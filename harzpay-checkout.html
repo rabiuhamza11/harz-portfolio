@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Pay for Harz Digital Services products via bank transfer or USDT crypto. Instant delivery after payment confirmation.">
+<meta name="keywords" content="harzpay checkout, buy digital products, bank transfer payment, crypto checkout, usdt payment">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="HarzPay — Checkout | Harz Digital Services">
+<meta property="og:description" content="Pay for Harz Digital Services products via bank transfer or USDT crypto. Instant delivery after payment confirmation.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzPay — Checkout | Harz Digital Services</title>
+<meta name="description" content="Pay for Harz Digital Services products via bank transfer or USDT crypto. Instant delivery after payment confirmation.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:480px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#00d4aa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tagline{font-size:.75rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+
+/* Step indicators */
+.steps{display:flex;gap:4px;margin-bottom:20px}
+.step{flex:1;height:4px;border-radius:2px;background:#1e1e2e;transition:background .3s}
+.step.active{background:linear-gradient(90deg,#00d4aa,#7c3aed)}
+.step.done{background:#00d4aa}
+
+/* Product cards */
+.product-grid{display:grid;gap:10px;margin-bottom:20px}
+.product-card{padding:14px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;cursor:pointer;transition:all .15s}
+.product-card:hover{border-color:#7c3aed;transform:translateY(-2px)}
+.product-card.selected{border-color:#00d4aa;background:rgba(0,212,170,.03)}
+.product-card .ptitle{font-size:.85rem;font-weight:600;color:#e8e8f0;margin-bottom:4px}
+.product-card .pcat{font-size:.65rem;color:#7c3aed;text-transform:uppercase;margin-bottom:6px}
+.product-card .pprice{font-size:1.1rem;font-weight:800;color:#00d4aa}
+.product-card .prating{font-size:.7rem;color:#f59e0b;margin-top:2px}
+
+/* Payment method */
+.method-tabs{display:flex;gap:8px;margin-bottom:16px}
+.method-tab{flex:1;padding:14px;text-align:center;background:#0e0e16;border:2px solid #1e1e2e;border-radius:12px;cursor:pointer;transition:all .15s}
+.method-tab.active{border-color:#00d4aa;background:rgba(0,212,170,.05)}
+.method-tab .icon{font-size:1.5rem}
+.method-tab .label{font-size:.7rem;color:#c8c8d0;margin-top:4px}
+.method-tab.active .label{color:#00d4aa}
+
+/* Payment details */
+.pay-box{padding:20px;background:#0e0e16;border:1px solid rgba(0,212,170,.3);border-radius:16px;margin-bottom:16px}
+.pay-box h3{font-size:.8rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(30,30,46,.5);font-size:.85rem}
+.detail-row .lbl{color:#6b6b80}
+.detail-row .val{color:#00d4aa;font-weight:600;font-family:monospace}
+.detail-row .val.copyable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted}
+.ref-badge{display:inline-block;padding:8px 16px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);border-radius:8px;font-size:1rem;font-weight:800;color:#a78bfa;font-family:monospace;margin:8px 0;text-align:center;width:100%}
+.qr-placeholder{text-align:center;padding:20px;background:#fff;border-radius:12px;margin:10px 0}
+.qr-placeholder .qr{font-size:4rem}
+.pay-instructions{font-size:.75rem;color:#6b6b80;line-height:1.6;padding:12px;background:#14141e;border-radius:10px;margin-top:10px}
+
+/* Confirm */
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.85rem}
+.input-group input:focus{border-color:#00d4aa;outline:none}
+
+/* Buttons */
+.btn{padding:14px;border:none;border-radius:12px;font-weight:700;font-size:.95rem;cursor:pointer;width:100%;transition:all .15s}
+.btn.primary{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,212,170,.3)}
+.btn.secondary{background:#14141e;border:1px solid #1e1e2e;color:#c8c8d0}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Success */
+.success{text-align:center;padding:30px}
+.success .check{font-size:3rem;margin-bottom:10px}
+.success h2{color:#00d4aa;font-size:1.2rem;margin-bottom:8px}
+.success p{font-size:.8rem;color:#6b6b80;margin-bottom:4px}
+.success .dl-link{display:inline-block;margin-top:16px;padding:12px 24px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:10px;color:#fff;text-decoration:none;font-weight:600;font-size:.85rem}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#00d4aa;color:#000;border-radius:10px;font-size:.8rem;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+
+.section{display:none}
+.section.active{display:block}
+
+.trust{display:flex;justify-content:center;gap:16px;padding:12px;font-size:.65rem;color:#6b6b80}
+.trust span{display:flex;align-items:center;gap:4px}
+</style>
+</head>
+<body>
+
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+
+<div class="header">
+<div class="logo">HarzPay</div>
+<div class="tagline">Secure Checkout — Bank Transfer & Crypto</div>
+</div>
+
+<div class="steps">
+<div class="step active" id="step1"></div>
+<div class="step" id="step2"></div>
+<div class="step" id="step3"></div>
+</div>
+
+<!-- STEP 1: Select Product -->
+<div class="section active" id="sec1">
+<div class="product-grid" id="productList"></div>
+<button class="btn primary" id="btn1" disabled onclick="goStep2()">Continue →</button>
+</div>
+
+<!-- STEP 2: Payment Method + Details -->
+<div class="section" id="sec2">
+<div class="method-tabs">
+<div class="method-tab active" onclick="setMethod('bank')" data-m="bank">
+<div class="icon">🏦</div><div class="label">Bank Transfer</div>
+</div>
+<div class="method-tab" onclick="setMethod('crypto')" data-m="crypto">
+<div class="icon">₮</div><div class="label">USDT Crypto</div>
+</div>
+</div>
+
+<div id="bankDetails" class="pay-box">
+<h3>🏦 Bank Transfer Details</h3>
+<div class="detail-row"><span class="lbl">Bank</span><span class="val">UBA (United Bank for Africa)</span></div>
+<div class="detail-row"><span class="lbl">Account Name</span><span class="val">HI Water/Block Industry</span></div>
+<div class="detail-row"><span class="lbl">Account Number</span><span class="val copyable" onclick="copy('2034326424')">2034326424</span></div>
+<div class="detail-row"><span class="lbl">Sort Code</span><span class="val">033</span></div>
+<div class="ref-badge" id="refCode">HARZ-XXXX-XXXX</div>
+<div class="pay-instructions">
+1. Transfer the exact amount to the UBA account above<br>
+2. Use this reference as payment description: <span id="refInline" style="color:#a78bfa;font-weight:600">HARZ-XXXX-XXXX</span><br>
+3. After transfer, click "I've Paid" below and enter your transaction ID
+</div>
+</div>
+
+<div id="cryptoDetails" class="pay-box" style="display:none">
+<h3>₮ USDT Payment (TRC20)</h3>
+<div class="detail-row"><span class="lbl">Network</span><span class="val">TRON (TRC20)</span></div>
+<div class="detail-row"><span class="lbl">Wallet Address</span><span class="val copyable" style="font-size:.7rem" onclick="copy('TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr')">TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr</span></div>
+<div class="detail-row"><span class="lbl">Amount (USDT)</span><span class="val" id="usdtAmount">$0.00</span></div>
+<div class="qr-placeholder"><div class="qr">₮</div><div style="font-size:.7rem;color:#666">Send USDT TRC20 to address above</div></div>
+<div class="pay-instructions">
+1. Send USDT on TRON (TRC20) network to the wallet above<br>
+2. Send exactly <span id="usdtInline" style="color:#a78bfa;font-weight:600">$0.00</span><br>
+3. After sending, click "I've Paid" and enter your transaction hash
+</div>
+</div>
+
+<button class="btn primary" onclick="goStep3()">I've Paid — Confirm →</button>
+<button class="btn secondary" style="margin-top:8px" onclick="goBack(1)">← Back</button>
+</div>
+
+<!-- STEP 3: Confirm Payment -->
+<div class="section" id="sec3">
+<div class="pay-box">
+<h3>Confirm Your Payment</h3>
+<div class="input-group">
+<label>Your Name</label>
+<input type="text" id="custName" placeholder="Enter your full name">
+</div>
+<div class="input-group">
+<label>Your Email</label>
+<input type="email" id="custEmail" placeholder="you@example.com">
+</div>
+<div class="input-group">
+<label id="txLabel">Transaction Reference / Hash</label>
+<input type="text" id="txRef" placeholder="Enter transaction ID or hash">
+</div>
+<div class="input-group">
+<label>WhatsApp / Phone (optional)</label>
+<input type="text" id="custPhone" placeholder="080xxxxxxxx">
+</div>
+<button class="btn primary" onclick="confirmPayment()">✅ Confirm Payment</button>
+<button class="btn secondary" style="margin-top:8px" onclick="goBack(2)">← Back</button>
+</div>
+</div>
+
+<!-- SUCCESS -->
+<div class="section" id="secSuccess">
+<div class="success">
+<div class="check">✅</div>
+<h2>Payment Submitted!</h2>
+<p id="successRef">Reference: HARZ-XXXX-XXXX</p>
+<p>Your payment is being verified.</p>
+<p>You'll receive your product within 10 minutes after confirmation.</p>
+<p style="margin-top:12px">Questions? WhatsApp: 08028687857</p>
+</div>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<div class="trust">
+<span>🔒 SSL Secured</span>
+<span>📋 RC 321424</span>
+<span>⚡ Instant Delivery</span>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | HarzPay Checkout
+</div>
+
+<script>
+var products=[
+{id:'notion-os',title:'Notion Productivity OS — All-in-One Life Dashboard',cat:'Template',price:17.99,currency:'USD',rating:5.0,sales:3200},
+{id:'freelancer-kit',title:'Freelancer Starter Kit — Contracts, Invoices & Proposals',cat:'Template',price:11.99,currency:'USD',rating:4.9,sales:2300},
+{id:'dm-masterclass',title:'Complete Digital Marketing Masterclass 2026',cat:'Course',price:49.99,currency:'USD',rating:4.9,sales:2100},
+{id:'ai-image-guide',title:'AI Image Generation Mastery — Midjourney & DALL-E Guide',cat:'Ebook',price:12.99,currency:'USD',rating:4.9,sales:1500},
+{id:'canva-bundle',title:'Ultimate Canva Business Template Bundle — 200 Slides',cat:'Template',price:19.99,currency:'USD',rating:4.8,sales:1240},
+{id:'dm-course',title:'Digital Marketing Course — Zero to Hero 2026',cat:'Course',price:49.99,currency:'USD',rating:4.9,sales:1200},
+{id:'email-playbook',title:'Email Marketing Playbook — 50 Templates That Convert',cat:'Ebook',price:16.99,currency:'USD',rating:4.8,sales:1100},
+{id:'tiktok-hooks',title:'Viral TikTok Hooks Formula — 200 Proven Hooks',cat:'Ebook',price:12.99,currency:'USD',rating:4.9,sales:1100},
+{id:'resume-pro',title:'Resume Builder Pro — 50 ATS-Ready Templates',cat:'Template',price:14.99,currency:'USD',rating:4.8,sales:950},
+{id:'reels-pack',title:'Instagram Reels Editing Pack — 200 Transitions & Effects',cat:'Template',price:22.99,currency:'USD',rating:4.8,sales:890},
+{id:'buildbot-basic',title:'BuildBot AI — Basic Construction Plan',cat:'Service',price:15000,currency:'NGN',rating:5.0,sales:50},
+{id:'buildbot-pro',title:'BuildBot AI — Professional Construction Plan',cat:'Service',price:45000,currency:'NGN',rating:5.0,sales:30},
+{id:'contentpilot-starter',title:'ContentPilot AI — Starter Plan',cat:'Subscription',price:15000,currency:'NGN',rating:4.8,sales:25},
+{id:'mindcare-pro',title:'MindCare AI Pro — Monthly Subscription',cat:'Subscription',price:5000,currency:'NGN',rating:4.9,sales:15},
+{id:'estate-pro',title:'Harz Estate Estimator Pro',cat:'Tool',price:15000,currency:'NGN',rating:5.0,sales:10}
+];
+
+var selectedProduct=null;
+var method='bank';
+var reference='';
+
+// Render products
+document.getElementById('productList').innerHTML=products.map(function(p,i){
+return '<div class="product-card" onclick="selectProduct('+i+')" id="pcard'+i+'">'+
+'<div class="pcat">'+p.cat+'</div>'+
+'<div class="ptitle">'+p.title+'</div>'+
+'<div class="pprice">'+(p.currency==='NGN'?'₦':'$')+p.price.toLocaleString()+'</div>'+
+'<div class="prating">⭐ '+p.rating+' · '+p.sales+' sales</div>'+
+'</div>'
+}).join('');
+
+function selectProduct(i){
+selectedProduct=products[i];
+document.querySelectorAll('.product-card').forEach(function(c){c.classList.remove('selected')});
+document.getElementById('pcard'+i).classList.add('selected');
+document.getElementById('btn1').disabled=false;
+// Generate reference
+reference='HARZ-'+selectedProduct.id.slice(0,6).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+}
+
+function goStep2(){
+if(!selectedProduct)return;
+document.getElementById('step1').classList.add('done');
+document.getElementById('step2').classList.add('active');
+document.getElementById('sec1').classList.remove('active');
+document.getElementById('sec2').classList.add('active');
+// Fill reference
+document.getElementById('refCode').textContent=reference;
+document.getElementById('refInline').textContent=reference;
+// Calc USDT
+var usdtAmt=selectedProduct.currency==='NGN'?(selectedProduct.price/1420).toFixed(2):selectedProduct.price.toFixed(2);
+document.getElementById('usdtAmount').textContent='$'+usdtAmt;
+document.getElementById('usdtInline').textContent='$'+usdtAmt;
+}
+
+function setMethod(m){
+method=m;
+document.querySelectorAll('.method-tab').forEach(function(e){e.classList.toggle('active',e.dataset.m===m)});
+document.getElementById('bankDetails').style.display=m==='bank'?'block':'none';
+document.getElementById('cryptoDetails').style.display=m==='crypto'?'block':'none';
+document.getElementById('txLabel').textContent=m==='bank'?'Transaction Reference (from your bank app)':'Transaction Hash (from your crypto wallet)';
+}
+
+function goStep3(){
+document.getElementById('step2').classList.add('done');
+document.getElementById('step3').classList.add('active');
+document.getElementById('sec2').classList.remove('active');
+document.getElementById('sec3').classList.add('active');
+}
+
+function goBack(step){
+document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
+document.querySelectorAll('.step').forEach(function(s,i){s.classList.toggle('active',i===step-1);s.classList.toggle('done',i<step-1)});
+document.getElementById('sec'+step).classList.add('active');
+}
+
+function confirmPayment(){
+var name=document.getElementById('custName').value;
+var email=document.getElementById('custEmail').value;
+var txRef=document.getElementById('txRef').value;
+var phone=document.getElementById('custPhone').value;
+if(!name||!email||!txRef){alert('Please fill in name, email, and transaction reference');return}
+
+// Call HarzPay backend to log
+fetch('https://app.base44.com/api/apps/6a1e2efdc14fbb292286fb2f/functions/harzPay',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({action:'generate_ref',productId:selectedProduct.id,productName:selectedProduct.title,amount:selectedProduct.price,currency:selectedProduct.currency,customerEmail:email,customerName:name})
+}).then(function(r){return r.json()}).catch(function(e){return {}});
+
+// Show success
+document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
+document.getElementById('secSuccess').classList.add('active');
+document.getElementById('successRef').textContent='Reference: '+reference;
+
+// Also try to notify via WhatsApp link
+var msg='New HarzPay Order!%0AProduct: '+selectedProduct.title+'%0AAmount: '+(selectedProduct.currency==='NGN'?'₦':'$')+selectedProduct.price+'%0ARef: '+reference+'%0AName: '+name+'%0AEmail: '+email+'%0ATx: '+txRef+'%0AMethod: '+(method==='bank'?'Bank Transfer':'USDT Crypto');
+// Silent notify
+fetch('https://wa.me/2348028687857?text='+msg).catch(function(){});
+}
+
+function copy(text){
+navigator.clipboard.writeText(text);
+var toast=document.getElementById('toast');
+toast.textContent='Copied: '+text;
+toast.classList.add('show');
+setTimeout(function(){toast.classList.remove('show')},2000);
+}
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
