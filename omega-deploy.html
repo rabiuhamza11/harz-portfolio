@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Deployment Engine — Infrastructure & CI/CD</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+.header{padding:16px 0 24px}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted)}
+.nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{padding:8px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.8rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.nav a.active{background:rgba(0,212,170,.1);border-color:var(--accent);color:var(--accent)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat .num{font-size:1.6rem;font-weight:800}
+.stat .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat.green .num{color:var(--accent)}
+.stat.purple .num{color:var(--purple)}
+.stat.blue .num{color:var(--blue)}
+.stat.yellow .num{color:var(--yellow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(0,212,170,.15);color:var(--accent)}
+.provider-card{background:#14141e;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.provider-card .top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.provider-card .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.provider-card .name{font-size:.9rem;font-weight:700}
+.provider-card .status{font-size:.7rem;padding:3px 8px;border-radius:6px;font-weight:600}
+.status.active{background:rgba(0,212,170,.15);color:var(--accent)}
+.status.pending{background:rgba(245,158,11,.15);color:var(--yellow)}
+.provider-card .stats{display:flex;gap:16px;font-size:.75rem;color:var(--muted)}
+.fin-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.85rem;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border:none}
+.fin-row .val{font-weight:600}
+.fin-row .val.pos{color:var(--accent)}
+.fin-row .val.pending{color:var(--yellow)}
+.fin-row .val.neg{color:var(--red)}
+.log-entry{font-size:.75rem;padding:6px 0;border-bottom:1px solid rgba(30,30,46,.5);display:flex;gap:8px}
+.log-entry .time{color:var(--muted);min-width:60px}
+.log-entry .level{font-weight:600;min-width:40px}
+.log-entry .level.info{color:var(--blue)}
+.log-entry .level.ok{color:var(--accent)}
+.log-entry .level.warn{color:var(--yellow)}
+.log-entry .level.err{color:var(--red)}
+.log-entry .msg{flex:1}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>OMEGA Deployment Engine</h1>
+<div class="sub">5 Cloud Providers | CI/CD | Auto-Deploy | Health Monitoring</div>
+</div>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander Dashboard</a>
+<a href="omega-executive.html">Executive AI</a>
+<a href="omega-products.html">Product Division</a>
+<a href="omega-deploy.html" class="active">Deployment Engine</a>
+<a href="omega-security.html">Security Center</a>
+<a href="tools.html">Tools Hub</a>
+</div>
+
+<div class="stats-row">
+<div class="stat green"><div class="num">27</div><div class="lbl">Vercel Sites</div></div>
+<div class="stat purple"><div class="num">44</div><div class="lbl">GitHub Repos</div></div>
+<div class="stat blue"><div class="num">8</div><div class="lbl">GitHub Pages</div></div>
+<div class="stat yellow"><div class="num">1</div><div class="lbl">Render Service</div></div>
+<div class="stat green"><div class="num">16+</div><div class="lbl">Base44 Functions</div></div>
+<div class="stat purple"><div class="num">20</div><div class="lbl">Active Automations</div></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Cloud Providers <span class="badge">5 Active + 4 Planned</span></h2>
+<div class="provider-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,0,0,.3)">▲</div>
+<div style="flex:1"><div class="name">Vercel</div></div>
+<div class="status active">27 SITES</div>
+</div>
+<div class="stats"><span>24 ecosystem platforms</span><span>3 checkout pages</span></div>
+</div>
+<div class="provider-card">
+<div class="top">
+<div class="icon" style="background:rgba(239,68,68,.1)">🔴</div>
+<div style="flex:1"><div class="name">Render</div></div>
+<div class="status active">LIVE</div>
+</div>
+<div class="stats"><span>Maganu AI v7.8.0</span><span>510 commands</span><span>Keep-alive active</span></div>
+</div>
+<div class="provider-card">
+<div class="top">
+<div class="icon" style="background:rgba(30,30,46,.5)">🐙</div>
+<div style="flex:1"><div class="name">GitHub Pages</div></div>
+<div class="status active">8 PAGES</div>
+</div>
+<div class="stats"><span>Portfolio + OMEGA dashboards + tools</span></div>
+</div>
+<div class="provider-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.1)">⚡</div>
+<div style="flex:1"><div class="name">Base44 Backend</div></div>
+<div class="status active">16+ FUNCTIONS</div>
+</div>
+<div class="stats"><span>maganuBridge</span><span>paymentBridge</span><span>harzCRM</span><span>harzPayments</span></div>
+</div>
+<div class="provider-card">
+<div class="top">
+<div class="icon" style="background:rgba(255,0,0,.1)">☁️</div>
+<div style="flex:1"><div class="name">Oracle Cloud</div></div>
+<div class="status pending">PLANNED</div>
+</div>
+<div class="stats"><span>24GB ARM free tier</span><span>Awaiting account creation</span></div>
+</div>
+</div>
+
+<div class="panel">
+<h2>CI/CD Pipeline <span class="badge">GitHub Actions</span></h2>
+<div class="fin-row"><span>Auto-Deploy (GitHub→Render)</span><span class="val pos">Active</span></div>
+<div class="fin-row"><span>Auto-Deploy (GitHub→Vercel)</span><span class="val pos">Active</span></div>
+<div class="fin-row"><span>Auto-Deploy (GitHub→Pages)</span><span class="val pos">Active</span></div>
+<div class="fin-row"><span>Blue/Green Deployments</span><span class="val pending">Planned</span></div>
+<div class="fin-row"><span>Canary Releases</span><span class="val pending">Planned</span></div>
+<div class="fin-row"><span>Auto Rollback</span><span class="val pending">Planned</span></div>
+<div class="fin-row"><span>Health Monitoring</span><span class="val pos">Daily 8AM</span></div>
+<div class="fin-row"><span>Keep-Alive Ping</span><span class="val pos">Every 10 min</span></div>
+<div class="fin-row"><span>Daily Backup</span><span class="val pos">10 PM → GitHub</span></div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Deployed Sites <span class="badge">27 Vercel + 8 Pages</span></h2>
+<div class="fin-row"><span>HarzDM Marketplace</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>HarzDM Checkout</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>Harz Shop</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>ContentPilot Checkout</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>Unified Dashboard</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>Apex Bank</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>HarzAjo</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>HarzPay</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>HarzFX</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>HarzLend</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>OMEGA Health AI</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>MindCare AI</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>CYBER SHIELD X</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>EduWealth AI</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>OMEGA INFINITY 1000</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>TradeOS</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>OMEGA Content AI</span><span class="val pos">vercel.app</span></div>
+<div class="fin-row"><span>Abuja Estate City AI</span><span class="val pos">vercel.app</span></div>
+<div style="font-size:.7rem;color:var(--muted);margin-top:8px">+ 9 more sites deployed</div>
+</div>
+
+<div class="panel">
+<h2>Backend Functions <span class="badge">16+ on Base44</span></h2>
+<div class="fin-row"><span>maganuBridge v3.0</span><span class="val pos">58 actions, CRUD</span></div>
+<div class="fin-row"><span>paymentBridge v2.0</span><span class="val pos">38 actions, Paystack+Stripe</span></div>
+<div class="fin-row"><span>harzCRM</span><span class="val pos">Auto-reply + stats</span></div>
+<div class="fin-row"><span>harzPayments</span><span class="val pos">Payment processing</span></div>
+<div class="fin-row"><span>harzdmCatalog</span><span class="val pos">Product catalog API</span></div>
+<div class="fin-row"><span>emailBridge</span><span class="val pos">Gmail send/read</span></div>
+<div class="fin-row"><span>calendarBridge</span><span class="val pos">Google Calendar</span></div>
+<div class="fin-row"><span>fileBridge</span><span class="val pos">File management</span></div>
+<div class="fin-row"><span>Integration Credits</span><span class="val pending">100/100 used</span></div>
+<div class="fin-row"><span>Credit Reset</span><span class="val pending">Monthly</span></div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Deployment Log <span class="badge">Recent Activity</span></h2>
+<div class="log-entry"><span class="time">Jul 18 09:43</span><span class="level ok">OK</span><span class="msg">OMEGA Commander v1.1 deployed to GitHub Pages</span></div>
+<div class="log-entry"><span class="time">Jul 18 09:38</span><span class="level ok">OK</span><span class="msg">OMEGA Commander v1.0 deployed with live entity data</span></div>
+<div class="log-entry"><span class="time">Jul 18 01:09</span><span class="level ok">OK</span><span class="msg">Maganu v7.8.0 deployed to Render (live)</span></div>
+<div class="log-entry"><span class="time">Jul 17 23:44</span><span class="level warn">WARN</span><span class="msg">Previous Maganu deploy deactivated (superseded)</span></div>
+<div class="log-entry"><span class="time">Jul 17 23:36</span><span class="level err">ERR</span><span class="msg">Deploy failed — syntax error in system prompt trim</span></div>
+<div class="log-entry"><span class="time">Jul 17 20:30</span><span class="level ok">OK</span><span class="msg">Paystack verification reply sent</span></div>
+<div class="log-entry"><span class="time">Jul 17 10:00</span><span class="level ok">OK</span><span class="msg">Daily backup completed to GitHub</span></div>
+<div class="log-entry"><span class="time">Every 10m</span><span class="level info">INFO</span><span class="msg">Keep-alive ping — 67 runs/24h (0 failures)</span></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
+OMEGA Deployment Engine — 27 Vercel + 1 Render + 8 GitHub Pages + 16+ Functions | Built by Magani
+</div>
+
+</body>
+</html>

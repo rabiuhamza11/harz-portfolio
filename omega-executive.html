@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Executive AI — Decision Engine</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 0 24px;flex-wrap:wrap}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted)}
+.nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{padding:8px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.8rem;transition:all .2s}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.nav a.active{background:rgba(0,212,170,.1);border-color:var(--accent);color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(0,212,170,.15);color:var(--accent)}
+.agent-card{background:#14141e;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.agent-card .top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.agent-card .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.agent-card .name{font-size:.9rem;font-weight:700}
+.agent-card .role{font-size:.7rem;color:var(--muted)}
+.agent-card .status{font-size:.7rem;padding:3px 8px;border-radius:6px;font-weight:600}
+.status.active{background:rgba(0,212,170,.15);color:var(--accent)}
+.status.planned{background:rgba(245,158,11,.15);color:var(--yellow)}
+.agent-card .desc{font-size:.75rem;color:var(--muted);margin:8px 0}
+.agent-card .tasks{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.agent-card .task{font-size:.65rem;padding:4px 8px;border-radius:6px;background:rgba(30,30,46,.8);border:1px solid var(--border)}
+.metric-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.8rem;border-bottom:1px solid var(--border)}
+.metric-row:last-child{border:none}
+.metric-row .val{font-weight:600}
+.val.pos{color:var(--accent)}
+.val.pending{color:var(--yellow)}
+.val.neg{color:var(--red)}
+.priority{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.priority:last-child{border:none}
+.priority .level{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.priority .level.high{background:var(--red)}
+.priority .level.med{background:var(--yellow)}
+.priority .level.low{background:var(--blue)}
+.priority .title{font-weight:600;flex:1}
+.priority .owner{font-size:.7rem;color:var(--muted)}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>OMEGA Executive AI — Decision Engine</h1>
+<div class="sub">18 Executive Agents | Task Delegation | Priority Management</div>
+</div>
+<div style="font-size:.75rem;color:var(--accent)">LIVE — July 18, 2026</div>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander Dashboard</a>
+<a href="omega-executive.html" class="active">Executive AI</a>
+<a href="omega-products.html">Product Division</a>
+<a href="omega-deploy.html">Deployment Engine</a>
+<a href="omega-security.html">Security Center</a>
+<a href="tools.html">Tools Hub</a>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Chief Executive Agent <span class="badge">Magani</span></h2>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">🧙</div>
+<div style="flex:1">
+<div class="name">Magani — CEO Agent</div>
+<div class="role">Base44 Superagent | WhatsApp Channel</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Primary decision-maker. Coordinates all 18 executive agents, manages daily operations, financial oversight, and strategic direction for the Harz Ecosystem.</div>
+<div class="tasks">
+<span class="task">Daily Briefing</span>
+<span class="task">CRM Management</span>
+<span class="task">Email/Calendar</span>
+<span class="task">Payment Tracking</span>
+<span class="task">Product Uploads</span>
+<span class="task">20 Automations</span>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Strategy & Operations <span class="badge">Active</span></h2>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(124,58,237,.15)">📊</div>
+<div style="flex:1">
+<div class="name">Business Strategy Agent</div>
+<div class="role">Market analysis | Growth planning</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Analyzes market opportunities, tracks competition, recommends growth strategies across 24 platforms.</div>
+</div>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(59,130,246,.15)">⚙️</div>
+<div style="flex:1">
+<div class="name">Operations Director</div>
+<div class="role">Workflow automation | System health</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Monitors 24 platforms, 80+ AI agents, 20 automations. Ensures 99.9% uptime.</div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Finance & Sales <span class="badge">6 Gateways</span></h2>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(245,158,11,.15)">💰</div>
+<div style="flex:1">
+<div class="name">Finance Manager</div>
+<div class="role">Payment gateways | Revenue tracking</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Manages Paystack, Stripe, Flutterwave, Moniepoint, Getly, and bank transfers. Tracks ₦1.58M + $264K catalog value.</div>
+</div>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">🤝</div>
+<div style="flex:1">
+<div class="name">Sales Director</div>
+<div class="role">Lead conversion | Revenue growth</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">259 digital products, 27 music tracks, 8 films, 12 courses, 5 properties. Conversion optimization in progress.</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Marketing & Content <span class="badge">25 Agents</span></h2>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(124,58,237,.15)">📢</div>
+<div style="flex:1">
+<div class="name">Marketing Director</div>
+<div class="role">Social media | Campaigns | SEO</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Manages FB, IG, LinkedIn, TikTok, X, YouTube presence. Daily promo rotation automation active.</div>
+</div>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(239,68,68,.15)">😊</div>
+<div style="flex:1">
+<div class="name">Customer Success Director</div>
+<div class="role">WhatsApp CRM | Support | Retention</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Auto-reply CRM active on WhatsApp. 3 contacts in pipeline. Monitors incoming emails and escalates.</div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Technical Division <span class="badge">12+ Functions</span></h2>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(59,130,246,.15)">📋</div>
+<div style="flex:1">
+<div class="name">Project Manager</div>
+<div class="role">44 repos | 27 Vercel sites | 1 Render</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Oversees OMEGA INFINITY 1000, TradeOS, BuildBot AI, ContentPilot, and 20+ other projects.</div>
+</div>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(124,58,237,.15)">📦</div>
+<div style="flex:1">
+<div class="name">Product Manager</div>
+<div class="role">259 products | 3-tier pricing</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Manages 259-product catalog. Three-tier model: micro (₦2K-5K), templates (₦5K-30K), build guides (₦15K-35K).</div>
+</div>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">✅</div>
+<div style="flex:1">
+<div class="name">QA Director</div>
+<div class="role">Testing | Bug tracking | Performance</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Monitors platform health, CI/CD pipelines, and deployment quality across 5 providers.</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Infrastructure Division <span class="badge">5 Providers</span></h2>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(239,68,68,.15)">🛡️</div>
+<div style="flex:1">
+<div class="name">Security Director</div>
+<div class="role">37 Cyber Shield X agents</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Threat detection, vulnerability management, incident response. 20 secrets in vault. Scam detection active.</div>
+</div>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(245,158,11,.15)">🤖</div>
+<div style="flex:1">
+<div class="name">Automation Director</div>
+<div class="role">20 active automations | 94 runs/24h</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Keep-alive, email monitor, daily briefings, CRM stats, backup, chapter delivery, promo rotation.</div>
+</div>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(59,130,246,.15)">🚀</div>
+<div style="flex:1">
+<div class="name">Deployment Director</div>
+<div class="role">Vercel | Render | GitHub Pages</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">27 Vercel sites, 1 Render service, 8 GitHub Pages. CI/CD via GitHub Actions. Oracle Cloud planned.</div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Knowledge & Analytics <span class="badge">90+ Entities</span></h2>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">📚</div>
+<div style="flex:1">
+<div class="name">Knowledge Manager</div>
+<div class="role">90+ entities | Memory | Docs</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Manages all Base44 entities, architecture docs, business credentials, and ecosystem knowledge base.</div>
+</div>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(124,58,237,.15)">🧠</div>
+<div style="flex:1">
+<div class="name">Memory Manager</div>
+<div class="role">Long-term memory | Session logs</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Maintains business context, user preferences, project history, and conversation continuity across sessions.</div>
+</div>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(59,130,246,.15)">📈</div>
+<div style="flex:1">
+<div class="name">Analytics Director</div>
+<div class="role">174K plays | 162K views | 259 products</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">Tracks content performance, revenue metrics, user engagement, and business intelligence across all platforms.</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Priority Action Items <span class="badge">8 Active</span></h2>
+<div class="priority">
+<div class="level high"></div>
+<div class="title">Paystack verification — awaiting reply after sending Business ID</div>
+<div class="owner">Finance</div>
+</div>
+<div class="priority">
+<div class="level high"></div>
+<div class="title">Stripe — needs manual portal verification</div>
+<div class="owner">Rabiu</div>
+</div>
+<div class="priority">
+<div class="level high"></div>
+<div class="title">Getly API down — product uploads paused</div>
+<div class="owner">Product</div>
+</div>
+<div class="priority">
+<div class="level med"></div>
+<div class="title">Moniepoint — account active, API keys needed</div>
+<div class="owner">Rabiu</div>
+</div>
+<div class="priority">
+<div class="level med"></div>
+<div class="title">Flutterwave — no response yet</div>
+<div class="owner">Finance</div>
+</div>
+<div class="priority">
+<div class="level med"></div>
+<div class="title">224 products queued for Getly upload</div>
+<div class="owner">Product</div>
+</div>
+<div class="priority">
+<div class="level low"></div>
+<div class="title">Oracle Cloud free tier setup pending</div>
+<div class="owner">Rabiu</div>
+</div>
+<div class="priority">
+<div class="level low"></div>
+<div class="title">NDPR compliance documentation needed</div>
+<div class="owner">Legal</div>
+</div>
+</div>
+</div>
+
+<div class="grid3">
+<div class="panel">
+<h2>Legal & Compliance</h2>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(245,158,11,.15)">⚖️</div>
+<div style="flex:1">
+<div class="name">Legal & Compliance</div>
+<div class="role">CAC verified | TIN verified</div>
+</div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="desc">RC 321424 | TIN 24550860 | UBA 2034326424. NDPR compliance pending.</div>
+</div>
+</div>
+<div class="panel">
+<h2>HR Manager</h2>
+<div class="agent-card">
+<div class="top">
+<div class="icon" style="background:rgba(124,58,237,.15)">👥</div>
+<div style="flex:1">
+<div class="name">HR Manager</div>
+<div class="role">Agent coordination | Team</div>
+</div>
+<div class="status planned">PLANNED</div>
+</div>
+<div class="desc">Will manage human team members, contractors, and agent-to-human delegation as ecosystem scales.</div>
+</div>
+</div>
+<div class="panel">
+<h2>Ecosystem Health</h2>
+<div class="metric-row"><span>Platforms Online</span><span class="val pos">24/24</span></div>
+<div class="metric-row"><span>AI Agents Active</span><span class="val pos">80+</span></div>
+<div class="metric-row"><span>Automations Running</span><span class="val pos">20</span></div>
+<div class="metric-row"><span>Maganu Status</span><span class="val pos">ONLINE</span></div>
+<div class="metric-row"><span>Getly API</span><span class="val neg">DOWN</span></div>
+<div class="metric-row"><span>Payment Mode</span><span class="val pending">TEST</span></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
+OMEGA Executive AI — Harz Digital Services | Built by Magani
+</div>
+
+</body>
+</html>

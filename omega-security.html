@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Security Center — Cyber Shield X</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+.header{padding:16px 0 24px}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,var(--accent),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted)}
+.nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{padding:8px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.8rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.nav a.active{background:rgba(0,212,170,.1);border-color:var(--accent);color:var(--accent)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat .num{font-size:1.6rem;font-weight:800}
+.stat .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat.green .num{color:var(--accent)}
+.stat.purple .num{color:var(--purple)}
+.stat.blue .num{color:var(--blue)}
+.stat.yellow .num{color:var(--yellow)}
+.stat.red .num{color:var(--red)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(0,212,170,.15);color:var(--accent)}
+.sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sec-item{background:#14141e;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.8rem}
+.sec-item .label{color:var(--muted);font-size:.7rem}
+.sec-item .val{font-weight:600;margin-top:2px}
+.sec-item .val.ok{color:var(--accent)}
+.sec-item .val.warn{color:var(--yellow)}
+.sec-item .val.bad{color:var(--red)}
+.agent-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.agent-row:last-child{border:none}
+.agent-row .icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.agent-row .info{flex:1}
+.agent-row .info .name{font-size:.85rem;font-weight:600}
+.agent-row .info .role{font-size:.7rem;color:var(--muted)}
+.agent-row .health{font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:6px}
+.health.active{background:rgba(0,212,170,.15);color:var(--accent)}
+.threat-entry{font-size:.75rem;padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:10px}
+.threat-entry .sev{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.threat-entry .sev.high{background:var(--red)}
+.threat-entry .sev.med{background:var(--yellow)}
+.threat-entry .sev.low{background:var(--blue)}
+.threat-entry .info{flex:1}
+.threat-entry .info .title{font-weight:600}
+.threat-entry .info .meta{font-size:.7rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>OMEGA Security Center</h1>
+<div class="sub">Cyber Shield X | 37 Agents | Credential Vault | Threat Detection</div>
+</div>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander Dashboard</a>
+<a href="omega-executive.html">Executive AI</a>
+<a href="omega-products.html">Product Division</a>
+<a href="omega-deploy.html">Deployment Engine</a>
+<a href="omega-security.html" class="active">Security Center</a>
+<a href="tools.html">Tools Hub</a>
+</div>
+
+<div class="stats-row">
+<div class="stat green"><div class="num">37</div><div class="lbl">Cyber Agents</div></div>
+<div class="stat purple"><div class="num">20</div><div class="lbl">Secrets Vaulted</div></div>
+<div class="stat blue"><div class="num">24</div><div class="lbl">SSL Secured</div></div>
+<div class="stat yellow"><div class="num">3</div><div class="lbl">Pending Actions</div></div>
+<div class="stat green"><div class="num">1</div><div class="lbl">Scam Blocked</div></div>
+<div class="stat red"><div class="num">2</div><div class="lbl">MFA Gaps</div></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Security Posture <span class="badge">Audited</span></h2>
+<div class="sec-grid">
+<div class="sec-item"><div class="label">Credential Vault</div><div class="val ok">20 Secrets Stored</div></div>
+<div class="sec-item"><div class="label">Threat Detection</div><div class="val ok">Active — 37 Agents</div></div>
+<div class="sec-item"><div class="label">Audit Logs</div><div class="val ok">Enabled</div></div>
+<div class="sec-item"><div class="label">MFA</div><div class="val warn">Not Configured</div></div>
+<div class="sec-item"><div class="label">Role-Based Access</div><div class="val warn">Owner Only</div></div>
+<div class="sec-item"><div class="label">Disaster Recovery</div><div class="val ok">GitHub + Render</div></div>
+<div class="sec-item"><div class="label">Backup Schedule</div><div class="val ok">Daily 10PM</div></div>
+<div class="sec-item"><div class="label">Compliance</div><div class="val warn">NDPR Needed</div></div>
+<div class="sec-item"><div class="label">SSL/HTTPS</div><div class="val ok">All Platforms</div></div>
+<div class="sec-item"><div class="label">Scam Detection</div><div class="val ok">1 Blocked</div></div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Cyber Shield X Agents <span class="badge">37 Online</span></h2>
+<div class="agent-row">
+<div class="icon" style="background:rgba(239,68,68,.15)">🔍</div>
+<div class="info"><div class="name">Threat Hunter</div><div class="role">Real-time threat detection and analysis</div></div>
+<div class="health active">12 ACTIVE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(245,158,11,.15)">🛡️</div>
+<div class="info"><div class="name">Vulnerability Scanner</div><div class="role">CVE tracking and patch management</div></div>
+<div class="health active">8 ACTIVE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(0,212,170,.15)">🚨</div>
+<div class="info"><div class="name">Incident Response</div><div class="role">Automated response and containment</div></div>
+<div class="health active">6 ACTIVE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(59,130,246,.15)">📡</div>
+<div class="info"><div class="name">Endpoint Monitor</div><div class="role">Device and server health tracking</div></div>
+<div class="health active">5 ACTIVE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(124,58,237,.15)">📋</div>
+<div class="info"><div class="name">Compliance Auditor</div><div class="role">NDPR, GDPR, regulatory tracking</div></div>
+<div class="health active">3 ACTIVE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(239,68,68,.15)">🔒</div>
+<div class="info"><div class="name">Security Analyst</div><div class="role">Log analysis and anomaly detection</div></div>
+<div class="health active">3 ACTIVE</div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Recent Security Events <span class="badge">Last 48h</span></h2>
+<div class="threat-entry">
+<div class="sev high"></div>
+<div class="info">
+<div class="title">Wangiri Scam Call — +39 324 755 6877</div>
+<div class="meta">Italian mobile | Vodafone/I WIND | Blocked | Jul 17</div>
+</div>
+</div>
+<div class="threat-entry">
+<div class="sev med"></div>
+<div class="info">
+<div class="title">Render Deploy Failure — maganu-agent</div>
+<div class="meta">2 failed deploys | Syntax error in prompt trim | Auto-recovered</div>
+</div>
+</div>
+<div class="threat-entry">
+<div class="sev med"></div>
+<div class="info">
+<div class="title">Getly API — Deployment Not Found</div>
+<div class="meta">Vercel DEPLOYMENT_NOT_FOUND | Product uploads paused | Jul 18</div>
+</div>
+</div>
+<div class="threat-entry">
+<div class="sev low"></div>
+<div class="info">
+<div class="title">Groq Rate Limit — Free Tier</div>
+<div class="meta">12K tokens/min limit | System prompt trimmed to 333 tokens | Resolved</div>
+</div>
+</div>
+<div class="threat-entry">
+<div class="sev low"></div>
+<div class="info">
+<div class="title">Google Account Data Shared with Bybit</div>
+<div class="meta">OAuth scope review needed | Jul 17</div>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Credential Vault <span class="badge">20 Secrets</span></h2>
+<div class="sec-grid">
+<div class="sec-item"><div class="label">Paystack Keys</div><div class="val ok">Secret + Public</div></div>
+<div class="sec-item"><div class="label">Stripe Keys</div><div class="val ok">Secret + Publishable</div></div>
+<div class="sec-item"><div class="label">Getly API Key</div><div class="val ok">2 keys (scoped)</div></div>
+<div class="sec-item"><div class="label">GitHub Token</div><div class="val ok">Full access</div></div>
+<div class="sec-item"><div class="label">Vercel Token</div><div class="val ok">Deploy access</div></div>
+<div class="sec-item"><div class="label">Render API Key</div><div class="val ok">Service management</div></div>
+<div class="sec-item"><div class="label">Telegram Bot Token</div><div class="val ok">Maganu bot</div></div>
+<div class="sec-item"><div class="label">Groq API Key</div><div class="val ok">AI processing</div></div>
+<div class="sec-item"><div class="label">Gmail OAuth</div><div class="val ok">Read + Send</div></div>
+<div class="sec-item"><div class="label">Google Calendar</div><div class="val ok">Read access</div></div>
+<div class="sec-item"><div class="label">AWS Keys</div><div class="val warn">Configured, unused</div></div>
+<div class="sec-item"><div class="label">Langfuse Key</div><div class="val ok">Observability</div></div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Security Recommendations <span class="badge">3 Pending</span></h2>
+<div class="sec-item" style="margin-bottom:8px">
+<div class="label" style="color:var(--yellow)">1. MFA Configuration (HIGH PRIORITY)</div>
+<div class="val" style="color:var(--muted);font-weight:400">Enable 2FA on Gmail, GitHub, Render, Vercel, Paystack, and Stripe accounts. Currently only password-protected.</div>
+</div>
+<div class="sec-item" style="margin-bottom:8px">
+<div class="label" style="color:var(--yellow)">2. NDPR Compliance Documentation</div>
+<div class="val" style="color:var(--muted);font-weight:400">Nigerian Data Protection Regulation compliance needed for platforms handling user data (MindCare, EduWealth, Health AI).</div>
+</div>
+<div class="sec-item">
+<div class="label" style="color:var(--blue)">3. Role-Based Access Control</div>
+<div class="val" style="color:var(--muted);font-weight:400">Currently owner-only access. As team grows, implement RBAC with admin, editor, and viewer roles.</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Backup & Recovery <span class="badge">Daily</span></h2>
+<div class="sec-grid">
+<div class="sec-item"><div class="label">Backup Schedule</div><div class="val ok">Daily 10PM WAT</div></div>
+<div class="sec-item"><div class="label">Backup Target</div><div class="val ok">GitHub repos</div></div>
+<div class="sec-item"><div class="label">Entities Backed Up</div><div class="val ok">90+ entities</div></div>
+<div class="sec-item"><div class="label">Recovery Method</div><div class="val ok">Git restore</div></div>
+<div class="sec-item"><div class="label">Last Backup</div><div class="val ok">Jul 17, 10PM</div></div>
+<div class="sec-item"><div class="label">Retention</div><div class="val ok">Indefinite (Git)</div></div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
+OMEGA Security Center — 37 Cyber Shield X Agents | 20 Secrets Vaulted | Built by Magani
+</div>
+
+</body>
+</html>

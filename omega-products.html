@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Product Division — Digital Products & Marketplaces</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+.header{padding:16px 0 24px}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted)}
+.nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{padding:8px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.8rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.nav a.active{background:rgba(0,212,170,.1);border-color:var(--accent);color:var(--accent)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat .num{font-size:1.6rem;font-weight:800}
+.stat .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat .sub{font-size:.65rem;color:var(--muted);margin-top:2px}
+.stat.green .num{color:var(--accent)}
+.stat.purple .num{color:var(--purple)}
+.stat.blue .num{color:var(--blue)}
+.stat.yellow .num{color:var(--yellow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(0,212,170,.15);color:var(--accent)}
+.product-item{background:#14141e;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.product-item .info .name{font-size:.8rem;font-weight:600}
+.product-item .info .meta{font-size:.65rem;color:var(--muted);margin-top:2px}
+.product-item .price{font-size:.85rem;font-weight:700;color:var(--accent)}
+.fin-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.85rem;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border:none}
+.fin-row .val{font-weight:600}
+.fin-row .val.pos{color:var(--accent)}
+.fin-row .val.pending{color:var(--yellow)}
+.tier-card{background:#14141e;border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.tier-card .tier-name{font-size:.8rem;font-weight:700;margin-bottom:8px}
+.tier-card .tier-price{font-size:1.2rem;font-weight:800;color:var(--accent)}
+.tier-card .tier-count{font-size:.7rem;color:var(--muted);margin-top:4px}
+.tier-card .tier-desc{font-size:.7rem;color:var(--muted);margin-top:6px}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>OMEGA Product Division</h1>
+<div class="sub">259 Digital Products | 3-Tier Pricing | Multi-Platform Distribution</div>
+</div>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander Dashboard</a>
+<a href="omega-executive.html">Executive AI</a>
+<a href="omega-products.html" class="active">Product Division</a>
+<a href="omega-deploy.html">Deployment Engine</a>
+<a href="omega-security.html">Security Center</a>
+<a href="tools.html">Tools Hub</a>
+</div>
+
+<div class="stats-row">
+<div class="stat green"><div class="num">259</div><div class="lbl">Total Products</div><div class="sub">171 NGN + 88 USD</div></div>
+<div class="stat purple"><div class="num">₦1.58M</div><div class="lbl">NGN Catalog Value</div><div class="sub">avg ₦9,222</div></div>
+<div class="stat blue"><div class="num">$264K</div><div class="lbl">USD Catalog Value</div><div class="sub">avg $3,005</div></div>
+<div class="stat yellow"><div class="num">20</div><div class="lbl">On Getly Store</div><div class="sub">224 queued</div></div>
+<div class="stat green"><div class="num">27</div><div class="lbl">Music Tracks</div><div class="sub">174K plays</div></div>
+<div class="stat purple"><div class="num">8</div><div class="lbl">Films</div><div class="sub">162K views</div></div>
+<div class="stat blue"><div class="num">12</div><div class="lbl">Courses</div><div class="sub">3 free, 9 paid</div></div>
+<div class="stat yellow"><div class="num">5</div><div class="lbl">Properties</div><div class="sub">₦582M listed</div></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Three-Tier Pricing Model <span class="badge">Active</span></h2>
+<div class="grid3">
+<div class="tier-card">
+<div class="tier-name">Front-End</div>
+<div class="tier-price">₦2K-5K</div>
+<div class="tier-count">~80 products</div>
+<div class="tier-desc">Micro-solutions, cheat sheets, mini-courses, AI prompts</div>
+</div>
+<div class="tier-card">
+<div class="tier-name">Mid-Tier</div>
+<div class="tier-price">₦5K-30K</div>
+<div class="tier-count">~90 products</div>
+<div class="tier-desc">Templates, UI kits, SOPs, data sets, workbooks</div>
+</div>
+<div class="tier-card">
+<div class="tier-name">Back-End</div>
+<div class="tier-price">₦15K-35K</div>
+<div class="tier-count">~89 products</div>
+<div class="tier-desc">Build guides, SaaS kits, business-in-a-box, memberships</div>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Distribution Channels <span class="badge">6 Active</span></h2>
+<div class="fin-row"><span>Getly Marketplace</span><span class="val pending">20/259 (API down)</span></div>
+<div class="fin-row"><span>HarzDM Website</span><span class="val pos">259 products listed</span></div>
+<div class="fin-row"><span>HarzMusic Platform</span><span class="val pos">27 tracks published</span></div>
+<div class="fin-row"><span>HarzFilm Platform</span><span class="val pos">8 films published</span></div>
+<div class="fin-row"><span>EduWealth Courses</span><span class="val pos">12 courses active</span></div>
+<div class="fin-row"><span>WhatsApp CRM</span><span class="val pos">Direct sales channel</span></div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Top Products (NGN) <span class="badge">Premium</span></h2>
+<div class="product-item">
+<div class="info"><div class="name">Payment Gateway Build Guide</div><div class="meta">Developer | Build Guide</div></div>
+<div class="price">₦30,000</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">ERP System Build Guide</div><div class="meta">Business | Build Guide</div></div>
+<div class="price">₦30,000</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">Multi-Currency Wallet System</div><div class="meta">FinTech | SaaS</div></div>
+<div class="price">₦25,000</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">AI Health Assistant Build</div><div class="meta">AI | SaaS</div></div>
+<div class="price">₦25,000</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">Online Course Platform Guide</div><div class="meta">Creator | Build Guide</div></div>
+<div class="price">₦25,000</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">React Masterclass (3 SaaS Apps)</div><div class="meta">Education | Course</div></div>
+<div class="price">₦35,000</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Top Products (USD) <span class="badge">International</span></h2>
+<div class="product-item">
+<div class="info"><div class="name">500 Angel Investors Database</div><div class="meta">Data | African Tech</div></div>
+<div class="price">$9,700</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">Start Digital Marketing Agency Kit</div><div class="meta">Business-in-a-Box</div></div>
+<div class="price">$9,700</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">Start Cybersecurity Consulting Kit</div><div class="meta">Business-in-a-Box</div></div>
+<div class="price">$9,700</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">Fintech Mobile App UI Kit (80+)</div><div class="meta">Design | Figma</div></div>
+<div class="price">$6,700</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">SaaS Dashboard UI Kit (50+)</div><div class="meta">Design | Figma</div></div>
+<div class="price">$6,700</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">1,000 SME Grants Database</div><div class="meta">Data | Nigeria</div></div>
+<div class="price">$6,700</div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Content Platforms <span class="badge">Live Data</span></h2>
+<div class="fin-row"><span>HarzMusic — Total Plays</span><span class="val pos">174,300</span></div>
+<div class="fin-row"><span>HarzMusic — Downloads</span><span class="val pos">4,310</span></div>
+<div class="fin-row"><span>HarzMusic — Artists</span><span class="val pos">10 (8 countries)</span></div>
+<div class="fin-row"><span>HarzMusic — Languages</span><span class="val pos">11</span></div>
+<div class="fin-row"><span>HarzFilm — Total Views</span><span class="val pos">162,500</span></div>
+<div class="fin-row"><span>HarzFilm — Creators</span><span class="val pos">5 (4 countries)</span></div>
+<div class="fin-row"><span>EduWealth — Courses</span><span class="val pos">12 (3 free)</span></div>
+<div class="fin-row"><span>EduWealth — Price Range</span><span class="val">₦8K-₦25K</span></div>
+<div class="fin-row"><span>EstateCity — Properties</span><span class="val pos">5 (₦582M)</span></div>
+</div>
+
+<div class="panel">
+<h2>Free Lead Magnets <span class="badge">3 Active</span></h2>
+<div class="product-item">
+<div class="info"><div class="name">10 AI Prompts for Nigerian Business</div><div class="meta">FREE | Lead magnet</div></div>
+<div class="price">FREE</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">Nigerian Business Registration Checklist</div><div class="meta">FREE | Lead magnet</div></div>
+<div class="price">FREE</div>
+</div>
+<div class="product-item">
+<div class="info"><div class="name">50 Digital Product Ideas for Nigerians</div><div class="meta">FREE | Lead magnet</div></div>
+<div class="price">FREE</div>
+</div>
+<div style="margin-top:12px;font-size:.75rem;color:var(--muted)">Lead magnets drive traffic to paid products via the value ladder: Free → $7-27 → $27-97 → $97+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Consultation Services <span class="badge">6 Slots</span></h2>
+<div class="fin-row"><span>AI Automation Strategy</span><span class="val pos">₦15,000</span></div>
+<div class="fin-row"><span>Business Strategy Session</span><span class="val pos">₦20,000</span></div>
+<div class="fin-row"><span>Tech Product Building</span><span class="val pos">₦25,000</span></div>
+<div class="fin-row"><span>Digital Marketing Masterclass</span><span class="val pos">₦10,000</span></div>
+<div class="fin-row"><span>Music & Film Distribution</span><span class="val pos">₦12,000</span></div>
+<div class="fin-row"><span>Monthly Retainer</span><span class="val pos">₦75,000/mo</span></div>
+</div>
+
+<div class="panel">
+<h2>Product Categories <span class="badge">33 Categories</span></h2>
+<div class="fin-row"><span>SaaS & Software</span><span class="val">35 products</span></div>
+<div class="fin-row"><span>Business-in-a-Box Kits</span><span class="val">8 products</span></div>
+<div class="fin-row"><span>Notion OS Templates</span><span class="val">10 products</span></div>
+<div class="fin-row"><span>UI/UX Kits (Figma)</span><span class="val">5 products</span></div>
+<div class="fin-row"><span>Data Databases</span><span class="val">5 products</span></div>
+<div class="fin-row"><span>Workbooks</span><span class="val">6 products</span></div>
+<div class="fin-row"><span>SOPs & Swipe Files</span><span class="val">8 products</span></div>
+<div class="fin-row"><span>Micro-Solutions (₦2K-5K)</span><span class="val">~80 products</span></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
+OMEGA Product Division — 259 products | ₦1.58M + $264K catalog | Built by Magani
+</div>
+
+</body>
+</html>
