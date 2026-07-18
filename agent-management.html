@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team & Agent Management — Harz Ecosystem</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1000px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:var(--accent)}
+.header p{font-size:.8rem;color:var(--muted);margin-top:4px}
+.nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.nav a{padding:6px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.75rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.stat .num{font-size:1.4rem;font-weight:800}
+.stat .lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.stat.green .num{color:var(--accent)}
+.stat.purple .num{color:var(--purple)}
+.stat.blue .num{color:var(--blue)}
+.stat.yellow .num{color:var(--yellow)}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(0,212,170,.15);color:var(--accent)}
+.div-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.div-card{background:#14141e;border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s}
+.div-card:hover{border-color:var(--accent)}
+.div-card .top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.div-card .icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.div-card .name{font-size:.9rem;font-weight:700}
+.div-card .agents{font-size:.7rem;color:var(--muted)}
+.div-card .health{font-size:.7rem;padding:3px 8px;border-radius:6px;font-weight:600}
+.health.online{background:rgba(0,212,170,.15);color:var(--accent)}
+.div-card .desc{font-size:.75rem;color:var(--muted);margin:8px 0}
+.div-card .tasks{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.div-card .task{font-size:.6rem;padding:3px 6px;border-radius:4px;background:rgba(30,30,46,.8);border:1px solid var(--border)}
+.fin-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.85rem;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border:none}
+.fin-row .val{font-weight:600}
+.fin-row .val.pos{color:var(--accent)}
+.fin-row .val.pending{color:var(--yellow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:768px){.grid2,.div-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Team & Agent Management</h1>
+<p>80+ AI agents across 8 divisions — organized by function</p>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander</a>
+<a href="omega-executive.html">Executive</a>
+<a href="tools.html">Tools Hub</a>
+</div>
+
+<div class="stats">
+<div class="stat green"><div class="num">80+</div><div class="lbl">Total Agents</div></div>
+<div class="stat purple"><div class="num">8</div><div class="lbl">Divisions</div></div>
+<div class="stat blue"><div class="num">18</div><div class="lbl">Executives</div></div>
+<div class="stat yellow"><div class="num">2</div><div class="lbl">Primary Bots</div></div>
+<div class="stat green"><div class="num">100%</div><div class="lbl">Online Rate</div></div>
+</div>
+
+<div class="panel">
+<h2>Agent Divisions <span class="badge">8 Active</span></h2>
+<div class="div-grid">
+<div class="div-card" onclick="location.href='omega-security.html'">
+<div class="top">
+<div class="icon" style="background:rgba(239,68,68,.15)">🛡️</div>
+<div style="flex:1"><div class="name">Cyber Shield X</div><div class="agents">37 agents</div></div>
+<div class="health online">ONLINE</div>
+</div>
+<div class="desc">Threat detection, vulnerability scanning, incident response, endpoint monitoring, compliance auditing</div>
+<div class="tasks"><span class="task">Threat Hunt</span><span class="task">Vuln Scan</span><span class="task">Incident Response</span><span class="task">Compliance</span></div>
+</div>
+<div class="div-card" onclick="location.href='omega-content.html'">
+<div class="top">
+<div class="icon" style="background:rgba(124,58,237,.15)">🎬</div>
+<div style="flex:1"><div class="name">OMEGA Content AI</div><div class="agents">25 agents</div></div>
+<div class="health online">ONLINE</div>
+</div>
+<div class="desc">Script generation, video editing, thumbnails, SEO, publishing, trend research, analytics</div>
+<div class="tasks"><span class="task">Scripts</span><span class="task">Video</span><span class="task">SEO</span><span class="task">Trends</span><span class="task">Publish</span></div>
+</div>
+<div class="div-card" onclick="location.href='omega-marketing.html'">
+<div class="top">
+<div class="icon" style="background:rgba(236,72,153,.15)">📢</div>
+<div style="flex:1"><div class="name">Marketing Division</div><div class="agents">25 agents</div></div>
+<div class="health online">ONLINE</div>
+</div>
+<div class="desc">Social media management, campaign optimization, promo rotation, funnel management</div>
+<div class="tasks"><span class="task">FB Posts</span><span class="task">YouTube</span><span class="task">Promos</span><span class="task">Funnel</span></div>
+</div>
+<div class="div-card">
+<div class="top">
+<div class="icon" style="background:rgba(59,130,246,.15)">📚</div>
+<div style="flex:1"><div class="name">EduWealth AI</div><div class="agents">18 agents</div></div>
+<div class="health online">ONLINE</div>
+</div>
+<div class="desc">Course management, assessments, career guidance, live classes, student support</div>
+<div class="tasks"><span class="task">Courses</span><span class="task">Assess</span><span class="task">Career</span><span class="task">Live Class</span></div>
+</div>
+<div class="div-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">🏥</div>
+<div style="flex:1"><div class="name">OMEGA Health AI</div><div class="agents">18 agents</div></div>
+<div class="health online">ONLINE</div>
+</div>
+<div class="desc">Health profiles, vitals monitoring, medication management, appointments, wearables</div>
+<div class="tasks"><span class="task">Vitals</span><span class="task">Meds</span><span class="task">Appointments</span><span class="task">Wearables</span></div>
+</div>
+<div class="div-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">🧠</div>
+<div style="flex:1"><div class="name">MindCare AI</div><div class="agents">7 agents</div></div>
+<div class="health online">ONLINE</div>
+</div>
+<div class="desc">Mood tracking, therapy exercises, meditation, crisis alerts, wellness goals</div>
+<div class="tasks"><span class="task">Mood</span><span class="task">Therapy</span><span class="task">Meditation</span><span class="task">Crisis</span></div>
+</div>
+<div class="div-card">
+<div class="top">
+<div class="icon" style="background:rgba(245,158,11,.15)">🤖</div>
+<div style="flex:1"><div class="name">Maganu AI</div><div class="agents">v7.8.0 — 510 cmds</div></div>
+<div class="health online">ONLINE</div>
+</div>
+<div class="desc">Primary Telegram bot — full ecosystem CRUD, payments, scheduling, email, calendar</div>
+<div class="tasks"><span class="task">Telegram</span><span class="task">Payments</span><span class="task">CRUD</span><span class="task">Email</span></div>
+</div>
+<div class="div-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">🧙</div>
+<div style="flex:1"><div class="name">Magani (Base44)</div><div class="agents">Superagent</div></div>
+<div class="health online">ONLINE</div>
+</div>
+<div class="desc">Primary WhatsApp agent — Gmail, Calendar, CRM, automations, builds, tools</div>
+<div class="tasks"><span class="task">WhatsApp</span><span class="task">Gmail</span><span class="task">CRM</span><span class="task">Builds</span><span class="task">Automations</span></div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Agent Hierarchy <span class="badge">18 Executives</span></h2>
+<div class="fin-row"><span>Tier 1 — CEO</span><span class="val pos">Magani (Base44)</span></div>
+<div class="fin-row"><span>Tier 2 — Director</span><span class="val pos">Strategy, Ops, Finance, Marketing</span></div>
+<div class="fin-row"><span>Tier 2 — Director</span><span class="val pos">Sales, Customer Success, Product</span></div>
+<div class="fin-row"><span>Tier 2 — Director</span><span class="val pos">Security, Automation, Deployment</span></div>
+<div class="fin-row"><span>Tier 2 — Director</span><span class="val pos">QA, Knowledge, Memory, Analytics</span></div>
+<div class="fin-row"><span>Tier 2 — Director</span><span class="val pos">Legal & Compliance</span></div>
+<div class="fin-row"><span>Tier 3 — Planned</span><span class="val pending">HR Manager</span></div>
+<div class="fin-row"><span>Tier 4 — Workers</span><span class="val pos">62 specialized agents</span></div>
+</div>
+<div class="panel">
+<h2>Agent Performance <span class="badge">24h Stats</span></h2>
+<div class="fin-row"><span>Maganu Commands Available</span><span class="val pos">510</span></div>
+<div class="fin-row"><span>Maganu Uptime (24h)</span><span class="val pos">99.2%</span></div>
+<div class="fin-row"><span>Keep-Alive Pings</span><span class="val pos">68 (0 fail)</span></div>
+<div class="fin-row"><span>Email Monitor Runs</span><span class="val pos">17</span></div>
+<div class="fin-row"><span>Total Automation Runs</span><span class="val pos">95</span></div>
+<div class="fin-row"><span>Automation Success Rate</span><span class="val pos">100%</span></div>
+<div class="fin-row"><span>Magani Tool Calls/Day</span><span class="val pos">~50+</span></div>
+<div class="fin-row"><span>Backend Functions</span><span class="val pos">16+ deployed</span></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.7rem">
+Harz Digital Services — RC 321424 | Team & Agent Management | Built by Magani
+</div>
+
+</body>
+</html>

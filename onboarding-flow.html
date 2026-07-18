@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Onboarding Flow — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:700px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.step-flow{display:flex;gap:4px;margin-bottom:24px;flex-wrap:wrap}
+.step{flex:1;min-width:80px;text-align:center;padding:10px 4px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#6b6b80;cursor:pointer;transition:all .2s;position:relative}
+.step.active{background:rgba(0,212,170,.1);border-color:#00d4aa;color:#00d4aa}
+.step.done{background:rgba(0,212,170,.05);border-color:rgba(0,212,170,.3);color:#00d4aa}
+.step .num{font-size:1rem;font-weight:800;display:block}
+.step .lbl{font-size:.6rem;margin-top:2px}
+.step .arrow{position:absolute;right:-6px;top:50%;transform:translateY(-50%);color:#1e1e2e}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:24px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem;font-family:inherit}
+.input-group textarea{min-height:50px;resize:vertical}
+.btn{padding:12px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn.next{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.btn.back{background:#14141e;border:1px solid #1e1e2e;color:#6b6b80}
+.btn-group{display:flex;gap:8px;margin-top:16px}
+.service-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.service-item{background:#14141e;border:1px solid #1e1e2e;border-radius:10px;padding:12px;cursor:pointer;transition:all .2s}
+.service-item:hover{border-color:#00d4aa}
+.service-item.selected{border-color:#00d4aa;background:rgba(0,212,170,.05)}
+.service-item .name{font-size:.85rem;font-weight:600}
+.service-item .price{font-size:.8rem;color:#00d4aa;margin-top:2px}
+.service-item .desc{font-size:.7rem;color:#6b6b80;margin-top:4px}
+.summary{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:16px;margin-top:16px}
+.summary h3{font-size:.8rem;color:#00d4aa;margin-bottom:8px}
+.summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid #1e1e2e}
+.summary-row:last-child{border:none}
+.summary-row .val{font-weight:600;color:#00d4aa}
+.progress{height:4px;background:#1e1e2e;border-radius:2px;margin-bottom:16px;overflow:hidden}
+.progress .fill{height:100%;background:linear-gradient(90deg,#00d4aa,#7c3aed);transition:width .3s}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header">
+<h1>Customer Onboarding Flow</h1>
+<p>5-step customer journey — from inquiry to delivery</p>
+</div>
+
+<div class="progress"><div class="fill" id="progressBar" style="width:20%"></div></div>
+
+<div class="step-flow" id="stepFlow">
+<div class="step active" onclick="goToStep(0)"><span class="num">1</span><span class="lbl">Welcome</span></div>
+<div class="step" onclick="goToStep(1)"><span class="num">2</span><span class="lbl">Needs</span></div>
+<div class="step" onclick="goToStep(2)"><span class="num">3</span><span class="lbl">Select</span></div>
+<div class="step" onclick="goToStep(3)"><span class="num">4</span><span class="lbl">Payment</span></div>
+<div class="step" onclick="goToStep(4)"><span class="num">5</span><span class="lbl">Delivery</span></div>
+</div>
+
+<div id="stepContent"></div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Onboarding System
+</div>
+
+<script>
+var currentStep=0;
+var customer={name:'',phone:'',email:'',interest:'',service:'',price:0,paymentMethod:'',deliveryDate:''};
+
+var services=[
+{name:"AI Automation Strategy",price:15000,desc:"1-hour consultation on automating your business"},
+{name:"Business Strategy Session",price:20000,desc:"Comprehensive business growth planning"},
+{name:"Tech Product Building",price:25000,desc:"Build your tech product with expert guidance"},
+{name:"Digital Marketing Masterclass",price:10000,desc:"Complete digital marketing training"},
+{name:"Music & Film Distribution",price:12000,desc:"Get your music/film on HarzMusic/HarzFilm"},
+{name:"Monthly Retainer",price:75000,desc:"Ongoing AI automation + support (monthly)"},
+{name:"Digital Product (Micro)",price:5000,desc:"₦2K-5K digital tools and cheat sheets"},
+{name:"Digital Product (Template)",price:15000,desc:"₦5K-30K templates, SOPs, and kits"},
+{name:"Digital Product (Build Guide)",price:25000,desc:"₦15K-35K comprehensive build guides"},
+{name:"Free Consultation",price:0,desc:"15-min discovery call — no charge"}
+];
+
+function renderStep(){
+var steps=document.querySelectorAll('.step');
+steps.forEach(function(s,i){s.classList.remove('active','done');if(i<currentStep)s.classList.add('done');if(i===currentStep)s.classList.add('active')});
+document.getElementById('progressBar').style.width=((currentStep+1)/5*100)+'%';
+
+var html='';
+if(currentStep===0){
+html='<div class="card"><h2>Welcome to Harz Digital Services</h2><p style="font-size:.85rem;line-height:1.6;color:#c8c8d0;margin-bottom:16px">Hi! 👋 We help Nigerian businesses grow with AI automation, digital products, and tech solutions. This 5-step process will match you with the right service and get you started quickly.</p><div class="input-group"><label>Full Name</label><input type="text" id="cName" placeholder="Your name" value="'+customer.name+'"></div><div class="input-group"><label>WhatsApp Number</label><input type="tel" id="cPhone" placeholder="080..." value="'+customer.phone+'"></div><div class="input-group"><label>Email (optional)</label><input type="email" id="cEmail" placeholder="you@example.com" value="'+customer.email+'"></div><div class="btn-group"><button class="btn next" onclick="saveAndNext(0)">Continue →</button></div></div>';
+}else if(currentStep===1){
+html='<div class="card"><h2>What do you need?</h2><div class="input-group"><label>Your Interest</label><select id="cInterest"><option value="">Select your primary need</option><option value="automation">AI Automation for my business</option><option value="digital">Buy digital products</option><option value="consulting">Business consulting</option><option value="music">Music distribution</option><option value="film">Film distribution</option><option value="courses">Online courses</option><option value="estate">Real estate services</option><option value="custom">Custom tech project</option><option value="support">Technical support</option></select></div><div class="input-group"><label>Tell us more (optional)</label><textarea id="cDetails" placeholder="Describe your project or need..."></textarea></div><div class="btn-group"><button class="btn back" onclick="currentStep--;renderStep()">← Back</button><button class="btn next" onclick="saveAndNext(1)">Continue →</button></div></div>';
+}else if(currentStep===2){
+html='<div class="card"><h2>Select a Service</h2><div class="service-grid" id="serviceGrid">'+services.map(function(s,i){return '<div class="service-item" onclick="selectService('+i+')" id="svc-'+i+'"><div class="name">'+s.name+'</div><div class="price">'+(s.price===0?'FREE':'₦'+s.price.toLocaleString())+'</div><div class="desc">'+s.desc+'</div></div>'}).join('')+'</div><div class="btn-group"><button class="btn back" onclick="currentStep--;renderStep()">← Back</button><button class="btn next" onclick="saveAndNext(2)">Continue →</button></div></div>';
+}else if(currentStep===3){
+html='<div class="card"><h2>Payment Method</h2><div class="input-group"><label>How would you like to pay?</label><select id="cPayment"><option value="bank">Bank Transfer (UBA 2034326424)</option><option value="paystack">Card Payment (Paystack)</option><option value="usdt">USDT TRC20 (Getly)</option><option value="stripe">International Card (Stripe USD)</option><option value="cash">Cash / In-person</option></select></div><div class="input-group"><label>Preferred Date</label><input type="date" id="cDate"></div><div class="summary"><h3>Order Summary</h3><div class="summary-row"><span>Customer</span><span class="val" id="sumName">'+customer.name+'</span></div><div class="summary-row"><span>Service</span><span class="val" id="sumService">'+customer.service+'</span></div><div class="summary-row"><span>Price</span><span class="val" id="sumPrice">'+(customer.price===0?'FREE':'₦'+customer.price.toLocaleString())+'</span></div></div><div class="btn-group"><button class="btn back" onclick="currentStep--;renderStep()">← Back</button><button class="btn next" onclick="saveAndNext(3)">Continue →</button></div></div>';
+}else if(currentStep===4){
+html='<div class="card"><h2>🎉 Onboarding Complete!</h2><p style="font-size:.85rem;line-height:1.6;color:#c8c8d0;margin-bottom:16px">Your request has been recorded. Here is what happens next:</p><div style="background:#14141e;border-radius:10px;padding:16px;margin-bottom:16px"><div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1e1e2e"><span style="font-size:1.2rem">1.</span><div><div style="font-size:.85rem;font-weight:600">Immediate WhatsApp Confirmation</div><div style="font-size:.75rem;color:#6b6b80">You\'ll get a message on WhatsApp within 15 minutes</div></div></div><div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1e1e2e"><span style="font-size:1.2rem">2.</span><div><div style="font-size:.85rem;font-weight:600">Payment Instructions</div><div style="font-size:.75rem;color:#6b6b80">Bank transfer or payment link sent to your phone</div></div></div><div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1e1e2e"><span style="font-size:1.2rem">3.</span><div><div style="font-size:.85rem;font-weight:600">Service Delivery</div><div style="font-size:.75rem;color:#6b6b80">Product download link or consultation scheduled</div></div></div><div style="display:flex;gap:10px;padding:8px 0"><span style="font-size:1.2rem">4.</span><div><div style="font-size:.85rem;font-weight:600">Follow-up Support</div><div style="font-size:.75rem;color:#6b6b80">Free support via WhatsApp after delivery</div></div></div></div><div class="summary"><h3>Your Details</h3><div class="summary-row"><span>Name</span><span class="val">'+customer.name+'</span></div><div class="summary-row"><span>Phone</span><span class="val">'+customer.phone+'</span></div><div class="summary-row"><span>Service</span><span class="val">'+customer.service+'</span></div><div class="summary-row"><span>Price</span><span class="val">'+(customer.price===0?'FREE':'₦'+customer.price.toLocaleString())+'</span></div><div class="summary-row"><span>Payment</span><span class="val">'+customer.paymentMethod+'</span></div></div><div class="btn-group"><button class="btn back" onclick="currentStep--;renderStep()">← Back</button><button class="btn next" onclick="alert(\'Onboarding submitted! Check your WhatsApp for confirmation.\')">Submit ✓</button></div></div>';
+}
+document.getElementById('stepContent').innerHTML=html;
+}
+
+function saveAndNext(step){
+if(step===0){customer.name=document.getElementById('cName').value;customer.phone=document.getElementById('cPhone').value;customer.email=document.getElementById('cEmail').value;if(!customer.name||!customer.phone){alert('Please enter your name and phone number');return}}
+if(step===1){customer.interest=document.getElementById('cInterest').value}
+if(step===2){if(!customer.service){alert('Please select a service');return}}
+if(step===3){customer.paymentMethod=document.getElementById('cPayment').value;customer.deliveryDate=document.getElementById('cDate').value;var sel=document.getElementById('cPayment');customer.paymentMethod=sel.options[sel.selectedIndex].text}
+currentStep++;
+renderStep();
+}
+
+function selectService(i){
+document.querySelectorAll('.service-item').forEach(function(e){e.classList.remove('selected')});
+document.getElementById('svc-'+i).classList.add('selected');
+customer.service=services[i].name;
+customer.price=services[i].price;
+}
+
+function goToStep(s){if(s<=currentStep+1){currentStep=s;renderStep()}}
+
+renderStep();
+</script>
+</body>
+</html>

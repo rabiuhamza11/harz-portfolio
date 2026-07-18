@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Content Calendar — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:1000px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:#ec4899}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.controls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.btn{padding:10px 16px;border-radius:8px;border:1px solid #ec4899;background:rgba(236,72,153,.1);color:#ec4899;font-size:.85rem;cursor:pointer}
+.btn.gen{background:linear-gradient(135deg,#ec4899,#7c3aed);color:#fff;border:none}
+.calendar{display:grid;grid-template-columns:60px repeat(7,1fr);gap:4px;margin-bottom:16px}
+.cal-header{text-align:center;font-size:.7rem;color:#6b6b80;padding:8px 4px;text-transform:uppercase;font-weight:600}
+.cal-time{text-align:right;font-size:.7rem;color:#6b6b80;padding:8px 4px}
+.cal-slot{background:#0e0e16;border:1px solid #1e1e2e;border-radius:6px;padding:6px;min-height:50px;font-size:.65rem;cursor:pointer;transition:all .2s}
+.cal-slot:hover{border-color:#ec4899}
+.cal-slot.filled{background:rgba(236,72,153,.08);border-color:rgba(236,72,153,.3)}
+.cal-slot .platform{font-weight:600;color:#ec4899}
+.cal-slot .content{color:#c8c8d0;margin-top:2px}
+.post-card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;padding:16px;margin-bottom:10px}
+.post-card .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.post-card .platform-tag{font-size:.7rem;padding:3px 8px;border-radius:6px;font-weight:600}
+.tag-yt{background:rgba(255,0,0,.15);color:#ff0000}
+.tag-fb{background:rgba(59,130,246,.15);color:#3b82f6}
+.tag-ig{background:rgba(236,72,153,.15);color:#ec4899}
+.tag-tt{background:rgba(20,20,30,.5);color:#fff}
+.tag-x{background:rgba(20,20,30,.5);color:#e8e8f0}
+.tag-wa{background:rgba(37,211,102,.15);color:#25d366}
+.post-card .time{font-size:.75rem;color:#6b6b80}
+.post-card .content{font-size:.85rem;margin:8px 0}
+.post-card .hashtags{font-size:.7rem;color:#7c3aed;margin-top:6px}
+.stats{display:flex;gap:12px;margin-bottom:16px}
+.stat{background:#0e0e16;border:1px solid #1e1e2e;border-radius:10px;padding:12px;flex:1;text-align:center}
+.stat .num{font-size:1.2rem;font-weight:800;color:#ec4899}
+.stat .lbl{font-size:.65rem;color:#6b6b80;text-transform:uppercase}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group select{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header">
+<h1>Social Media Content Calendar</h1>
+<p>Weekly schedule generator for all platforms</p>
+</div>
+
+<div class="stats">
+<div class="stat"><div class="num" id="postCount">0</div><div class="lbl">Posts This Week</div></div>
+<div class="stat"><div class="num">5</div><div class="lbl">Platforms</div></div>
+<div class="stat"><div class="num">7</div><div class="lbl">Days/Week</div></div>
+<div class="stat"><div class="num">3</div><div class="lbl">Posts/Day</div></div>
+</div>
+
+<div class="controls">
+<div class="input-group" style="flex:1">
+<label>Content Focus</label>
+<select id="contentFocus">
+<option value="products">Digital Products (259 catalog)</option>
+<option value="music">HarzMusic (27 tracks)</option>
+<option value="film">HarzFilm (8 films)</option>
+<option value="courses">EduWealth (12 courses)</option>
+<option value="estate">Estate Properties (5 listings)</option>
+<option value="tools">Free Tools & Calculators</option>
+<option value="business">Business Services & Consulting</option>
+<option value="mixed">Mixed (rotate all)</option>
+</select>
+</div>
+<button class="btn gen" onclick="generateCalendar()">Generate Week</button>
+</div>
+
+<div id="calendarSection" style="display:none">
+<div class="calendar" id="calGrid"></div>
+<div id="postList"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Content Calendar Generator
+</div>
+
+<script>
+var platforms=[
+{name:"YouTube",tag:"yt",color:"rgba(255,0,0,.15)"},
+{name:"Facebook",tag:"fb",color:"rgba(59,130,246,.15)"},
+{name:"Instagram",tag:"ig",color:"rgba(236,72,153,.15)"},
+{name:"TikTok",tag:"tt",color:"rgba(20,20,30,.5)"},
+{name:"WhatsApp",tag:"wa",color:"rgba(37,211,102,.15)"}
+];
+
+var contentTemplates={
+products:[
+{platform:"WhatsApp",time:"7:00 AM",content:"Daily chapter from Genius 365 — personal growth tip",tags:"#Genius365 #PersonalGrowth"},
+{platform:"WhatsApp",time:"12:00 PM",content:"Product spotlight: [Rotating product from 259 catalog] — link + price + benefits",tags:"#HarzDM #DigitalProducts"},
+{platform:"Facebook",time:"9:00 AM",content:"How this digital product helps Nigerian businesses grow 📈 — case study post",tags:"#DigitalProducts #NigeriaBusiness"},
+{platform:"YouTube",time:"3:00 PM",content:"Build a SaaS app in 30 minutes — tutorial demo",tags:"#Tutorial #SaaS #Coding"},
+{platform:"Instagram",time:"6:00 PM",content:"Product carousel: 5 tools every Nigerian entrepreneur needs",tags:"#Entrepreneur #Nigeria #Tools"}
+],
+music:[
+{platform:"WhatsApp",time:"12:00 PM",content:"🎵 New track spotlight: [Rotating track] — listen now on HarzMusic",tags:"#HarzMusic #NewMusic"},
+{platform:"Facebook",time:"9:00 AM",content:"Artist of the week — bio, top tracks, and culture story",tags:"#HarzMusic #Artist"},
+{platform:"YouTube",time:"3:00 PM",content:"Music video premiere or lyric video",tags:"#Music #HarzMusic"},
+{platform:"Instagram",time:"6:00 PM",content:"Album art + behind the scenes story",tags:"#NewMusic #BehindTheScenes"},
+{platform:"TikTok",time:"8:00 PM",content:"30-sec snippet challenge",tags:"#MusicChallenge #Trending"}
+],
+film:[
+{platform:"WhatsApp",time:"12:00 PM",content:"🎬 Featured film: [Rotating film] — watch trailer + rent/buy link",tags:"#HarzFilm #Nollywood"},
+{platform:"Facebook",time:"9:00 AM",content:"Director spotlight — creator story + filmography",tags:"#HarzFilm #Filmmaker"},
+{platform:"YouTube",time:"3:00 PM",content:"Trailer release or behind-the-scenes documentary",tags:"#Trailer #HarzFilm"},
+{platform:"Instagram",time:"6:00 PM",content:"Poster reveal + cast spotlight",tags:"#Film #Nollywood"},
+{platform:"TikTok",time:"8:00 PM",content:"Best scene clip — 30 sec hook",tags:"#FilmClip #Nollywood"}
+],
+courses:[
+{platform:"WhatsApp",time:"7:00 AM",content:"📚 Free lesson from [course] — daily learning tip",tags:"#EduWealth #Learning"},
+{platform:"WhatsApp",time:"12:00 PM",content:"Course spotlight: [Rotating course] — syllabus + price + enrollment link",tags:"#EduWealth #OnlineCourse"},
+{platform:"Facebook",time:"9:00 AM",content:"Student success story — from enrollment to completion",tags:"#EduWealth #Success"},
+{platform:"YouTube",time:"3:00 PM",content:"Free preview lesson from a paid course",tags:"#FreeLesson #Education"},
+{platform:"Instagram",time:"6:00 PM",content:"Certificate showcase — graduate highlights",tags:"#Certificate #Learning"}
+],
+estate:[
+{platform:"WhatsApp",time:"12:00 PM",content:"🏠 Property of the week: [Rotating property] — price + location + features",tags:"#AbujaEstate #RealEstate"},
+{platform:"Facebook",time:"9:00 AM",content:"Market insight: Abuja real estate trends and investment tips",tags:"#RealEstate #Abuja"},
+{platform:"YouTube",time:"3:00 PM",content:"Property walkthrough video tour",tags:"#PropertyTour #RealEstate"},
+{platform:"Instagram",time:"6:00 PM",content:"Property photo carousel — interior + exterior showcase",tags:"#RealEstate #Abuja"},
+{platform:"TikTok",time:"8:00 PM",content:"Quick property highlight — 30 sec reel",tags:"#Property #RealEstateNigeria"}
+],
+tools:[
+{platform:"WhatsApp",time:"12:00 PM",content:"🛠️ Free tool spotlight: Tax Calculator / Invoice Generator / ROI Calculator — link",tags:"#FreeTools #BusinessTools"},
+{platform:"Facebook",time:"9:00 AM",content:"How to calculate Nigerian VAT in 30 seconds — free tool",tags:"#FreeTool #VAT"},
+{platform:"YouTube",time:"3:00 PM",content:"Demo: Using the Business Plan Generator",tags:"#BusinessPlan #ToolDemo"},
+{platform:"Instagram",time:"6:00 PM",content:"Swipe to see all 9 free business tools",tags:"#BusinessTools #Free"},
+{platform:"TikTok",time:"8:00 PM",content:"30-sec: Generate a business plan in 1 click",tags:"#BusinessPlan #Tool"}
+],
+business:[
+{platform:"WhatsApp",time:"12:00 PM",content:"💼 Consultation available: [Rotating service] — book your session",tags:"#Consulting #HarzDigital"},
+{platform:"Facebook",time:"9:00 AM",content:"How AI automation transformed this Nigerian business — case study",tags:"#AIAutomation #Nigeria"},
+{platform:"YouTube",time:"3:00 PM",content:"Live Q&A: Building digital products for the Nigerian market",tags:"#QandA #DigitalProducts"},
+{platform:"Instagram",time:"6:00 PM",content:"Behind the scenes: Building 24 platforms with AI",tags:"#BuildingInPublic #AI"},
+{platform:"TikTok",time:"8:00 PM",content:"30-sec: Why your business needs AI automation",tags:"#AIAutomation #BusinessTips"}
+],
+mixed:[
+{platform:"WhatsApp",time:"7:00 AM",content:"Daily Genius 365 chapter — personal growth",tags:"#Genius365"},
+{platform:"WhatsApp",time:"12:00 PM",content:"Rotating promo: products → music → film → courses → estate",tags:"#HarzEcosystem"},
+{platform:"Facebook",time:"9:00 AM",content:"Rotating: case study / artist / filmmaker / student / property",tags:"#HarzEcosystem"},
+{platform:"YouTube",time:"3:00 PM",content:"Rotating: tutorial / music video / trailer / lesson / tour",tags:"#HarzContent"},
+{platform:"Instagram",time:"6:00 PM",content:"Rotating: carousel / poster / certificate / property / BTS",tags:"#HarzEcosystem"}
+]
+};
+
+var days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+function generateCalendar(){
+var focus=document.getElementById('contentFocus').value;
+var templates=contentTemplates[focus]||contentTemplates.mixed;
+var posts=[];
+
+// Generate 7 days x posts
+for(var d=0;d<7;d++){
+templates.forEach(function(t,i){
+var platIdx=i%templates.length;
+posts.push({
+day:days[d],
+dayIdx:d,
+platform:t.platform,
+time:t.time,
+content:t.content,
+tags:t.tags,
+tagClass:getTagClass(t.platform)
+});
+});
+}
+
+document.getElementById('postCount').textContent=posts.length;
+
+// Render calendar grid
+var grid='<div class="cal-header"></div>';
+days.forEach(function(day){grid+='<div class="cal-header">'+day+'</div>'});
+
+var times=["7:00 AM","9:00 AM","12:00 PM","3:00 PM","6:00 PM","8:00 PM"];
+times.forEach(function(time){
+grid+='<div class="cal-time">'+time+'</div>';
+days.forEach(function(day){
+var slot=posts.find(function(p){return p.day===day&&p.time===time});
+if(slot){
+grid+='<div class="cal-slot filled"><div class="platform">'+slot.platform+'</div><div class="content">'+slot.content.substring(0,40)+'...</div></div>';
+}else{
+grid+='<div class="cal-slot"></div>';
+}
+});
+});
+document.getElementById('calGrid').innerHTML=grid;
+
+// Render post list
+var html='';
+var currentDay='';
+posts.forEach(function(p){
+if(p.day!==currentDay){currentDay=p.day;html+='<div style="margin:16px 0 8px;font-size:.85rem;color:#7c3aed;font-weight:600;text-transform:uppercase">'+p.day+'</div>'}
+html+='<div class="post-card"><div class="top"><span class="platform-tag '+p.tagClass+'">'+p.platform+'</span><span class="time">'+p.day+' '+p.time+'</span></div><div class="content">'+p.content+'</div><div class="hashtags">'+p.tags+'</div></div>';
+});
+document.getElementById('postList').innerHTML=html;
+
+document.getElementById('calendarSection').style.display='block';
+}
+
+function getTagClass(platform){
+var map={YouTube:'tag-yt',Facebook:'tag-fb',Instagram:'tag-ig',TikTok:'tag-tt',WhatsApp:'tag-wa','X (Twitter)':'tag-x'};
+return map[platform]||'tag-fb';
+}
+</script>
+</body>
+</html>
