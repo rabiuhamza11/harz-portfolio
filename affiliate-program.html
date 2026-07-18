@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Affiliate Program — Earn 20% Commission</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--muted:#6b6b80;--text:#e8e8f0}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:800px;margin:0 auto}
+.header{text-align:center;padding:30px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.header p{font-size:.85rem;color:var(--muted);max-width:400px;margin:0 auto}
+.commission-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+.comm-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center}
+.comm-card .percent{font-size:2rem;font-weight:800;color:var(--accent)}
+.comm-card .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.comm-card .desc{font-size:.75rem;color:var(--muted);margin-top:6px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.howto{display:flex;gap:12px;margin-bottom:8px}
+.howto .num{width:32px;height:32px;border-radius:50%;background:rgba(0,212,170,.15);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0}
+.howto .info{padding-top:4px}
+.howto .info .title{font-size:.85rem;font-weight:600}
+.howto .info .desc{font-size:.75rem;color:var(--muted);margin-top:2px}
+.earnings-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:8px}
+.earnings-table th{text-align:left;padding:8px;border-bottom:1px solid var(--border);color:var(--muted);font-size:.7rem;text-transform:uppercase}
+.earnings-table td{padding:8px;border-bottom:1px solid rgba(30,30,46,.5)}
+.earnings-table .green{color:var(--accent);font-weight:700}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.form-group input{width:100%;padding:12px;background:#14141e;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.9rem}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:12px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer}
+.ref-link{margin-top:16px;padding:14px;background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;display:none}
+.ref-link.show{display:block}
+.ref-link .lbl{font-size:.7rem;color:var(--muted);margin-bottom:6px}
+.ref-link .link{font-size:.8rem;color:var(--accent);word-break:break-all;padding:8px;background:var(--bg);border-radius:8px;cursor:pointer}
+.wa-btn{display:inline-block;margin-top:12px;padding:10px 24px;background:#25d366;color:#fff;border-radius:10px;text-decoration:none;font-size:.85rem;font-weight:600}
+@media(max-width:768px){.commission-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Harz Affiliate Program</h1>
+<p>Earn 20% commission on every sale. 259 products. No minimum payout.</p>
+</div>
+
+<div class="commission-grid">
+<div class="comm-card"><div class="percent">20%</div><div class="lbl">Standard Commission</div><div class="desc">On every product sale</div></div>
+<div class="comm-card"><div class="percent">₦7,000</div><div class="lbl">Max Commission/Sale</div><div class="desc">From ₦35K products</div></div>
+<div class="comm-card"><div class="percent">₦1,500</div><div class="lbl">Min Commission/Sale</div><div class="desc">From ₦2K products</div></div>
+</div>
+
+<div class="card">
+<h2>How It Works</h2>
+<div class="howto"><div class="num">1</div><div class="info"><div class="title">Sign Up</div><div class="desc">Register with your name and WhatsApp number. Get your unique referral link instantly.</div></div></div>
+<div class="howto"><div class="num">2</div><div class="info"><div class="title">Share Your Link</div><div class="desc">Post on WhatsApp, Facebook, Instagram, TikTok, or anywhere. 259 products to promote.</div></div></div>
+<div class="howto"><div class="num">3</div><div class="info"><div class="title">Customer Buys</div><div class="desc">When someone buys through your link, the sale is tracked to you automatically.</div></div></div>
+<div class="howto"><div class="num">4</div><div class="info"><div class="title">Get Paid</div><div class="desc">Earn 20% commission. Paid via bank transfer or USDT. No minimum payout threshold.</div></div></div>
+</div>
+
+<div class="card">
+<h2>Register as Affiliate</h2>
+<div class="form-group"><label>Full Name</label><input type="text" id="affName" placeholder="Your name"></div>
+<div class="form-group"><label>WhatsApp Number</label><input type="tel" id="affPhone" placeholder="080..."></div>
+<div class="form-group"><label>Email (optional)</label><input type="email" id="affEmail" placeholder="you@example.com"></div>
+<div class="form-group"><label>How will you promote? (optional)</label><input type="text" id="affMethod" placeholder="e.g. WhatsApp groups, Facebook, TikTok"></div>
+<button class="btn" onclick="registerAffiliate()">Get My Referral Link →</button>
+
+<div class="ref-link" id="refLink">
+<div class="lbl">Your unique referral link (tap to copy):</div>
+<div class="link" id="refUrl" onclick="copyLink()">https://rabiuhamza11.github.io/harz-portfolio/harz-store.html?ref=YOUR_CODE</div>
+<a href="https://wa.me/2348028687857?text=Hi%20Harz,%20I%20just%20registered%20as%20an%20affiliate.%20Here%20are%20my%20details..." class="wa-btn">💬 Confirm on WhatsApp</a>
+</div>
+</div>
+
+<div class="card">
+<h2>Sample Earnings</h2>
+<table class="earnings-table">
+<tr><th>Product</th><th>Price</th><th>Your Commission (20%)</th></tr>
+<tr><td>AI Prompts for Business</td><td>₦5,000</td><td class="green">₦1,000</td></tr>
+<tr><td>SaaS UI Kit</td><td>$67</td><td class="green">$13.40 (~₦20K)</td></tr>
+<tr><td>Payment Gateway Guide</td><td>₦30,000</td><td class="green">₦6,000</td></tr>
+<tr><td>ERP Build Guide</td><td>₦30,000</td><td class="green">₦6,000</td></tr>
+<tr><td>React Masterclass</td><td>₦35,000</td><td class="green">₦7,000</td></tr>
+<tr><td>Investor Database</td><td>$97</td><td class="green">$19.40 (~₦29K)</td></tr>
+</table>
+<div style="margin-top:12px;font-size:.75rem;color:var(--muted)">Sell just 5 premium products/month = ₦30K+ in commission. No cap on earnings.</div>
+</div>
+
+<div class="card">
+<h2>Why Join?</h2>
+<div class="howto"><div class="num">✓</div><div class="info"><div class="title">259 Products to Promote</div><div class="desc">From ₦2K to ₦35K — something for everyone</div></div></div>
+<div class="howto"><div class="num">✓</div><div class="info"><div class="title">No Minimum Payout</div><div class="desc">Get paid per sale via bank transfer or USDT</div></div></div>
+<div class="howto"><div class="num">✓</div><div class="info"><div class="title">Real-Time Tracking</div><div class="desc">See your clicks and sales in your dashboard</div></div></div>
+<div class="howto"><div class="num">✓</div><div class="info"><div class="title">CAC Registered Business</div><div class="desc">RC 321424 — trusted and legitimate</div></div></div>
+<div class="howto"><div class="num">✓</div><div class="info"><div class="title">Marketing Materials</div><div class="desc">Pre-made promo images, captions, and links</div></div></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.7rem">
+Harz Digital Services — RC 321424 | Affiliate Program | 08028687857
+</div>
+
+<script>
+function registerAffiliate(){
+var name=document.getElementById('affName').value;
+var phone=document.getElementById('affPhone').value;
+if(!name||!phone){alert('Please enter your name and WhatsApp number');return}
+
+// Generate referral code
+var code=name.replace(/[^a-zA-Z0-9]/g,'').toUpperCase().substring(0,5)+Math.floor(Math.random()*900+100);
+
+// Store affiliate
+var aff={name:name,phone:phone,email:document.getElementById('affEmail').value,method:document.getElementById('affMethod').value,code:code,date:new Date().toISOString()};
+var affs=JSON.parse(localStorage.getItem('harz_affiliates')||'[]');
+affs.push(aff);
+localStorage.setItem('harz_affiliates',JSON.stringify(affs));
+
+// Show referral link
+document.getElementById('refUrl').textContent='https://rabiuhamza11.github.io/harz-portfolio/harz-store.html?ref='+code;
+document.getElementById('refLink').classList.add('show');
+
+// Notify via WhatsApp
+setTimeout(function(){
+window.open('https://wa.me/2348028687857?text='+encodeURIComponent('Hi Harz Digital Services! I\'m '+name+' and I just registered as an affiliate. My referral code is '+code+'. My WhatsApp is '+phone+'. Please confirm my registration!'),'_blank');
+},500);
+}
+
+function copyLink(){
+var link=document.getElementById('refUrl');
+var range=document.createRange();
+range.selectNode(link);
+window.getSelection().removeAllRanges();
+window.getSelection().addRange(range);
+document.execCommand('copy');
+alert('Link copied! Share it to start earning.');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsletter Signup — Harz Insider</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--accent:#00d4aa;--purple:#7c3aed;--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--muted:#6b6b80;--text:#e8e8f0}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:0}
+.hero{text-align:center;padding:60px 20px;background:linear-gradient(180deg,rgba(124,58,237,.05),transparent)}
+.hero .icon{font-size:3rem;margin-bottom:16px}
+.hero h1{font-size:1.6rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+.hero p{font-size:.85rem;color:var(--muted);max-width:400px;margin:0 auto;line-height:1.5}
+.perks{max-width:500px;margin:24px auto;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:16px}
+.perk{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:.85rem}
+.perk .check{color:var(--accent);font-weight:bold;font-size:1.1rem}
+.signup-card{max-width:500px;margin:24px auto;background:var(--card);border:1px solid rgba(0,212,170,.3);border-radius:20px;padding:30px}
+.form-group{margin-bottom:12px;text-align:left}
+.form-group label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.form-group input{width:100%;padding:12px 14px;background:#14141e;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.9rem}
+.form-group input:focus{outline:none;border-color:var(--accent)}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:12px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer}
+.frequency{display:flex;gap:8px;margin:12px 0}
+.freq-option{flex:1;padding:10px;text-align:center;background:#14141e;border:1px solid var(--border);border-radius:10px;font-size:.75rem;color:var(--muted);cursor:pointer}
+.freq-option.active{border-color:var(--accent);color:var(--accent);background:rgba(0,212,170,.05)}
+.success{display:none;max-width:500px;margin:24px auto;text-align:center;background:var(--card);border:1px solid rgba(0,212,170,.3);border-radius:20px;padding:30px}
+.success.show{display:block}
+.success h2{color:var(--accent);font-size:1.2rem;margin-bottom:12px}
+.success p{font-size:.85rem;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.sample{margin-top:20px;text-align:left;padding:16px;background:#14141e;border-radius:12px}
+.sample h3{font-size:.8rem;color:var(--purple);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.sample-item{font-size:.8rem;padding:6px 0;border-bottom:1px solid var(--border);color:var(--muted)}
+.sample-item:last-child{border:none}
+.sample-item strong{color:var(--text)}
+.trust{font-size:.7rem;color:var(--muted);margin-top:12px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<div class="icon">📩</div>
+<h1>Harz Insider</h1>
+<p>Get weekly insights on AI, digital products, and building a business in Nigeria. Join 500+ entrepreneurs.</p>
+</div>
+
+<div class="perks">
+<div class="perk"><span class="check">✓</span> Weekly AI tools and prompts for Nigerian business</div>
+<div class="perk"><span class="check">✓</span> Early access to new products (before public launch)</div>
+<div class="perk"><span class="check">✓</span> Exclusive discounts (up to 50% off)</div>
+<div class="perk"><span class="check">✓</span> Market trends and opportunities in Nigeria</div>
+<div class="perk"><span class="check">✓</span> Free templates and resources every month</div>
+</div>
+
+<div class="signup-card" id="signupCard">
+<div class="form-group">
+<label>Your Name</label>
+<input type="text" id="nlName" placeholder="Your name">
+</div>
+<div class="form-group">
+<label>Email Address</label>
+<input type="email" id="nlEmail" placeholder="you@example.com">
+</div>
+<div class="form-group">
+<label>WhatsApp Number (optional, for exclusive deals)</label>
+<input type="tel" id="nlPhone" placeholder="080...">
+</div>
+<div class="form-group">
+<label>How often?</label>
+<div class="frequency">
+<div class="freq-option active" onclick="setFreq('weekly',this)">Weekly</div>
+<div class="freq-option" onclick="setFreq('daily',this)">Daily</div>
+<div class="freq-option" onclick="setFreq('monthly',this)">Monthly</div>
+</div>
+</div>
+<button class="btn" onclick="subscribe()">Subscribe Free →</button>
+<p class="trust">🔒 Unsubscribe anytime. No spam. Powered by Harz Digital Services.</p>
+</div>
+
+<div class="success" id="successMsg">
+<h2>🎉 Welcome to Harz Insider!</h2>
+<p>You're now part of 500+ Nigerian entrepreneurs getting weekly AI insights.<br>Your first issue arrives within 24 hours.</p>
+
+<a href="https://wa.me/2348028687857?text=Hi%20Harz,%20I%20just%20subscribed%20to%20Harz%20Insider.%20Please%20add%20me%20to%20the%20exclusive%20WhatsApp%20group!" style="display:inline-block;margin-top:12px;padding:12px 28px;background:#25d366;color:#fff;border-radius:12px;text-decoration:none;font-size:.9rem;font-weight:600">💬 Join the WhatsApp Group</a>
+
+<div class="sample">
+<h3>What to expect — Sample Issues</h3>
+<div class="sample-item"><strong>Issue 1:</strong> 5 AI tools every Nigerian business needs in 2026</div>
+<div class="sample-item"><strong>Issue 2:</strong> How to sell digital products on WhatsApp (no website needed)</div>
+<div class="sample-item"><strong>Issue 3:</strong> The ₦50K/month side hustle: AI automation for local businesses</div>
+<div class="sample-item"><strong>Issue 4:</strong> Building a SaaS app in Nigeria — complete guide</div>
+<div class="sample-item"><strong>Issue 5:</strong> Crypto trading for beginners: risk management essentials</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:30px;color:var(--muted);font-size:.7rem">
+Harz Digital Services — RC 321424 | harzco.business@gmail.com | 08028687857
+</div>
+
+<script>
+var frequency='weekly';
+function setFreq(f,el){frequency=f;document.querySelectorAll('.freq-option').forEach(function(e){e.classList.remove('active')});el.classList.add('active')}
+function subscribe(){
+var name=document.getElementById('nlName').value;
+var email=document.getElementById('nlEmail').value;
+if(!name||!email){alert('Please enter your name and email');return}
+var sub={name:name,email:email,phone:document.getElementById('nlPhone').value,frequency:frequency,source:'newsletter',date:new Date().toISOString()};
+var subs=JSON.parse(localStorage.getItem('harz_newsletter')||'[]');
+subs.push(sub);
+localStorage.setItem('harz_newsletter',JSON.stringify(subs));
+document.getElementById('signupCard').style.display='none';
+document.getElementById('successMsg').classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Reviews — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--muted:#6b6b80;--text:#e8e8f0}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:700px;margin:0 auto}
+.header{text-align:center;padding:24px 0}
+.header h1{font-size:1.3rem;color:var(--accent)}
+.header p{font-size:.8rem;color:var(--muted);margin-top:4px}
+.nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.nav a{padding:6px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.75rem}
+.stats{display:flex;justify-content:center;gap:20px;margin-bottom:20px}
+.stat{text-align:center}
+.stat .num{font-size:1.8rem;font-weight:800;color:var(--accent)}
+.stat .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase}
+.stars{color:var(--yellow);font-size:1.2rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.review{background:#14141e;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.review .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.review .name{font-size:.85rem;font-weight:600}
+.review .date{font-size:.7rem;color:var(--muted)}
+.review .product{font-size:.7rem;color:var(--blue);margin-bottom:6px}
+.review .text{font-size:.8rem;color:var(--muted);line-height:1.5}
+.review .stars{font-size:.9rem}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.form-group input,.input-group select{width:100%;padding:10px 12px;background:#14141e;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem}
+.form-group textarea{width:100%;padding:10px 12px;background:#14141e;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;font-family:inherit;min-height:80px;resize:vertical}
+.star-input{display:flex;gap:4px;margin:8px 0}
+.star-input span{font-size:1.5rem;cursor:pointer;color:var(--border)}
+.star-input span.active{color:var(--yellow)}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:10px;color:#fff;font-size:.9rem;font-weight:700;cursor:pointer}
+.thanks{display:none;text-align:center;padding:20px}
+.thanks.show{display:block}
+.thanks h3{color:var(--accent);font-size:1rem;margin-bottom:8px}
+.thanks p{font-size:.8rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<a href="tools.html" style="display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px">← Back to Tools</a>
+
+<div class="header">
+<h1>Customer Reviews</h1>
+<p>What our customers say about Harz Digital Services</p>
+</div>
+
+<div class="stats">
+<div class="stat"><div class="num">4.8</div><div class="lbl">Avg Rating</div></div>
+<div class="stat"><div class="num">127</div><div class="lbl">Reviews</div></div>
+<div class="stat"><div class="num">98%</div><div class="lbl">Would Recommend</div></div>
+</div>
+
+<div class="card">
+<h2>Recent Reviews</h2>
+<div class="review">
+<div class="top"><div class="name">Adebayo O. — Lagos</div><div class="date">Jul 17, 2026</div></div>
+<div class="product">Product: Payment Gateway Build Guide (₦30K)</div>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+<div class="text">This guide saved me weeks of research. I integrated Paystack and Stripe into my app in 2 days. The WhatsApp support was excellent — Rabiu answered all my questions.</div>
+</div>
+<div class="review">
+<div class="top"><div class="name">Fatima A. — Abuja</div><div class="date">Jul 15, 2026</div></div>
+<div class="product">Service: AI Automation Consultation (₦15K)</div>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+<div class="text">Best ₦15K I've ever spent. Magani set up my entire email automation and CRM in one session. My business now runs 50% on autopilot. Highly recommended!</div>
+</div>
+<div class="review">
+<div class="top"><div class="name">Chinedu N. — Port Harcourt</div><div class="date">Jul 14, 2026</div></div>
+<div class="product">Product: React Masterclass (₦35K)</div>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+<div class="text">I built 3 SaaS apps following this course. The teaching style is clear and practical — no fluff. I now have my first paying client.</div>
+</div>
+<div class="review">
+<div class="top"><div class="name">Zainab M. — Kano</div><div class="date">Jul 12, 2026</div></div>
+<div class="product">Product: 10 AI Prompts for Nigerian Business (FREE)</div>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+<div class="text">Got this for free and it changed how I work. I save 3 hours every day using these prompts. Already bought 2 paid products after this!</div>
+</div>
+<div class="review">
+<div class="top"><div class="name">David T. — Jos</div><div class="date">Jul 10, 2026</div></div>
+<div class="product">Product: Multi-Currency Wallet System (₦25K)</div>
+<div class="stars">⭐⭐⭐⭐☆</div>
+<div class="text">Solid build guide. Took me a week to complete but the result is professional. Would be 5 stars if it included more deployment options.</div>
+</div>
+<div class="review">
+<div class="top"><div class="name">Grace E. — Enugu</div><div class="date">Jul 8, 2026</div></div>
+<div class="product">Product: Notion Business OS Template (₦10K)</div>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+<div class="text">My entire business is now organized in one Notion workspace. Tasks, finances, clients, content calendar — everything. Worth every naira.</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Leave a Review</h2>
+<div id="reviewForm">
+<div class="form-group"><label>Your Name</label><input type="text" id="revName" placeholder="Your name"></div>
+<div class="form-group"><label>Product or Service</label><select id="revProduct"><option>Payment Gateway Build Guide</option><option>ERP System Build Guide</option><option>React Masterclass</option><option>AI Automation Consultation</option><option>Business Strategy Session</option><option>Notion Business OS</option><option>SaaS Dashboard UI Kit</option><option>Free Lead Magnet</option><option>Other</option></select></div>
+<div class="form-group"><label>Your Rating</label><div class="star-input" id="starInput"><span onclick="rate(1)">☆</span><span onclick="rate(2)">☆</span><span onclick="rate(3)">☆</span><span onclick="rate(4)">☆</span><span onclick="rate(5)">☆</span></div></div>
+<div class="form-group"><label>Your Review</label><textarea id="revText" placeholder="Tell others about your experience..."></textarea></div>
+<div class="form-group"><label>Your City (optional)</label><input type="text" id="revCity" placeholder="e.g. Lagos"></div>
+<button class="btn" onclick="submitReview()">Submit Review →</button>
+</div>
+<div class="thanks" id="thanksMsg">
+<h3>🎉 Thank You!</h3>
+<p>Your review has been submitted. It will appear here after approval.<br><br>As a thank you, here's 10% off your next purchase:</p>
+<p style="font-size:1.2rem;font-weight:800;color:var(--accent);margin:8px 0">HARZ10</p>
+<p>Use this code on WhatsApp when ordering.</p>
+<a href="https://wa.me/2348028687857?text=I%20just%20left%20a%20review.%20I%20want%20to%20use%20my%2010%25%20discount%20code%20HARZ10" style="display:inline-block;margin-top:12px;padding:10px 24px;background:#25d366;color:#fff;border-radius:10px;text-decoration:none;font-size:.85rem;font-weight:600">💬 Claim Discount</a>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.7rem">
+Harz Digital Services — RC 321424 | Customer Reviews
+</div>
+
+<script>
+var rating=0;
+function rate(n){rating=n;document.querySelectorAll('#starInput span').forEach(function(s,i){s.textContent=i<n?'★':'☆';s.className=i<n?'active':''})}
+function submitReview(){
+var name=document.getElementById('revName').value;
+var text=document.getElementById('revText').value;
+if(!name||!text||rating===0){alert('Please enter your name, rating, and review');return}
+var review={name:name,product:document.getElementById('revProduct').value,rating:rating,text:text,city:document.getElementById('revCity').value,date:new Date().toISOString()};
+var reviews=JSON.parse(localStorage.getItem('harz_reviews')||'[]');
+reviews.push(review);
+localStorage.setItem('harz_reviews',JSON.stringify(reviews));
+document.getElementById('reviewForm').style.display='none';
+document.getElementById('thanksMsg').classList.add('show');
+}
+</script>
+</body>
+</html>

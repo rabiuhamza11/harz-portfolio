@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Lead Magnet — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--muted:#6b6b80;--text:#e8e8f0}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:0}
+.hero{text-align:center;padding:50px 20px 30px;background:linear-gradient(180deg,rgba(0,212,170,.08),transparent)}
+.hero .icon{font-size:3rem;margin-bottom:12px}
+.hero h1{font-size:1.6rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.hero p{font-size:.85rem;color:var(--muted);max-width:450px;margin:0 auto}
+.offer-card{max-width:500px;margin:24px auto;background:var(--card);border:1px solid rgba(0,212,170,.3);border-radius:20px;padding:30px;text-align:center}
+.offer-card .free-badge{display:inline-block;padding:6px 16px;background:rgba(0,212,170,.15);color:var(--accent);border-radius:20px;font-size:.75rem;font-weight:700;margin-bottom:16px}
+.offer-card h2{font-size:1.2rem;margin-bottom:8px}
+.offer-card .desc{font-size:.85rem;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.free-items{text-align:left;margin:20px 0;padding:16px;background:#14141e;border-radius:12px}
+.free-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:.8rem}
+.free-item .check{color:var(--accent);font-weight:bold}
+.form-group{margin-bottom:12px;text-align:left}
+.form-group label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.form-group input{width:100%;padding:12px 14px;background:#14141e;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.9rem}
+.form-group input:focus{outline:none;border-color:var(--accent)}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:12px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer}
+.trust{font-size:.7rem;color:var(--muted);margin-top:12px}
+.after-optin{display:none;max-width:500px;margin:24px auto;background:var(--card);border:1px solid rgba(0,212,170,.3);border-radius:20px;padding:30px;text-align:center}
+.after-optin.show{display:block}
+.after-optin h2{color:var(--accent);font-size:1.1rem;margin-bottom:12px}
+.after-optin .download{display:inline-block;padding:12px 28px;background:rgba(0,212,170,.1);border:1px solid var(--accent);border-radius:12px;color:var(--accent);font-size:.9rem;font-weight:600;text-decoration:none;margin:12px 0}
+.upsell{margin-top:20px;padding:16px;background:#14141e;border:1px solid rgba(124,58,237,.3);border-radius:12px;text-align:left}
+.upsell h3{font-size:.8rem;color:var(--purple);margin-bottom:8px}
+.upsell p{font-size:.75rem;color:var(--muted);margin-bottom:10px}
+.upsell a{display:block;text-align:center;padding:10px;background:rgba(124,58,237,.15);border:1px solid var(--purple);border-radius:8px;color:var(--purple);font-size:.8rem;font-weight:600;text-decoration:none}
+.wa-btn{display:inline-block;margin-top:12px;padding:10px 24px;background:#25d366;color:#fff;border-radius:10px;text-decoration:none;font-size:.85rem;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<div class="icon">🎁</div>
+<h1>3 Free Resources for Nigerian Entrepreneurs</h1>
+<p>Get instant access to our top 3 free tools — no credit card needed.</p>
+</div>
+
+<div class="offer-card" id="optinCard">
+<span class="free-badge">100% FREE — INSTANT ACCESS</span>
+<h2>The Nigerian Entrepreneur Starter Pack</h2>
+<p class="desc">3 powerful resources to kickstart your business in Nigeria.</p>
+
+<div class="free-items">
+<div class="free-item"><span class="check">✓</span> 10 AI Prompts for Nigerian Business — save hours daily</div>
+<div class="free-item"><span class="check">✓</span> Nigerian Business Registration Checklist — CAC made simple</div>
+<div class="free-item"><span class="check">✓</span> 50 Digital Product Ideas for Nigerians — start selling today</div>
+</div>
+
+<div class="form-group">
+<label>Your Name</label>
+<input type="text" id="leadName" placeholder="Your name">
+</div>
+<div class="form-group">
+<label>WhatsApp Number</label>
+<input type="tel" id="leadPhone" placeholder="080...">
+</div>
+<div class="form-group">
+<label>Email (optional)</label>
+<input type="email" id="leadEmail" placeholder="you@example.com">
+</div>
+
+<button class="btn" onclick="submitLead()">Get My Free Resources →</button>
+<p class="trust">🔒 Your info is safe. We'll send your resources via WhatsApp. No spam, ever.</p>
+</div>
+
+<div class="after-optin" id="afterOptin">
+<h2>🎉 You're In!</h2>
+<p style="font-size:.85rem;color:var(--muted);margin-bottom:16px">Your free resources are on the way to your WhatsApp. Here's what happens next:</p>
+
+<a href="https://wa.me/2348028687857?text=Hi%20Harz%20Digital%20Services,%20I%20just%20downloaded%20the%20free%20starter%20pack.%20Please%20send%20me%20the%20resources!" class="download">📥 Confirm on WhatsApp to receive downloads</a>
+
+<div class="upsell">
+<h3>⭐ Recommended Next Step</h3>
+<p>While you're here, check out our premium products starting at just ₦2,000. From AI tools to full build guides.</p>
+<a href="harz-store.html">Browse 259 Products →</a>
+</div>
+
+<a href="https://wa.me/2348028687857?text=I%20want%20to%20learn%20more%20about%20Harz%20Digital%20Services" class="wa-btn">💬 Talk to us on WhatsApp</a>
+</div>
+
+<div style="text-align:center;padding:30px;color:var(--muted);font-size:.75rem">
+Harz Digital Services — RC 321424 | TIN 24550860<br>
+08028687857 | harzco.business@gmail.com
+</div>
+
+<script>
+function submitLead(){
+var name=document.getElementById('leadName').value;
+var phone=document.getElementById('leadPhone').value;
+if(!name||!phone){alert('Please enter your name and WhatsApp number');return}
+
+// Store in localStorage for now (would go to Base44 entity in production)
+var lead={name:name,phone:phone,email:document.getElementById('leadEmail').value,source:'lead-magnet',date:new Date().toISOString()};
+var leads=JSON.parse(localStorage.getItem('harz_leads')||'[]');
+leads.push(lead);
+localStorage.setItem('harz_leads',JSON.stringify(leads));
+
+// Show success
+document.getElementById('optinCard').style.display='none';
+document.getElementById('afterOptin').classList.add('show');
+
+// Auto-open WhatsApp with pre-filled message
+setTimeout(function(){
+window.open('https://wa.me/2348028687857?text='+encodeURIComponent('Hi Harz Digital Services, I\'m '+name+' and I just signed up for the free Entrepreneur Starter Pack. Please send me my resources!'),'_blank');
+},500);
+}
+</script>
+</body>
+</html>
