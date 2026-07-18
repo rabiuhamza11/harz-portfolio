@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free SQL formatter and beautifier. Format SQL queries with proper indentation and keyword highlighting. Developer tool for database queries.">
+<meta name="keywords" content="sql formatter, sql beautifier, format sql, query formatter, database tool">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SQL Formatter — Query Beautifier | Harz Digital Services">
+<meta property="og:description" content="Free SQL formatter and beautifier. Format SQL queries with proper indentation and keyword highlighting. Developer tool for database queries.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/sql-formatter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/sql-formatter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Formatter — Query Beautifier | Harz Digital Services</title>
+<meta name="description" content="Free SQL formatter and beautifier. Format SQL queries with proper indentation and keyword highlighting. Developer tool for database queries.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:550px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+textarea{width:100%;min-height:120px;padding:14px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.82rem;font-family:monospace;line-height:1.6;resize:vertical;margin-bottom:8px}
+textarea:focus{border-color:#00d4aa;outline:none}
+.btn-row{display:flex;gap:6px;margin-bottom:12px}
+.btn{padding:10px 16px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:.8rem;flex:1}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+.btn.clear{background:#14141e;border:1px solid #1e1e2e;color:#c8c8d0}
+.output{background:#0e0e16;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:16px;min-height:120px}
+.output pre{font-family:monospace;font-size:.82rem;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+.kw{color:#7c3aed;font-weight:600}
+.fn{color:#00d4aa}
+.str{color:#f59e0b}
+.num{color:#3b82f6}
+.com{color:#6b6b80;font-style:italic}
+.punc{color:#c8c8d0}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🗄️ SQL Formatter</h1></div>
+
+<textarea id="sqlInput" oninput="format()">SELECT u.id, u.name, u.email, o.total_amount FROM users u LEFT JOIN orders o ON u.id = o.user_id WHERE u.status = 'active' AND o.total_amount > 1000 ORDER BY o.total_amount DESC LIMIT 10</textarea>
+
+<div class="btn-row">
+<button class="btn gen" onclick="format()">✨ Format</button>
+<button class="btn copy" onclick="copy()">📋 Copy</button>
+<button class="btn clear" onclick="clearAll()">Clear</button>
+</div>
+
+<div class="output"><pre id="sqlOutput"></pre></div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | SQL Formatter
+</div>
+
+<script>
+var keywords=new Set(['SELECT','FROM','WHERE','INSERT','INTO','VALUES','UPDATE','SET','DELETE','JOIN','LEFT','RIGHT','INNER','OUTER','ON','GROUP','BY','ORDER','HAVING','LIMIT','OFFSET','AS','AND','OR','NOT','NULL','IS','IN','LIKE','BETWEEN','DISTINCT','UNION','ALL','CREATE','TABLE','ALTER','ADD','DROP','PRIMARY','KEY','FOREIGN','REFERENCES','INDEX','DEFAULT','CASCADE','CONSTRAINT','CHECK','UNIQUE','CASE','WHEN','THEN','ELSE','END','EXISTS','COUNT','SUM','AVG','MIN','MAX','WITH','RECURSIVE','RETURNING','TRUNCATE']);
+
+function format(){
+var sql=document.getElementById('sqlInput').value.trim();
+if(!sql){document.getElementById('sqlOutput').innerHTML='<span class="com">Enter SQL above</span>';return}
+
+// Format: add newlines before keywords
+var formatted=sql
+.replace(/\s+/g,' ')
+.replace(/\b(SELECT|FROM|WHERE|INSERT INTO|INSERT|INTO|VALUES|UPDATE|SET|DELETE FROM|DELETE|LEFT JOIN|RIGHT JOIN|INNER JOIN|OUTER JOIN|JOIN|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|UNION ALL|UNION|WITH|CREATE TABLE|ALTER TABLE|DROP TABLE)\b/gi,function(m){return'\n'+m.toUpperCase()})
+.replace(/\b(AND|OR)\b/gi,function(m){return'\n  '+m.toUpperCase()})
+.replace(/\n+/g,'\n')
+.replace(/^\n/,'')
+.trim();
+
+// Indent
+var lines=formatted.split('\n');
+var indent=0;
+for(var i=0;i<lines.length;i++){
+var l=lines[i].trim();
+if(l.match(/^(FROM|WHERE|GROUP|ORDER|HAVING|LIMIT|UNION|WITH)/))indent=0;
+else if(l.match(/^(AND|OR)/))indent=2;
+else if(!l.match(/^(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP)/))indent=indent;
+lines[i]='  '.repeat(indent)+l;
+if(l.match(/^(SELECT)/))indent=1;
+}
+formatted=lines.join('\n');
+
+// Highlight
+var highlighted=formatted
+.replace(/(--.*$)/gm,'<span class="com">$1</span>')
+.replace(/'([^']*)'/g,'<span class="str">\'$1\'</span>')
+.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>')
+.replace(/\b(SELECT|FROM|WHERE|INSERT|INTO|VALUES|UPDATE|SET|DELETE|JOIN|LEFT|RIGHT|INNER|OUTER|ON|GROUP|BY|ORDER|HAVING|LIMIT|OFFSET|AS|AND|OR|NOT|NULL|IS|IN|LIKE|BETWEEN|DISTINCT|UNION|ALL|CREATE|TABLE|ALTER|ADD|DROP|PRIMARY|KEY|FOREIGN|REFERENCES|INDEX|DEFAULT|CASCADE|CONSTRAINT|CHECK|UNIQUE|CASE|WHEN|THEN|ELSE|END|EXISTS|WITH|RECURSIVE|RETURNING|TRUNCATE)\b/g,'<span class="kw">$1</span>')
+.replace(/\b(COUNT|SUM|AVG|MIN|MAX)\b/g,'<span class="fn">$1</span>');
+
+document.getElementById('sqlOutput').innerHTML=highlighted;
+}
+
+function copy(){
+navigator.clipboard.writeText(document.getElementById('sqlOutput').textContent);
+alert('SQL copied!');
+}
+
+function clearAll(){
+document.getElementById('sqlInput').value='';
+format();
+}
+
+format();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

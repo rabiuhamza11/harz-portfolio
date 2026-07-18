@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free CSS border radius generator. Create custom rounded corners with visual sliders. Copy CSS for your projects.">
+<meta name="keywords" content="border radius generator, css border radius, rounded corners, css generator, web design">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Border Radius Generator — CSS Visual Tool | Harz Digital Services">
+<meta property="og:description" content="Free CSS border radius generator. Create custom rounded corners with visual sliders. Copy CSS for your projects.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/border-radius-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/border-radius-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Border Radius Generator — CSS Visual Tool | Harz Digital Services</title>
+<meta name="description" content="Free CSS border radius generator. Create custom rounded corners with visual sliders. Copy CSS for your projects.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:480px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.preview{background:#fff;border-radius:16px;padding:40px;text-align:center;margin-bottom:16px}
+.radius-box{width:160px;height:120px;background:linear-gradient(135deg,#00d4aa,#7c3aed);margin:0 auto;transition:border-radius .2s}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.link-toggle{display:flex;gap:6px;margin-bottom:12px}
+.link-btn{flex:1;padding:8px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.75rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.link-btn.active{border-color:#00d4aa;color:#00d4aa}
+.corner-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.corner{background:#14141e;border:1px solid #1e1e2e;border-radius:10px;padding:10px;text-align:center}
+.corner label{font-size:.65rem;color:#6b6b80;text-transform:uppercase;margin-bottom:4px;display:block}
+.corner input[type=range]{width:100%;accent-color:#00d4aa;margin-bottom:4px}
+.corner .val{font-size:.75rem;color:#00d4aa;font-weight:600}
+.slider-row{margin-bottom:10px}
+.slider-row label{display:flex;justify-content:space-between;font-size:.75rem;color:#c8c8d0;margin-bottom:4px}
+.slider-row label .val{color:#00d4aa;font-weight:600}
+.slider-row input[type=range]{width:100%;accent-color:#00d4aa}
+.preset-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px}
+.preset{padding:8px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.65rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.preset:hover{border-color:#00d4aa}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px}
+.output .code{font-family:monospace;font-size:.75rem;color:#00d4aa;white-space:pre-wrap;word-break:break-all;line-height:1.6}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>📐 Border Radius Generator</h1></div>
+
+<div class="preview"><div class="radius-box" id="box"></div></div>
+
+<div class="card">
+<h2>Linked Corners</h2>
+<div class="link-toggle">
+<div class="link-btn active" onclick="setLinked(true)" data-l="1">🔗 Linked</div>
+<div class="link-btn" onclick="setLinked(false)" data-l="0">✂️ Individual</div>
+</div>
+<div id="linkedControl">
+<div class="slider-row"><label>Border Radius <span class="val" id="allVal">16px</span></label><input type="range" id="all" min="0" max="100" value="16" oninput="gen()"></div>
+</div>
+<div class="corner-grid" id="individualControl" style="display:none">
+<div class="corner"><label>Top Left</label><input type="range" id="tl" min="0" max="100" value="16" oninput="gen()"><div class="val" id="tlVal">16px</div></div>
+<div class="corner"><label>Top Right</label><input type="range" id="tr" min="0" max="100" value="16" oninput="gen()"><div class="val" id="trVal">16px</div></div>
+<div class="corner"><label>Bottom Left</label><input type="range" id="bl" min="0" max="100" value="16" oninput="gen()"><div class="val" id="blVal">16px</div></div>
+<div class="corner"><label>Bottom Right</label><input type="range" id="br" min="0" max="100" value="16" oninput="gen()"><div class="val" id="brVal">16px</div></div>
+</div>
+</div>
+
+<div class="card">
+<h2>Presets</h2>
+<div class="preset-row">
+<div class="preset" onclick="preset(0,0,0,0)">Square</div>
+<div class="preset" onclick="preset(8,8,8,8)">Rounded</div>
+<div class="preset" onclick="preset(50,50,50,50)">Pill</div>
+<div class="preset" onclick="preset(100,0,0,100)">Leaf</div>
+<div class="preset" onclick="preset(50,0,50,0)">Blob</div>
+<div class="preset" onclick="preset(0,50,0,50)">Wave</div>
+<div class="preset" onclick="preset(80,80,20,20)">Organic</div>
+<div class="preset" onclick="preset(20,80,80,20)">Funky</div>
+<div class="preset" onclick="preset(30,30,30,30)">Card</div>
+</div>
+</div>
+
+<div class="card">
+<h2>CSS Code</h2>
+<div class="output"><div class="code" id="cssCode"></div></div>
+<button class="btn" onclick="copy()">📋 Copy CSS</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Border Radius Generator
+</div>
+
+<script>
+var linked=true;
+
+function setLinked(l){
+linked=l;
+document.querySelectorAll('.link-btn').forEach(function(e){e.classList.toggle('active',e.dataset.l==(l?'1':'0'))});
+document.getElementById('linkedControl').style.display=l?'block':'none';
+document.getElementById('individualControl').style.display=l?'none':'grid';
+gen();
+}
+
+function gen(){
+var tl,tr,bl,br;
+if(linked){
+var v=document.getElementById('all').value;
+document.getElementById('allVal').textContent=v+'px';
+tl=tr=bl=br=v;
+}else{
+tl=document.getElementById('tl').value;tr=document.getElementById('tr').value;bl=document.getElementById('bl').value;br=document.getElementById('br').value;
+document.getElementById('tlVal').textContent=tl+'px';
+document.getElementById('trVal').textContent=tr+'px';
+document.getElementById('blVal').textContent=bl+'px';
+document.getElementById('brVal').textContent=br+'px';
+}
+var css=tl+'px '+tr+'px '+br+'px '+bl+'px';
+if(tl===tr&&tr===bl&&bl===br)css=tl+'px';
+document.getElementById('box').style.borderRadius=css;
+document.getElementById('cssCode').textContent='border-radius: '+css+';';
+}
+
+function preset(tl,tr,bl,br){
+if(linked&&tl===tr&&tr===bl&&bl===br){
+document.getElementById('all').value=tl;gen();
+}else{
+setLinked(false);
+document.getElementById('tl').value=tl;
+document.getElementById('tr').value=tr;
+document.getElementById('bl').value=bl;
+document.getElementById('br').value=br;
+gen();
+}
+}
+
+function copy(){navigator.clipboard.writeText(document.getElementById('cssCode').textContent);alert('CSS copied!')}
+gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

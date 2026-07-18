@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free CSS animation generator. Create keyframe animations with live preview. Adjust duration, easing, delay, and iteration. Copy CSS code.">
+<meta name="keywords" content="css animation, keyframes, css generator, bounce animation, spin animation">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CSS Animation Generator — Keyframe Tool | Harz Digital Services">
+<meta property="og:description" content="Free CSS animation generator. Create keyframe animations with live preview. Adjust duration, easing, delay, and iteration. Copy CSS code.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/animation-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/animation-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Animation Generator — Keyframe Tool | Harz Digital Services</title>
+<meta name="description" content="Free CSS animation generator. Create keyframe animations with live preview. Adjust duration, easing, delay, and iteration. Copy CSS code.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:520px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.preview{background:#fff;border-radius:16px;padding:40px;text-align:center;margin-bottom:16px;min-height:100px}
+.anim-box{width:60px;height:60px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:12px;margin:0 auto}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.anim-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px}
+.anim-tab{padding:8px 4px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.65rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.anim-tab.active{border-color:#00d4aa;color:#00d4aa}
+.slider-row{margin-bottom:10px}
+.slider-row label{display:flex;justify-content:space-between;font-size:.75rem;color:#c8c8d0;margin-bottom:4px}
+.slider-row label .val{color:#00d4aa;font-weight:600}
+.slider-row input[type=range]{width:100%;accent-color:#00d4aa}
+.select-group{margin-bottom:10px}
+.select-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.select-group select{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px}
+.output .code{font-family:monospace;font-size:.68rem;color:#00d4aa;white-space:pre-wrap;word-break:break-all;line-height:1.6}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🎬 CSS Animation Generator</h1></div>
+
+<div class="preview"><div class="anim-box" id="animBox"></div></div>
+
+<div class="card">
+<h2>Animation Type</h2>
+<div class="anim-tabs" id="animTabs">
+<div class="anim-tab active" onclick="setAnim('bounce')" data-a="bounce">↕ Bounce</div>
+<div class="anim-tab" onclick="setAnim('pulse')" data-a="pulse">⊙ Pulse</div>
+<div class="anim-tab" onclick="setAnim('shake')" data-a="shake">↔ Shake</div>
+<div class="anim-tab" onclick="setAnim('spin')" data-a="spin">↻ Spin</div>
+<div class="anim-tab" onclick="setAnim('float')" data-a="float">↑ Float</div>
+<div class="anim-tab" onclick="setAnim('flip')" data-a="flip">⟳ Flip</div>
+<div class="anim-tab" onclick="setAnim('swing')" data-a="swing">∠ Swing</div>
+<div class="anim-tab" onclick="setAnim('slide')" data-a="slide">→ Slide</div>
+<div class="anim-tab" onclick="setAnim('zoom')" data-a="zoom">⊕ Zoom</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Settings</h2>
+<div class="slider-row"><label>Duration <span class="val" id="durVal">1s</span></label><input type="range" id="duration" min="0.1" max="5" step="0.1" value="1" oninput="gen()"></div>
+<div class="slider-row"><label>Delay <span class="val" id="delayVal">0s</span></label><input type="range" id="delay" min="0" max="3" step="0.1" value="0" oninput="gen()"></div>
+<div class="select-group"><label>Easing</label><select id="easing" onchange="gen()">
+<option value="ease">ease</option>
+<option value="ease-in">ease-in</option>
+<option value="ease-out">ease-out</option>
+<option value="ease-in-out">ease-in-out</option>
+<option value="linear">linear</option>
+<option value="cubic-bezier(0.68,-0.55,0.27,1.55)">bounce</option>
+</select></div>
+<div class="select-group"><label>Iteration Count</label><select id="iterations" onchange="gen()">
+<option value="infinite">Infinite</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="5">5</option>
+<option value="10">10</option>
+</select></div>
+</div>
+
+<div class="card">
+<h2>CSS Code</h2>
+<div class="output"><div class="code" id="cssCode"></div></div>
+<button class="btn" onclick="copy()">📋 Copy CSS</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Animation Generator
+</div>
+
+<script>
+var anim='bounce';
+var keyframes={
+bounce:'@keyframes bounce {\n  0%, 100% { transform: translateY(0); }\n  50% { transform: translateY(-20px); }\n}',
+pulse:'@keyframes pulse {\n  0%, 100% { transform: scale(1); }\n  50% { transform: scale(1.2); }\n}',
+shake:'@keyframes shake {\n  0%, 100% { transform: translateX(0); }\n  25% { transform: translateX(-10px); }\n  75% { transform: translateX(10px); }\n}',
+spin:'@keyframes spin {\n  from { transform: rotate(0deg); }\n  to { transform: rotate(360deg); }\n}',
+float:'@keyframes float {\n  0%, 100% { transform: translateY(0); }\n  50% { transform: translateY(-15px); }\n}',
+flip:'@keyframes flip {\n  0% { transform: rotateY(0); }\n  100% { transform: rotateY(360deg); }\n}',
+swing:'@keyframes swing {\n  0%, 100% { transform: rotate(0deg); }\n  25% { transform: rotate(15deg); }\n  75% { transform: rotate(-15deg); }\n}',
+slide:'@keyframes slide {\n  0% { transform: translateX(-100px); opacity: 0; }\n  100% { transform: translateX(0); opacity: 1; }\n}',
+zoom:'@keyframes zoom {\n  0%, 100% { transform: scale(1); }\n  50% { transform: scale(1.5); }\n}'
+};
+
+function setAnim(a){
+anim=a;
+document.querySelectorAll('.anim-tab').forEach(function(e){e.classList.toggle('active',e.dataset.a===a)});
+gen();
+}
+
+function gen(){
+var dur=document.getElementById('duration').value;
+var delay=document.getElementById('delay').value;
+var ease=document.getElementById('easing').value;
+var iter=document.getElementById('iterations').value;
+document.getElementById('durVal').textContent=dur+'s';
+document.getElementById('delayVal').textContent=delay+'s';
+
+var prop='bounce'===anim?'bounce':anim;
+document.getElementById('animBox').style.animation=prop+' '+dur+'s '+ease+' '+delay+'s '+iter;
+document.getElementById('animBox').style.animationFillMode='both';
+
+// Inject keyframes
+var styleId='animStyle';
+var old=document.getElementById(styleId);
+if(old)old.remove();
+var s=document.createElement('style');
+s.id=styleId;
+s.textContent=keyframes[anim];
+document.head.appendChild(s);
+
+var css=keyframes[anim]+'\n\n.element {\n  animation: '+anim+' '+dur+'s '+ease+' '+delay+'s '+iter+';\n}';
+document.getElementById('cssCode').textContent=css;
+}
+
+function copy(){navigator.clipboard.writeText(document.getElementById('cssCode').textContent);alert('CSS copied!')}
+gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

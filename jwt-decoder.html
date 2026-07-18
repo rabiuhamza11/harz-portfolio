@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free JWT decoder. Paste a JSON Web Token and instantly see the header and payload. Developer tool for API authentication debugging.">
+<meta name="keywords" content="jwt decoder, json web token, jwt decode, token inspector, api authentication">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JWT Decoder — Token Inspector | Harz Digital Services">
+<meta property="og:description" content="Free JWT decoder. Paste a JSON Web Token and instantly see the header and payload. Developer tool for API authentication debugging.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/jwt-decoder.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/jwt-decoder.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JWT Decoder — Token Inspector | Harz Digital Services</title>
+<meta name="description" content="Free JWT decoder. Paste a JSON Web Token and instantly see the header and payload. Developer tool for API authentication debugging.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:550px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+textarea{width:100%;min-height:80px;padding:14px;background:#14141e;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.8rem;font-family:monospace;line-height:1.5;resize:vertical}
+.result{background:#14141e;border:1px solid #1e1e2e;border-radius:12px;padding:14px;margin-top:10px}
+.result .label{font-size:.7rem;color:#7c3aed;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+.result .json{font-family:monospace;font-size:.75rem;color:#00d4aa;white-space:pre-wrap;word-break:break-all;line-height:1.6}
+.result .err{color:#ef4444;font-size:.8rem}
+.expiry{text-align:center;padding:12px;border-radius:10px;margin-top:8px;font-size:.8rem;font-weight:600}
+.expiry.valid{background:rgba(0,212,170,.05);color:#00d4aa;border:1px solid rgba(0,212,170,.2)}
+.expiry.expired{background:rgba(239,68,68,.05);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+.info{font-size:.75rem;color:#6b6b80;line-height:1.6;padding:12px;background:#14141e;border-radius:10px;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🔑 JWT Decoder</h1></div>
+
+<div class="card">
+<h2>Paste JWT Token</h2>
+<textarea id="jwtInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." oninput="decode()">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlJhYml1IEhhbXphIiwiaWF0IjoxNzUyODAwMDAwLCJleHAiOjE3NTI4ODY0MDB9.iBq7K8jV3mN2xQ5wR9sT6uY1zA4bC0dE8fG7hI2jK3l</textarea>
+</div>
+
+<div class="card">
+<h2>Decoded</h2>
+<div class="result"><div class="label">Header</div><div class="json" id="headerOut"></div></div>
+<div class="result"><div class="label">Payload</div><div class="json" id="payloadOut"></div></div>
+<div class="result"><div class="label">Signature</div><div class="json" id="sigOut"></div></div>
+<div class="expiry" id="expiryInfo"></div>
+</div>
+
+<div class="card">
+<h2>About JWT</h2>
+<div class="info">
+A JWT has 3 parts separated by dots: header.payload.signature
+1. Header — algorithm and token type
+2. Payload — claims (user data, expiry, etc.)
+3. Signature — verifies token integrity
+This tool only decodes. It does NOT verify signatures. Never paste production secrets.
+</div>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | JWT Decoder
+</div>
+
+<script>
+function b64decode(str){
+str=str.replace(/-/g,'+').replace(/_/g,'/');
+while(str.length%4)str+='=';
+try{return decodeURIComponent(escape(atob(str)))}catch(e){return atob(str)}
+}
+
+function decode(){
+var token=document.getElementById('jwtInput').value.trim();
+if(!token){
+document.getElementById('headerOut').innerHTML='<span class="err">Paste a JWT above</span>';
+document.getElementById('payloadOut').textContent='';
+document.getElementById('sigOut').textContent='';
+document.getElementById('expiryInfo').textContent='';
+return;
+}
+var parts=token.split('.');
+if(parts.length<2){
+document.getElementById('headerOut').innerHTML='<span class="err">Invalid JWT format</span>';
+return;
+}
+try{
+var header=JSON.parse(b64decode(parts[0]));
+document.getElementById('headerOut').textContent=JSON.stringify(header,null,2);
+}catch(e){document.getElementById('headerOut').innerHTML='<span class="err">Cannot decode header</span>'}
+
+try{
+var payload=JSON.parse(b64decode(parts[1]));
+document.getElementById('payloadOut').textContent=JSON.stringify(payload,null,2);
+
+// Check expiry
+if(payload.exp){
+var expDate=new Date(payload.exp*1000);
+var now=new Date();
+var isExpired=now>expDate;
+var el=document.getElementById('expiryInfo');
+el.className='expiry '+(isExpired?'expired':'valid');
+el.textContent=(isExpired?'✗ EXPIRED':'✓ VALID')+' — Expires: '+expDate.toLocaleString();
+}else{
+document.getElementById('expiryInfo').textContent='No expiry (exp) claim';
+document.getElementById('expiryInfo').className='expiry valid';
+}
+}catch(e){document.getElementById('payloadOut').innerHTML='<span class="err">Cannot decode payload</span>'}
+
+document.getElementById('sigOut').textContent=parts[2]?parts[2].substring(0,40)+'...':'(none)';
+}
+
+decode();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free text repeater. Repeat any text or message multiple times. Perfect for WhatsApp pranks, social media, and testing.">
+<meta name="keywords" content="text repeater, repeat text, message multiplier, whatsapp spam, text duplicator">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Text Repeater — Message Multiplier | Harz Digital Services">
+<meta property="og:description" content="Free text repeater. Repeat any text or message multiple times. Perfect for WhatsApp pranks, social media, and testing.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/text-repeater.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/text-repeater.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Repeater — Message Multiplier | Harz Digital Services</title>
+<meta name="description" content="Free text repeater. Repeat any text or message multiple times. Perfect for WhatsApp pranks, social media, and testing.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+textarea{width:100%;min-height:60px;padding:14px;background:#14141e;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.9rem;resize:vertical;margin-bottom:8px}
+textarea:focus{border-color:#00d4aa;outline:none}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:1rem;text-align:center}
+.sep-tabs{display:flex;gap:6px;margin-bottom:8px}
+.sep-tab{flex:1;padding:8px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.sep-tab.active{border-color:#00d4aa;color:#00d4aa}
+.output-box{background:#0e0e16;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px;margin-bottom:8px}
+.output-box textarea{background:none;border:none;color:#00d4aa;font-size:.85rem;font-family:monospace;min-height:120px;max-height:300px;overflow-y:auto}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-bottom:8px}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+.stats{text-align:center;font-size:.75rem;color:#6b6b80;margin-bottom:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🔁 Text Repeater</h1></div>
+
+<div class="card">
+<h2>Text to Repeat</h2>
+<textarea id="input" placeholder="Enter text to repeat..." oninput="gen()">🚀 Harz Digital Services</textarea>
+<div class="input-group"><label>Repeat Count (max 1000)</label><input type="number" id="count" value="10" min="1" max="1000" oninput="gen()"></div>
+<div class="input-group"><label>Separator</label>
+<div class="sep-tabs">
+<div class="sep-tab active" onclick="setSep('newline')" data-s="newline">New Line</div>
+<div class="sep-tab" onclick="setSep('space')" data-s="space">Space</div>
+<div class="sep-tab" onclick="setSep('none')" data-s="none">None</div>
+<div class="sep-tab" onclick="setSep('custom')" data-s="custom">Custom</div>
+</div>
+<input type="text" id="customSep" value=" | " oninput="gen()" style="display:none;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem;width:100%">
+</div>
+</div>
+
+<div class="card">
+<h2>Result</h2>
+<div class="stats" id="stats">0 repetitions · 0 characters</div>
+<div class="output-box"><textarea id="output" readonly></textarea></div>
+<button class="btn copy" onclick="copy()">📋 Copy Result</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Text Repeater
+</div>
+
+<script>
+var sep='newline';
+function setSep(s){
+sep=s;
+document.querySelectorAll('.sep-tab').forEach(function(e){e.classList.toggle('active',e.dataset.s===s)});
+document.getElementById('customSep').style.display=s==='custom'?'block':'none';
+gen();
+}
+
+function gen(){
+var text=document.getElementById('input').value;
+var count=Math.min(parseInt(document.getElementById('count').value)||0,1000);
+var separator='';
+if(sep==='newline')separator='\n';
+else if(sep==='space')separator=' ';
+else if(sep==='none')separator='';
+else if(sep==='custom')separator=document.getElementById('customSep').value;
+var result=[];
+for(var i=0;i<count;i++)result.push(text);
+var output=result.join(separator);
+document.getElementById('output').value=output;
+document.getElementById('stats').textContent=count+' repetitions · '+output.length+' characters';
+}
+
+function copy(){
+navigator.clipboard.writeText(document.getElementById('output').value);
+alert('Copied!');
+}
+gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
