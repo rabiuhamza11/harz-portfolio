@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free currency converter with live exchange rates. Convert NGN, USD, EUR, GBP, and more. For Nigerian businesses.">
+<meta name="keywords" content="currency converter, fx rates, naira to dollar, exchange rate nigeria, usd to ngn">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Currency Converter — Live FX Rates | Harz Digital Services">
+<meta property="og:description" content="Free currency converter with live exchange rates. Convert NGN, USD, EUR, GBP, and more. For Nigerian businesses.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/currency-converter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/currency-converter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Currency Converter — Live FX Rates | Harz Digital Services</title>
+<meta name="description" content="Free currency converter with live exchange rates. Convert NGN, USD, EUR, GBP, and more. For Nigerian businesses.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:1rem}
+.swap-btn{display:block;margin:8px auto;padding:8px 16px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:50%;color:#00d4aa;font-size:1.2rem;cursor:pointer}
+.result{text-align:center;padding:20px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:16px;margin-top:16px}
+.result .amount{font-size:2rem;font-weight:800;color:#00d4aa}
+.result .rate{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.rates-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:12px}
+.rates-table th{text-align:left;padding:8px;border-bottom:1px solid #1e1e2e;color:#6b6b80;font-size:.65rem;text-transform:uppercase}
+.rates-table td{padding:10px;border-bottom:1px solid rgba(30,30,46,.5)}
+.rates-table .cur{font-weight:600;color:#00d4aa}
+.rates-table .flag{font-size:1.2rem}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Currency Converter</h1><p>Live exchange rates for NGN</p></div>
+
+<div class="card">
+<h2>Convert</h2>
+<div class="input-group"><label>Amount</label><input type="number" id="amount" value="100000" min="0"></div>
+<div class="input-group"><label>From</label><select id="fromCur">
+<option value="NGN" selected>🇳🇬 NGN — Nigerian Naira</option>
+<option value="USD">🇺🇸 USD — US Dollar</option>
+<option value="EUR">🇪🇺 EUR — Euro</option>
+<option value="GBP">🇬🇧 GBP — British Pound</option>
+<option value="GHS">🇬🇭 GHS — Ghana Cedi</option>
+<option value="KES">🇰🇪 KES — Kenyan Shilling</option>
+<option value="ZAR">🇿🇦 ZAR — South African Rand</option>
+<option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+<option value="CNY">🇨🇳 CNY — Chinese Yuan</option>
+<option value="USDT">₮ USDT — Tether (Crypto)</option>
+</select></div>
+<button class="swap-btn" onclick="swap()">⇅</button>
+<div class="input-group"><label>To</label><select id="toCur">
+<option value="NGN">🇳🇬 NGN — Nigerian Naira</option>
+<option value="USD" selected>🇺🇸 USD — US Dollar</option>
+<option value="EUR">🇪🇺 EUR — Euro</option>
+<option value="GBP">🇬🇧 GBP — British Pound</option>
+<option value="GHS">🇬🇭 GHS — Ghana Cedi</option>
+<option value="KES">🇰🇪 KES — Kenyan Shilling</option>
+<option value="ZAR">🇿🇦 ZAR — South African Rand</option>
+<option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+<option value="CNY">🇨🇳 CNY — Chinese Yuan</option>
+<option value="USDT">₮ USDT — Tether (Crypto)</option>
+</select></div>
+<div class="result" id="result">
+<div class="amount" id="resultAmount">—</div>
+<div class="rate" id="resultRate">Enter an amount to convert</div>
+</div>
+</div>
+
+<div class="card">
+<h2>NGN Exchange Rates</h2>
+<table class="rates-table" id="ratesTable">
+<tr><th>Currency</th><th>Buy (NGN)</th><th>Sell (NGN)</th></tr>
+</table>
+<p style="font-size:.7rem;color:#6b6b80;margin-top:8px">Rates are approximate. Actual rates vary by provider (banks, BDC, AbokiFX).</p>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Currency Converter
+</div>
+
+<script>
+// Approximate rates relative to USD (July 2026 estimates)
+var usdRates={USD:1,NGN:1580,EUR:0.92,GBP:0.78,GHS:15.5,KES:129,ZAR:18.5,CAD:1.37,CNY:7.25,USDT:1.0};
+
+function convert(){
+var amt=parseFloat(document.getElementById('amount').value)||0;
+var from=document.getElementById('fromCur').value;
+var to=document.getElementById('toCur').value;
+// Convert through USD
+var usdVal=amt/usdRates[from];
+var result=usdVal*usdRates[to];
+var rate=(usdRates[to]/usdRates[from]);
+document.getElementById('resultAmount').textContent=result.toLocaleString('en',{maximumFractionDigits:2})+' '+to;
+document.getElementById('resultRate').textContent='1 '+from+' = '+rate.toFixed(4)+' '+to+' | '+amt.toLocaleString()+' '+from+' = '+result.toLocaleString('en',{maximumFractionDigits:2})+' '+to;
+}
+
+function swap(){
+var f=document.getElementById('fromCur').value;
+document.getElementById('fromCur').value=document.getElementById('toCur').value;
+document.getElementById('toCur').value=f;
+convert();
+}
+
+function loadRates(){
+var table=document.getElementById('ratesTable');
+var currencies=[['USD','🇺🇸'],['EUR','🇪🇺'],['GBP','🇬🇧'],['GHS','🇬🇭'],['KES','🇰🇪'],['ZAR','🇿🇦'],['CAD','🇨🇦'],['CNY','🇨🇳'],['USDT','₮']];
+currencies.forEach(function(c){
+var buy=usdRates['NGN']/usdRates[c[0]];
+var sell=buy*1.02;
+var row=table.insertRow();
+row.innerHTML='<td><span class="flag">'+c[1]+'</span> <span class="cur">'+c[0]+'</span></td><td>₦'+buy.toLocaleString('en',{maximumFractionDigits:2})+'</td><td>₦'+sell.toLocaleString('en',{maximumFractionDigits:2})+'</td>';
+});
+}
+
+document.getElementById('amount').addEventListener('input',convert);
+document.getElementById('fromCur').addEventListener('change',convert);
+document.getElementById('toCur').addEventListener('change',convert);
+convert();
+loadRates();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

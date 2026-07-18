@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free Pomodoro timer for productivity. 25-minute focus sessions with 5-minute breaks. Track your daily focus time.">
+<meta name="keywords" content="pomodoro timer, focus timer, productivity timer, work timer">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pomodoro Timer — Focus & Productivity | Harz Digital Services">
+<meta property="og:description" content="Free Pomodoro timer for productivity. 25-minute focus sessions with 5-minute breaks. Track your daily focus time.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/pomodoro-timer.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/pomodoro-timer.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pomodoro Timer — Focus & Productivity | Harz Digital Services</title>
+<meta name="description" content="Free Pomodoro timer for productivity. 25-minute focus sessions with 5-minute breaks. Track your daily focus time.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:450px;margin:0 auto;height:100vh;display:flex;flex-direction:column}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:6px 14px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.75rem;margin-bottom:12px}
+.timer-display{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.timer-ring{width:250px;height:250px;border-radius:50%;border:4px solid #1e1e2e;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;background:radial-gradient(circle,#0e0e16,#050508)}
+.timer-ring.focus{border-color:#00d4aa;box-shadow:0 0 40px rgba(0,212,170,.2)}
+.timer-ring.break{border-color:#7c3aed;box-shadow:0 0 40px rgba(124,58,237,.2)}
+.timer-ring.done{border-color:#22c55e}
+.time{font-size:3.5rem;font-weight:800;font-family:monospace}
+.timer-label{font-size:.8rem;color:#6b6b80;text-transform:uppercase;letter-spacing:2px;margin-top:8px}
+.mode-tabs{display:flex;gap:8px;justify-content:center;margin-bottom:20px}
+.mtab{padding:8px 16px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:20px;font-size:.75rem;color:#6b6b80;cursor:pointer}
+.mtab.active{border-color:#00d4aa;color:#00d4aa}
+.controls{display:flex;gap:12px;justify-content:center;margin:20px 0}
+.ctrl-btn{width:60px;height:60px;border-radius:50%;border:none;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ctrl-btn.start{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.ctrl-btn.pause{background:#f59e0b;color:#fff}
+.ctrl-btn.reset{background:#1e1e2e;color:#6b6b80}
+.stats{display:flex;gap:12px;justify-content:center;margin-bottom:16px}
+.stat{text-align:center;padding:10px 16px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:10px}
+.stat .num{font-size:1.2rem;font-weight:800;color:#00d4aa}
+.stat .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase}
+.settings{padding:16px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;margin-bottom:12px}
+.settings label{font-size:.75rem;color:#6b6b80;display:flex;justify-content:space-between;align-items:center;padding:6px 0}
+.settings input[type=number]{width:60px;padding:4px 8px;background:#14141e;border:1px solid #1e1e2e;border-radius:6px;color:#e8e8f0;text-align:center}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Pomodoro Timer</h1></div>
+
+<div class="mode-tabs">
+<div class="mtab active" onclick="setMode('focus')">Focus 25min</div>
+<div class="mtab" onclick="setMode('break')">Break 5min</div>
+<div class="mtab" onclick="setMode('long')">Long Break 15min</div>
+</div>
+
+<div class="timer-display">
+<div class="timer-ring focus" id="ring">
+<div class="time" id="time">25:00</div>
+<div class="timer-label" id="label">Focus Time</div>
+</div>
+</div>
+
+<div class="controls">
+<button class="ctrl-btn start" id="startBtn" onclick="toggle()">▶</button>
+<button class="ctrl-btn reset" onclick="reset()">↻</button>
+</div>
+
+<div class="stats">
+<div class="stat"><div class="num" id="sessions">0</div><div class="lbl">Sessions</div></div>
+<div class="stat"><div class="num" id="focusMin">0</div><div class="lbl">Focus Min</div></div>
+<div class="stat"><div class="num" id="streak">0</div><div class="lbl">Day Streak</div></div>
+</div>
+
+<div class="settings">
+<label>Focus Duration (min): <input type="number" id="focusDur" value="25" min="1" max="90" onchange="reset()"></label>
+<label>Break Duration (min): <input type="number" id="breakDur" value="5" min="1" max="30" onchange="reset()"></label>
+<label>Long Break (min): <input type="number" id="longDur" value="15" min="1" max="60" onchange="reset()"></label>
+</div>
+
+<div style="text-align:center;padding:10px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424
+</div>
+
+<script>
+var mode='focus';
+var running=false;
+var interval=null;
+var timeLeft=25*60;
+var sessionsToday=parseInt(localStorage.getItem('pom_sessions')||'0');
+var focusMinToday=parseInt(localStorage.getItem('pom_focus_min')||'0');
+var streak=parseInt(localStorage.getItem('pom_streak')||'0');
+
+var durations={focus:25,break:5,long:15};
+
+function setMode(m){
+mode=m;
+var dur=document.getElementById(m==='focus'?'focusDur':m==='break'?'breakDur':'longDur');
+durations[m]=parseInt(dur.value)||25;
+timeLeft=durations[m]*60;
+running=false;clearInterval(interval);
+document.getElementById('startBtn').textContent='▶';
+document.getElementById('startBtn').className='ctrl-btn start';
+document.querySelectorAll('.mtab').forEach((e,i)=>{e.classList.toggle('active',['focus','break','long'][i]===m)});
+document.getElementById('ring').className='timer-ring '+(m==='focus'?'focus':m==='break'?'break':'break');
+document.getElementById('label').textContent=m==='focus'?'Focus Time':m==='break'?'Short Break':'Long Break';
+updateDisplay();
+}
+
+function toggle(){
+if(running){running=false;clearInterval(interval);document.getElementById('startBtn').textContent='▶';document.getElementById('startBtn').className='ctrl-btn start'}
+else{running=true;document.getElementById('startBtn').textContent='⏸';document.getElementById('startBtn').className='ctrl-btn pause';interval=setInterval(tick,1000)}
+}
+
+function tick(){
+timeLeft--;
+if(timeLeft<=0){
+running=false;clearInterval(interval);
+document.getElementById('startBtn').textContent='▶';
+document.getElementById('ring').classList.add('done');
+if(mode==='focus'){
+sessionsToday++;focusMinToday+=durations.focus;
+localStorage.setItem('pom_sessions',sessionsToday);
+localStorage.setItem('pom_focus_min',focusMinToday);
+updateStats();
+// Auto switch to break
+setTimeout(function(){document.getElementById('ring').classList.remove('done');setMode(sessionsToday%4===0?'long':'break')},1000);
+}else{
+setTimeout(function(){document.getElementById('ring').classList.remove('done');setMode('focus')},1000);
+}
+// Vibrate if supported
+if(navigator.vibrate)navigator.vibrate([200,100,200]);
+}
+updateDisplay();
+}
+
+function reset(){
+running=false;clearInterval(interval);
+document.getElementById('startBtn').textContent='▶';
+document.getElementById('startBtn').className='ctrl-btn start';
+timeLeft=durations[mode]*60;
+document.getElementById('ring').classList.remove('done');
+updateDisplay();
+}
+
+function updateDisplay(){
+var m=Math.floor(timeLeft/60);
+var s=timeLeft%60;
+document.getElementById('time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+function updateStats(){
+document.getElementById('sessions').textContent=sessionsToday;
+document.getElementById('focusMin').textContent=focusMinToday;
+document.getElementById('streak').textContent=streak;
+}
+
+updateStats();
+setMode('focus');
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

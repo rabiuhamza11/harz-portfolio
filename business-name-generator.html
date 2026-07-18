@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free business name generator for Nigerian entrepreneurs. Generate catchy, unique business names and check domain availability.">
+<meta name="keywords" content="business name generator, brand name, startup name, company name nigeria">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Business Name Generator — Free Tool | Harz Digital Services">
+<meta property="og:description" content="Free business name generator for Nigerian entrepreneurs. Generate catchy, unique business names and check domain availability.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/business-name-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/business-name-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Name Generator — Free Tool | Harz Digital Services</title>
+<meta name="description" content="Free business name generator for Nigerian entrepreneurs. Generate catchy, unique business names and check domain availability.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:600px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.9rem}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.name-list{margin-top:16px}
+.name-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;margin-bottom:8px}
+.name-item .nm{font-size:.95rem;font-weight:600;color:#00d4aa}
+.name-item .tld{font-size:.7rem;color:#6b6b80}
+.name-item .copy{padding:6px 12px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:8px;color:#00d4aa;font-size:.75rem;cursor:pointer}
+.preset-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.preset-tag{padding:6px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:20px;font-size:.75rem;color:#c8c8d0;cursor:pointer}
+.preset-tag.active{border-color:#00d4aa;color:#00d4aa}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Business Name Generator</h1><p>Find the perfect name for your business</p></div>
+
+<div class="card">
+<h2>Generate Names</h2>
+<div class="input-group"><label>Keyword (what you do)</label><input type="text" id="keyword" placeholder="e.g. tech, fashion, food, logistics"></div>
+<div class="preset-tags">
+<span class="preset-tag" onclick="setKey('tech')">Tech</span>
+<span class="preset-tag" onclick="setKey('fashion')">Fashion</span>
+<span class="preset-tag" onclick="setKey('food')">Food</span>
+<span class="preset-tag" onclick="setKey('logistics')">Logistics</span>
+<span class="preset-tag" onclick="setKey('beauty')">Beauty</span>
+<span class="preset-tag" onclick="setKey('finance')">Finance</span>
+<span class="preset-tag" onclick="setKey('health')">Health</span>
+<span class="preset-tag" onclick="setKey('education')">Education</span>
+</div>
+<div class="input-group"><label>Style</label><select id="style">
+<option value="modern">Modern & Tech</option>
+<option value="classic">Classic & Professional</option>
+<option value="creative">Creative & Catchy</option>
+<option value="african">African & Cultural</option>
+<option value="luxury">Luxury & Premium</option>
+</select></div>
+<button class="btn gen" onclick="generate()">Generate 12 Names</button>
+<div class="name-list" id="nameList"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Business Name Generator
+</div>
+
+<script>
+var prefixes={modern:['Neo','Quantum','Cyber','Digital','Hyper','Prime','Nexus','Vertex','Apex','Synth','Pulse','Flux'],classic:['Royal','Grand','Premier','Elite','Summit','Crown','Sterling','Pinnacle','Heritage','Classic','First','Prime'],creative:['Zappy','Bloop','Quirk','Fizz','Boom','Zing','Spark','Dash','Wink','Pop','Zoom','Glow'],african:['Naija','Sahara','Konga','Zumi','Afri','Nile','Savanna','Kente','Baobab','Djembe','Zaria','Kano'],luxury:['Gold','Platinum','Diamond','Velvet','Royal','Imperial','Prestige','Opulent','Luxe','Regal','Noble','Majestic']};
+var suffixes={modern:['Labs','Tech','Hub','AI','Systems','Works','Stack','Code','Grid','Byte','Cloud','Sync'],classic:['Group','Partners','Associates','Holdings','Company','Ltd','Inc','Solutions','Services','Consulting','Enterprises','Co'],creative:['ly','ify','ster','oo','io','able','ish','ful','works','pop','buzz','box'],african:['Hub','Connect','Wave','Link','Ville','Port','Junction','Express','Way','Place','Square','Circle'],luxury:['Collection','Boutique','Atelier','House','Maison','Estate','Gallery','Reserve','Edition','Label','Lifestyle','Heritage']};
+
+function setKey(kw){document.getElementById('keyword').value=kw;generate()}
+
+function generate(){
+var kw=document.getElementById('keyword').value.toLowerCase().trim()||'business';
+var style=document.getElementById('style').value;
+var pre=prefixes[style],suf=suffixes[style];
+var names=[];
+var used={};
+while(names.length<12){
+var p=pre[Math.floor(Math.random()*pre.length)];
+var s=suf[Math.floor(Math.random()*suf.length)];
+var name=p+kw.charAt(0).toUpperCase()+kw.slice(1)+s;
+if(!used[name]){used[name]=1;names.push(name)}
+// Also try keyword + suffix
+var name2=kw.charAt(0).toUpperCase()+kw.slice(1)+s;
+if(!used[name2]){used[name2]=1;names.push(name2)}
+// Prefix + keyword
+var name3=p+' '+kw.charAt(0).toUpperCase()+kw.slice(1);
+if(!used[name3]){used[name3]=1;names.push(name3)}
+}
+names=names.slice(0,12);
+var html=names.map(function(n){
+return '<div class="name-item"><div><div class="nm">'+n+'</div><div class="tld">'+n.toLowerCase().replace(/\s/g,'')+'.com · '+n.toLowerCase().replace(/\s/g,'')+'.ng</div></div><div class="copy" onclick="copyName(\''+n+'\')">Copy</div></div>';
+}).join('');
+document.getElementById('nameList').innerHTML=html;
+}
+
+function copyName(n){navigator.clipboard.writeText(n);alert('Copied: '+n)}
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
