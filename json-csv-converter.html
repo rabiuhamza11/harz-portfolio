@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free JSON to CSV converter. Transform JSON arrays into CSV format. Also convert CSV back to JSON. Developer and data tool.">
+<meta name="keywords" content="json to csv, csv to json, json converter, csv converter, data tool">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JSON to CSV Converter — Data Tool | Harz Digital Services">
+<meta property="og:description" content="Free JSON to CSV converter. Transform JSON arrays into CSV format. Also convert CSV back to JSON. Developer and data tool.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/json-csv-converter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/json-csv-converter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON to CSV Converter — Data Tool | Harz Digital Services</title>
+<meta name="description" content="Free JSON to CSV converter. Transform JSON arrays into CSV format. Also convert CSV back to JSON. Developer and data tool.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:550px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.mode-tabs{display:flex;gap:6px;margin-bottom:12px}
+.mode-tab{flex:1;padding:10px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;font-size:.8rem;color:#c8c8d0;cursor:pointer}
+.mode-tab.active{border-color:#00d4aa;color:#00d4aa}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+textarea{width:100%;min-height:120px;padding:14px;background:#14141e;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.8rem;font-family:monospace;line-height:1.6;resize:vertical;margin-bottom:8px}
+textarea:focus{border-color:#00d4aa;outline:none}
+.btn-row{display:flex;gap:6px;margin-bottom:8px}
+.btn{padding:10px 16px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:.8rem;flex:1}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+.btn.dl{background:#14141e;border:1px solid #1e1e2e;color:#c8c8d0}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px}
+.output pre{font-family:monospace;font-size:.75rem;color:#00d4aa;white-space:pre-wrap;word-break:break-all;line-height:1.6;max-height:200px;overflow-y:auto}
+.stats{text-align:center;font-size:.75rem;color:#6b6b80;margin-bottom:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>📊 JSON ↔ CSV</h1></div>
+
+<div class="mode-tabs">
+<div class="mode-tab active" onclick="setMode('j2c')" data-m="j2c">JSON → CSV</div>
+<div class="mode-tab" onclick="setMode('c2j')" data-m="c2j">CSV → JSON</div>
+</div>
+
+<div class="card">
+<h2 id="inputLabel">JSON Input</h2>
+<textarea id="input" oninput="convert()">[{"name":"Harz Digital","email":"harzco.business@gmail.com","phone":"08028687857","platforms":24},{"name":"Rabiu Hamza","email":"hamzarabiu390@gmail.com","phone":"07036170795","platforms":12},{"name":"Magani AI","email":"magani@harz.ai","phone":"N/A","platforms":80}]</textarea>
+<button class="btn gen" style="width:100%" onclick="convert()">⚡ Convert</button>
+</div>
+
+<div class="card">
+<h2>Output</h2>
+<div class="stats" id="convertStats"></div>
+<div class="output"><pre id="output"></pre></div>
+<div class="btn-row" style="margin-top:8px">
+<button class="btn copy" onclick="copy()">📋 Copy</button>
+<button class="btn dl" onclick="download()">📥 Download</button>
+</div>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | JSON ↔ CSV Converter
+</div>
+
+<script>
+var mode='j2c';
+function setMode(m){
+mode=m;
+document.querySelectorAll('.mode-tab').forEach(function(e){e.classList.toggle('active',e.dataset.m===m)});
+document.getElementById('inputLabel').textContent=m==='j2c'?'JSON Input':'CSV Input';
+if(m==='j2c'){
+document.getElementById('input').value='[{"name":"Harz Digital","email":"harzco.business@gmail.com","phone":"08028687857","platforms":24}]';
+}else{
+document.getElementById('input').value='name,email,phone,platforms\nHarz Digital,harzco.business@gmail.com,08028687857,24\nRabiu Hamza,hamzarabiu390@gmail.com,07036170795,12';
+}
+convert();
+}
+
+function convert(){
+var input=document.getElementById('input').value.trim();
+if(!input){document.getElementById('output').textContent='Enter data above';return}
+try{
+if(mode==='j2c'){jsonToCsv(input)}else{csvToJson(input)}
+}catch(e){document.getElementById('output').textContent='Error: '+e.message;document.getElementById('convertStats').textContent=''}
+}
+
+function jsonToCsv(input){
+var data=JSON.parse(input);
+if(!Array.isArray(data)){data=[data]}
+if(data.length===0){document.getElementById('output').textContent='Empty array';return}
+// Get headers
+var headers=Object.keys(data[0]);
+var rows=[headers.join(',')];
+data.forEach(function(item){
+var row=headers.map(function(h){
+var val=item[h];
+if(val===null||val===undefined)val='';
+if(typeof val==='string'&&val.includes(','))val='"'+val.replace(/"/g,'""')+'"';
+return val;
+});
+rows.push(row.join(','));
+});
+var csv=rows.join('\n');
+document.getElementById('output').textContent=csv;
+document.getElementById('convertStats').textContent=data.length+' records · '+headers.length+' columns';
+}
+
+function csvToJson(input){
+var lines=input.split('\n');
+if(lines.length<2){document.getElementById('output').textContent='Need at least header + 1 row';return}
+var headers=parseCsvLine(lines[0]);
+var data=[];
+for(var i=1;i<lines.length;i++){
+if(!lines[i].trim())continue;
+var values=parseCsvLine(lines[i]);
+var obj={};
+headers.forEach(function(h,j){
+var val=values[j]||'';
+if(!isNaN(val)&&val!=='')val=Number(val);
+obj[h]=val;
+});
+data.push(obj);
+}
+document.getElementById('output').textContent=JSON.stringify(data,null,2);
+document.getElementById('convertStats').textContent=data.length+' records · '+headers.length+' columns';
+}
+
+function parseCsvLine(line){
+var result=[],current='',inQuotes=false;
+for(var i=0;i<line.length;i++){
+var ch=line[i];
+if(ch==='"'){
+if(inQuotes&&line[i+1]==='"'){current+='"';i++}
+else{inQuotes=!inQuotes}
+}else if(ch===','&&!inQuotes){result.push(current);current=''}
+else{current+=ch}
+}
+result.push(current);
+return result;
+}
+
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!')}
+function download(){
+var text=document.getElementById('output').textContent;
+var ext=mode==='j2c'?'csv':'json';
+var blob=new Blob([text],{type:'text/'+ext});
+var a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='converted.'+ext;
+a.click();
+}
+convert();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

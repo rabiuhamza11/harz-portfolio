@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free CSS transform generator. Create 2D and 3D transforms with visual sliders. Rotate, scale, skew, translate. Copy CSS code.">
+<meta name="keywords" content="css transform, rotate, scale, skew, translate, css generator">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CSS Transform Generator — Visual Tool | Harz Digital Services">
+<meta property="og:description" content="Free CSS transform generator. Create 2D and 3D transforms with visual sliders. Rotate, scale, skew, translate. Copy CSS code.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/transform-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/transform-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Transform Generator — Visual Tool | Harz Digital Services</title>
+<meta name="description" content="Free CSS transform generator. Create 2D and 3D transforms with visual sliders. Rotate, scale, skew, translate. Copy CSS code.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.preview{background:#fff;border-radius:16px;padding:40px;text-align:center;margin-bottom:16px;min-height:120px;display:flex;align-items:center;justify-content:center;perspective:600px}
+.transform-box{width:100px;height:80px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:12px;transition:transform .2s}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.slider-row{margin-bottom:10px}
+.slider-row label{display:flex;justify-content:space-between;font-size:.75rem;color:#c8c8d0;margin-bottom:4px}
+.slider-row label .val{color:#00d4aa;font-weight:600}
+.slider-row input[type=range]{width:100%;accent-color:#00d4aa}
+.btn{padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#c8c8d0;font-size:.75rem;cursor:pointer;width:100%;margin-bottom:8px}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px}
+.output .code{font-family:monospace;font-size:.72rem;color:#00d4aa;white-space:pre-wrap;word-break:break-all;line-height:1.6}
+.copy-btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🔄 CSS Transform Generator</h1></div>
+
+<div class="preview"><div class="transform-box" id="box"></div></div>
+
+<div class="card">
+<h2>2D Transform</h2>
+<div class="slider-row"><label>Rotate (deg) <span class="val" id="rotVal">0°</span></label><input type="range" id="rotate" min="-180" max="180" value="0" oninput="gen()"></div>
+<div class="slider-row"><label>Scale X <span class="val" id="sxVal">1.0</span></label><input type="range" id="scaleX" min="0" max="3" step="0.1" value="1" oninput="gen()"></div>
+<div class="slider-row"><label>Scale Y <span class="val" id="syVal">1.0</span></label><input type="range" id="scaleY" min="0" max="3" step="0.1" value="1" oninput="gen()"></div>
+<div class="slider-row"><label>Translate X (px) <span class="val" id="txVal">0px</span></label><input type="range" id="translateX" min="-100" max="100" value="0" oninput="gen()"></div>
+<div class="slider-row"><label>Translate Y (px) <span class="val" id="tyVal">0px</span></label><input type="range" id="translateY" min="-100" max="100" value="0" oninput="gen()"></div>
+<div class="slider-row"><label>Skew X (deg) <span class="val" id="kxVal">0°</span></label><input type="range" id="skewX" min="-45" max="45" value="0" oninput="gen()"></div>
+<div class="slider-row"><label>Skew Y (deg) <span class="val" id="kyVal">0°</span></label><input type="range" id="skewY" min="-45" max="45" value="0" oninput="gen()"></div>
+</div>
+
+<div class="card">
+<h2>CSS Code</h2>
+<div class="output"><div class="code" id="cssCode"></div></div>
+<button class="copy-btn" onclick="copy()">📋 Copy CSS</button>
+<button class="btn" onclick="reset()">↻ Reset All</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Transform Generator
+</div>
+
+<script>
+function gen(){
+var rot=document.getElementById('rotate').value;
+var sx=document.getElementById('scaleX').value;
+var sy=document.getElementById('scaleY').value;
+var tx=document.getElementById('translateX').value;
+var ty=document.getElementById('translateY').value;
+var kx=document.getElementById('skewX').value;
+var ky=document.getElementById('skewY').value;
+document.getElementById('rotVal').textContent=rot+'°';
+document.getElementById('sxVal').textContent=sx;
+document.getElementById('syVal').textContent=sy;
+document.getElementById('txVal').textContent=tx+'px';
+document.getElementById('tyVal').textContent=ty+'px';
+document.getElementById('kxVal').textContent=kx+'°';
+document.getElementById('kyVal').textContent=ky+'°';
+
+var transform='translate('+tx+'px, '+ty+'px) rotate('+rot+'deg) scale('+sx+', '+sy+') skew('+kx+'deg, '+ky+'deg)';
+document.getElementById('box').style.transform=transform;
+document.getElementById('cssCode').textContent='.element {\n  transform: '+transform+';\n}';
+}
+
+function reset(){
+['rotate','translateX','translateY','skewX','skewY'].forEach(function(id){document.getElementById(id).value=0});
+['scaleX','scaleY'].forEach(function(id){document.getElementById(id).value=1});
+gen();
+}
+
+function copy(){navigator.clipboard.writeText(document.getElementById('cssCode').textContent);alert('CSS copied!')}
+gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
