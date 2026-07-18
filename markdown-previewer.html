@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free Markdown previewer. Write Markdown and see live preview. Export to HTML. Perfect for README files, documentation, and blog posts.">
+<meta name="keywords" content="markdown previewer, markdown editor, md to html, live markdown, readme editor">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Markdown Previewer — Live Editor | Harz Digital Services">
+<meta property="og:description" content="Free Markdown previewer. Write Markdown and see live preview. Export to HTML. Perfect for README files, documentation, and blog posts.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/markdown-previewer.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/markdown-previewer.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown Previewer — Live Editor | Harz Digital Services</title>
+<meta name="description" content="Free Markdown previewer. Write Markdown and see live preview. Export to HTML. Perfect for README files, documentation, and blog posts.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:600px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.editor{background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;padding:14px;margin-bottom:12px}
+.editor h2{font-size:.8rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+textarea{width:100%;min-height:180px;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.85rem;font-family:monospace;line-height:1.6;resize:vertical}
+.preview{background:#fff;color:#1a1a2e;border-radius:12px;padding:20px;min-height:180px;font-size:.85rem;line-height:1.7}
+.preview h1{font-size:1.4rem;font-weight:800;margin:10px 0;border-bottom:2px solid #e0e0e0;padding-bottom:4px}
+.preview h2{font-size:1.1rem;font-weight:700;margin:10px 0}
+.preview h3{font-size:.95rem;font-weight:600;margin:8px 0}
+.preview p{margin:6px 0}
+.preview ul,.preview ol{padding-left:24px;margin:6px 0}
+.preview li{margin:3px 0}
+.preview code{background:#f0f0f0;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:.8rem}
+.preview pre{background:#1a1a2e;color:#e8e8f0;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0}
+.preview pre code{background:none;color:inherit}
+.preview blockquote{border-left:3px solid #00d4aa;padding-left:12px;margin:8px 0;color:#666}
+.preview a{color:#0066cc}
+.preview strong{font-weight:700}
+.preview em{font-style:italic}
+.preview table{border-collapse:collapse;width:100%;margin:8px 0}
+.preview th,.preview td{border:1px solid #ddd;padding:6px 10px}
+.preview th{background:#f5f5f5;font-weight:700}
+.preview img{max-width:100%;border-radius:8px}
+.preview hr{border:none;border-top:1px solid #e0e0e0;margin:10px 0}
+.btn-row{display:flex;gap:8px;margin-top:8px}
+.btn{padding:10px 18px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:.8rem;flex:1}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+.btn.html{background:#14141e;border:1px solid #1e1e2e;color:#c8c8d0}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Markdown Previewer</h1></div>
+
+<div class="editor">
+<h2>📝 Markdown Editor</h2>
+<textarea id="mdInput" oninput="render()"># Harz Digital Services
+
+## About Us
+We are a **Nigerian digital services** company registered with CAC (RC 321424).
+
+### Our Platforms
+1. HarzDM Marketplace
+2. Apex Bank
+3. Cyber Shield X
+4. Omega Health AI
+
+### Features
+- 24 live platforms
+- 80+ AI agents
+- 259 digital products
+
+### Code Example
+```javascript
+const harz = {
+  platforms: 24,
+  products: 259,
+  agents: 80
+};
+```
+
+### Quote
+> Building Nigeria's largest digital ecosystem.
+
+### Contact
+Visit us at [Harz Portfolio](https://rabiuhamza11.github.io/harz-portfolio/)
+
+---
+
+*Made with ❤️ by Magani AI*</textarea>
+<div class="btn-row">
+<button class="btn gen" onclick="render()">👁️ Preview</button>
+<button class="btn copy" onclick="copyMD()">📋 Copy MD</button>
+<button class="btn html" onclick="copyHTML()">📋 Copy HTML</button>
+<button class="btn html" onclick="clearMD()">Clear</button>
+</div>
+</div>
+
+<div class="editor">
+<h2>👁️ Live Preview</h2>
+<div class="preview" id="mdPreview"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Markdown Previewer
+</div>
+
+<script>
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function render(){
+var md=document.getElementById('mdInput').value;
+var html=md;
+// Code blocks
+html=html.replace(/```(\w*)\n([\s\S]*?)```/g,function(m,lang,code){return'<pre><code>'+escapeHtml(code)+'</code></pre>'});
+// Inline code
+html=html.replace(/`([^`]+)`/g,'<code>$1</code>');
+// Headers
+html=html.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+html=html.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+html=html.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+// Bold and italic
+html=html.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+html=html.replace(/\*(.+?)\*/g,'<em>$1</em>');
+// Links
+html=html.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>');
+// Blockquote
+html=html.replace(/^&gt; (.+)$/gm,'<blockquote>$1</blockquote>');
+// Horizontal rule
+html=html.replace(/^---$/gm,'<hr>');
+// Unordered list
+html=html.replace(/^- (.+)$/gm,'<li>$1</li>');
+html=html.replace(/(<li>.*<\/li>\n?)+/g,function(m){return'<ul>'+m+'</ul>'});
+// Ordered list
+html=html.replace(/^\d+\. (.+)$/gm,'<li>$1</li>');
+// Images
+html=html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img alt="$1" src="$2">');
+// Paragraphs
+html=html.split('\n\n').map(function(p){
+if(p.match(/^<(h[1-3]|ul|ol|pre|blockquote|hr|img)/))return p;
+return p.trim()?'<p>'+p.replace(/\n/g,'<br>')+'</p>':'';
+}).join('\n');
+document.getElementById('mdPreview').innerHTML=html;
+}
+
+function copyMD(){navigator.clipboard.writeText(document.getElementById('mdInput').value);alert('Markdown copied!')}
+function copyHTML(){navigator.clipboard.writeText(document.getElementById('mdPreview').innerHTML);alert('HTML copied!')}
+function clearMD(){document.getElementById('mdInput').value='';render()}
+render();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

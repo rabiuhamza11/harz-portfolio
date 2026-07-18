@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free image to Base64 converter. Convert images to Base64 data URIs for embedding in HTML, CSS, and JSON. Supports PNG, JPG, GIF, WebP.">
+<meta name="keywords" content="image to base64, base64 image converter, data uri, image encoder, html embed image">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Image to Base64 — Converter Tool | Harz Digital Services">
+<meta property="og:description" content="Free image to Base64 converter. Convert images to Base64 data URIs for embedding in HTML, CSS, and JSON. Supports PNG, JPG, GIF, WebP.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/image-to-base64.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/image-to-base64.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to Base64 — Converter Tool | Harz Digital Services</title>
+<meta name="description" content="Free image to Base64 converter. Convert images to Base64 data URIs for embedding in HTML, CSS, and JSON. Supports PNG, JPG, GIF, WebP.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.drop-zone{border:2px dashed #1e1e2e;border-radius:16px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s}
+.drop-zone:hover{border-color:#00d4aa;background:rgba(0,212,170,.03)}
+.drop-zone .icon{font-size:3rem}
+.drop-zone .text{font-size:.85rem;color:#6b6b80;margin-top:8px}
+.drop-zone .hint{font-size:.7rem;color:#4a4a5e;margin-top:4px}
+#fileInput{display:none}
+.preview-area{margin-top:16px}
+.preview-img{max-width:100%;border-radius:12px;margin-bottom:12px;display:none}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.info-item{padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px}
+.info-item .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase}
+.info-item .val{font-size:.8rem;color:#00d4aa;font-weight:600;margin-top:2px}
+.output-box{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px;margin-top:12px;position:relative}
+.output-box textarea{width:100%;min-height:100px;background:none;border:none;color:#00d4aa;font-family:monospace;font-size:.7rem;line-height:1.5;resize:vertical;outline:none}
+.btn-row{display:flex;gap:8px;margin-top:10px}
+.btn{padding:10px 18px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:.8rem;flex:1}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+.btn.html{background:#14141e;border:1px solid #1e1e2e;color:#c8c8d0}
+.btn.css{background:#14141e;border:1px solid #1e1e2e;color:#7c3aed}
+.usage{font-size:.75rem;color:#6b6b80;line-height:1.6;padding:12px;background:#14141e;border-radius:10px;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Image to Base64</h1><p>Convert images to data URIs</p></div>
+
+<div class="card">
+<h2>Upload Image</h2>
+<div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+<div class="icon">📁</div>
+<div class="text">Click to select an image</div>
+<div class="hint">PNG, JPG, GIF, WebP, SVG — max 2MB</div>
+</div>
+<input type="file" id="fileInput" accept="image/*">
+<div class="preview-area">
+<img class="preview-img" id="previewImg">
+<div class="info-grid" id="infoGrid" style="display:none">
+<div class="info-item"><div class="lbl">File Name</div><div class="val" id="fName">—</div></div>
+<div class="info-item"><div class="lbl">File Size</div><div class="val" id="fSize">—</div></div>
+<div class="info-item"><div class="lbl">MIME Type</div><div class="val" id="fMime">—</div></div>
+<div class="info-item"><div class="lbl">Base64 Size</div><div class="val" id="b64Size">—</div></div>
+</div>
+</div>
+</div>
+
+<div class="card" id="outputCard" style="display:none">
+<h2>Base64 Output</h2>
+<div class="output-box"><textarea id="b64Output" readonly></textarea></div>
+<div class="btn-row">
+<button class="btn copy" onclick="copyB64()">📋 Copy Base64</button>
+<button class="btn html" onclick="copyHTML()">📋 Copy &lt;img&gt; Tag</button>
+<button class="btn css" onclick="copyCSS()">📋 Copy CSS</button>
+</div>
+<div class="usage">
+Uses: Embed images in HTML emails, CSS backgrounds, JSON APIs, or Markdown without external file requests. Reduces HTTP requests but increases file size by ~33%.
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Image to Base64 Converter
+</div>
+
+<script>
+function formatSize(bytes){
+if(bytes<1024)return bytes+' B';
+if(bytes<1048576)return (bytes/1024).toFixed(1)+' KB';
+return (bytes/1048576).toFixed(2)+' MB';
+}
+
+document.getElementById('fileInput').addEventListener('change',function(e){
+var file=e.target.files[0];
+if(!file)return;
+if(file.size>2*1024*1024){alert('File too large. Max 2MB.');return}
+var reader=new FileReader();
+reader.onload=function(ev){
+var b64=ev.target.result;
+document.getElementById('previewImg').src=b64;
+document.getElementById('previewImg').style.display='block';
+document.getElementById('fName').textContent=file.name;
+document.getElementById('fSize').textContent=formatSize(file.size);
+document.getElementById('fMime').textContent=file.type;
+document.getElementById('b64Size').textContent=formatSize(b64.length);
+document.getElementById('infoGrid').style.display='grid';
+document.getElementById('b64Output').value=b64;
+document.getElementById('outputCard').style.display='block';
+};
+reader.readAsDataURL(file);
+});
+
+function copyB64(){
+navigator.clipboard.writeText(document.getElementById('b64Output').value);
+alert('Base64 copied!');
+}
+function copyHTML(){
+var b64=document.getElementById('b64Output').value;
+navigator.clipboard.writeText('<img src="'+b64+'" alt="image">');
+alert('HTML img tag copied!');
+}
+function copyCSS(){
+var b64=document.getElementById('b64Output').value;
+navigator.clipboard.writeText('background-image: url("'+b64+'");');
+alert('CSS background copied!');
+}
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
