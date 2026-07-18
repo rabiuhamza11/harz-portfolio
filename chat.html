@@ -1,45 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Magani AI — Harz Digital Services</title>
 <meta name="description" content="Chat with Magani AI — your digital business assistant. Ask about products, services, pricing, tools, or anything Harz Digital Services.">
 <meta name="keywords" content="chat with AI, Magani AI, Harz Digital Services, AI assistant Nigeria, chatbot">
 <meta name="author" content="Harz Digital Services (RC 321424)">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="#00d4aa">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Magani AI">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Chat with Magani AI — Harz Digital Services">
 <meta property="og:description" content="Chat with Magani AI — your digital business assistant.">
 <meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/chat.html">
 <link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/chat.html">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chat with Magani AI — Harz Digital Services</title>
-<meta name="description" content="Chat with Magani AI — your digital business assistant. Ask about products, services, pricing, tools, or anything Harz Digital Services.">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="magani-icon-192.png">
+<link rel="icon" type="image/png" href="magani-icon-192.png">
+<link rel="icon" type="image/png" sizes="64x64" href="magani-icon-64.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;height:100vh;display:flex;flex-direction:column}
-.header{background:#0e0e16;border-bottom:1px solid #1e1e2e;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-.header .avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#00d4aa,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.header{background:#0e0e16;border-bottom:1px solid #1e1e2e;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:sticky;top:0;z-index:10}
+.header .avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#00d4aa,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:1.4rem}
 .header .info{flex:1}
-.header .info h1{font-size:.95rem;color:#e8e8f0}
+.header .info h1{font-size:1rem;color:#e8e8f0}
 .header .info .status{font-size:.7rem;color:#00d4aa;display:flex;align-items:center;gap:4px}
-.header .info .status .dot{width:8px;height:8px;background:#00d4aa;border-radius:50%;display:inline-block}
+.header .info .status .dot{width:8px;height:8px;background:#00d4aa;border-radius:50%;display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .header a{color:#6b6b80;font-size:1.2rem;text-decoration:none;padding:4px 12px}
 .chat-container{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .chat-iframe-wrapper{flex:1;position:relative;overflow:hidden}
 .chat-iframe-wrapper iframe{width:100%;height:100%;border:none;background:#050508}
-.fallback{display:none;flex:1;padding:20px;overflow-y:auto}
+.fallback{display:none;flex:1;padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .fallback.show{display:block}
-.msg{max-width:80%;margin-bottom:12px}
+.welcome{text-align:center;padding:20px 0 30px}
+.welcome .big-icon{font-size:3.5rem;margin-bottom:8px}
+.welcome h2{font-size:1.2rem;color:#00d4aa}
+.welcome p{font-size:.8rem;color:#6b6b80;margin:8px 0}
+.welcome .badge{display:inline-block;padding:4px 12px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);border-radius:20px;font-size:.7rem;color:#00d4aa;margin-top:8px}
+.msg{max-width:85%;margin-bottom:14px}
 .msg.ai{margin-right:auto}
 .msg.user{margin-left:auto;text-align:right}
-.msg .bubble{padding:12px 16px;border-radius:16px;font-size:.85rem;line-height:1.5}
+.msg .bubble{padding:14px 18px;border-radius:18px;font-size:.9rem;line-height:1.6}
 .msg.ai .bubble{background:#16161e;border:1px solid #1e1e2e;border-bottom-left-radius:4px}
 .msg.user .bubble{background:linear-gradient(135deg,#00d4aa,#7c3aed);border-bottom-right-radius:4px;color:#fff}
 .msg .time{font-size:.6rem;color:#6b6b80;margin-top:4px}
-.quick-actions{padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid #1e1e2e}
-.quick-btn{padding:8px 14px;background:#16161e;border:1px solid #2a2a3e;border-radius:20px;color:#c8c8d0;font-size:.75rem;cursor:pointer;text-decoration:none;display:inline-block}
+.quick-actions{padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid #1e1e2e;flex-shrink:0}
+.quick-btn{padding:10px 16px;background:#16161e;border:1px solid #2a2a3e;border-radius:22px;color:#c8c8d0;font-size:.8rem;cursor:pointer;text-decoration:none;display:inline-block}
+.quick-btn:active{transform:scale(.95)}
 .quick-btn:hover{border-color:#00d4aa;color:#00d4aa}
-.wa-float{position:fixed;bottom:20px;right:20px;width:56px;height:56px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 20px rgba(37,211,102,.3);z-index:100;text-decoration:none}
+.chat-input{display:flex;gap:8px;padding:12px 16px;border-top:1px solid #1e1e2e;background:#0e0e16;flex-shrink:0}
+.chat-input input{flex:1;padding:12px 16px;background:#14141e;border:1px solid #2a2a3e;border-radius:24px;color:#e8e8f0;font-size:.9rem;outline:none}
+.chat-input input:focus{border-color:#00d4aa}
+.chat-input button{padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:24px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer}
+.chat-input button:active{transform:scale(.95)}
+.install-prompt{display:none;padding:14px 16px;background:rgba(0,212,170,.08);border-top:1px solid rgba(0,212,170,.2);text-align:center}
+.install-prompt.show{display:block}
+.install-prompt button{padding:10px 24px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:10px;color:#fff;font-size:.85rem;font-weight:600;cursor:pointer}
+.install-prompt p{font-size:.75rem;color:#6b6b80;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -50,7 +73,7 @@ body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;heigh
 <h1>Magani AI</h1>
 <div class="status"><span class="dot"></span> Online — Harz Digital Services</div>
 </div>
-<a href="tools.html" title="Back to Tools">✕</a>
+<a href="tools.html" title="Close" style="font-size:1.4rem">✕</a>
 </div>
 
 <div class="chat-container">
@@ -59,62 +82,110 @@ body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;heigh
 </div>
 
 <div class="fallback" id="fallback">
-<div style="text-align:center;padding:20px 0">
-<div style="font-size:3rem;margin-bottom:12px">🧙‍♂️</div>
-<h2 style="font-size:1.1rem;color:#00d4aa">Magani AI</h2>
-<p style="font-size:.8rem;color:#6b6b80;margin:8px 0 20px">Your digital business assistant</p>
+<div class="welcome">
+<div class="big-icon">🧙‍♂️</div>
+<h2>Magani AI</h2>
+<p>Your digital business assistant</p>
+<div class="badge">CAC RC 321424 · TIN 24550860</div>
 </div>
 
-<div class="msg ai"><div class="bubble">Hi! I'm Magani, your AI assistant for Harz Digital Services. I can help you with products, services, pricing, tools, and more. How can I help you today?</div></div>
+<div class="msg ai"><div class="bubble">Hi! I'm Magani 🧙‍♂️
+
+I can help you with:
+1. Browse 259 digital products
+2. Services & consulting
+3. Pricing questions
+4. Free business tools
+5. Affiliate program (20% commission)
+6. Order tracking & support
+
+How can I help you today?</div></div>
 
 <div id="chatLog"></div>
 
 <div class="quick-actions">
-<a href="https://wa.me/2348028687857?text=Hi%20Magani,%20I%20want%20to%20browse%20products" class="quick-btn">🛍️ Browse Products</a>
+<a href="https://wa.me/2348028687857?text=Hi%20Magani,%20I%20want%20to%20browse%20products" class="quick-btn">🛍️ Products</a>
 <a href="https://wa.me/2348028687857?text=Hi%20Magani,%20what%20services%20do%20you%20offer?" class="quick-btn">💼 Services</a>
 <a href="https://wa.me/2348028687857?text=Hi%20Magani,%20I%20have%20a%20pricing%20question" class="quick-btn">💰 Pricing</a>
 <a href="https://wa.me/2348028687857?text=Hi%20Magani,%20I%20want%20to%20join%20the%20affiliate%20program" class="quick-btn">🤝 Affiliate</a>
 <a href="https://wa.me/2348028687857?text=Hi%20Magani,%20I%20need%20support" class="quick-btn">💬 Support</a>
-<a href="https://t.me/b44_e609780e17959020_bot" class="quick-btn">✈️ Chat on Telegram</a>
+<a href="https://t.me/b44_e609780e17959020_bot" class="quick-btn">✈️ Telegram</a>
 </div>
+
+<div class="chat-input">
+<input type="text" id="msgInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendMsg()">
+<button onclick="sendMsg()">Send</button>
 </div>
 </div>
 
-<a href="https://wa.me/2348028687857?text=Hi%20Magani!" class="wa-float" title="Chat on WhatsApp">💬</a>
+<div class="install-prompt" id="installPrompt">
+<p>📱 Install Magani AI on your home screen for quick access</p>
+<button onclick="installApp()">Install App</button>
+</div>
+</div>
 
 <script>
-function onChatLoad(){
-// If iframe loads successfully, hide fallback
-document.getElementById('fallback').classList.remove('show');
-document.getElementById('chatWrapper').style.display='block';
+// Register service worker for PWA
+if('serviceWorker' in navigator){
+navigator.serviceWorker.register('sw.js').then(function(){console.log('SW registered')}).catch(function(){});
 }
 
-// Fallback after 5 seconds if iframe doesn't load (CORS issues)
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', function(e){
+e.preventDefault();
+deferredPrompt = e;
+document.getElementById('installPrompt').classList.add('show');
+});
+
+function installApp(){
+if(deferredPrompt){
+deferredPrompt.prompt();
+deferredPrompt.userChoice.then(function(){
+deferredPrompt = null;
+document.getElementById('installPrompt').classList.remove('show');
+});
+}
+}
+
+function onChatLoad(){
+document.getElementById('fallback').classList.remove('show');
+document.getElementById('chatWrapper').style.display = 'block';
+}
+
+// Fallback after 5s if iframe blocked
 setTimeout(function(){
 try{
-var f=document.getElementById('chatFrame');
-if(!f.contentWindow||f.contentWindow.length===0){
+var f = document.getElementById('chatFrame');
+if(!f.contentWindow || f.contentWindow.length === 0){
 showFallback();
 }
 }catch(e){
 showFallback();
 }
-},5000);
+}, 5000);
 
 function showFallback(){
-document.getElementById('chatWrapper').style.display='none';
+document.getElementById('chatWrapper').style.display = 'none';
 document.getElementById('fallback').classList.add('show');
-document.getElementById('fallback').style.display='block';
+document.getElementById('fallback').style.display = 'flex';
+document.getElementById('fallback').style.flexDirection = 'column';
 }
 
-// If user sends message in fallback, open WhatsApp
-var chatLog=document.getElementById('chatLog');
-var quickBtns=document.querySelectorAll('.quick-btn');
-quickBtns.forEach(function(btn){
-btn.addEventListener('click',function(e){
-// These are links, let them go through normally
-});
-});
+function sendMsg(){
+var input = document.getElementById('msgInput');
+var text = input.value.trim();
+if(!text) return;
+var log = document.getElementById('chatLog');
+// Add user message
+log.innerHTML += '<div class="msg user"><div class="bubble">' + text.replace(/</g,'&lt;') + '</div></div>';
+input.value = '';
+// Show "typing" then redirect to WhatsApp
+log.innerHTML += '<div class="msg ai" id="typing"><div class="bubble">⏳ Opening WhatsApp...</div></div>';
+setTimeout(function(){
+window.location.href = 'https://wa.me/2348028687857?text=' + encodeURIComponent(text);
+}, 800);
+log.scrollTop = log.scrollHeight;
+}
 </script>
 
 </body>
