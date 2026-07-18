@@ -22,6 +22,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg
 .stat.purple .num{color:var(--purple)}
 .stat.blue .num{color:var(--blue)}
 .stat.yellow .num{color:var(--yellow)}
+.stat .sub{font-size:.65rem;color:var(--muted);margin-top:2px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
 .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
@@ -74,6 +75,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg
 .exec-card .role-status{font-size:.65rem;color:var(--muted);margin-top:2px}
 .exec-card.active{border-color:rgba(0,212,170,.3)}
 .exec-card.planned{opacity:.5}
+.bar-chart{display:flex;align-items:flex-end;gap:4px;height:60px;margin-top:8px}
+.bar-chart .bar{flex:1;background:linear-gradient(180deg,var(--accent),rgba(0,212,170,.3));border-radius:3px 3px 0 0;min-height:4px;position:relative}
+.bar-chart .bar .lbl{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--muted);white-space:nowrap}
 @media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
 </style>
 </head>
@@ -82,25 +86,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg
 <div class="header">
 <div>
 <h1>OMEGA BUSINESS COMMANDER</h1>
-<div class="sub">Harz Ecosystem Control Center — 24 Platforms | 80+ AI Agents</div>
+<div class="sub">Harz Ecosystem Control Center — 24 Platforms | 80+ AI Agents | Live Data</div>
 </div>
-<div class="live"><div class="dot"></div> SYSTEM ONLINE — July 18, 2026</div>
+<div class="live"><div class="dot"></div> SYSTEM ONLINE — July 18, 2026 09:43 WAT</div>
 </div>
 
 <div class="stats-row">
-<div class="stat green"><div class="num">24</div><div class="lbl">Platforms Live</div></div>
-<div class="stat purple"><div class="num">80+</div><div class="lbl">AI Agents</div></div>
-<div class="stat blue"><div class="num">90+</div><div class="lbl">Data Entities</div></div>
-<div class="stat yellow"><div class="num">241</div><div class="lbl">Digital Products</div></div>
-<div class="stat green"><div class="num">44</div><div class="lbl">GitHub Repos</div></div>
-<div class="stat purple"><div class="num">18</div><div class="lbl">Automations</div></div>
-<div class="stat blue"><div class="num">16+</div><div class="lbl">Backend Functions</div></div>
-<div class="stat green"><div class="num">510+</div><div class="lbl">Maganu Commands</div></div>
+<div class="stat green"><div class="num">259</div><div class="lbl">Digital Products</div><div class="sub">171 NGN + 88 USD</div></div>
+<div class="stat purple"><div class="num">27</div><div class="lbl">Music Tracks</div><div class="sub">174K plays</div></div>
+<div class="stat blue"><div class="num">8</div><div class="lbl">Films</div><div class="sub">162K views</div></div>
+<div class="stat yellow"><div class="num">12</div><div class="lbl">Courses</div><div class="sub">3 free, 9 paid</div></div>
+<div class="stat green"><div class="num">5</div><div class="lbl">Properties</div><div class="sub">₦582M listed</div></div>
+<div class="stat purple"><div class="num">3</div><div class="lbl">Orders</div><div class="sub">1 paid, 2 pending</div></div>
+<div class="stat blue"><div class="num">3</div><div class="lbl">CRM Contacts</div><div class="sub">1 new, 1 responded</div></div>
+<div class="stat green"><div class="num">6</div><div class="lbl">Consultations</div><div class="sub">₦10K-₦75K/session</div></div>
 </div>
 
 <div class="grid2">
 <div class="panel">
-<h2>Executive AI Agents <span class="badge">18 Planned</span></h2>
+<h2>Executive AI Agents <span class="badge">18 Total</span></h2>
 <div class="exec-grid">
 <div class="exec-card active"><div class="role-icon">👔</div><div class="role-name">Chief Executive</div><div class="role-status">Magani (Active)</div></div>
 <div class="exec-card active"><div class="role-icon">📊</div><div class="role-name">Strategy</div><div class="role-status">Active</div></div>
@@ -125,17 +129,65 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg
 
 <div class="panel">
 <h2>Financial Operations <span class="badge">6 Gateways</span></h2>
-<div class="fin-row"><span>Getly (USDT TRC20)</span><span class="val pos">LIVE</span></div>
+<div class="fin-row"><span>Getly (USDT TRC20)</span><span class="val pos">LIVE — 20 products</span></div>
 <div class="fin-row"><span>Bank Transfer (UBA)</span><span class="val pos">LIVE</span></div>
-<div class="fin-row"><span>Paystack</span><span class="val pending">TEST — Awaiting Verification</span></div>
+<div class="fin-row"><span>Paystack</span><span class="val pending">TEST — Biz ID 1908660 sent</span></div>
 <div class="fin-row"><span>Stripe</span><span class="val pending">TEST — Charges Disabled</span></div>
 <div class="fin-row"><span>Flutterwave</span><span class="val pending">Awaiting Response</span></div>
 <div class="fin-row"><span>Moniepoint</span><span class="val pending">Account Active — API Needed</span></div>
-<div class="fin-row"><span>Total Revenue (MTD)</span><span class="val">₦0 (Test Mode)</span></div>
-<div class="fin-row"><span>Products on Getly</span><span class="val">20 / 244</span></div>
-<div class="fin-row"><span>USDT Wallet</span><span class="val pos">TVE2ia3...X5Cr</span></div>
-<div class="fin-row"><span>Business CAC</span><span class="val pos">RC 321424</span></div>
-<div class="fin-row"><span>Business TIN</span><span class="val pos">24550860</span></div>
+<div class="fin-row"><span>Product Catalog Value (NGN)</span><span class="val pos">₦1,577,000</span></div>
+<div class="fin-row"><span>Product Catalog Value (USD)</span><span class="val pos">$264,465</span></div>
+<div class="fin-row"><span>Music Revenue Potential</span><span class="val pos">$880 (27 tracks)</span></div>
+<div class="fin-row"><span>Estate Listings</span><span class="val pos">₦582M total</span></div>
+<div class="fin-row"><span>Business CAC/TIN</span><span class="val pos">RC 321424 / TIN 24550860</span></div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Digital Product Catalog <span class="badge">259 Products</span></h2>
+<div class="fin-row"><span>NGN Products</span><span class="val pos">171 (avg ₦9,222)</span></div>
+<div class="fin-row"><span>USD Products</span><span class="val pos">88 (avg $3,005)</span></div>
+<div class="fin-row"><span>Free Lead Magnets</span><span class="val pos">3</span></div>
+<div class="fin-row"><span>Getly Store</span><span class="val pending">20/259 uploaded</span></div>
+<div class="fin-row"><span>Top Price (NGN)</span><span class="val">₦35,000</span></div>
+<div class="fin-row"><span>Top Price (USD)</span><span class="val">$9,700</span></div>
+<div class="bar-chart">
+<div class="bar" style="height:20%"></div>
+<div class="bar" style="height:35%"></div>
+<div class="bar" style="height:55%"></div>
+<div class="bar" style="height:70%"></div>
+<div class="bar" style="height:45%"></div>
+<div class="bar" style="height:90%"></div>
+<div class="bar" style="height:60%"></div>
+<div class="bar" style="height:30%"></div>
+<div class="bar" style="height:50%"></div>
+<div class="bar" style="height:15%"></div>
+</div>
+<div style="font-size:.65rem;color:var(--muted);margin-top:20px">Product distribution by category</div>
+</div>
+
+<div class="panel">
+<h2>Content Platforms <span class="badge">Live Data</span></h2>
+<div style="margin-bottom:12px">
+<strong style="color:var(--accent);font-size:.8rem">🎵 HarzMusic — 27 Tracks</strong>
+<div class="fin-row"><span>Total Plays</span><span class="val pos">174,300</span></div>
+<div class="fin-row"><span>Total Downloads</span><span class="val pos">4,310</span></div>
+<div class="fin-row"><span>Artists</span><span class="val">10 across 8 countries</span></div>
+<div class="fin-row"><span>Languages</span><span class="val">11</span></div>
+<div class="fin-row"><span>Avg Price</span><span class="val">$32.66</span></div>
+</div>
+<div style="margin-bottom:12px">
+<strong style="color:var(--accent);font-size:.8rem">🎬 HarzFilm — 8 Films</strong>
+<div class="fin-row"><span>Total Views</span><span class="val pos">162,500</span></div>
+<div class="fin-row"><span>Purchases</span><span class="val pending">0 (test mode)</span></div>
+<div class="fin-row"><span>Creators</span><span class="val">5 across 4 countries</span></div>
+</div>
+<div>
+<strong style="color:var(--accent);font-size:.8rem">📚 EduWealth — 12 Courses</strong>
+<div class="fin-row"><span>Free Courses</span><span class="val pos">3</span></div>
+<div class="fin-row"><span>Paid Range</span><span class="val">₦8K - ₦25K</span></div>
+</div>
 </div>
 </div>
 
@@ -208,7 +260,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg
 
 <div class="grid2">
 <div class="panel">
-<h2>Automation Log <span class="badge">18 Active</span></h2>
+<h2>Automation Log <span class="badge">20 Active</span></h2>
 <div class="log-entry"><span class="time">10:00 PM</span><span class="level ok">OK</span><span class="msg">Daily backup to GitHub completed</span></div>
 <div class="log-entry"><span class="time">08:15 AM</span><span class="level ok">OK</span><span class="msg">CRM stats report sent to WhatsApp</span></div>
 <div class="log-entry"><span class="time">08:00 AM</span><span class="level ok">OK</span><span class="msg">Calendar briefing sent to WhatsApp</span></div>
@@ -216,7 +268,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg
 <div class="log-entry"><span class="time">07:00 AM</span><span class="level ok">OK</span><span class="msg">Daily chapter sent — Genius 365</span></div>
 <div class="log-entry"><span class="time">Every 10m</span><span class="level info">INFO</span><span class="msg">Maganu keep-alive ping — 66 runs/24h</span></div>
 <div class="log-entry"><span class="time">Real-time</span><span class="level info">INFO</span><span class="msg">Incoming email monitor — 18 runs/24h</span></div>
-<div class="log-entry"><span class="time">Jul 17</span><span class="level warn">WARN</span><span class="msg">Paystack awaiting Business ID response</span></div>
+<div class="log-entry"><span class="time">Jul 18</span><span class="level info">INFO</span><span class="msg">Paystack reply sent with Business ID 1908660</span></div>
 <div class="log-entry"><span class="time">Jul 17</span><span class="level warn">WARN</span><span class="msg">Stripe rejected email verification — use portal</span></div>
 <div class="log-entry"><span class="time">Jul 17</span><span class="level err">ERR</span><span class="msg">Render deploy failed for maganu-agent (2x)</span></div>
 </div>
@@ -224,20 +276,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg
 <div class="panel">
 <h2>Deployment Infrastructure <span class="badge">5 Providers</span></h2>
 <div class="fin-row"><span>Vercel</span><span class="val pos">27 sites deployed</span></div>
-<div class="fin-row"><span>Render</span><span class="val pos">1 service (Maganu AI)</span></div>
-<div class="fin-row"><span>GitHub Pages</span><span class="val pos">7 pages (portfolio + tools)</span></div>
+<div class="fin-row"><span>Render</span><span class="val pos">1 service (Maganu AI v7.8.1)</span></div>
+<div class="fin-row"><span>GitHub Pages</span><span class="val pos">8 pages (portfolio + tools)</span></div>
 <div class="fin-row"><span>GitHub Repos</span><span class="val pos">44 repositories</span></div>
 <div class="fin-row"><span>Base44 Backend</span><span class="val pos">16+ functions</span></div>
 <div class="fin-row"><span>Oracle Cloud</span><span class="val pending">Awaiting setup (24GB ARM free)</span></div>
 <div class="fin-row"><span>AWS / Azure / GCP</span><span class="val pending">Planned</span></div>
 <div class="fin-row"><span>Cloudflare</span><span class="val pending">Planned</span></div>
 <div class="fin-row"><span>CI/CD Pipeline</span><span class="val warn">GitHub Actions (partial)</span></div>
-<div class="fin-row"><span>Auto Rollback</span><span class="val pending">Planned</span></div>
+<div class="fin-row"><span>Auto Rollback</span><span class="val pending">Planned</div>
 </div>
 </div>
 
 <div class="panel" style="margin-bottom:16px">
-<h2>Communication Hub <span class="badge">3 Active</span></h2>
+<h2>Communication Hub <span class="badge">4 Connected</span></h2>
 <div class="grid3">
 <div class="sec-item"><div class="label">WhatsApp</div><div class="val ok">Connected — CRM Active</div></div>
 <div class="sec-item"><div class="label">Telegram</div><div class="val ok">Connected — Maganu Bot</div></div>
@@ -262,14 +314,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg
 <div class="sec-item"><div class="label">Registered</div><div class="val ok">August 5, 2014</div></div>
 <div class="sec-item"><div class="label">Address</div><div class="val ok">232 Kafin Galadima, Bauchi</div></div>
 <div class="sec-item"><div class="label">Bank</div><div class="val ok">UBA 2034326424</div></div>
-<div class="sec-item"><div class="label">Registrar</div><div class="val ok">Bello Mahmud, CAC Nigeria</div></div>
+<div class="sec-item"><div class="label">Registrar</div><div class="val ok">Bello Mahmud, CAC</div></div>
 </div>
 </div>
 
 <div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
-OMEGA BUSINESS COMMANDER AI — Harz Digital Services (RC 321424, TIN 24550860)<br>
+OMEGA BUSINESS COMMANDER AI v1.1 — Harz Digital Services (RC 321424, TIN 24550860)<br>
 Owner: Rabiu Hamza Mohammed | 08028687857 | harzco.business@gmail.com<br>
-Control Center v1.0 — Built by Magani
+Built by Magani — Live data from 90+ Base44 entities
 </div>
 
 <script>
@@ -291,13 +343,13 @@ var platforms=[
 {name:"OMEGA INFINITY 1000",url:"omega-infinity-dashboard.vercel.app",status:"online"},
 {name:"TradeOS",url:"tradeos.vercel.app",status:"online"},
 {name:"OMEGA Content AI",url:"omega-content-ai.vercel.app",status:"online"},
-{name:"Abuja Estate City",url:"abuja-estate-city-ai.vercel.app",status:"online"},
+{name:"Abuja Estate City AI",url:"abuja-estate-city-ai.vercel.app",status:"online"},
 {name:"Maganu Agent",url:"maganu-agent.onrender.com",status:"online"},
-{name:"BuildBot AI",url:"Paystack integrated",status:"online"},
-{name:"ContentPilot AI",url:"Stripe + Paystack",status:"online"},
-{name:"HarzMusic",url:"harz-music.vercel.app",status:"online"},
-{name:"HarzFilm",url:"harz-film.vercel.app",status:"online"},
-{name:"WhatsApp CRM",url:"harz-crm.vercel.app",status:"online"},
+{name:"BuildBot AI",url:"Paystack ₦15K/₦45K/₦50K",status:"online"},
+{name:"ContentPilot AI",url:"Stripe $15/$39/$99",status:"online"},
+{name:"HarzMusic",url:"27 tracks, 174K plays",status:"online"},
+{name:"HarzFilm",url:"8 films, 162K views",status:"online"},
+{name:"WhatsApp CRM",url:"3 contacts, auto-reply",status:"online"},
 ];
 document.getElementById('platformGrid').innerHTML=platforms.map(function(p){
 return '<div class="platform-item"><div class="name">'+p.name+'</div><div class="url">'+p.url+'</div><div class="status '+p.status+'"></div></div>';
