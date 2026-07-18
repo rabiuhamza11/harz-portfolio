@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free terms of service generator for websites and apps. Create customized terms and conditions. NDPR compliant for Nigerian businesses.">
+<meta name="keywords" content="terms of service, terms and conditions, legal generator, website terms, tos generator">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Terms of Service Generator — Legal Tool | Harz Digital Services">
+<meta property="og:description" content="Free terms of service generator for websites and apps. Create customized terms and conditions. NDPR compliant for Nigerian businesses.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/terms-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/terms-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service Generator — Legal Tool | Harz Digital Services</title>
+<meta name="description" content="Free terms of service generator for websites and apps. Create customized terms and conditions. NDPR compliant for Nigerian businesses.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:550px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group textarea{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.input-group textarea{min-height:40px;resize:vertical}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:16px;max-height:300px;overflow-y:auto;margin-bottom:10px}
+.output h3{font-size:.8rem;color:#00d4aa;margin:10px 0 4px}
+.output p{font-size:.75rem;color:#c8c8d0;line-height:1.6;margin-bottom:8px}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-bottom:8px}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>📋 Terms of Service Generator</h1></div>
+
+<div class="card">
+<h2>Company Info</h2>
+<div class="input-group"><label>Company Name</label><input type="text" id="company" value="Harz Digital Services" oninput="gen()"></div>
+<div class="input-group"><label>Website URL</label><input type="text" id="website" value="https://rabiuhamza11.github.io/harz-portfolio/" oninput="gen()"></div>
+<div class="input-group"><label>Contact Email</label><input type="text" id="email" value="harzco.business@gmail.com" oninput="gen()"></div>
+<div class="input-group"><label>Country</label><input type="text" id="country" value="Nigeria" oninput="gen()"></div>
+<div class="input-group"><label>Service Description</label><textarea id="service" oninput="gen()">AI-powered digital products marketplace, fintech services, educational platforms, and content creation tools.</textarea></div>
+</div>
+
+<div class="card">
+<h2>Generated Terms of Service</h2>
+<div class="output" id="termsOutput"></div>
+<button class="btn copy" onclick="copy()">📋 Copy Terms</button>
+<button class="btn" onclick="download()">📥 Download as HTML</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Legal Template Generator
+</div>
+
+<script>
+function gen(){
+var company=document.getElementById('company').value;
+var website=document.getElementById('website').value;
+var email=document.getElementById('email').value;
+var country=document.getElementById('country').value;
+var service=document.getElementById('service').value;
+var today=new Date().toLocaleDateString('en',{year:'numeric',month:'long',day:'numeric'});
+
+var html='<h1>Terms of Service</h1>';
+html+='<p><strong>Last updated:</strong> '+today+'</p>';
+html+='<p>These Terms of Service ("Terms") govern your use of '+website+' (the "Service") operated by '+company+' ("we", "us", or "our").</p>';
+html+='<h3>1. Acceptance of Terms</h3><p>By accessing or using our Service, you agree to be bound by these Terms. If you do not agree, please do not use the Service.</p>';
+html+='<h3>2. Description of Service</h3><p>'+company+' provides: '+service+' We reserve the right to modify or discontinue the Service at any time without notice.</p>';
+html+='<h3>3. User Accounts</h3><p>You may need to create an account to access certain features. You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.</p>';
+html+='<h3>4. Acceptable Use</h3><p>You agree not to:<br>• Use the Service for unlawful purposes<br>• Violate any '+country+' or international law<br>• Infringe on intellectual property rights<br>• Attempt to disrupt or compromise the Service<br>• Use automated systems to access the Service without permission<br>• Submit false or misleading information</p>';
+html+='<h3>5. Intellectual Property</h3><p>All content, features, and functionality of the Service are owned by '+company+' and protected by '+country+' and international copyright laws. You may not reproduce, distribute, or create derivative works without our written permission.</p>';
+html+='<h3>6. User Content</h3><p>You retain ownership of content you submit to the Service. By submitting content, you grant '+company+' a non-exclusive license to use, display, and process your content for the purpose of providing the Service.</p>';
+html+='<h3>7. Payments</h3><p>Some features may require payment. Payment terms will be displayed at the time of purchase. All payments are processed through secure third-party payment gateways. Refunds are subject to our Refund Policy.</p>';
+html+='<h3>8. Limitation of Liability</h3><p>'+company+' shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount you have paid us in the past 12 months.</p>';
+html+='<h3>9. Disclaimer of Warranties</h3><p>The Service is provided "as is" without warranties of any kind. We do not guarantee that the Service will be uninterrupted, error-free, or secure.</p>';
+html+='<h3>10. Termination</h3><p>We may terminate or suspend your access to the Service at any time, without notice, for conduct that we believe violates these Terms or is harmful to other users, us, or third parties.</p>';
+html+='<h3>11. Governing Law</h3><p>These Terms are governed by the laws of '+country+'. Any disputes shall be resolved in the courts of '+country+'.</p>';
+html+='<h3>12. Changes to Terms</h3><p>We may update these Terms from time to time. Changes will be posted on this page with an updated revision date.</p>';
+html+='<h3>13. Contact</h3><p>For questions about these Terms, contact us at:<br>'+email+'<br>'+company+'</p>';
+
+document.getElementById('termsOutput').innerHTML=html;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('termsOutput').innerText);alert('Terms copied!')}
+function download(){
+var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Terms of Service Generator — Legal Tool | Harz Digital Services</title></head><body>'+document.getElementById('termsOutput').innerHTML+'<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body></html>';
+var blob=new Blob([html],{type:'text/html'});
+var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='terms-of-service.html';a.click();
+}
+gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

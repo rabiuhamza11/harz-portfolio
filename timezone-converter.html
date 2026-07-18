@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free time zone converter. Convert times between cities and plan meetings across time zones. Compare Lagos, London, New York, Dubai, and more.">
+<meta name="keywords" content="time zone converter, timezone, meeting planner, time difference, international time">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Time Zone Converter — Meeting Planner | Harz Digital Services">
+<meta property="og:description" content="Free time zone converter. Convert times between cities and plan meetings across time zones. Compare Lagos, London, New York, Dubai, and more.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/timezone-converter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/timezone-converter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Zone Converter — Meeting Planner | Harz Digital Services</title>
+<meta name="description" content="Free time zone converter. Convert times between cities and plan meetings across time zones. Compare Lagos, London, New York, Dubai, and more.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-row{display:flex;gap:8px;align-items:end;margin-bottom:12px}
+.input-group{flex:1}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.input-group input{font-size:1.1rem;color:#00d4aa;font-family:monospace}
+.result{background:#14141e;border:1px solid #1e1e2e;border-radius:12px;padding:14px;margin-bottom:10px}
+.result .city{font-size:.8rem;color:#c8c8d0;margin-bottom:4px}
+.result .time{font-size:1.5rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.result .date{font-size:.7rem;color:#6b6b80;margin-top:2px}
+.result .badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.6rem;margin-top:4px}
+.badge.good{background:rgba(0,212,170,.1);color:#00d4aa}
+.badge.bad{background:rgba(239,68,68,.1);color:#ef4444}
+.btn{padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#c8c8d0;font-size:.75rem;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🕐 Time Zone Converter</h1></div>
+
+<div class="card">
+<h2>From</h2>
+<div class="input-row">
+<div class="input-group"><label>City</label><select id="fromCity" onchange="convert()">
+<option value="Africa/Lagos">Lagos 🇳🇬</option>
+<option value="Europe/London">London 🇬🇧</option>
+<option value="America/New_York">New York 🇺🇸</option>
+<option value="America/Los_Angeles">Los Angeles 🇺🇸</option>
+<option value="Asia/Dubai">Dubai 🇦🇪</option>
+<option value="Asia/Tokyo">Tokyo 🇯🇵</option>
+<option value="Asia/Kolkata">Mumbai 🇮🇳</option>
+<option value="Africa/Nairobi">Nairobi 🇰🇪</option>
+<option value="Africa/Accra">Accra 🇬🇭</option>
+<option value="Europe/Berlin">Berlin 🇩🇪</option>
+</select></div>
+<div class="input-group"><label>Time</label><input type="time" id="fromTime" value="14:00" oninput="convert()"></div>
+</div>
+</div>
+
+<div class="card">
+<h2>Converted Times</h2>
+<div id="results"></div>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Time Zone Converter
+</div>
+
+<script>
+var allCities=[
+{tz:'Africa/Lagos',name:'Lagos',flag:'🇳🇬'},
+{tz:'Europe/London',name:'London',flag:'🇬🇧'},
+{tz:'America/New_York',name:'New York',flag:'🇺🇸'},
+{tz:'America/Los_Angeles',name:'Los Angeles',flag:'🇺🇸'},
+{tz:'Asia/Dubai',name:'Dubai',flag:'🇦🇪'},
+{tz:'Asia/Tokyo',name:'Tokyo',flag:'🇯🇵'},
+{tz:'Asia/Kolkata',name:'Mumbai',flag:'🇮🇳'},
+{tz:'Africa/Nairobi',name:'Nairobi',flag:'🇰🇪'},
+{tz:'Africa/Accra',name:'Accra',flag:'🇬🇭'},
+{tz:'Europe/Berlin',name:'Berlin',flag:'🇩🇪'},
+{tz:'Asia/Singapore',name:'Singapore',flag:'🇸🇬'},
+{tz:'Australia/Sydney',name:'Sydney',flag:'🇦🇺'}
+];
+
+function convert(){
+var fromTz=document.getElementById('fromCity').value;
+var time=document.getElementById('fromTime').value;
+if(!time)return;
+var [hours,mins]=time.split(':').map(Number);
+// Create a date for today at the specified time in the from timezone
+var now=new Date();
+// Get the offset of the from timezone
+var fromDate=new Date(now.toLocaleString('en-US',{timeZone:fromTz}));
+var fromDateOffset=new Date(now.toLocaleString('en-US'));
+var tzOffset=fromDate.getTime()-fromDateOffset.getTime();
+var baseDate=new Date(now.getFullYear(),now.getMonth(),now.getDate(),hours,mins);
+// Adjust to UTC
+var utcDate=new Date(baseDate.getTime()-tzOffset);
+// Actually, simpler approach: use Intl
+var fromStr=now.toLocaleDateString('en-CA',{timeZone:fromTz});
+var baseISO=fromStr+'T'+time+':00';
+
+document.getElementById('results').innerHTML=allCities.filter(function(c){return c.tz!==fromTz}).map(function(c){
+try{
+var d=new Date(baseISO);
+var localStr=d.toLocaleTimeString('en-US',{timeZone:c.tz,hour:'2-digit',minute:'2-digit',hour12:true});
+var localDate=d.toLocaleDateString('en-US',{timeZone:c.tz,weekday:'short',month:'short',day:'numeric'});
+var localHour=parseInt(d.toLocaleTimeString('en-US',{timeZone:c.tz,hour:'2-digit',hour12:false}));
+var good=localHour>=8&&localHour<20;
+return '<div class="result"><div class="city">'+c.flag+' '+c.name+'</div><div class="time">'+localStr+'</div><div class="date">'+localDate+'</div><div class="badge '+(good?'good':'bad')+'">'+(good?'✓ Good time to meet':'✗ Too early/late')+'</div></div>';
+}catch(e){return '<div class="result">Error</div>'}
+}).join('');
+}
+
+convert();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

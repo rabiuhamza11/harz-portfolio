@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free Open Graph image generator. Create social share images for Facebook, Twitter, LinkedIn. Canvas-based, download as PNG.">
+<meta name="keywords" content="og image, open graph image, social share image, twitter card image, facebook share image">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OG Image Generator — Social Share Image | Harz Digital Services">
+<meta property="og:description" content="Free Open Graph image generator. Create social share images for Facebook, Twitter, LinkedIn. Canvas-based, download as PNG.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/og-image-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/og-image-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OG Image Generator — Social Share Image | Harz Digital Services</title>
+<meta name="description" content="Free Open Graph image generator. Create social share images for Facebook, Twitter, LinkedIn. Canvas-based, download as PNG.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.preview{background:#14141e;border-radius:12px;padding:12px;text-align:center;margin-bottom:16px}
+canvas{max-width:100%;border-radius:8px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group textarea,.input-group select{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.input-group textarea{min-height:40px;resize:vertical}
+.size-tabs{display:flex;gap:6px;margin-bottom:10px}
+.size-tab{flex:1;padding:8px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.65rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.size-tab.active{border-color:#00d4aa;color:#00d4aa}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-bottom:8px}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🖼️ OG Image Generator</h1></div>
+
+<div class="preview"><canvas id="canvas" width="1200" height="630"></canvas></div>
+
+<div class="card">
+<h2>Content</h2>
+<div class="size-tabs">
+<div class="size-tab active" onclick="setSize(1200,630)" data-s="0">1200×630 (OG)</div>
+<div class="size-tab" onclick="setSize(1024,512)" data-s="1">1024×512</div>
+<div class="size-tab" onclick="setSize(800,418)" data-s="2">800×418</div>
+</div>
+<div class="input-group"><label>Title</label><input type="text" id="ogTitle" value="Harz Digital Services" oninput="draw()"></div>
+<div class="input-group"><label>Subtitle</label><input type="text" id="ogSub" value="AI-Powered Digital Ecosystem" oninput="draw()"></div>
+<div class="input-group"><label>Description</label><textarea id="ogDesc" oninput="draw()">24 platforms · 80+ AI agents · 259 digital products</textarea></div>
+</div>
+
+<div class="card">
+<h2>Design</h2>
+<div class="input-group"><label>Background Color</label><input type="color" id="bgColor" value="#050508" oninput="draw()"></div>
+<div class="input-group"><label>Gradient End</label><input type="color" id="bg2Color" value="#1a1a2e" oninput="draw()"></div>
+<div class="input-group"><label>Title Color</label><input type="color" id="titleColor" value="#00d4aa" oninput="draw()"></div>
+<div class="input-group"><label>Text Color</label><input type="color" id="textColor" value="#e8e8f0" oninput="draw()"></div>
+</div>
+
+<button class="btn" onclick="download()">📥 Download PNG</button>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | OG Image Generator
+</div>
+
+<script>
+var w=1200,h=630;
+function setSize(sw,sh){
+w=sw;h=sh;
+document.querySelectorAll('.size-tab').forEach(function(e,i){
+e.classList.toggle('active',[[1200,630],[1024,512],[800,418]][i][0]===sw);
+});
+draw();
+}
+
+function draw(){
+var canvas=document.getElementById('canvas');
+canvas.width=w;canvas.height=h;
+var ctx=canvas.getContext('2d');
+var bg=document.getElementById('bgColor').value;
+var bg2=document.getElementById('bg2Color').value;
+var tc=document.getElementById('titleColor').value;
+var txt=document.getElementById('textColor').value;
+var title=document.getElementById('ogTitle').value;
+var sub=document.getElementById('ogSub').value;
+var desc=document.getElementById('ogDesc').value;
+
+// Gradient background
+var grad=ctx.createLinearGradient(0,0,w,h);
+grad.addColorStop(0,bg);
+grad.addColorStop(1,bg2);
+ctx.fillStyle=grad;
+ctx.fillRect(0,0,w,h);
+
+// Accent bar
+ctx.fillStyle=tc;
+ctx.fillRect(0,h-8,w,8);
+
+// Title
+ctx.fillStyle=tc;
+ctx.font='bold '+Math.round(w*0.06)+'px -apple-system,sans-serif';
+ctx.textAlign='center';
+ctx.fillText(title,w/2,h*0.35);
+
+// Subtitle
+ctx.fillStyle=txt;
+ctx.font='600 '+Math.round(w*0.03)+'px -apple-system,sans-serif';
+ctx.fillText(sub,w/2,h*0.5);
+
+// Description
+ctx.fillStyle=txt;
+ctx.font=Math.round(w*0.022)+'px -apple-system,sans-serif';
+ctx.globalAlpha=0.7;
+// Wrap text
+var words=desc.split(' ');
+var lines=[];var current='';
+words.forEach(function(word){
+if((current+word).length*w*0.012>w*0.8){lines.push(current.trim());current=word+' '}
+else{current+=word+' '}
+});
+if(current)lines.push(current.trim());
+lines.forEach(function(line,i){
+ctx.fillText(line,w/2,h*0.62+i*h*0.05);
+});
+ctx.globalAlpha=1;
+}
+
+function download(){
+var canvas=document.getElementById('canvas');
+var a=document.createElement('a');
+a.href=canvas.toDataURL('image/png');
+a.download='og-image-'+w+'x'+h+'.png';
+a.click();
+}
+draw();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free HTML formatter. Beautify messy HTML code or minify it for production. Developer tool with live preview.">
+<meta name="keywords" content="html formatter, html beautifier, html minifier, format html, code formatter">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="HTML Formatter — Beautify & Minify | Harz Digital Services">
+<meta property="og:description" content="Free HTML formatter. Beautify messy HTML code or minify it for production. Developer tool with live preview.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/html-formatter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/html-formatter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Formatter — Beautify & Minify | Harz Digital Services</title>
+<meta name="description" content="Free HTML formatter. Beautify messy HTML code or minify it for production. Developer tool with live preview.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:550px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+textarea{width:100%;min-height:120px;padding:14px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.8rem;font-family:monospace;line-height:1.6;resize:vertical;margin-bottom:8px}
+textarea:focus{border-color:#00d4aa;outline:none}
+.btn-row{display:flex;gap:6px;margin-bottom:8px}
+.btn{padding:10px 16px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:.8rem;flex:1}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.btn.min{background:#14141e;border:1px solid #1e1e2e;color:#f59e0b}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+.output-box{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px}
+.output-box textarea{background:none;border:none;color:#00d4aa;min-height:150px;max-height:300px;overflow-y:auto}
+.stats{text-align:center;font-size:.75rem;color:#6b6b80;margin:8px 0}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>📄 HTML Formatter</h1></div>
+
+<div class="card">
+<h2>Input HTML</h2>
+<textarea id="input" oninput="beautify()"><div class="container"><h1>Hello World</h1><p>This is a <strong>test</strong> paragraph.</p><ul><li>Item 1</li><li>Item 2</li></ul></div></textarea>
+<div class="btn-row">
+<button class="btn gen" onclick="beautify()">✨ Beautify</button>
+<button class="btn min" onclick="minify()">📦 Minify</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Output</h2>
+<div class="stats" id="stats">0 bytes</div>
+<div class="output-box"><textarea id="output" readonly></textarea></div>
+<button class="btn copy" style="margin-top:8px;width:100%" onclick="copy()">📋 Copy HTML</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | HTML Formatter
+</div>
+
+<script>
+function beautify(){
+var html=document.getElementById('input').value;
+if(!html){document.getElementById('output').value='';return}
+// Simple beautifier
+var formatted='';
+var indent=0;
+var tokens=html.replace(/></g,'>|||<').split('|||');
+tokens.forEach(function(token){
+token=token.trim();
+if(!token)return;
+if(token.match(/^<\/.*>/)){
+indent=Math.max(0,indent-1);
+formatted+='  '.repeat(indent)+token+'\n';
+}else if(token.match(/^<[^/!?][^>]*[^/]>/)&&!token.match(/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/i)){
+formatted+='  '.repeat(indent)+token+'\n';
+indent++;
+}else if(token.match(/^<[^/!?][^>]*\/>/)||token.match(/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/i)){
+formatted+='  '.repeat(indent)+token+'\n';
+}else{
+formatted+='  '.repeat(indent)+token+'\n';
+}
+});
+document.getElementById('output').value=formatted.trim();
+document.getElementById('stats').textContent=formatted.length+' bytes · '+formatted.split('\n').length+' lines';
+}
+
+function minify(){
+var html=document.getElementById('input').value;
+if(!html){document.getElementById('output').value='';return}
+var minified=html
+.replace(/<!--[\s\S]*?-->/g,'')
+.replace(/\s+/g,' ')
+.replace(/>\s+</g,'><')
+.replace(/\s+>/g,'>')
+.replace(/<\s+/g,'<')
+.trim();
+document.getElementById('output').value=minified;
+document.getElementById('stats').textContent=minified.length+' bytes · 1 line';
+}
+
+function copy(){navigator.clipboard.writeText(document.getElementById('output').value);alert('HTML copied!')}
+beautify();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

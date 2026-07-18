@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free Nigerian Naira formatter. Format amounts with thousands separators, convert to words, and calculate taxes. Perfect for invoices.">
+<meta name="keywords" content="naira formatter, ngn formatter, nigerian naira, amount to words, vat calculator">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Naira Amount Formatter — NGN Tool | Harz Digital Services">
+<meta property="og:description" content="Free Nigerian Naira formatter. Format amounts with thousands separators, convert to words, and calculate taxes. Perfect for invoices.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/naira-formatter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/naira-formatter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naira Amount Formatter — NGN Tool | Harz Digital Services</title>
+<meta name="description" content="Free Nigerian Naira formatter. Format amounts with thousands separators, convert to words, and calculate taxes. Perfect for invoices.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:450px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:1.2rem}
+.result{padding:16px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:12px;margin-bottom:10px}
+.result .label{font-size:.7rem;color:#6b6b80;text-transform:uppercase;margin-bottom:4px}
+.result .val{font-size:1.5rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.result .sub{font-size:.75rem;color:#c8c8d0;margin-top:4px}
+.tax-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.8rem;border-bottom:1px solid rgba(30,30,46,.5)}
+.tax-row .l{color:#6b6b80}
+.tax-row .v{color:#00d4aa;font-weight:600}
+.copy-btn{padding:8px 16px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:8px;color:#00d4aa;font-size:.75rem;cursor:pointer;width:100%;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>₦ Naira Formatter</h1></div>
+
+<div class="card">
+<h2>Amount</h2>
+<div class="input-group"><label>Enter Amount (₦)</label><input type="number" id="amount" value="1580000" oninput="format()"></div>
+</div>
+
+<div class="card">
+<h2>Formatted</h2>
+<div class="result"><div class="label">With separators</div><div class="val" id="sep">₦1,580,000.00</div></div>
+<div class="result"><div class="label">In words</div><div class="val" id="words" style="font-size:1rem;line-height:1.5">One Million, Five Hundred and Eighty Thousand Naira</div></div>
+<div class="result"><div class="label">Short form</div><div class="val" id="short">₦1.58M</div></div>
+<div class="result"><div class="label">USD equivalent (~₦1,580/USD)</div><div class="val" id="usd">$1,000.00</div></div>
+</div>
+
+<div class="card">
+<h2>Tax Breakdown</h2>
+<div class="tax-row"><span class="l">VAT (7.5%)</span><span class="v" id="vat">₦118,500.00</span></div>
+<div class="tax-row"><span class="l">WHT (5%)</span><span class="v" id="wht">₦79,000.00</span></div>
+<div class="tax-row"><span class="l">Total + VAT</span><span class="v" id="totalVat">₦1,698,500.00</span></div>
+<div class="tax-row"><span class="l">Net after WHT</span><span class="v" id="netWht">₦1,501,000.00</span></div>
+<button class="copy-btn" onclick="copyAll()">📋 Copy All</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Naira Formatter
+</div>
+
+<script>
+var ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+var tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+
+function threeDigits(n){
+var w='';
+if(n>=100){w+=ones[Math.floor(n/100)]+' Hundred';n%=100;if(n>0)w+=' and '}
+if(n>=20){w+=tens[Math.floor(n/10)];if(n%10>0)w+='-'+ones[n%10]}
+else if(n>0){w+=ones[n]}
+return w;
+}
+
+function numToWords(num){
+if(num===0)return'Zero';
+var scales=['','Thousand','Million','Billion','Trillion'];
+var words='';
+var scaleIdx=0;
+var intPart=Math.floor(num);
+while(intPart>0){
+var chunk=intPart%1000;
+if(chunk>0){var cw=threeDigits(chunk);if(scaleIdx>0)cw+=' '+scales[scaleIdx];words=cw+(words?', '+words:'')}
+intPart=Math.floor(intPart/1000);scaleIdx++;
+}
+return words+' Naira';
+}
+
+function fmtNaira(n){
+return '₦'+n.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function format(){
+var amt=parseFloat(document.getElementById('amount').value)||0;
+document.getElementById('sep').textContent=fmtNaira(amt);
+document.getElementById('words').textContent=numToWords(amt);
+var short=amt>=1e9?(amt/1e9).toFixed(2)+'B':amt>=1e6?(amt/1e6).toFixed(2)+'M':amt>=1e3?(amt/1e3).toFixed(1)+'K':amt.toString();
+document.getElementById('short').textContent='₦'+short;
+document.getElementById('usd').textContent='$'+(amt/1580).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+var vat=amt*0.075;
+var wht=amt*0.05;
+document.getElementById('vat').textContent=fmtNaira(vat);
+document.getElementById('wht').textContent=fmtNaira(wht);
+document.getElementById('totalVat').textContent=fmtNaira(amt+vat);
+document.getElementById('netWht').textContent=fmtNaira(amt-wht);
+}
+
+function copyAll(){
+var text='Amount: '+document.getElementById('sep').textContent+
+'\nIn Words: '+document.getElementById('words').textContent+
+'\nShort: '+document.getElementById('short').textContent+
+'\n\nTax Breakdown:'+
+'\nVAT (7.5%): '+document.getElementById('vat').textContent+
+'\nWHT (5%): '+document.getElementById('wht').textContent+
+'\nTotal + VAT: '+document.getElementById('totalVat').textContent+
+'\nNet after WHT: '+document.getElementById('netWht').textContent;
+navigator.clipboard.writeText(text);
+alert('All amounts copied!');
+}
+
+format();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
