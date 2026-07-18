@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free random picker and decision wheel. Enter options and let the wheel decide. Perfect for quick decisions, raffles, and random selection.">
+<meta name="keywords" content="random picker, decision wheel, spin the wheel, random choice, coin flip">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Random Picker — Decision Maker | Harz Digital Services">
+<meta property="og:description" content="Free random picker and decision wheel. Enter options and let the wheel decide. Perfect for quick decisions, raffles, and random selection.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/random-picker.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/random-picker.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Picker — Decision Maker | Harz Digital Services</title>
+<meta name="description" content="Free random picker and decision wheel. Enter options and let the wheel decide. Perfect for quick decisions, raffles, and random selection.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:450px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-row{display:flex;gap:8px;margin-bottom:10px}
+.input-row input{flex:1;padding:10px 14px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.85rem}
+.input-row button{padding:10px 18px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer}
+.option-list{margin-top:12px}
+.option-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;margin-bottom:6px;font-size:.85rem}
+.option-item .text{color:#e8e8f0}
+.option-item .color{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px}
+.option-item .rm{color:#ef4444;cursor:pointer}
+.wheel-container{text-align:center;padding:20px}
+.wheel{width:280px;height:280px;border-radius:50%;margin:0 auto;position:relative;transition:transform 4s cubic-bezier(.17,.67,.12,.99);border:4px solid #1e1e2e;box-shadow:0 0 30px rgba(0,212,170,.1)}
+.wheel-btn{padding:14px 40px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:30px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;margin-top:20px}
+.wheel-btn:active{transform:scale(.95)}
+.pointer{width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid #f59e0b;position:absolute;top:-5px;left:50%;transform:translateX(-50%);z-index:10}
+.result-display{text-align:center;padding:20px;display:none}
+.result-display.show{display:block}
+.result-display .winner{font-size:1.8rem;font-weight:800;color:#00d4aa}
+.result-display .label{font-size:.8rem;color:#6b6b80}
+.coin-flip{text-align:center;padding:30px}
+.coin{font-size:4rem;cursor:pointer;display:inline-block;transition:transform .5s}
+.coin:hover{transform:scale(1.1)}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Random Picker</h1><p>Let fate decide for you</p></div>
+
+<div class="card">
+<h2>Add Options</h2>
+<div class="input-row">
+<input type="text" id="optionInput" placeholder="Enter an option..." onkeypress="if(event.key==='Enter')addOption()">
+<button onclick="addOption()">+ Add</button>
+</div>
+<div class="option-list" id="optionList"></div>
+</div>
+
+<div class="card">
+<h2>Spin the Wheel</h2>
+<div class="wheel-container">
+<div style="position:relative;display:inline-block">
+<div class="pointer"></div>
+<div class="wheel" id="wheel" style="background:conic-gradient(#00d4aa,#7c3aed,#f59e0b,#ef4444,#3b82f6)"></div>
+</div>
+<button class="wheel-btn" onclick="spin()">🎰 SPIN</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Quick Tools</h2>
+<button class="wheel-btn" style="width:100%;margin-bottom:10px" onclick="coinFlip()">🪙 Flip a Coin</button>
+<button class="wheel-btn" style="width:100%;margin-bottom:10px;background:linear-gradient(135deg,#7c3aed,#3b82f6)" onclick="diceRoll()">🎲 Roll a Dice</button>
+<button class="wheel-btn" style="width:100%;background:linear-gradient(135deg,#f59e0b,#ef4444)" onclick="randomNum()">🔢 Random Number 1-100</button>
+<div id="quickResult" style="text-align:center;padding:16px;font-size:1.5rem;font-weight:800;color:#00d4aa;display:none"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Random Picker
+</div>
+
+<script>
+var options=['Pizza','Burger','Sushi','Rice & Stew'];
+var colors=['#00d4aa','#7c3aed','#f59e0b','#ef4444','#3b82f6','#22c55e','#ec4899','#f97316','#06b6d4','#8b5cf6'];
+
+function renderOptions(){
+document.getElementById('optionList').innerHTML=options.map(function(o,i){
+return '<div class="option-item"><span><span class="color" style="background:'+colors[i%colors.length]+'"></span>'+o.replace(/</g,'&lt;')+'</span><span class="rm" onclick="rmOption('+i+')">✕</span></div>';
+}).join('');
+updateWheel();
+}
+
+function addOption(){
+var input=document.getElementById('optionInput');
+var val=input.value.trim();
+if(!val)return;
+options.push(val);input.value='';renderOptions();
+}
+function rmOption(i){options.splice(i,1);renderOptions()}
+
+function updateWheel(){
+if(options.length===0)return;
+var angle=360/options.length;
+var gradient=options.map(function(o,i){
+var start=i*angle;var end=(i+1)*angle;
+return colors[i%colors.length]+' '+start+'deg '+end+'deg';
+}).join(', ');
+document.getElementById('wheel').style.background='conic-gradient('+gradient+')';
+}
+
+function spin(){
+if(options.length<2){alert('Add at least 2 options!');return}
+var winnerIdx=Math.floor(Math.random()*options.length);
+var rotations=5*360+winnerIdx*(360/options.length);
+var wheel=document.getElementById('wheel');
+wheel.style.transform='rotate('+rotations+'deg)';
+setTimeout(function(){
+alert('🎉 Winner: '+options[winnerIdx]+'!');
+},4100);
+}
+
+function coinFlip(){
+var result=Math.random()<0.5?' Heads 🪙':' Tails 🪙';
+showQuick('🪙'+result);
+}
+function diceRoll(){
+showQuick('🎲 You rolled: '+(Math.floor(Math.random()*6)+1));
+}
+function randomNum(){
+showQuick('🔢 '+Math.floor(Math.random()*100+1));
+}
+function showQuick(text){
+var el=document.getElementById('quickResult');
+el.textContent=text;el.style.display='block';
+}
+
+renderOptions();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

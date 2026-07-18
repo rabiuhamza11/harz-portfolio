@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free JSON formatter, validator, and minifier. Format JSON, validate syntax, minify code, and convert to CSV. Perfect for developers.">
+<meta name="keywords" content="json formatter, json validator, json minifier, format json, developer tool">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JSON Formatter & Validator — Developer Tool | Harz Digital Services">
+<meta property="og:description" content="Free JSON formatter, validator, and minifier. Format JSON, validate syntax, minify code, and convert to CSV. Perfect for developers.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/json-formatter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/json-formatter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Formatter & Validator — Developer Tool | Harz Digital Services</title>
+<meta name="description" content="Free JSON formatter, validator, and minifier. Format JSON, validate syntax, minify code, and convert to CSV. Perfect for developers.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:550px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+textarea{width:100%;min-height:150px;padding:14px;background:#14141e;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.8rem;font-family:monospace;line-height:1.6;resize:vertical}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.btn{padding:10px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:.8rem}
+.btn.format{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.btn.minify{background:#14141e;border:1px solid #1e1e2e;color:#c8c8d0}
+.btn.validate{background:#14141e;border:1px solid #1e1e2e;color:#c8c8d0}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+.status{padding:10px 14px;border-radius:10px;margin-top:12px;font-size:.8rem;text-align:center}
+.status.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#22c55e}
+.status.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444}
+.stats{display:flex;gap:8px;margin-top:8px}
+.stat{flex:1;text-align:center;padding:8px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px}
+.stat .num{font-size:1rem;font-weight:800;color:#00d4aa}
+.stat .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>JSON Formatter</h1></div>
+
+<div class="card">
+<h2>Input</h2>
+<textarea id="input" placeholder='{"name":"Harz","products":259,"platforms":24}' oninput="autoValidate()">{"name":"Harz Digital Services","cac":"RC 321424","tin":"24550860","platforms":24,"products":259,"agents":80,"registered":"2014-08-05","services":["digital_products","consulting","music","film","fintech"]}</textarea>
+<div class="btn-row">
+<button class="btn format" onclick="format()">🎨 Format</button>
+<button class="btn minify" onclick="minify()">📦 Minify</button>
+<button class="btn validate" onclick="validate()">✓ Validate</button>
+<button class="btn copy" onclick="copy()">📋 Copy</button>
+</div>
+<div class="status" id="status" style="display:none"></div>
+<div class="stats" id="stats" style="display:none">
+<div class="stat"><div class="num" id="sKeys">0</div><div class="lbl">Keys</div></div>
+<div class="stat"><div class="num" id="sDepth">0</div><div class="lbl">Depth</div></div>
+<div class="stat"><div class="num" id="sSize">0</div><div class="lbl">Bytes</div></div>
+</div>
+</div>
+
+<div class="card">
+<h2>Output</h2>
+<textarea id="output" placeholder="Formatted JSON will appear here..." style="min-height:200px" readonly></textarea>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | JSON Formatter & Validator
+</div>
+
+<script>
+function getDepth(obj,level){
+level=level||0;
+if(typeof obj!=='object'||obj===null)return level;
+var max=level;
+for(var k in obj){var d=getDepth(obj[k],level+1);if(d>max)max=d}
+return max;
+}
+
+function countKeys(obj){
+var count=0;
+if(typeof obj==='object'&&obj!==null){
+for(var k in obj){count++;count+=countKeys(obj[k])}
+}
+return count;
+}
+
+function setStatus(type,msg){
+var el=document.getElementById('status');
+el.style.display='block';
+el.className='status '+type;
+el.textContent=msg;
+}
+
+function showStats(obj){
+document.getElementById('stats').style.display='flex';
+document.getElementById('sKeys').textContent=countKeys(obj);
+document.getElementById('sDepth').textContent=getDepth(obj);
+document.getElementById('sSize').textContent=document.getElementById('output').value.length;
+}
+
+function format(){
+try{
+var input=document.getElementById('input').value;
+var parsed=JSON.parse(input);
+var output=JSON.stringify(parsed,null,2);
+document.getElementById('output').value=output;
+setStatus('ok','✓ Valid JSON — formatted successfully');
+showStats(parsed);
+}catch(e){
+setStatus('err','✗ '+e.message);
+document.getElementById('stats').style.display='none';
+}
+}
+
+function minify(){
+try{
+var input=document.getElementById('input').value;
+var parsed=JSON.parse(input);
+var output=JSON.stringify(parsed);
+document.getElementById('output').value=output;
+setStatus('ok','✓ Minified — '+output.length+' bytes');
+showStats(parsed);
+}catch(e){
+setStatus('err','✗ '+e.message);
+}
+}
+
+function validate(){
+try{
+var input=document.getElementById('input').value;
+JSON.parse(input);
+setStatus('ok','✓ Valid JSON — no errors found');
+}catch(e){
+setStatus('err','✗ Invalid JSON: '+e.message);
+}
+}
+
+function copy(){
+var text=document.getElementById('output').value||document.getElementById('input').value;
+if(!text)return;
+navigator.clipboard.writeText(text);
+alert('JSON copied!');
+}
+
+function autoValidate(){
+try{
+JSON.parse(document.getElementById('input').value);
+document.getElementById('input').style.borderColor='#22c55e';
+}catch(e){
+document.getElementById('input').style.borderColor='#ef4444';
+}
+}
+
+format();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

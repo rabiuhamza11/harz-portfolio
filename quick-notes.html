@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free online notepad. Create, edit, and save quick notes. Color-coded, searchable, and saves to your browser.">
+<meta name="keywords" content="online notepad, quick notes, sticky notes, note taking app, browser notes">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Quick Notes — Notepad | Harz Digital Services">
+<meta property="og:description" content="Free online notepad. Create, edit, and save quick notes. Color-coded, searchable, and saves to your browser.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/quick-notes.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/quick-notes.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Notes — Notepad | Harz Digital Services</title>
+<meta name="description" content="Free online notepad. Create, edit, and save quick notes. Color-coded, searchable, and saves to your browser.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.search-bar{width:100%;padding:10px 14px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.85rem;margin-bottom:12px}
+.note-input{display:flex;gap:8px;margin-bottom:16px}
+.note-input input{flex:1;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.9rem}
+.note-input select{padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.85rem}
+.note-input button{padding:12px 18px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer}
+.notes-list{display:flex;flex-direction:column;gap:8px}
+.note-card{background:#0e0e16;border:1px solid #1e1e2e;border-left:4px solid;border-radius:12px;padding:14px;position:relative}
+.note-card .title{font-size:.9rem;font-weight:600;color:#e8e8f0;margin-bottom:4px}
+.note-card .body{font-size:.8rem;color:#c8c8d0;line-height:1.5}
+.note-card .meta{font-size:.65rem;color:#6b6b80;margin-top:6px;display:flex;justify-content:space-between}
+.note-card .actions{position:absolute;top:10px;right:10px;display:flex;gap:6px}
+.note-card .actions span{cursor:pointer;font-size:.9rem;padding:2px 6px;border-radius:4px}
+.note-card .actions .edit{color:#7c3aed}
+.note-card .actions .del{color:#ef4444}
+.empty{text-align:center;padding:30px;color:#6b6b80;font-size:.85rem}
+.note-count{font-size:.75rem;color:#6b6b80;text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>📝 Quick Notes</h1></div>
+
+<input type="text" class="search-bar" id="search" placeholder="🔍 Search notes..." oninput="render()">
+
+<div class="note-input">
+<input type="text" id="noteTitle" placeholder="Note title..." onkeypress="if(event.key==='Enter')addNote()">
+<select id="noteColor">
+<option value="#00d4aa">🟢 Green</option>
+<option value="#7c3aed">🟣 Purple</option>
+<option value="#f59e0b">🟠 Orange</option>
+<option value="#3b82f6">🔵 Blue</option>
+<option value="#ef4444">🔴 Red</option>
+<option value="#22c55e">🟢 Lime</option>
+</select>
+<button onclick="addNote()">+ Add</button>
+</div>
+
+<input type="text" id="noteBody" placeholder="Note content (optional)..." style="width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.9rem;margin-bottom:12px" onkeypress="if(event.key==='Enter')addNote()">
+
+<div class="notes-list" id="notesList"></div>
+<div class="note-count" id="noteCount"></div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Quick Notes — saves to your browser
+</div>
+
+<script>
+var notes=JSON.parse(localStorage.getItem('harz_notes')||'[]');
+if(notes.length===0){
+notes=[
+{id:1,title:'Welcome to Quick Notes!',body:'This is your personal notepad. Notes save automatically to your browser. Add, search, and delete notes anytime.',color:'#00d4aa',date:new Date().toISOString()},
+{id:2,title:'Business Ideas',body:'Launch a YouTube channel for Harz tutorials. Create an affiliate program with 20% commission.',color:'#7c3aed',date:new Date().toISOString()},
+{id:3,title:'TODO This Week',body:'1. Follow up with Paystack about Business ID 1908660\n2. Check Stripe verification status\n3. Upload 20 new products to Getly',color:'#f59e0b',date:new Date().toISOString()}
+];
+localStorage.setItem('harz_notes',JSON.stringify(notes));
+}
+
+function save(){localStorage.setItem('harz_notes',JSON.stringify(notes))}
+
+function render(){
+var search=document.getElementById('search').value.toLowerCase();
+var filtered=notes.filter(function(n){return n.title.toLowerCase().includes(search)||n.body.toLowerCase().includes(search)});
+if(filtered.length===0){
+document.getElementById('notesList').innerHTML='<div class="empty">'+(notes.length===0?'No notes yet. Add your first note above!':'No notes match your search.')+'</div>';
+}else{
+document.getElementById('notesList').innerHTML=filtered.map(function(n){
+var date=new Date(n.date).toLocaleDateString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+return '<div class="note-card" style="border-left-color:'+n.color+'"><div class="actions"><span class="edit" onclick="editNote('+n.id+')">✎</span><span class="del" onclick="delNote('+n.id+')">✕</span></div><div class="title">'+n.title.replace(/</g,'&lt;')+'</div><div class="body">'+n.body.replace(/</g,'&lt;').replace(/\n/g,'<br>')+'</div><div class="meta"><span>'+date+'</span></div></div>';
+}).join('');
+}
+document.getElementById('noteCount').textContent=filtered.length+' of '+notes.length+' notes';
+}
+
+function addNote(){
+var title=document.getElementById('noteTitle').value.trim();
+var body=document.getElementById('noteBody').value.trim();
+var color=document.getElementById('noteColor').value;
+if(!title){title=body.slice(0,30)||'Untitled'}
+if(!title&&!body)return;
+notes.unshift({id:Date.now(),title:title,body:body,color:color,date:new Date().toISOString()});
+document.getElementById('noteTitle').value='';
+document.getElementById('noteBody').value='';
+save();render();
+}
+
+function editNote(id){
+var n=notes.find(function(n){return n.id===id});
+if(!n)return;
+var title=prompt('Title:',n.title);
+if(title!==null)n.title=title;
+var body=prompt('Content:',n.body);
+if(body!==null)n.body=body;
+save();render();
+}
+
+function delNote(id){
+if(confirm('Delete this note?')){
+notes=notes.filter(function(n){return n.id!==id});
+save();render();
+}
+}
+
+render();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
