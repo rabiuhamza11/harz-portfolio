@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free CSS button generator. Create beautiful buttons with gradients, shadows, borders, hover effects. Copy CSS code for your projects.">
+<meta name="keywords" content="css button generator, button design, gradient button, hover effect, web design">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CSS Button Generator — Design Tool | Harz Digital Services">
+<meta property="og:description" content="Free CSS button generator. Create beautiful buttons with gradients, shadows, borders, hover effects. Copy CSS code for your projects.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/button-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/button-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Button Generator — Design Tool | Harz Digital Services</title>
+<meta name="description" content="Free CSS button generator. Create beautiful buttons with gradients, shadows, borders, hover effects. Copy CSS code for your projects.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.preview{background:#fff;border-radius:16px;padding:40px;text-align:center;margin-bottom:16px;min-height:120px;display:flex;align-items:center;justify-content:center}
+.btn-preview{padding:14px 28px;border:none;cursor:pointer;font-size:1rem;font-weight:600;transition:all .2s}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input[type=text],.input-group input[type=color]{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.input-group input[type=color]{height:40px;cursor:pointer}
+.slider-row{margin-bottom:10px}
+.slider-row label{display:flex;justify-content:space-between;font-size:.75rem;color:#c8c8d0;margin-bottom:4px}
+.slider-row label .val{color:#00d4aa;font-weight:600}
+.slider-row input[type=range]{width:100%;accent-color:#00d4aa}
+.style-tabs{display:flex;gap:6px;margin-bottom:10px}
+.style-tab{flex:1;padding:8px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer}
+.style-tab.active{border-color:#00d4aa;color:#00d4aa}
+.preset-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.preset-btn{padding:8px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.preset-btn:hover{border-color:#00d4aa}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px}
+.output .code{font-family:monospace;font-size:.7rem;color:#00d4aa;white-space:pre-wrap;word-break:break-all;line-height:1.6}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>CSS Button Generator</h1></div>
+
+<div class="preview"><button class="btn-preview" id="previewBtn">Click Me</button></div>
+
+<div class="card">
+<h2>Button Text</h2>
+<div class="input-group"><label>Button Text</label><input type="text" id="btnText" value="Get Started" oninput="gen()"></div>
+<div class="style-tabs">
+<div class="style-tab active" onclick="setStyle('solid')" data-s="solid">Solid</div>
+<div class="style-tab" onclick="setStyle('gradient')" data-s="gradient">Gradient</div>
+<div class="style-tab" onclick="setStyle('outline')" data-s="outline">Outline</div>
+</div>
+<div class="input-group"><label id="bgLabel">Background Color</label><input type="color" id="bgColor" value="#00d4aa" oninput="gen()"></div>
+<div class="input-group" id="bg2Group" style="display:none"><label>Gradient End Color</label><input type="color" id="bg2Color" value="#7c3aed" oninput="gen()"></div>
+<div class="input-group"><label>Text Color</label><input type="color" id="textColor" value="#ffffff" oninput="gen()"></div>
+</div>
+
+<div class="card">
+<h2>Styling</h2>
+<div class="slider-row"><label>Padding <span class="val" id="padVal">14px</span></label><input type="range" id="padding" min="4" max="40" value="14" oninput="gen()"></div>
+<div class="slider-row"><label>Font Size <span class="val" id="fsVal">16px</span></label><input type="range" id="fontSize" min="10" max="32" value="16" oninput="gen()"></div>
+<div class="slider-row"><label>Border Radius <span class="val" id="brVal">10px</span></label><input type="range" id="borderRadius" min="0" max="50" value="10" oninput="gen()"></div>
+<div class="slider-row"><label>Border Width <span class="val" id="bwVal">0px</span></label><input type="range" id="borderWidth" min="0" max="5" value="0" oninput="gen()"></div>
+<div class="slider-row"><label>Box Shadow (Y) <span class="val" id="shVal">4px</span></label><input type="range" id="shadowY" min="0" max="20" value="4" oninput="gen()"></div>
+</div>
+
+<div class="card">
+<h2>Presets</h2>
+<div class="preset-btns">
+<button class="preset-btn" onclick="preset('#00d4aa','#7c3aed','gradient','#ffffff',14,16,10,0,4)">Teal Gradient</button>
+<button class="preset-btn" onclick="preset('#ef4444','#7c3aed','gradient','#ffffff',14,16,8,0,6)">Red Gradient</button>
+<button class="preset-btn" onclick="preset('#3b82f6','#3b82f6','solid','#ffffff',14,16,20,0,2)">Blue Pill</button>
+<button class="preset-btn" onclick="preset('#ffffff','#ffffff','outline','#00d4aa',14,16,12,2,0)">Outline</button>
+<button class="preset-btn" onclick="preset('#1a1a2e','#1a1a2e','solid','#00d4aa',16,18,4,1,6)">Dark Tech</button>
+<button class="preset-btn" onclick="preset('#f59e0b','#ef4444','gradient','#000000',14,16,30,0,3)">Sunset</button>
+</div>
+</div>
+
+<div class="card">
+<h2>CSS Code</h2>
+<div class="output"><div class="code" id="cssCode"></div></div>
+<button class="btn" onclick="copy()">📋 Copy CSS</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | CSS Button Generator
+</div>
+
+<script>
+var style='solid';
+function setStyle(s){
+style=s;
+document.querySelectorAll('.style-tab').forEach(function(e){e.classList.toggle('active',e.dataset.s===s)});
+document.getElementById('bg2Group').style.display=s==='gradient'?'block':'none';
+document.getElementById('bgLabel').textContent=s==='outline'?'Border Color':'Background Color';
+gen();
+}
+
+function gen(){
+var text=document.getElementById('btnText').value;
+var bg=document.getElementById('bgColor').value;
+var bg2=document.getElementById('bg2Color').value;
+var txt=document.getElementById('textColor').value;
+var pad=document.getElementById('padding').value;
+var fs=document.getElementById('fontSize').value;
+var br=document.getElementById('borderRadius').value;
+var bw=document.getElementById('borderWidth').value;
+var sh=document.getElementById('shadowY').value;
+document.getElementById('padVal').textContent=pad+'px';
+document.getElementById('fsVal').textContent=fs+'px';
+document.getElementById('brVal').textContent=br+'px';
+document.getElementById('bwVal').textContent=bw+'px';
+document.getElementById('shVal').textContent=sh+'px';
+
+var btn=document.getElementById('previewBtn');
+btn.textContent=text;
+
+var bgVal;
+if(style==='gradient')bgVal='linear-gradient(135deg,'+bg+','+bg2+')';
+else if(style==='outline'){bgVal='transparent';txt=bg;bw=Math.max(bw,2)}
+else bgVal=bg;
+
+btn.style.background=bgVal;
+btn.style.color=txt;
+btn.style.padding=pad+'px '+(parseInt(pad)*2)+'px';
+btn.style.fontSize=fs+'px';
+btn.style.borderRadius=br+'px';
+btn.style.border=bw>0?bw+'px solid '+bg:'none';
+btn.style.boxShadow=sh>0?'0 '+sh+'px '+(sh*2)+'px rgba(0,0,0,0.2)':'none';
+
+var css='.btn {\n  padding: '+pad+'px '+(parseInt(pad)*2)+'px;\n  font-size: '+fs+'px;\n  font-weight: 600;\n  border: '+(bw>0?bw+'px solid '+bg:'none')+';\n  border-radius: '+br+'px;\n  color: '+txt+';\n  background: '+bgVal+';\n  box-shadow: '+(sh>0?'0 '+sh+'px '+(sh*2)+'px rgba(0,0,0,0.2)':'none')+';\n  cursor: pointer;\n  transition: all 0.2s;\n}\n\n.btn:hover {\n  transform: translateY(-2px);\n  box-shadow: 0 '+(parseInt(sh)+4)+'px '+(sh*2+8)+'px rgba(0,0,0,0.3);\n}';
+document.getElementById('cssCode').textContent=css;
+}
+
+function preset(bg,bg2,st,txt,pad,fs,br,bw,sh){
+document.getElementById('bgColor').value=bg;
+document.getElementById('bg2Color').value=bg2;
+document.getElementById('textColor').value=txt;
+document.getElementById('padding').value=pad;
+document.getElementById('fontSize').value=fs;
+document.getElementById('borderRadius').value=br;
+document.getElementById('borderWidth').value=bw;
+document.getElementById('shadowY').value=sh;
+setStyle(st);
+}
+
+function copy(){
+navigator.clipboard.writeText(document.getElementById('cssCode').textContent);
+alert('CSS copied!');
+}
+
+gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

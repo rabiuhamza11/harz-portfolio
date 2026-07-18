@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free image resizer. Resize and compress images in your browser. Supports PNG, JPG, WebP. No upload needed — all processing is local.">
+<meta name="keywords" content="image resizer, image compressor, resize image, compress jpg, webp converter">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Image Resizer — Resize & Compress | Harz Digital Services">
+<meta property="og:description" content="Free image resizer. Resize and compress images in your browser. Supports PNG, JPG, WebP. No upload needed — all processing is local.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/image-resizer.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/image-resizer.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Resizer — Resize & Compress | Harz Digital Services</title>
+<meta name="description" content="Free image resizer. Resize and compress images in your browser. Supports PNG, JPG, WebP. No upload needed — all processing is local.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.drop-zone{border:2px dashed #1e1e2e;border-radius:14px;padding:30px 20px;text-align:center;cursor:pointer;transition:all .2s}
+.drop-zone:hover{border-color:#00d4aa;background:rgba(0,212,170,.03)}
+.drop-zone .icon{font-size:2.5rem}
+.drop-zone .text{font-size:.85rem;color:#6b6b80;margin-top:8px}
+#fileInput{display:none}
+.preview-area{margin-top:12px;text-align:center}
+.preview-img{max-width:100%;border-radius:12px;margin-bottom:8px;display:none}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-row{display:flex;gap:8px}
+.input-row .input-group{flex:1}
+.input-group input{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem;text-align:center}
+.slider-row label{display:flex;justify-content:space-between;font-size:.75rem;color:#c8c8d0;margin-bottom:4px}
+.slider-row label .val{color:#00d4aa;font-weight:600}
+.slider-row input[type=range]{width:100%;accent-color:#00d4aa}
+.format-tabs{display:flex;gap:6px;margin-bottom:10px}
+.format-tab{flex:1;padding:8px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.75rem;color:#c8c8d0;cursor:pointer}
+.format-tab.active{border-color:#00d4aa;color:#00d4aa}
+.preset-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.preset-btn{padding:8px 4px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.65rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.preset-btn:hover{border-color:#00d4aa}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.result-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.info-item{padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;text-align:center}
+.info-item .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase}
+.info-item .val{font-size:.85rem;color:#00d4aa;font-weight:700;margin-top:2px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🖼️ Image Resizer</h1></div>
+
+<div class="card">
+<h2>Upload Image</h2>
+<div class="drop-zone" onclick="document.getElementById('fileInput').click()">
+<div class="icon">📁</div>
+<div class="text">Click to select an image</div>
+</div>
+<input type="file" id="fileInput" accept="image/*">
+<div class="preview-area">
+<img class="preview-img" id="originalImg">
+</div>
+</div>
+
+<div class="card" id="resizeCard" style="display:none">
+<h2>Resize Settings</h2>
+<div class="preset-btns">
+<div class="preset-btn" onclick="setPreset(100,100)">100×100</div>
+<div class="preset-btn" onclick="setPreset(300,300)">300×300</div>
+<div class="preset-btn" onclick="setPreset(500,500)">500×500</div>
+<div class="preset-btn" onclick="setPreset(800,800)">800×800</div>
+<div class="preset-btn" onclick="setPreset(1920,0)">1920 wide</div>
+<div class="preset-btn" onclick="setPreset(1080,0)">1080 wide</div>
+<div class="preset-btn" onclick="setPreset(600,0)">600 wide</div>
+<div class="preset-btn" onclick="setPreset(300,0)">300 wide</div>
+</div>
+<div class="input-row">
+<div class="input-group"><label>Width (px)</label><input type="number" id="width" value="500" min="1" oninput="preview()"></div>
+<div class="input-group"><label>Height (px)</label><input type="number" id="height" value="500" min="0" oninput="preview()"></div>
+</div>
+<label style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:#c8c8d0;margin-bottom:10px"><input type="checkbox" id="aspectLock" checked onchange="preview()"> Lock aspect ratio</label>
+<div class="slider-row"><label>Quality <span class="val" id="qVal">80%</span></label><input type="range" id="quality" min="10" max="100" value="80" oninput="document.getElementById('qVal').textContent=this.value+'%';preview()"></div>
+<div class="format-tabs">
+<div class="format-tab active" onclick="setFormat('jpeg')" data-f="jpeg">JPEG</div>
+<div class="format-tab" onclick="setFormat('png')" data-f="png">PNG</div>
+<div class="format-tab" onclick="setFormat('webp')" data-f="webp">WebP</div>
+</div>
+<div class="result-info">
+<div class="info-item"><div class="lbl">Original Size</div><div class="val" id="origSize">—</div></div>
+<div class="info-item"><div class="lbl">New Size</div><div class="val" id="newSize">—</div></div>
+<div class="info-item"><div class="lbl">Dimensions</div><div class="val" id="dimensions">—</div></div>
+<div class="info-item"><div class="lbl">Savings</div><div class="val" id="savings">—</div></div>
+</div>
+<button class="btn" onclick="download()">📥 Download Resized Image</button>
+<div style="margin-top:12px;text-align:center">
+<img id="resizedPreview" style="max-width:100%;border-radius:12px;display:none">
+</div>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+All processing happens in your browser — no uploads
+Harz Digital Services — RC 321424
+</div>
+
+<script>
+var originalImg=document.getElementById('originalImg');
+var imgData=null;
+var format='jpeg';
+var origWidth=0,origHeight=0,origSize=0;
+
+function formatSize(bytes){
+if(bytes<1024)return bytes+' B';
+if(bytes<1048576)return (bytes/1024).toFixed(1)+' KB';
+return (bytes/1048576).toFixed(2)+' MB';
+}
+
+document.getElementById('fileInput').addEventListener('change',function(e){
+var file=e.target.files[0];
+if(!file)return;
+origSize=file.size;
+document.getElementById('origSize').textContent=formatSize(origSize);
+var reader=new FileReader();
+reader.onload=function(ev){
+imgData=ev.target.result;
+originalImg.src=imgData;
+originalImg.style.display='block';
+originalImg.onload=function(){
+origWidth=originalImg.naturalWidth;
+origHeight=originalImg.naturalHeight;
+document.getElementById('width').value=Math.min(origWidth,500);
+document.getElementById('height').value=Math.min(origHeight,500);
+document.getElementById('resizeCard').style.display='block';
+preview();
+};
+};
+reader.readAsDataURL(file);
+});
+
+function setPreset(w,h){
+document.getElementById('width').value=w;
+if(h>0)document.getElementById('height').value=h;
+else if(document.getElementById('aspectLock').checked&&origHeight>0){
+document.getElementById('height').value=Math.round(w*origHeight/origWidth);
+}
+preview();
+}
+
+function setFormat(f){format=f;document.querySelectorAll('.format-tab').forEach(function(e){e.classList.toggle('active',e.dataset.f===f)});preview()}
+
+function preview(){
+if(!imgData)return;
+var w=parseInt(document.getElementById('width').value)||100;
+var h=parseInt(document.getElementById('height').value)||100;
+if(document.getElementById('aspectLock').checked&&origHeight>0){
+if(this===document.getElementById('width')){
+h=Math.round(w*origHeight/origWidth);
+document.getElementById('height').value=h;
+}else{
+w=Math.round(h*origWidth/origHeight);
+document.getElementById('width').value=w;
+}
+}
+document.getElementById('dimensions').textContent=w+'×'+h;
+var canvas=document.createElement('canvas');
+canvas.width=w;canvas.height=h;
+var ctx=canvas.getContext('2d');
+var img=new Image();
+img.onload=function(){
+ctx.drawImage(img,0,0,w,h);
+var q=parseInt(document.getElementById('quality').value)/100;
+var dataUrl=canvas.toDataURL('image/'+format,q);
+var newSize=Math.round(dataUrl.length*3/4);
+document.getElementById('newSize').textContent=formatSize(newSize);
+var savings=Math.round((1-newSize/origSize)*100);
+document.getElementById('savings').textContent=savings>0?'-'+savings+'%':'+'+Math.abs(savings)+'%';
+var prev=document.getElementById('resizedPreview');
+prev.src=dataUrl;prev.style.display='block';
+};
+img.src=imgData;
+}
+
+function download(){
+var w=parseInt(document.getElementById('width').value)||100;
+var h=parseInt(document.getElementById('height').value)||100;
+var canvas=document.createElement('canvas');
+canvas.width=w;canvas.height=h;
+var ctx=canvas.getContext('2d');
+var img=new Image();
+img.onload=function(){
+ctx.drawImage(img,0,0,w,h);
+var q=parseInt(document.getElementById('quality').value)/100;
+canvas.toBlob(function(blob){
+var a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='resized-'+w+'x'+h+'.'+format;
+a.click();
+},'image/'+format,q);
+};
+img.src=imgData;
+}
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta Tag Generator — SEO Tool | Harz Digital Services</title>
+<meta name="description" content="Free meta tag generator. Create SEO-optimized meta tags, Open Graph tags, Twitter cards, and JSON-LD structured data for your website.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:520px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group textarea,.input-group select{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.input-group textarea{min-height:60px;resize:vertical}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px;margin-bottom:10px}
+.output .label{font-size:.7rem;color:#7c3aed;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+.output .code{font-family:monospace;font-size:.7rem;color:#00d4aa;white-space:pre-wrap;word-break:break-all;line-height:1.5}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-bottom:8px}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Meta Tag Generator</h1></div>
+
+<div class="card">
+<h2>Website Info</h2>
+<div class="input-group"><label>Page Title (max 60 chars)</label><input type="text" id="title" value="Harz Digital Services — AI-Powered Digital Ecosystem" oninput="gen()"></div>
+<div class="input-group"><label>Description (max 160 chars)</label><textarea id="desc" oninput="gen()">Nigeria's largest AI-powered digital ecosystem. 24 platforms, 80+ AI agents, 259 digital products. From fintech to film, health AI to cybersecurity.</textarea></div>
+<div class="input-group"><label>Keywords (comma-separated)</label><input type="text" id="keywords" value="AI, fintech, digital products, Nigeria, marketplace, cybersecurity" oninput="gen()"></div>
+<div class="input-group"><label>Canonical URL</label><input type="text" id="url" value="https://rabiuhamza11.github.io/harz-portfolio/" oninput="gen()"></div>
+<div class="input-group"><label>Page Type</label><select id="type" oninput="gen()"><option value="website">Website</option><option value="article">Article</option><option value="product">Product</option></select></div>
+<div class="input-group"><label>Image URL (for social sharing)</label><input type="text" id="image" value="https://rabiuhamza11.github.io/harz-portfolio/og-image.png" oninput="gen()"></div>
+<div class="input-group"><label>Author / Business Name</label><input type="text" id="author" value="Harz Digital Services (RC 321424)" oninput="gen()"></div>
+</div>
+
+<div class="card">
+<h2>Generated Tags</h2>
+<div class="output"><div class="label">Basic Meta Tags</div><div class="code" id="basicTags"></div></div>
+<button class="btn copy" onclick="copyAll('basicTags')">📋 Copy Basic Tags</button>
+<div class="output"><div class="label">Open Graph (Facebook)</div><div class="code" id="ogTags"></div></div>
+<button class="btn copy" onclick="copyAll('ogTags')">📋 Copy OG Tags</button>
+<div class="output"><div class="label">Twitter Card</div><div class="code" id="twitterTags"></div></div>
+<button class="btn copy" onclick="copyAll('twitterTags')">📋 Copy Twitter Tags</button>
+<div class="output"><div class="label">JSON-LD Schema</div><div class="code" id="jsonld"></div></div>
+<button class="btn copy" onclick="copyAll('jsonld')">📋 Copy JSON-LD</button>
+<button class="btn" onclick="copyAll('allTags')">📋 Copy Everything</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Meta Tag Generator
+</div>
+
+<script>
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function gen(){
+var title=document.getElementById('title').value;
+var desc=document.getElementById('desc').value;
+var kw=document.getElementById('keywords').value;
+var url=document.getElementById('url').value;
+var type=document.getElementById('type').value;
+var image=document.getElementById('image').value;
+var author=document.getElementById('author').value;
+
+document.getElementById('basicTags').textContent=
+'<title>'+title+'</title>\n'+
+'<meta name="description" content="'+desc+'">\n'+
+'<meta name="keywords" content="'+kw+'">\n'+
+'<meta name="author" content="'+author+'">\n'+
+'<meta name="robots" content="index, follow">\n'+
+'<link rel="canonical" href="'+url+'">';
+
+document.getElementById('ogTags').textContent=
+'<meta property="og:type" content="'+type+'">\n'+
+'<meta property="og:title" content="'+title+'">\n'+
+'<meta property="og:description" content="'+desc+'">\n'+
+'<meta property="og:url" content="'+url+'">\n'+
+'<meta property="og:image" content="'+image+'">\n'+
+'<meta property="og:site_name" content="'+author+'">';
+
+document.getElementById('twitterTags').textContent=
+'<meta name="twitter:card" content="summary_large_image">\n'+
+'<meta name="twitter:title" content="'+title+'">\n'+
+'<meta name="twitter:description" content="'+desc+'">\n'+
+'<meta name="twitter:image" content="'+image+'">\n'+
+'<meta name="twitter:creator" content="@rabiuhamza11">';
+
+document.getElementById('jsonld').textContent=
+'<script type="application/ld+json">\n'+
+'{\n'+
+'  "@context": "https://schema.org",\n'+
+'  "@type": "'+(type==='article'?'Article':type==='product'?'Product':'WebSite')+'",\n'+
+'  "name": "'+title+'",\n'+
+'  "description": "'+desc+'",\n'+
+'  "url": "'+url+'",\n'+
+'  "image": "'+image+'",\n'+
+'  "author": {\n'+
+'    "@type": "Organization",\n'+
+'    "name": "'+author+'"\n'+
+'  }\n'+
+'}\n'+
+'<\/script>';
+}
+
+function copyAll(id){
+var el=document.getElementById(id);
+var text=id==='allTags'?
+document.getElementById('basicTags').textContent+'\n\n'+
+document.getElementById('ogTags').textContent+'\n\n'+
+document.getElementById('twitterTags').textContent+'\n\n'+
+document.getElementById('jsonld').textContent:
+el.textContent;
+navigator.clipboard.writeText(text);
+alert('Copied!');
+}
+gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

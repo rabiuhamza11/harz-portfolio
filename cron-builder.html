@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free cron expression generator. Build cron schedules visually, see plain English descriptions, and copy for your automations and scheduled tasks.">
+<meta name="keywords" content="cron expression, cron generator, schedule builder, crontab, job scheduler">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cron Expression Builder — Scheduler Tool | Harz Digital Services">
+<meta property="og:description" content="Free cron expression generator. Build cron schedules visually, see plain English descriptions, and copy for your automations and scheduled tasks.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/cron-builder.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/cron-builder.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Expression Builder — Scheduler Tool | Harz Digital Services</title>
+<meta name="description" content="Free cron expression generator. Build cron schedules visually, see plain English descriptions, and copy for your automations and scheduled tasks.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.freq-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:14px}
+.freq-tab{padding:8px 4px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.65rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.freq-tab.active{border-color:#00d4aa;color:#00d4aa}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.input-row{display:flex;gap:8px}
+.input-row .input-group{flex:1}
+.result{text-align:center;padding:24px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:16px;margin-bottom:12px}
+.result .cron{font-size:1.8rem;font-weight:800;font-family:monospace;color:#00d4aa;word-break:break-all}
+.result .desc{font-size:.85rem;color:#c8c8d0;margin-top:8px}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px;margin-top:8px}
+.output .code{font-family:monospace;font-size:.8rem;color:#00d4aa}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.preset{padding:8px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer;margin-bottom:6px;display:flex;justify-content:space-between}
+.preset:hover{border-color:#00d4aa}
+.preset .cron{font-family:monospace;color:#00d4aa}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>⏰ Cron Expression Builder</h1></div>
+
+<div class="card">
+<h2>Frequency</h2>
+<div class="freq-tabs">
+<div class="freq-tab active" onclick="setFreq('minutely')" data-f="minutely">Every Min</div>
+<div class="freq-tab" onclick="setFreq('hourly')" data-f="hourly">Hourly</div>
+<div class="freq-tab" onclick="setFreq('daily')" data-f="daily">Daily</div>
+<div class="freq-tab" onclick="setFreq('weekly')" data-f="weekly">Weekly</div>
+<div class="freq-tab" onclick="setFreq('monthly')" data-f="monthly">Monthly</div>
+</div>
+<div id="options"></div>
+</div>
+
+<div class="result">
+<div class="cron" id="cronResult">0 9 * * *</div>
+<div class="desc" id="cronDesc">Every day at 9:00 AM</div>
+</div>
+
+<div class="card">
+<h2>Common Presets</h2>
+<div class="preset" onclick="setPreset('0 9 * * *','Every day at 9:00 AM')"><span>Every day at 9 AM</span><span class="cron">0 9 * * *</span></div>
+<div class="preset" onclick="setPreset('0 7 * * 1-5','Weekdays at 7:00 AM')"><span>Weekdays at 7 AM</span><span class="cron">0 7 * * 1-5</span></div>
+<div class="preset" onclick="setPreset('*/10 * * * *','Every 10 minutes')"><span>Every 10 minutes</span><span class="cron">*/10 * * * *</span></div>
+<div class="preset" onclick="setPreset('0 */2 * * *','Every 2 hours')"><span>Every 2 hours</span><span class="cron">0 */2 * * *</span></div>
+<div class="preset" onclick="setPreset('0 22 * * *','Every day at 10 PM')"><span>Daily at 10 PM</span><span class="cron">0 22 * * *</span></div>
+<div class="preset" onclick="setPreset('0 0 * * 0','Every Sunday at midnight')"><span>Sunday midnight</span><span class="cron">0 0 * * 0</span></div>
+<div class="preset" onclick="setPreset('0 0 1 * *','1st of every month at midnight')"><span>Monthly on 1st</span><span class="cron">0 0 1 * *</span></div>
+<div class="preset" onclick="setPreset('30 8 * * 1','Every Monday at 8:30 AM')"><span>Monday 8:30 AM</span><span class="cron">30 8 * * 1</span></div>
+</div>
+
+<div class="card">
+<h2>Copy for Your Automation</h2>
+<div class="output"><div class="code" id="cronOutput">0 9 * * *</div></div>
+<button class="btn" style="margin-top:8px" onclick="copyCron()">📋 Copy Cron Expression</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Note: Cron times are in UTC. Convert from your timezone.
+Harz Digital Services — RC 321424
+</div>
+
+<script>
+var freq='daily';
+var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function setFreq(f){freq=f;document.querySelectorAll('.freq-tab').forEach(function(e){e.classList.toggle('active',e.dataset.f===f)});renderOptions()}
+
+function renderOptions(){
+var html='';
+if(freq==='minutely'){
+html='<div class="input-group"><label>Every N minutes</label><input type="number" id="minInt" value="5" min="1" max="59" oninput="gen()"></div>';
+}else if(freq==='hourly'){
+html='<div class="input-group"><label>Every N hours</label><input type="number" id="hrInt" value="2" min="1" max="23" oninput="gen()"></div><div class="input-group"><label>At minute</label><input type="number" id="hrMin" value="0" min="0" max="59" oninput="gen()"></div>';
+}else if(freq==='daily'){
+html='<div class="input-row"><div class="input-group"><label>Hour (UTC)</label><input type="number" id="dHour" value="8" min="0" max="23" oninput="gen()"></div><div class="input-group"><label>Minute</label><input type="number" id="dMin" value="0" min="0" max="59" oninput="gen()"></div></div>';
+}else if(freq==='weekly'){
+html='<div class="input-row"><div class="input-group"><label>Hour (UTC)</label><input type="number" id="wHour" value="8" min="0" max="23" oninput="gen()"></div><div class="input-group"><label>Minute</label><input type="number" id="wMin" value="0" min="0" max="59" oninput="gen()"></div></div><div class="input-group"><label>Day of week</label><select id="wDay" onchange="gen()"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option></select></div>';
+}else if(freq==='monthly'){
+html='<div class="input-row"><div class="input-group"><label>Day of month</label><input type="number" id="mDay" value="1" min="1" max="31" oninput="gen()"></div><div class="input-group"><label>Hour (UTC)</label><input type="number" id="mHour" value="0" min="0" max="23" oninput="gen()"></div></div><div class="input-group"><label>Minute</label><input type="number" id="mMin" value="0" min="0" max="59" oninput="gen()"></div>';
+}
+document.getElementById('options').innerHTML=html;
+gen();
+}
+
+function gen(){
+var cron='',desc='';
+if(freq==='minutely'){
+var n=document.getElementById('minInt').value||'5';
+cron='*/'+n+' * * * *';desc='Every '+n+' minutes';
+}else if(freq==='hourly'){
+var n=document.getElementById('hrInt').value||'2';
+var m=document.getElementById('hrMin').value||'0';
+cron=m+' */'+n+' * * *';desc='Every '+n+' hours at minute '+m;
+}else if(freq==='daily'){
+var h=document.getElementById('dHour').value||'0';
+var m=document.getElementById('dMin').value||'0';
+cron=m+' '+h+' * * *';desc='Every day at '+h+':'+String(m).padStart(2,'0')+' UTC';
+}else if(freq==='weekly'){
+var h=document.getElementById('wHour').value||'0';
+var m=document.getElementById('wMin').value||'0';
+var d=document.getElementById('wDay').value||'1';
+cron=m+' '+h+' * * '+d;desc='Every '+days[d]+' at '+h+':'+String(m).padStart(2,'0')+' UTC';
+}else if(freq==='monthly'){
+var d=document.getElementById('mDay').value||'1';
+var h=document.getElementById('mHour').value||'0';
+var m=document.getElementById('mMin').value||'0';
+cron=m+' '+h+' '+d+' * *';desc='On day '+d+' at '+h+':'+String(m).padStart(2,'0')+' UTC';
+}
+document.getElementById('cronResult').textContent=cron;
+document.getElementById('cronDesc').textContent=desc;
+document.getElementById('cronOutput').textContent=cron;
+}
+
+function setPreset(cron,desc){
+document.getElementById('cronResult').textContent=cron;
+document.getElementById('cronDesc').textContent=desc;
+document.getElementById('cronOutput').textContent=cron;
+}
+
+function copyCron(){
+navigator.clipboard.writeText(document.getElementById('cronOutput').textContent);
+alert('Cron expression copied!');
+}
+
+renderOptions();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

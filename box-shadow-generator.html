@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free CSS box shadow generator. Create inner, outer, and layered shadows with live preview. Copy CSS code for your projects.">
+<meta name="keywords" content="box shadow generator, css shadow, drop shadow, inset shadow, web design tool">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CSS Box Shadow Generator — Design Tool | Harz Digital Services">
+<meta property="og:description" content="Free CSS box shadow generator. Create inner, outer, and layered shadows with live preview. Copy CSS code for your projects.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/box-shadow-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/box-shadow-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Box Shadow Generator — Design Tool | Harz Digital Services</title>
+<meta name="description" content="Free CSS box shadow generator. Create inner, outer, and layered shadows with live preview. Copy CSS code for your projects.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.preview{background:#fff;border-radius:16px;padding:40px;margin-bottom:16px;text-align:center}
+.preview .box{width:150px;height:100px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:12px;margin:0 auto;transition:box-shadow .2s}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.slider-row{margin-bottom:12px}
+.slider-row label{display:flex;justify-content:space-between;font-size:.75rem;color:#c8c8d0;margin-bottom:4px}
+.slider-row label .val{color:#00d4aa;font-weight:600}
+.slider-row input[type=range]{width:100%;accent-color:#00d4aa}
+.slider-row input[type=color]{width:100%;height:36px;border:1px solid #1e1e2e;border-radius:8px;cursor:pointer;background:#14141e}
+.mode-tabs{display:flex;gap:6px;margin-bottom:12px}
+.mode-tab{flex:1;padding:8px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer}
+.mode-tab.active{border-color:#00d4aa;color:#00d4aa}
+.preset-btn{padding:8px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#c8c8d0;font-size:.7rem;cursor:pointer;text-align:center;margin-bottom:6px;width:100%}
+.preset-btn:hover{border-color:#00d4aa}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px;margin-top:8px;position:relative}
+.output .code{font-family:monospace;font-size:.75rem;color:#00d4aa;word-break:break-all;line-height:1.6}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>CSS Box Shadow Generator</h1></div>
+
+<div class="preview"><div class="box" id="previewBox"></div></div>
+
+<div class="card">
+<h2>Shadow Settings</h2>
+<div class="mode-tabs">
+<div class="mode-tab active" onclick="setMode('outset')" data-mode="outset">Outer Shadow</div>
+<div class="mode-tab" onclick="setMode('inset')" data-mode="inset">Inner Shadow</div>
+</div>
+<div class="slider-row"><label>Offset X <span class="val" id="xVal">0px</span></label><input type="range" id="x" min="-50" max="50" value="0" oninput="gen()"></div>
+<div class="slider-row"><label>Offset Y <span class="val" id="yVal">10px</span></label><input type="range" id="y" min="-50" max="50" value="10" oninput="gen()"></div>
+<div class="slider-row"><label>Blur <span class="val" id="blurVal">20px</span></label><input type="range" id="blur" min="0" max="100" value="20" oninput="gen()"></div>
+<div class="slider-row"><label>Spread <span class="val" id="spreadVal">-3px</span></label><input type="range" id="spread" min="-50" max="50" value="-3" oninput="gen()"></div>
+<div class="slider-row"><label>Shadow Color</label><input type="color" id="color" value="#00d4aa" oninput="gen()"></div>
+<div class="slider-row"><label>Opacity <span class="val" id="opacityVal">0.4</span></label><input type="range" id="opacity" min="0" max="100" value="40" oninput="gen()"></div>
+</div>
+
+<div class="card">
+<h2>Presets</h2>
+<button class="preset-btn" onclick="preset(0,4,6,0,'#000000',30)">Soft Drop</button>
+<button class="preset-btn" onclick="preset(0,10,20,-3,'#00d4aa',40)">Glow Teal</button>
+<button class="preset-btn" onclick="preset(0,2,4,0,'#000000',20)">Subtle</button>
+<button class="preset-btn" onclick="preset(0,20,40,-10,'#7c3aed',30)">Floating</button>
+<button class="preset-btn" onclick="preset(4,4,0,0,'#000000',25)">Hard Edge</button>
+</div>
+
+<div class="card">
+<h2>CSS Code</h2>
+<div class="output"><div class="code" id="cssCode">box-shadow: 0px 10px 20px -3px rgba(0,212,170,0.4);</div></div>
+<button class="btn" onclick="copy()">📋 Copy CSS</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Box Shadow Generator
+</div>
+
+<script>
+var mode='outset';
+function setMode(m){mode=m;document.querySelectorAll('.mode-tab').forEach(function(e){e.classList.toggle('active',e.dataset.mode===m)});gen()}
+
+function hexToRgba(hex,opacity){
+var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+return 'rgba('+r+','+g+','+b+','+(opacity/100)+')';
+}
+
+function gen(){
+var x=document.getElementById('x').value;
+var y=document.getElementById('y').value;
+var blur=document.getElementById('blur').value;
+var spread=document.getElementById('spread').value;
+var color=document.getElementById('color').value;
+var opacity=document.getElementById('opacity').value;
+document.getElementById('xVal').textContent=x+'px';
+document.getElementById('yVal').textContent=y+'px';
+document.getElementById('blurVal').textContent=blur+'px';
+document.getElementById('spreadVal').textContent=spread+'px';
+document.getElementById('opacityVal').textContent=(opacity/100).toFixed(1);
+var rgba=hexToRgba(color,opacity);
+var css=(mode==='inset'?'inset ':'')+x+'px '+y+'px '+blur+'px '+spread+'px '+rgba;
+var boxShadow='box-shadow: '+css+';';
+document.getElementById('cssCode').textContent=boxShadow;
+document.getElementById('previewBox').style.boxShadow=css;
+}
+
+function preset(x,y,blur,spread,color,opacity){
+document.getElementById('x').value=x;
+document.getElementById('y').value=y;
+document.getElementById('blur').value=blur;
+document.getElementById('spread').value=spread;
+document.getElementById('color').value=color;
+document.getElementById('opacity').value=opacity;
+gen();
+}
+
+function copy(){
+navigator.clipboard.writeText(document.getElementById('cssCode').textContent);
+alert('CSS copied!');
+}
+gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
