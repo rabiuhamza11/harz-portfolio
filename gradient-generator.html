@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free CSS gradient generator. Create linear and radial gradients with multiple colors. Copy CSS code for your projects.">
+<meta name="keywords" content="css gradient generator, linear gradient, radial gradient, css background, web design tool">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CSS Gradient Generator — Design Tool | Harz Digital Services">
+<meta property="og:description" content="Free CSS gradient generator. Create linear and radial gradients with multiple colors. Copy CSS code for your projects.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/gradient-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/gradient-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Gradient Generator — Design Tool | Harz Digital Services</title>
+<meta name="description" content="Free CSS gradient generator. Create linear and radial gradients with multiple colors. Copy CSS code for your projects.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.preview{height:150px;border-radius:14px;margin-bottom:16px;border:1px solid #1e1e2e}
+.type-tabs{display:flex;gap:6px;margin-bottom:12px}
+.type-tab{flex:1;padding:8px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.75rem;color:#c8c8d0;cursor:pointer}
+.type-tab.active{border-color:#00d4aa;color:#00d4aa}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+input[type=range]{width:100%;accent-color:#00d4aa}
+.color-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.color-row input[type=color]{width:44px;height:38px;border:none;border-radius:8px;cursor:pointer}
+.color-row input[type=text]{flex:1;padding:8px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem;font-family:monospace}
+.color-row .rm{color:#ef4444;cursor:pointer;font-size:1.2rem;padding:4px}
+.btn{padding:10px 18px;border:none;border-radius:10px;font-weight:600;cursor:pointer}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;width:100%}
+.btn.add{background:#14141e;border:1px solid #1e1e2e;color:#00d4aa;width:100%;margin-top:8px}
+.code-box{background:#14141e;border:1px solid #1e1e2e;border-radius:10px;padding:14px;margin-top:12px;position:relative}
+.code-box code{font-family:monospace;font-size:.75rem;color:#00d4aa;display:block;line-height:1.6;word-break:break-all}
+.copy-btn{margin-top:8px;padding:8px 16px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:8px;color:#00d4aa;font-size:.8rem;cursor:pointer}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>CSS Gradient Generator</h1><p>Create beautiful gradients</p></div>
+
+<div class="card">
+<h2>Gradient Type</h2>
+<div class="type-tabs">
+<div class="type-tab active" onclick="setType('linear')">↔ Linear</div>
+<div class="type-tab" onclick="setType('radial')">◎ Radial</div>
+<div class="type-tab" onclick="setType('conic')">🌀 Conic</div>
+</div>
+<div class="preview" id="preview"></div>
+<div class="input-group" id="angleGroup">
+<label>Angle: <span id="angleVal">135°</span></label>
+<input type="range" id="angle" min="0" max="360" value="135" oninput="update()">
+</div>
+</div>
+
+<div class="card">
+<h2>Colors</h2>
+<div id="colorList"></div>
+<button class="btn add" onclick="addColor()">+ Add Color</button>
+</div>
+
+<div class="card">
+<h2>CSS Code</h2>
+<div class="code-box"><code id="cssCode"></code></div>
+<button class="copy-btn" onclick="copyCSS()">📋 Copy CSS</button>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | CSS Gradient Generator
+</div>
+
+<script>
+var type='linear';
+var colors=['#00d4aa','#7c3aed','#f59e0b'];
+
+function setType(t){
+type=t;
+document.querySelectorAll('.type-tab').forEach(function(e,i){e.classList.toggle('active',['linear','radial','conic'][i]===t)});
+document.getElementById('angleGroup').style.display=t==='linear'?'block':'none';
+update();
+}
+
+function update(){
+var angle=document.getElementById('angle').value;
+document.getElementById('angleVal').textContent=angle+'°';
+var gradient;
+if(type==='linear'){gradient='linear-gradient('+angle+'deg, '+colors.join(', ')+')'}
+else if(type==='radial'){gradient='radial-gradient(circle, '+colors.join(', ')+')'}
+else{gradient='conic-gradient(from '+angle+'deg, '+colors.join(', ')+')'}
+document.getElementById('preview').style.background=gradient;
+document.getElementById('cssCode').textContent='background: '+gradient+';';
+}
+
+function renderColors(){
+document.getElementById('colorList').innerHTML=colors.map(function(c,i){
+return '<div class="color-row"><input type="color" value="'+c+'" oninput="setColor('+i+',this.value)"><input type="text" value="'+c+'" oninput="setColor('+i+',this.value)">'+(colors.length>2?'<span class="rm" onclick="rmColor('+i+')">✕</span>':'')+'</div>';
+}).join('');
+}
+
+function setColor(i,val){colors[i]=val;update();renderColors()}
+function addColor(){if(colors.length<6){colors.push('#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0'));renderColors();update()}}
+function rmColor(i){colors.splice(i,1);renderColors();update()}
+
+function copyCSS(){
+navigator.clipboard.writeText(document.getElementById('cssCode').textContent);
+alert('CSS copied!');
+}
+
+document.getElementById('angle').addEventListener('input',update);
+renderColors();update();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

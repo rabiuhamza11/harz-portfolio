@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free date calculator. Calculate days between dates, add or subtract days, find day of week, and calculate age.">
+<meta name="keywords" content="date calculator, days between dates, age calculator, add days to date">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Date Calculator — Days Between Dates | Harz Digital Services">
+<meta property="og:description" content="Free date calculator. Calculate days between dates, add or subtract days, find day of week, and calculate age.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/date-calculator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/date-calculator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Calculator — Days Between Dates | Harz Digital Services</title>
+<meta name="description" content="Free date calculator. Calculate days between dates, add or subtract days, find day of week, and calculate age.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:3px}
+.input-group input{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.input-row{display:flex;gap:8px}
+.input-row .input-group{flex:1}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.result{text-align:center;padding:20px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:12px;margin-top:12px}
+.result .big{font-size:2rem;font-weight:800;color:#00d4aa}
+.result .label{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.detail-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.8rem;border-bottom:1px solid rgba(30,30,46,.5)}
+.detail-row .l{color:#6b6b80}
+.detail-row .v{color:#e8e8f0;font-weight:600}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Date Calculator</h1><p>Days between dates, add/subtract, age</p></div>
+
+<div class="card">
+<h2>Days Between Two Dates</h2>
+<div class="input-row">
+<div class="input-group"><label>From</label><input type="date" id="date1" value="2026-01-01"></div>
+<div class="input-group"><label>To</label><input type="date" id="date2" value="2026-12-31"></div>
+</div>
+<button class="btn" onclick="calcDays()">Calculate</button>
+<div class="result" id="daysResult">
+<div class="big" id="daysNum">—</div>
+<div class="label" id="daysLabel">Select dates and calculate</div>
+</div>
+<div id="daysDetail" style="margin-top:12px"></div>
+</div>
+
+<div class="card">
+<h2>Add/Subtract Days</h2>
+<div class="input-row">
+<div class="input-group"><label>Start Date</label><input type="date" id="addDate" value="2026-07-18"></div>
+<div class="input-group"><label>Days (+/−)</label><input type="number" id="addDays" value="30"></div>
+</div>
+<button class="btn" onclick="addDays()">Calculate</button>
+<div class="result" id="addResult">
+<div class="big" id="addResultDate">—</div>
+<div class="label" id="addResultLabel">Enter date and days</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Age Calculator</h2>
+<div class="input-group"><label>Birth Date</label><input type="date" id="birthDate" value="1995-01-01"></div>
+<button class="btn" onclick="calcAge()">Calculate Age</button>
+<div id="ageResult" style="margin-top:12px"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Date Calculator
+</div>
+
+<script>
+function calcDays(){
+var d1=new Date(document.getElementById('date1').value);
+var d2=new Date(document.getElementById('date2').value);
+if(isNaN(d1)||isNaN(d2))return;
+var diff=Math.abs(d2-d1);
+var days=Math.floor(diff/86400000);
+document.getElementById('daysNum').textContent=days.toLocaleString();
+document.getElementById('daysLabel').textContent=days+' days between '+d1.toDateString()+' and '+d2.toDateString();
+document.getElementById('daysDetail').innerHTML=
+'<div class="detail-row"><span class="l">Weeks</span><span class="v">'+Math.floor(days/7).toLocaleString()+'</span></div>'+
+'<div class="detail-row"><span class="l">Months (approx)</span><span class="v">'+Math.floor(days/30.44).toLocaleString()+'</span></div>'+
+'<div class="detail-row"><span class="l">Years (approx)</span><span class="v">'+(days/365.25).toFixed(2)+'</span></div>'+
+'<div class="detail-row"><span class="l">Hours</span><span class="v">'+(days*24).toLocaleString()+'</span></div>'+
+'<div class="detail-row"><span class="l">Business days</span><span class="v">'+Math.floor(days*5/7).toLocaleString()+'</span></div>';
+}
+
+function addDays(){
+var d=new Date(document.getElementById('addDate').value);
+var days=parseInt(document.getElementById('addDays').value);
+if(isNaN(d)||isNaN(days))return;
+var result=new Date(d);
+result.setDate(result.getDate()+days);
+document.getElementById('addResultDate').textContent=result.toDateString();
+document.getElementById('addResultLabel').textContent=days+' days from '+d.toDateString()+' is a '+['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][result.getDay()];
+}
+
+function calcAge(){
+var birth=new Date(document.getElementById('birthDate').value);
+var now=new Date();
+if(isNaN(birth))return;
+var years=now.getFullYear()-birth.getFullYear();
+var months=now.getMonth()-birth.getMonth();
+var days=now.getDate()-birth.getDate();
+if(days<0){months--;days+=30}
+if(months<0){years--;months+=12}
+var totalDays=Math.floor((now-birth)/86400000);
+document.getElementById('ageResult').innerHTML=
+'<div class="detail-row"><span class="l">Age</span><span class="v">'+years+' years, '+months+' months, '+days+' days</span></div>'+
+'<div class="detail-row"><span class="l">Total days</span><span class="v">'+totalDays.toLocaleString()+'</span></div>'+
+'<div class="detail-row"><span class="l">Total weeks</span><span class="v">'+Math.floor(totalDays/7).toLocaleString()+'</span></div>'+
+'<div class="detail-row"><span class="l">Total hours</span><span class="v">'+(totalDays*24).toLocaleString()+'</span></div>'+
+'<div class="detail-row"><span class="l">Next birthday</span><span class="v">'+new Date(birth.getFullYear()+years+1,birth.getMonth(),birth.getDate()).toDateString()+'</span></div>';
+}
+
+calcDays();addDays();calcAge();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
