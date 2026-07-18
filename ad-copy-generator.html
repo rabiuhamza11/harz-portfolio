@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free ad copy generator for Nigerian businesses. Create Facebook, Google, TikTok, and WhatsApp ad copy with proven templates.">
+<meta name="keywords" content="ad copy generator, facebook ads, google ads, tiktok ads, whatsapp marketing, ad templates nigeria">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ad Copy Generator — Facebook, Google, TikTok, WhatsApp | Free">
+<meta property="og:description" content="Free ad copy generator for Nigerian businesses. Create Facebook, Google, TikTok, and WhatsApp ad copy with proven templates.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/ad-copy-generator.html">
+<meta property="og:site_name" content="Harz Digital Services">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ad Copy Generator — Facebook, Google, TikTok, WhatsApp | Free">
+<meta name="twitter:description" content="Free ad copy generator for Nigerian businesses. Create Facebook, Google, TikTok, and WhatsApp ad copy with proven templates.">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/ad-copy-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad Copy Generator — Facebook, Google, TikTok, WhatsApp | Free</title>
+<meta name="description" content="Free ad copy generator for Nigerian businesses. Create Facebook, Google, TikTok, and WhatsApp ad copy with proven templates.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:700px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:10px;text-align:center;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;font-size:.8rem;color:#6b6b80;cursor:pointer}
+.tab.active{background:rgba(0,212,170,.1);border-color:#00d4aa;color:#00d4aa}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem;font-family:inherit}
+.input-group textarea{min-height:60px;resize:vertical}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:8px}
+.output{display:none;margin-top:16px}
+.output.show{display:block}
+.ad-box{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:16px;margin-bottom:12px}
+.ad-box .platform{font-size:.7rem;color:#7c3aed;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.ad-box .headline{font-size:1rem;font-weight:700;margin-bottom:6px}
+.ad-box .body{font-size:.85rem;color:#c8c8d0;line-height:1.5;margin-bottom:6px;white-space:pre-wrap}
+.ad-box .cta{font-size:.8rem;color:#00d4aa;font-weight:600}
+.ad-box .hashtags{font-size:.75rem;color:#7c3aed;margin-top:4px}
+.copy-btn{padding:6px 14px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:6px;color:#00d4aa;font-size:.75rem;cursor:pointer;margin-top:8px}
+.section{display:none}
+.section.active{display:block}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header">
+<h1>Ad Copy Generator</h1>
+<p>Generate ad copy for Facebook, Google, TikTok, WhatsApp</p>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('product')">Product Ad</div>
+<div class="tab" onclick="switchTab('service')">Service Ad</div>
+<div class="tab" onclick="switchTab('promo')">Promo Ad</div>
+</div>
+
+<div id="product" class="section active">
+<div class="card">
+<h2>Product Ad Generator</h2>
+<div class="input-group"><label>Product Name</label><input type="text" id="pName" placeholder="e.g. AI Prompts for Nigerian Business"></div>
+<div class="input-group"><label>Price</label><input type="text" id="pPrice" placeholder="e.g. ₦5,000 or $2.99"></div>
+<div class="input-group"><label>Key Benefit (1 sentence)</label><textarea id="pBenefit" placeholder="e.g. Save 3 hours daily with these AI prompts">Save 3 hours daily with these proven AI prompts designed for Nigerian businesses</textarea>
+<div class="input-group"><label>Target Audience</label><select id="pAudience"><option>Nigerian entrepreneurs</option><option>Small business owners</option><option>Content creators</option><option>Students</option><option>Freelancers</option><option>Tech professionals</option></select></div>
+<button class="btn" onclick="genProduct()">Generate Ad Copy</button>
+<div id="productOutput" class="output"></div>
+</div>
+</div>
+
+<div id="service" class="section">
+<div class="card">
+<h2>Service Ad Generator</h2>
+<div class="input-group"><label>Service Name</label><input type="text" id="sName" placeholder="e.g. AI Automation Consultation"></div>
+<div class="input-group"><label>Price</label><input type="text" id="sPrice" placeholder="e.g. ₦15,000"></div>
+<div class="input-group"><label>What you do</label><textarea id="sDesc" placeholder="e.g. Set up email automation and CRM for your business in 1 session">Set up email automation and CRM for your business in 1 session</textarea>
+<div class="input-group"><label>Result for client</label><input type="text" id="sResult" placeholder="e.g. Your business runs 50% on autopilot"></div>
+<button class="btn" onclick="genService()">Generate Ad Copy</button>
+<div id="serviceOutput" class="output"></div>
+</div>
+</div>
+
+<div id="promo" class="section">
+<div class="card">
+<h2>Promo / Flash Sale Ad</h2>
+<div class="input-group"><label>Promo Name</label><input type="text" id="prName" placeholder="e.g. Independence Day Sale"></div>
+<div class="input-group"><label>Discount</label><input type="text" id="prDiscount" placeholder="e.g. 50% OFF"></div>
+<div class="input-group"><label>Original Price</label><input type="text" id="prOrig" placeholder="e.g. ₦30,000"></div>
+<div class="input-group"><label>Valid For</label><input type="text" id="prTime" placeholder="e.g. 48 hours only"></div>
+<button class="btn" onclick="genPromo()">Generate Ad Copy</button>
+<div id="promoOutput" class="output"></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Free Ad Copy Generator
+</div>
+
+<script>
+function switchTab(t){document.querySelectorAll('.tab').forEach((e,i)=>{if(['product','service','promo'][i]===t){e.classList.add('active')}else{e.classList.remove('active')}});document.querySelectorAll('.section').forEach(e=>{e.classList.remove('active')});document.getElementById(t).classList.add('active')}
+function copyText(id){var el=document.getElementById(id);var range=document.createRange();range.selectNode(el);window.getSelection().removeAllRanges();window.getSelection().addRange(range);document.execCommand('copy');alert('Copied!')}
+
+function genProduct(){
+var n=document.getElementById('pName').value||'Product';
+var p=document.getElementById('pPrice').value||'₦5,000';
+var b=document.getElementById('pBenefit').value||'Boost your business';
+var a=document.getElementById('pAudience').value||'entrepreneurs';
+var o=document.getElementById('productOutput');
+o.classList.add('show');
+o.innerHTML=`
+<div class="ad-box"><div class="platform">Facebook Ad</div><div class="headline">🎯 ${a}, this changes everything</div><div class="body">${b}.
+
+"${n}" — the tool ${a} are talking about.
+
+✅ Ready to use instantly
+✅ Works for Nigerian businesses
+✅ No experience needed
+
+Price: ${p} (one-time payment, lifetime access)
+
+Tap "Learn More" to get yours today 👇</div><div class="cta">👉 Get ${n} now — ${p}</div><button class="copy-btn" onclick="copyText('fbAd')">Copy</button></div>
+<div class="ad-box"><div class="platform">Google Search Ad</div><div class="headline">${n} — ${a}</div><div class="body">${b}. Instant access. ${p}. Nigerian business tested. WhatsApp support included.</div><div class="cta">Buy Now → ${p}</div><button class="copy-btn" onclick="copyText('gAd')">Copy</button></div>
+<div class="ad-box"><div class="platform">TikTok / Instagram</div><div class="headline">POV: You found ${n} 💡</div><div class="body">${b}
+
+₦${p} and it pays for itself in days.
+
+Link in bio 🔗</div><div class="hashtags">#NigeriaBusiness #DigitalProducts #AI</div><button class="copy-btn" onclick="copyText('ttAd')">Copy</button></div>
+<div class="ad-box"><div class="platform">WhatsApp Status</div><div class="body">🔥 NEW: ${n}
+
+${b}
+
+Price: ${p} (lifetime access)
+
+DM "YES" to get it now 👆
+
+Limited slots available ⏰</div><button class="copy-btn" onclick="copyText('waAd')">Copy</button></div>`;
+}
+
+function genService(){
+var n=document.getElementById('sName').value||'Consultation';
+var p=document.getElementById('sPrice').value||'₦15,000';
+var d=document.getElementById('sDesc').value||'Help your business';
+var r=document.getElementById('sResult').value||'Better results';
+var o=document.getElementById('serviceOutput');
+o.classList.add('show');
+o.innerHTML=`
+<div class="ad-box"><div class="platform">Facebook Ad</div><div class="headline">💼 Stop doing it the hard way</div><div class="body">${d}.
+
+Result: ${r}
+
+1-hour consultation with a CAC-registered expert (RC 321424).
+
+${p} — no monthly fees, no contracts.
+
+Book your session today 👇</div><div class="cta">👉 Book ${n} — ${p}</div><button class="copy-btn" onclick="copyText('sFb')">Copy</button></div>
+<div class="ad-box"><div class="platform">LinkedIn Ad</div><div class="headline">${n} for ambitious Nigerian businesses</div><div class="body">${d}.
+
+✅ ${r}
+✅ 1-hour session
+✅ ${p} (one-time)
+✅ WhatsApp follow-up support
+
+Message me to book your session.</div><div class="cta">Book Now → ${p}</div><button class="copy-btn" onclick="copyText('sLi')">Copy</button></div>
+<div class="ad-box"><div class="platform">WhatsApp Broadcast</div><div class="body">✨ ${n} now available
+
+${d}
+
+Result: ${r}
+
+💰 ${p} (1 session)
+📱 WhatsApp or Google Meet
+✅ CAC registered (RC 321424)
+
+Reply "BOOK" to schedule 📅</div><button class="copy-btn" onclick="copyText('sWa')">Copy</button></div>`;
+}
+
+function genPromo(){
+var n=document.getElementById('prName').value||'Flash Sale';
+var d=document.getElementById('prDiscount').value||'50% OFF';
+var o=document.getElementById('prOrig').value||'₦30,000';
+var t=document.getElementById('prTime').value||'48 hours';
+var out=document.getElementById('promoOutput');
+out.classList.add('show');
+var sale=Math.round(parseInt(o.replace(/[^0-9]/g,''))*0.5);
+out.innerHTML=`
+<div class="ad-box"><div class="platform">Facebook + Instagram</div><div class="headline">🚨 ${d} — ${n}!</div><div class="body">For ${t} only!
+
+Was: ${o}
+Now: ₦${sale.toLocaleString()}
+
+This is NOT a drill. Real discount, real value.
+
+Tap to claim before it's gone 👇</div><div class="cta">⚡ Claim ${d} Now</div><button class="copy-btn" onclick="copyText('prFb')">Copy</button></div>
+<div class="ad-box"><div class="platform">WhatsApp Status / Broadcast</div><div class="body">🔥 ${n} — ${d}!
+
+⏰ ${t} only
+💰 Was ${o} → Now ₦${sale.toLocaleString()}
+
+DM "SALE" to grab yours before time runs out ⏳
+
+Don't wait — this won't come back 🔒</div><button class="copy-btn" onclick="copyText('prWa')">Copy</button></div>
+<div class="ad-box"><div class="platform">TikTok</div><div class="headline">Nobody: ${d} on ${n}</div><div class="body">Me: 🏃‍♂️💨
+
+${o} → ₦${sale.toLocaleString()}
+${t} only
+
+Link in bio before it's gone 🔗</div><div class="hashtags">#FlashSale #NigeriaBusiness #Deal</div><button class="copy-btn" onclick="copyText('prTt')">Copy</button></div>`;
+}
+</script>
+</body>
+</html>

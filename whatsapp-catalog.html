@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Generate a WhatsApp Business catalog from your products. Free tool with CSV export and step-by-step setup guide.">
+<meta name="keywords" content="whatsapp catalog, whatsapp business, product catalog, whatsapp marketing nigeria">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WhatsApp Catalog Generator — Harz Digital Services">
+<meta property="og:description" content="Generate a WhatsApp Business catalog from your products. Free tool with CSV export and step-by-step setup guide.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/whatsapp-catalog.html">
+<meta property="og:site_name" content="Harz Digital Services">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WhatsApp Catalog Generator — Harz Digital Services">
+<meta name="twitter:description" content="Generate a WhatsApp Business catalog from your products. Free tool with CSV export and step-by-step setup guide.">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/whatsapp-catalog.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Catalog Generator — Harz Digital Services</title>
+<meta name="description" content="Generate a WhatsApp Business catalog format from your products. Free tool for Nigerian businesses to set up WhatsApp Business catalog.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:700px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:#25d366}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.intro{font-size:.85rem;color:#c8c8d0;line-height:1.6;margin-bottom:16px;padding:12px;background:rgba(37,211,102,.05);border:1px solid rgba(37,211,102,.15);border-radius:10px}
+.btn{width:100%;padding:14px;background:#25d366;border:none;border-radius:10px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:8px}
+.catalog-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:12px}
+.catalog-table th{text-align:left;padding:8px;border-bottom:2px solid #1e1e2e;color:#6b6b80;font-size:.7rem;text-transform:uppercase}
+.catalog-table td{padding:8px;border-bottom:1px solid rgba(30,30,46,.5);vertical-align:top}
+.catalog-table .name{font-weight:600}
+.catalog-table .price{color:#00d4aa;font-weight:600}
+.catalog-table .cat{font-size:.7rem;color:#7c3aed}
+.copy-btn{padding:8px 16px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:8px;color:#25d366;font-size:.8rem;cursor:pointer;margin-top:12px}
+.instructions{margin-top:16px;padding:16px;background:#14141e;border-radius:12px}
+.instructions h3{font-size:.8rem;color:#25d366;margin-bottom:10px}
+.instructions ol{padding-left:20px;font-size:.8rem;color:#c8c8d0;line-height:1.8}
+.instructions a{color:#25d366}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header">
+<h1>WhatsApp Catalog Generator</h1>
+<p>Generate your WhatsApp Business catalog from Harz products</p>
+</div>
+
+<div class="card">
+<h2>Your WhatsApp Business Catalog</h2>
+<div class="intro">
+These are your top 20 products formatted for WhatsApp Business Catalog. Copy the table and add products manually in WhatsApp Business app, or use the CSV export below for bulk upload.
+</div>
+<button class="btn" onclick="generateCatalog()">Generate Catalog</button>
+<div id="catalogOutput" style="display:none;margin-top:16px">
+<table class="catalog-table" id="catalogTable"></table>
+<div style="margin-top:16px">
+<button class="copy-btn" onclick="exportCSV()">📥 Download CSV</button>
+<button class="copy-btn" onclick="copyTable()">📋 Copy Table</button>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>How to Set Up WhatsApp Business Catalog</h2>
+<div class="instructions">
+<h3>📱 Step-by-Step Guide</h3>
+<ol>
+<li>Download <strong>WhatsApp Business</strong> app (separate from regular WhatsApp)</li>
+<li>Set up your business profile with name: "Harz Digital Services"</li>
+<li>Go to <strong>Settings → Business Tools → Catalog</strong></li>
+<li>Tap <strong>"Add Product"</strong> for each item from the table above</li>
+<li>Add product image, name, price, description, and link</li>
+<li>Share catalog link with customers via WhatsApp or social media</li>
+<li>Customers can browse and ask about products directly</li>
+</ol>
+</div>
+</div>
+
+<div class="card">
+<h2>Quick Share Message</h2>
+<div style="background:#14141e;border-radius:10px;padding:14px;font-size:.85rem;color:#c8c8d0;line-height:1.6;white-space:pre-wrap" id="shareMsg">🛍️ Harz Digital Services Catalog
+
+We have 259 digital products for Nigerian businesses:
+1. AI Tools & Prompts (₦2K-5K)
+2. Build Guides (₦15K-35K)
+3. Templates & Kits (₦5K-30K)
+4. Online Courses (₦5K-35K)
+5. Music & Film Downloads ($2.99-14.99)
+
+✅ Instant delivery
+✅ WhatsApp support
+✅ CAC registered (RC 321424)
+
+Browse: https://rabiuhamza11.github.io/harz-portfolio/harz-store.html
+
+WhatsApp: 08028687857</div>
+<button class="copy-btn" onclick="copyShare()">📋 Copy Share Message</button>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | WhatsApp Catalog Generator
+</div>
+
+<script>
+var products=[
+{name:"10 AI Prompts for Nigerian Business",price:0,currency:"FREE",cat:"AI Tools",desc:"10 proven AI prompts that save 3+ hours daily"},
+{name:"Nigerian Business Registration Checklist",price:0,currency:"FREE",cat:"Business",desc:"Complete CAC registration step-by-step guide"},
+{name:"50 Digital Product Ideas for Nigerians",price:0,currency:"FREE",cat:"Business",desc:"50 profitable digital product ideas you can start today"},
+{name:"WhatsApp Business Setup Guide",price:2000,currency:"₦",cat:"Business",desc:"Complete WhatsApp Business setup with automation"},
+{name:"Social Media Content Planner",price:2500,currency:"₦",cat:"Marketing",desc:"30-day content plan for all social platforms"},
+{name:"Email Marketing Swipe File",price:3000,currency:"₦",cat:"Marketing",desc:"50+ proven email templates for Nigerian businesses"},
+{name:"Google Ads Setup Checklist",price:5000,currency:"₦",cat:"Marketing",desc:"Step-by-step Google Ads setup for Nigeria"},
+{name:"AI Prompt Engineering Guide",price:5000,currency:"₦",cat:"AI Tools",desc:"Master AI prompts for business productivity"},
+{name:"Fintech Mobile App UI Kit",price:6700,currency:"$",cat:"Design",desc:"80+ screens for fintech app development"},
+{name:"SaaS Dashboard UI Kit",price:6700,currency:"$",cat:"Design",desc:"50+ screens for SaaS dashboard design"},
+{name:"Notion Business OS Template",price:10000,currency:"₦",cat:"Templates",desc:"All-in-one business management in Notion"},
+{name:"Marketing Agency SOP Bundle",price:15000,currency:"₦",cat:"Business",desc:"Standard operating procedures for agencies"},
+{name:"AI Chatbot Build Guide",price:15000,currency:"₦",cat:"Build Guide",desc:"Build and deploy AI chatbots for businesses"},
+{name:"Content Creator Workbook",price:8000,currency:"₦",cat:"Marketing",desc:"Complete content creation system"},
+{name:"Cybersecurity Starter Kit",price:12000,currency:"₦",cat:"Security",desc:"Protect your business from cyber threats"},
+{name:"E-commerce Platform Build Guide",price:20000,currency:"₦",cat:"Build Guide",desc:"Build a complete e-commerce platform"},
+{name:"Multi-Currency Wallet System",price:25000,currency:"₦",cat:"FinTech",desc:"Build a multi-currency digital wallet"},
+{name:"Payment Gateway Build Guide",price:30000,currency:"₦",cat:"Build Guide",desc:"Integrate Paystack + Stripe + Flutterwave"},
+{name:"ERP System Build Guide",price:30000,currency:"₦",cat:"Build Guide",desc:"Build a complete ERP system"},
+{name:"React Masterclass (3 SaaS Apps)",price:35000,currency:"₦",cat:"Education",desc:"Build 3 real SaaS apps with React"},
+];
+
+function generateCatalog(){
+document.getElementById('catalogOutput').style.display='block';
+var html='<tr><th>Product Name</th><th>Price</th><th>Category</th><th>Description</th></tr>';
+products.forEach(function(p){
+var price=p.currency==='FREE'?'FREE':p.currency+p.price.toLocaleString();
+html+='<tr><td class="name">'+p.name+'</td><td class="price">'+price+'</td><td class="cat">'+p.cat+'</td><td>'+p.desc+'</td></tr>';
+});
+document.getElementById('catalogTable').innerHTML=html;
+}
+
+function exportCSV(){
+var csv='Name,Price,Category,Description,Link\n';
+products.forEach(function(p){
+var price=p.currency==='FREE'?'FREE':p.currency+p.price;
+csv+='"'+p.name+'","'+price+'","'+p.cat+'","'+p.desc+'","https://rabiuhamza11.github.io/harz-portfolio/harz-store.html"\n';
+});
+var blob=new Blob([csv],{type:'text/csv'});
+var a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='whatsapp-catalog.csv';
+a.click();
+}
+
+function copyTable(){
+var range=document.createRange();
+range.selectNode(document.getElementById('catalogTable'));
+window.getSelection().removeAllRanges();
+window.getSelection().addRange(range);
+document.execCommand('copy');
+alert('Catalog table copied!');
+}
+
+function copyShare(){
+var range=document.createRange();
+range.selectNode(document.getElementById('shareMsg'));
+window.getSelection().removeAllRanges();
+window.getSelection().addRange(range);
+document.execCommand('copy');
+alert('Share message copied!');
+}
+</script>
+</body>
+</html>
