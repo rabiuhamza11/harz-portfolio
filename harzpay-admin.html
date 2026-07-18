@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzPay Admin Dashboard | Harz Digital Services</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:600px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,#00d4aa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{font-size:.75rem;color:#6b6b80;margin-top:4px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+.stat-card{padding:14px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;text-align:center}
+.stat-card .num{font-size:1.6rem;font-weight:800;color:#00d4aa}
+.stat-card .label{font-size:.65rem;color:#6b6b80;text-transform:uppercase;margin-top:4px}
+.stat-card.revenue .num{color:#f59e0b}
+.stat-card.pending .num{color:#ef4444}
+.stat-card.affiliates .num{color:#a78bfa}
+.section{background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;padding:16px;margin-bottom:12px}
+.section h2{font-size:.8rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.order-row{padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;margin-bottom:8px}
+.order-row .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.order-row .ref{font-size:.7rem;color:#00d4aa;font-family:monospace;font-weight:700}
+.order-row .status{padding:3px 8px;border-radius:6px;font-size:.6rem;font-weight:700;text-transform:uppercase}
+.status-pending_payment{background:rgba(245,158,11,.15);color:#f59e0b}
+.status-payment_submitted{background:rgba(59,130,246,.15);color:#3b82f6}
+.status-delivered{background:rgba(34,197,94,.15);color:#22c55e}
+.status-confirmed{background:rgba(168,85,247,.15);color:#a78bfa}
+.order-row .product{font-size:.8rem;color:#e8e8f0;font-weight:600}
+.order-row .meta{font-size:.7rem;color:#6b6b80;margin-top:4px}
+.order-row .meta span{margin-right:12px}
+.btn{padding:8px 14px;border:none;border-radius:8px;font-size:.7rem;font-weight:600;cursor:pointer;margin-top:6px}
+.btn.confirm{background:#22c55e;color:#fff}
+.btn.deliver{background:#00d4aa;color:#000}
+.btn.contact{background:#25d366;color:#fff}
+.aff-row{padding:10px;background:#14141e;border-radius:8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.aff-row .code{font-size:.7rem;color:#a78bfa;font-weight:700;font-family:monospace}
+.aff-row .name{font-size:.75rem;color:#e8e8f0}
+.aff-row .earned{font-size:.7rem;color:#f59e0b;font-weight:600}
+.tab-row{display:flex;gap:4px;margin-bottom:12px}
+.tab{flex:1;padding:10px;text-align:center;background:#0e0e16;border:1px solid #1e1e2e;border-radius:10px;font-size:.75rem;color:#6b6b80;cursor:pointer;font-weight:600}
+.tab.active{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;border:none}
+.loading{text-align:center;padding:40px;color:#6b6b80;font-size:.8rem}
+.refresh-btn{display:block;width:100%;padding:12px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:10px;color:#00d4aa;font-size:.8rem;font-weight:600;cursor:pointer;margin-bottom:12px;text-align:center;text-decoration:none}
+.payment-method{display:inline-block;padding:3px 8px;border-radius:6px;font-size:.6rem;font-weight:600;margin:2px}
+.pm-live{background:rgba(34,197,94,.15);color:#22c55e}
+.pm-pending{background:rgba(245,158,11,.15);color:#f59e0b}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>HarzPay Admin</h1>
+<p>Order Management Dashboard</p>
+</div>
+
+<div class="tab-row">
+<div class="tab active" onclick="showTab('orders')">Orders</div>
+<div class="tab" onclick="showTab('affiliates')">Affiliates</div>
+<div class="tab" onclick="showTab('settings')">Settings</div>
+</div>
+
+<div id="ordersView">
+<a href="#" class="refresh-btn" onclick="loadOrders();return false">↻ Refresh Orders</a>
+<div class="stats-grid">
+<div class="stat-card"><div class="num" id="statTotal">0</div><div class="label">Total Orders</div></div>
+<div class="stat-card pending"><div class="num" id="statPending">0</div><div class="label">Pending</div></div>
+<div class="stat-card"><div class="num" id="statDelivered">0</div><div class="label">Delivered</div></div>
+<div class="stat-card revenue"><div class="num" id="statRevenue">₦0</div><div class="label">Revenue</div></div>
+</div>
+<div id="ordersList" class="section">
+<h2>Recent Orders</h2>
+<div class="loading">Click Refresh to load orders...</div>
+</div>
+</div>
+
+<div id="affiliatesView" style="display:none">
+<a href="#" class="refresh-btn" onclick="loadAffiliates();return false">↻ Refresh Affiliates</a>
+<div class="stats-grid">
+<div class="stat-card affiliates"><div class="num" id="affTotal">0</div><div class="label">Total Affiliates</div></div>
+<div class="stat-card"><div class="num" id="affActive">0</div><div class="label">Active</div></div>
+</div>
+<div id="affiliatesList" class="section">
+<h2>Affiliate Partners</h2>
+<div class="loading">Click Refresh to load...</div>
+</div>
+</div>
+
+<div id="settingsView" style="display:none">
+<div class="section">
+<h2>Payment Methods</h2>
+<div id="paymentMethods">
+<span class="payment-method pm-live">✓ Bank Transfer (UBA 2034326424)</span>
+<span class="payment-method pm-live">✓ USDT TRC20</span>
+<span class="payment-method pm-live">✓ USSD</span>
+<span class="payment-method pm-live">✓ WhatsApp Ordering</span>
+<span class="payment-method pm-live">✓ Affiliate Links</span>
+<span class="payment-method pm-pending">⏳ Moniepoint (needs API keys)</span>
+<span class="payment-method pm-pending">⏳ NOWPayments (needs API key)</span>
+<span class="payment-method pm-pending">⏳ Paystack (awaiting verification)</span>
+<span class="payment-method pm-pending">⏳ Stripe (needs portal verification)</span>
+</div>
+</div>
+<div class="section">
+<h2>Quick Actions</h2>
+<a href="harzpay.html" style="display:block;padding:10px;background:#14141e;border-radius:8px;color:#00d4aa;font-size:.75rem;text-decoration:none;margin-bottom:6px">📋 HarzPay Landing Page</a>
+<a href="harzpay-checkout.html" style="display:block;padding:10px;background:#14141e;border-radius:8px;color:#00d4aa;font-size:.75rem;text-decoration:none;margin-bottom:6px">🛒 Checkout Page</a>
+<a href="harzpay-boost.html" style="display:block;padding:10px;background:#14141e;border-radius:8px;color:#00d4aa;font-size:.75rem;text-decoration:none;margin-bottom:6px">🚀 HarzPay Boost</a>
+<a href="https://wa.me/2348028687857" style="display:block;padding:10px;background:#14141e;border-radius:8px;color:#25d366;font-size:.75rem;text-decoration:none;margin-bottom:6px">💬 WhatsApp Magani</a>
+</div>
+<div class="section">
+<h2>API Keys Needed</h2>
+<div style="font-size:.72rem;color:#6b6b80;line-height:1.8">
+1. Moniepoint/Monnify — Download Moniepoint Business app, go to Settings → API Keys<br>
+2. NOWPayments — Sign up at nowpayments.io, grab API key from dashboard<br>
+3. Paystack — Awaiting business verification (Business ID: 1908660)<br>
+4. Stripe — Need manual portal verification at support.stripe.com
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.65rem">
+HarzPay Admin | HI Water/Block Industry RC 321424 | Powered by Magani
+</div>
+
+<script>
+const API_BASE='https://superagent-2286fb2f.base44.app/functions';
+
+function showTab(tab){
+document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+event.target.classList.add('active');
+document.getElementById('ordersView').style.display=tab==='orders'?'block':'none';
+document.getElementById('affiliatesView').style.display=tab==='affiliates'?'block':'none';
+document.getElementById('settingsView').style.display=tab==='settings'?'block':'none';
+}
+
+async function loadOrders(){
+document.getElementById('ordersList').innerHTML='<h2>Recent Orders</h2><div class="loading">Loading...</div>';
+try{
+const r=await fetch(API_BASE+'/harzPayOrders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'stats'})});
+const d=await r.json();
+if(d.status==='ok'||d.success){
+const s=d.stats||d;
+document.getElementById('statTotal').textContent=s.total_orders||0;
+document.getElementById('statPending').textContent=s.pending||0;
+document.getElementById('statDelivered').textContent=s.delivered||0;
+document.getElementById('statRevenue').textContent='₦'+(s.revenue_ngn||0).toLocaleString()+' | $'+(s.revenue_usd||0).toFixed(2);
+}
+// Now load actual orders
+const r2=await fetch(API_BASE+'/maganuBridge',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'getHarzPayOrders'})});
+const d2=await r2.json();
+if(d2.success&&d2.summary&&d2.summary.recent_orders){
+const orders=d2.summary.recent_orders;
+if(orders.length===0){
+document.getElementById('ordersList').innerHTML='<h2>Recent Orders</h2><div class="loading">No orders yet. Checkout is live and ready!</div>';
+return;
+}
+document.getElementById('ordersList').innerHTML='<h2>Recent Orders</h2>'+orders.map(function(o){
+var statusClass='status-'+(o.status||'pending_payment');
+var payBtn=o.status==='payment_submitted'?'<button class="btn deliver" onclick="confirmOrder(\''+o.ref+'\')">✓ Confirm & Deliver</button>':'';
+var waBtn=o.customer_phone?'<button class="btn contact" onclick="contactCustomer(\''+o.ref+'\')">💬 WhatsApp Customer</button>':'';
+return '<div class="order-row">'+
+'<div class="top"><span class="ref">'+o.ref+'</span><span class="status '+statusClass+'">'+(o.status||'pending').replace(/_/g,' ')+'</span></div>'+
+'<div class="product">'+(o.product_name||'Unknown')+'</div>'+
+'<div class="meta"><span>💰 '+(o.currency==='NGN'?'₦':'$')+(o.amount||0)+'</span><span>👤 '+(o.customer||'Unknown')+'</span></div>'+
+payBtn+waBtn+
+'</div>';
+}).join('');
+}else{
+document.getElementById('ordersList').innerHTML='<h2>Recent Orders</h2><div class="loading">No orders yet. Checkout is live!</div>';
+}
+}catch(e){
+document.getElementById('ordersList').innerHTML='<h2>Recent Orders</h2><div class="loading">Error loading: '+e.message+'</div>';
+}
+}
+
+async function loadAffiliates(){
+document.getElementById('affiliatesList').innerHTML='<h2>Affiliate Partners</h2><div class="loading">Loading...</div>';
+try{
+const r=await fetch(API_BASE+'/maganuBridge',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'getHarzPayAffiliates'})});
+const d=await r.json();
+if(d.success&&d.summary){
+var s=d.summary;
+document.getElementById('affTotal').textContent=s.total_affiliates||0;
+document.getElementById('affActive').textContent=s.active||0;
+if(s.top_affiliates&&s.top_affiliates.length>0){
+document.getElementById('affiliatesList').innerHTML='<h2>Affiliate Partners</h2>'+s.top_affiliates.map(function(a){
+return '<div class="aff-row"><div><div class="code">'+a.code+'</div><div class="name">'+(a.name||'Unknown')+' — '+(a.orders||0)+' orders</div></div><div class="earned">₦'+(a.earned||0).toLocaleString()+'</div></div>';
+}).join('');
+}else{
+document.getElementById('affiliatesList').innerHTML='<h2>Affiliate Partners</h2><div class="loading">No affiliates yet. Share the boost page to get affiliates!</div>';
+}
+}
+}catch(e){
+document.getElementById('affiliatesList').innerHTML='<h2>Affiliate Partners</h2><div class="loading">Error: '+e.message+'</div>';
+}
+}
+
+function confirmOrder(ref){
+var deliveryUrl=prompt('Enter delivery URL (or leave blank to mark delivered):','');
+fetch(API_BASE+'/harzPayOrders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'confirm_and_deliver',reference:ref,deliveryUrl:deliveryUrl||''})})
+.then(function(r){return r.json()})
+.then(function(d){
+if(d.status==='ok'||d.success){alert('✓ Order '+ref+' confirmed and delivered!');loadOrders();}
+else{alert('Error: '+(d.error||'Unknown'));}
+});
+}
+
+function contactCustomer(ref){
+window.open('https://wa.me/2348028687857?text=Regarding%20order%20'+encodeURIComponent(ref));
+}
+</script>
+</body>
+</html>
