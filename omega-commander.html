@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Business Commander — Harz Ecosystem Control Center</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 0 24px;flex-wrap:wrap;gap:12px}
+.header h1{font-size:1.5rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted);margin-top:2px}
+.header .live{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--accent)}
+.live .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat .num{font-size:1.8rem;font-weight:800}
+.stat .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat.green .num{color:var(--accent)}
+.stat.purple .num{color:var(--purple)}
+.stat.blue .num{color:var(--blue)}
+.stat.yellow .num{color:var(--yellow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(0,212,170,.15);color:var(--accent)}
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.platform-item{background:#14141e;border:1px solid var(--border);border-radius:10px;padding:12px;transition:all .2s;cursor:pointer}
+.platform-item:hover{border-color:var(--accent)}
+.platform-item .name{font-size:.85rem;font-weight:600}
+.platform-item .url{font-size:.7rem;color:var(--muted);margin-top:2px}
+.platform-item .status{display:inline-block;width:8px;height:8px;border-radius:50%;margin-top:6px}
+.status.online{background:var(--accent)}
+.status.test{background:var(--yellow)}
+.status.offline{background:var(--red)}
+.agent-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.agent-row:last-child{border:none}
+.agent-row .icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.agent-row .info{flex:1}
+.agent-row .info .name{font-size:.85rem;font-weight:600}
+.agent-row .info .role{font-size:.7rem;color:var(--muted)}
+.agent-row .health{font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:6px}
+.health.active{background:rgba(0,212,170,.15);color:var(--accent)}
+.health.standby{background:rgba(245,158,11,.15);color:var(--yellow)}
+.health.offline{background:rgba(239,68,68,.15);color:var(--red)}
+.log-entry{font-size:.75rem;padding:6px 0;border-bottom:1px solid rgba(30,30,46,.5);display:flex;gap:8px}
+.log-entry .time{color:var(--muted);min-width:60px}
+.log-entry .level{font-weight:600;min-width:40px}
+.log-entry .level.info{color:var(--blue)}
+.log-entry .level.ok{color:var(--accent)}
+.log-entry .level.warn{color:var(--yellow)}
+.log-entry .level.err{color:var(--red)}
+.log-entry .msg{flex:1}
+.fin-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.85rem;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border:none}
+.fin-row .val{font-weight:600}
+.fin-row .val.pos{color:var(--accent)}
+.fin-row .val.neg{color:var(--red)}
+.fin-row .val.pending{color:var(--yellow)}
+.sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sec-item{background:#14141e;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.8rem}
+.sec-item .label{color:var(--muted);font-size:.7rem}
+.sec-item .val{font-weight:600;margin-top:2px}
+.sec-item .val.ok{color:var(--accent)}
+.sec-item .val.warn{color:var(--yellow)}
+.sec-item .val.bad{color:var(--red)}
+.exec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.exec-card{background:#14141e;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.exec-card .role-icon{font-size:1.5rem;margin-bottom:4px}
+.exec-card .role-name{font-size:.75rem;font-weight:600}
+.exec-card .role-status{font-size:.65rem;color:var(--muted);margin-top:2px}
+.exec-card.active{border-color:rgba(0,212,170,.3)}
+.exec-card.planned{opacity:.5}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>OMEGA BUSINESS COMMANDER</h1>
+<div class="sub">Harz Ecosystem Control Center — 24 Platforms | 80+ AI Agents</div>
+</div>
+<div class="live"><div class="dot"></div> SYSTEM ONLINE — July 18, 2026</div>
+</div>
+
+<div class="stats-row">
+<div class="stat green"><div class="num">24</div><div class="lbl">Platforms Live</div></div>
+<div class="stat purple"><div class="num">80+</div><div class="lbl">AI Agents</div></div>
+<div class="stat blue"><div class="num">90+</div><div class="lbl">Data Entities</div></div>
+<div class="stat yellow"><div class="num">241</div><div class="lbl">Digital Products</div></div>
+<div class="stat green"><div class="num">44</div><div class="lbl">GitHub Repos</div></div>
+<div class="stat purple"><div class="num">18</div><div class="lbl">Automations</div></div>
+<div class="stat blue"><div class="num">16+</div><div class="lbl">Backend Functions</div></div>
+<div class="stat green"><div class="num">510+</div><div class="lbl">Maganu Commands</div></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Executive AI Agents <span class="badge">18 Planned</span></h2>
+<div class="exec-grid">
+<div class="exec-card active"><div class="role-icon">👔</div><div class="role-name">Chief Executive</div><div class="role-status">Magani (Active)</div></div>
+<div class="exec-card active"><div class="role-icon">📊</div><div class="role-name">Strategy</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">⚙️</div><div class="role-name">Operations</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">💰</div><div class="role-name">Finance</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">📢</div><div class="role-name">Marketing</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">🤝</div><div class="role-name">Sales</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">😊</div><div class="role-name">Customer Success</div><div class="role-status">Active</div></div>
+<div class="exec-card planned"><div class="role-icon">👥</div><div class="role-name">HR Manager</div><div class="role-status">Planned</div></div>
+<div class="exec-card active"><div class="role-icon">⚖️</div><div class="role-name">Legal & Compliance</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">📋</div><div class="role-name">Project Manager</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">📦</div><div class="role-name">Product Manager</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">✅</div><div class="role-name">QA Director</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">🛡️</div><div class="role-name">Security Director</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">🤖</div><div class="role-name">Automation Director</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">🚀</div><div class="role-name">Deployment Director</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">📚</div><div class="role-name">Knowledge Manager</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">🧠</div><div class="role-name">Memory Manager</div><div class="role-status">Active</div></div>
+<div class="exec-card active"><div class="role-icon">📈</div><div class="role-name">Analytics Director</div><div class="role-status">Active</div></div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Financial Operations <span class="badge">6 Gateways</span></h2>
+<div class="fin-row"><span>Getly (USDT TRC20)</span><span class="val pos">LIVE</span></div>
+<div class="fin-row"><span>Bank Transfer (UBA)</span><span class="val pos">LIVE</span></div>
+<div class="fin-row"><span>Paystack</span><span class="val pending">TEST — Awaiting Verification</span></div>
+<div class="fin-row"><span>Stripe</span><span class="val pending">TEST — Charges Disabled</span></div>
+<div class="fin-row"><span>Flutterwave</span><span class="val pending">Awaiting Response</span></div>
+<div class="fin-row"><span>Moniepoint</span><span class="val pending">Account Active — API Needed</span></div>
+<div class="fin-row"><span>Total Revenue (MTD)</span><span class="val">₦0 (Test Mode)</span></div>
+<div class="fin-row"><span>Products on Getly</span><span class="val">20 / 244</span></div>
+<div class="fin-row"><span>USDT Wallet</span><span class="val pos">TVE2ia3...X5Cr</span></div>
+<div class="fin-row"><span>Business CAC</span><span class="val pos">RC 321424</span></div>
+<div class="fin-row"><span>Business TIN</span><span class="val pos">24550860</span></div>
+</div>
+</div>
+
+<div class="panel" style="margin-bottom:16px">
+<h2>Platform Status — 24 Ecosystem Platforms <span class="badge">All Tracked</span></h2>
+<div class="platform-grid" id="platformGrid"></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>AI Agent Divisions <span class="badge">80+ Agents</span></h2>
+<div class="agent-row">
+<div class="icon" style="background:rgba(239,68,68,.15)">🛡️</div>
+<div class="info"><div class="name">Cyber Shield X</div><div class="role">37 agents — Threat detection, vuln mgmt, incident response</div></div>
+<div class="health active">37 ONLINE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(124,58,237,.15)">🎬</div>
+<div class="info"><div class="name">OMEGA Content AI</div><div class="role">25 agents — Script gen, analytics, publishing, trends</div></div>
+<div class="health active">25 ONLINE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(59,130,246,.15)">📚</div>
+<div class="info"><div class="name">EduWealth AI</div><div class="role">18 agents — Courses, assessments, career, live classes</div></div>
+<div class="health active">18 ONLINE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(0,212,170,.15)">🧠</div>
+<div class="info"><div class="name">MindCare AI</div><div class="role">7 agents — Mood tracking, therapy, crisis alerts, meditation</div></div>
+<div class="health active">7 ONLINE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(245,158,11,.15)">🤖</div>
+<div class="info"><div class="name">Maganu AI (v7.8.1)</div><div class="role">Telegram bot — 510 commands, ecosystem CRUD, payments</div></div>
+<div class="health active">ONLINE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(0,212,170,.15)">🧙</div>
+<div class="info"><div class="name">Magani (Base44)</div><div class="role">WhatsApp agent — Gmail, Calendar, CRM, automations</div></div>
+<div class="health active">ONLINE</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(124,58,237,.15)">🔮</div>
+<div class="info"><div class="name">Oracle AI</div><div class="role">Per-read pricing, Paystack integration</div></div>
+<div class="health standby">STANDBY</div>
+</div>
+<div class="agent-row">
+<div class="icon" style="background:rgba(59,130,246,.15)">🏥</div>
+<div class="info"><div class="name">OMEGA Health AI</div><div class="role">18 agents — Vitals, meds, appointments, wearables</div></div>
+<div class="health active">18 ONLINE</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Security Status <span class="badge">Audited</span></h2>
+<div class="sec-grid">
+<div class="sec-item"><div class="label">Credential Vault</div><div class="val ok">20 Secrets Stored</div></div>
+<div class="sec-item"><div class="label">Threat Detection</div><div class="val ok">Active — 37 Agents</div></div>
+<div class="sec-item"><div class="label">Audit Logs</div><div class="val ok">Enabled</div></div>
+<div class="sec-item"><div class="label">MFA</div><div class="val warn">Not Configured</div></div>
+<div class="sec-item"><div class="label">Role-Based Access</div><div class="val warn">Basic (Owner Only)</div></div>
+<div class="sec-item"><div class="label">Disaster Recovery</div><div class="val ok">GitHub + Render</div></div>
+<div class="sec-item"><div class="label">Backup Schedule</div><div class="val ok">Daily 10PM</div></div>
+<div class="sec-item"><div class="label">Compliance</div><div class="val warn">NDPR Needed</div></div>
+<div class="sec-item"><div class="label">SSL/HTTPS</div><div class="val ok">All Platforms</div></div>
+<div class="sec-item"><div class="label">Scam Alerts</div><div class="val ok">1 Blocked (+39 324...)</div></div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Automation Log <span class="badge">18 Active</span></h2>
+<div class="log-entry"><span class="time">10:00 PM</span><span class="level ok">OK</span><span class="msg">Daily backup to GitHub completed</span></div>
+<div class="log-entry"><span class="time">08:15 AM</span><span class="level ok">OK</span><span class="msg">CRM stats report sent to WhatsApp</span></div>
+<div class="log-entry"><span class="time">08:00 AM</span><span class="level ok">OK</span><span class="msg">Calendar briefing sent to WhatsApp</span></div>
+<div class="log-entry"><span class="time">07:30 AM</span><span class="level ok">OK</span><span class="msg">YouTube trends scan completed</span></div>
+<div class="log-entry"><span class="time">07:00 AM</span><span class="level ok">OK</span><span class="msg">Daily chapter sent — Genius 365</span></div>
+<div class="log-entry"><span class="time">Every 10m</span><span class="level info">INFO</span><span class="msg">Maganu keep-alive ping — 66 runs/24h</span></div>
+<div class="log-entry"><span class="time">Real-time</span><span class="level info">INFO</span><span class="msg">Incoming email monitor — 18 runs/24h</span></div>
+<div class="log-entry"><span class="time">Jul 17</span><span class="level warn">WARN</span><span class="msg">Paystack awaiting Business ID response</span></div>
+<div class="log-entry"><span class="time">Jul 17</span><span class="level warn">WARN</span><span class="msg">Stripe rejected email verification — use portal</span></div>
+<div class="log-entry"><span class="time">Jul 17</span><span class="level err">ERR</span><span class="msg">Render deploy failed for maganu-agent (2x)</span></div>
+</div>
+
+<div class="panel">
+<h2>Deployment Infrastructure <span class="badge">5 Providers</span></h2>
+<div class="fin-row"><span>Vercel</span><span class="val pos">27 sites deployed</span></div>
+<div class="fin-row"><span>Render</span><span class="val pos">1 service (Maganu AI)</span></div>
+<div class="fin-row"><span>GitHub Pages</span><span class="val pos">7 pages (portfolio + tools)</span></div>
+<div class="fin-row"><span>GitHub Repos</span><span class="val pos">44 repositories</span></div>
+<div class="fin-row"><span>Base44 Backend</span><span class="val pos">16+ functions</span></div>
+<div class="fin-row"><span>Oracle Cloud</span><span class="val pending">Awaiting setup (24GB ARM free)</span></div>
+<div class="fin-row"><span>AWS / Azure / GCP</span><span class="val pending">Planned</span></div>
+<div class="fin-row"><span>Cloudflare</span><span class="val pending">Planned</span></div>
+<div class="fin-row"><span>CI/CD Pipeline</span><span class="val warn">GitHub Actions (partial)</span></div>
+<div class="fin-row"><span>Auto Rollback</span><span class="val pending">Planned</span></div>
+</div>
+</div>
+
+<div class="panel" style="margin-bottom:16px">
+<h2>Communication Hub <span class="badge">3 Active</span></h2>
+<div class="grid3">
+<div class="sec-item"><div class="label">WhatsApp</div><div class="val ok">Connected — CRM Active</div></div>
+<div class="sec-item"><div class="label">Telegram</div><div class="val ok">Connected — Maganu Bot</div></div>
+<div class="sec-item"><div class="label">Gmail</div><div class="val ok">Connected — Read + Send</div></div>
+<div class="sec-item"><div class="label">Google Calendar</div><div class="val ok">Connected — Read</div></div>
+<div class="sec-item"><div class="label">Slack</div><div class="val pending">Not Connected</div></div>
+<div class="sec-item"><div class="label">Discord</div><div class="val pending">Not Connected</div></div>
+<div class="sec-item"><div class="label">Outlook / M365</div><div class="val pending">Not Connected</div></div>
+<div class="sec-item"><div class="label">Zoom</div><div class="val pending">Not Connected</div></div>
+<div class="sec-item"><div class="label">Google Meet</div><div class="val pending">Not Connected</div></div>
+</div>
+</div>
+
+<div class="panel" style="margin-bottom:16px">
+<h2>Business Credentials <span class="badge">Verified</span></h2>
+<div class="grid3">
+<div class="sec-item"><div class="label">Registered Name</div><div class="val ok">HI Water/Block Industry</div></div>
+<div class="sec-item"><div class="label">Trading As</div><div class="val ok">Harz Digital Services</div></div>
+<div class="sec-item"><div class="label">CAC RC Number</div><div class="val ok">321424 (CRBN)</div></div>
+<div class="sec-item"><div class="label">TIN</div><div class="val ok">24550860 (FIRS)</div></div>
+<div class="sec-item"><div class="label">Branch TIN</div><div class="val ok">24550860-0001</div></div>
+<div class="sec-item"><div class="label">Registered</div><div class="val ok">August 5, 2014</div></div>
+<div class="sec-item"><div class="label">Address</div><div class="val ok">232 Kafin Galadima, Bauchi</div></div>
+<div class="sec-item"><div class="label">Bank</div><div class="val ok">UBA 2034326424</div></div>
+<div class="sec-item"><div class="label">Registrar</div><div class="val ok">Bello Mahmud, CAC Nigeria</div></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
+OMEGA BUSINESS COMMANDER AI — Harz Digital Services (RC 321424, TIN 24550860)<br>
+Owner: Rabiu Hamza Mohammed | 08028687857 | harzco.business@gmail.com<br>
+Control Center v1.0 — Built by Magani
+</div>
+
+<script>
+var platforms=[
+{name:"HarzDM Marketplace",url:"harzdm-marketplace.vercel.app",status:"online"},
+{name:"HarzDM Checkout",url:"harzdm-checkout.vercel.app",status:"online"},
+{name:"Harz Shop",url:"harz-shop.vercel.app",status:"online"},
+{name:"ContentPilot Checkout",url:"cp-checkout-harz.vercel.app",status:"online"},
+{name:"Unified Dashboard",url:"harz-ecosystem-dashboard.vercel.app",status:"online"},
+{name:"Apex Bank",url:"apex-bank.vercel.app",status:"online"},
+{name:"HarzAjo",url:"harzajo.vercel.app",status:"online"},
+{name:"HarzPay",url:"harzpay.vercel.app",status:"online"},
+{name:"HarzFX",url:"harzfx.vercel.app",status:"online"},
+{name:"HarzLend",url:"harzlend.vercel.app",status:"online"},
+{name:"OMEGA Health AI",url:"omega-health-ai.vercel.app",status:"online"},
+{name:"MindCare AI",url:"mindcare-ai.vercel.app",status:"online"},
+{name:"CYBER SHIELD X",url:"cyber-shield-x.vercel.app",status:"online"},
+{name:"EduWealth AI",url:"eduwealth-ai.vercel.app",status:"online"},
+{name:"OMEGA INFINITY 1000",url:"omega-infinity-dashboard.vercel.app",status:"online"},
+{name:"TradeOS",url:"tradeos.vercel.app",status:"online"},
+{name:"OMEGA Content AI",url:"omega-content-ai.vercel.app",status:"online"},
+{name:"Abuja Estate City",url:"abuja-estate-city-ai.vercel.app",status:"online"},
+{name:"Maganu Agent",url:"maganu-agent.onrender.com",status:"online"},
+{name:"BuildBot AI",url:"Paystack integrated",status:"online"},
+{name:"ContentPilot AI",url:"Stripe + Paystack",status:"online"},
+{name:"HarzMusic",url:"harz-music.vercel.app",status:"online"},
+{name:"HarzFilm",url:"harz-film.vercel.app",status:"online"},
+{name:"WhatsApp CRM",url:"harz-crm.vercel.app",status:"online"},
+];
+document.getElementById('platformGrid').innerHTML=platforms.map(function(p){
+return '<div class="platform-item"><div class="name">'+p.name+'</div><div class="url">'+p.url+'</div><div class="status '+p.status+'"></div></div>';
+}).join('');
+</script>
+</body>
+</html>
