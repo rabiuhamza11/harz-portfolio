@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free meeting notes and consultation tracker. Record sessions, action items, and follow-ups. Export to print.">
+<meta name="keywords" content="meeting notes, consultation tracker, action items, meeting tracker nigeria">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Meeting Notes & Consultation Tracker | Harz Digital Services">
+<meta property="og:description" content="Free meeting notes and consultation tracker. Record sessions, action items, and follow-ups. Export to print.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/meeting-notes.html">
+<meta property="og:site_name" content="Harz Digital Services">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meeting Notes & Consultation Tracker | Harz Digital Services">
+<meta name="twitter:description" content="Free meeting notes and consultation tracker. Record sessions, action items, and follow-ups. Export to print.">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/meeting-notes.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Notes & Consultation Tracker | Harz Digital Services</title>
+<meta name="description" content="Free meeting notes and consultation tracker. Record sessions, action items, and follow-ups. Export to print.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:700px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem;font-family:inherit}
+.input-group textarea{min-height:60px;resize:vertical}
+.row{display:flex;gap:8px}
+.row .input-group{flex:1}
+.btn{padding:12px 24px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;width:100%}
+.btn.small{padding:6px 12px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa;font-size:.75rem;border-radius:6px}
+.meeting-card{background:#14141e;border:1px solid #1e1e2e;border-radius:12px;padding:16px;margin-bottom:12px}
+.meeting-card .top{display:flex;justify-content:space-between;margin-bottom:8px}
+.meeting-card .title{font-size:.9rem;font-weight:600}
+.meeting-card .date{font-size:.7rem;color:#6b6b80}
+.meeting-card .type{font-size:.65rem;padding:2px 8px;border-radius:4px;font-weight:600;display:inline-block;margin-bottom:8px}
+.type-Consultation{background:rgba(0,212,170,.15);color:#00d4aa}
+.type-Strategy{background:rgba(124,58,237,.15);color:#7c3aed}
+.type-Sales{background:rgba(245,158,11,.15);color:#f59e0b}
+.type-Support{background:rgba(59,130,246,.15);color:#3b82f6}
+.meeting-card .notes{font-size:.8rem;color:#c8c8d0;line-height:1.5;margin:8px 0}
+.meeting-card .actions{margin-top:10px;padding-top:10px;border-top:1px solid #1e1e2e}
+.action-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:.75rem}
+.action-item .check{width:18px;height:18px;border:2px solid #1e1e2e;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem}
+.action-item .check.done{background:#00d4aa;color:#050508;border-color:#00d4aa}
+.action-item .text{flex:1}
+.action-item.done .text{text-decoration:line-through;color:#6b6b80}
+.print-area{display:none}
+@media print{body *{visibility:hidden}.print-area,.print-area *{visibility:visible}.print-area{display:block;position:absolute;left:0;top:0;width:100%;padding:20px;color:#000;font-family:serif}.print-area h1{font-size:18px}.print-area h2{font-size:14px;margin-top:12px}.print-area table{width:100%;border-collapse:collapse;margin-top:8px}.print-area td,.print-area th{border:1px solid #ccc;padding:6px;font-size:12px;text-align:left}}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Meeting Notes & Consultation Tracker</h1><p>Record sessions, track action items, export to print</p></div>
+
+<div class="card">
+<h2>New Meeting / Consultation</h2>
+<div class="row">
+<div class="input-group"><label>Client / Attendee Name</label><input type="text" id="mClient" placeholder="Client name"></div>
+<div class="input-group"><label>Type</label><select id="mType"><option value="Consultation">Consultation</option><option value="Strategy">Strategy Session</option><option value="Sales">Sales Call</option><option value="Support">Support Session</option></select></div>
+</div>
+<div class="row">
+<div class="input-group"><label>Date</label><input type="date" id="mDate"></div>
+<div class="input-group"><label>Duration (mins)</label><input type="number" id="mDuration" value="60"></div>
+</div>
+<div class="input-group"><label>Topic / Agenda</label><input type="text" id="mTopic" placeholder="What was discussed"></div>
+<div class="input-group"><label>Key Notes</label><textarea id="mNotes" placeholder="Main points discussed..." style="min-height:80px"></textarea>
+<div class="input-group"><label>Action Items (one per line)</label><textarea id="mActions" placeholder="Follow up on payment&#10;Send product link&#10;Schedule next call"></textarea>
+</div>
+<button class="btn gen" onclick="addMeeting()">Save Meeting</button>
+</div>
+
+<div class="card">
+<h2>Saved Meetings <button class="btn small" style="float:right" onclick="window.print()">🖨️ Print All</button></h2>
+<div id="meetingList"></div>
+</div>
+
+<div class="card">
+<h2>Consultation Stats</h2>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<div style="flex:1;min-width:100px;text-align:center;padding:12px;background:#14141e;border-radius:10px"><div style="font-size:1.3rem;font-weight:800;color:#00d4aa" id="statTotal">0</div><div style="font-size:.65rem;color:#6b6b80;text-transform:uppercase">Total Sessions</div></div>
+<div style="flex:1;min-width:100px;text-align:center;padding:12px;background:#14141e;border-radius:10px"><div style="font-size:1.3rem;font-weight:800;color:#7c3aed" id="statHours">0h</div><div style="font-size:.65rem;color:#6b6b80;text-transform:uppercase">Total Hours</div></div>
+<div style="flex:1;min-width:100px;text-align:center;padding:12px;background:#14141e;border-radius:10px"><div style="font-size:1.3rem;font-weight:800;color:#f59e0b" id="statActions">0</div><div style="font-size:.65rem;color:#6b6b80;text-transform:uppercase">Open Actions</div></div>
+<div style="flex:1;min-width:100px;text-align:center;padding:12px;background:#14141e;border-radius:10px"><div style="font-size:1.3rem;font-weight:800;color:#3b82f6" id="statClients">0</div><div style="font-size:.65rem;color:#6b6b80;text-transform:uppercase">Unique Clients</div></div>
+</div>
+</div>
+
+<div class="print-area" id="printArea"></div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Meeting & Consultation Tracker
+</div>
+
+<script>
+var meetings=JSON.parse(localStorage.getItem('harz_meetings')||'[]');
+if(meetings.length===0){
+meetings=[{id:1,client:'Adebayo O.',type:'Consultation',date:'2026-07-17',duration:60,topic:'AI automation setup',notes:'Discussed setting up email automation and CRM. Client wants to automate 50% of operations.',actions:[{text:'Send Paystack integration guide',done:false},{text:'Schedule follow-up call next week',done:true}]},{id:2,client:'Fatima A.',type:'Sales',date:'2026-07-15',duration:30,topic:'Product inquiry - Payment Gateway Guide',notes:'Called about the ₦30K Payment Gateway Build Guide. Interested in Paystack+Stripe integration.',actions:[{text:'Send product preview',done:true},{text:'Follow up on payment',done:false}]}];
+localStorage.setItem('harz_meetings',JSON.stringify(meetings));
+}
+
+function render(){
+document.getElementById('meetingList').innerHTML=meetings.slice().reverse().map(function(m){
+var actionsHtml=m.actions.map(function(a,i){
+return '<div class="action-item '+(a.done?'done':'')+'"><div class="check '+(a.done?'done':'')+'" onclick="toggleAction('+m.id+','i+')">'+(a.done?'✓':'')+'</div><div class="text">'+a.text+'</div></div>';
+}).join('');
+return '<div class="meeting-card"><div class="top"><div class="title">'+m.client+'</div><div class="date">'+m.date+' · '+m.duration+'min</div></div><span class="type type-'+m.type+'">'+m.type+'</span><div style="font-size:.8rem;font-weight:600;margin:6px 0">'+m.topic+'</div><div class="notes">'+m.notes+'</div><div class="actions">'+actionsHtml+'<div style="margin-top:8px"><button class="btn small" onclick="delMeeting('+m.id+')">Delete</button></div></div></div>';
+}).join('');
+updateStats();
+}
+
+function updateStats(){
+document.getElementById('statTotal').textContent=meetings.length;
+var mins=meetings.reduce(function(s,m){return s+m.duration},0);
+document.getElementById('statHours').textContent=(mins/60).toFixed(1)+'h';
+var openActions=meetings.reduce(function(s,m){return s+m.actions.filter(function(a){return !a.done}).length},0);
+document.getElementById('statActions').textContent=openActions;
+var clients={};meetings.forEach(function(m){clients[m.client]=1});
+document.getElementById('statClients').textContent=Object.keys(clients).length;
+}
+
+function addMeeting(){
+var client=document.getElementById('mClient').value;
+if(!client){alert('Enter client name');return}
+var actionsText=document.getElementById('mActions').value;
+var actions=actionsText.split('\n').filter(function(a){return a.trim()}).map(function(a){return{text:a.trim(),done:false}});
+meetings.push({id:Date.now(),client:client,type:document.getElementById('mType').value,date:document.getElementById('mDate').value||new Date().toISOString().split('T')[0],duration:parseInt(document.getElementById('mDuration').value)||60,topic:document.getElementById('mTopic').value,notes:document.getElementById('mNotes').value,actions:actions});
+localStorage.setItem('harz_meetings',JSON.stringify(meetings));
+document.getElementById('mClient').value='';document.getElementById('mTopic').value='';document.getElementById('mNotes').value='';document.getElementById('mActions').value='';
+render();
+}
+
+function toggleAction(mid,ai){
+var m=meetings.find(function(m){return m.id==mid});
+if(m){m.actions[ai].done=!m.actions[ai].done;localStorage.setItem('harz_meetings',JSON.stringify(meetings));render()}
+}
+
+function delMeeting(id){meetings=meetings.filter(function(m){return m.id!=id});localStorage.setItem('harz_meetings',JSON.stringify(meetings));render()}
+
+render();
+</script>
+</body>
+</html>

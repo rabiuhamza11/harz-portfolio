@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free hashtag generator for Nigerian social media. Generate hashtags for Instagram, TikTok, Facebook, X, and YouTube.">
+<meta name="keywords" content="hashtag generator, instagram hashtags, tiktok hashtags, social media hashtags nigeria">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hashtag Generator — Social Media | Harz Digital Services">
+<meta property="og:description" content="Free hashtag generator for Nigerian social media. Generate hashtags for Instagram, TikTok, Facebook, X, and YouTube.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/hashtag-generator.html">
+<meta property="og:site_name" content="Harz Digital Services">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hashtag Generator — Social Media | Harz Digital Services">
+<meta name="twitter:description" content="Free hashtag generator for Nigerian social media. Generate hashtags for Instagram, TikTok, Facebook, X, and YouTube.">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/hashtag-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hashtag Generator — Social Media | Harz Digital Services</title>
+<meta name="description" content="Free hashtag generator for Nigerian social media. Generate hashtags for Instagram, TikTok, Facebook, X, and YouTube.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:600px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.btn{padding:12px 24px;border:none;border-radius:8px;font-weight:600;cursor:pointer;width:100%}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.tags-box{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:16px;margin-top:16px;display:none}
+.tags-box.show{display:block}
+.tags-box h3{font-size:.8rem;color:#00d4aa;margin-bottom:10px}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
+.tag{padding:5px 10px;border-radius:20px;font-size:.75rem;cursor:pointer;transition:all .2s}
+.tag:hover{transform:scale(1.05)}
+.tag.niche{background:rgba(0,212,170,.15);color:#00d4aa;border:1px solid rgba(0,212,170,.3)}
+.tag.broad{background:rgba(124,58,237,.15);color:#7c3aed;border:1px solid rgba(124,58,237,.3)}
+.tag.local{background:rgba(59,130,246,.15);color:#3b82f6;border:1px solid rgba(59,130,246,.3)}
+.copy-area{margin-top:12px;padding:12px;background:#050508;border-radius:8px;font-size:.75rem;color:#c8c8d0;word-break:break-all;line-height:1.8;min-height:60px}
+.copy-btn{margin-top:8px;padding:8px 16px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:8px;color:#00d4aa;font-size:.8rem;cursor:pointer}
+.platform-tabs{display:flex;gap:8px;margin-bottom:12px}
+.ptab{flex:1;padding:8px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.75rem;color:#6b6b80;cursor:pointer}
+.ptab.active{border-color:#00d4aa;color:#00d4aa}
+.legend{display:flex;gap:12px;margin-top:8px;font-size:.65rem;color:#6b6b80}
+.legend .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Hashtag Generator</h1><p>Generate hashtags for any topic or niche</p></div>
+
+<div class="card">
+<h2>Generate Hashtags</h2>
+<div class="input-group"><label>Topic / Niche</label><input type="text" id="hashTopic" placeholder="e.g. digital products, AI, business, music"></div>
+<div class="input-group"><label>Platform</label><select id="hashPlatform"><option value="all">All Platforms</option><option value="ig">Instagram (30 tags)</option><option value="tt">TikTok (5 tags)</option><option value="fb">Facebook (5 tags)</option><option value="x">X/Twitter (3 tags)</option><option value="yt">YouTube (10 tags)</option></select></div>
+<button class="btn gen" onclick="generateTags()">Generate Hashtags</button>
+<div class="tags-box" id="tagsBox">
+<h3>Your Hashtags</h3>
+<div class="tag-cloud" id="tagCloud"></div>
+<div style="margin-top:12px">
+<label style="font-size:.75rem;color:#6b6b80;display:block;margin-bottom:4px">Copy these hashtags:</label>
+<div class="copy-area" id="copyArea"></div>
+<button class="copy-btn" onclick="copyTags()">📋 Copy All</button>
+</div>
+<div class="legend">
+<span><span class="dot" style="background:#00d4aa"></span>Niche (targeted)</span>
+<span><span class="dot" style="background:#7c3aed"></span>Broad (high volume)</span>
+<span><span class="dot" style="background:#3b82f6"></span>Local (Nigeria)</span>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Pre-built Hashtag Sets</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<button onclick="loadSet('business')" style="padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.8rem;cursor:pointer">💼 Business</button>
+<button onclick="loadSet('music')" style="padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.8rem;cursor:pointer">🎵 Music</button>
+<button onclick="loadSet('film')" style="padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.8rem;cursor:pointer">🎬 Film</button>
+<button onclick="loadSet('education')" style="padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.8rem;cursor:pointer">📚 Education</button>
+<button onclick="loadSet('realestate')" style="padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.8rem;cursor:pointer">🏠 Real Estate</button>
+<button onclick="loadSet('tech')" style="padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.8rem;cursor:pointer">💻 Tech & AI</button>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Free Hashtag Generator
+</div>
+
+<script>
+var tagSets={
+business:{niche:['#BusinessTips','#EntrepreneurLife','#SmallBusinessTips','#BusinessGrowth','#DigitalBusiness','#OnlineBusiness'],broad:['#Business','#Entrepreneur','#Startup','#Hustle','#Success'],local:['#NigeriaBusiness','#NaijaBusiness','#MadeInNigeria','#LagosBusiness','#NigeriaEntrepreneur']},
+music:{niche:['#NewMusic','#MusicRelease','#IndependentArtist','#MusicPromotion','#AfrobeatMusic'],broad:['#Music','#Afrobeat','#NaijaMusic','#NowPlaying','#MusicLover'],local:['#NigeriaMusic','#NaijaHits','#LagosMusic','#NigerianArtist','#AfrobeatNigeria']},
+film:{niche:['#NollywoodFilms','#IndependentFilm','#FilmProduction','#NollywoodMovies','#AfricanCinema'],broad:['#Film','#Nollywood','#MovieNight','#Filmmaker','#Cinema'],local:['#NigeriaFilm','#NaijaMovies','#NollywoodNigeria','#LagosFilm','#AfricanFilm']},
+education:{niche:['#OnlineCourse','#LearnOnline','#SkillAcquisition','#ProfessionalDevelopment','#DigitalSkills'],broad:['#Education','#Learning','#Courses','#Knowledge','#Study'],local:['#NigeriaEducation','#LearnInNigeria','#NaijaEducation','#SkillsNigeria','#DigitalSkillsNigeria']},
+realestate:{niche:['#PropertyInvestment','#RealEstateTips','#HouseHunting','#PropertyListing','#InvestmentProperty'],broad:['#RealEstate','#Property','#Investment','#Housing'],local:['#NigeriaProperty','#AbujaRealEstate','#LagosProperty','#NaijaRealEstate','#NigeriaInvestment']},
+tech:{niche:['#AITools','#AutomationTech','#SaaSTools','#TechStartup','#DigitalTransformation'],broad:['#AI','#Technology','#Tech','#Innovation','#Programming'],local:['#NigeriaTech','#NaijaTech','#LagosTech','#AfricaTech','#NigerianDeveloper']}
+};
+
+function generateTags(){
+var topic=document.getElementById('hashTopic').value.toLowerCase().trim();
+if(!topic){alert('Enter a topic or niche');return}
+// Check if matches pre-built sets
+var set=null;
+for(var key in tagSets){if(topic.includes(key)||key.includes(topic)){set=tagSets[key];break}}
+if(!set){
+// Generate from topic
+set={
+niche:['#'+topic.replace(/\s/g,'')+'Tips','#'+topic.replace(/\s/g,'')+'Guide','#'+topic.replace(/\s/g,'')+'Tools','#'+topic.replace(/\s/g,'')+'Strategy','#'+topic.replace(/\s/g,'')+'Hacks'],
+broad:['#'+topic.replace(/\s/g,''),'#'+topic.replace(/\s/g,'')+'Life','#'+topic.replace(/\s/g,'')+'Community','#Trending'+topic.charAt(0).toUpperCase()+topic.slice(1).replace(/\s/g,'')],
+local:['#Nigeria'+topic.replace(/\s/g,''),'#Naija'+topic.replace(/\s/g,''),'#Lagos'+topic.replace(/\s/g,''),'#'+topic.replace(/\s/g,'')+'Nigeria']
+};
+}
+displayTags(set);
+}
+
+function loadSet(key){displayTags(tagSets[key])}
+
+function displayTags(set){
+var platform=document.getElementById('hashPlatform').value;
+var limits={ig:30,tt:5,fb:5,x:3,yt:10,all:999};
+var limit=limits[platform]||30;
+var allTags=set.niche.concat(set.broad).concat(set.local).slice(0,limit);
+var cloud=allTags.map(function(t){
+var cls=set.niche.includes(t)?'niche':set.broad.includes(t)?'broad':'local';
+return '<span class="tag '+cls+'" onclick="toggleTag(this,\''+t+'\')">'+t+'</span>';
+}).join('');
+document.getElementById('tagCloud').innerHTML=cloud;
+document.getElementById('copyArea').textContent=allTags.join(' ');
+document.getElementById('tagsBox').classList.add('show');
+}
+
+function copyTags(){
+var range=document.createRange();
+range.selectNode(document.getElementById('copyArea'));
+window.getSelection().removeAllRanges();
+window.getSelection().addRange(range);
+document.execCommand('copy');
+alert('Hashtags copied!');
+}
+
+function toggleTag(el,tag){
+el.style.opacity=el.style.opacity==='0.3'?'1':'0.3';
+var current=document.getElementById('copyArea').textContent;
+var tags=current.split(' ');
+if(tags.includes(tag)){tags=tags.filter(function(t){return t!==tag})}
+else{tags.push(tag)}
+document.getElementById('copyArea').textContent=tags.join(' ');
+}
+</script>
+</body>
+</html>

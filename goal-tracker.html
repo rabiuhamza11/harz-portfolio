@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free business goal tracker and OKR dashboard. Set quarterly objectives, track key results, measure progress. For Nigerian businesses.">
+<meta name="keywords" content="goal tracker, OKR, business goals, objective tracking, quarterly goals nigeria">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Business Goal Tracker — OKR Dashboard | Harz Digital Services">
+<meta property="og:description" content="Free business goal tracker and OKR dashboard. Set quarterly objectives, track key results, measure progress. For Nigerian businesses.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/goal-tracker.html">
+<meta property="og:site_name" content="Harz Digital Services">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Business Goal Tracker — OKR Dashboard | Harz Digital Services">
+<meta name="twitter:description" content="Free business goal tracker and OKR dashboard. Set quarterly objectives, track key results, measure progress. For Nigerian businesses.">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/goal-tracker.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Goal Tracker — OKR Dashboard | Harz Digital Services</title>
+<meta name="description" content="Free business goal tracker and OKR dashboard. Set quarterly objectives, track key results, measure progress. For Nigerian businesses.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:800px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{background:#0e0e16;border:1px solid #1e1e2e;border-radius:10px;padding:12px;text-align:center}
+.stat .num{font-size:1.3rem;font-weight:800}
+.stat .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase}
+.stat.green .num{color:#00d4aa}.stat.yellow .num{color:#f59e0b}.stat.blue .num{color:#3b82f6}.stat.purple .num{color:#7c3aed}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.btn{padding:12px 24px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;width:100%}
+.goal-item{background:#14141e;border:1px solid #1e1e2e;border-radius:12px;padding:16px;margin-bottom:12px}
+.goal-item .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.goal-item .title{font-size:.9rem;font-weight:600}
+.goal-item .del{font-size:1rem;cursor:pointer;color:#ef4444;background:none;border:none}
+.goal-item .meta{font-size:.7rem;color:#6b6b80;margin-bottom:10px}
+.progress-bar{height:8px;background:#1e1e2e;border-radius:4px;overflow:hidden;margin:8px 0}
+.progress-fill{height:100%;border-radius:4px;transition:width .3s}
+.fill.green{background:linear-gradient(90deg,#00d4aa,#22c55e)}
+.fill.yellow{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.fill.red{background:linear-gradient(90deg,#ef4444,#dc2626)}
+.goal-item .pct{font-size:.8rem;font-weight:700;margin-top:4px}
+.kr-row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.75rem}
+.kr-row input[type=range]{flex:1}
+.kr-row .kr-val{width:40px;text-align:right;color:#00d4aa;font-weight:600}
+.preset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:12px}
+.preset{background:#14141e;border:1px solid #1e1e2e;border-radius:10px;padding:12px;cursor:pointer;transition:all .2s}
+.preset:hover{border-color:#00d4aa}
+.preset .p-title{font-size:.8rem;font-weight:600}
+.preset .p-desc{font-size:.7rem;color:#6b6b80;margin-top:2px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Business Goal Tracker</h1><p>Set objectives, track key results, measure progress</p></div>
+
+<div class="stats">
+<div class="stat green"><div class="num" id="activeGoals">0</div><div class="lbl">Active Goals</div></div>
+<div class="stat yellow"><div class="num" id="onTrack">0</div><div class="lbl">On Track</div></div>
+<div class="stat blue"><div class="num" id="atRisk">0</div><div class="lbl">At Risk</div></div>
+<div class="stat purple"><div class="num" id="avgProgress">0%</div><div class="lbl">Avg Progress</div></div>
+</div>
+
+<div class="card">
+<h2>Quick Preset Goals (Q3 2026)</h2>
+<div class="preset-grid">
+<div class="preset" onclick="addPreset('Revenue: ₦500K in product sales','₦500K in product sales by Sept 30',50)"><div class="p-title">₦500K Revenue</div><div class="p-desc">Product sales target</div></div>
+<div class="preset" onclick="addPreset('Get payments live','All 4 payment gateways live',25)"><div class="p-title">Payments Live</div><div class="p-desc">Paystack+Stripe+Flutterwave+Moniepoint</div></div>
+<div class="preset" onclick="addPreset('Upload 259 products to Getly','All products on Getly marketplace',10)"><div class="p-title">259 Products</div><div class="p-desc">Complete Getly uploads</div></div>
+<div class="preset" onclick="addPreset('500 newsletter subscribers','500 Harz Insider subscribers',15)"><div class="p-title">500 Subscribers</div><div class="p-desc">Newsletter growth</div></div>
+<div class="preset" onclick="addPreset('10 affiliate signups','10 active affiliates',0)"><div class="p-title">10 Affiliates</div><div class="p-desc">Recruit sellers</div></div>
+<div class="preset" onclick="addPreset('100 customer reviews','100 customer reviews',5)"><div class="p-title">100 Reviews</div><div class="p-desc">Social proof</div></div>
+</div>
+</div>
+
+<div class="card">
+<h2>Add Custom Goal</h2>
+<div class="input-group"><label>Goal Title</label><input type="text" id="gTitle" placeholder="e.g. Launch new SaaS product"></div>
+<div class="input-group"><label>Description</label><input type="text" id="gDesc" placeholder="What does success look like?"></div>
+<div class="input-group"><label>Category</label><select id="gCat"><option>Revenue</option><option>Growth</option><option>Product</option><option>Marketing</option><option>Operations</option><option>Infrastructure</option></select></div>
+<div class="input-group"><label>Start Progress (%)</label><input type="number" id="gProgress" value="0" min="0" max="100"></div>
+<button class="btn gen" onclick="addGoal()">Add Goal</button>
+</div>
+
+<div id="goalList"></div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Goal Tracker
+</div>
+
+<script>
+var goals=JSON.parse(localStorage.getItem('harz_goals')||'[]');
+if(goals.length===0){
+goals=[
+{id:1,title:'Revenue: ₦500K in product sales',desc:'₦500K in product sales by Sept 30',cat:'Revenue',progress:50},
+{id:2,title:'Get payments live',desc:'All 4 payment gateways live',cat:'Infrastructure',progress:25},
+{id:3,title:'Upload 259 products to Getly',desc:'All products on Getly marketplace',cat:'Product',progress:10},
+{id:4,title:'500 newsletter subscribers',desc:'500 Harz Insider subscribers',cat:'Growth',progress:15}
+];
+localStorage.setItem('harz_goals',JSON.stringify(goals));
+}
+
+function render(){
+document.getElementById('goalList').innerHTML=goals.map(function(g){
+var color=g.progress>=70?'green':g.progress>=40?'yellow':'red';
+var catColor={Revenue:'#00d4aa',Growth:'#7c3aed',Product:'#3b82f6',Marketing:'#ec4899',Operations:'#f59e0b',Infrastructure:'#22c55e'};
+return '<div class="goal-item"><div class="top"><div class="title">'+g.title+'</div><button class="del" onclick="delGoal('+g.id+')">×</button></div><div class="meta">'+g.cat+' · '+g.desc+'</div><div class="progress-bar"><div class="progress-fill '+color+'" style="width:'+g.progress+'%"></div></div><div class="pct" style="color:'+catColor[g.cat]+'">'+g.progress+'% complete</div><div style="margin-top:10px"><input type="range" min="0" max="100" value="'+g.progress+'" onchange="updateGoal('+g.id+',this.value)" style="width:100%"></div></div>';
+}).join('');
+updateStats();
+}
+
+function updateStats(){
+document.getElementById('activeGoals').textContent=goals.length;
+document.getElementById('onTrack').textContent=goals.filter(function(g){return g.progress>=50}).length;
+document.getElementById('atRisk').textContent=goals.filter(function(g){return g.progress<50}).length;
+var avg=goals.length?Math.round(goals.reduce(function(s,g){return s+g.progress},0)/goals.length):0;
+document.getElementById('avgProgress').textContent=avg+'%';
+}
+
+function addGoal(){
+var t=document.getElementById('gTitle').value;if(!t){alert('Enter a goal title');return}
+goals.push({id:Date.now(),title:t,desc:document.getElementById('gDesc').value,cat:document.getElementById('gCat').value,progress:parseInt(document.getElementById('gProgress').value)||0});
+localStorage.setItem('harz_goals',JSON.stringify(goals));
+document.getElementById('gTitle').value='';document.getElementById('gDesc').value='';document.getElementById('gProgress').value='0';
+render();
+}
+
+function addPreset(title,desc,progress){
+goals.push({id:Date.now(),title:title,desc:desc,cat:'Revenue',progress:progress});
+localStorage.setItem('harz_goals',JSON.stringify(goals));
+render();
+}
+
+function updateGoal(id,val){var g=goals.find(function(g){return g.id==id});if(g){g.progress=parseInt(val);localStorage.setItem('harz_goals',JSON.stringify(goals));render();}}
+
+function delGoal(id){goals=goals.filter(function(g){return g.id!=id});localStorage.setItem('harz_goals',JSON.stringify(goals));render();}
+
+render();
+</script>
+</body>
+</html>

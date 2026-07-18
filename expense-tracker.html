@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free business expense tracker for Nigerian businesses. Log expenses, categorize spending, track monthly totals. Export to CSV.">
+<meta name="keywords" content="expense tracker, business expenses, spending tracker, finance tool nigeria">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Expense Tracker — Business Expenses | Harz Digital Services">
+<meta property="og:description" content="Free business expense tracker for Nigerian businesses. Log expenses, categorize spending, track monthly totals. Export to CSV.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/expense-tracker.html">
+<meta property="og:site_name" content="Harz Digital Services">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Expense Tracker — Business Expenses | Harz Digital Services">
+<meta name="twitter:description" content="Free business expense tracker for Nigerian businesses. Log expenses, categorize spending, track monthly totals. Export to CSV.">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/expense-tracker.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expense Tracker — Business Expenses | Harz Digital Services</title>
+<meta name="description" content="Free business expense tracker for Nigerian businesses. Log expenses, categorize spending, track monthly totals. Export to CSV.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:700px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:#0e0e16;border:1px solid #1e1e2e;border-radius:10px;padding:14px;text-align:center}
+.stat .num{font-size:1.2rem;font-weight:800}
+.stat .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase}
+.stat.green .num{color:#00d4aa}.stat.yellow .num{color:#f59e0b}.stat.red .num{color:#ef4444}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.row{display:flex;gap:8px}
+.row .input-group{flex:1}
+.btn{padding:12px 24px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;width:100%}
+.btn.small{padding:6px 12px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa;font-size:.75rem;border-radius:6px}
+.exp-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:12px}
+.exp-table th{text-align:left;padding:8px;border-bottom:1px solid #1e1e2e;color:#6b6b80;font-size:.65rem;text-transform:uppercase}
+.exp-table td{padding:8px;border-bottom:1px solid rgba(30,30,46,.5)}
+.exp-table .amt{font-weight:600}
+.exp-table .cat{font-size:.7rem;padding:2px 8px;border-radius:4px}
+.cat-Hosting{background:rgba(59,130,246,.15);color:#3b82f6}
+.cat-Payments{background:rgba(245,158,11,.15);color:#f59e0b}
+.cat-Marketing{background:rgba(236,72,153,.15);color:#ec4899}
+.cat-Tools{background:rgba(124,58,237,.15);color:#7c3aed}
+.cat-Office{background:rgba(0,212,170,.15);color:#00d4aa}
+.cat-Other{background:rgba(107,107,128,.15);color:#6b6b80}
+.exp-table .del{cursor:pointer;color:#ef4444}
+.chart-row{display:flex;align-items:flex-end;gap:4px;height:100px;margin-top:8px}
+.chart-bar{flex:1;border-radius:4px 4px 0 0;min-height:4px;position:relative;transition:height .3s}
+.chart-bar .val{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:.55rem;color:#6b6b80;white-space:nowrap}
+.empty{text-align:center;padding:30px;color:#6b6b80;font-size:.85rem}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Business Expense Tracker</h1><p>Log expenses, categorize, track monthly spending</p></div>
+
+<div class="stats">
+<div class="stat green"><div class="num" id="totalSpent">₦0</div><div class="lbl">Total This Month</div></div>
+<div class="stat yellow"><div class="num" id="expCount">0</div><div class="lbl">Transactions</div></div>
+<div class="stat red"><div class="num" id="topCat">—</div><div class="lbl">Top Category</div></div>
+</div>
+
+<div class="card">
+<h2>Add Expense</h2>
+<div class="row">
+<div class="input-group"><label>Amount (₦)</label><input type="number" id="expAmount" placeholder="0"></div>
+<div class="input-group"><label>Category</label><select id="expCat"><option>Hosting</option><option>Payments</option><option>Marketing</option><option>Tools</option><option>Office</option><option>Other</option></select></div>
+</div>
+<div class="input-group"><label>Description</label><input type="text" id="expDesc" placeholder="e.g. Vercel Pro subscription"></div>
+<button class="btn gen" onclick="addExpense()">Add Expense</button>
+</div>
+
+<div class="card">
+<h2>Spending by Category <button class="btn small" style="float:right" onclick="exportCSV()">Export CSV</button></h2>
+<div id="catChart"></div>
+<div id="catBreakdown" style="margin-top:20px"></div>
+</div>
+
+<div class="card">
+<h2>Recent Expenses</h2>
+<div id="expList"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Expense Tracker
+</div>
+
+<script>
+var expenses=JSON.parse(localStorage.getItem('harz_expenses')||'[]');
+if(expenses.length===0){
+expenses=[
+{id:1,amount:2500,cat:'Hosting',desc:'Vercel Pro plan',date:'Jul 18'},
+{id:2,amount:0,cat:'Hosting',desc:'Render free tier',date:'Jul 18'},
+{id:3,amount:5000,cat:'Marketing',desc:'Facebook ads (test)',date:'Jul 17'},
+{id:4,amount:1200,cat:'Tools',desc:'Domain registration',date:'Jul 15'},
+{id:5,amount:3500,cat:'Office',desc:'Data + internet',date:'Jul 14'}
+];
+localStorage.setItem('harz_expenses',JSON.stringify(expenses));
+}
+
+var catColors={Hosting:'#3b82f6',Payments:'#f59e0b',Marketing:'#ec4899',Tools:'#7c3aed',Office:'#00d4aa',Other:'#6b6b80'};
+
+function render(){
+var total=expenses.reduce(function(s,e){return s+e.amount},0);
+document.getElementById('totalSpent').textContent='₦'+total.toLocaleString();
+document.getElementById('expCount').textContent=expenses.length;
+
+// Category breakdown
+var cats={};
+expenses.forEach(function(e){cats[e.cat]=(cats[e.cat]||0)+e.amount});
+var topCat=Object.keys(cats).sort(function(a,b){return cats[b]-cats[a]})[0];
+document.getElementById('topCat').textContent=topCat||'—';
+
+// Chart
+var maxVal=Math.max.apply(null,Object.values(cats).concat([1]));
+var chartHtml='<div class="chart-row">';
+Object.keys(cats).forEach(function(c){
+var h=(cats[c]/maxVal)*100;
+chartHtml+='<div class="chart-bar" style="height:'+h+'px;background:'+catColors[c]+'"><div class="val">₦'+(cats[c]/1000).toFixed(1)+'K</div></div>';
+});
+chartHtml+='</div>';
+document.getElementById('catChart').innerHTML=chartHtml;
+
+// Breakdown
+var bd='<table class="exp-table"><tr><th>Category</th><th>Total</th><th>% of Total</th></tr>';
+Object.keys(cats).sort(function(a,b){return cats[b]-cats[a]}).forEach(function(c){
+bd+='<tr><td><span class="cat cat-'+c+'">'+c+'</span></td><td class="amt">₦'+cats[c].toLocaleString()+'</td><td>'+Math.round(cats[c]/total*100)+'%</td></tr>';
+});
+bd+='</table>';
+document.getElementById('catBreakdown').innerHTML=bd;
+
+// List
+var list='<table class="exp-table"><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th></th></tr>';
+if(expenses.length===0){list+='<tr><td colspan="5" class="empty">No expenses logged yet</td></tr>'}
+expenses.slice().reverse().forEach(function(e){
+list+='<tr><td>'+e.date+'</td><td>'+e.desc+'</td><td><span class="cat cat-'+e.cat+'">'+e.cat+'</span></td><td class="amt">₦'+e.amount.toLocaleString()+'</td><td class="del" onclick="delExp('+e.id+')">✕</td></tr>';
+});
+list+='</table>';
+document.getElementById('expList').innerHTML=list;
+}
+
+function addExpense(){
+var amt=parseInt(document.getElementById('expAmount').value);
+if(!amt||amt<=0){alert('Enter a valid amount');return}
+expenses.push({id:Date.now(),amount:amt,cat:document.getElementById('expCat').value,desc:document.getElementById('expDesc').value||'Untitled',date:new Date().toLocaleDateString('en-NG',{month:'short',day:'numeric'})});
+localStorage.setItem('harz_expenses',JSON.stringify(expenses));
+document.getElementById('expAmount').value='';document.getElementById('expDesc').value='';
+render();
+}
+
+function delExp(id){expenses=expenses.filter(function(e){return e.id!=id});localStorage.setItem('harz_expenses',JSON.stringify(expenses));render()}
+
+function exportCSV(){
+var csv='Date,Description,Category,Amount\n';
+expenses.forEach(function(e){csv+=e.date+',"'+e.desc+'",'+e.cat+','+e.amount+'\n'});
+var b=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='expenses.csv';a.click();
+}
+
+render();
+</script>
+</body>
+</html>

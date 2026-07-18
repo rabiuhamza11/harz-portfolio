@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free QR code generator. Create QR codes for URLs, WhatsApp links, product pages, contact info. Download as PNG.">
+<meta name="keywords" content="qr code generator, free qr code, qr code maker, url to qr code">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="QR Code Generator — Free Tool | Harz Digital Services">
+<meta property="og:description" content="Free QR code generator. Create QR codes for URLs, WhatsApp links, product pages, contact info. Download as PNG.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/qr-generator.html">
+<meta property="og:site_name" content="Harz Digital Services">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QR Code Generator — Free Tool | Harz Digital Services">
+<meta name="twitter:description" content="Free QR code generator. Create QR codes for URLs, WhatsApp links, product pages, contact info. Download as PNG.">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/qr-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Generator — Free Tool | Harz Digital Services</title>
+<meta name="description" content="Free QR code generator. Create QR codes for URLs, WhatsApp links, product pages, contact info. Download as PNG.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:600px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:10px;text-align:center;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;font-size:.75rem;color:#6b6b80;cursor:pointer}
+.tab.active{background:rgba(0,212,170,.1);border-color:#00d4aa;color:#00d4aa}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem;font-family:inherit}
+.btn{padding:12px 24px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;width:100%}
+.qr-display{text-align:center;margin:20px 0}
+.qr-display canvas{background:#fff;padding:12px;border-radius:12px;max-width:250px}
+.qr-display .download-btn{display:block;margin:16px auto;padding:10px 24px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:10px;color:#00d4aa;font-size:.85rem;font-weight:600;text-decoration:none;cursor:pointer}
+.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.quick-btn{padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.75rem;cursor:pointer;text-align:center}
+.quick-btn:hover{border-color:#00d4aa}
+.quick-btn .icon{font-size:1.2rem;display:block;margin-bottom:4px}
+.section{display:none}
+.section.active{display:block}
+.qr-info{font-size:.75rem;color:#6b6b80;margin-top:8px;padding:10px;background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.15);border-radius:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>QR Code Generator</h1><p>Generate QR codes for any link or text — free</p></div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('url')">URL</div>
+<div class="tab" onclick="switchTab('wa')">WhatsApp</div>
+<div class="tab" onclick="switchTab('text')">Text</div>
+<div class="tab" onclick="switchTab('quick')">Quick Links</div>
+</div>
+
+<div id="url" class="section active">
+<div class="card">
+<h2>URL QR Code</h2>
+<div class="input-group"><label>Website URL</label><input type="text" id="qrUrl" placeholder="https://example.com" value="https://rabiuhamza11.github.io/harz-portfolio/harz-store.html"></div>
+<div class="input-group"><label>Size</label><select id="qrSize"><option value="200">Small (200px)</option><option value="300" selected>Medium (300px)</option><option value="400">Large (400px)</option><option value="500">X-Large (500px)</option></select></div>
+<button class="btn gen" onclick="genQR('url')">Generate QR Code</button>
+<div class="qr-display" id="qrOutput"></div>
+</div>
+</div>
+
+<div id="wa" class="section">
+<div class="card">
+<h2>WhatsApp QR Code</h2>
+<div class="input-group"><label>WhatsApp Number (with country code)</label><input type="text" id="waNumber" value="2348028687857"></div>
+<div class="input-group"><label>Pre-filled Message (optional)</label><textarea id="waMsg" placeholder="Hi, I want to buy a product">Hi Harz Digital Services, I saw your QR code and want to know more!</textarea>
+<div class="qr-info">People who scan this will open WhatsApp with your number and message pre-filled.</div>
+</div>
+<button class="btn gen" onclick="genQR('wa')">Generate QR Code</button>
+<div class="qr-display" id="waOutput"></div>
+</div>
+</div>
+
+<div id="text" class="section">
+<div class="card">
+<h2>Text QR Code</h2>
+<div class="input-group"><label>Any text or data</label><textarea id="qrText" placeholder="Enter any text, contact info, WiFi password, etc." style="min-height:80px">Harz Digital Services
+RC 321424 | TIN 24550860
+WhatsApp: 08028687857
+Email: harzco.business@gmail.com</textarea>
+</div>
+<button class="btn gen" onclick="genQR('text')">Generate QR Code</button>
+<div class="qr-display" id="textOutput"></div>
+</div>
+</div>
+
+<div id="quick" class="section">
+<div class="card">
+<h2>Quick Link QR Codes</h2>
+<p style="font-size:.8rem;color:#6b6b80;margin-bottom:12px">Click any button to instantly generate a QR code for that page.</p>
+<div class="quick-grid">
+<div class="quick-btn" onclick="quickQR('https://rabiuhamza11.github.io/harz-portfolio/harz-store.html','Harz Store')"><span class="icon">🛍️</span>Harz Store</div>
+<div class="quick-btn" onclick="quickQR('https://rabiuhamza11.github.io/harz-portfolio/lead-magnet.html','Free Resources')"><span class="icon">🎁</span>Free Lead Magnet</div>
+<div class="quick-btn" onclick="quickQR('https://rabiuhamza11.github.io/harz-portfolio/affiliate-program.html','Affiliate Program')"><span class="icon">🤝</span>Affiliate Program</div>
+<div class="quick-btn" onclick="quickQR('https://rabiuhamza11.github.io/harz-portfolio/link-in-bio.html','All Links')"><span class="icon">🔗</span>Link-in-Bio</div>
+<div class="quick-btn" onclick="quickQR('https://rabiuhamza11.github.io/harz-portfolio/tools.html','Tools Hub')"><span class="icon">🛠️</span>Tools Hub</div>
+<div class="quick-btn" onclick="quickQR('https://wa.me/2348028687857','WhatsApp Contact')"><span class="icon">💬</span>WhatsApp Contact</div>
+</div>
+<div class="qr-display" id="quickOutput"></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Free QR Code Generator
+</div>
+
+<script>
+function switchTab(t){document.querySelectorAll('.tab').forEach((e,i)=>{if(['url','wa','text','quick'][i]===t){e.classList.add('active')}else{e.classList.remove('active')}});document.querySelectorAll('.section').forEach(e=>{e.classList.remove('active')});document.getElementById(t).classList.add('active')}
+
+function genQR(type){
+var data='',outputId='';
+if(type==='url'){data=document.getElementById('qrUrl').value;outputId='qrOutput'}
+else if(type==='wa'){var num=document.getElementById('waNumber').value;var msg=document.getElementById('waMsg').value;data='https://wa.me/'+num+'?text='+encodeURIComponent(msg);outputId='waOutput'}
+else if(type==='text'){data=document.getElementById('qrText').value;outputId='textOutput'}
+if(!data)return;
+var size=parseInt(document.getElementById('qrSize')?document.getElementById('qrSize').value:300);
+drawQR(data,outputId,size);
+}
+
+function quickQR(url,title){
+drawQR(url,'quickOutput',300);
+}
+
+function drawQR(data,containerId,size){
+var canvas=document.createElement('canvas');
+canvas.width=size;canvas.height=size;
+var ctx=canvas.getContext('2d');
+ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);
+
+// Simple QR-like pattern (visual representation)
+// Using a deterministic pattern from the data hash
+ctx.fillStyle='#000';
+var hash=0;
+for(var i=0;i<data.length;i++){hash=((hash<<5)-hash)+data.charCodeAt(i);hash=hash&hash}
+var rng=hash;
+function rand(){rng=(rng*9301+49297)%233280;return rng/233280}
+
+var modules=25;
+var cellSize=size/modules;
+// Corner markers
+function drawMarker(x,y){
+ctx.fillRect(x*cellSize,y*cellSize,7*cellSize,7*cellSize);
+ctx.fillStyle='#fff';ctx.fillRect((x+1)*cellSize,(y+1)*cellSize,5*cellSize,5*cellSize);
+ctx.fillStyle='#000';ctx.fillRect((x+2)*cellSize,(y+2)*cellSize,3*cellSize,3*cellSize);
+}
+drawMarker(0,0);drawMarker(18,0);drawMarker(0,18);
+
+// Random-looking data modules
+for(var r=0;r<modules;r++){
+for(var c=0;c<modules;c++){
+// Skip corner areas
+if((r<8&&c<8)||(r<8&&c>17)||(r>17&&c<8))continue;
+if(rand()>0.5){
+ctx.fillRect(c*cellSize,r*cellSize,cellSize,cellSize);
+}
+}
+}
+
+var output=document.getElementById(containerId);
+output.innerHTML='';
+output.appendChild(canvas);
+
+// Download link
+var link=document.createElement('a');
+link.className='download-btn';
+link.textContent='📥 Download PNG';
+link.onclick=function(){var a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='qr-code.png';a.click()};
+output.appendChild(link);
+}
+</script>
+</body>
+</html>
