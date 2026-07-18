@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROI & Loan Calculator — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:600px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer}
+.result{margin-top:16px;display:none}
+.result.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #1e1e2e;font-size:.85rem}
+.result-row:last-child{border:none}
+.result-row .val{font-weight:700}
+.result-row .val.green{color:#00d4aa}
+.result-row .val.red{color:#ef4444}
+.result-row .val.yellow{color:#f59e0b}
+.result-big{margin-top:12px;padding:14px;background:#14141e;border-radius:10px;text-align:center}
+.result-big .num{font-size:1.8rem;font-weight:800;color:#00d4aa}
+.result-big .lbl{font-size:.7rem;color:#6b6b80}
+.amort{margin-top:16px;font-size:.7rem;display:none}
+.amort.show{display:block}
+.amort table{width:100%;border-collapse:collapse}
+.amort th{text-align:left;padding:6px;border-bottom:1px solid #1e1e2e;color:#6b6b80;font-weight:600}
+.amort td{padding:6px;border-bottom:1px solid rgba(30,30,46,.5)}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:10px;text-align:center;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;font-size:.8rem;color:#6b6b80;cursor:pointer}
+.tab.active{background:rgba(0,212,170,.1);border-color:#00d4aa;color:#00d4aa}
+.section{display:none}
+.section.active{display:block}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header">
+<h1>ROI & Loan Calculator</h1>
+<p>Investment Returns | Loan Amortization | Break-Even Analysis</p>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('roi')">ROI</div>
+<div class="tab" onclick="switchTab('loan')">Loan</div>
+<div class="tab" onclick="switchTab('breakeven')">Break-Even</div>
+</div>
+
+<div id="roi" class="section active">
+<div class="card">
+<h2>Return on Investment</h2>
+<div class="input-group">
+<label>Initial Investment (₦)</label>
+<input type="number" id="roiCost" placeholder="e.g. 500000" value="500000">
+</div>
+<div class="input-group">
+<label>Monthly Revenue (₦)</label>
+<input type="number" id="roiRev" placeholder="e.g. 50000" value="50000">
+</div>
+<div class="input-group">
+<label>Monthly Operating Cost (₦)</label>
+<input type="number" id="roiOp" placeholder="e.g. 10000" value="10000">
+</div>
+<button class="btn" onclick="calcROI()">Calculate ROI</button>
+<div id="roiResult" class="result">
+<div class="result-row"><span>Monthly Profit</span><span class="val green" id="roiMonthly">₦0</span></div>
+<div class="result-row"><span>Annual Profit</span><span class="val green" id="roiAnnual">₦0</span></div>
+<div class="result-row"><span>Payback Period</span><span class="val yellow" id="roiPayback">0 months</span></div>
+<div class="result-row"><span>Year 1 ROI</span><span class="val" id="roiY1">0%</span></div>
+<div class="result-row"><span>Year 2 ROI</span><span class="val" id="roiY2">0%</span></div>
+<div class="result-big">
+<div class="num" id="roiBig">0%</div>
+<div class="lbl">Year 1 Return on Investment</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="loan" class="section">
+<div class="card">
+<h2>Loan Calculator (Amortization)</h2>
+<div class="input-group">
+<label>Loan Amount (₦)</label>
+<input type="number" id="loanAmount" placeholder="e.g. 1000000" value="1000000">
+</div>
+<div class="input-group">
+<label>Annual Interest Rate (%)</label>
+<input type="number" id="loanRate" placeholder="e.g. 15" value="15" step="0.1">
+</div>
+<div class="input-group">
+<label>Loan Term (months)</label>
+<input type="number" id="loanTerm" placeholder="e.g. 12" value="12">
+</div>
+<button class="btn" onclick="calcLoan()">Calculate</button>
+<div id="loanResult" class="result">
+<div class="result-row"><span>Monthly Payment</span><span class="val red" id="loanMonthly">₦0</span></div>
+<div class="result-row"><span>Total Interest</span><span class="val red" id="loanInterest">₦0</span></div>
+<div class="result-row"><span>Total Repayment</span><span class="val" id="loanTotal">₦0</span></div>
+<div class="result-row"><span>Effective Rate</span><span class="val yellow" id="loanEff">0%</span></div>
+<div id="loanAmort" class="amort">
+<table>
+<tr><th>Month</th><th>Payment</th><th>Interest</th><th>Principal</th><th>Balance</th></tr>
+<tbody id="amortBody"></tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<div id="breakeven" class="section">
+<div class="card">
+<h2>Break-Even Analysis</h2>
+<div class="input-group">
+<label>Fixed Costs (₦)</label>
+<input type="number" id="beFixed" placeholder="e.g. 200000" value="200000">
+</div>
+<div class="input-group">
+<label>Price per Unit (₦)</label>
+<input type="number" id="bePrice" placeholder="e.g. 5000" value="5000">
+</div>
+<div class="input-group">
+<label>Variable Cost per Unit (₦)</label>
+<input type="number" id="beVar" placeholder="e.g. 1500" value="1500">
+</div>
+<button class="btn" onclick="calcBE()">Calculate Break-Even</button>
+<div id="beResult" class="result">
+<div class="result-row"><span>Contribution Margin</span><span class="val" id="beMargin">₦0</span></div>
+<div class="result-row"><span>Break-Even Units</span><span class="val yellow" id="beUnits">0</span></div>
+<div class="result-row"><span>Break-Even Revenue</span><span class="val" id="beRev">₦0</span></div>
+<div class="result-row"><span>Margin of Safety (at 200 units)</span><span class="val green" id="beSafety">0%</span></div>
+<div class="result-big">
+<div class="num" id="beBig">0</div>
+<div class="lbl">Units to Break Even</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | TIN 24550860
+</div>
+
+<script>
+function fmt(n){return '₦'+Math.round(n).toLocaleString('en-NG')}
+function switchTab(t){document.querySelectorAll('.tab').forEach((e,i)=>{if(['roi','loan','breakeven'][i]===t){e.classList.add('active')}else{e.classList.remove('active')}});document.querySelectorAll('.section').forEach(e=>{e.classList.remove('active')});document.getElementById(t).classList.add('active')}
+function calcROI(){const c=parseFloat(document.getElementById('roiCost').value)||0;const r=parseFloat(document.getElementById('roiRev').value)||0;const o=parseFloat(document.getElementById('roiOp').value)||0;const m=r-o;const a=m*12;const pb=c/m;const y1=(a-c)/c*100;const y2=a/c*100;document.getElementById('roiResult').classList.add('show');document.getElementById('roiMonthly').textContent=fmt(m);document.getElementById('roiAnnual').textContent=fmt(a);document.getElementById('roiPayback').textContent=pb.toFixed(1)+' months';document.getElementById('roiY1').textContent=y1.toFixed(1)+'%';document.getElementById('roiY2').textContent=y2.toFixed(1)+'%';document.getElementById('roiBig').textContent=y1.toFixed(1)+'%'}
+function calcLoan(){const p=parseFloat(document.getElementById('loanAmount').value)||0;const r=(parseFloat(document.getElementById('loanRate').value)||0)/100/12;const n=parseInt(document.getElementById('loanTerm').value)||1;const m=p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);const total=m*n;const interest=total-p;const eff=interest/p*100;document.getElementById('loanResult').classList.add('show');document.getElementById('loanMonthly').textContent=fmt(m);document.getElementById('loanInterest').textContent=fmt(interest);document.getElementById('loanTotal').textContent=fmt(total);document.getElementById('loanEff').textContent=eff.toFixed(1)+'%';let bal=p;let rows='';for(let i=1;i<=Math.min(n,12);i++){const intr=bal*r;const princ=m-intr;bal-=princ;rows+='<tr><td>'+i+'</td><td>'+fmt(m)+'</td><td>'+fmt(intr)+'</td><td>'+fmt(princ)+'</td><td>'+fmt(Math.max(0,bal))+'</td></tr>'}document.getElementById('amortBody').innerHTML=rows;document.getElementById('loanAmort').classList.add('show')}
+function calcBE(){const f=parseFloat(document.getElementById('beFixed').value)||0;const p=parseFloat(document.getElementById('bePrice').value)||0;const v=parseFloat(document.getElementById('beVar').value)||0;const cm=p-v;const units=Math.ceil(f/cm);const rev=units*p;const safety=(200-units)/200*100;document.getElementById('beResult').classList.add('show');document.getElementById('beMargin').textContent=fmt(cm);document.getElementById('beUnits').textContent=units;document.getElementById('beRev').textContent=fmt(rev);document.getElementById('beSafety').textContent=safety.toFixed(1)+'%';document.getElementById('beBig').textContent=units}
+</script>
+</body>
+</html>

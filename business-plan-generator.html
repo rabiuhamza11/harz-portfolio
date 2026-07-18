@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Plan Generator — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:700px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group textarea,.input-group select{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem;font-family:inherit}
+.input-group textarea{min-height:60px;resize:vertical}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:8px}
+.output{display:none;margin-top:20px}
+.output.show{display:block}
+.output-section{background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;padding:16px;margin-bottom:12px}
+.output-section h3{font-size:.8rem;color:#00d4aa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.output-section p{font-size:.85rem;line-height:1.6;color:#c8c8d0;white-space:pre-wrap}
+.output-section .stat{display:flex;justify-content:space-between;padding:4px 0;font-size:.8rem}
+.output-section .stat .val{color:#00d4aa;font-weight:600}
+.print-btn{width:100%;padding:12px;background:#14141e;border:1px solid #00d4aa;border-radius:8px;color:#00d4aa;font-size:.85rem;cursor:pointer;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header">
+<h1>Business Plan Generator</h1>
+<p>Generate a CAC-compliant business plan in minutes</p>
+</div>
+
+<div class="card">
+<h2>Business Information</h2>
+<div class="input-group">
+<label>Business Name</label>
+<input type="text" id="bpName" placeholder="e.g. Harz Digital Services">
+</div>
+<div class="input-group">
+<label>Industry</label>
+<select id="bpIndustry">
+<option>Digital Products & Services</option>
+<option>Construction & Real Estate</option>
+<option>Fintech & Payments</option>
+<option>Education & Training</option>
+<option>Music & Entertainment</option>
+<option>Film & Media</option>
+<option>Agriculture</option>
+<option>Healthcare & Wellness</option>
+<option>Technology & SaaS</option>
+<option>Other</option>
+</select>
+</div>
+<div class="input-group">
+<label>Starting Capital (₦)</label>
+<input type="number" id="bpCapital" placeholder="e.g. 500000" value="500000">
+</div>
+<div class="input-group">
+<label>Monthly Revenue Target (₦)</label>
+<input type="number" id="bpRevenue" placeholder="e.g. 200000" value="200000">
+</div>
+<div class="input-group">
+<label>Monthly Expenses (₦)</label>
+<input type="number" id="bpExpenses" placeholder="e.g. 80000" value="80000">
+</div>
+<div class="input-group">
+<label>Business Description</label>
+<textarea id="bpDesc" placeholder="Describe your business in 1-2 sentences...">Providing digital products and services to Nigerian businesses and individuals.</textarea>
+</div>
+<div class="input-group">
+<label>Target Market</label>
+<select id="bpMarket">
+<option>Nigerian individuals and SMEs</option>
+<option>African tech startups</option>
+<option>International clients (USA, UK, EU)</option>
+<option>Nigerian government and agencies</option>
+<option>Students and young professionals</option>
+<option>Construction and real estate companies</option>
+<option>Content creators and musicians</option>
+</select>
+</div>
+<button class="btn" onclick="generatePlan()">Generate Business Plan</button>
+</div>
+
+<div id="output" class="output">
+<div class="output-section">
+<h3>1. Executive Summary</h3>
+<p id="execSummary"></p>
+</div>
+<div class="output-section">
+<h3>2. Business Description</h3>
+<p id="businessDesc"></p>
+</div>
+<div class="output-section">
+<h3>3. Market Analysis</h3>
+<p id="marketAnalysis"></p>
+</div>
+<div class="output-section">
+<h3>4. Products & Services</h3>
+<p id="products"></p>
+</div>
+<div class="output-section">
+<h3>5. Financial Projections</h3>
+<div class="stat"><span>Starting Capital</span><span class="val" id="finCapital"></span></div>
+<div class="stat"><span>Monthly Revenue Target</span><span class="val" id="finRevenue"></span></div>
+<div class="stat"><span>Monthly Expenses</span><span class="val" id="finExpenses"></span></div>
+<div class="stat"><span>Monthly Profit</span><span class="val" id="finProfit"></span></div>
+<div class="stat"><span>Annual Revenue Projection</span><span class="val" id="finAnnualRev"></span></div>
+<div class="stat"><span>Annual Profit Projection</span><span class="val" id="finAnnualProfit"></span></div>
+<div class="stat"><span>Payback Period</span><span class="val" id="finPayback"></span></div>
+<div class="stat"><span>Year 1 ROI</span><span class="val" id="finROI"></span></div>
+</div>
+<div class="output-section">
+<h3>6. Operational Plan</h3>
+<p id="opsPlan"></p>
+</div>
+<div class="output-section">
+<h3>7. Risk Assessment</h3>
+<p id="riskAssess"></p>
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | TIN 24550860
+</div>
+
+<script>
+function fmt(n){return '₦'+Math.round(n).toLocaleString('en-NG')}
+function generatePlan(){
+const name=document.getElementById('bpName').value||'[Business Name]';
+const ind=document.getElementById('bpIndustry').value;
+const cap=parseFloat(document.getElementById('bpCapital').value)||0;
+const rev=parseFloat(document.getElementById('bpRevenue').value)||0;
+const exp=parseFloat(document.getElementById('bpExpenses').value)||0;
+const desc=document.getElementById('bpDesc').value||'';
+const market=document.getElementById('bpMarket').value;
+const profit=rev-exp;
+const annualRev=rev*12;
+const annualProfit=profit*12;
+const payback=cap/profit;
+const roi=(annualProfit-cap)/cap*100;
+
+document.getElementById('output').classList.add('show');
+document.getElementById('execSummary').textContent=name+' is a '+ind.toLowerCase()+' business operating in Nigeria with a starting capital of '+fmt(cap)+'. The business targets '+market+' and aims to achieve '+fmt(rev)+' in monthly revenue within the first year. With monthly expenses of '+fmt(exp)+', the projected monthly profit is '+fmt(profit)+', resulting in an annual profit of '+fmt(annualProfit)+' and a Year 1 ROI of '+roi.toFixed(1)+'%.';
+document.getElementById('businessDesc').textContent=desc+'\n\nIndustry: '+ind+'\nLegal Structure: Sole Proprietorship (upgradeable to LTD)\nRegistration: CAC RC 321424 (reference)\nTax: TIN 24550860 (reference)';
+document.getElementById('marketAnalysis').textContent='Target Market: '+market+'\n\nNigeria has a population of 220M+ with rapidly growing internet penetration (55%+). The '+ind.toLowerCase()+' sector is expanding as digital adoption accelerates. Key competitors include local and international players, but the market remains underserved especially outside Lagos and Abuja.\n\nOpportunity: Focus on underserved regions (Northern Nigeria), affordable pricing (₦2K-35K range), and localized content in Hausa, Yoruba, and Igbo.';
+document.getElementById('products').textContent='Revenue Model: '+fmt(rev)+'/month\n\nPricing Strategy:\n1. Front-End: ₦2,000-5,000 (entry-level products)\n2. Mid-Tier: ₦5,000-30,000 (templates, tools, kits)\n3. Back-End: ₦15,000-35,000 (build guides, consulting)\n4. Retainer: ₦75,000/month (ongoing services)\n\nDelivery: Digital download, WhatsApp support, email delivery';
+document.getElementById('finCapital').textContent=fmt(cap);
+document.getElementById('finRevenue').textContent=fmt(rev);
+document.getElementById('finExpenses').textContent=fmt(exp);
+document.getElementById('finProfit').textContent=fmt(profit);
+document.getElementById('finAnnualRev').textContent=fmt(annualRev);
+document.getElementById('finAnnualProfit').textContent=fmt(annualProfit);
+document.getElementById('finPayback').textContent=payback.toFixed(1)+' months';
+document.getElementById('finROI').textContent=roi.toFixed(1)+'%';
+document.getElementById('opsPlan').textContent='Infrastructure: Vercel (hosting), GitHub (code), Render (backend), Base44 (database, automations, API)\n\nTools: WhatsApp Business, Telegram Bot, Gmail (auto-monitor), Google Calendar\n\nTeam: Owner-operated with AI agent assistance (Maganu + Magani)\n\nPayment: Bank transfer (UBA), USDT (Getly), Paystack (card), Stripe (international)\n\nAutomation: Daily briefings, CRM auto-reply, email monitoring, product promotion, backups';
+document.getElementById('riskAssess').textContent='1. Market Risk: Competition from established players → Mitigate with niche focus and local language support\n2. Payment Risk: Gateway delays → Maintain multiple payment options (bank, crypto, card)\n3. Technical Risk: Server downtime → Use multiple hosting providers + daily backups\n4. Regulatory Risk: NDPR compliance needed → Document data handling practices\n5. Economic Risk: Inflation affecting purchasing power → Keep entry prices affordable';
+}
+</script>
+</body>
+</html>

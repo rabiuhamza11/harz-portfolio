@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nigerian Tax Calculator — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:600px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:#00d4aa}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn:hover{opacity:.9}
+.result{margin-top:16px;display:none}
+.result.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #1e1e2e;font-size:.85rem}
+.result-row:last-child{border:none}
+.result-row .val{font-weight:700}
+.result-row .val.green{color:#00d4aa}
+.result-row .val.red{color:#ef4444}
+.result-row .val.yellow{color:#f59e0b}
+.result-total{margin-top:12px;padding:14px;background:#14141e;border-radius:10px;text-align:center}
+.result-total .num{font-size:1.8rem;font-weight:800;color:#00d4aa}
+.result-total .lbl{font-size:.7rem;color:#6b6b80}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:10px;text-align:center;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;font-size:.8rem;color:#6b6b80;cursor:pointer}
+.tab.active{background:rgba(0,212,170,.1);border-color:#00d4aa;color:#00d4aa}
+.section{display:none}
+.section.active{display:block}
+.note{font-size:.7rem;color:#6b6b80;margin-top:12px;padding:10px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header">
+<h1>Nigerian Tax Calculator</h1>
+<p>VAT | WHT | PAYE | Company Tax | Personal Income Tax</p>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('vat')">VAT</div>
+<div class="tab" onclick="switchTab('wht')">WHT</div>
+<div class="tab" onclick="switchTab('paye')">PAYE</div>
+<div class="tab" onclick="switchTab('cit')">Company Tax</div>
+</div>
+
+<div id="vat" class="section active">
+<div class="card">
+<h2>Value Added Tax (VAT)</h2>
+<div class="input-group">
+<label>Amount (₦)</label>
+<input type="number" id="vatAmount" placeholder="e.g. 100000" value="100000">
+</div>
+<button class="btn" onclick="calcVAT()">Calculate VAT</button>
+<div id="vatResult" class="result">
+<div class="result-row"><span>Subtotal</span><span class="val" id="vatSub">₦0</span></div>
+<div class="result-row"><span>VAT (7.5%)</span><span class="val green" id="vatVat">₦0</span></div>
+<div class="result-row"><span>Total (incl. VAT)</span><span class="val" id="vatTotal">₦0</span></div>
+</div>
+</div>
+</div>
+
+<div id="wht" class="section">
+<div class="card">
+<h2>Withholding Tax (WHT)</h2>
+<div class="input-group">
+<label>Payment Amount (₦)</label>
+<input type="number" id="whtAmount" placeholder="e.g. 500000" value="500000">
+</div>
+<div class="input-group">
+<label>Payment Type</label>
+<select id="whtType">
+<option value="5">Contract — 5%</option>
+<option value="10">Rent — 10%</option>
+<option value="10">Consultancy — 10%</option>
+<option value="5">Dividend — 5%</option>
+<option value="10">Interest — 10%</option>
+<option value="5">Royalty — 5%</option>
+</select>
+</div>
+<button class="btn" onclick="calcWHT()">Calculate WHT</button>
+<div id="whtResult" class="result">
+<div class="result-row"><span>Gross Payment</span><span class="val" id="whtGross">₦0</span></div>
+<div class="result-row"><span>WHT Deducted</span><span class="val red" id="whtDeduct">₦0</span></div>
+<div class="result-row"><span>Net Payment</span><span class="val green" id="whtNet">₦0</span></div>
+</div>
+</div>
+</div>
+
+<div id="paye" class="section">
+<div class="card">
+<h2>PAYE — Personal Income Tax</h2>
+<div class="input-group">
+<label>Monthly Salary (₦)</label>
+<input type="number" id="payeSalary" placeholder="e.g. 200000" value="200000">
+</div>
+<button class="btn" onclick="calcPAYE()">Calculate PAYE</button>
+<div id="payeResult" class="result">
+<div class="result-row"><span>Gross Monthly</span><span class="val" id="payeGross">₦0</span></div>
+<div class="result-row"><span>Pension (7.5%)</span><span class="val red" id="payePension">₦0</span></div>
+<div class="result-row"><span>Taxable Income</span><span class="val" id="payeTaxable">₦0</span></div>
+<div class="result-row"><span>Monthly PAYE</span><span class="val red" id="payeTax">₦0</span></div>
+<div class="result-row"><span>Net Monthly</span><span class="val green" id="payeNet">₦0</span></div>
+<div class="result-row"><span>Annual Tax</span><span class="val" id="payeAnnual">₦0</span></div>
+<div class="result-row"><span>Annual Net</span><span class="val green" id="payeAnnualNet">₦0</span></div>
+</div>
+</div>
+</div>
+
+<div id="cit" class="section">
+<div class="card">
+<h2>Company Income Tax (CIT)</h2>
+<div class="input-group">
+<label>Annual Revenue (₦)</label>
+<input type="number" id="citRevenue" placeholder="e.g. 5000000" value="5000000">
+</div>
+<div class="input-group">
+<label>Deductible Expenses (₦)</label>
+<input type="number" id="citExpenses" placeholder="e.g. 3000000" value="3000000">
+</div>
+<button class="btn" onclick="calcCIT()">Calculate Company Tax</button>
+<div id="citResult" class="result">
+<div class="result-row"><span>Revenue</span><span class="val green" id="citRev">₦0</span></div>
+<div class="result-row"><span>Expenses</span><span class="val red" id="citExp">₦0</span></div>
+<div class="result-row"><span>Taxable Profit</span><span class="val" id="citProfit">₦0</span></div>
+<div class="result-row"><span>CIT (30%)</span><span class="val red" id="citTax">₦0</span></div>
+<div class="result-row"><span>After-Tax Profit</span><span class="val green" id="citAfter">₦0</span></div>
+</div>
+</div>
+</div>
+
+<div class="note">
+Rates based on FIRS Nigeria 2026 guidelines. For small businesses with turnover under ₦25M, CIT rate may be 0%. Consult a tax professional for official filings.
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | TIN 24550860
+</div>
+
+<script>
+function fmt(n){return '₦'+Math.round(n).toLocaleString('en-NG')}
+function switchTab(t){document.querySelectorAll('.tab').forEach((e,i)=>{if(['vat','wht','paye','cit'][i]===t){e.classList.add('active')}else{e.classList.remove('active')}});document.querySelectorAll('.section').forEach(e=>{e.classList.remove('active')});document.getElementById(t).classList.add('active')}
+function calcVAT(){const a=parseFloat(document.getElementById('vatAmount').value)||0;const vat=a*0.075;document.getElementById('vatResult').classList.add('show');document.getElementById('vatSub').textContent=fmt(a);document.getElementById('vatVat').textContent=fmt(vat);document.getElementById('vatTotal').textContent=fmt(a+vat)}
+function calcWHT(){const a=parseFloat(document.getElementById('whtAmount').value)||0;const r=parseFloat(document.getElementById('whtType').value);const w=a*r/100;document.getElementById('whtResult').classList.add('show');document.getElementById('whtGross').textContent=fmt(a);document.getElementById('whtDeduct').textContent=fmt(w);document.getElementById('whtNet').textContent=fmt(a-w)}
+function calcPAYE(){const m=parseFloat(document.getElementById('payeSalary').value)||0;const pension=m*0.075;const taxable=m-pension;let tax=0;const bands=[[30000,0.07],[30000,0.11],[50000,0.15],[50000,0.19],[160000,0.21],[99999999,0.24]];let remaining=taxable;for(const [rate,bracket] of [[0.01,0],[30000,0.07]]){}let t=taxable;let due=0;if(t<=30000){due=0.01*t}else{due=30000*0.01;t-=30000;if(t<=30000){due+=t*0.07}else{due+=30000*0.07;t-=30000;if(t<=50000){due+=t*0.11}else{due+=50000*0.11;t-=50000;if(t<=50000){due+=t*0.15}else{due+=50000*0.15;t-=50000;if(t<=160000){due+=t*0.19}else{due+=160000*0.19;t-=160000;due+=t*0.21}}}}document.getElementById('payeResult').classList.add('show');document.getElementById('payeGross').textContent=fmt(m);document.getElementById('payePension').textContent=fmt(pension);document.getElementById('payeTaxable').textContent=fmt(taxable);document.getElementById('payeTax').textContent=fmt(due);document.getElementById('payeNet').textContent=fmt(m-pension-due);document.getElementById('payeAnnual').textContent=fmt(due*12);document.getElementById('payeAnnualNet').textContent=fmt((m-pension-due)*12)}
+function calcCIT(){const r=parseFloat(document.getElementById('citRevenue').value)||0;const e=parseFloat(document.getElementById('citExpenses').value)||0;const p=r-e;const tax=p*0.30;document.getElementById('citResult').classList.add('show');document.getElementById('citRev').textContent=fmt(r);document.getElementById('citExp').textContent=fmt(e);document.getElementById('citProfit').textContent=fmt(p);document.getElementById('citTax').textContent=fmt(tax);document.getElementById('citAfter').textContent=fmt(p-tax)}
+</script>
+</body>
+</html>

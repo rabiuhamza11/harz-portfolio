@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Platform Health Monitor — Harz Ecosystem</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1000px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:var(--accent)}
+.header p{font-size:.8rem;color:var(--muted);margin-top:4px}
+.nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.nav a{padding:6px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.75rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.nav a.active{background:rgba(0,212,170,.1);border-color:var(--accent);color:var(--accent)}
+.controls{display:flex;gap:8px;margin-bottom:16px}
+.btn{padding:10px 16px;border-radius:8px;border:1px solid var(--accent);background:rgba(0,212,170,.1);color:var(--accent);font-size:.85rem;cursor:pointer}
+.btn.scan{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;border:none}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.sum-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.sum-card .num{font-size:1.4rem;font-weight:800}
+.sum-card .lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.sum-card.online .num{color:var(--accent)}
+.sum-card.slow .num{color:var(--yellow)}
+.sum-card.offline .num{color:var(--red)}
+.sum-card.total .num{color:var(--purple)}
+.platform-list{display:grid;grid-template-columns:1fr;gap:8px}
+.platform-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;transition:all .2s}
+.platform-row:hover{border-color:var(--accent)}
+.platform-row .status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.platform-row .status-dot.online{background:var(--accent);box-shadow:0 0 8px rgba(0,212,170,.5)}
+.platform-row .status-dot.slow{background:var(--yellow);box-shadow:0 0 8px rgba(245,158,11,.5)}
+.platform-row .status-dot.offline{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,.5)}
+.platform-row .status-dot.checking{background:var(--muted);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.platform-row .info{flex:1}
+.platform-row .info .name{font-size:.85rem;font-weight:600}
+.platform-row .info .url{font-size:.7rem;color:var(--muted)}
+.platform-row .latency{font-size:.8rem;font-weight:600;min-width:80px;text-align:right}
+.platform-row .latency.online{color:var(--accent)}
+.platform-row .latency.slow{color:var(--yellow)}
+.platform-row .latency.offline{color:var(--red)}
+.platform-row .latency.checking{color:var(--muted)}
+@media(max-width:768px){.summary{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Live Platform Health Monitor</h1>
+<p>Real-time status of all 24 Harz Ecosystem platforms</p>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander</a>
+<a href="omega-deploy.html">Deploy Engine</a>
+<a href="tools.html">Tools Hub</a>
+</div>
+
+<div class="controls">
+<button class="btn scan" onclick="scanAll()">Scan All Platforms</button>
+<button class="btn" onclick="exportResults()">Export Results</button>
+</div>
+
+<div class="summary">
+<div class="sum-card total"><div class="num" id="totalAll">24</div><div class="lbl">Total Platforms</div></div>
+<div class="sum-card online"><div class="num" id="totalOnline">—</div><div class="lbl">Online</div></div>
+<div class="sum-card slow"><div class="num" id="totalSlow">—</div><div class="lbl">Slow</div></div>
+<div class="sum-card offline"><div class="num" id="totalOffline">—</div><div class="lbl">Offline</div></div>
+</div>
+
+<div class="platform-list" id="platformList"></div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.7rem">
+Note: Browser CORS may prevent direct health checks. Results show reachable status where possible.<br>
+Harz Digital Services — RC 321424
+</div>
+
+<script>
+var platforms=[
+{name:"HarzDM Marketplace",url:"https://harzdm-marketplace.vercel.app"},
+{name:"HarzDM Checkout",url:"https://harzdm-checkout.vercel.app"},
+{name:"Harz Shop",url:"https://harz-shop.vercel.app"},
+{name:"ContentPilot Checkout",url:"https://cp-checkout-harz.vercel.app"},
+{name:"Unified Dashboard",url:"https://harz-ecosystem-dashboard.vercel.app"},
+{name:"Apex Bank",url:"https://apex-bank.vercel.app"},
+{name:"HarzAjo",url:"https://harzajo.vercel.app"},
+{name:"HarzPay",url:"https://harzpay.vercel.app"},
+{name:"HarzFX",url:"https://harzfx.vercel.app"},
+{name:"HarzLend",url:"https://harzlend.vercel.app"},
+{name:"OMEGA Health AI",url:"https://omega-health-ai.vercel.app"},
+{name:"MindCare AI",url:"https://mindcare-ai.vercel.app"},
+{name:"CYBER SHIELD X",url:"https://cyber-shield-x.vercel.app"},
+{name:"EduWealth AI",url:"https://eduwealth-ai.vercel.app"},
+{name:"OMEGA INFINITY 1000",url:"https://omega-infinity-dashboard.vercel.app"},
+{name:"TradeOS",url:"https://tradeos.vercel.app"},
+{name:"OMEGA Content AI",url:"https://omega-content-ai.vercel.app"},
+{name:"Abuja Estate City AI",url:"https://abuja-estate-city-ai.vercel.app"},
+{name:"Maganu Agent",url:"https://maganu-agent.onrender.com"},
+{name:"Harz Portfolio",url:"https://rabiuhamza11.github.io/harz-portfolio/"},
+{name:"OMEGA Commander",url:"https://rabiuhamza11.github.io/harz-portfolio/omega-commander.html"},
+{name:"Tools Hub",url:"https://rabiuhamza11.github.io/harz-portfolio/tools.html"},
+{name:"Invoice Generator",url:"https://rabiuhamza11.github.io/harz-portfolio/invoice-generator.html"},
+{name:"Construction Quote",url:"https://rabiuhamza11.github.io/harz-portfolio/construction-quote.html"}
+];
+
+var results={online:0,slow:0,offline:0};
+
+// Render initial state
+function renderInitial(){
+document.getElementById('platformList').innerHTML=platforms.map(function(p){
+return '<div class="platform-row" id="row-'+p.url.replace(/[^a-z0-9]/gi,'')+'">'+
+'<div class="status-dot checking"></div>'+
+'<div class="info"><div class="name">'+p.name+'</div><div class="url">'+p.url+'</div></div>'+
+'<div class="latency checking">checking...</div>'+
+'</div>';
+}).join('');
+}
+
+async function checkPlatform(p){
+var id=p.url.replace(/[^a-z0-9]/gi,'');
+var row=document.getElementById('row-'+id);
+var dot=row.querySelector('.status-dot');
+var lat=row.querySelector('.latency');
+var start=Date.now();
+
+try{
+// Use image loading trick for CORS bypass
+await new Promise(function(resolve,reject){
+var img=new Image();
+img.onload=function(){resolve()};
+img.onerror=function(){resolve()}; // onerror still means server responded
+img.src=p.url+'/favicon.ico?_='+Date.now();
+setTimeout(reject,8000);
+});
+var elapsed=Date.now()-start;
+if(elapsed<2000){dot.className='status-dot online';lat.className='latency online';lat.textContent=elapsed+'ms';results.online++}
+else if(elapsed<5000){dot.className='status-dot slow';lat.className='latency slow';lat.textContent=elapsed+'ms (slow)';results.slow++}
+else{dot.className='status-dot offline';lat.className='latency offline';lat.textContent='timeout';results.offline++}
+}catch(e){
+// Try fetch as fallback
+try{
+await fetch(p.url,{mode:'no-cors',signal:AbortSignal.timeout(8000)});
+var elapsed2=Date.now()-start;
+dot.className='status-dot online';lat.className='latency online';lat.textContent=elapsed2+'ms';results.online++;
+}catch(e2){
+dot.className='status-dot offline';lat.className='latency offline';lat.textContent='offline';results.offline++;
+}
+}
+updateSummary();
+}
+
+function updateSummary(){
+document.getElementById('totalOnline').textContent=results.online;
+document.getElementById('totalSlow').textContent=results.slow;
+document.getElementById('totalOffline').textContent=results.offline;
+}
+
+async function scanAll(){
+results={online:0,slow:0,offline:0};
+document.getElementById('totalOnline').textContent='—';
+document.getElementById('totalSlow').textContent='—';
+document.getElementById('totalOffline').textContent='—';
+renderInitial();
+// Scan in batches of 4
+for(var i=0;i<platforms.length;i+=4){
+var batch=platforms.slice(i,i+4);
+await Promise.all(batch.map(checkPlatform));
+}
+}
+
+function exportResults(){
+var txt='Harz Ecosystem Platform Health Report\n';
+txt+='Generated: '+new Date().toLocaleString()+'\n\n';
+platforms.forEach(function(p){
+var id=p.url.replace(/[^a-z0-9]/gi,'');
+var row=document.getElementById('row-'+id);
+var lat=row.querySelector('.latency').textContent;
+txt+=p.name+' — '+lat+' — '+p.url+'\n';
+});
+txt+='\nOnline: '+results.online+' | Slow: '+results.slow+' | Offline: '+results.offline;
+var blob=new Blob([txt],{type:'text/plain'});
+var a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='harz-health-report.txt';
+a.click();
+}
+
+renderInitial();
+</script>
+</body>
+</html>
