@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free memory card game. Test and improve your memory with this fun matching game. Multiple difficulty levels and timer.">
+<meta name="keywords" content="memory game, brain training, card matching game, memory test, puzzle game">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Memory Game — Brain Training | Harz Digital Services">
+<meta property="og:description" content="Free memory card game. Test and improve your memory with this fun matching game. Multiple difficulty levels and timer.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/memory-game.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/memory-game.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Game — Brain Training | Harz Digital Services</title>
+<meta name="description" content="Free memory card game. Test and improve your memory with this fun matching game. Multiple difficulty levels and timer.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:480px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.stats{display:flex;justify-content:space-around;padding:14px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;margin-bottom:12px}
+.stat{text-align:center}
+.stat .num{font-size:1.5rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.stat .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase}
+.diff-tabs{display:flex;gap:6px;margin-bottom:12px}
+.diff-tab{flex:1;padding:8px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#6b6b80;cursor:pointer}
+.diff-tab.active{border-color:#00d4aa;color:#00d4aa}
+.board{display:grid;gap:8px;justify-content:center;margin-bottom:16px}
+.card{width:70px;height:70px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2rem;background:#14141e;border:2px solid #1e1e2e;transition:all .2s}
+.card:hover{border-color:#7c3aed}
+.card.flipped{background:#0e0e16;border-color:#00d4aa}
+.card.matched{background:rgba(0,212,170,.1);border-color:#00d4aa;opacity:.6}
+.card .back{display:none}
+.card.flipped .back,.card.matched .back{display:block}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.win-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,8,.9);display:none;align-items:center;justify-content:center;z-index:100}
+.win-overlay.show{display:flex}
+.win-card{text-align:center;padding:40px;background:#0e0e16;border:1px solid #00d4aa;border-radius:20px;max-width:320px}
+.win-card .icon{font-size:3rem}
+.win-card h2{font-size:1.5rem;color:#00d4aa;margin:10px 0}
+.win-card p{font-size:.8rem;color:#c8c8d0;margin:4px 0}
+.win-card .score{font-size:1.2rem;color:#7c3aed;font-weight:700;margin:12px 0}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🧠 Memory Game</h1></div>
+
+<div class="stats">
+<div class="stat"><div class="num" id="moves">0</div><div class="lbl">Moves</div></div>
+<div class="stat"><div class="num" id="matches">0</div><div class="lbl">Matched</div></div>
+<div class="stat"><div class="num" id="timer">0s</div><div class="lbl">Time</div></div>
+</div>
+
+<div class="diff-tabs">
+<div class="diff-tab active" onclick="setDiff(4,4)">Easy 4x4</div>
+<div class="diff-tab" onclick="setDiff(5,4)">Medium 5x4</div>
+<div class="diff-tab" onclick="setDiff(6,5)">Hard 6x5</div>
+</div>
+
+<div class="board" id="board"></div>
+<button class="btn" onclick="init()">🔄 New Game</button>
+
+<div class="win-overlay" id="winOverlay">
+<div class="win-card">
+<div class="icon">🎉</div>
+<h2>You Won!</h2>
+<p id="winStats"></p>
+<div class="score" id="winScore"></div>
+<button class="btn" onclick="init()" style="margin-top:16px">Play Again</button>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Memory Game
+</div>
+
+<script>
+var emojis=['🚀','🌟','⚡','🔥','💎','🎯','🎪','🎨','🎮','🦄','🐙','🦋','🌺','🍕','🎧','🍉','⭐','🌈','🛸','🦖','🍀','🎪','🎭','🎬','🏰','🎪','🍔','🏆','🎸','🎲'];
+var cols=4,rows=4,pairs=8;
+var cards=[],flipped=[],matched=0,moves=0,startTime=null,tInterval=null;
+
+function setDiff(c,r){
+cols=c;rows=r;pairs=Math.floor(c*r/2);
+document.querySelectorAll('.diff-tab').forEach(function(e,i){
+e.classList.toggle('active',[[4,4],[5,4],[6,5]][i][0]===c);
+});
+init();
+}
+
+function init(){
+document.getElementById('winOverlay').classList.remove('show');
+flipped=[];matched=0;moves=0;
+document.getElementById('moves').textContent='0';
+document.getElementById('matches').textContent='0';
+document.getElementById('timer').textContent='0s';
+clearInterval(tInterval);startTime=null;
+var pool=emojis.slice(0,pairs);
+var all=pool.concat(pool);
+for(var i=all.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=all[i];all[i]=all[j];all[j]=t}
+cards=all;
+render();
+}
+
+function render(){
+document.getElementById('board').style.gridTemplateColumns='repeat('+cols+',1fr)';
+document.getElementById('board').innerHTML=cards.map(function(e,i){
+return '<div class="card" id="card'+i+'" onclick="flip('+i+')"><span class="back" style="display:none">'+e+'</span></div>';
+}).join('');
+}
+
+function flip(i){
+if(flipped.length>=2||flipped.includes(i))return;
+if(!startTime){startTime=Date.now();tInterval=setInterval(function(){
+document.getElementById('timer').textContent=Math.round((Date.now()-startTime)/1000)+'s';
+},1000)}
+var card=document.getElementById('card'+i);
+card.classList.add('flipped');
+card.querySelector('.back').style.display='block';
+flipped.push(i);
+if(flipped.length===2){
+moves++;document.getElementById('moves').textContent=moves;
+var a=flipped[0],b=flipped[1];
+if(cards[a]===cards[b]){
+setTimeout(function(){
+document.getElementById('card'+a).classList.add('matched');
+document.getElementById('card'+b).classList.add('matched');
+matched++;
+document.getElementById('matches').textContent=matched;
+flipped=[];
+if(matched===pairs)win();
+},400);
+}else{
+setTimeout(function(){
+document.getElementById('card'+a).classList.remove('flipped');
+document.getElementById('card'+b).classList.remove('flipped');
+document.getElementById('card'+a).querySelector('.back').style.display='none';
+document.getElementById('card'+b).querySelector('.back').style.display='none';
+flipped=[];
+},800);
+}
+}
+}
+
+function win(){
+clearInterval(tInterval);
+var time=Math.round((Date.now()-startTime)/1000);
+var score=Math.max(0,pairs*1000-moves*50-time*10);
+document.getElementById('winStats').textContent=moves+' moves in '+time+' seconds';
+document.getElementById('winScore').textContent='Score: '+score;
+document.getElementById('winOverlay').classList.add('show');
+}
+
+init();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

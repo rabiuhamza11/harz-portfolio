@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free unit converter. Convert length, weight, temperature, area, volume, speed, and data units. Quick and accurate conversions.">
+<meta name="keywords" content="unit converter, length converter, weight converter, temperature converter, metric converter">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Unit Converter — Length, Weight, Temp | Harz Digital Services">
+<meta property="og:description" content="Free unit converter. Convert length, weight, temperature, area, volume, speed, and data units. Quick and accurate conversions.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/unit-converter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/unit-converter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Converter — Length, Weight, Temp | Harz Digital Services</title>
+<meta name="description" content="Free unit converter. Convert length, weight, temperature, area, volume, speed, and data units. Quick and accurate conversions.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:480px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.category-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.cat-tab{padding:8px 12px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#6b6b80;cursor:pointer}
+.cat-tab.active{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.05)}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.input-row{display:flex;gap:12px;align-items:end}
+.input-group{flex:1}
+.input-group label{display:block;font-size:.7rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.9rem}
+.input-group input{font-size:1.2rem;font-family:monospace;color:#00d4aa}
+.swap-btn{padding:12px 16px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#7c3aed;cursor:pointer;font-size:1.2rem;margin-bottom:0}
+.result-display{padding:20px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:12px;margin-top:16px;text-align:center}
+.result-display .value{font-size:2rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.result-display .unit{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.formula{font-size:.7rem;color:#4a4a5e;text-align:center;margin-top:8px}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:12px}
+.quick-item{padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;text-align:center;font-size:.7rem;color:#c8c8d0;cursor:pointer}
+.quick-item:hover{border-color:#00d4aa}
+.quick-item .qval{font-size:.85rem;color:#00d4aa;font-weight:700}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Unit Converter</h1><p>Convert anything quickly</p></div>
+
+<div class="category-tabs" id="catTabs"></div>
+
+<div class="card">
+<div class="input-row">
+<div class="input-group"><label>From</label><input type="number" id="fromVal" value="1" oninput="convert()"></div>
+<div class="input-group"><label>Unit</label><select id="fromUnit" onchange="convert()"></select></div>
+</div>
+<div style="text-align:center;margin:8px 0"><button class="swap-btn" onclick="swap()">⇅</button></div>
+<div class="input-row">
+<div class="input-group"><label>To</label><input type="number" id="toVal" value="0" readonly></div>
+<div class="input-group"><label>Unit</label><select id="toUnit" onchange="convert()"></select></div>
+</div>
+<div class="result-display">
+<div class="value" id="resultVal">—</div>
+<div class="unit" id="resultUnit"></div>
+</div>
+</div>
+
+<div class="card">
+<h2 style="font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:12px">Quick Conversions</h2>
+<div class="quick-grid" id="quickGrid"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Unit Converter
+</div>
+
+<script>
+var categories={
+length:{name:'📏 Length',units:{m:'Meter',km:'Kilometer',cm:'Centimeter',mm:'Millimeter',mi:'Mile',yd:'Yard',ft:'Foot',inch:'Inch'}},
+weight:{name:'⚖️ Weight',units:{kg:'Kilogram',g:'Gram',mg:'Milligram',lb:'Pound',oz:'Ounce',ton:'Tonne',st:'Stone'}},
+temperature:{name:'🌡️ Temperature',units:{c:'Celsius',f:'Fahrenheit',k:'Kelvin'}},
+area:{name:'📐 Area',units:{sqm:'Sq Meter',sqkm:'Sq Kilometer',sqft:'Sq Foot',acre:'Acre',hectare:'Hectare',sqmi:'Sq Mile'}},
+volume:{name:'🧊 Volume',units:{l:'Liter',ml:'Milliliter',gal:'Gallon',qt:'Quart',pt:'Pint',cup:'Cup',floz:'Fl Oz'}},
+speed:{name:'🚀 Speed',units:{ms:'m/s',kmh:'km/h',mph:'mph',knot:'Knot',fts:'ft/s'}},
+data:{name:'💾 Data',units:{b:'Byte',kb:'KB',mb:'MB',gb:'GB',tb:'TB',pb:'PB',bit:'Bit'}},
+time:{name:'⏰ Time',units:{s:'Second',min:'Minute',hr:'Hour',day:'Day',week:'Week',month:'Month',year:'Year'}}
+};
+
+// Conversion factors (to base unit)
+var factors={
+length:{m:1,km:1000,cm:0.01,mm:0.001,mi:1609.34,yd:0.9144,ft:0.3048,inch:0.0254},
+weight:{kg:1000,g:1,mg:0.001,lb:453.592,oz:28.3495,ton:1000000,st:6350.29318},
+temperature:null, // special handling
+area:{sqm:1,sqkm:1000000,sqft:0.0929,acre:4046.86,hectare:10000,sqmi:2589988.11},
+volume:{l:1000,ml:1,gal:3785.41,qt:946.353,pt:473.176,cup:236.588,floz:29.5735},
+speed:{ms:1,kmh:0.277778,mph:0.44704,knot:0.514444,fts:0.3048},
+data:{b:1,kb:1024,mb:1048576,gb:1073741824,tb:1099511627776,pb:1.125899907e15,bit:0.125},
+time:{s:1,min:60,hr:3600,day:86400,week:604800,month:2629800,year:31557600}
+};
+
+var currentCat='length';
+
+function renderCategories(){
+document.getElementById('catTabs').innerHTML=Object.keys(categories).map(function(k){
+return '<span class="cat-tab '+(k===currentCat?'active':'')+'" onclick="setCategory(\''+k+'\')">'+categories[k].name+'</span>';
+}).join('');
+}
+
+function setCategory(cat){
+currentCat=cat;
+renderCategories();
+var units=categories[cat].units;
+var unitKeys=Object.keys(units);
+var fromSel=document.getElementById('fromUnit');
+var toSel=document.getElementById('toUnit');
+fromSel.innerHTML=unitKeys.map(function(k){return'<option value="'+k+'">'+units[k]+'</option>'}).join('');
+toSel.innerHTML=unitKeys.map(function(k){return'<option value="'+k+'">'+units[k]+'</option>'}).join('');
+fromSel.selectedIndex=0;
+toSel.selectedIndex=Math.min(1,unitKeys.length-1);
+convert();
+}
+
+function convert(){
+var from=document.getElementById('fromUnit').value;
+var to=document.getElementById('toUnit').value;
+var val=parseFloat(document.getElementById('fromVal').value)||0;
+var result;
+
+if(currentCat==='temperature'){
+if(from==='c'){
+result=to==='f'?val*9/5+32:to==='k'?val+273.15:val;
+}else if(from==='f'){
+result=to==='c'?(val-32)*5/9:to==='k'?(val-32)*5/9+273.15:val;
+}else{result=to==='c'?val-273.15:to==='f'?(val-273.15)*9/5+32:val}
+}else{
+var factor=factors[currentCat];
+result=val*factor[from]/factor[to];
+}
+
+document.getElementById('toVal').value=result;
+document.getElementById('resultVal').textContent=result.toLocaleString(undefined,{maximumFractionDigits:6});
+document.getElementById('resultUnit').textContent=val+' '+categories[currentCat].units[from]+' = '+result.toLocaleString(undefined,{maximumFractionDigits:6})+' '+categories[currentCat].units[to];
+
+// Quick conversions
+var unitKeys=Object.keys(categories[currentCat].units);
+document.getElementById('quickGrid').innerHTML=unitKeys.slice(0,6).map(function(k){
+var qv;
+if(currentCat==='temperature'){
+var temp=val;
+if(from==='f')temp=(temp-32)*5/9;
+else if(from==='k')temp=temp-273.15;
+if(k==='c')qv=temp;
+else if(k==='f')qv=temp*9/5+32;
+else qv=temp+273.15;
+}else{
+qv=val*factors[currentCat][from]/factors[currentCat][k];
+}
+return '<div class="quick-item" onclick="setQuick(\''+k+'\')"><div class="qval">'+qv.toLocaleString(undefined,{maximumFractionDigits:4})+'</div>'+categories[currentCat].units[k]+'</div>';
+}).join('');
+}
+
+function setQuick(unit){document.getElementById('toUnit').value=unit;convert()}
+
+function swap(){
+var f=document.getElementById('fromUnit');
+var t=document.getElementById('toUnit');
+var fv=f.value;
+f.value=t.value;t.value=fv;
+convert();
+}
+
+renderCategories();setCategory('length');
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

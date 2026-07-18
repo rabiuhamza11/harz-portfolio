@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free regex tester and pattern matcher. Test regular expressions against text with live highlighting. Supports flags and common patterns.">
+<meta name="keywords" content="regex tester, regular expression, pattern matching, regex validator, developer tool">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Regex Tester — Pattern Matching Tool | Harz Digital Services">
+<meta property="og:description" content="Free regex tester and pattern matcher. Test regular expressions against text with live highlighting. Supports flags and common patterns.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/regex-tester.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/regex-tester.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regex Tester — Pattern Matching Tool | Harz Digital Services</title>
+<meta name="description" content="Free regex tester and pattern matcher. Test regular expressions against text with live highlighting. Supports flags and common patterns.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:550px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.regex-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.regex-row input{flex:1;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#00d4aa;font-size:.9rem;font-family:monospace}
+.flags{display:flex;gap:6px}
+.flag-btn{padding:8px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.75rem;color:#c8c8d0;cursor:pointer;font-family:monospace}
+.flag-btn.active{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.05)}
+textarea{width:100%;min-height:100px;padding:14px;background:#14141e;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.85rem;font-family:monospace;line-height:1.6;resize:vertical}
+.result{background:#14141e;border:1px solid #1e1e2e;border-radius:12px;padding:14px;margin-top:10px;font-size:.85rem;font-family:monospace;line-height:1.6;min-height:80px;word-break:break-all}
+.match{background:rgba(0,212,170,.2);color:#00d4aa;border-radius:3px;padding:1px 2px}
+.no-match{color:#ef4444}
+.match-info{display:flex;justify-content:space-between;padding:8px 0;font-size:.8rem;border-bottom:1px solid rgba(30,30,46,.5)}
+.match-info .l{color:#6b6b80}
+.match-info .v{color:#00d4aa;font-weight:600}
+.patterns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.pattern-chip{padding:6px 10px;background:#14141e;border:1px solid #1e1e2e;border-radius:6px;font-size:.65rem;color:#c8c8d0;cursor:pointer;font-family:monospace}
+.pattern-chip:hover{border-color:#7c3aed;color:#7c3aed}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Regex Tester</h1></div>
+
+<div class="card">
+<h2>Pattern</h2>
+<div class="patterns">
+<span class="pattern-chip" onclick="setPattern('\\b\\w+@\\w+\\.\\w+')">Email</span>
+<span class="pattern-chip" onclick="setPattern('\\b\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}\\b')">Credit Card</span>
+<span class="pattern-chip" onclick="setPattern('\\b(?:https?://|www\\.)\\S+\\b')">URL</span>
+<span class="pattern-chip" onclick="setPattern('\\b\\d{3}-\\d{4}\\b')">Phone</span>
+<span class="pattern-chip" onclick="setPattern('\\b[A-Z]{2,}\\b')">ALL CAPS</span>
+<span class="pattern-chip" onclick="setPattern('\\b(?:080|070|081|090|091)\\d{8}\\b')">NG Phone</span>
+<span class="pattern-chip" onclick="setPattern('#\\w+')">Hashtag</span>
+<span class="pattern-chip" onclick="setPattern('\\b₦[\\d,]+\\b')">Naira Amount</span>
+</div>
+<div class="regex-row">
+<input type="text" id="pattern" value="\\b\\w+@\\w+\\.\\w+" placeholder="Enter regex pattern..." oninput="test()">
+<div class="flags">
+<span class="flag-btn active" onclick="toggleFlag(this,'g')">g</span>
+<span class="flag-btn" onclick="toggleFlag(this,'i')">i</span>
+<span class="flag-btn" onclick="toggleFlag(this,'m')">m</span>
+<span class="flag-btn" onclick="toggleFlag(this,'s')">s</span>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Test Text</h2>
+<textarea id="testText" oninput="test()">Contact us at harzco.business@gmail.com or rabiuhamza11@gmail.com. Visit https://rabiuhamza11.github.io for more. Call 08028687857. Budget: ₦1,580,000. Follow #HarzDigital on social media.</textarea>
+</div>
+
+<div class="card">
+<h2>Results</h2>
+<div class="match-info"><span class="l">Matches found</span><span class="v" id="matchCount">0</span></div>
+<div class="match-info"><span class="l">Match groups</span><span class="v" id="groupCount">0</span></div>
+<div class="result" id="highlightResult"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Regex Tester
+</div>
+
+<script>
+var flags='g';
+function toggleFlag(btn,f){
+if(btn.classList.contains('active')){btn.classList.remove('active');flags=flags.replace(f,'')}
+else{btn.classList.add('active');flags+=f}
+flags=flags.split('').filter(function(c,i,a){return a.indexOf(c)===i}).sort().join('');
+test();
+}
+
+function setPattern(p){document.getElementById('pattern').value=p;test()}
+
+function test(){
+var pattern=document.getElementById('pattern').value;
+var text=document.getElementById('testText').value;
+var resultEl=document.getElementById('highlightResult');
+var countEl=document.getElementById('matchCount');
+var groupEl=document.getElementById('groupCount');
+
+if(!pattern||!text){resultEl.innerHTML='<span class="no-match">Enter a pattern and text</span>';countEl.textContent='0';groupEl.textContent='0';return}
+
+try{
+var re=new RegExp(pattern,flags);
+var matches=[];
+var match;
+if(flags.includes('g')){
+while((match=re.exec(text))!==null){matches.push(match);if(match.index===re.lastIndex)re.lastIndex++}
+}else{match=re.exec(text);if(match)matches.push(match)}
+
+countEl.textContent=matches.length;
+groupEl.textContent=matches.length>0?(matches[0].length-1):0;
+
+if(matches.length===0){resultEl.innerHTML='<span class="no-match">No matches found</span>';return}
+
+// Highlight
+var highlighted='';
+var lastEnd=0;
+matches.forEach(function(m){
+highlighted+=text.slice(lastEnd,m.index).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+highlighted+='<span class="match">'+m[0].replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>';
+lastEnd=m.index+m[0].length;
+});
+highlighted+=text.slice(lastEnd).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+resultEl.innerHTML=highlighted;
+}catch(e){
+resultEl.innerHTML='<span class="no-match">⚠ '+e.message+'</span>';
+countEl.textContent='0';groupEl.textContent='0';
+}
+}
+
+test();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

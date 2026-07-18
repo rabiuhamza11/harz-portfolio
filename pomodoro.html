@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free Pomodoro timer for focused work sessions. 25-minute work, 5-minute breaks. Track sessions and boost productivity.">
+<meta name="keywords" content="pomodoro timer, focus timer, productivity timer, 25 minute timer, work timer">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pomodoro Timer — Focus & Productivity | Harz Digital Services">
+<meta property="og:description" content="Free Pomodoro timer for focused work sessions. 25-minute work, 5-minute breaks. Track sessions and boost productivity.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/pomodoro.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/pomodoro.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pomodoro Timer — Focus & Productivity | Harz Digital Services</title>
+<meta name="description" content="Free Pomodoro timer for focused work sessions. 25-minute work, 5-minute breaks. Track sessions and boost productivity.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:450px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.mode-tabs{display:flex;gap:6px;margin-bottom:16px}
+.mtab{flex:1;padding:10px;text-align:center;background:#0e0e16;border:1px solid #1e1e2e;border-radius:10px;font-size:.75rem;color:#6b6b80;cursor:pointer}
+.mtab.active.work{border-color:#00d4aa;color:#00d4aa}
+.mtab.active.break{border-color:#7c3aed;color:#7c3aed}
+.mtab.active.long{border-color:#f59e0b;color:#f59e0b}
+.timer-circle{text-align:center;padding:20px}
+.circle{width:220px;height:220px;border-radius:50%;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid;position:relative;transition:border-color .3s}
+.circle.work{border-color:#00d4aa;box-shadow:0 0 40px rgba(0,212,170,.15)}
+.circle.break{border-color:#7c3aed;box-shadow:0 0 40px rgba(124,58,237,.15)}
+.circle.long{border-color:#f59e0b;box-shadow:0 0 40px rgba(245,158,11,.15)}
+.time{font-size:3rem;font-weight:800;font-family:monospace;color:#e8e8f0}
+.phase-label{font-size:.8rem;color:#6b6b80;margin-top:4px;text-transform:uppercase;letter-spacing:2px}
+.controls{display:flex;gap:12px;justify-content:center;margin:24px 0}
+.ctrl{width:60px;height:60px;border-radius:50%;border:none;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ctrl:active{transform:scale(.9)}
+.ctrl.start{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.ctrl.stop{background:#ef4444;color:#fff}
+.ctrl.reset{background:#1e1e2e;color:#6b6b80}
+.session-info{text-align:center;padding:14px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px}
+.session-info .count{font-size:1.5rem;font-weight:800;color:#00d4aa}
+.session-info .lbl{font-size:.7rem;color:#6b6b80;text-transform:uppercase}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.dot{width:12px;height:12px;border-radius:50%;background:#1e1e2e}
+.dot.done{background:#00d4aa}
+.settings{background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;padding:16px;margin-top:12px}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:.8rem;color:#c8c8d0}
+.setting-row input{width:60px;padding:6px 10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;text-align:center}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🍅 Pomodoro Timer</h1><p>Focus 25 min, break 5 min</p></div>
+
+<div class="mode-tabs">
+<div class="mtab active work" onclick="switchMode('work')">💼 Work 25:00</div>
+<div class="mtab break" onclick="switchMode('break')">☕ Break 5:00</div>
+<div class="mtab long" onclick="switchMode('long')">🌴 Long 15:00</div>
+</div>
+
+<div class="timer-circle">
+<div class="circle work" id="circle">
+<div class="time" id="display">25:00</div>
+<div class="phase-label" id="phaseLabel">Work Session</div>
+</div>
+</div>
+
+<div class="controls">
+<button class="ctrl start" id="startBtn" onclick="toggle()">▶</button>
+<button class="ctrl reset" onclick="reset()">↻</button>
+<button class="ctrl" style="background:#14141e;border:1px solid #1e1e2e;color:#7c3aed" onclick="skip()">⏭</button>
+</div>
+
+<div class="session-info">
+<div class="count" id="sessionCount">0</div>
+<div class="lbl">Pomodoros completed today</div>
+<div class="dots" id="dots"></div>
+</div>
+
+<div class="settings">
+<div class="setting-row"><label>Work duration (min)</label><input type="number" id="workMin" value="25" min="1" max="60" onchange="updateDurations()"></div>
+<div class="setting-row"><label>Short break (min)</label><input type="number" id="breakMin" value="5" min="1" max="30" onchange="updateDurations()"></div>
+<div class="setting-row"><label>Long break (min)</label><input type="number" id="longMin" value="15" min="1" max="60" onchange="updateDurations()"></div>
+<div class="setting-row"><label>Long break after</label><input type="number" id="longAfter" value="4" min="2" max="10" onchange="updateDurations()"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Pomodoro Timer
+</div>
+
+<script>
+var mode='work';
+var durations={work:25,break:5,long:15};
+var longAfter=4;
+var remaining=25*60;
+var running=false;
+var interval=null;
+var sessions=0;
+var phase='work';
+
+function updateDurations(){
+durations.work=parseInt(document.getElementById('workMin').value)||25;
+durations.break=parseInt(document.getElementById('breakMin').value)||5;
+durations.long=parseInt(document.getElementById('longMin').value)||15;
+longAfter=parseInt(document.getElementById('longAfter')?)||4;
+if(!running)switchMode(phase);
+}
+
+function switchMode(m){
+mode=m;
+remaining=durations[m]*60;
+running=false;clearInterval(interval);
+document.getElementById('startBtn').textContent='▶';document.getElementById('startBtn').className='ctrl start';
+var circle=document.getElementById('circle');
+circle.className='circle '+m;
+document.querySelectorAll('.mtab').forEach(function(e,i){e.classList.remove('active');if(['work','break','long'][i]===m)e.classList.add('active')});
+document.getElementById('phaseLabel').textContent={work:'Work Session',break:'Short Break',long:'Long Break'}[m];
+updateDisplay();
+}
+
+function updateDisplay(){
+var m=Math.floor(remaining/60);
+var s=remaining%60;
+document.getElementById('display').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+function toggle(){
+if(running){running=false;clearInterval(interval);document.getElementById('startBtn').textContent='▶';document.getElementById('startBtn').className='ctrl start'}
+else{running=true;document.getElementById('startBtn').textContent='⏸';document.getElementById('startBtn').className='ctrl stop';interval=setInterval(tick,1000)}
+}
+
+function tick(){
+remaining--;
+updateDisplay();
+if(remaining<=0){
+clearInterval(interval);running=false;
+document.getElementById('startBtn').textContent='▶';document.getElementById('startBtn').className='ctrl start';
+if(mode==='work'){
+sessions++;
+document.getElementById('sessionCount').textContent=sessions;
+updateDots();
+if(navigator.vibrate)navigator.vibrate([200,100,200]);
+if(sessions%longAfter===0)switchMode('long');else switchMode('break');
+}else{switchMode('work')}
+toggle();
+}
+}
+
+function skip(){
+running=false;clearInterval(interval);document.getElementById('startBtn').textContent='▶';document.getElementById('startBtn').className='ctrl start';
+if(mode==='work'){sessions++;document.getElementById('sessionCount').textContent=sessions;updateDots();if(sessions%longAfter===0)switchMode('long');else switchMode('break')}
+else{switchMode('work')}
+}
+
+function reset(){running=false;clearInterval(interval);document.getElementById('startBtn').textContent='▶';document.getElementById('startBtn').className='ctrl start';switchMode('work')}
+
+function updateDots(){
+var html='';
+for(var i=0;i<longAfter;i++){
+html+='<div class="dot'+(i<sessions%longAfter||(sessions>0&&sessions%longAfter===0)?' done':'')+'"></div>';
+}
+document.getElementById('dots').innerHTML=html;
+}
+
+updateDots();updateDisplay();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
