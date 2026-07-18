@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free tip calculator for restaurants and services. Calculate tips, split bills, and track total cost including tax.">
+<meta name="keywords" content="tip calculator, restaurant tip, bill splitter, gratuity calculator">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tip Calculator — Restaurant & Service Tips | Harz Digital Services">
+<meta property="og:description" content="Free tip calculator for restaurants and services. Calculate tips, split bills, and track total cost including tax.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/tip-calculator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/tip-calculator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tip Calculator — Restaurant & Service Tips | Harz Digital Services</title>
+<meta name="description" content="Free tip calculator for restaurants and services. Calculate tips, split bills, and track total cost including tax.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:450px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:1rem}
+.tip-buttons{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px}
+.tip-btn{padding:12px 4px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#c8c8d0;font-size:.85rem;font-weight:600;cursor:pointer;text-align:center}
+.tip-btn.active{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.05)}
+.result{text-align:center;padding:24px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:16px}
+.result .total{font-size:2.5rem;font-weight:800;color:#00d4aa}
+.result .label{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.breakdown{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+.bd{text-align:center;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px}
+.bd .num{font-size:1.1rem;font-weight:700;color:#7c3aed}
+.bd .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase;margin-top:2px}
+.split-row{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;margin-top:12px}
+.split-row label{font-size:.8rem;color:#c8c8d0}
+.split-row input{width:60px;padding:6px 10px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;text-align:center}
+.per-person{text-align:center;padding:14px;background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:12px;margin-top:8px}
+.per-person .amt{font-size:1.8rem;font-weight:800;color:#7c3aed}
+.per-person .lbl{font-size:.7rem;color:#6b6b80}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Tip Calculator</h1><p>Calculate tips and split bills</p></div>
+
+<div class="card">
+<h2>Bill Details</h2>
+<div class="input-group"><label>Bill Amount (₦)</label><input type="number" id="bill" value="5000" min="0" oninput="calc()"></div>
+<div class="input-group"><label>Tip Percentage</label>
+<div class="tip-buttons">
+<div class="tip-btn" onclick="setTip(5)">5%</div>
+<div class="tip-btn active" onclick="setTip(10)">10%</div>
+<div class="tip-btn" onclick="setTip(15)">15%</div>
+<div class="tip-btn" onclick="setTip(20)">20%</div>
+<div class="tip-btn" onclick="setTip(0)">Custom</div>
+</div>
+<input type="number" id="tipInput" value="10" min="0" max="100" oninput="calc()" style="display:none">
+</div>
+<div class="input-group"><label>Tax / VAT (%)</label><input type="number" id="tax" value="7.5" min="0" step="0.5" oninput="calc()"></div>
+<div class="split-row"><label>Split between people</label><input type="number" id="split" value="1" min="1" max="50" oninput="calc()"></div>
+</div>
+
+<div class="result">
+<div class="total" id="total">₦0</div>
+<div class="label">Total bill (incl. tax + tip)</div>
+<div class="breakdown">
+<div class="bd"><div class="num" id="bdTip">₦0</div><div class="lbl">Tip</div></div>
+<div class="bd"><div class="num" id="bdTax">₦0</div><div class="lbl">Tax</div></div>
+<div class="bd"><div class="num" id="bdBill">₦0</div><div class="lbl">Subtotal</div></div>
+</div>
+<div class="per-person">
+<div class="amt" id="perPerson">₦0</div>
+<div class="lbl">Per person</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Tip Calculator
+</div>
+
+<script>
+var tipPercent=10;
+function setTip(p){
+tipPercent=p;
+document.querySelectorAll('.tip-btn').forEach(function(b){b.classList.remove('active')});
+event.target.classList.add('active');
+if(p===0){document.getElementById('tipInput').style.display='block';document.getElementById('tipInput').value=''}
+else{document.getElementById('tipInput').style.display='none'}
+calc();
+}
+
+function calc(){
+var bill=parseFloat(document.getElementById('bill').value)||0;
+var tip=tipPercent||parseFloat(document.getElementById('tipInput').value)||0;
+var tax=parseFloat(document.getElementById('tax').value)||0;
+var split=parseInt(document.getElementById('split').value)||1;
+var tipAmt=bill*tip/100;
+var taxAmt=bill*tax/100;
+var total=bill+tipAmt+taxAmt;
+document.getElementById('total').textContent='₦'+Math.round(total).toLocaleString();
+document.getElementById('bdTip').textContent='₦'+Math.round(tipAmt).toLocaleString();
+document.getElementById('bdTax').textContent='₦'+Math.round(taxAmt).toLocaleString();
+document.getElementById('bdBill').textContent='₦'+Math.round(bill).toLocaleString();
+document.getElementById('perPerson').textContent='₦'+Math.round(total/split).toLocaleString();
+}
+calc();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

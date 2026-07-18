@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free typing speed test. Measure your words per minute (WPM) and accuracy. Practice and improve your typing speed.">
+<meta name="keywords" content="typing test, wpm test, typing speed, words per minute, typing practice">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Typing Speed Test — WPM | Harz Digital Services">
+<meta property="og:description" content="Free typing speed test. Measure your words per minute (WPM) and accuracy. Practice and improve your typing speed.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/typing-test.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/typing-test.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typing Speed Test — WPM | Harz Digital Services</title>
+<meta name="description" content="Free typing speed test. Measure your words per minute (WPM) and accuracy. Practice and improve your typing speed.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:600px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.stats{display:flex;justify-content:space-around;padding:20px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;margin-bottom:16px}
+.stat{text-align:center}
+.stat .num{font-size:2rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.stat .lbl{font-size:.65rem;color:#6b6b80;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.text-display{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:24px;margin-bottom:16px;font-size:1.1rem;line-height:1.8;min-height:150px}
+.text-display .char{color:#6b6b80;transition:color .1s}
+.text-display .char.correct{color:#00d4aa}
+.text-display .char.incorrect{color:#ef4444;background:rgba(239,68,68,.1);border-radius:2px}
+.text-display .char.current{background:rgba(0,212,170,.15);border-bottom:2px solid #00d4aa;color:#e8e8f0}
+.input-box{width:100%;padding:14px;background:#14141e;border:2px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:1rem;outline:none;transition:border-color .2s}
+.input-box:focus{border-color:#00d4aa}
+.input-box:disabled{opacity:.5}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.progress{height:4px;background:#14141e;border-radius:2px;margin-top:8px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,#00d4aa,#7c3aed);transition:width .3s;width:0%}
+.result-card{display:none;text-align:center;padding:30px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:16px;margin-bottom:16px}
+.result-card.show{display:block}
+.result-card .grade{font-size:3rem;font-weight:800}
+.result-card .grade.s{color:#00d4aa}
+.result-card .grade.a{color:#22c55e}
+.result-card .grade.b{color:#f59e0b}
+.result-card .grade.c{color:#ef4444}
+.result-card .msg{font-size:.9rem;color:#c8c8d0;margin-top:8px}
+.result-card .details{font-size:.8rem;color:#6b6b80;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Typing Speed Test</h1><p>Measure your WPM and accuracy</p></div>
+
+<div class="stats">
+<div class="stat"><div class="num" id="wpm">0</div><div class="lbl">WPM</div></div>
+<div class="stat"><div class="num" id="accuracy">100%</div><div class="lbl">Accuracy</div></div>
+<div class="stat"><div class="num" id="timer">60</div><div class="lbl">Seconds</div></div>
+</div>
+
+<div class="text-display" id="textDisplay"></div>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+<input type="text" class="input-box" id="inputBox" placeholder="Start typing to begin..." oninput="handleInput()" autofocus>
+
+<button class="btn" style="margin-top:12px" onclick="reset()">🔄 New Test</button>
+
+<div class="result-card" id="resultCard">
+<div class="grade" id="grade">—</div>
+<div class="msg" id="gradeMsg"></div>
+<div class="details" id="gradeDetails"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Typing Speed Test
+</div>
+
+<script>
+var texts=[
+"Harz Digital Services is a Nigerian technology company building AI-powered platforms for businesses across Africa. With twenty-four platforms and over eighty AI agents, we are creating the largest digital ecosystem in West Africa.",
+"The Complete Genius 365 is a daily book designed to unlock your full potential. Each chapter reveals a new insight about creativity, productivity, and personal growth. Read one chapter per day for a full year of transformation.",
+"Artificial intelligence is transforming how we work, create, and connect. From automated customer service to content generation, AI tools are becoming essential for modern businesses. The future belongs to those who embrace change.",
+"Building a business requires patience, strategy, and execution. Start with a clear vision, understand your market, deliver value consistently, and never stop learning. Success is the sum of small efforts repeated daily.",
+"Nigeria has the largest economy in Africa and a rapidly growing tech sector. With over two hundred million people and increasing internet penetration, the opportunities for digital innovation are limitless. The time to build is now."
+];
+
+var text='',chars=[],startTime=null,timer=60,interval=null,typed=0,errors=0,started=false;
+
+function reset(){
+text=texts[Math.floor(Math.random()*texts.length)];
+chars=text.split('');
+startTime=null;timer=60;typed=0;errors=0;started=false;
+clearInterval(interval);
+document.getElementById('timer').textContent='60';
+document.getElementById('wpm').textContent='0';
+document.getElementById('accuracy').textContent='100%';
+document.getElementById('progressBar').style.width='0%';
+document.getElementById('inputBox').value='';
+document.getElementById('inputBox').disabled=false;
+document.getElementById('inputBox').placeholder='Start typing to begin...';
+document.getElementById('inputBox').focus();
+document.getElementById('resultCard').classList.remove('show');
+renderText();
+}
+
+function renderText(){
+document.getElementById('textDisplay').innerHTML=chars.map(function(c,i){
+var cls='';
+if(c===' ')c='&nbsp;';
+return '<span class="char'+cls+'" id="ch'+i+'">'+c+'</span>';
+}).join('');
+document.getElementById('ch0').classList.add('current');
+}
+
+function handleInput(){
+if(!started){started=true;startTime=Date.now();interval=setInterval(tick,1000)}
+var input=document.getElementById('inputBox').value;
+typed=input.length;
+for(var i=0;i<chars.length;i++){
+var el=document.getElementById('ch'+i);
+el.classList.remove('correct','incorrect','current');
+if(i<typed){
+if(input[i]===chars[i])el.classList.add('correct');
+else{el.classList.add('incorrect');errors++}
+}
+if(i===typed)el.classList.add('current');
+}
+if(typed>=chars.length||input[input.length-1]!==chars[typed-1]){} // nothing
+// Update stats
+var elapsed=(Date.now()-startTime)/1000;
+if(elapsed>0){
+var wpm=Math.round((typed/5)/(elapsed/60));
+document.getElementById('wpm').textContent=Math.max(0,wpm);
+var acc=typed>0?Math.max(0,Math.round((typed-errors)/typed*100)):100;
+document.getElementById('accuracy').textContent=acc+'%';
+}
+document.getElementById('progressBar').style.width=(typed/chars.length*100)+'%';
+if(typed>=chars.length)finishTest();
+}
+
+function tick(){
+timer--;
+document.getElementById('timer').textContent=timer;
+var elapsed=60-timer;
+if(elapsed>0){
+var wpm=Math.round((typed/5)/(elapsed/60));
+document.getElementById('wpm').textContent=Math.max(0,wpm);
+}
+if(timer<=0)finishTest();
+}
+
+function finishTest(){
+clearInterval(interval);
+document.getElementById('inputBox').disabled=true;
+var elapsed=(Date.now()-startTime)/1000;
+var wpm=Math.round((typed/5)/(elapsed/60));
+var acc=typed>0?Math.round((typed-errors)/typed*100):100;
+var grade,gradeClass,msg;
+if(wpm>=70){grade='S';gradeClass='s';msg='🏆 Exceptional! You are a typing wizard!'}
+else if(wpm>=50){grade='A';gradeClass='a';msg='Excellent! You type like a pro!'}
+else if(wpm>=30){grade='B';gradeClass='b';msg='Good job! Keep practicing to improve.'}
+else{grade='C';gradeClass='c';msg='Keep practicing! Speed comes with time.'}
+var card=document.getElementById('resultCard');
+card.classList.add('show');
+document.getElementById('grade').className='grade '+gradeClass;
+document.getElementById('grade').textContent=grade;
+document.getElementById('gradeMsg').textContent=msg;
+document.getElementById('gradeDetails').textContent=wpm+' WPM | '+acc+'% accuracy | '+Math.round(elapsed)+' seconds | '+typed+' characters | '+errors+' errors';
+}
+
+reset();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

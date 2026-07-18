@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Convert numbers to words in English. Perfect for writing cheques, invoices, and legal documents in Nigerian Naira.">
+<meta name="keywords" content="number to words, naira to words, cheque writer, invoice words, number converter">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Number to Words — Nigerian Naira | Harz Digital Services">
+<meta property="og:description" content="Convert numbers to words in English. Perfect for writing cheques, invoices, and legal documents in Nigerian Naira.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/number-to-words.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/number-to-words.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number to Words — Nigerian Naira | Harz Digital Services</title>
+<meta name="description" content="Convert numbers to words in English. Perfect for writing cheques, invoices, and legal documents in Nigerian Naira.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:1.2rem}
+.currency-tabs{display:flex;gap:6px;margin-bottom:12px}
+.ctab{flex:1;padding:8px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.75rem;color:#c8c8d0;cursor:pointer}
+.ctab.active{border-color:#00d4aa;color:#00d4aa}
+.result{padding:20px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:16px;margin-top:12px}
+.result .words{font-size:1.1rem;font-weight:600;color:#00d4aa;line-height:1.5;text-align:center}
+.result .formatted{font-size:.8rem;color:#6b6b80;margin-top:8px;text-align:center}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.copy-btn{padding:8px 16px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:8px;color:#00d4aa;font-size:.8rem;cursor:pointer;width:100%;margin-top:10px}
+.sample-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sample{padding:6px 10px;background:#14141e;border:1px solid #1e1e2e;border-radius:6px;font-size:.7rem;color:#c8c8d0;cursor:pointer}
+.sample:hover{border-color:#00d4aa;color:#00d4aa}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Number to Words</h1><p>Convert numbers to words for cheques & invoices</p></div>
+
+<div class="card">
+<h2>Enter Number</h2>
+<div class="currency-tabs">
+<div class="ctab active" onclick="setCur('NGN')">₦ Naira</div>
+<div class="ctab" onclick="setCur('USD')">$ Dollar</div>
+<div class="ctab" onclick="setCur('EUR')">€ Euro</div>
+<div class="ctab" onclick="setCur('GBP')">£ Pound</div>
+</div>
+<div class="sample-row">
+<span class="sample" onclick="setNum(1580000)">₦1,580,000</span>
+<span class="sample" onclick="setNum(264000)">₦264,000</span>
+<span class="sample" onclick="setNum(25)">25</span>
+<span class="sample" onclick="setNum(1500)">1,500</span>
+<span class="sample" onclick="setNum(50000)">50,000</span>
+</div>
+<div class="input-group"><label>Amount</label><input type="number" id="num" value="1580000" oninput="convert()"></div>
+<div class="result">
+<div class="words" id="words">—</div>
+<div class="formatted" id="formatted">—</div>
+</div>
+<button class="copy-btn" onclick="copy()">📋 Copy Words</button>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Number to Words Converter
+</div>
+
+<script>
+var currency='NGN';
+var curSymbol={NGN:'₦',USD:'$',EUR:'€',GBP:'£'};
+var curName={NGN:'Naira',USD:'Dollars',EUR:'Euros',GBP:'Pounds'};
+var curSingle={NGN:'Naira',USD:'Dollar',EUR:'Euro',GBP:'Pound'};
+var curKobo={NGN:'Kobo',USD:'Cent',EUR:'Cent',GBP:'Pence'};
+
+function setCur(c){currency=c;document.querySelectorAll('.ctab').forEach(function(e,i){e.classList.toggle('active',['NGN','USD','EUR','GBP'][i]===c)});convert()}
+function setNum(n){document.getElementById('num').value=n;convert()}
+
+function numToWords(num){
+if(num===0)return'Zero';
+var ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+var tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+var scales=['','Thousand','Million','Billion','Trillion'];
+
+function threeDigits(n){
+var w='';
+if(n>=100){w+=ones[Math.floor(n/100)]+' Hundred';n%=100;if(n>0)w+=' and '}
+if(n>=20){w+=tens[Math.floor(n/10)];if(n%10>0)w+='-'+ones[n%10]}
+else if(n>0){w+=ones[n]}
+return w;
+}
+
+var intPart=Math.floor(num);
+var decPart=Math.round((num-intPart)*100);
+var words='';
+var scaleIdx=0;
+while(intPart>0){
+var chunk=intPart%1000;
+if(chunk>0){
+var chunkWords=threeDigits(chunk);
+if(scaleIdx>0)chunkWords+=' '+scales[scaleIdx];
+words=chunkWords+(words?' '+words:'');
+}
+intPart=Math.floor(intPart/1000);
+scaleIdx++;
+}
+if(decPart>0){words+=' '+curName[currency]+' and '+threeDigits(decPart)+' '+curKobo[currency]}
+else{words+=' '+curName[currency]}
+return words;
+}
+
+function convert(){
+var num=parseFloat(document.getElementById('num').value)||0;
+var words=numToWords(num);
+document.getElementById('words').textContent=words;
+document.getElementById('formatted').textContent=curSymbol[currency]+num.toLocaleString();
+}
+
+function copy(){
+navigator.clipboard.writeText(document.getElementById('words').textContent);
+alert('Words copied!');
+}
+
+convert();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

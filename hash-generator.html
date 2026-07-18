@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free hash generator. Generate SHA-256, SHA-1, SHA-512, and MD5 hashes from text. Developer utility for data integrity and verification.">
+<meta name="keywords" content="hash generator, sha256, sha512, md5, sha1, checksum, hash">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hash Generator — SHA-256, SHA-1, MD5 | Harz Digital Services">
+<meta property="og:description" content="Free hash generator. Generate SHA-256, SHA-1, SHA-512, and MD5 hashes from text. Developer utility for data integrity and verification.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/hash-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/hash-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hash Generator — SHA-256, SHA-1, MD5 | Harz Digital Services</title>
+<meta name="description" content="Free hash generator. Generate SHA-256, SHA-1, SHA-512, and MD5 hashes from text. Developer utility for data integrity and verification.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+textarea{width:100%;min-height:100px;padding:14px;background:#14141e;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.85rem;font-family:monospace;line-height:1.6;resize:vertical}
+.hash-result{background:#14141e;border:1px solid #1e1e2e;border-radius:12px;padding:14px;margin-bottom:10px;position:relative}
+.hash-result .label{font-size:.7rem;color:#7c3aed;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+.hash-result .hash{font-family:monospace;font-size:.72rem;color:#00d4aa;word-break:break-all;line-height:1.6}
+.hash-result .copy{position:absolute;top:10px;right:10px;padding:4px 10px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:6px;color:#00d4aa;font-size:.65rem;cursor:pointer}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.info{font-size:.75rem;color:#6b6b80;line-height:1.6;padding:12px;background:#14141e;border-radius:10px;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Hash Generator</h1><p>SHA-256, SHA-1, SHA-512, MD5</p></div>
+
+<div class="card">
+<h2>Input Text</h2>
+<textarea id="input" oninput="hash()" placeholder="Enter text to hash...">Harz Digital Services — RC 321424</textarea>
+</div>
+
+<div class="card">
+<h2>Hash Results</h2>
+<div class="hash-result"><div class="label">SHA-256</div><div class="hash" id="sha256">—</div><div class="copy" onclick="copyHash('sha256')">Copy</div></div>
+<div class="hash-result"><div class="label">SHA-512</div><div class="hash" id="sha512">—</div><div class="copy" onclick="copyHash('sha512')">Copy</div></div>
+<div class="hash-result"><div class="label">SHA-1</div><div class="hash" id="sha1">—</div><div class="copy" onclick="copyHash('sha1')">Copy</div></div>
+<div class="hash-result"><div class="label">MD5</div><div class="hash" id="md5">—</div><div class="copy" onclick="copyHash('md5')">Copy</div></div>
+</div>
+
+<div class="card">
+<h2>Uses</h2>
+<div class="info">
+1. Password hashing and verification<br>
+2. File integrity checks (checksums)<br>
+3. Digital signatures and certificates<br>
+4. Blockchain and cryptocurrency<br>
+5. Data deduplication<br>
+6. Git commit identifiers (SHA-1)<br>
+7. API request signing
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Hash Generator
+</div>
+
+<script>
+async function sha(algo,text){
+var data=new TextEncoder().encode(text);
+var hash=await crypto.subtle.digest(algo,data);
+var arr=Array.from(new Uint8Array(hash));
+return arr.map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+}
+
+function md5(text){
+// Simple MD5 implementation
+function rl(n,c){return(n<<c)|(n>>>(32-c))}
+function au(n,s){var t=(n&0xFFFF)+(s&0xFFFF);var m=(n>>16)+(s>>16)+(t>>16);return(m<<16)|(t&0xFFFF)}
+function cmn(q,a,b,x,s,t){return au(rl(au(au(a,q),au(x,t)),s),b)}
+function ff(a,b,c,d,x,s,t){return cmn((b&c)|((~b)&d),a,b,x,s,t)}
+function gg(a,b,c,d,x,s,t){return cmn((b&d)|(c&(~d)),a,b,x,s,t)}
+function hh(a,b,c,d,x,s,t){return cmn(b^c^d,a,b,x,s,t)}
+function ii(a,b,c,d,x,s,t){return cmn(c^(b|(~d)),a,b,x,s,t)}
+function core(x,len){
+x[len>>5]|=0x80<<(len%32);x[(((len+64)>>>9)<<4)+14]=len;
+var a=1732584193,b=-271733879,c=-1732584192,d=271733878;
+for(var i=0;i<x.length;i+=16){
+var oa=a,ob=b,oc=c,od=d;
+a=ff(a,b,c,d,x[i],7,-680876936);d=ff(d,a,b,c,x[i+1],12,-389564586);c=ff(c,d,a,b,x[i+2],17,606105819);b=ff(b,c,d,a,x[i+3],22,-1044525330);
+a=ff(a,b,c,d,x[i+4],7,-176418897);d=ff(d,a,b,c,x[i+5],12,1200080426);c=ff(c,d,a,b,x[i+6],17,-1473231341);b=ff(b,c,d,a,x[i+7],22,-45705983);
+a=ff(a,b,c,d,x[i+8],7,1770035416);d=ff(d,a,b,c,x[i+9],12,-1958414417);c=ff(c,d,a,b,x[i+10],17,-42063);b=ff(b,c,d,a,x[i+11],22,-1990404162);
+a=ff(a,b,c,d,x[i+12],7,1804603682);d=ff(d,a,b,c,x[i+13],12,-40341101);c=ff(c,d,a,b,x[i+14],17,-1502002290);b=ff(b,c,d,a,x[i+15],22,1236535329);
+a=gg(a,b,c,d,x[i+1],5,-165796510);d=gg(d,a,b,c,x[i+6],9,-1069501632);c=gg(c,d,a,b,x[i+11],14,643717713);b=gg(b,c,d,a,x[i],20,-373897302);
+a=gg(a,b,c,d,x[i+5],5,-701558691);d=gg(d,a,b,c,x[i+10],9,38016083);c=gg(c,d,a,b,x[i+15],14,-660478335);b=gg(b,c,d,a,x[i+4],20,-405537848);
+a=gg(a,b,c,d,x[i+9],5,568446438);d=gg(d,a,b,c,x[i+14],9,-1019803690);c=gg(c,d,a,b,x[i+3],14,-187363961);b=gg(b,c,d,a,x[i+8],20,1163531501);
+a=gg(a,b,c,d,x[i+13],5,-1444681467);d=gg(d,a,b,c,x[i+2],9,-51403784);c=gg(c,d,a,b,x[i+7],14,1735328473);b=gg(b,c,d,a,x[i+12],20,-1926607734);
+a=hh(a,b,c,d,x[i+5],4,-378558);d=hh(d,a,b,c,x[i+8],11,-2022574463);c=hh(c,d,a,b,x[i+11],16,1839030562);b=hh(b,c,d,a,x[i+14],23,-35309556);
+a=hh(a,b,c,d,x[i+1],4,-1530992060);d=hh(d,a,b,c,x[i+4],11,1272893353);c=hh(c,d,a,b,x[i+7],16,-155497632);b=hh(b,c,d,a,x[i+10],23,-1094730640);
+a=hh(a,b,c,d,x[i+13],4,681279174);d=hh(d,a,b,c,x[i],11,-358537222);c=hh(c,d,a,b,x[i+3],16,-722521979);b=hh(b,c,d,a,x[i+6],23,76029189);
+a=hh(a,b,c,d,x[i+9],4,-640364487);d=hh(d,a,b,c,x[i+12],11,-421815835);c=hh(c,d,a,b,x[i+15],16,530742520);b=hh(b,c,d,a,x[i+2],23,-995338651);
+a=ii(a,b,c,d,x[i],6,-198630844);d=ii(d,a,b,c,x[i+7],10,1126891415);c=ii(c,d,a,b,x[i+14],15,-1416354905);b=ii(b,c,d,a,x[i+5],21,-57434055);
+a=ii(a,b,c,d,x[i+12],6,1700485571);d=ii(d,a,b,c,x[i+3],10,-1894986606);c=ii(c,d,a,b,x[i+10],15,-1051523);b=ii(b,c,d,a,x[i+1],21,-2054922799);
+a=ii(a,b,c,d,x[i+8],6,1873313359);d=ii(d,a,b,c,x[i+15],10,-30611744);c=ii(c,d,a,b,x[i+6],15,-1560198380);b=ii(b,c,d,a,x[i+13],21,1309151649);
+a=ii(a,b,c,d,x[i+4],6,-145523070);d=ii(d,a,b,c,x[i+11],10,-1120210379);c=ii(c,d,a,b,x[i+2],15,718787259);b=ii(b,c,d,a,x[i+9],21,-343485551);
+a=au(a,oa);b=au(b,ob);c=au(c,oc);d=au(d,od);
+}
+return[a,b,c,d];
+}
+function binl2hex(b){
+var s='0123456789abcdef';var str='';
+for(var i=0;i<b.length*4;i++){str+=s.charAt((b[i>>2]>>((i%4)*8+4))&0xF)+s.charAt((b[i>>2]>>((i%4)*8))&0xF)}
+return str;
+}
+function str2binl(str){
+var bin=[];var mask=(1<<8)-1;
+for(var i=0;i<str.length*8;i+=8){bin[i>>5]|=(str.charCodeAt(i/8)&mask)<<(i%32)}
+return bin;
+}
+return binl2hex(core(str2binl(unescape(encodeURIComponent(text))),text.length*8));
+}
+
+async function hash(){
+var text=document.getElementById('input').value;
+if(!text){
+['sha256','sha512','sha1','md5'].forEach(function(id){document.getElementById(id).textContent='—'});
+return;
+}
+document.getElementById('sha256').textContent=await sha('SHA-256',text);
+document.getElementById('sha512').textContent=await sha('SHA-512',text);
+document.getElementById('sha1').textContent=await sha('SHA-1',text);
+document.getElementById('md5').textContent=md5(text);
+}
+
+function copyHash(id){
+var text=document.getElementById(id).textContent;
+if(text==='—')return;
+navigator.clipboard.writeText(text);alert('Hash copied!');
+}
+hash();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
