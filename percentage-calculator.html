@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free percentage calculator. Calculate percentages, percentage change, discounts, markup, and more. Quick and accurate results.">
+<meta name="keywords" content="percentage calculator, percent, discount calculator, vat calculator, percentage change">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Percentage Calculator — Easy Math | Harz Digital Services">
+<meta property="og:description" content="Free percentage calculator. Calculate percentages, percentage change, discounts, markup, and more. Quick and accurate results.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/percentage-calculator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/percentage-calculator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentage Calculator — Easy Math | Harz Digital Services</title>
+<meta name="description" content="Free percentage calculator. Calculate percentages, percentage change, discounts, markup, and more. Quick and accurate results.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:480px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.calc-card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:12px}
+.calc-card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.calc-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.calc-row input{width:80px;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:1rem;text-align:center}
+.calc-row .text{font-size:.85rem;color:#c8c8d0;flex:1}
+.calc-row .eq{text-align:center;font-size:1.2rem;color:#00d4aa;font-weight:800;font-family:monospace;width:100px}
+.result{padding:14px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:12px;text-align:center;margin-top:8px}
+.result .val{font-size:1.8rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.result .desc{font-size:.75rem;color:#6b6b80;margin-top:4px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>% Percentage Calculator</h1></div>
+
+<div class="calc-card">
+<h2>What is X% of Y?</h2>
+<div class="calc-row">
+<span class="text">What is</span>
+<input type="number" id="p1x" value="15" oninput="calc1()">
+<span class="text">% of</span>
+<input type="number" id="p1y" value="50000" oninput="calc1()">
+</div>
+<div class="result"><div class="val" id="p1r">7,500</div><div class="desc" id="p1d">15% of 50,000 = 7,500</div></div>
+</div>
+
+<div class="card" style="background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:12px">
+<h2 style="font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:12px">X is what % of Y?</h2>
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+<span style="font-size:.85rem;color:#c8c8d0;flex:1">
+<input type="number" id="p2x" value="7500" oninput="calc2()" style="width:80px;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:1rem;text-align:center">
+ is what % of
+<input type="number" id="p2y" value="50000" oninput="calc2()" style="width:80px;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:1rem;text-align:center">
+</span>
+</div>
+<div class="result"><div class="val" id="p2r">15%</div><div class="desc" id="p2d">7,500 is 15% of 50,000</div></div>
+</div>
+
+<div class="calc-card">
+<h2>Percentage Change</h2>
+<div class="calc-row">
+<span class="text">From</span>
+<input type="number" id="p3old" value="150000" oninput="calc3()">
+<span class="text">to</span>
+<input type="number" id="p3new" value="180000" oninput="calc3()">
+</div>
+<div class="result"><div class="val" id="p3r">+20%</div><div class="desc" id="p3d">180,000 is 20% increase from 150,000</div></div>
+</div>
+
+<div class="calc-card">
+<h2>Discount Calculator</h2>
+<div class="calc-row">
+<span class="text">Original ₦</span>
+<input type="number" id="p4price" value="5000" oninput="calc4()">
+<span class="text">Discount %</span>
+<input type="number" id="p4disc" value="20" oninput="calc4()">
+</div>
+<div class="result"><div class="val" id="p4r">₦4,000</div><div class="desc" id="p4d">Save ₦1,000 · Pay ₦4,000</div></div>
+</div>
+
+<div class="calc-card">
+<h2>VAT / Tax Adder</h2>
+<div class="calc-row">
+<span class="text">Amount ₦</span>
+<input type="number" id="p5amt" value="10000" oninput="calc5()">
+<span class="text">Tax %</span>
+<input type="number" id="p5tax" value="7.5" step="0.5" oninput="calc5()">
+</div>
+<div class="result"><div class="val" id="p5r">₦10,750</div><div class="desc" id="p5d">Tax: ₦750 · Total: ₦10,750</div></div>
+</div>
+
+<div class="calc-card">
+<h2>Tip Calculator</h2>
+<div class="calc-row">
+<span class="text">Bill ₦</span>
+<input type="number" id="p6bill" value="3000" oninput="calc6()">
+<span class="text">Tip %</span>
+<input type="number" id="p6tip" value="10" oninput="calc6()">
+</div>
+<div class="result"><div class="val" id="p6r">₦3,300</div><div class="desc" id="p6d">Tip: ₦300 · Total: ₦3,300</div></div>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Percentage Calculator
+</div>
+
+<script>
+function fmt(n){return n.toLocaleString(undefined,{maximumFractionDigits:2})}
+function calc1(){var x=+document.getElementById('p1x').value||0;var y=+document.getElementById('p1y').value||0;var r=x/100*y;document.getElementById('p1r').textContent=fmt(r);document.getElementById('p1d').textContent=x+'% of '+fmt(y)+' = '+fmt(r)}
+function calc2(){var x=+document.getElementById('p2x').value||0;var y=+document.getElementById('p2y').value||0;var r=y?x/y*100:0;document.getElementById('p2r').textContent=r.toFixed(1)+'%';document.getElementById('p2d').textContent=fmt(x)+' is '+r.toFixed(1)+'% of '+fmt(y)}
+function calc3(){var old=+document.getElementById('p3old').value||0;var nw=+document.getElementById('p3new').value||0;var r=old?(nw-old)/old*100:0;var sign=r>=0?'+':'';document.getElementById('p3r').textContent=sign+r.toFixed(1)+'%';document.getElementById('p3d').textContent=fmt(nw)+' is '+Math.abs(r).toFixed(1)+'% '+(r>=0?'increase':'decrease')+' from '+fmt(old)}
+function calc4(){var p=+document.getElementById('p4price').value||0;var d=+document.getElementById('p4disc').value||0;var save=p*d/100;var pay=p-save;document.getElementById('p4r').textContent='₦'+fmt(pay);document.getElementById('p4d').textContent='Save ₦'+fmt(save)+' · Pay ₦'+fmt(pay)}
+function calc5(){var a=+document.getElementById('p5amt').value||0;var t=+document.getElementById('p5tax').value||0;var tax=a*t/100;document.getElementById('p5r').textContent='₦'+fmt(a+tax);document.getElementById('p5d').textContent='Tax: ₦'+fmt(tax)+' · Total: ₦'+fmt(a+tax)}
+function calc6(){var b=+document.getElementById('p6bill').value||0;var t=+document.getElementById('p6tip').value||0;var tip=b*t/100;document.getElementById('p6r').textContent='₦'+fmt(b+tip);document.getElementById('p6d').textContent='Tip: ₦'+fmt(tip)+' · Total: ₦'+fmt(b+tip)}
+calc1();calc2();calc3();calc4();calc5();calc6();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

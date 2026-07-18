@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free social media character counter. Check post length against Twitter, Instagram, Facebook, LinkedIn, and WhatsApp limits before posting.">
+<meta name="keywords" content="social media counter, character count, twitter limit, instagram limit, post length">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Social Media Character Counter — Platform Limits | Harz Digital Services">
+<meta property="og:description" content="Free social media character counter. Check post length against Twitter, Instagram, Facebook, LinkedIn, and WhatsApp limits before posting.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/social-counter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/social-counter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Character Counter — Platform Limits | Harz Digital Services</title>
+<meta name="description" content="Free social media character counter. Check post length against Twitter, Instagram, Facebook, LinkedIn, and WhatsApp limits before posting.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+textarea{width:100%;min-height:120px;padding:14px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.9rem;line-height:1.6;resize:vertical;margin-bottom:12px}
+textarea:focus{border-color:#00d4aa;outline:none}
+.counter{text-align:center;padding:20px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:16px;margin-bottom:16px}
+.counter .big{font-size:2.5rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.counter .lbl{font-size:.8rem;color:#6b6b80}
+.counter .sub{font-size:.7rem;color:#6b6b80;margin-top:4px}
+.platform-card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;padding:14px;margin-bottom:8px}
+.platform-card .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.platform-card .name{font-size:.85rem;font-weight:700;color:#e8e8f0}
+.platform-card .limit{font-size:.7rem;color:#6b6b80}
+.platform-card .bar{height:6px;background:#14141e;border-radius:3px;overflow:hidden;margin-top:6px}
+.platform-card .fill{height:100%;transition:width .3s,background .3s;border-radius:3px}
+.platform-card .status{font-size:.7rem;margin-top:4px;font-weight:600}
+.status.ok{color:#00d4aa}
+.status.warn{color:#f59e0b}
+.status.over{color:#ef4444}
+.preview-card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;padding:14px;margin-bottom:8px}
+.preview-card .label{font-size:.7rem;color:#7c3aed;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.preview-card .msg{font-size:.85rem;color:#c8c8d0;line-height:1.6;word-break:break-word;max-height:80px;overflow-y:auto}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>📝 Social Media Counter</h1></div>
+
+<textarea id="text" placeholder="Type your post here to check all platform limits..." oninput="count()">🚀 Harz Digital Services is building the largest AI ecosystem in Nigeria! 24 platforms, 80+ AI agents, 259 digital products. From fintech to film, from health AI to cybersecurity. The future is African. #HarzDigital #NigeriaTech #AI</textarea>
+
+<div class="counter">
+<div class="big" id="charCount">0</div>
+<div class="lbl">Characters</div>
+<div class="sub"><span id="wordCount">0</span> words · <span id="hashtagCount">0</span> hashtags · <span id="emojiCount">0</span> emojis</div>
+</div>
+
+<div class="preview-card"><div class="label">📱 Message Preview</div><div class="msg" id="preview"></div></div>
+
+<div id="platforms"></div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Social Media Character Counter
+</div>
+
+<script>
+var platforms=[
+{name:'Twitter / X',limit:280,icon:'𝕏',color:'#000'},
+{name:'Instagram Caption',limit:2200,icon:'📷',color:'#ec4899'},
+{name:'Instagram Hashtags',limit:30,icon:'#',color:'#ec4899',countTags:true},
+{name:'Facebook Post',limit:63206,icon:'📘',color:'#1877f2'},
+{name:'LinkedIn Post',limit:3000,icon:'💼',color:'#0a66c2'},
+{name:'WhatsApp Status',limit:139,icon:'💬',color:'#22c55e'},
+{name:'Telegram Message',limit:4096,icon:'✈️',color:'#0088cc'},
+{name:'YouTube Title',limit:100,icon:'▶️',color:'#ff0000'},
+{name:'YouTube Description',limit:5000,icon:'📺',color:'#ff0000'},
+{name:'SMS',limit:160,icon:'📩',color:'#f59e0b'}
+];
+
+function count(){
+var text=document.getElementById('text').value;
+var chars=text.length;
+var words=text.trim()?text.trim().split(/\s+/).length:0;
+var hashtags=(text.match(/#\w+/g)||[]).length;
+var emojis=(text.match(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}]/gu)||[]).length;
+
+document.getElementById('charCount').textContent=chars;
+document.getElementById('wordCount').textContent=words;
+document.getElementById('hashtagCount').textContent=hashtags;
+document.getElementById('emojiCount').textContent=emojis;
+document.getElementById('preview').textContent=text;
+
+document.getElementById('platforms').innerHTML=platforms.map(function(p){
+var count=p.countTags?hashtags:chars;
+var pct=Math.min(100,count/p.limit*100);
+var statusCls='ok',statusText='✓ Fits';
+if(count>p.limit){statusCls='over';statusText='✗ '+(count-p.limit)+' chars over'}
+else if(count>p.limit*0.9){statusCls='warn';statusText='⚠ Near limit ('+(p.limit-count)+' left)'}
+var fillColor=pct<90?'#00d4aa':pct<100?'#f59e0b':'#ef4444';
+return '<div class="platform-card"><div class="top"><span class="name">'+p.icon+' '+p.name+'</span><span class="limit">'+count+' / '+p.limit+(p.countTags?' tags':' chars')+'</span></div><div class="bar"><div class="fill" style="width:'+pct+'%;background:'+fillColor+'"></div></div><div class="status '+statusCls+'">'+statusText+'</div></div>';
+}).join('');
+}
+
+count();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

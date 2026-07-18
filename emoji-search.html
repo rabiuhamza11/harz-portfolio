@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free emoji search and picker. Find the perfect emoji by keyword. Copy emojis for social media, messages, and content creation.">
+<meta name="keywords" content="emoji search, emoji picker, find emoji, copy emoji, emoji keyword">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Emoji Search & Picker — Find Emojis | Harz Digital Services">
+<meta property="og:description" content="Free emoji search and picker. Find the perfect emoji by keyword. Copy emojis for social media, messages, and content creation.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/emoji-search.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/emoji-search.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emoji Search & Picker — Find Emojis | Harz Digital Services</title>
+<meta name="description" content="Free emoji search and picker. Find the perfect emoji by keyword. Copy emojis for social media, messages, and content creation.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.search-bar{width:100%;padding:14px 18px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:1rem;margin-bottom:12px}
+.search-bar:focus{border-color:#00d4aa;outline:none}
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.cat-tab{padding:6px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer}
+.cat-tab.active{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.05)}
+.emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.emoji-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:1.8rem;cursor:pointer;border-radius:10px;background:#14141e;border:1px solid #1e1e2e;transition:all .15s}
+.emoji-cell:hover{border-color:#00d4aa;transform:scale(1.1)}
+.emoji-cell:active{transform:scale(.95)}
+.copy-bar{position:sticky;bottom:0;padding:12px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;display:flex;gap:8px;align-items:center;margin-top:12px}
+.copy-bar .preview{flex:1;font-size:1.5rem;padding:8px;background:#14141e;border-radius:8px;min-height:40px;text-align:center}
+.copy-bar button{padding:10px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Emoji Search 🔍</h1></div>
+
+<input type="text" class="search-bar" id="search" placeholder="Search emojis (e.g. love, money, fire)..." oninput="render()">
+
+<div class="cat-tabs" id="catTabs"></div>
+<div class="emoji-grid" id="grid"></div>
+
+<div class="copy-bar">
+<div class="preview" id="preview">Tap an emoji</div>
+<button onclick="copy()">📋 Copy</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Emoji Search
+</div>
+
+<script>
+var categories={
+'😊':'Smileys','🐶':'Animals','🍔':'Food','⚽':'Activity','💡':'Objects','❤️':'Symbols','🇳🇬':'Flags'
+};
+var emojis=[
+['😀','grin','smile','happy','face'],['😃','grin','happy','smile','joy'],['😄','grin','happy','laugh'],['😁','grin','happy','teeth'],['😆','laugh','happy','squint'],['😅','sweat','laugh','happy'],['🤣','laugh','rofl','rolling','funny'],['😂','laugh','joy','tears','funny'],
+['🙂','smile','slight'],['😉','wink','flirt'],['😊','smile','blush','happy','love'],['😍','love','heart','eyes','adore'],['🥰','love','hearts','adore'],['😘','kiss','love','face'],['😎','cool','sunglasses','sun','boss'],['🤩','star','eyes','excited','amazing'],
+['🥳','party','celebrate','birthday','excited'],['😏','smirk','smug'],['😴','sleep','tired','bed','night'],['🤔','think','hmm','wonder','consider'],['🤨','skeptical','suspicious','raised','eyebrow'],['🤯','mind','blown','shock','explode'],['🤗','hug','warm'],['🤷','shrug','whatever','dunno'],
+['👍','thumbs','up','like','yes','good'],['👎','thumbs','down','dislike','no','bad'],['👏','clap','applause','praise'],['🙌','raise','hands','celebrate','praise'],['🤝','handshake','deal','agreement','business'],['🙏','pray','please','thanks','namaste'],['💪','muscle','strong','power','flex'],['✊','fist','power','fight','resist'],
+['❤️','love','heart','red','romance'],['🔥','fire','hot','lit','trend','burn'],['✨','sparkle','shine','magic','clean'],['⭐','star','rating','favorite','review'],['💯','100','perfect','hundred','percent'],['🎉','party','celebrate','confetti','fun'],['💥','boom','explosion','impact','collision'],['⚡','lightning','bolt','energy','fast','power'],
+['💰','money','cash','dollar','wealth','rich'],['💵','dollar','money','cash','usd'],['💶','euro','money','europe'],['💷','pound','money','gbp','uk'],['💴','yen','money','japan','jpy'],['💸','money','fly','loss','spent'],['🤑','money','face','rich','wealthy'],['💳','card','credit','payment','pay'],
+['🚀','rocket','launch','space','fast','startup'],['💎','diamond','gem','jewel','valuable'],['🎯','target','bullseye','goal','aim'],['🏆','trophy','win','champion','award'],['🔑','key','unlock','access','password'],['🔑','key','unlock','access','secret'],['📱','phone','mobile','device','screen'],['💻','laptop','computer','work','code'],
+['🇳🇬','nigeria','flag','naija','green'],['🌍','earth','world','globe','international'],['🏰','castle','fortress','royal','medieval'],['🎬','film','movie','camera','cinema','action'],['🎵','music','note','song','audio','sound'],['🛡️','shield','security','protect','defense'],['🤖','robot','ai','machine','bot','tech'],['🧙','wizard','magic','mage','sorcerer','magani'],
+['🐶','dog','puppy','pet','animal'],['🐱','cat','kitten','pet','animal'],['🦁','lion','king','animal','wild'],['🦄','unicorn','magic','fantasy','horse'],['🐙','octopus','sea','ocean','animal'],['🦋','butterfly','insect','nature','transform'],['🍕','pizza','food','italian','slice'],['🍔','burger','food','fast','hamburger'],
+['☕','coffee','drink','morning','caffeine'],['🍺','beer','drink','alcohol','party'],['🍉','watermelon','fruit','food','summer'],['🍓','strawberry','fruit','food','red'],['🍞','bread','food','bakery','loaf'],['🥗','salad','food','healthy','green'],['🎂','cake','birthday','dessert','celebrate'],['🍩','donut','doughnut','dessert','sweet'],
+['⚽','soccer','football','ball','sport'],['🏀','basketball','ball','sport','hoops'],['🎮','game','controller','gaming','play'],['🎸','guitar','music','rock','instrument'],['🎧','headphones','music','audio','listen'],['🎤','microphone','mic','sing','karaoke'],['📷','camera','photo','picture','image'],['💡','light','bulb','idea','bright','lamp'],
+['⚠️','warning','caution','alert','danger'],['✅','check','mark','done','yes','correct'],['❌','cross','mark','no','wrong','cancel'],['❓','question','what','help','unknown'],['❗','exclamation','alert','important','attention'],['🔔','bell','notification','alert','ring'],['📌','pin','push','mark','location'],['📎','paperclip','attach','link','file'],
+['📧','email','mail','envelope','message'],['💬','chat','speech','message','talk','bubble'],['📞','phone','call','contact','dial'],['📩','envelope','send','message','mail'],['📮','postbox','mail','letter','send'],['✏️','pencil','write','edit','draw'],['📝','memo','note','write','edit','document'],['📁','folder','file','directory','documents']
+];
+
+var currentCat='all';
+var selected='';
+
+function renderCats(){
+document.getElementById('catTabs').innerHTML='<span class="cat-tab '+(currentCat==='all'?'active':'')+'" onclick="setCat(\'all\')">All</span>'+
+Object.keys(categories).map(function(k){return '<span class="cat-tab '+(currentCat===k?'active':'')+'" onclick="setCat(\''+k+'\')">'+k+' '+categories[k]+'</span>'}).join('');
+}
+
+function setCat(c){currentCat=c;render()}
+
+function render(){
+var search=document.getElementById('search').value.toLowerCase();
+var filtered=emojis.filter(function(e){
+if(search){
+return e.slice(1).some(function(kw){return kw.includes(search)});
+}
+if(currentCat==='all')return true;
+// Simple category mapping
+var catMap={'😊':/grin|smile|happy|laugh|kiss|wink|cool|sleep|think|shrug|hug/,'🐶':/dog|cat|lion|unicorn|octopus|butterfly|animal/,'🍔':/pizza|burger|coffee|beer|watermelon|strawberry|bread|salad|cake|donut|food/,'⚽':/soccer|basket|game|guitar|headphones|mic|camera|sport|music/,'💡':/light|bulb|pencil|memo|note|folder|file|bell|pin|clip|email|chat|phone|warning|check|cross|question|exclamation/,'❤️':/love|heart|fire|sparkle|star|party|boom|bolt|money|dollar|euro|pound|yen|rocket|diamond|target|trophy|key|card|robot|wizard|shield|castle|film|music|earth|nigeria/,'🇳🇬':/nigeria/};
+return catMap[currentCat]&&catMap[currentCat].test(e.slice(1).join(' '));
+});
+document.getElementById('grid').innerHTML=filtered.map(function(e){
+return '<div class="emoji-cell" onclick="select(\''+e[0]+'\')">'+e[0]+'</div>';
+}).join('');
+}
+
+function select(emoji){
+selected=emoji;
+document.getElementById('preview').textContent=emoji;
+}
+
+function copy(){
+if(!selected)return;
+navigator.clipboard.writeText(selected);
+alert('Copied: '+selected);
+}
+
+renderCats();render();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

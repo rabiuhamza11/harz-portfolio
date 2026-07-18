@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free meeting cost calculator. Calculate how much your meetings actually cost based on attendee salaries and duration. Optimize team time.">
+<meta name="keywords" content="meeting cost calculator, meeting time value, team cost, meeting ROI, time cost">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Meeting Cost Calculator — Team Time Value | Harz Digital Services">
+<meta property="og:description" content="Free meeting cost calculator. Calculate how much your meetings actually cost based on attendee salaries and duration. Optimize team time.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/meeting-cost.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/meeting-cost.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Cost Calculator — Team Time Value | Harz Digital Services</title>
+<meta name="description" content="Free meeting cost calculator. Calculate how much your meetings actually cost based on attendee salaries and duration. Optimize team time.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:1rem}
+.input-row{display:flex;gap:8px}
+.input-row .input-group{flex:1}
+.attendee-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px}
+.attendee-row input{flex:1;padding:8px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.attendee-row select{padding:8px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.8rem}
+.attendee-row .rm{color:#ef4444;cursor:pointer;font-size:1.2rem}
+.btn{padding:10px 18px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:.85rem}
+.btn.add{background:#14141e;border:1px solid #1e1e2e;color:#00d4aa;width:100%}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;width:100%}
+.result{text-align:center;padding:24px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:16px}
+.result .big{font-size:2.5rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.result .label{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.breakdown{margin-top:12px}
+.bd-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.8rem;border-bottom:1px solid rgba(30,30,46,.5)}
+.bd-row .l{color:#6b6b80}
+.bd-row .v{color:#00d4aa;font-weight:600}
+.tip{padding:12px;background:#14141e;border-radius:10px;font-size:.75rem;color:#c8c8d0;line-height:1.6;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>⏰ Meeting Cost Calculator</h1><p>How much does this meeting actually cost?</p></div>
+
+<div class="card">
+<h2>Meeting Details</h2>
+<div class="input-row">
+<div class="input-group"><label>Duration (minutes)</label><input type="number" id="duration" value="60" min="1" oninput="calc()"></div>
+<div class="input-group"><label>Hourly Rate (₦/hr each)</label><input type="number" id="hourlyRate" value="2500" min="0" oninput="calc()"></div>
+</div>
+<div class="input-group"><label>Number of Attendees</label><input type="number" id="attendees" value="5" min="1" oninput="calc()"></div>
+</div>
+
+<div class="card">
+<h2>Or Add Individual Salaries</h2>
+<div id="salaryList"></div>
+<button class="btn add" onclick="addSalary()">+ Add Attendee</button>
+</div>
+
+<div class="result">
+<div class="big" id="totalCost">₦0</div>
+<div class="label">Total meeting cost</div>
+<div class="breakdown" id="breakdown"></div>
+</div>
+
+<div class="tip" id="tip">
+💡 A 60-minute meeting with 5 people at ₦2,500/hr each costs ₦12,500. That's ₦208 per minute. Ask yourself: is this meeting worth ₦208/min?
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Meeting Cost Calculator
+</div>
+
+<script>
+var salaries=[2500,2500,2500,2500,2500];
+
+function renderSalaries(){
+document.getElementById('salaryList').innerHTML=salaries.map(function(s,i){
+return '<div class="attendee-row"><span style="font-size:.75rem;color:#6b6b80">Person '+(i+1)+'</span><input type="number" value="'+s+'" oninput="salaries['+i+']=+this.value;calc()" style="text-align:center"><span style="font-size:.7rem;color:#6b6b80">₦/hr</span>'+(salaries.length>1?'<span class="rm" onclick="rmSalary('+i+')">✕</span>':'')+'</div>';
+}).join('');
+}
+
+function addSalary(){salaries.push(2500);renderSalaries();calc()}
+function rmSalary(i){salaries.splice(i,1);renderSalaries();calc()}
+
+function calc(){
+var duration=+document.getElementById('duration').value||0;
+var baseRate=+document.getElementById('hourlyRate').value||0;
+var numAttendees=+document.getElementById('attendees').value||0;
+
+// Use individual salaries if they add up, otherwise use flat rate
+var useIndividual=salaries.length>0;
+var totalPerHour=useIndividual?salaries.reduce(function(a,b){return a+b},0):baseRate*numAttendees;
+var hours=duration/60;
+var total=totalPerHour*hours;
+var perMinute=total/duration;
+var perPerson=useIndividual?(total/salaries.length):(total/numAttendees);
+var weekly=total*5; // 5 meetings per week
+
+document.getElementById('totalCost').textContent='₦'+Math.round(total).toLocaleString();
+document.getElementById('breakdown').innerHTML=
+'<div class="bd-row"><span class="l">Cost per minute</span><span class="v">₦'+Math.round(perMinute).toLocaleString()+'</span></div>'+
+'<div class="bd-row"><span class="l">Cost per person</span><span class="v">₦'+Math.round(perPerson).toLocaleString()+'</span></div>'+
+'<div class="bd-row"><span class="l">Attendees</span><span class="v">'+(useIndividual?salaries.length:numAttendees)+'</span></div>'+
+'<div class="bd-row"><span class="l">Combined hourly cost</span><span class="v">₦'+Math.round(totalPerHour).toLocaleString()+'</span></div>'+
+'<div class="bd-row"><span class="l">If 5 meetings/week</span><span class="v">₦'+Math.round(weekly).toLocaleString()+'</span></div>'+
+'<div class="bd-row"><span class="l">If 20 meetings/month</span><span class="v">₦'+Math.round(weekly*4).toLocaleString()+'</span></div>';
+
+document.getElementById('tip').innerHTML='💡 A '+duration+'-minute meeting with '+(useIndividual?salaries.length:numAttendees)+' people costs ₦'+Math.round(total).toLocaleString()+' — that\'s ₦'+Math.round(perMinute).toLocaleString()+' per minute. Ask: is this meeting worth ₦'+Math.round(perMinute).toLocaleString()+'/min?';
+}
+
+renderSalaries();calc();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

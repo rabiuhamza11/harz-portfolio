@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free favicon generator. Create custom favicons with text, shapes, and colors. Export as PNG for your website.">
+<meta name="keywords" content="favicon generator, website icon, create favicon, png favicon, pwa icon">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Favicon Generator — Create Website Icons | Harz Digital Services">
+<meta property="og:description" content="Free favicon generator. Create custom favicons with text, shapes, and colors. Export as PNG for your website.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/favicon-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/favicon-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Favicon Generator — Create Website Icons | Harz Digital Services</title>
+<meta name="description" content="Free favicon generator. Create custom favicons with text, shapes, and colors. Export as PNG for your website.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:480px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.preview{text-align:center;padding:20px;background:#14141e;border:1px solid #1e1e2e;border-radius:16px;margin-bottom:16px}
+.preview canvas{image-rendering:pixelated;border-radius:12px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input[type=text]{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.input-group input[type=color]{width:100%;height:40px;border:1px solid #1e1e2e;border-radius:8px;cursor:pointer;background:#14141e}
+.size-tabs{display:flex;gap:6px;margin-bottom:10px}
+.size-tab{flex:1;padding:8px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer}
+.size-tab.active{border-color:#00d4aa;color:#00d4aa}
+.shape-tabs{display:flex;gap:6px;margin-bottom:10px}
+.shape-tab{flex:1;padding:8px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer}
+.shape-tab.active{border-color:#00d4aa;color:#00d4aa}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.size-row{display:flex;gap:8px}
+.size-row a{flex:1;padding:10px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;font-size:.7rem;color:#00d4aa;text-decoration:none}
+.size-row a:hover{border-color:#00d4aa}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Favicon Generator</h1></div>
+
+<div class="preview">
+<canvas id="canvas" width="64" height="64"></canvas>
+</div>
+
+<div class="card">
+<h2>Design</h2>
+<div class="input-group"><label>Text (1-2 chars recommended)</label><input type="text" id="favText" value="H" maxlength="3" oninput="draw()"></div>
+<div class="input-group"><label>Background Color</label><input type="color" id="bgColor" value="#00d4aa" oninput="draw()"></div>
+<div class="input-group"><label>Text Color</label><input type="color" id="textColor" value="#050508" oninput="draw()"></div>
+<div class="shape-tabs">
+<div class="shape-tab active" onclick="setShape('square')" data-shape="square">⬛ Square</div>
+<div class="shape-tab" onclick="setShape('rounded')" data-shape="rounded">🔲 Rounded</div>
+<div class="shape-tab" onclick="setShape('circle')" data-shape="circle">⚪ Circle</div>
+</div>
+<div class="size-tabs">
+<div class="size-tab active" onclick="setSize(16)" data-size="16">16px</div>
+<div class="size-tab" onclick="setSize(32)" data-size="32">32px</div>
+<div class="size-tab" onclick="setSize(64)" data-size="64">64px</div>
+<div class="size-tab" onclick="setSize(128)" data-size="128">128px</div>
+<div class="size-tab" onclick="setSize(256)" data-size="256">256px</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Download</h2>
+<div class="size-row">
+<a href="#" onclick="downloadPNG(16);return false">16×16</a>
+<a href="#" onclick="downloadPNG(32);return false">32×32</a>
+<a href="#" onclick="downloadPNG(64);return false">64×64</a>
+<a href="#" onclick="downloadPNG(128);return false">128×128</a>
+<a href="#" onclick="downloadPNG(256);return false">256×256</a>
+</div>
+<button class="btn" style="margin-top:10px" onclick="downloadPNG(512)">📥 Download 512×512 (PWA)</button>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Favicon Generator
+</div>
+
+<script>
+var size=64;
+var shape='square';
+
+function setSize(s){
+size=s;
+document.querySelectorAll('.size-tab').forEach(function(e){e.classList.toggle('active',parseInt(e.dataset.size)===s)});
+draw();
+}
+
+function setShape(s){
+shape=s;
+document.querySelectorAll('.shape-tab').forEach(function(e){e.classList.toggle('active',e.dataset.shape===s)});
+draw();
+}
+
+function draw(){
+var canvas=document.getElementById('canvas');
+canvas.width=size;canvas.height=size;
+var ctx=canvas.getContext('2d');
+var bg=document.getElementById('bgColor').value;
+var text=document.getElementById('favText').value||'H';
+var txtColor=document.getElementById('textColor').value;
+
+// Background
+ctx.fillStyle=bg;
+if(shape==='square'){ctx.fillRect(0,0,size,size)}
+else if(shape==='rounded'){var r=size*0.2;ctx.beginPath();ctx.moveTo(r,0);ctx.lineTo(size-r,0);ctx.quadraticCurveTo(size,0,size,r);ctx.lineTo(size,size-r);ctx.quadraticCurveTo(size,size,size-r,size);ctx.lineTo(r,size);ctx.quadraticCurveTo(0,size,0,size-r);ctx.lineTo(0,r);ctx.quadraticCurveTo(0,0,r,0);ctx.fill()}
+else{ctx.beginPath();ctx.arc(size/2,size/2,size/2,0,Math.PI*2);ctx.fill()}
+
+// Text
+ctx.fillStyle=txtColor;
+ctx.font='bold '+Math.round(size*0.65)+'px -apple-system,sans-serif';
+ctx.textAlign='center';
+ctx.textBaseline='middle';
+ctx.fillText(text,size/2,size/2+size*0.05);
+}
+
+function downloadPNG(s){
+var c=document.createElement('canvas');
+c.width=s;c.height=s;
+var ctx=c.getContext('2d');
+var bg=document.getElementById('bgColor').value;
+var text=document.getElementById('favText').value||'H';
+var txtColor=document.getElementById('textColor').value;
+ctx.fillStyle=bg;
+if(shape==='square'){ctx.fillRect(0,0,s,s)}
+else if(shape==='rounded'){var r=s*0.2;ctx.beginPath();ctx.moveTo(r,0);ctx.lineTo(s-r,0);ctx.quadraticCurveTo(s,0,s,r);ctx.lineTo(s,s-r);ctx.quadraticCurveTo(s,s,s-r,s);ctx.lineTo(r,s);ctx.quadraticCurveTo(0,s,0,s-r);ctx.lineTo(0,r);ctx.quadraticCurveTo(0,0,r,0);ctx.fill()}
+else{ctx.beginPath();ctx.arc(s/2,s/2,s/2,0,Math.PI*2);ctx.fill()}
+ctx.fillStyle=txtColor;
+ctx.font='bold '+Math.round(s*0.65)+'px -apple-system,sans-serif';
+ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.fillText(text,s/2,s/2+s*0.05);
+c.toBlob(function(blob){
+var a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='favicon-'+s+'.png';
+a.click();
+});
+}
+
+draw();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
