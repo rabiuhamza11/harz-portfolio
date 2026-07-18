@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free compound interest calculator. See how your investments grow over time with monthly contributions. Perfect for Nigerian investors.">
+<meta name="keywords" content="compound interest calculator, investment growth, savings calculator nigeria">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Compound Interest Calculator — Investment Growth | Harz Digital Services">
+<meta property="og:description" content="Free compound interest calculator. See how your investments grow over time with monthly contributions. Perfect for Nigerian investors.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/compound-interest.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/compound-interest.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compound Interest Calculator — Investment Growth | Harz Digital Services</title>
+<meta name="description" content="Free compound interest calculator. See how your investments grow over time with monthly contributions. Perfect for Nigerian investors.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.9rem}
+.input-row{display:flex;gap:8px}
+.input-row .input-group{flex:1}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.result{text-align:center;padding:24px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:16px;margin-top:16px}
+.result .final{font-size:2.2rem;font-weight:800;color:#00d4aa}
+.result .label{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.breakdown{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.breakdown .bd{padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;text-align:center}
+.breakdown .bd .num{font-size:1.1rem;font-weight:700;color:#7c3aed}
+.breakdown .bd .lbl{font-size:.65rem;color:#6b6b80;text-transform:uppercase;margin-top:2px}
+.yearly{margin-top:12px}
+.yearly-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(30,30,46,.5);font-size:.8rem}
+.yearly-row .yr{color:#6b6b80}
+.yearly-row .val{color:#00d4aa;font-weight:600}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Compound Interest Calculator</h1><p>See your money grow</p></div>
+
+<div class="card">
+<h2>Investment Details</h2>
+<div class="input-group"><label>Initial Amount (₦)</label><input type="number" id="principal" value="100000" min="0"></div>
+<div class="input-group"><label>Monthly Contribution (₦)</label><input type="number" id="monthly" value="10000" min="0"></div>
+<div class="input-row">
+<div class="input-group"><label>Annual Rate (%)</label><input type="number" id="rate" value="15" min="0" step="0.1"></div>
+<div class="input-group"><label>Years</label><input type="number" id="years" value="10" min="1"></div>
+</div>
+<button class="btn" onclick="calculate()">Calculate Growth</button>
+</div>
+
+<div class="result" id="result">
+<div class="final" id="finalAmount">₦0</div>
+<div class="label">Total value after <span id="yearLabel">10</span> years</div>
+<div class="breakdown">
+<div class="bd"><div class="num" id="totalInvested">₦0</div><div class="lbl">Total Invested</div></div>
+<div class="bd"><div class="num" id="totalInterest">₦0</div><div class="lbl">Interest Earned</div></div>
+</div>
+</div>
+
+<div class="card">
+<h2>Year-by-Year Growth</h2>
+<div class="yearly" id="yearlyBreakdown"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Compound Interest Calculator
+</div>
+
+<script>
+function calculate(){
+var p=parseFloat(document.getElementById('principal').value)||0;
+var m=parseFloat(document.getElementById('monthly').value)||0;
+var r=(parseFloat(document.getElementById('rate').value)||0)/100/12;
+var y=parseInt(document.getElementById('years').value)||1;
+document.getElementById('yearLabel').textContent=y;
+
+var balance=p;
+var totalInvested=p;
+var yearlyData=[];
+
+for(var month=1;month<=y*12;month++){
+balance=balance*(1+r)+m;
+totalInvested+=m;
+if(month%12===0){
+yearlyData.push({year:month/12,balance:Math.round(balance),invested:Math.round(totalInvested)});
+}
+}
+
+var interest=balance-totalInvested;
+document.getElementById('finalAmount').textContent='₦'+Math.round(balance).toLocaleString();
+document.getElementById('totalInvested').textContent='₦'+Math.round(totalInvested).toLocaleString();
+document.getElementById('totalInterest').textContent='₦'+Math.round(interest).toLocaleString();
+
+document.getElementById('yearlyBreakdown').innerHTML=yearlyData.map(function(d){
+return '<div class="yearly-row"><span class="yr">Year '+d.year+'</span><span class="val">₦'+d.balance.toLocaleString()+'</span></div>';
+}).join('');
+}
+calculate();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
