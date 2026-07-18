@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitor Tracker — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1000px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:var(--accent)}
+.header p{font-size:.8rem;color:var(--muted);margin-top:4px}
+.nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.nav a{padding:6px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.75rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(0,212,170,.15);color:var(--accent)}
+.comp-card{background:#14141e;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.comp-card .top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.comp-card .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.comp-card .name{font-size:.9rem;font-weight:700;flex:1}
+.comp-card .threat{font-size:.65rem;padding:3px 8px;border-radius:6px;font-weight:600}
+.threat.high{background:rgba(239,68,68,.15);color:var(--red)}
+.threat.med{background:rgba(245,158,11,.15);color:var(--yellow)}
+.threat.low{background:rgba(0,212,170,.15);color:var(--accent)}
+.comp-card .desc{font-size:.75rem;color:var(--muted);margin-top:6px}
+.comp-card .stats{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+.comp-card .stat{font-size:.7rem;color:var(--muted)}
+.comp-card .stat strong{color:var(--text)}
+.adv-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.adv-row:last-child{border:none}
+.adv-row .check{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.check.yes{background:rgba(0,212,170,.15);color:var(--accent)}
+.check.no{background:rgba(239,68,68,.15);color:var(--red)}
+.swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.swot-box{border-radius:10px;padding:14px}
+.swot-box h3{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.swot-box ul{list-style:none;padding:0}
+.swot-box li{font-size:.75rem;padding:3px 0;color:var(--muted)}
+.swot-box.s{background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.2)}
+.swot-box.s h3{color:var(--accent)}
+.swot-box.w{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2)}
+.swot-box.w h3{color:var(--red)}
+.swot-box.o{background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.2)}
+.swot-box.o h3{color:var(--blue)}
+.swot-box.t{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2)}
+.swot-box.t h3{color:var(--yellow)}
+@media(max-width:768px){.grid2,.swot-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Competitor Tracker</h1>
+<p>Nigerian digital products market — competitive analysis</p>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander</a>
+<a href="omega-marketing.html">Marketing</a>
+<a href="tools.html">Tools Hub</a>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Key Competitors <span class="badge">6 Tracked</span></h2>
+<div class="comp-card">
+<div class="top">
+<div class="icon" style="background:rgba(59,130,246,.15)">🛒</div>
+<div class="name">Selar</div>
+<div class="threat med">MEDIUM</div>
+</div>
+<div class="desc">Nigeria's largest digital products marketplace. Similar to HarzDM but broader creator base.</div>
+<div class="stats"><span><strong>Products:</strong> 10,000+</span><span><strong>Creators:</strong> 5,000+</span><span><strong>Fees:</strong> 5-10%</span></div>
+</div>
+<div class="comp-card">
+<div class="top">
+<div class="icon" style="background:rgba(124,58,237,.15)">📚</div>
+<div class="name">Udemy / Coursera</div>
+<div class="threat high">HIGH</div>
+</div>
+<div class="desc">Global course platforms competing with EduWealth. Massive reach but not Nigeria-specific.</div>
+<div class="stats"><span><strong>Courses:</strong> 200K+</span><span><strong>Users:</strong> 100M+</span><span><strong>Price:</strong> $10-200</span></div>
+</div>
+<div class="comp-card">
+<div class="top">
+<div class="icon" style="background:rgba(236,72,153,.15)">🎵</div>
+<div class="name">Audiomack / Boomplay</div>
+<div class="threat high">HIGH</div>
+</div>
+<div class="desc">Music streaming platforms competing with HarzMusic. Free tier with ads.</div>
+<div class="stats"><span><strong>Tracks:</strong> 5M+</span><span><strong>Users:</strong> 75M+</span><span><strong>Fees:</strong> Free</span></div>
+</div>
+<div class="comp-card">
+<div class="top">
+<div class="icon" style="background:rgba(239,68,68,.15)">🎬</div>
+<div class="name">IrokoTV / Netflix NG</div>
+<div class="threat high">HIGH</div>
+</div>
+<div class="desc">Nigerian film streaming. Competing with HarzFilm. Much larger catalog.</div>
+<div class="stats"><span><strong>Films:</strong> 10,000+</span><span><strong>Users:</strong> 500K+</span><span><strong>Price:</strong> ₦3K/mo</span></div>
+</div>
+<div class="comp-card">
+<div class="top">
+<div class="icon" style="background:rgba(245,158,11,.15)">🏗️</div>
+<div class="name">BuildBot Alternatives</div>
+<div class="threat low">LOW</div>
+</div>
+<div class="desc">No direct competitor in Nigeria for AI construction estimation. Niche advantage.</div>
+<div class="stats"><span><strong>Direct comps:</strong> 0</span><span><strong>Adjacent:</strong> 3</span><span><strong>Advantage:</strong> First mover</span></div>
+</div>
+<div class="comp-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">🤖</div>
+<div class="name">Other AI Agent Platforms</div>
+<div class="threat med">MEDIUM</div>
+</div>
+<div class="desc">Base44 competitors (Replit Agent, v0, Bolt). Growing fast but no Nigerian focus.</div>
+<div class="stats"><span><strong>Platforms:</strong> 5+</span><span><strong>Funding:</strong> $100M+</span><span><strong>Focus:</strong> Global</span></div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Harz Competitive Advantages <span class="badge">8 Edges</span></h2>
+<div class="adv-row"><div class="check yes">✓</div><span>Nigerian market focus (local payment methods, Hausa/Yoruba/Igbo)</span></div>
+<div class="adv-row"><div class="check yes">✓</div><span>24 integrated platforms (vs. 1-2 for most competitors)</span></div>
+<div class="adv-row"><div class="check yes">✓</div><span>AI automation + CRM built-in (no third-party tools needed)</span></div>
+<div class="adv-row"><div class="check yes">✓</div><span>Affordable pricing (₦2K-35K vs. ₦10K-200K competitors)</span></div>
+<div class="adv-row"><div class="check yes">✓</div><span>Music + Film + Courses + Products (unified ecosystem)</span></div>
+<div class="adv-row"><div class="check yes">✓</div><span>WhatsApp CRM (primary sales channel for Nigeria)</span></div>
+<div class="adv-row"><div class="check yes">✓</div><span>80+ AI agents working 24/7 (no human overhead)</span></div>
+<div class="adv-row"><div class="check yes">✓</div><span>CAC registered business (RC 321424) — trusted entity</span></div>
+<div class="adv-row"><div class="check no">✗</div><span>Payment gateways still in test mode (competitors are live)</span></div>
+<div class="adv-row"><div class="check no">✗</div><span>Smaller catalog than Selar/Udemy (259 vs 10,000+)</span></div>
+<div style="margin-top:14px;padding:12px;background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.15);border-radius:8px;font-size:.75rem;color:var(--accent)">
+Strategy: Win on integration, local focus, and affordability. Expand catalog via Getly uploads. Go live on payments ASAP.
+</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>SWOT Analysis — Harz Digital Services <span class="badge">2026</span></h2>
+<div class="swot-grid">
+<div class="swot-box s">
+<h3>Strengths</h3>
+<ul>
+<li>24 unified platforms</li>
+<li>80+ AI agents (24/7)</li>
+<li>Nigerian market expertise</li>
+<li>CAC + TIN verified</li>
+<li>Affordable 3-tier pricing</li>
+<li>WhatsApp-native CRM</li>
+<li>20 automated workflows</li>
+</ul>
+</div>
+<div class="swot-box w">
+<h3>Weaknesses</h3>
+<ul>
+<li>Payments in test mode</li>
+<li>259 products vs 10K+ competitors</li>
+<li>Single founder + AI agents</li>
+<li>Limited brand awareness</li>
+<li>No paid marketing yet</li>
+<li>Getly API unreliable</li>
+</ul>
+</div>
+<div class="swot-box o">
+<h3>Opportunities</h3>
+<ul>
+<li>Nigeria 220M population, 55%+ internet</li>
+<li>Northern Nigeria underserved</li>
+<li>AI adoption accelerating</li>
+<li>Crypto/USDT adoption growing</li>
+<li>Education tech boom</li>
+<li>Government digital push</li>
+</ul>
+</div>
+<div class="swot-box t">
+<h3>Threats</h3>
+<ul>
+<li>Global platforms (Udemy, Netflix)</li>
+<li>Payment gateway delays</li>
+<li>Naira devaluation</li>
+<li>Power/internet instability</li>
+<li>Competitor pricing wars</li>
+<li>Regulatory changes (NDPR)</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.7rem">
+Harz Digital Services — RC 321424 | Competitor Intelligence | Built by Magani
+</div>
+
+</body>
+</html>

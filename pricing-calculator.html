@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing Strategy Calculator — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:700px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:8px}
+.result{display:none;margin-top:16px}
+.result.show{display:block}
+.tier{background:#14141e;border:1px solid #1e1e2e;border-radius:12px;padding:16px;margin-bottom:10px}
+.tier .name{font-size:.9rem;font-weight:700;margin-bottom:6px}
+.tier .price{font-size:1.4rem;font-weight:800;color:#00d4aa}
+.tier .desc{font-size:.75rem;color:#6b6b80;margin-top:4px}
+.tier .margin{font-size:.7rem;margin-top:6px;padding:4px 8px;border-radius:6px;display:inline-block}
+.margin.good{background:rgba(0,212,170,.15);color:#00d4aa}
+.margin.ok{background:rgba(245,158,11,.15);color:#f59e0b}
+.margin.bad{background:rgba(239,68,68,.15);color:#ef4444}
+.compare{margin-top:16px}
+.compare table{width:100%;border-collapse:collapse;font-size:.8rem}
+.compare th{text-align:left;padding:8px;border-bottom:1px solid #1e1e2e;color:#6b6b80}
+.compare td{padding:8px;border-bottom:1px solid rgba(30,30,46,.5)}
+.compare .green{color:#00d4aa;font-weight:600}
+.compare .red{color:#ef4444}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:10px;text-align:center;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;font-size:.8rem;color:#6b6b80;cursor:pointer}
+.tab.active{background:rgba(0,212,170,.1);border-color:#00d4aa;color:#00d4aa}
+.section{display:none}
+.section.active{display:block}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header">
+<h1>Pricing Strategy Calculator</h1>
+<p>Optimal pricing for digital products in Nigeria</p>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('cost')">Cost-Based</div>
+<div class="tab" onclick="switchTab('value')">Value-Based</div>
+<div class="tab" onclick="switchTab('tier')">3-Tier Model</div>
+</div>
+
+<div id="cost" class="section active">
+<div class="card">
+<h2>Cost-Based Pricing</h2>
+<div class="input-group"><label>Production Cost (₦)</label><input type="number" id="cCost" value="2000"></div>
+<div class="input-group"><label>Desired Profit Margin (%)</label><input type="number" id="cMargin" value="60"></div>
+<div class="input-group"><label>Monthly Volume (units)</label><input type="number" id="cVolume" value="50"></div>
+<button class="btn" onclick="calcCost()">Calculate</button>
+<div id="costResult" class="result">
+<div class="tier"><div class="name">Recommended Price</div><div class="price" id="cPrice">₦0</div><div class="desc" id="cDesc"></div></div>
+<div class="tier"><div class="name">Monthly Revenue</div><div class="price" id="cRev">₦0</div><div class="desc" id="cProfit"></div></div>
+</div>
+</div>
+</div>
+
+<div id="value" class="section">
+<div class="card">
+<h2>Value-Based Pricing</h2>
+<div class="input-group"><label>What problem does it solve?</label><select id="vProblem"><option value="time">Saves time (hours/month)</option><option value="money">Saves money (₦/month)</option><option value="revenue">Increases revenue (₦/month)</option><option value="skill">Teaches a skill</option></select></div>
+<div class="input-group"><label>Value Delivered (₦/month)</label><input type="number" id="vValue" value="50000"></div>
+<div class="input-group"><label>Value Capture Rate (%) — how much of value you charge</label><input type="number" id="vCapture" value="10" step="1"></div>
+<button class="btn" onclick="calcValue()">Calculate</button>
+<div id="valueResult" class="result">
+<div class="tier"><div class="name">Recommended Price</div><div class="price" id="vPrice">₦0</div><div class="desc" id="vDesc"></div></div>
+<div class="tier"><div class="name">Customer ROI</div><div class="price" id="vROI">0x</div><div class="desc" id="vROIDesc"></div></div>
+</div>
+</div>
+</div>
+
+<div id="tier" class="section">
+<div class="card">
+<h2>3-Tier Pricing Model</h2>
+<p style="font-size:.8rem;color:#6b6b80;margin-bottom:14px">Based on HarzDM's proven model: Front-End, Mid-Tier, Back-End. Enter your base cost and we'll generate optimal 3-tier pricing.</p>
+<div class="input-group"><label>Base Production Cost (₦)</label><input type="number" id="tCost" value="2000"></div>
+<button class="btn" onclick="calcTier()">Generate 3-Tier Pricing</button>
+<div id="tierResult" class="result">
+<div class="tier"><div class="name">Front-End (Micro Solution)</div><div class="price" id="t1Price">₦0</div><div class="desc" id="t1Desc"></div><div class="margin good" id="t1Margin"></div></div>
+<div class="tier"><div class="name">Mid-Tier (Template/Kit)</div><div class="price" id="t2Price">₦0</div><div class="desc" id="t2Desc"></div><div class="margin good" id="t2Margin"></div></div>
+<div class="tier"><div class="name">Back-End (Build Guide/SaaS)</div><div class="price" id="t3Price">₦0</div><div class="desc" id="t3Desc"></div><div class="margin good" id="t3Margin"></div></div>
+<div class="compare">
+<table>
+<tr><th>Tier</th><th>Price</th><th>Margin</th><th>Target Market</th></tr>
+<tr><td>Front-End</td><td class="green" id="cT1">₦0</td><td id="cM1">0%</td><td>New customers</td></tr>
+<tr><td>Mid-Tier</td><td class="green" id="cT2">₦0</td><td id="cM2">0%</td><td>Serious buyers</td></tr>
+<tr><td>Back-End</td><td class="green" id="cT3">₦0</td><td id="cM3">0%</td><td>Premium clients</td></tr>
+<tr><td>Retainer</td><td class="green" id="cT4">₦0</td><td id="cM4">0%</td><td>Ongoing clients</td></tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Pricing Strategy Tool
+</div>
+
+<script>
+function fmt(n){return '₦'+Math.round(n).toLocaleString('en-NG')}
+function switchTab(t){document.querySelectorAll('.tab').forEach((e,i)=>{if(['cost','value','tier'][i]===t){e.classList.add('active')}else{e.classList.remove('active')}});document.querySelectorAll('.section').forEach(e=>{e.classList.remove('active')});document.getElementById(t).classList.add('active')}
+function calcCost(){const c=parseFloat(document.getElementById('cCost').value)||0;const m=parseFloat(document.getElementById('cMargin').value)||0;const v=parseFloat(document.getElementById('cVolume').value)||0;const price=c/(1-m/100);const rev=price*v;const profit=(price-c)*v;document.getElementById('costResult').classList.add('show');document.getElementById('cPrice').textContent=fmt(price);document.getElementById('cDesc').textContent='Cost: '+fmt(c)+' | Margin: '+m+'% | Profit/unit: '+fmt(price-c);document.getElementById('cRev').textContent=fmt(rev);document.getElementById('cProfit').textContent='Monthly profit: '+fmt(profit)+' ('+v+' units)'}
+function calcValue(){const v=parseFloat(document.getElementById('vValue').value)||0;const c=parseFloat(document.getElementById('vCapture').value)||0;const price=Math.round((v*c/100/12)*1.5/100)*100;const annualValue=v*12;const annualROI=annualValue/price;document.getElementById('valueResult').classList.add('show');document.getElementById('vPrice').textContent=fmt(price);document.getElementById('vDesc').textContent='Capturing '+c+'% of monthly value ('+fmt(v)+')';document.getElementById('vROI').textContent=annualROI.toFixed(1)+'x';document.getElementById('vROIDesc').textContent='Customer gets '+fmt(annualValue)+' value/year for '+fmt(price)+' — '+annualROI.toFixed(1)+'x return'}
+function calcTier(){const c=parseFloat(document.getElementById('tCost').value)||0;const t1=Math.max(c*2.5,2000);const t2=Math.max(c*7.5,5000);const t3=Math.max(c*12,15000);const t4=75000;const m1=Math.round((t1-c)/t1*100);const m2=Math.round((t2-c)/t2*100);const m3=Math.round((t3-c)/t3*100);const m4=Math.round((t4-c)/t4*100);document.getElementById('tierResult').classList.add('show');document.getElementById('t1Price').textContent=fmt(t1);document.getElementById('t1Desc').textContent='Quick wins, cheat sheets, mini-courses, AI prompts';document.getElementById('t1Margin').textContent='Margin: '+m1+'%';document.getElementById('t2Price').textContent=fmt(t2);document.getElementById('t2Desc').textContent='Templates, UI kits, SOPs, data sets, workbooks';document.getElementById('t2Margin').textContent='Margin: '+m2+'%';document.getElementById('t3Price').textContent=fmt(t3);document.getElementById('t3Desc').textContent='Build guides, SaaS kits, business-in-a-box, memberships';document.getElementById('t3Margin').textContent='Margin: '+m3+'%';document.getElementById('cT1').textContent=fmt(t1);document.getElementById('cM1').textContent=m1+'%';document.getElementById('cT2').textContent=fmt(t2);document.getElementById('cM2').textContent=m2+'%';document.getElementById('cT3').textContent=fmt(t3);document.getElementById('cM3').textContent=m3+'%';document.getElementById('cT4').textContent=fmt(t4);document.getElementById('cM4').textContent=m4+'%'}
+</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Delivery System — Harz Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:800px;margin:0 auto}
+.header{padding:16px 0;text-align:center}
+.header h1{font-size:1.3rem;color:var(--accent)}
+.header p{font-size:.8rem;color:var(--muted);margin-top:4px}
+.nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.nav a{padding:6px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.75rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.stat .num{font-size:1.3rem;font-weight:800}
+.stat .lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.stat.green .num{color:var(--accent)}
+.stat.yellow .num{color:var(--yellow)}
+.stat.blue .num{color:var(--blue)}
+.stat.purple .num{color:var(--purple)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:10px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem;font-family:inherit}
+.btn{padding:12px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;width:100%}
+.delivery-item{background:#14141e;border:1px solid #1e1e2e;border-radius:10px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.delivery-item .info .product{font-size:.85rem;font-weight:600}
+.delivery-item .info .buyer{font-size:.75rem;color:var(--muted);margin-top:2px}
+.delivery-item .status{font-size:.7rem;padding:4px 10px;border-radius:6px;font-weight:600}
+.status.delivered{background:rgba(0,212,170,.15);color:var(--accent)}
+.status.pending{background:rgba(245,158,11,.15);color:var(--yellow)}
+.status.failed{background:rgba(239,68,68,.15);color:var(--red)}
+.flow-step{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.flow-step:last-child{border:none}
+.flow-step .num{width:28px;height:28px;border-radius:50%;background:rgba(0,212,170,.15);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0}
+.auto-row{padding:8px 0;border-bottom:1px solid var(--border);font-size:.8rem;display:flex;justify-content:space-between}
+.auto-row:last-child{border:none}
+.auto-row .val{font-weight:600}
+.auto-row .val.on{color:var(--accent)}
+.auto-row .val.off{color:var(--red)}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Product Delivery System</h1>
+<p>Automated digital product delivery pipeline</p>
+</div>
+
+<div class="nav">
+<a href="omega-products.html">Products</a>
+<a href="omega-finance.html">Finance</a>
+<a href="tools.html">Tools Hub</a>
+</div>
+
+<div class="stats">
+<div class="stat green"><div class="num">259</div><div class="lbl">Products Ready</div></div>
+<div class="stat yellow"><div class="num">224</div><div class="lbl">Queued (Getly)</div></div>
+<div class="stat blue"><div class="num">3</div><div class="lbl">Orders Total</div></div>
+<div class="stat purple"><div class="num">1</div><div class="lbl">Delivered</div></div>
+</div>
+
+<div class="card">
+<h2>Delivery Pipeline — Create Delivery Link</h2>
+<div class="input-group">
+<label>Customer Name</label>
+<input type="text" id="dName" placeholder="Customer name">
+</div>
+<div class="input-group">
+<label>Customer Email</label>
+<input type="email" id="dEmail" placeholder="customer@email.com">
+</div>
+<div class="input-group">
+<label>Customer Phone (WhatsApp)</label>
+<input type="tel" id="dPhone" placeholder="080...">
+</div>
+<div class="input-group">
+<label>Product</label>
+<select id="dProduct">
+<option value="micro|5000">AI Prompts for Nigerian Business (₦5,000)</option>
+<option value="template|15000">SaaS Dashboard UI Kit (₦15,000)</option>
+<option value="guide|25000">Payment Gateway Build Guide (₦25,000)</option>
+<option value="guide|30000">ERP System Build Guide (₦30,000)</option>
+<option value="course|25000">React Masterclass — 3 SaaS Apps (₦25,000)</option>
+<option value="music|990">HarzMusic Track Download ($2.99)</option>
+<option value="film|4990">HarzFilm Rental ($14.99)</option>
+<option value="course|8000">EduWealth Course — Beginner (₦8,000)</option>
+<option value="consult|15000">AI Automation Consultation (₦15,000)</option>
+<option value="retainer|75000">Monthly Retainer (₦75,000)</option>
+</select>
+</div>
+<button class="btn gen" onclick="generateDelivery()">Generate Delivery Link</button>
+<div id="deliveryOutput" style="display:none;margin-top:16px">
+<div style="background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:16px">
+<div style="font-size:.8rem;color:var(--accent);font-weight:600;margin-bottom:8px">✓ Delivery Generated</div>
+<div style="font-size:.85rem;margin:6px 0"><strong>Product:</strong> <span id="oProduct"></span></div>
+<div style="font-size:.85rem;margin:6px 0"><strong>Customer:</strong> <span id="oCustomer"></span></div>
+<div style="font-size:.85rem;margin:6px 0"><strong>Delivery Method:</strong> <span id="oMethod"></span></div>
+<div style="font-size:.85rem;margin:6px 0"><strong>Delivery Link:</strong> <span style="color:var(--accent);word-break:break-all" id="oLink"></span></div>
+<div style="font-size:.85rem;margin:6px 0"><strong>Payment Required:</strong> <span id="oPrice"></span></div>
+<div style="margin-top:12px;font-size:.75rem;color:var(--muted)">Customer will receive this link via WhatsApp and email automatically after payment confirmation.</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Automated Delivery Flow</h2>
+<div class="flow-step"><div class="num">1</div><div>Customer pays via Paystack, Stripe, Bank Transfer, or USDT</div></div>
+<div class="flow-step"><div class="num">2</div><div>Order entity created in Base44 database with payment reference</div></div>
+<div class="flow-step"><div class="num">3</div><div>Entity automation triggers — order receipt email sent to buyer</div></div>
+<div class="flow-step"><div class="num">4</div><div>Delivery link generated and sent via WhatsApp + email</div></div>
+<div class="flow-step"><div class="num">5</div><div>Customer downloads product or gets consultation scheduled</div></div>
+<div class="flow-step"><div class="num">6</div><div>Follow-up message sent 24h later for feedback + upsell</div></div>
+</div>
+
+<div class="card">
+<h2>Delivery Status — Recent Orders</h2>
+<div class="delivery-item">
+<div class="info"><div class="product">MindCare AI Pro Subscription</div><div class="buyer">Customer 1 — ₦5,000 — Bank Transfer</div></div>
+<div class="status delivered">DELIVERED</div>
+</div>
+<div class="delivery-item">
+<div class="info"><div class="product">MindCare AI Pro Subscription</div><div class="buyer">Customer 2 — ₦5,000 — Pending bank payment</div></div>
+<div class="status pending">PENDING</div>
+</div>
+<div class="delivery-item">
+<div class="info"><div class="product">Harz Estate Estimator Pro</div><div class="buyer">Customer 3 — ₦15,000 — Pending</div></div>
+<div class="status pending">PENDING</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Delivery Automation Status</h2>
+<div class="auto-row"><span>Order receipt email (entity trigger)</span><span class="val on">ACTIVE</span></div>
+<div class="auto-row"><span>Payment delivery email (entity trigger)</span><span class="val on">ACTIVE</span></div>
+<div class="auto-row"><span>WhatsApp CRM auto-reply</span><span class="val on">ACTIVE</span></div>
+<div class="auto-row"><span>Getly product sync</span><span class="val off">API DOWN</span></div>
+<div class="auto-row"><span>Stripe webhook (auto-deliver on payment)</span><span class="val off">TEST MODE</span></div>
+<div class="auto-row"><span>Paystack webhook (auto-deliver on payment)</span><span class="val off">TEST MODE</span></div>
+<div class="auto-row"><span>24h follow-up automation</span><span class="val on">PLANNED</span></div>
+<div style="margin-top:12px;padding:10px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:8px;font-size:.75rem;color:var(--yellow)">
+Auto-delivery webhooks will activate once payment gateways go live. Until then, delivery is manual via WhatsApp.
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.7rem">
+Harz Digital Services — RC 321424 | Product Delivery System | Built by Magani
+</div>
+
+<script>
+function generateDelivery(){
+var name=document.getElementById('dName').value||'Customer';
+var email=document.getElementById('dEmail').value||'N/A';
+var phone=document.getElementById('dPhone').value||'N/A';
+var prodSelect=document.getElementById('dProduct');
+var prodText=prodSelect.options[prodSelect.selectedIndex].text;
+var prodVal=prodSelect.value.split('|');
+var type=prodVal[0];
+var price=parseInt(prodVal[1]);
+
+var methods={micro:'Email + WhatsApp download link',template:'Email + WhatsApp download link',guide:'Email + WhatsApp download link',course:'Email + course platform access',music:'WhatsApp + HarzMusic download',film:'WhatsApp + HarzFilm watch link',consult:'WhatsApp + Google Meet link',retainer:'WhatsApp + dedicated support channel'};
+
+var link='https://harzdm-marketplace.vercel.app/deliver/'+type+'-'+Date.now().toString(36);
+
+document.getElementById('deliveryOutput').style.display='block';
+document.getElementById('oProduct').textContent=prodText;
+document.getElementById('oCustomer').textContent=name+' ('+phone+')';
+document.getElementById('oMethod').textContent=methods[type];
+document.getElementById('oLink').textContent=link;
+document.getElementById('oPrice').textContent=price>=1000?'₦'+price.toLocaleString()+'':'$'+(price/100).toFixed(2);
+}
+</script>
+</body>
+</html>
