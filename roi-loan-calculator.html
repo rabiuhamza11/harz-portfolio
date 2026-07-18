@@ -169,5 +169,13 @@ function calcROI(){const c=parseFloat(document.getElementById('roiCost').value)|
 function calcLoan(){const p=parseFloat(document.getElementById('loanAmount').value)||0;const r=(parseFloat(document.getElementById('loanRate').value)||0)/100/12;const n=parseInt(document.getElementById('loanTerm').value)||1;const m=p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);const total=m*n;const interest=total-p;const eff=interest/p*100;document.getElementById('loanResult').classList.add('show');document.getElementById('loanMonthly').textContent=fmt(m);document.getElementById('loanInterest').textContent=fmt(interest);document.getElementById('loanTotal').textContent=fmt(total);document.getElementById('loanEff').textContent=eff.toFixed(1)+'%';let bal=p;let rows='';for(let i=1;i<=Math.min(n,12);i++){const intr=bal*r;const princ=m-intr;bal-=princ;rows+='<tr><td>'+i+'</td><td>'+fmt(m)+'</td><td>'+fmt(intr)+'</td><td>'+fmt(princ)+'</td><td>'+fmt(Math.max(0,bal))+'</td></tr>'}document.getElementById('amortBody').innerHTML=rows;document.getElementById('loanAmort').classList.add('show')}
 function calcBE(){const f=parseFloat(document.getElementById('beFixed').value)||0;const p=parseFloat(document.getElementById('bePrice').value)||0;const v=parseFloat(document.getElementById('beVar').value)||0;const cm=p-v;const units=Math.ceil(f/cm);const rev=units*p;const safety=(200-units)/200*100;document.getElementById('beResult').classList.add('show');document.getElementById('beMargin').textContent=fmt(cm);document.getElementById('beUnits').textContent=units;document.getElementById('beRev').textContent=fmt(rev);document.getElementById('beSafety').textContent=safety.toFixed(1)+'%';document.getElementById('beBig').textContent=units}
 </script>
+
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+
 </body>
 </html>

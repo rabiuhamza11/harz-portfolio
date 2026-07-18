@@ -168,5 +168,13 @@ function calcWHT(){const a=parseFloat(document.getElementById('whtAmount').value
 function calcPAYE(){const m=parseFloat(document.getElementById('payeSalary').value)||0;const pension=m*0.075;const taxable=m-pension;let tax=0;const bands=[[30000,0.07],[30000,0.11],[50000,0.15],[50000,0.19],[160000,0.21],[99999999,0.24]];let remaining=taxable;for(const [rate,bracket] of [[0.01,0],[30000,0.07]]){}let t=taxable;let due=0;if(t<=30000){due=0.01*t}else{due=30000*0.01;t-=30000;if(t<=30000){due+=t*0.07}else{due+=30000*0.07;t-=30000;if(t<=50000){due+=t*0.11}else{due+=50000*0.11;t-=50000;if(t<=50000){due+=t*0.15}else{due+=50000*0.15;t-=50000;if(t<=160000){due+=t*0.19}else{due+=160000*0.19;t-=160000;due+=t*0.21}}}}document.getElementById('payeResult').classList.add('show');document.getElementById('payeGross').textContent=fmt(m);document.getElementById('payePension').textContent=fmt(pension);document.getElementById('payeTaxable').textContent=fmt(taxable);document.getElementById('payeTax').textContent=fmt(due);document.getElementById('payeNet').textContent=fmt(m-pension-due);document.getElementById('payeAnnual').textContent=fmt(due*12);document.getElementById('payeAnnualNet').textContent=fmt((m-pension-due)*12)}
 function calcCIT(){const r=parseFloat(document.getElementById('citRevenue').value)||0;const e=parseFloat(document.getElementById('citExpenses').value)||0;const p=r-e;const tax=p*0.30;document.getElementById('citResult').classList.add('show');document.getElementById('citRev').textContent=fmt(r);document.getElementById('citExp').textContent=fmt(e);document.getElementById('citProfit').textContent=fmt(p);document.getElementById('citTax').textContent=fmt(tax);document.getElementById('citAfter').textContent=fmt(p-tax)}
 </script>
+
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+
 </body>
 </html>
