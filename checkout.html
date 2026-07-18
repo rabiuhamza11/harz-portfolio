@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Digital Services — Payment</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0f;color:#e8e8f0;min-height:100vh;padding:40px 20px}
+.header{text-align:center;margin-bottom:40px}
+.header h1{font-size:1.8rem;color:#00d4aa;margin-bottom:8px}
+.header p{color:#8888a0;font-size:.9rem}
+.notice{max-width:600px;margin:0 auto 40px;padding:16px 24px;border-radius:12px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#f59e0b;text-align:center;font-size:.85rem}
+.grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:20px}
+.card{background:#12121a;border:1px solid #2a2a3e;border-radius:16px;padding:24px;transition:all .3s}
+.card:hover{border-color:#00d4aa;transform:translateY(-4px)}
+.card h3{font-size:1.1rem;margin-bottom:8px}
+.card p{color:#8888a0;font-size:.85rem;margin-bottom:16px}
+.price{font-size:1.8rem;font-weight:800;color:#00d4aa;margin-bottom:16px}
+.price small{font-size:.85rem;color:#8888a0;font-weight:400}
+.badge{display:inline-block;padding:4px 12px;border-radius:6px;font-size:.7rem;font-weight:600;margin-bottom:12px}
+.badge.ngn{background:rgba(0,212,170,.15);color:#00d4aa}
+.badge.usd{background:rgba(124,58,237,.15);color:#7c3aed}
+.badge.test{background:rgba(245,158,11,.15);color:#f59e0b}
+.btn{display:inline-block;padding:12px 24px;border-radius:10px;font-weight:600;text-decoration:none;text-align:center;width:100%;margin-top:8px;transition:all .2s}
+.btn-paystack{background:#00d4aa;color:#000}
+.btn-paystack:hover{background:#00f0c0}
+.btn-stripe{background:#7c3aed;color:#fff}
+.btn-stripe:hover{background:#9061f6}
+.footer{text-align:center;margin-top:40px;color:#8888a0;font-size:.85rem}
+.footer a{color:#00d4aa}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Harz Payment Center</h1>
+<p>Choose a product and pay securely via Paystack or Stripe</p>
+</div>
+
+<div class="notice">
+⚠️ PAYMENTS ARE IN TEST MODE. Business verification pending with Paystack and Stripe.
+Real payments will be available once verification is complete.
+</div>
+
+<div class="grid">
+
+<div class="card">
+<span class="badge ngn">NGN</span><span class="badge test">TEST</span>
+<h3>BuildBot AI — Basic Construction Plan</h3>
+<p>Instant construction cost estimate, floor plan, and material schedule.</p>
+<div class="price">₦15,000 <small>one-time</small></div>
+<a href="https://paystack.com/pay/hbxgddu2ei" class="btn btn-paystack" target="_blank">Pay with Paystack</a>
+</div>
+
+<div class="card">
+<span class="badge ngn">NGN</span><span class="badge test">TEST</span>
+<h3>BuildBot AI — Standard Plan</h3>
+<p>Full construction planning: 3D model, materials, labor estimate, timeline.</p>
+<div class="price">₦35,000 <small>one-time</small></div>
+<a href="https://paystack.com/pay/h8vd642akf" class="btn btn-paystack" target="_blank">Pay with Paystack</a>
+</div>
+
+<div class="card">
+<span class="badge ngn">NGN</span><span class="badge test">TEST</span>
+<h3>BuildBot AI — Luxury Plan</h3>
+<p>Premium: architect-grade plans, 3D render, full project management.</p>
+<div class="price">₦50,000 <small>one-time</small></div>
+<a href="https://paystack.com/pay/mit9unhiqi" class="btn btn-paystack" target="_blank">Pay with Paystack</a>
+</div>
+
+<div class="card">
+<span class="badge ngn">NGN</span><span class="badge test">TEST</span>
+<h3>ContentPilot AI — Pro Monthly</h3>
+<p>25 AI agents for content creation. Scripts, SEO, scheduling.</p>
+<div class="price">₦15,000 <small>/month</small></div>
+<a href="https://paystack.com/pay/s04sh05-qc" class="btn btn-paystack" target="_blank">Pay with Paystack</a>
+</div>
+
+<div class="card">
+<span class="badge usd">USD</span><span class="badge test">TEST</span>
+<h3>ContentPilot AI — Pro Monthly (USD)</h3>
+<p>Same plan, international pricing. Cancel anytime.</p>
+<div class="price">$15.00 <small>/month</small></div>
+<a href="https://buy.stripe.com/test_14AfZheYq6K41iPeeTbZe00" class="btn btn-stripe" target="_blank">Pay with Stripe</a>
+</div>
+
+<div class="card">
+<span class="badge ngn">NGN</span><span class="badge test">TEST</span>
+<h3>The Complete Genius 365 — Ebook</h3>
+<p>365 days of genius-level strategies. Full ebook edition.</p>
+<div class="price">₦5,000 <small>one-time</small></div>
+<a href="https://paystack.com/pay/o-7znhmgvr" class="btn btn-paystack" target="_blank">Pay with Paystack</a>
+</div>
+
+<div class="card">
+<span class="badge ngn">NGN</span><span class="badge test">TEST</span>
+<h3>Harz Insider — Monthly Newsletter</h3>
+<p>Premium newsletter: AI tools, business, tech, creator economy.</p>
+<div class="price">₦2,000 <small>/month</small></div>
+<a href="https://paystack.com/pay/tr25rycftv" class="btn btn-paystack" target="_blank">Pay with Paystack</a>
+</div>
+
+<div class="card">
+<span class="badge ngn">NGN</span><span class="badge test">TEST</span>
+<h3>Harz Consult — Strategy Session</h3>
+<p>1-hour consultation: AI strategy, business, tech, marketing.</p>
+<div class="price">₦2,500 <small>one-time</small></div>
+<a href="https://paystack.com/pay/o87u6sgjva" class="btn btn-paystack" target="_blank">Pay with Paystack</a>
+</div>
+
+<div class="card">
+<span class="badge usd">USD</span><span class="badge test">TEST</span>
+<h3>Harz Strategy Consultation (USD)</h3>
+<p>1-hour strategy session via Google Meet. International pricing.</p>
+<div class="price">$50.00 <small>one-time</small></div>
+<a href="https://buy.stripe.com/test_4gMeVd7vYfgA8LheeTbZe02" class="btn btn-stripe" target="_blank">Pay with Stripe</a>
+</div>
+
+<div class="card">
+<span class="badge usd">USD</span><span class="badge test">TEST</span>
+<h3>HarzDM Digital Product Bundle</h3>
+<p>Access to premium digital products from the marketplace.</p>
+<div class="price">$9.99 <small>one-time</small></div>
+<a href="https://buy.stripe.com/test_fZu4gz9E60lG7Hd2wbbZe01" class="btn btn-stripe" target="_blank">Pay with Stripe</a>
+</div>
+
+</div>
+
+<div class="footer">
+<p>© 2026 Harz Digital Services (HI Water/Block Industry, RC 321424)</p>
+<p>Bank Transfer: UBA 2034326424 | WhatsApp: <a href="https://wa.me/2348028687857">08028687857</a></p>
+</div>
+
+</body>
+</html>
