@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harz Tools Hub — OMEGA Business Commander Suite</title>
+<title>OMEGA Business Commander Suite — Harz Ecosystem</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;padding:20px}
@@ -11,7 +11,7 @@ body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;paddi
 .header h1{color:#00d4aa;font-size:2rem;margin-bottom:5px}
 .header p{color:#8888a0;font-size:.9rem}
 .section-title{color:#7c3aed;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin:24px 0 12px;max-width:900px;margin-left:auto;margin-right:auto}
-.grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
 .tool-card{background:#12121a;border:1px solid #2a2a3e;border-radius:14px;padding:20px;text-decoration:none;color:inherit;transition:all .3s;cursor:pointer;display:block}
 .tool-card:hover{border-color:#00d4aa;transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,212,170,.1)}
 .tool-card .icon{font-size:1.8rem;margin-bottom:10px}
@@ -20,7 +20,10 @@ body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;paddi
 .tool-card .tag{display:inline-block;padding:3px 10px;border-radius:6px;font-size:.65rem;font-weight:600;margin-top:10px}
 .tag.main{background:linear-gradient(135deg,rgba(0,212,170,.2),rgba(124,58,237,.2));color:#00d4aa}
 .tag.sec{background:rgba(239,68,68,.15);color:#ef4444}
-.tag.fin{background:rgba(0,212,170,.15);color:#00d4aa}
+.tag.fin{background:rgba(245,158,11,.15);color:#f59e0b}
+.tag.mkt{background:rgba(236,72,153,.15);color:#ec4899}
+.tag.cnt{background:rgba(0,212,170,.15);color:#00d4aa}
+.tag.com{background:rgba(59,130,246,.15);color:#3b82f6}
 .tag.free{background:rgba(59,130,246,.15);color:#3b82f6}
 .footer{text-align:center;padding:40px 0;color:#8888a0;font-size:.8rem}
 </style>
@@ -28,7 +31,7 @@ body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;paddi
 <body>
 <div class="header">
 <h1>OMEGA Business Commander Suite</h1>
-<p>Harz Digital Services — Enterprise AI Operating System</p>
+<p>Harz Digital Services — Autonomous Enterprise Operating System</p>
 </div>
 
 <div class="section-title">Command Center</div>
@@ -36,7 +39,7 @@ body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;paddi
 <a href="omega-commander.html" class="tool-card" style="border-color:rgba(0,212,170,.3);background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05))">
 <div class="icon">🧙‍♂️</div>
 <h3>Commander Dashboard</h3>
-<p>Unified control center — 24 platforms, 80+ AI agents, live entity data, financial ops, all systems.</p>
+<p>Unified control center — 24 platforms, 80+ agents, live entity data, financial ops, all systems.</p>
 <span class="tag main">CONTROL CENTER</span>
 </a>
 <a href="omega-executive.html" class="tool-card">
@@ -47,7 +50,7 @@ body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;paddi
 </a>
 </div>
 
-<div class="section-title">Business Operations</div>
+<div class="section-title">Business Divisions</div>
 <div class="grid">
 <a href="omega-products.html" class="tool-card">
 <div class="icon">📦</div>
@@ -55,17 +58,45 @@ body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;paddi
 <p>259 digital products, 3-tier pricing, music, films, courses, properties. ₦1.58M + $264K catalog.</p>
 <span class="tag fin">259 PRODUCTS</span>
 </a>
+<a href="omega-finance.html" class="tool-card">
+<div class="icon">💰</div>
+<h3>Financial Operations</h3>
+<p>6 payment gateways, catalog valuation, transactions, estate portfolio, business credentials.</p>
+<span class="tag fin">6 GATEWAYS</span>
+</a>
+<a href="omega-marketing.html" class="tool-card">
+<div class="icon">📢</div>
+<h3>Marketing AI</h3>
+<p>6 social platforms, 25 content agents, campaign tracking, marketing funnel, value ladder.</p>
+<span class="tag mkt">25 AGENTS</span>
+</a>
+<a href="omega-content.html" class="tool-card">
+<div class="icon">🎬</div>
+<h3>Content Studio</h3>
+<p>8 content formats, 25 agents, 174K plays, 162K views, daily ideation and trend research.</p>
+<span class="tag cnt">8 FORMATS</span>
+</a>
+</div>
+
+<div class="section-title">Infrastructure & Security</div>
+<div class="grid">
 <a href="omega-deploy.html" class="tool-card">
 <div class="icon">🚀</div>
 <h3>Deployment Engine</h3>
-<p>27 Vercel sites, 1 Render service, 8 GitHub Pages, 16+ backend functions. CI/CD pipelines.</p>
-<span class="tag fin">5 PROVIDERS</span>
+<p>27 Vercel, 1 Render, 8 GitHub Pages, 16+ backend functions. CI/CD, health monitoring, logs.</p>
+<span class="tag main">5 PROVIDERS</span>
 </a>
 <a href="omega-security.html" class="tool-card">
 <div class="icon">🛡️</div>
 <h3>Security Center</h3>
 <p>37 Cyber Shield X agents, 20 vaulted secrets, threat detection, audit logs, scam alerts.</p>
 <span class="tag sec">37 AGENTS</span>
+</a>
+<a href="omega-comms.html" class="tool-card">
+<div class="icon">📡</div>
+<h3>Communication Hub</h3>
+<p>4 connected channels (WhatsApp, Telegram, Gmail, Calendar), 510 commands, 94 automation runs/day.</p>
+<span class="tag com">4 CONNECTED</span>
 </a>
 </div>
 
@@ -112,6 +143,7 @@ body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;paddi
 <div class="footer">
 <p>Harz Digital Services (HI Water/Block Industry, RC 321424, TIN 24550860)</p>
 <p>WhatsApp: 08028687857 | Email: harzco.business@gmail.com</p>
+<p style="margin-top:8px;color:#00d4aa">OMEGA Business Commander — 9 Dashboards | Built by Magani</p>
 </div>
 </body>
 </html>

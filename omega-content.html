@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Content Studio — AI Content Creation Engine</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--pink:#ec4899;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+.header{padding:16px 0 24px}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted)}
+.nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{padding:8px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.8rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.nav a.active{background:rgba(0,212,170,.1);border-color:var(--accent);color:var(--accent)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat .num{font-size:1.6rem;font-weight:800}
+.stat .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat .sub{font-size:.65rem;color:var(--muted);margin-top:2px}
+.stat.green .num{color:var(--accent)}
+.stat.purple .num{color:var(--purple)}
+.stat.blue .num{color:var(--blue)}
+.stat.yellow .num{color:var(--yellow)}
+.stat.pink .num{color:var(--pink)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(0,212,170,.15);color:var(--accent)}
+.content-type{background:#14141e;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.content-type .top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.content-type .icon{font-size:1.3rem}
+.content-type .name{font-size:.85rem;font-weight:700;flex:1}
+.content-type .status{font-size:.65rem;padding:3px 8px;border-radius:6px;font-weight:600}
+.status.live{background:rgba(0,212,170,.15);color:var(--accent)}
+.status.planned{background:rgba(245,158,11,.15);color:var(--yellow)}
+.content-type .desc{font-size:.7rem;color:var(--muted)}
+.fin-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.85rem;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border:none}
+.fin-row .val{font-weight:600}
+.fin-row .val.pos{color:var(--accent)}
+.fin-row .val.pending{color:var(--yellow)}
+.agent-card{background:#14141e;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.agent-card .name{font-size:.8rem;font-weight:600}
+.agent-card .role{font-size:.7rem;color:var(--muted);margin-top:2px}
+.agent-card .tasks{font-size:.65rem;color:var(--accent);margin-top:4px}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>OMEGA Content Studio</h1>
+<div class="sub">AI-Powered Content Creation | 25 Agents | Multi-Format Production</div>
+</div>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander</a>
+<a href="omega-executive.html">Executive</a>
+<a href="omega-products.html">Products</a>
+<a href="omega-deploy.html">Deploy</a>
+<a href="omega-security.html">Security</a>
+<a href="omega-marketing.html">Marketing</a>
+<a href="omega-content.html" class="active">Content Studio</a>
+<a href="omega-finance.html">Finance</a>
+<a href="omega-comms.html">Comms Hub</a>
+</div>
+
+<div class="stats-row">
+<div class="stat green"><div class="num">25</div><div class="lbl">Content Agents</div><div class="sub">All online</div></div>
+<div class="stat purple"><div class="num">8</div><div class="lbl">Content Types</div><div class="sub">4 live, 4 planned</div></div>
+<div class="stat blue"><div class="num">174K</div><div class="lbl">Audio Plays</div><div class="sub">27 tracks</div></div>
+<div class="stat yellow"><div class="num">162K</div><div class="lbl">Video Views</div><div class="sub">8 films</div></div>
+<div class="stat pink"><div class="num">365</div><div class="lbl">Book Chapters</div><div class="sub">Daily delivery</div></div>
+<div class="stat green"><div class="num">11AM</div><div class="lbl">Daily Ideation</div><div class="sub">Weekdays</div></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Content Types <span class="badge">8 Formats</span></h2>
+<div class="content-type">
+<div class="top">
+<div class="icon">📝</div>
+<div class="name">Blog Posts</div>
+<div class="status live">LIVE</div>
+</div>
+<div class="desc">SEO-optimized articles for tech, AI, Nigerian business, digital products</div>
+</div>
+<div class="content-type">
+<div class="top">
+<div class="icon">🎬</div>
+<div class="name">YouTube Videos</div>
+<div class="status live">LIVE</div>
+</div>
+<div class="desc">Trend research 7:30AM daily, script generation, thumbnail design, SEO optimization</div>
+</div>
+<div class="content-type">
+<div class="top">
+<div class="icon">🎵</div>
+<div class="name">Music Production</div>
+<div class="status live">LIVE</div>
+</div>
+<div class="desc">27 tracks published, 10 artists, 8 countries, 11 languages on HarzMusic</div>
+</div>
+<div class="content-type">
+<div class="top">
+<div class="icon">🎥</div>
+<div class="name">Film Production</div>
+<div class="status live">LIVE</div>
+</div>
+<div class="desc">8 films published, 5 creators, 4 countries on HarzFilm. 162K total views</div>
+</div>
+<div class="content-type">
+<div class="top">
+<div class="icon">📱</div>
+<div class="name">Short-Form Videos</div>
+<div class="status planned">PLANNED</div>
+</div>
+<div class="desc">TikTok, Instagram Reels, YouTube Shorts — short-form viral content engine</div>
+</div>
+<div class="content-type">
+<div class="top">
+<div class="icon">🎙️</div>
+<div class="name">Podcasts</div>
+<div class="status planned">PLANNED</div>
+</div>
+<div class="desc">Audio podcast series on AI, business, tech in Nigeria and Africa</div>
+</div>
+<div class="content-type">
+<div class="top">
+<div class="icon">📄</div>
+<div class="name">Sales Pages</div>
+<div class="status live">LIVE</div>
+</div>
+<div class="desc">Product descriptions, landing pages, checkout flows for 259 products</div>
+</div>
+<div class="content-type">
+<div class="top">
+<div class="icon">📚</div>
+<div class="name">Technical Docs</div>
+<div class="status live">LIVE</div>
+</div>
+<div class="desc">API docs, architecture guides, README files for 44 GitHub repos</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Content Agent Roster <span class="badge">25 Active</span></h2>
+<div class="agent-card">
+<div class="name">Script Generator</div>
+<div class="role">YouTube + video scripts with hooks, CTAs, SEO keywords</div>
+<div class="tasks">5 agents | 50+ scripts generated</div>
+</div>
+<div class="agent-card">
+<div class="name">Analytics Engine</div>
+<div class="role">Views, retention, CTR, engagement tracking across platforms</div>
+<div class="tasks">4 agents | Real-time monitoring</div>
+</div>
+<div class="agent-card">
+<div class="name">Publishing Manager</div>
+<div class="role">Schedule and publish content across YouTube, Facebook</div>
+<div class="tasks">3 agents | Daily automation</div>
+</div>
+<div class="agent-card">
+<div class="name">Trend Researcher</div>
+<div class="role">Scan YouTube, Google, social for trending topics daily</div>
+<div class="tasks">3 agents | 7:30AM daily scan</div>
+</div>
+<div class="agent-card">
+<div class="name">SEO Optimizer</div>
+<div class="role">Titles, descriptions, tags, thumbnails for search ranking</div>
+<div class="tasks">3 agents | All content</div>
+</div>
+<div class="agent-card">
+<div class="name">Thumbnail Designer</div>
+<div class="role">AI-generated thumbnails with click-through optimization</div>
+<div class="tasks">2 agents</div>
+</div>
+<div class="agent-card">
+<div class="name">Video Editor</div>
+<div class="role">Cut, trim, add effects, captions, music to video content</div>
+<div class="tasks">2 agents</div>
+</div>
+<div class="agent-card">
+<div class="name">Channel Manager</div>
+<div class="role">Cross-platform posting, community management, comment replies</div>
+<div class="tasks">3 agents</div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Content Performance <span class="badge">Live Metrics</span></h2>
+<div class="fin-row"><span>HarzMusic — Total Plays</span><span class="val pos">174,300</span></div>
+<div class="fin-row"><span>HarzMusic — Downloads</span><span class="val pos">4,310</span></div>
+<div class="fin-row"><span>HarzMusic — Top Track</span><span class="val">Tokyo Midnight (18K plays)</span></div>
+<div class="fin-row"><span>HarzFilm — Total Views</span><span class="val pos">162,500</span></div>
+<div class="fin-row"><span>HarzFilm — Top Film</span><span class="val">Monsoon Rhapsody (45K views)</span></div>
+<div class="fin-row"><span>Genius 365 — Chapters Sent</span><span class="val pos">Daily 7AM</span></div>
+<div class="fin-row"><span>Blog Posts — Published</span><span class="val pos">On portfolio + subdomains</span></div>
+<div class="fin-row"><span>Product Descriptions</span><span class="val pos">259 products written</span></div>
+</div>
+
+<div class="panel">
+<h2>Content Pipeline <span class="badge">Daily Flow</span></h2>
+<div class="fin-row"><span>7:00 AM</span><span class="val">Daily chapter — Genius 365</span></div>
+<div class="fin-row"><span>7:30 AM</span><span class="val">YouTube trend research</span></div>
+<div class="fin-row"><span>8:00 AM</span><span class="val">Calendar briefing</span></div>
+<div class="fin-row"><span>8:15 AM</span><span class="val">CRM stats report</span></div>
+<div class="fin-row"><span>9:00 AM</span><span class="val">Channel promo post</span></div>
+<div class="fin-row"><span>11:00 AM</span><span class="val">Content ideas generation</span></div>
+<div class="fin-row"><span>12:00 PM</span><span class="val">Product promo rotation</span></div>
+<div class="fin-row"><span>10:00 PM</span><span class="val">Daily backup + review</span></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
+OMEGA Content Studio — 25 Agents | 8 Content Formats | 336K+ Total Views | Built by Magani
+</div>
+
+</body>
+</html>

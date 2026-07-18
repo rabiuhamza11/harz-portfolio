@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Communication Hub — Unified Messaging</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+.header{padding:16px 0 24px}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,var(--blue),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted)}
+.nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{padding:8px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.8rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.nav a.active{background:rgba(59,130,246,.1);border-color:var(--blue);color:var(--blue)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat .num{font-size:1.6rem;font-weight:800}
+.stat .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat .sub{font-size:.65rem;color:var(--muted);margin-top:2px}
+.stat.green .num{color:var(--accent)}
+.stat.purple .num{color:var(--purple)}
+.stat.blue .num{color:var(--blue)}
+.stat.yellow .num{color:var(--yellow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(59,130,246,.15);color:var(--blue)}
+.channel-card{background:#14141e;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.channel-card .top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.channel-card .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.channel-card .name{font-size:.9rem;font-weight:700;flex:1}
+.channel-card .status{font-size:.7rem;padding:3px 8px;border-radius:6px;font-weight:600}
+.status.live{background:rgba(0,212,170,.15);color:var(--accent)}
+.status.pending{background:rgba(245,158,11,.15);color:var(--yellow)}
+.channel-card .info{font-size:.75rem;color:var(--muted);margin-top:6px}
+.fin-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.85rem;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border:none}
+.fin-row .val{font-weight:600}
+.fin-row .val.pos{color:var(--accent)}
+.fin-row .val.pending{color:var(--yellow)}
+.sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sec-item{background:#14141e;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.8rem}
+.sec-item .label{color:var(--muted);font-size:.7rem}
+.sec-item .val{font-weight:600;margin-top:2px}
+.sec-item .val.ok{color:var(--accent)}
+.sec-item .val.pending{color:var(--yellow)}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>OMEGA Communication Hub</h1>
+<div class="sub">Unified Messaging | Email | Calendar | CRM | Multi-Platform Integration</div>
+</div>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander</a>
+<a href="omega-executive.html">Executive</a>
+<a href="omega-products.html">Products</a>
+<a href="omega-deploy.html">Deploy</a>
+<a href="omega-security.html">Security</a>
+<a href="omega-marketing.html">Marketing</a>
+<a href="omega-content.html">Content Studio</a>
+<a href="omega-finance.html">Finance</a>
+<a href="omega-comms.html" class="active">Comms Hub</a>
+</div>
+
+<div class="stats-row">
+<div class="stat green"><div class="num">4</div><div class="lbl">Channels Connected</div><div class="sub">WhatsApp + Telegram + Gmail + Calendar</div></div>
+<div class="stat purple"><div class="num">5</div><div class="lbl">Channels Pending</div><div class="sub">Slack, Discord, Zoom, Outlook, Meet</div></div>
+<div class="stat blue"><div class="num">17</div><div class="lbl">Email Runs/24h</div><div class="sub">Auto monitor</div></div>
+<div class="stat yellow"><div class="num">3</div><div class="lbl">CRM Contacts</div><div class="sub">1 new, 1 responded</div></div>
+<div class="stat green"><div class="num">510</div><div class="lbl">Telegram Commands</div><div class="sub">Maganu AI</div></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Connected Channels <span class="badge">4 Live</span></h2>
+<div class="channel-card">
+<div class="top">
+<div class="icon" style="background:rgba(37,211,102,.15)">💬</div>
+<div class="name">WhatsApp</div>
+<div class="status live">CONNECTED</div>
+</div>
+<div class="info">CRM auto-reply active | 3 contacts in pipeline | Daily briefings, chapter delivery, promo posts, CRM stats</div>
+</div>
+<div class="channel-card">
+<div class="top">
+<div class="icon" style="background:rgba(50,170,238,.15)">✈️</div>
+<div class="name">Telegram</div>
+<div class="status live">CONNECTED</div>
+</div>
+<div class="info">Maganu AI v7.8.0 | 510 commands | Full ecosystem CRUD | Payment management | Keep-alive active</div>
+</div>
+<div class="channel-card">
+<div class="top">
+<div class="icon" style="background:rgba(239,68,68,.15)">📧</div>
+<div class="name">Gmail</div>
+<div class="status live">CONNECTED</div>
+</div>
+<div class="info">harzco.business@gmail.com | Read + Send | Auto-monitor (17 runs/24h) | Invoice/receipt automation</div>
+</div>
+<div class="channel-card">
+<div class="top">
+<div class="icon" style="background:rgba(66,133,244,.15)">📅</div>
+<div class="name">Google Calendar</div>
+<div class="status live">CONNECTED</div>
+</div>
+<div class="info">Read access | Daily 8AM briefing | 15-30 min event reminders | Meeting preparation</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Pending Channels <span class="badge">5 to Connect</span></h2>
+<div class="channel-card">
+<div class="top">
+<div class="icon" style="background:rgba(74,21,75,.15)">💼</div>
+<div class="name">Slack</div>
+<div class="status pending">NOT CONNECTED</div>
+</div>
+<div class="info">Available via Base44 OAuth | Team collaboration | Webhook notifications</div>
+</div>
+<div class="channel-card">
+<div class="top">
+<div class="icon" style="background:rgba(88,101,242,.15)">🎮</div>
+<div class="name">Discord</div>
+<div class="status pending">NOT CONNECTED</div>
+</div>
+<div class="info">Community server | Bot integration | Voice + text channels</div>
+</div>
+<div class="channel-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,122,255,.15)">📅</div>
+<div class="name">Outlook / M365</div>
+<div class="status pending">NOT CONNECTED</div>
+</div>
+<div class="info">Email + calendar alternative to Google | Enterprise integration</div>
+</div>
+<div class="channel-card">
+<div class="top">
+<div class="icon" style="background:rgba(47,156,214,.15)">🎥</div>
+<div class="name">Zoom</div>
+<div class="status pending">NOT CONNECTED</div>
+</div>
+<div class="info">Video meetings | Consultation sessions | Webinar hosting</div>
+</div>
+<div class="channel-card">
+<div class="top">
+<div class="icon" style="background:rgba(66,133,244,.15)">🔗</div>
+<div class="name">Google Meet</div>
+<div class="status pending">NOT CONNECTED</div>
+</div>
+<div class="info">Free video conferencing | Calendar integration | Consultation links</div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Communication Capabilities <span class="badge">Active Features</span></h2>
+<div class="sec-grid">
+<div class="sec-item"><div class="label">Read Emails</div><div class="val ok">Gmail auto-monitor</div></div>
+<div class="sec-item"><div class="label">Draft/Send Emails</div><div class="val ok">Via emailBridge</div></div>
+<div class="sec-item"><div class="label">Classify Messages</div><div class="val ok">CRM inquiry detection</div></div>
+<div class="sec-item"><div class="label">Prioritize Inbox</div><div class="val ok">Auto-escalation</div></div>
+<div class="sec-item"><div class="label">Schedule Meetings</div><div class="val pending">Calendar read only</div></div>
+<div class="sec-item"><div class="label">Create Reminders</div><div class="val ok">15-30 min before events</div></div>
+<div class="sec-item"><div class="label">Generate Summaries</div><div class="val ok">Email + calendar</div></div>
+<div class="sec-item"><div class="label">Auto-Reply (WhatsApp)</div><div class="val ok">CRM system active</div></div>
+<div class="sec-item"><div class="label">Escalate Important</div><div class="val ok">WhatsApp + Telegram</div></div>
+<div class="sec-item"><div class="label">Translate</div><div class="val pending">Planned</div></div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Automated Communications <span class="badge">Daily Flow</span></h2>
+<div class="fin-row"><span>7:00 AM</span><span class="val pos">Genius 365 chapter → WhatsApp</span></div>
+<div class="fin-row"><span>8:00 AM</span><span class="val pos">Calendar briefing → WhatsApp</span></div>
+<div class="fin-row"><span>8:15 AM</span><span class="val pos">CRM stats → WhatsApp</span></div>
+<div class="fin-row"><span>9:00 AM</span><span class="val pos">Channel promo → WhatsApp</span></div>
+<div class="fin-row"><span>12:00 PM</span><span class="val pos">Product promo → WhatsApp</span></div>
+<div class="fin-row"><span>Real-time</span><span class="val pos">Email monitor (17 runs/24h)</span></div>
+<div class="fin-row"><span>Every 10m</span><span class="val pos">Maganu keep-alive (67 runs/24h)</span></div>
+<div class="fin-row"><span>On event</span><span class="val pos">Order receipt email to buyer</span></div>
+<div class="fin-row"><span>On event</span><span class="val pos">Payment delivery email</span></div>
+<div class="fin-row"><span>On event</span><span class="val pos">Welcome email (new subs/sellers)</span></div>
+<div class="fin-row"><span>10:00 PM</span><span class="val pos">Daily backup → GitHub</span></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
+OMEGA Communication Hub — 4 Connected | 510 Telegram Commands | 94 Automation Runs/Day | Built by Magani
+</div>
+
+</body>
+</html>

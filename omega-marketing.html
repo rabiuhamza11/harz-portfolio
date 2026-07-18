@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Marketing AI — Social Media & Campaign Engine</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--pink:#ec4899;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+.header{padding:16px 0 24px}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted)}
+.nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{padding:8px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.8rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.nav a.active{background:rgba(236,72,153,.1);border-color:var(--pink);color:var(--pink)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat .num{font-size:1.6rem;font-weight:800}
+.stat .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat .sub{font-size:.65rem;color:var(--muted);margin-top:2px}
+.stat.pink .num{color:var(--pink)}
+.stat.purple .num{color:var(--purple)}
+.stat.blue .num{color:var(--blue)}
+.stat.green .num{color:var(--accent)}
+.stat.yellow .num{color:var(--yellow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(236,72,153,.15);color:var(--pink)}
+.platform-card{background:#14141e;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.platform-card .top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.platform-card .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.platform-card .name{font-size:.9rem;font-weight:700}
+.platform-card .status{font-size:.7rem;padding:3px 8px;border-radius:6px;font-weight:600}
+.status.active{background:rgba(0,212,170,.15);color:var(--accent)}
+.status.pending{background:rgba(245,158,11,.15);color:var(--yellow)}
+.platform-card .stats{display:flex;gap:16px;font-size:.75rem;color:var(--muted)}
+.fin-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.85rem;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border:none}
+.fin-row .val{font-weight:600}
+.fin-row .val.pos{color:var(--accent)}
+.fin-row .val.pending{color:var(--yellow)}
+.campaign-item{background:#14141e;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
+.campaign-item .title{font-size:.85rem;font-weight:600;margin-bottom:4px}
+.campaign-item .meta{font-size:.7rem;color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--border);margin-top:6px;overflow:hidden}
+.bar .fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--pink),var(--purple))}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>OMEGA Marketing AI</h1>
+<div class="sub">Social Media Management | Content Creation | Campaign Optimization</div>
+</div>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander</a>
+<a href="omega-executive.html">Executive</a>
+<a href="omega-products.html">Products</a>
+<a href="omega-deploy.html">Deploy</a>
+<a href="omega-security.html">Security</a>
+<a href="omega-marketing.html" class="active">Marketing</a>
+<a href="omega-content.html">Content Studio</a>
+<a href="omega-finance.html">Finance</a>
+<a href="omega-comms.html">Comms Hub</a>
+</div>
+
+<div class="stats-row">
+<div class="stat pink"><div class="num">6</div><div class="lbl">Social Platforms</div><div class="sub">2 active, 4 planned</div></div>
+<div class="stat purple"><div class="num">25</div><div class="lbl">Content Agents</div><div class="sub">OMEGA Content AI</div></div>
+<div class="stat green"><div class="num">174K</div><div class="lbl">Music Plays</div><div class="sub">27 tracks</div></div>
+<div class="stat blue"><div class="num">162K</div><div class="lbl">Film Views</div><div class="sub">8 films</div></div>
+<div class="stat yellow"><div class="num">8</div><div class="lbl">Daily Automations</div><div class="sub">Promo + trends</div></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Social Media Platforms <span class="badge">6 Targeted</span></h2>
+<div class="platform-card">
+<div class="top">
+<div class="icon" style="background:rgba(255,0,0,.1)">📺</div>
+<div style="flex:1"><div class="name">YouTube</div></div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="stats"><span>Trend scanning daily 7:30AM</span><span>Content ideas 11AM weekdays</span></div>
+</div>
+<div class="platform-card">
+<div class="top">
+<div class="icon" style="background:rgba(59,130,246,.1)">📘</div>
+<div style="flex:1"><div class="name">Facebook</div></div>
+<div class="status active">ACTIVE</div>
+</div>
+<div class="stats"><span>Daily promo rotation 12PM</span><span>Business page</span></div>
+</div>
+<div class="platform-card">
+<div class="top">
+<div class="icon" style="background:rgba(236,72,153,.1)">📷</div>
+<div style="flex:1"><div class="name">Instagram</div></div>
+<div class="status pending">PLANNED</div>
+</div>
+<div class="stats"><span>Needs business account</span><span>Reels + stories strategy</span></div>
+</div>
+<div class="platform-card">
+<div class="top">
+<div class="icon" style="background:rgba(10,102,194,.1)">💼</div>
+<div style="flex:1"><div class="name">LinkedIn</div></div>
+<div class="status pending">PLANNED</div>
+</div>
+<div class="stats"><span>B2B networking</span><span>Company page needed</span></div>
+</div>
+<div class="platform-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,0,0,.3)">🎵</div>
+<div style="flex:1"><div class="name">TikTok</div></div>
+<div class="status pending">PLANNED</div>
+</div>
+<div class="stats"><span>Short-form video</span><span>Music + film promotion</span></div>
+</div>
+<div class="platform-card">
+<div class="top">
+<div class="icon" style="background:rgba(20,20,30,.8)">𝕏</div>
+<div style="flex:1"><div class="name">X (Twitter)</div></div>
+<div class="status pending">PLANNED</div>
+</div>
+<div class="stats"><span>Tech community</span><span>Product announcements</span></div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Active Campaigns <span class="badge">3 Running</span></h2>
+<div class="campaign-item">
+<div class="title">Daily Product Promotion Rotation</div>
+<div class="meta">12PM daily | 24 platforms rotating | Auto-posted to WhatsApp + Facebook</div>
+<div class="bar"><div class="fill" style="width:85%"></div></div>
+<div class="meta" style="margin-top:4px">85% consistency (last 7 days)</div>
+</div>
+<div class="campaign-item">
+<div class="title">YouTube Trend Research</div>
+<div class="meta">7:30AM daily | OMEGA Content AI | Trending topics in tech, AI, Nigerian business</div>
+<div class="bar"><div class="fill" style="width:100%"></div></div>
+<div class="meta" style="margin-top:4px">100% daily run rate</div>
+</div>
+<div class="campaign-item">
+<div class="title">Content Ideas Generation</div>
+<div class="meta">11AM weekdays | 25 agents | Blog, video, social post ideas</div>
+<div class="bar"><div class="fill" style="width:90%"></div></div>
+<div class="meta" style="margin-top:4px">90% weekday run rate</div>
+</div>
+<div style="margin-top:16px">
+<strong style="font-size:.8rem;color:var(--accent)">Planned Campaigns</strong>
+<div class="fin-row"><span>TikTok Short-Form Series</span><span class="val pending">Q3 2026</span></div>
+<div class="fin-row"><span>LinkedIn B2B Outreach</span><span class="val pending">Q3 2026</span></div>
+<div class="fin-row"><span>Instagram Reels Strategy</span><span class="val pending">Q3 2026</span></div>
+<div class="fin-row"><span>Paid Ad Campaigns (FB/Google)</span><span class="val pending">After payments live</span></div>
+</div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>OMEGA Content AI <span class="badge">25 Agents</span></h2>
+<div class="fin-row"><span>Script Generator</span><span class="val pos">5 agents active</span></div>
+<div class="fin-row"><span>Analytics Engine</span><span class="val pos">4 agents active</span></div>
+<div class="fin-row"><span>Publishing Manager</span><span class="val pos">3 agents active</span></div>
+<div class="fin-row"><span>Trend Researcher</span><span class="val pos">3 agents active</span></div>
+<div class="fin-row"><span>SEO Optimizer</span><span class="val pos">3 agents active</span></div>
+<div class="fin-row"><span>Thumbnail Designer</span><span class="val pos">2 agents active</span></div>
+<div class="fin-row"><span>Video Editor</span><span class="val pos">2 agents active</span></div>
+<div class="fin-row"><span>Channel Manager</span><span class="val pos">3 agents active</span></div>
+</div>
+
+<div class="panel">
+<h2>Marketing Funnel <span class="badge">Value Ladder</span></h2>
+<div class="fin-row"><span>Stage 1: Awareness</span><span class="val">Free lead magnets (3)</span></div>
+<div class="fin-row"><span>Stage 2: Interest</span><span class="val">₦2K-5K micro-products</span></div>
+<div class="fin-row"><span>Stage 3: Desire</span><span class="val">₦5K-30K templates/kits</span></div>
+<div class="fin-row"><span>Stage 4: Action</span><span class="val">₦15K-35K build guides</span></div>
+<div class="fin-row"><span>Stage 5: Retention</span><span class="val">₦75K/mo retainer</span></div>
+<div class="fin-row"><span>Channels</span><span class="val">WhatsApp + Getly + Direct</span></div>
+<div class="fin-row"><span>CRM Pipeline</span><span class="val pos">3 contacts</span></div>
+<div class="fin-row"><span>Conversion Rate</span><span class="val pending">0% (test mode)</span></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
+OMEGA Marketing AI — 25 Content Agents | 6 Social Platforms | Built by Magani
+</div>
+
+</body>
+</html>

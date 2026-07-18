@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Financial Operations — Payment & Revenue Center</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#00d4aa;--purple:#7c3aed;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;--text:#e8e8f0;--muted:#6b6b80}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+.header{padding:16px 0 24px}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,var(--accent),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted)}
+.nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{padding:8px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.8rem}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+.nav a.active{background:rgba(245,158,11,.1);border-color:var(--yellow);color:var(--yellow)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat .num{font-size:1.6rem;font-weight:800}
+.stat .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat .sub{font-size:.65rem;color:var(--muted);margin-top:2px}
+.stat.green .num{color:var(--accent)}
+.stat.purple .num{color:var(--purple)}
+.stat.blue .num{color:var(--blue)}
+.stat.yellow .num{color:var(--yellow)}
+.stat.red .num{color:var(--red)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.panel h2{font-size:.85rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between}
+.panel h2 .badge{font-size:.65rem;padding:2px 8px;border-radius:6px;background:rgba(245,158,11,.15);color:var(--yellow)}
+.gw-card{background:#14141e;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.gw-card .top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.gw-card .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.gw-card .name{font-size:.9rem;font-weight:700;flex:1}
+.gw-card .status{font-size:.7rem;padding:3px 8px;border-radius:6px;font-weight:600}
+.status.live{background:rgba(0,212,170,.15);color:var(--accent)}
+.status.test{background:rgba(245,158,11,.15);color:var(--yellow)}
+.status.pending{background:rgba(59,130,246,.15);color:var(--blue)}
+.gw-card .info{font-size:.75rem;color:var(--muted);margin-top:6px}
+.fin-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.85rem;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border:none}
+.fin-row .val{font-weight:600}
+.fin-row .val.pos{color:var(--accent)}
+.fin-row .val.pending{color:var(--yellow)}
+.fin-row .val.neg{color:var(--red)}
+.fin-row .val.blue{color:var(--blue)}
+.big-num{text-align:center;padding:20px 0}
+.big-num .num{font-size:2.5rem;font-weight:800;color:var(--accent)}
+.big-num .lbl{font-size:.8rem;color:var(--muted);margin-top:4px}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>OMEGA Financial Operations</h1>
+<div class="sub">Payment Gateways | Revenue Tracking | Catalog Valuation | Transactions</div>
+</div>
+</div>
+
+<div class="nav">
+<a href="omega-commander.html">Commander</a>
+<a href="omega-executive.html">Executive</a>
+<a href="omega-products.html">Products</a>
+<a href="omega-deploy.html">Deploy</a>
+<a href="omega-security.html">Security</a>
+<a href="omega-marketing.html">Marketing</a>
+<a href="omega-content.html">Content Studio</a>
+<a href="omega-finance.html" class="active">Finance</a>
+<a href="omega-comms.html">Comms Hub</a>
+</div>
+
+<div class="stats-row">
+<div class="stat green"><div class="num">2</div><div class="lbl">Live Gateways</div><div class="sub">Bank + Getly</div></div>
+<div class="stat yellow"><div class="num">4</div><div class="lbl">Test/Pending</div><div class="sub">Paystack+Stripe+FW+MP</div></div>
+<div class="stat purple"><div class="num">₦1.58M</div><div class="lbl">NGN Catalog</div><div class="sub">171 products</div></div>
+<div class="stat blue"><div class="num">$264K</div><div class="lbl">USD Catalog</div><div class="sub">88 products</div></div>
+<div class="stat green"><div class="num">₦582M</div><div class="lbl">Estate Listings</div><div class="sub">5 properties</div></div>
+<div class="stat yellow"><div class="num">₦25K</div><div class="lbl">Orders</div><div class="sub">1 paid, 2 pending</div></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Payment Gateways <span class="badge">6 Total</span></h2>
+<div class="gw-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">🏦</div>
+<div class="name">Bank Transfer (UBA)</div>
+<div class="status live">LIVE</div>
+</div>
+<div class="info">UBA 2034326424 | Rabiu Hamza Mohammed | Direct payments accepted</div>
+</div>
+<div class="gw-card">
+<div class="top">
+<div class="icon" style="background:rgba(245,158,11,.15)">₿</div>
+<div class="name">Getly (USDT TRC20)</div>
+<div class="status live">LIVE</div>
+</div>
+<div class="info">Wallet: TVE2ia3UTXUsp8V7...X5Cr | 20 products listed | API temporarily down</div>
+</div>
+<div class="gw-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,166,255,.15)">💳</div>
+<div class="name">Paystack</div>
+<div class="status test">TEST MODE</div>
+</div>
+<div class="info">Biz ID 1908660 sent for verification | Awaiting reply | Keys: sk_test_4753c4d / pk_test_c25ac32</div>
+</div>
+<div class="gw-card">
+<div class="top">
+<div class="icon" style="background:rgba(99,91,255,.15)">💳</div>
+<div class="name">Stripe</div>
+<div class="status test">TEST MODE</div>
+</div>
+<div class="info">Charges disabled | Needs manual portal verification | Keys: sk_test_51TosWc / pk_test_51TosWc</div>
+</div>
+<div class="gw-card">
+<div class="top">
+<div class="icon" style="background:rgba(245,158,11,.15)">🌊</div>
+<div class="name">Flutterwave</div>
+<div class="status pending">PENDING</div>
+</div>
+<div class="info">Application submitted | No response yet | Awaiting approval</div>
+</div>
+<div class="gw-card">
+<div class="top">
+<div class="icon" style="background:rgba(0,212,170,.15)">📱</div>
+<div class="name">Moniepoint</div>
+<div class="status pending">PENDING</div>
+</div>
+<div class="info">Account active | Needs API keys | Rabiu must download Business app</div>
+</div>
+</div>
+
+<div class="panel">
+<h2>Catalog Valuation <span class="badge">259 Products</span></h2>
+<div class="big-num">
+<div class="num">₦1.58M + $264K</div>
+<div class="lbl">Total Catalog Value (NGN + USD)</div>
+</div>
+<div class="fin-row"><span>NGN Products</span><span class="val pos">171 (avg ₦9,222)</span></div>
+<div class="fin-row"><span>USD Products</span><span class="val blue">88 (avg $3,005)</span></div>
+<div class="fin-row"><span>Top NGN Price</span><span class="val">₦35,000 (React Masterclass)</span></div>
+<div class="fin-row"><span>Top USD Price</span><span class="val">$9,700 (Investor Database)</span></div>
+<div class="fin-row"><span>Free Products</span><span class="val pos">3 lead magnets</span></div>
+<div class="fin-row"><span>Music Revenue Potential</span><span class="val pos">$880 (27 tracks)</span></div>
+<div class="fin-row"><span>Consultation Slots</span><span class="val pos">6 (₦10K-₦75K/session)</span></div>
+<div class="fin-row"><span>Monthly Retainer</span><span class="val pos">₦75,000/mo</span></div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Recent Transactions <span class="badge">3 Orders</span></h2>
+<div class="fin-row"><span>MindCare AI Pro Subscription</span><span class="val pos">₦5,000 PAID</span></div>
+<div class="fin-row"><span>MindCare AI Pro Subscription</span><span class="val pending">₦5,000 pending_bank</span></div>
+<div class="fin-row"><span>Harz Estate Estimator Pro</span><span class="val pending">₦15,000 pending</span></div>
+<div style="margin-top:12px;font-size:.8rem;color:var(--muted)">
+All transactions in test mode. Revenue will begin flowing once Paystack/Stripe go live.
+</div>
+</div>
+
+<div class="panel">
+<h2>Business Credentials <span class="badge">Verified</span></h2>
+<div class="fin-row"><span>Legal Name</span><span class="val pos">HI Water/Block Industry</span></div>
+<div class="fin-row"><span>Trading As</span><span class="val pos">Harz Digital Services</span></div>
+<div class="fin-row"><span>CAC RC</span><span class="val pos">321424 (CRBN)</span></div>
+<div class="fin-row"><span>TIN</span><span class="val pos">24550860 (FIRS)</span></div>
+<div class="fin-row"><span>Registered</span><span class="val pos">August 5, 2014</span></div>
+<div class="fin-row"><span>Bank</span><span class="val pos">UBA 2034326424</span></div>
+<div class="fin-row"><span>USDT Wallet</span><span class="val pos">TVE2ia3...X5Cr (TRC20)</span></div>
+<div class="fin-row"><span>Docs Submitted</span><span class="val pending">Jul 17, 2026</span></div>
+</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2>Estate Portfolio <span class="badge">₦582M</span></h2>
+<div class="fin-row"><span>4-Bed Duplex, Gousa</span><span class="val pos">₦185M (Sale)</span></div>
+<div class="fin-row"><span>Commercial Plaza, Wuse 2</span><span class="val pos">₦320M (Sale)</span></div>
+<div class="fin-row"><span>3-Bed Apt, Maitama</span><span class="val pos">₦12M (Rent/yr)</span></div>
+<div class="fin-row"><span>Warehouse, Idu</span><span class="val pos">₦25M (Lease/yr)</span></div>
+<div class="fin-row"><span>Residential Plot, Gousa</span><span class="val pos">₦45M (Sale)</span></div>
+</div>
+
+<div class="panel">
+<h2>Financial Action Items <span class="badge">4 Pending</span></h2>
+<div class="fin-row"><span>1. Paystack verification</span><span class="val pending">Awaiting reply</span></div>
+<div class="fin-row"><span>2. Stripe verification</span><span class="val pending">Manual portal</span></div>
+<div class="fin-row"><span>3. Flutterwave approval</span><span class="val pending">No response</span></div>
+<div class="fin-row"><span>4. Moniepoint API keys</span><span class="val pending">Download app</span></div>
+<div style="margin-top:12px;font-size:.75rem;color:var(--accent)">
+All 4 require action. Once 2+ gateways go live, revenue can begin flowing from 259 products.
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">
+OMEGA Financial Operations — 6 Gateways | ₦1.58M + $264K Catalog | Built by Magani
+</div>
+
+</body>
+</html>
