@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rabiuhamza11.github.io/harz-portfolio/sitemap.xml
