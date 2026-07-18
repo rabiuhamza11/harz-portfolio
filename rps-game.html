@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free rock paper scissors game. Play against AI. Classic hand game with score tracking.">
+<meta name="keywords" content="rock paper scissors, rps, hand game, classic game, ai game">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Rock Paper Scissors — Game | Harz Digital Services">
+<meta property="og:description" content="Free rock paper scissors game. Play against AI. Classic hand game with score tracking.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/rps-game.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/rps-game.html">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rock Paper Scissors — Game | Harz Digital Services</title>
+<meta name="description" content="Free rock paper scissors game. Play against AI. Classic hand game with score tracking.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:400px;margin:0 auto}
+.header{text-align:center;padding:12px 0}.header h1{font-size:1.3rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.score-board{display:flex;justify-content:space-around;padding:16px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;margin-bottom:16px}
+.score{text-align:center}.score .num{font-size:1.8rem;font-weight:800;color:#00d4aa}
+.score .lbl{font-size:.65rem;color:#6b6b80;text-transform:uppercase}
+.battle{text-align:center;padding:30px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;margin-bottom:16px;min-height:120px}
+.battle .hands{font-size:3.5rem;margin-bottom:8px}
+.battle .result{font-size:1.2rem;font-weight:700;min-height:24px}
+.battle .result.win{color:#00d4aa}.battle .result.lose{color:#ef4444}.battle .result.draw{color:#f59e0b}
+.choices{display:flex;gap:12px;justify-content:center;margin-bottom:16px}
+.choice{width:80px;height:80px;border-radius:50%;background:#14141e;border:2px solid #1e1e2e;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:all .15s}
+.choice:hover{border-color:#00d4aa;transform:scale(1.05)}
+.choice:active{transform:scale(.9)}
+.history{font-size:.75rem;color:#6b6b80;text-align:center;line-height:1.8}
+.btn{padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#c8c8d0;font-size:.75rem;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>✊ Rock Paper Scissors</h1></div>
+<div class="score-board"><div class="score"><div class="num" id="wins">0</div><div class="lbl">You</div></div><div class="score"><div class="num" id="ties">0</div><div class="lbl">Ties</div></div><div class="score"><div class="num" id="losses">0</div><div class="lbl">AI</div></div></div>
+<div class="battle"><div class="hands" id="hands">✊ vs ✊</div><div class="result" id="result">Choose your weapon!</div></div>
+<div class="choices"><div class="choice" onclick="play('✊')">✊</div><div class="choice" onclick="play('✋')">✋</div><div class="choice" onclick="play('✌')">✌</div></div>
+<div class="history" id="history"></div>
+<button class="btn" onclick="reset()" style="margin-top:8px">↻ Reset</button>
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">Harz Digital Services — RC 321424 | Rock Paper Scissors</div>
+<script>
+var w=0,l=0,t=0,hist=[];
+function play(choice){
+var ai=['✊','✋','✌'][Math.floor(Math.random()*3)];
+var res;
+if(choice===ai){res='draw';t++}
+else if((choice==='✊'&&ai==='✌')||(choice==='✋'&&ai==='✊')||(choice==='✌'&&ai==='✋')){res='win';w++}
+else{res='lose';l++}
+document.getElementById('hands').textContent=choice+' vs '+ai;
+var r=document.getElementById('result');
+r.className='result '+res;
+r.textContent=res==='win'?'🎉 You Win!':res==='lose'?'😅 AI Wins!':"🤝 It's a Tie!";
+document.getElementById('wins').textContent=w;
+document.getElementById('losses').textContent=l;
+document.getElementById('ties').textContent=t;
+hist.unshift({you:choice,ai:ai,res:res});
+if(hist.length>8)hist.pop();
+document.getElementById('history').innerHTML=hist.map(function(h){return (h.res==='win'?'✓':h.res==='lose'?'✗':'=')+' '+h.you+' vs '+h.ai}).join(' · ');
+if(navigator.vibrate)navigator.vibrate(50);
+}
+function reset(){w=0;l=0;t=0;hist=[];document.getElementById('wins').textContent=0;document.getElementById('losses').textContent=0;document.getElementById('ties').textContent=0;document.getElementById('hands').textContent='✊ vs ✊';document.getElementById('result').textContent='Choose your weapon!';document.getElementById('result').className='result';document.getElementById('history').textContent=''}
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
