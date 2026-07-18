@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuildBot AI — Construction Quote Generator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;padding:20px}
+.header{text-align:center;padding:20px 0 30px}
+.header h1{color:#00d4aa;font-size:1.6rem;margin-bottom:5px}
+.header p{color:#8888a0;font-size:.85rem}
+.card{max-width:700px;margin:0 auto 20px;background:#12121a;border:1px solid #2a2a3e;border-radius:16px;padding:24px}
+.card h2{font-size:1rem;color:#7c3aed;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:.8rem;color:#8888a0;margin-bottom:4px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#1a1a2e;border:1px solid #2a2a3e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.form-group input:focus{border-color:#00d4aa;outline:none}
+.form-full{grid-column:1/-1}
+.btn-gen{background:#00d4aa;color:#000;padding:14px 32px;width:100%;font-size:1rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;margin-top:16px}
+.btn-pay{background:#7c3aed;color:#fff;padding:12px 24px;border:none;border-radius:8px;cursor:pointer;font-weight:600;text-decoration:none;display:inline-block;margin-top:12px}
+.result{display:none;margin-top:20px}
+.result-card{background:linear-gradient(135deg,rgba(0,212,170,.1),rgba(124,58,237,.1));border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:24px;margin-bottom:16px}
+.result-card h3{color:#00d4aa;font-size:1.2rem;margin-bottom:12px}
+.cost-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.9rem;border-bottom:1px solid rgba(42,42,62,.5)}
+.cost-row.total{font-weight:700;font-size:1.2rem;color:#00d4aa;border:none;border-top:2px solid #00d4aa;padding-top:12px;margin-top:8px}
+.material-table{width:100%;margin-top:12px;font-size:.85rem}
+.material-table th{text-align:left;padding:6px;color:#8888a0;border-bottom:1px solid #2a2a3e}
+.material-table td{padding:6px;border-bottom:1px solid rgba(42,42,62,.3)}
+.pricing-info{background:#1a1a2e;border-radius:8px;padding:16px;margin-top:16px;font-size:.8rem;color:#8888a0}
+.pricing-info strong{color:#e8e8f0}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>BuildBot AI — Construction Quote</h1>
+<p>Instant construction cost estimate with current Nigerian material prices</p>
+</div>
+
+<div class="card">
+<h2>Project Details</h2>
+<div class="form-grid">
+<div class="form-group"><label>Project Type</label><select id="projectType">
+<option value="bungalow">Bungalow (1 floor)</option>
+<option value="duplex">Duplex (2 floors)</option>
+<option value="terrace">Terrace</option>
+<option value="commercial">Commercial Building</option>
+<option value="fence">Fence / Wall</option>
+</select></div>
+<div class="form-group"><label>Quality Tier</label><select id="tier">
+<option value="basic">Basic (180k/sqm)</option>
+<option value="standard">Standard (350k/sqm)</option>
+<option value="luxury">Luxury (500k/sqm)</option>
+</select></div>
+<div class="form-group"><label>Length (meters)</label><input id="length" type="number" value="15" placeholder="e.g. 15"></div>
+<div class="form-group"><label>Width (meters)</label><input id="width" type="number" value="10" placeholder="e.g. 10"></div>
+<div class="form-group"><label>Floors</label><select id="floors"><option value="1">1 Floor</option><option value="2">2 Floors</option><option value="3">3 Floors</option></select></div>
+<div class="form-group"><label>Rooms</label><input id="rooms" type="number" value="4" placeholder="e.g. 4"></div>
+<div class="form-group"><label>Bathrooms</label><input id="bathrooms" type="number" value="2" placeholder="e.g. 2"></div>
+<div class="form-group"><label>Location</label><select id="location">
+<option value="lagos">Lagos</option>
+<option value="abuja">Abuja</option>
+<option value="kano">Kano</option>
+<option value="port-harcourt">Port Harcourt</option>
+<option value="bauchi">Bauchi</option>
+<option value="taraba">Taraba</option>
+<option value="other">Other</option>
+</select></div>
+<div class="form-group form-full"><label>Additional Features (comma separated)</label><input id="features" type="text" placeholder="e.g. borehole, solar panels, generator house, car park"></div>
+</div>
+<button class="btn-gen" onclick="generateQuote()">Generate Instant Quote</button>
+</div>
+
+<div class="result" id="result">
+<div class="card">
+<div class="result-card">
+<h3>Construction Cost Estimate</h3>
+<div id="costBreakdown"></div>
+</div>
+<div class="card">
+<h2>Material Schedule</h2>
+<div id="materialSchedule"></div>
+</div>
+<div class="pricing-info" id="pricingInfo"></div>
+<div style="text-align:center">
+<a id="payLink" href="#" class="btn-pay" target="_blank">Pay for Full Plan</a>
+</div>
+</div>
+</div>
+
+<script>
+var PRICES={cement:11300,block9:800,block6:650,iron12:8500,iron16:14500,sand:35000,granite:65000,tiles:4500,paint:12000,roofing:8500};
+var TIER_RATES={basic:180000,standard:350000,luxury:500000};
+var LOCATION_FACTORS={lagos:1.15,abuja:1.20,kano:0.95,'port-harcourt':1.10,bauchi:0.90,taraba:0.88,other:1.0};
+
+function generateQuote(){
+var L=parseFloat(document.getElementById('length').value)||10;
+var W=parseFloat(document.getElementById('width').value)||10;
+var F=parseInt(document.getElementById('floors').value)||1;
+var R=parseInt(document.getElementById('rooms').value)||3;
+var B=parseInt(document.getElementById('bathrooms').value)||2;
+var tier=document.getElementById('tier').value;
+var loc=document.getElementById('location').value;
+var pType=document.getElementById('projectType').value;
+var features=document.getElementById('features').value;
+var rate=TIER_RATES[tier];
+var locFactor=LOCATION_FACTORS[loc];
+var area=L*W*F;
+var baseCost=area*rate*locFactor;
+
+var foundation=baseCost*0.15;
+var structure=baseCost*0.30;
+var roofing=baseCost*0.12;
+var finishing=baseCost*0.25;
+var electrical=baseCost*0.08;
+var plumbing=baseCost*0.07;
+var featuresCost=0;
+if(features.toLowerCase().includes('borehole'))featuresCost+=500000;
+if(features.toLowerCase().includes('solar'))featuresCost+=800000;
+if(features.toLowerCase().includes('generator'))featuresCost+=300000;
+if(features.toLowerCase().includes('car park'))featuresCost+=200000;
+var contingency=baseCost*0.03;
+var total=baseCost+featuresCost+contingency;
+
+var cementBags=Math.ceil(area*0.5);
+var blocks=Math.ceil(area*12);
+var ironTons=Math.ceil(area*0.015);
+var sandTrips=Math.ceil(area*0.03);
+var graniteTrips=Math.ceil(area*0.025);
+
+document.getElementById('costBreakdown').innerHTML=
+'<div class="cost-row"><span>Project Type</span><span>'+pType.charAt(0).toUpperCase()+pType.slice(1)+'</span></div>'+
+'<div class="cost-row"><span>Building Area</span><span>'+area+' sqm ('+L+'m x '+W+'m x '+F+' floor(s))</span></div>'+
+'<div class="cost-row"><span>Quality Tier</span><span>'+tier.charAt(0).toUpperCase()+tier.slice(1)+' ('+rate.toLocaleString()+'/sqm)</span></div>'+
+'<div class="cost-row"><span>Location Factor</span><span>'+loc+' (x'+locFactor+')</span></div>'+
+'<div class="cost-row"><span>Foundation & Earthwork (15%)</span><span>'+Math.round(foundation).toLocaleString()+'</span></div>'+
+'<div class="cost-row"><span>Structure & Blockwork (30%)</span><span>'+Math.round(structure).toLocaleString()+'</span></div>'+
+'<div class="cost-row"><span>Roofing (12%)</span><span>'+Math.round(roofing).toLocaleString()+'</span></div>'+
+'<div class="cost-row"><span>Finishing & Tiling (25%)</span><span>'+Math.round(finishing).toLocaleString()+'</span></div>'+
+'<div class="cost-row"><span>Electrical (8%)</span><span>'+Math.round(electrical).toLocaleString()+'</span></div>'+
+'<div class="cost-row"><span>Plumbing (7%)</span><span>'+Math.round(plumbing).toLocaleString()+'</span></div>'+
+(featuresCost?'<div class="cost-row"><span>Additional Features</span><span>'+featuresCost.toLocaleString()+'</span></div>':'')+
+'<div class="cost-row"><span>Contingency (3%)</span><span>'+Math.round(contingency).toLocaleString()+'</span></div>'+
+'<div class="cost-row total"><span>TOTAL ESTIMATE</span><span>'+Math.round(total).toLocaleString()+'</span></div>';
+
+document.getElementById('materialSchedule').innerHTML=
+'<table class="material-table"><thead><tr><th>Material</th><th>Qty</th><th>Unit</th><th>Unit Price</th><th>Subtotal</th></tr></thead><tbody>'+
+'<tr><td>Cement (50kg bags)</td><td>'+cementBags+'</td><td>bags</td><td>'+PRICES.cement.toLocaleString()+'</td><td>'+(cementBags*PRICES.cement).toLocaleString()+'</td></tr>'+
+'<tr><td>Blocks (9-inch)</td><td>'+blocks+'</td><td>pcs</td><td>'+PRICES.block9.toLocaleString()+'</td><td>'+(blocks*PRICES.block9).toLocaleString()+'</td></tr>'+
+'<tr><td>Iron rods (12mm)</td><td>'+ironTons+'</td><td>tons</td><td>'+PRICES.iron12.toLocaleString()+'</td><td>'+(ironTons*PRICES.iron12).toLocaleString()+'</td></tr>'+
+'<tr><td>Sand</td><td>'+sandTrips+'</td><td>trips</td><td>'+PRICES.sand.toLocaleString()+'</td><td>'+(sandTrips*PRICES.sand).toLocaleString()+'</td></tr>'+
+'<tr><td>Granite</td><td>'+graniteTrips+'</td><td>trips</td><td>'+PRICES.granite.toLocaleString()+'</td><td>'+(graniteTrips*PRICES.granite).toLocaleString()+'</td></tr>'+
+'</tbody></table>';
+
+var payLinks={basic:'https://paystack.com/pay/hbxgddu2ei',standard:'https://paystack.com/pay/h8vd642akf',luxury:'https://paystack.com/pay/mit9unhiqi'};
+document.getElementById('payLink').href=payLinks[tier];
+document.getElementById('payLink').textContent='Pay '+tier.charAt(0).toUpperCase()+tier.slice(1)+' Plan ('+rate.toLocaleString()+'/sqm)';
+
+document.getElementById('pricingInfo').innerHTML=
+'<strong>Current Material Prices (July 2026):</strong><br>'+
+'Cement: '+PRICES.cement.toLocaleString()+'/bag | Blocks 9in: '+PRICES.block9.toLocaleString()+' | Iron 12mm: '+PRICES.iron12.toLocaleString()+'/ton<br>'+
+'Sand: '+PRICES.sand.toLocaleString()+'/trip | Granite: '+PRICES.granite.toLocaleString()+'/trip<br>'+
+'<br><strong>USD Equivalent:</strong> ~$'+Math.round(total/1650).toLocaleString()+' (at 1,650 NGN/USD)<br>'+
+'<strong>Timeline:</strong> ~'+Math.ceil(area/50)+' weeks for '+tier+' quality<br>'+
+'<strong>Note:</strong> This is an AI-generated estimate. Full architectural plans, 3D models, and project management available after payment.';
+
+document.getElementById('result').style.display='block';
+document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>

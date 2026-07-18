@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Invoice Generator — Nigerian Business Invoices</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;padding:20px}
+.header{text-align:center;padding:20px 0 30px}
+.header h1{color:#00d4aa;font-size:1.6rem;margin-bottom:5px}
+.header p{color:#8888a0;font-size:.85rem}
+.form-section{max-width:800px;margin:0 auto;background:#12121a;border:1px solid #2a2a3e;border-radius:16px;padding:24px;margin-bottom:20px}
+.form-section h2{font-size:1rem;color:#7c3aed;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:.8rem;color:#8888a0;margin-bottom:4px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#1a1a2e;border:1px solid #2a2a3e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.form-group input:focus,.form-group textarea:focus{border-color:#00d4aa;outline:none}
+.form-full{grid-column:1/-1}
+.items-table{width:100%;margin-top:10px}
+.items-table th{text-align:left;padding:8px;font-size:.75rem;color:#8888a0;border-bottom:1px solid #2a2a3e}
+.items-table td{padding:8px}
+.items-table input{width:100%;padding:8px;background:#1a1a2e;border:1px solid #2a2a3e;border-radius:6px;color:#e8e8f0;font-size:.85rem}
+.btn{padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;border:none;font-size:.9rem}
+.btn-add{background:rgba(124,58,237,.2);color:#7c3aed;margin-top:8px}
+.btn-gen{background:#00d4aa;color:#000;padding:14px 32px;width:100%;font-size:1rem;margin-top:16px}
+.btn-print{background:#7c3aed;color:#fff;margin-top:10px}
+.invoice-preview{max-width:800px;margin:20px auto;background:#fff;color:#000;border-radius:16px;overflow:hidden;display:none}
+.invoice-header{padding:30px;background:linear-gradient(135deg,#0a0a0f,#1a1a2e);color:#fff;display:flex;justify-content:space-between}
+.invoice-header h2{color:#00d4aa;font-size:1.4rem}
+.invoice-header p{font-size:.8rem;opacity:.8}
+.invoice-body{padding:30px}
+.invoice-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.9rem}
+.invoice-row.total{border-top:2px solid #000;font-weight:700;font-size:1.1rem;padding-top:12px;margin-top:8px}
+.invoice-items{width:100%;border-collapse:collapse;margin:16px 0}
+.invoice-items th{text-align:left;padding:10px;background:#f5f5f5;font-size:.8rem;border-bottom:2px solid #ddd}
+.invoice-items td{padding:10px;border-bottom:1px solid #eee;font-size:.85rem}
+.invoice-footer{padding:20px 30px;border-top:1px solid #eee;text-align:center;font-size:.75rem;color:#888}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>Harz Invoice Generator</h1>
+<p>Nigerian business invoices with VAT (7.5%) and WHT (5%) calculations</p>
+</div>
+<div class="form-section">
+<h2>Business Details</h2>
+<div class="form-grid">
+<div class="form-group"><label>Business Name</label><input id="bizName" value="Harz Digital Services" type="text"></div>
+<div class="form-group"><label>CAC Number</label><input id="cacNum" value="RC 321424" type="text"></div>
+<div class="form-group"><label>TIN</label><input id="tin" value="24550860" type="text"></div>
+<div class="form-group"><label>Phone</label><input id="phone" value="08028687857" type="text"></div>
+<div class="form-group"><label>Email</label><input id="email" value="harzco.business@gmail.com" type="text"></div>
+<div class="form-group"><label>Bank</label><input id="bank" value="UBA 2034326424" type="text"></div>
+</div>
+</div>
+<div class="form-section">
+<h2>Client Details</h2>
+<div class="form-grid">
+<div class="form-group"><label>Client Name</label><input id="clientName" type="text" placeholder="Client name"></div>
+<div class="form-group"><label>Client Phone</label><input id="clientPhone" type="text" placeholder="Phone"></div>
+<div class="form-group form-full"><label>Client Address</label><input id="clientAddr" type="text" placeholder="Address"></div>
+</div>
+</div>
+<div class="form-section">
+<h2>Invoice Items</h2>
+<table class="items-table">
+<thead><tr><th>Description</th><th style="width:80px">Qty</th><th style="width:120px">Unit Price</th><th style="width:120px">Amount</th><th style="width:40px"></th></tr></thead>
+<tbody id="itemsBody">
+<tr><td><input type="text" class="desc" placeholder="Product or service"></td><td><input type="number" class="qty" value="1" onchange="calcRow(this)"></td><td><input type="number" class="price" placeholder="0" onchange="calcRow(this)"></td><td class="amount">0</td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#ef4444;cursor:pointer">X</button></td></tr>
+</tbody>
+</table>
+<button class="btn btn-add" onclick="addRow()">+ Add Item</button>
+<div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+<div class="form-group"><label>VAT (7.5%)</label><input id="vat" type="checkbox" checked onchange="calcTotals()"> <span style="font-size:.8rem;color:#888">Include VAT</span></div>
+<div class="form-group"><label>WHT (5%)</label><input id="wht" type="checkbox" onchange="calcTotals()"> <span style="font-size:.8rem;color:#888">Deduct WHT</span></div>
+<div class="form-group"><label>Currency</label><select id="currency"><option value="NGN">NGN</option><option value="USD">USD</option></select></div>
+</div>
+<button class="btn btn-gen" onclick="generateInvoice()">Generate Invoice</button>
+</div>
+<div class="invoice-preview" id="invoicePreview"></div>
+<script>
+function addRow(){var b=document.getElementById('itemsBody');var r=document.createElement('tr');r.innerHTML='<td><input type="text" class="desc" placeholder="Product or service"></td><td><input type="number" class="qty" value="1" onchange="calcRow(this)"></td><td><input type="number" class="price" placeholder="0" onchange="calcRow(this)"></td><td class="amount">0</td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#ef4444;cursor:pointer">X</button></td>';b.appendChild(r)}
+function removeRow(b){if(document.querySelectorAll('#itemsBody tr').length>1){b.closest('tr').remove();calcTotals()}}
+function calcRow(i){var r=i.closest('tr');var q=parseFloat(r.querySelector('.qty').value)||0;var p=parseFloat(r.querySelector('.price').value)||0;r.querySelector('.amount').textContent=(q*p).toLocaleString();calcTotals()}
+function calcTotals(){var t=0;document.querySelectorAll('#itemsBody tr').forEach(function(r){var q=parseFloat(r.querySelector('.qty').value)||0;var p=parseFloat(r.querySelector('.price').value)||0;t+=q*p});var v=document.getElementById('vat').checked?t*0.075:0;var w=document.getElementById('wht').checked?t*0.05:0;var g=t+v-w;return{sub:t,vat:v,wht:w,grand:g}}
+function generateInvoice(){var c=calcTotals();var now=new Date();var inv='INV-'+now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*999);var items='';document.querySelectorAll('#itemsBody tr').forEach(function(r){var d=r.querySelector('.desc').value||'-';var q=r.querySelector('.qty').value||1;var p=parseFloat(r.querySelector('.price').value)||0;var a=q*p;items+='<tr><td>'+d+'</td><td>'+q+'</td><td>'+p.toLocaleString()+'</td><td>'+a.toLocaleString()+'</td></tr>'});var vRow=document.getElementById('vat').checked?'<div class="invoice-row"><span>VAT (7.5%)</span><span>'+c.vat.toLocaleString()+'</span></div>':'<div class="invoice-row"><span>VAT</span><span>0 (exempted)</span></div>';var wRow=document.getElementById('wht').checked?'<div class="invoice-row"><span>Withholding Tax (5%)</span><span>-'+c.wht.toLocaleString()+'</span></div>':'';document.getElementById('invoicePreview').style.display='block';document.getElementById('invoicePreview').innerHTML='<div class="invoice-header"><div><h2>Harz Digital Services</h2><p>CAC: '+document.getElementById('cacNum').value+' | TIN: '+document.getElementById('tin').value+'</p><p>'+document.getElementById('phone').value+' | '+document.getElementById('email').value+'</p><p>Bank: '+document.getElementById('bank').value+'</p></div><div style="text-align:right"><h2 style="font-size:1rem">INVOICE</h2><p>'+inv+'</p><p>'+now.toDateString()+'</p></div></div><div class="invoice-body"><div class="invoice-row"><span style="font-weight:600">Bill To:</span><span></span></div><div class="invoice-row"><span>'+document.getElementById('clientName').value+'</span><span></span></div><div class="invoice-row"><span>'+document.getElementById('clientAddr').value+'</span><span></span></div><div class="invoice-row"><span>'+document.getElementById('clientPhone').value+'</span><span></span></div><table class="invoice-items"><thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>Amount</th></tr></thead><tbody>'+items+'</tbody></table><div class="invoice-row"><span>Subtotal</span><span>'+c.sub.toLocaleString()+'</span></div>'+vRow+wRow+'<div class="invoice-row total"><span>TOTAL PAYABLE</span><span>'+c.grand.toLocaleString()+'</span></div><div style="margin-top:24px;padding:16px;background:#f8f9fa;border-radius:8px;font-size:.8rem"><strong>Payment Details:</strong><br>Bank: '+document.getElementById('bank').value+'<br>Make payment within 14 days of invoice date.</div></div><div class="invoice-footer"><p>This invoice was generated by Harz Digital Services Invoice Generator</p><p>HI Water/Block Industry (RC 321424, TIN 24550860) - Registered since August 5, 2014</p></div><div style="text-align:center;padding:20px"><button class="btn btn-print" onclick="window.print()">Print / Save as PDF</button></div>';document.getElementById('invoicePreview').scrollIntoView({behavior:'smooth'})}
+</script>
+</body>
+</html>

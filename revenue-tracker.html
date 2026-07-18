@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Revenue Tracker — All Income Streams</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;padding:20px}
+.header{text-align:center;padding:20px 0 30px}
+.header h1{color:#00d4aa;font-size:1.6rem;margin-bottom:5px}
+.header p{color:#8888a0;font-size:.85rem}
+.summary{max-width:900px;margin:0 auto 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.summary-card{background:#12121a;border:1px solid #2a2a3e;border-radius:12px;padding:20px;text-align:center}
+.summary-card .label{font-size:.75rem;color:#8888a0;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.summary-card .value{font-size:1.8rem;font-weight:800}
+.summary-card.green .value{color:#00d4aa}
+.summary-card.purple .value{color:#7c3aed}
+.summary-card.yellow .value{color:#f59e0b}
+.summary-card.red .value{color:#ef4444}
+.card{max-width:900px;margin:0 auto 20px;background:#12121a;border:1px solid #2a2a3e;border-radius:16px;padding:24px}
+.card h2{font-size:1rem;color:#7c3aed;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px}
+.stream-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.stream-card{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:12px;padding:16px}
+.stream-card .icon{font-size:1.5rem;margin-bottom:8px}
+.stream-card h3{font-size:.95rem;margin-bottom:4px}
+.stream-card .amount{font-size:1.3rem;font-weight:700;color:#00d4aa}
+.stream-card .meta{font-size:.75rem;color:#8888a0;margin-top:4px}
+.stream-card .bar{height:4px;border-radius:2px;background:#2a2a3e;margin-top:8px;overflow:hidden}
+.stream-card .bar-fill{height:100%;background:#00d4aa;border-radius:2px}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th{text-align:left;padding:10px;font-size:.75rem;color:#8888a0;border-bottom:1px solid #2a2a3e;text-transform:uppercase}
+td{padding:10px;border-bottom:1px solid rgba(42,42,62,.5);font-size:.85rem}
+.status{padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:600}
+.status.test{background:rgba(245,158,11,.15);color:#f59e0b}
+.status.active{background:rgba(0,212,170,.15);color:#00d4aa}
+.status.pending{background:rgba(239,68,68,.15);color:#ef4444}
+.add-form{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-top:16px}
+.add-form input,.add-form select{padding:10px;background:#1a1a2e;border:1px solid #2a2a3e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.btn-add{background:#00d4aa;color:#000;border:none;border-radius:8px;padding:10px 16px;cursor:pointer;font-weight:600}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>Harz Revenue Tracker</h1>
+<p>Track all income streams across the ecosystem in one view</p>
+</div>
+
+<div class="summary">
+<div class="summary-card green"><div class="label">Total Revenue (MTD)</div><div class="value" id="totalRev">0</div></div>
+<div class="summary-card purple"><div class="label">Active Streams</div><div class="value" id="activeStreams">0</div></div>
+<div class="summary-card yellow"><div class="label">Pending Payouts</div><div class="value" id="pendingPayout">0</div></div>
+<div class="summary-card red"><div class="label">Test Mode</div><div class="value">5</div></div>
+</div>
+
+<div class="card">
+<h2>Income Streams</h2>
+<div class="stream-grid" id="streamGrid"></div>
+</div>
+
+<div class="card">
+<h2>Recent Transactions</h2>
+<table>
+<thead><tr><th>Source</th><th>Reference</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+<tbody id="txnBody"></tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>Payment Gateway Status</h2>
+<table>
+<thead><tr><th>Gateway</th><th>Mode</th><th>Transactions</th><th>Balance</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Paystack</td><td>TEST</td><td>18</td><td>0 NGN</td><td><span class="status test">Awaiting Verification</span></td></tr>
+<tr><td>Stripe</td><td>TEST</td><td>0</td><td>$0.00</td><td><span class="status test">Charges Disabled</span></td></tr>
+<tr><td>Flutterwave</td><td>—</td><td>0</td><td>0 NGN</td><td><span class="status pending">Awaiting Approval</span></td></tr>
+<tr><td>Moniepoint</td><td>—</td><td>0</td><td>0 NGN</td><td><span class="status pending">Awaiting Approval</span></td></tr>
+<tr><td>Getly (Crypto)</td><td>LIVE</td><td>0</td><td>$0.00</td><td><span class="status active">Active (USDT TRC20)</span></td></tr>
+<tr><td>Bank Transfer (UBA)</td><td>LIVE</td><td>—</td><td>—</td><td><span class="status active">Manual</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>Record New Income</h2>
+<div class="add-form">
+<input id="newSource" type="text" placeholder="Source (e.g. HarzDM sale, Consultation, BuildBot)">
+<input id="newAmount" type="number" placeholder="Amount">
+<select id="newCurrency"><option value="NGN">NGN</option><option value="USD">USD</option></select>
+<button class="btn-add" onclick="addIncome()">Add</button>
+</div>
+</div>
+
+<script>
+var streams=[
+{name:'HarzDM Marketplace',icon:'🛒',amount:0,currency:'NGN',meta:'241 products via Getly',status:'active',pct:0},
+{name:'BuildBot AI',icon:'🏗️',amount:0,currency:'NGN',meta:'3 tiers: 15k/35k/50k',status:'test',pct:0},
+{name:'ContentPilot AI',icon:'✍️',amount:0,currency:'NGN',meta:'3 plans: 15k/39k/99k',status:'test',pct:0},
+{name:'HarzConsult',icon:'🎯',amount:0,currency:'NGN',meta:'2.5k per session',status:'test',pct:0},
+{name:'Harz Insider Newsletter',icon:'📰',amount:0,currency:'NGN',meta:'2k/month subscription',status:'test',pct:0},
+{name:'HarzMusic',icon:'🎵',amount:0,currency:'NGN',meta:'27 tracks, commission-based',status:'active',pct:0},
+{name:'HarzFilm',icon:'🎬',amount:0,currency:'NGN',meta:'8 films, buy/rent',status:'active',pct:0},
+{name:'HarzFreelance',icon:'💼',amount:0,currency:'NGN',meta:'15% platform fee',status:'active',pct:0},
+{name:'HarzAjo',icon:'👥',amount:0,currency:'NGN',meta:'Digital savings groups',status:'active',pct:0},
+{name:'HarzPay',icon:'💳',amount:0,currency:'NGN',meta:'Payment processing fees',status:'test',pct:0},
+{name:'HarzFX',icon:'💱',amount:0,currency:'NGN',meta:'FX trading spread',status:'active',pct:0},
+{name:'HarzLend',icon:'💰',amount:0,currency:'NGN',meta:'Interest on micro-loans',status:'active',pct:0},
+{name:'EduWealth AI',icon:'📚',amount:0,currency:'NGN',meta:'Course sales, subscriptions',status:'active',pct:0},
+{name:'Oracle AI',icon:'🔮',amount:0,currency:'NGN',meta:'Per-read pricing',status:'active',pct:0},
+{name:'HostMaster AI',icon:'🖥️',amount:0,currency:'NGN',meta:'Domain & hosting',status:'active',pct:0},
+];
+
+var txns=[
+{source:'Paystack Test',ref:'r4n8b3xgnp',amount:5000,currency:'NGN',status:'abandoned',date:'Jul 17'},
+{source:'Paystack Test',ref:'g8aa7xnlhf',amount:26384,currency:'NGN',status:'abandoned',date:'Jul 17'},
+{source:'Paystack Test',ref:'oracle_single',amount:500,currency:'NGN',status:'abandoned',date:'Jul 16'},
+];
+
+var totalRev=0;
+var maxAmount=Math.max.apply(Math,streams.map(function(s){return s.amount}));
+streams.forEach(function(s){s.pct=maxAmount>0?(s.amount/maxAmount*100):0;totalRev+=s.amount});
+
+document.getElementById('totalRev').textContent=totalRev.toLocaleString()+' NGN';
+document.getElementById('activeStreams').textContent=streams.filter(function(s){return s.status==='active'}).length;
+document.getElementById('pendingPayout').textContent='0 NGN';
+
+document.getElementById('streamGrid').innerHTML=streams.map(function(s){
+var cls=s.status==='active'?'active':'test';
+return '<div class="stream-card"><div class="icon">'+s.icon+'</div><h3>'+s.name+'</h3><div class="amount">'+s.amount.toLocaleString()+' '+s.currency+'</div><div class="meta">'+s.meta+'</div><div class="bar"><div class="bar-fill" style="width:'+s.pct+'%"></div></div></div>';
+}).join('');
+
+document.getElementById('txnBody').innerHTML=txns.map(function(t){
+return '<tr><td>'+t.source+'</td><td>'+t.ref+'</td><td>'+t.amount.toLocaleString()+' '+t.currency+'</td><td><span class="status test">'+t.status+'</span></td><td>'+t.date+'</td></tr>';
+}).join('');
+
+function addIncome(){
+var src=document.getElementById('newSource').value||'Unknown';
+var amt=parseFloat(document.getElementById('newAmount').value)||0;
+var cur=document.getElementById('newCurrency').value;
+if(amt<=0)return;
+var now=new Date();
+var ref='MAN-'+now.getDate()+now.getMonth()+Math.floor(Math.random()*999);
+txns.unshift({source:src,ref:ref,amount:amt,currency:cur,status:'received',date:now.toLocaleDateString()});
+totalRev+=cur==='USD'?amt*1650:amt;
+document.getElementById('totalRev').textContent=totalRev.toLocaleString()+' NGN';
+document.getElementById('txnBody').innerHTML=txns.map(function(t){
+return '<tr><td>'+t.source+'</td><td>'+t.ref+'</td><td>'+t.amount.toLocaleString()+' '+t.currency+'</td><td><span class="status '+(t.status==='received'?'active':'test')+'">'+t.status+'</span></td><td>'+t.date+'</td></tr>';
+}).join('');
+document.getElementById('newSource').value='';
+document.getElementById('newAmount').value='';
+}
+</script>
+</body>
+</html>
