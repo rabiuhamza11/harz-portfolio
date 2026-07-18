@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free countdown timer for product launches, deadlines, and events. Set custom dates and track time remaining.">
+<meta name="keywords" content="countdown timer, launch countdown, deadline tracker, event timer">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Countdown Timer — Launch & Deadline Tracker | Harz Digital Services">
+<meta property="og:description" content="Free countdown timer for product launches, deadlines, and events. Set custom dates and track time remaining.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/countdown-timer.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/countdown-timer.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer — Launch & Deadline Tracker | Harz Digital Services</title>
+<meta name="description" content="Free countdown timer for product launches, deadlines, and events. Set custom dates and track time remaining.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:3px}
+.input-group input{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
+.btn{padding:12px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%}
+.btn.gen{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.countdown-display{text-align:center;padding:30px 0}
+.event-name{font-size:1rem;color:#c8c8d0;margin-bottom:20px}
+.time-grid{display:flex;justify-content:center;gap:12px}
+.time-box{background:#14141e;border:1px solid #1e1e2e;border-radius:16px;padding:16px 12px;min-width:70px}
+.time-box .num{font-size:2rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.time-box .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase;margin-top:4px}
+.ended{text-align:center;padding:40px;font-size:1.2rem;color:#f59e0b}
+.preset-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.preset-btn{padding:8px 14px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#c8c8d0;font-size:.75rem;cursor:pointer}
+.preset-btn:hover{border-color:#00d4aa;color:#00d4aa}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Countdown Timer</h1><p>Track launches, deadlines & events</p></div>
+
+<div class="card">
+<h2>Set Your Countdown</h2>
+<div class="preset-btns">
+<button class="preset-btn" onclick="setPreset(1)">+1 Day</button>
+<button class="preset-btn" onclick="setPreset(7)">+1 Week</button>
+<button class="preset-btn" onclick="setPreset(30)">+1 Month</button>
+<button class="preset-btn" onclick="setPreset(90)">+3 Months</button>
+</div>
+<div class="input-group"><label>Event Name</label><input type="text" id="eventName" value="Product Launch"></div>
+<div class="input-group"><label>Target Date & Time</label><input type="datetime-local" id="targetDate"></div>
+<button class="btn gen" onclick="startCountdown()">Start Countdown</button>
+</div>
+
+<div class="card" id="displayCard" style="display:none">
+<div class="countdown-display">
+<div class="event-name" id="displayName"></div>
+<div class="time-grid">
+<div class="time-box"><div class="num" id="days">00</div><div class="lbl">Days</div></div>
+<div class="time-box"><div class="num" id="hours">00</div><div class="lbl">Hours</div></div>
+<div class="time-box"><div class="num" id="mins">00</div><div class="lbl">Minutes</div></div>
+<div class="time-box"><div class="num" id="secs">00</div><div class="lbl">Seconds</div></div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Countdown Timer
+</div>
+
+<script>
+var interval=null;
+// Default to 7 days from now
+var def=new Date(Date.now()+7*24*60*60*1000);
+var localISO=new Date(def.getTime()-def.getTimezoneOffset()*60000).toISOString().slice(0,16);
+document.getElementById('targetDate').value=localISO;
+
+function setPreset(days){
+var d=new Date(Date.now()+days*24*60*60*1000);
+var iso=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);
+document.getElementById('targetDate').value=iso;
+document.getElementById('eventName').value=days+' Day Countdown';
+startCountdown();
+}
+
+function startCountdown(){
+var name=document.getElementById('eventName').value||'Countdown';
+var target=document.getElementById('targetDate').value;
+if(!target){alert('Set a date');return}
+var targetTime=new Date(target).getTime();
+clearInterval(interval);
+document.getElementById('displayCard').style.display='block';
+document.getElementById('displayName').textContent=name;
+
+function update(){
+var now=Date.now();
+var diff=targetTime-now;
+if(diff<=0){
+clearInterval(interval);
+document.getElementById('displayCard').innerHTML='<div class="ended">🎉 '+name+' has arrived! 🎉</div>';
+return;
+}
+var d=Math.floor(diff/86400000);
+var h=Math.floor(diff%86400000/3600000);
+var m=Math.floor(diff%3600000/60000);
+var s=Math.floor(diff%60000/1000);
+document.getElementById('days').textContent=String(d).padStart(2,'0');
+document.getElementById('hours').textContent=String(h).padStart(2,'0');
+document.getElementById('mins').textContent=String(m).padStart(2,'0');
+document.getElementById('secs').textContent=String(s).padStart(2,'0');
+}
+update();
+interval=setInterval(update,1000);
+}
+
+startCountdown();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

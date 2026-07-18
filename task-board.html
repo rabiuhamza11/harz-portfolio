@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free kanban task board. Create tasks, drag between columns, track progress. Saves to your browser. Perfect for solo entrepreneurs.">
+<meta name="keywords" content="task board, kanban, project management, todo list, task tracker">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Task Board — Kanban Project Manager | Harz Digital Services">
+<meta property="og:description" content="Free kanban task board. Create tasks, drag between columns, track progress. Saves to your browser. Perfect for solo entrepreneurs.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/task-board.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/task-board.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Board — Kanban Project Manager | Harz Digital Services</title>
+<meta name="description" content="Free kanban task board. Create tasks, drag between columns, track progress. Saves to your browser. Perfect for solo entrepreneurs.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:900px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.add-task{display:flex;gap:8px;margin-bottom:16px}
+.add-task input{flex:1;padding:10px 14px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:.85rem}
+.add-task button{padding:10px 18px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer}
+.board{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.column{background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;padding:12px;min-height:200px}
+.column-header{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid}
+.col-todo{border-color:#f59e0b;color:#f59e0b}
+.col-doing{border-color:#00d4aa;color:#00d4aa}
+.col-done{border-color:#7c3aed;color:#7c3aed}
+.task{background:#14141e;border:1px solid #1e1e2e;border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.task:hover{border-color:#00d4aa;transform:translateY(-2px)}
+.task .text{font-size:.8rem;color:#e8e8f0;line-height:1.4}
+.task .meta{font-size:.65rem;color:#6b6b80;margin-top:6px;display:flex;justify-content:space-between;align-items:center}
+.task .move{padding:3px 8px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);border-radius:6px;color:#00d4aa;cursor:pointer;font-size:.65rem}
+.task .del{color:#ef4444;cursor:pointer;font-size:.9rem}
+.task-count{font-size:.7rem;color:#6b6b80;margin-left:6px}
+.empty{text-align:center;padding:20px;color:#6b6b80;font-size:.75rem}
+@media(max-width:600px){.board{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header">
+<h1>📋 Task Board</h1>
+<div style="font-size:.75rem;color:#6b6b80"><span id="totalCount">0</span> tasks</div>
+</div>
+
+<div class="add-task">
+<input type="text" id="taskInput" placeholder="Add a new task..." onkeypress="if(event.key==='Enter')addTask()">
+<button onclick="addTask()">+ Add</button>
+</div>
+
+<div class="board">
+<div class="column">
+<div class="column-header col-todo">📌 To Do <span class="task-count" id="countTodo">0</span></div>
+<div id="colTodo"></div>
+</div>
+<div class="column">
+<div class="column-header col-doing">🔄 In Progress <span class="task-count" id="countDoing">0</span></div>
+<div id="colDoing"></div>
+</div>
+<div class="column">
+<div class="column-header col-done">✅ Done <span class="task-count" id="countDone">0</span></div>
+<div id="colDone"></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Task Board — saves to your browser
+</div>
+
+<script>
+var tasks=JSON.parse(localStorage.getItem('harz_tasks')||'[]');
+if(tasks.length===0){
+tasks=[
+{id:1,text:'Set up Paystack live mode',col:'todo'},
+{id:2,text:'Complete Stripe verification',col:'todo'},
+{id:3,text:'Upload 20 new products to Getly',col:'doing'},
+{id:4,text:'Build 60 portfolio pages',col:'doing'},
+{id:5,text:'Register Harz domain',col:'done'},
+{id:6,text:'Set up Gmail business email',col:'done'},
+{id:7,text:'Configure Telegram bot',col:'done'}
+];
+localStorage.setItem('harz_tasks',JSON.stringify(tasks));
+}
+
+function save(){localStorage.setItem('harz_tasks',JSON.stringify(tasks))}
+
+function render(){
+var cols={todo:[],doing:[],done:[]};
+tasks.forEach(function(t){cols[t.col].push(t)});
+['Todo','Doing','Done'].forEach(function(cap){
+var lower=cap.toLowerCase();
+var container=document.getElementById('col'+cap);
+if(cols[lower].length===0){
+container.innerHTML='<div class="empty">No tasks</div>';
+}else{
+container.innerHTML=cols[lower].map(function(t){
+var nextCol=lower==='todo'?'doing':lower==='doing'?'done':null;
+var prevCol=lower==='doing'?'todo':lower==='done'?'doing':null;
+var moveBtns='';
+if(nextCol)moveBtns+='<span class="move" onclick="moveTask('+t.id+',\''+nextCol+'\')">→</span>';
+if(prevCol)moveBtns+='<span class="move" onclick="moveTask('+t.id+',\''+prevCol+'\')">←</span>';
+return '<div class="task"><div class="text">'+t.text.replace(/</g,'&lt;')+'</div><div class="meta">'+moveBtns+' <span class="del" onclick="delTask('+t.id+')">✕</span></div></div>';
+}).join('');
+}
+document.getElementById('count'+cap).textContent=cols[lower].length;
+});
+document.getElementById('totalCount').textContent=tasks.length;
+}
+
+function addTask(){
+var input=document.getElementById('taskInput');
+var text=input.value.trim();
+if(!text)return;
+tasks.push({id:Date.now(),text:text,col:'todo'});
+input.value='';
+save();render();
+}
+
+function moveTask(id,newCol){
+var t=tasks.find(function(t){return t.id===id});
+if(t){t.col=newCol;save();render()}
+}
+
+function delTask(id){
+tasks=tasks.filter(function(t){return t.id!==id});
+save();render();
+}
+
+render();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

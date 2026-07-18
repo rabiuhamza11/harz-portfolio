@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free word counter and text analyzer. Count words, characters, sentences, paragraphs, and reading time. Perfect for content creators and writers.">
+<meta name="keywords" content="word counter, character count, text analyzer, reading time, content tool">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Word Counter & Text Analyzer — Free Tool | Harz Digital Services">
+<meta property="og:description" content="Free word counter and text analyzer. Count words, characters, sentences, paragraphs, and reading time. Perfect for content creators and writers.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/word-counter.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/word-counter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Counter & Text Analyzer — Free Tool | Harz Digital Services</title>
+<meta name="description" content="Free word counter and text analyzer. Count words, characters, sentences, paragraphs, and reading time. Perfect for content creators and writers.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:600px;margin:0 auto}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.3rem;color:#00d4aa}
+.header p{font-size:.8rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:16px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+textarea{width:100%;min-height:200px;padding:14px;background:#14141e;border:1px solid #1e1e2e;border-radius:12px;color:#e8e8f0;font-size:.9rem;font-family:inherit;line-height:1.6;resize:vertical}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.stat{background:#14141e;border:1px solid #1e1e2e;border-radius:10px;padding:12px;text-align:center}
+.stat .num{font-size:1.5rem;font-weight:800;color:#00d4aa}
+.stat .lbl{font-size:.6rem;color:#6b6b80;text-transform:uppercase;margin-top:2px}
+.reading-time{background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.2);border-radius:12px;padding:14px;text-align:center;margin-top:12px}
+.reading-time .icon{font-size:1.5rem}
+.reading-time .text{font-size:.85rem;color:#c8c8d0;margin-top:4px}
+.reading-time .time{font-size:1.1rem;font-weight:700;color:#00d4aa}
+.keyword-list{margin-top:12px}
+.keyword{display:inline-block;padding:4px 10px;background:#14141e;border:1px solid #1e1e2e;border-radius:20px;font-size:.75rem;color:#c8c8d0;margin:3px}
+.keyword .count{color:#00d4aa;font-weight:700}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>Word Counter</h1><p>Count words, characters, reading time & more</p></div>
+
+<div class="card">
+<h2>Paste Your Text</h2>
+<textarea id="textArea" placeholder="Start typing or paste your content here..." oninput="analyze()">Start typing or paste your content here to see live stats...</textarea>
+<div class="stats">
+<div class="stat"><div class="num" id="wordCount">0</div><div class="lbl">Words</div></div>
+<div class="stat"><div class="num" id="charCount">0</div><div class="lbl">Characters</div></div>
+<div class="stat"><div class="num" id="charNoSpace">0</div><div class="lbl">No Spaces</div></div>
+<div class="stat"><div class="num" id="sentCount">0</div><div class="lbl">Sentences</div></div>
+<div class="stat"><div class="num" id="paraCount">0</div><div class="lbl">Paragraphs</div></div>
+<div class="stat"><div class="num" id="lineCount">0</div><div class="lbl">Lines</div></div>
+</div>
+<div class="reading-time">
+<div class="icon">⏱️</div>
+<div class="text">Estimated reading time</div>
+<div class="time" id="readTime">0 sec</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Top Keywords</h2>
+<div class="keyword-list" id="keywords"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Word Counter & Text Analyzer
+</div>
+
+<script>
+var stopWords=['the','a','an','and','or','but','in','on','at','to','for','of','with','by','from','is','are','was','were','be','been','being','have','has','had','do','does','did','will','would','could','should','may','might','can','this','that','these','those','i','you','he','she','it','we','they','them','their','what','which','who','when','where','why','how','all','each','every','both','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','just','as','if','about','your','here','there'];
+
+function analyze(){
+var text=document.getElementById('textArea').value;
+var words=text.trim().split(/\s+/).filter(function(w){return w.length>0});
+var chars=text.length;
+var charsNoSpace=text.replace(/\s/g,'').length;
+var sentences=text.split(/[.!?]+/).filter(function(s){return s.trim().length>0});
+var paragraphs=text.split(/\n\n+/).filter(function(p){return p.trim().length>0});
+if(paragraphs.length===0&&text.trim().length>0)paragraphs=[text.trim()];
+var lines=text.split('\n').filter(function(l){return l.trim().length>0});
+
+document.getElementById('wordCount').textContent=words.length;
+document.getElementById('charCount').textContent=chars;
+document.getElementById('charNoSpace').textContent=charsNoSpace;
+document.getElementById('sentCount').textContent=sentences.length;
+document.getElementById('paraCount').textContent=paragraphs.length;
+document.getElementById('lineCount').textContent=lines.length;
+
+// Reading time (200 wpm)
+var mins=words.length/200;
+var secs=Math.round(mins*60);
+var timeText;
+if(secs<60)timeText=secs+' sec';
+else if(secs<3600)timeText=Math.floor(secs/60)+' min '+(secs%60)+' sec';
+else timeText=Math.floor(secs/3600)+' hr '+Math.floor((secs%3600)/60)+' min';
+document.getElementById('readTime').textContent=timeText;
+
+// Keywords
+var freq={};
+words.forEach(function(w){
+w=w.toLowerCase().replace(/[^a-z0-9]/g,'');
+if(w.length<3||stopWords.includes(w))return;
+freq[w]=(freq[w]||0)+1;
+});
+var sorted=Object.entries(freq).sort(function(a,b){return b[1]-a[1]}).slice(0,15);
+document.getElementById('keywords').innerHTML=sorted.map(function(k){
+return '<span class="keyword">'+k[0]+' <span class="count">'+k[1]+'</span></span>';
+}).join('');
+}
+
+analyze();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
