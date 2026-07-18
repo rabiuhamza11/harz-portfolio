@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free ASCII art text generator. Convert text to ASCII art banners. Multiple fonts and styles. Copy for social media and terminals.">
+<meta name="keywords" content="ascii art, text to ascii, ascii banner, text art, terminal art">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ASCII Art Text Generator — Fun Tool | Harz Digital Services">
+<meta property="og:description" content="Free ASCII art text generator. Convert text to ASCII art banners. Multiple fonts and styles. Copy for social media and terminals.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/ascii-art.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/ascii-art.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASCII Art Text Generator — Fun Tool | Harz Digital Services</title>
+<meta name="description" content="Free ASCII art text generator. Convert text to ASCII art banners. Multiple fonts and styles. Copy for social media and terminals.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:550px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;color:#e8e8f0;font-size:1rem}
+.font-tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.font-tab{padding:8px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer}
+.font-tab.active{border-color:#00d4aa;color:#00d4aa}
+.output{background:#0e0e16;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:16px;margin-bottom:10px;overflow-x:auto}
+.output pre{font-family:monospace;font-size:.6rem;color:#00d4aa;line-height:1.1;white-space:pre}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-bottom:8px}
+.btn.copy{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);color:#00d4aa}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>ASCII Art Generator</h1></div>
+
+<div class="card">
+<h2>Enter Text</h2>
+<div class="input-group"><label>Text (max 10 chars for best results)</label><input type="text" id="text" value="HARZ" maxlength="10" oninput="gen()"></div>
+<div class="font-tabs" id="fontTabs"></div>
+</div>
+
+<div class="card">
+<h2>Result</h2>
+<div class="output"><pre id="asciiOutput"></pre></div>
+<button class="btn copy" onclick="copy()">📋 Copy ASCII Art</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | ASCII Art Generator
+</div>
+
+<script>
+// Simple block font
+var blockFont={
+'A':['  ██  ',' ████ ','██  ██','██████','██  ██','██  ██'],
+'B:['█████ ','██  ██','█████ ','██  ██','██  ██','█████ '],
+'C:[' █████','██   ','██    ','██    ','██   ',' █████'],
+'D:['█████ ','██  ██','██  ██','██  ██','██  ██','█████ '],
+'E:['██████','██    ','█████ ','██    ','██    ','██████'],
+'F':['██████','██    ','█████ ','██    ','██    ','██    '],
+'G':[' █████','██    ','██  ██','██  ██','██  ██',' ████ '],
+'H:['██  ██','██  ██','██████','██  ██','██  ██','██  ██'],
+'I:['██','██','██','██','██','██'],
+'J':['  ████','    ██','    ██','██  ██','██  ██',' ████ '],
+'K':['██  ██','██ ██ ','████  ','██ ██ ','██  ██','██  ██'],
+'L:['██    ','██    ','██    ','██    ','██    ','██████'],
+'M:['██    ██','████  █','██ ██ ██','██ ██ ██','██    ██','██    ██'],
+'N':['██  ██','████ ██','███████','███████','██ ████','██  ██'],
+'O:[' ████ ','██  ██','██  ██','██  ██','██  ██',' ████ '],
+'P':['██████','██  ██','██████','██    ','██    ','██    '],
+'Q':[' ████ ','██  ██','██  ██','██ ███','██████','  ███ '],
+'R:['█████ ','██  ██','█████ ','██ ██ ','██  ██','██  ██'],
+'S:[' █████','██    ',' ████ ','    ██','██  ██',' █████'],
+'T:['██████','  ██  ','  ██  ','  ██  ','  ██  ','  ██  '],
+'U':['██  ██','██  ██','██  ██','██  ██','██  ██',' ████ '],
+'V':['██  ██','██  ██','██  ██','██  ██',' ████ ','  ██  '],
+'W':['██    ██','██    ██','██ ██ ██','████  █','██    ██','██    ██'],
+'X':['██  ██',' ████ ','  ██  ','  ██  ',' ████ ','██  ██'],
+'Y:['██  ██',' ██ ██','  ██  ','  ██  ','  ██  ','  ██  '],
+'Z':['██████','   ██','  ██ ',' ██  ','██   ','██████'],
+' ':['   ','   ','   ','   ','   ','   '],
+'0':[' ████ ','██  ██','██ ███','██████','██  ██',' ████ '],
+'1':['  ██  ',' ███  ','  ██  ','  ██  ','  ██  ','██████'],
+'2':[' ████ ','██  ██','   ██ ','  ██  ',' ██   ','██████'],
+'3:['█████ ','    ██',' ████ ','    ██','    ██','█████ '],
+'4':['██  █','██ █ ','████  ','   ██ ','   ██ ','   ██ '],
+'5':['██████','██    ','█████ ','    ██','██  ██',' █████'],
+'6:[' █████','██    ','█████ ','██  ██','██  ██',' █████'],
+'7':['██████','   ██ ','  ██  ',' ██   ','██    ','██    '],
+'8':[' ████ ','██  ██',' ████ ','██  ██','██  ██',' ████ '],
+'9':[' █████','██  ██','██  ██',' █████','    ██',' ████ '],
+'!':['██','██','██','██','   ','██'],
+'?':['█████ ','██  ██','   ██ ','  ██  ','      ','  ██  ']
+};
+
+// Binary font (small)
+var binaryFont={
+'A':['01000001','H','|','|-|','| |','H H','H H'],
+'B':['01000010','|-]','| ]','|-]','| ]','|-]'],
+'C':['01000011','|^^','|  ','|  ','|  ','|^_'],
+'D:['01000100','|-]','| ]','| ]','| ]','|-]'],
+'E':['01000101','|^^','|  ','|- ','|  ','|__'],
+'F':['01000110','|^^','|  ','|- ','|  ','|  '],
+'G':['01000111','|^^','|  ','| ]','| |','|_]'],
+'H':['01001000','| |','| |','|-|','| |','| |'],
+'I':['01001001','|','|','|','|','|'],
+'J':['01001010','  |','  |','  |','| |',' L_'],
+'K':['01001011','| |','|/ ','|- ','| ]','| |'],
+'L':['01001100','|  ','|  ','|  ','|  ','|__'],
+'M':['01001101','|  |','|[]|','|  |','|  |','|  |'],
+'N':['01001110','| |','|[]|','|/|','| ||','| ||'],
+'O':['01001111',' ^-^ ','|   |','|   |','|   |',' L_J '],
+'P':['01010000','|-|]','|  |','|-]','|  ','|  '],
+'Q':['01010001',' ^-^ ','|   |','|   |','| _]',' L_J_'],
+'R':['01010010','|-|]','|  |','|-]','| ]','|  |'],
+'S':['01010011',' ^-^ ','|  ',' L_ ','   |','L_J '],
+'T':['01010100','|-|',' | ',' | ',' | ',' | '],
+'U':['01010101','|  |','|  |','|  |','|  |',' L_J'],
+'V':['01010110','|  |','|  |','|  |',' ]/',' ]'],
+'W':['01010111','|    |','| [] |','| /  |','|/  | ','|  |  '],
+'X':['01011000','| |',' ]/','<  ',' ]','| |'],
+'Y':['01011001','| |',' ]/',' | ',' | ',' | '],
+'Z':['01011010','|^^',' / ',' / ','/  ','|__'],
+' ':['00100000','   ','   ','   ','   ','   '],
+'0':['00110000',' _ ','| |','| |','| |',' L_'],
+'1':['00110001','  |','  |','  |','  |','  |'],
+'2':['00110010',' _ ','|]','/ ','/ ','[_'],
+'3':['00110011',' _ ','|]',' _','|]',' _]'],
+'4':['00110100','| |','| |','|-|','  |','  |'],
+'5':['00110101',' _ ','|  ','-_ ','  |','L_ '],
+'6':['00110110',' _ ','|  ','|-]','| |',' L_'],
+'7':['00110111','_-_','  |','  |','  |','  |'],
+'8':['00111000',' _ ','| |',' L ','| |',' L_'],
+'9':['00111001',' _ ','| |',' L]','  |','L_ ']
+};
+
+var currentFont='block';
+var fonts={'block':'Block Font','binary':'Binary Font','banner':'Banner (Simple)'};
+
+function renderFontTabs(){
+document.getElementById('fontTabs').innerHTML=Object.keys(fonts).map(function(f){
+return '<span class="font-tab '+(f===currentFont?'active':'')+'" onclick="setFont(\''+f+'\')">'+fonts[f]+'</span>';
+}).join('');
+}
+
+function setFont(f){currentFont=f;renderFontTabs();gen()}
+
+function gen(){
+var text=document.getElementById('text').value.toUpperCase()||'HARZ';
+if(currentFont==='block'){
+genBlock(text);
+}else if(currentFont==='binary'){
+genBinary(text);
+}else{
+genBanner(text);
+}
+}
+
+function genBlock(text){
+var rows=6;
+var lines=[];
+for(var r=0;r<rows;r++){
+var line='';
+for(var i=0;i<text.length;i++){
+var ch=text[i];
+if(blockFont[ch]){line+=blockFont[ch][r]+' '}
+else{line+='      '}
+}
+lines.push(line.replace(/\s+$/,''));
+}
+document.getElementById('asciiOutput').textContent=lines.join('\n');
+}
+
+function genBinary(text){
+var rows=6;
+var lines=[];
+for(var r=0;r<rows;r++){
+var line='';
+for(var i=0;i<text.length;i++){
+var ch=text[i];
+if(binaryFont[ch]){line+=binaryFont[ch][r+1]+' '}
+else if(ch===' '){line+='   '}
+else{line+='     '}
+}
+lines.push(line.replace(/\s+$/,''));
+}
+document.getElementById('asciiOutput').textContent=lines.join('\n');
+}
+
+function genBanner(text){
+var banner={};
+var lines=[];
+for(var i=0;i<3;i++){
+var line='';
+for(var j=0;j<text.length;j++){
+var ch=text[j];
+if(ch===' '){line+='     '}
+else{
+// Simple hash-like banner
+var code=ch.charCodeAt(0);
+var row='';
+for(var b=0;b<5;b++){row+=(code&(1<<(b+i*5)))?'█':'░'}
+line+=row+' ';
+}
+line=line.replace(/█/g,'#');
+}
+lines.push(line.replace(/\s+$/,''));
+}
+document.getElementById('asciiOutput').textContent=lines.join('\n');
+}
+
+function copy(){
+navigator.clipboard.writeText('```\n'+document.getElementById('asciiOutput').textContent+'\n```');
+alert('ASCII art copied!');
+}
+
+renderFontTabs();gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

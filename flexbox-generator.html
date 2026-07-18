@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free CSS flexbox generator. Build flex layouts visually with live preview. Adjust direction, justify, align, wrap, and gap. Copy CSS instantly.">
+<meta name="keywords" content="flexbox generator, css flex, flex layout, flex direction, justify content, align items">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CSS Flexbox Generator — Layout Tool | Harz Digital Services">
+<meta property="og:description" content="Free CSS flexbox generator. Build flex layouts visually with live preview. Adjust direction, justify, align, wrap, and gap. Copy CSS instantly.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/flexbox-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/flexbox-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Flexbox Generator — Layout Tool | Harz Digital Services</title>
+<meta name="description" content="Free CSS flexbox generator. Build flex layouts visually with live preview. Adjust direction, justify, align, wrap, and gap. Copy CSS instantly.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:520px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.preview{background:#14141e;border:2px dashed #1e1e2e;border-radius:12px;padding:16px;min-height:140px;display:flex;margin-bottom:16px}
+.flex-item{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;padding:12px 20px;border-radius:8px;font-size:.8rem;font-weight:600;margin:4px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.btn-group{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.btn-opt{padding:8px 4px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.65rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.btn-opt.active{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.05)}
+.slider-row{margin-bottom:10px}
+.slider-row label{display:flex;justify-content:space-between;font-size:.75rem;color:#c8c8d0;margin-bottom:4px}
+.slider-row label .val{color:#00d4aa;font-weight:600}
+.slider-row input[type=range]{width:100%;accent-color:#00d4aa}
+.item-count{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.item-count button{padding:6px 14px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#00d4aa;font-size:1rem;cursor:pointer}
+.item-count span{font-size:.8rem;color:#c8c8d0;margin:0 8px}
+.output{background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:14px}
+.output .code{font-family:monospace;font-size:.72rem;color:#00d4aa;white-space:pre-wrap;word-break:break-all;line-height:1.6}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>CSS Flexbox Generator</h1></div>
+
+<div class="preview" id="preview">
+<div class="flex-item">1</div>
+<div class="flex-item">2</div>
+<div class="flex-item">3</div>
+</div>
+
+<div class="card">
+<h2>Container Settings</h2>
+<div class="input-group"><label>Flex Direction</label>
+<div class="btn-group">
+<div class="btn-opt active" onclick="set('direction','row')" data-v="row">→ Row</div>
+<div class="btn-opt" onclick="set('direction','column')" data-v="column">↓ Column</div>
+<div class="btn-opt" onclick="set('direction','row-reverse')" data-v="row-reverse">← Rev</div>
+<div class="btn-opt" onclick="set('direction','column-reverse')" data-v="column-reverse">↑ Rev</div>
+</div></div>
+<div class="input-group"><label>Justify Content</label>
+<div class="btn-group">
+<div class="btn-opt active" onclick="set('justify','flex-start')" data-v="flex-start">Start</div>
+<div class="btn-opt" onclick="set('justify','center')" data-v="center">Center</div>
+<div class="btn-opt" onclick="set('justify','flex-end')" data-v="flex-end">End</div>
+<div class="btn-opt" onclick="set('justify','space-between')" data-v="space-between">Between</div>
+</div></div>
+<div class="input-group"><label>Align Items</label>
+<div class="btn-group">
+<div class="btn-opt active" onclick="set('align','stretch')" data-v="stretch">Stretch</div>
+<div class="btn-opt" onclick="set('align','flex-start')" data-v="flex-start">Start</div>
+<div class="btn-opt" onclick="set('align','center')" data-v="center">Center</div>
+<div class="btn-opt" onclick="set('align','flex-end')" data-v="flex-end">End</div>
+</div></div>
+<div class="input-group"><label>Flex Wrap</label>
+<div class="btn-group">
+<div class="btn-opt active" onclick="set('wrap','nowrap')" data-v="nowrap">No Wrap</div>
+<div class="btn-opt" onclick="set('wrap','wrap')" data-v="wrap">Wrap</div>
+</div></div>
+<div class="slider-row"><label>Gap <span class="val" id="gapVal">8px</span></label><input type="range" id="gap" min="0" max="40" value="8" oninput="gen()"></div>
+</div>
+
+<div class="card">
+<h2>Items</h2>
+<div class="item-count"><button onclick="addItem()">+</button><span id="itemCount">3 items</span><button onclick="rmItem()">−</button></div>
+</div>
+
+<div class="card">
+<h2>CSS Code</h2>
+<div class="output"><div class="code" id="cssCode"></div></div>
+<button class="btn" onclick="copy()">📋 Copy CSS</button>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">
+Harz Digital Services — RC 321424 | Flexbox Generator
+</div>
+
+<script>
+var settings={direction:'row',justify:'flex-start',align:'stretch',wrap:'nowrap'};
+var items=3;
+
+function set(prop,val){
+settings[prop]=val;
+document.querySelectorAll('[data-v]').forEach(function(e){
+if(e.parentElement.previousElementSibling&&e.parentElement.previousElementSibling.textContent.includes(prop)){
+e.classList.toggle('active',e.dataset.v===val);
+}
+});
+// Update active state on clicked group
+event.target.parentElement.querySelectorAll('.btn-opt').forEach(function(e){e.classList.remove('active')});
+event.target.classList.add('active');
+gen();
+}
+
+function addItem(){if(items<8){items++;gen()}}
+function rmItem(){if(items>1){items--;gen()}}
+
+function gen(){
+var gap=document.getElementById('gap').value;
+document.getElementById('gapVal').textContent=gap+'px';
+document.getElementById('itemCount').textContent=items+' items';
+var preview=document.getElementById('preview');
+preview.style.flexDirection=settings.direction;
+preview.style.justifyContent=settings.justify;
+preview.style.alignItems=settings.align;
+preview.style.flexWrap=settings.wrap;
+preview.style.gap=gap+'px';
+preview.innerHTML='';
+for(var i=1;i<=items;i++){
+var d=document.createElement('div');
+d.className='flex-item';d.textContent=i;
+preview.appendChild(d);
+}
+var css='.container {\n  display: flex;\n  flex-direction: '+settings.direction+';\n  justify-content: '+settings.justify+';\n  align-items: '+settings.align+';\n  flex-wrap: '+settings.wrap+';\n  gap: '+gap+'px;\n}\n\n.item {\n  background: linear-gradient(135deg, #00d4aa, #7c3aed);\n  color: #ffffff;\n  padding: 12px 20px;\n  border-radius: 8px;\n  font-weight: 600;\n}';
+document.getElementById('cssCode').textContent=css;
+}
+
+function copy(){navigator.clipboard.writeText(document.getElementById('cssCode').textContent);alert('CSS copied!')}
+gen();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
