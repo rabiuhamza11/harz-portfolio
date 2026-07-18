@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free certificate generator. Create professional certificates for courses, events, and achievements. Download as PNG.">
+<meta name="keywords" content="certificate generator, create certificate, award certificate, course certificate, achievement certificate">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Certificate Generator — Create Certificates | Harz Digital Services">
+<meta property="og:description" content="Free certificate generator. Create professional certificates for courses, events, and achievements. Download as PNG.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/certificate-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/certificate-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificate Generator — Create Certificates | Harz Digital Services</title>
+<meta name="description" content="Free certificate generator. Create professional certificates for courses, events, and achievements. Download as PNG.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:520px;margin:0 auto}
+.header{text-align:center;padding:12px 0}.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.preview{background:#14141e;border-radius:12px;padding:12px;text-align:center;margin-bottom:16px;overflow-x:auto}
+canvas{max-width:100%;border-radius:8px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.theme-tabs{display:flex;gap:6px;margin-bottom:10px}
+.theme-tab{flex:1;padding:8px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.7rem;color:#c8c8d0;cursor:pointer;text-align:center}
+.theme-tab.active{border-color:#00d4aa;color:#00d4aa}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-bottom:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>🎓 Certificate Generator</h1></div>
+<div class="preview"><canvas id="canvas" width="800" height="560"></canvas></div>
+<div class="card">
+<h2>Details</h2>
+<div class="input-group"><label>Recipient Name</label><input type="text" id="name" value="Rabiu Hamza Mohammed" oninput="draw()"></div>
+<div class="input-group"><label>Course / Achievement</label><input type="text" id="course" value="AI Automation Masterclass" oninput="draw()"></div>
+<div class="input-group"><label>Issuer / Organization</label><input type="text" id="issuer" value="Harz Digital Services" oninput="draw()"></div>
+<div class="input-group"><label>Date</label><input type="date" id="certDate" oninput="draw()"></div>
+<div class="theme-tabs">
+<div class="theme-tab active" onclick="setTheme('teal')" data-t="teal">Teal</div>
+<div class="theme-tab" onclick="setTheme('gold')" data-t="gold">Gold</div>
+<div class="theme-tab" onclick="setTheme('purple')" data-t="purple">Purple</div>
+</div>
+</div>
+<button class="btn" onclick="download()">📥 Download Certificate PNG</button>
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">Harz Digital Services — RC 321424 | Certificate Generator</div>
+<script>
+var theme='teal';
+var themes={teal:{primary:'#00d4aa',secondary:'#7c3aed',bg:'#0e0e16'},gold:{primary:'#f59e0b',secondary:'#fbbf24',bg:'#1a1505'},purple:{primary:'#7c3aed',secondary:'#a78bfa',bg:'#0e0e16'}};
+function setTheme(t){theme=t;document.querySelectorAll('.theme-tab').forEach(function(e){e.classList.toggle('active',e.dataset.t===t)});draw()}
+function draw(){
+var canvas=document.getElementById('canvas');var ctx=canvas.getContext('2d');
+var t=themes[theme];
+ctx.fillStyle=t.bg;ctx.fillRect(0,0,800,560);
+// Border
+ctx.strokeStyle=t.primary;ctx.lineWidth=4;ctx.strokeRect(20,20,760,520);
+ctx.strokeStyle=t.secondary;ctx.lineWidth=1;ctx.strokeRect(32,32,736,496);
+// Corner accents
+ctx.fillStyle=t.primary;
+[[20,20],[780,20],[20,540],[780,540]].forEach(function(c){ctx.beginPath();ctx.arc(c[0],c[1],12,0,Math.PI*2);ctx.fill()});
+// Title
+ctx.fillStyle=t.primary;ctx.font='bold 32px Georgia,serif';ctx.textAlign='center';
+ctx.fillText('CERTIFICATE',400,100);
+ctx.fillStyle='#e8e8f0';ctx.font='16px Georgia,serif';
+ctx.fillText('OF COMPLETION',400,125);
+// Line
+ctx.strokeStyle=t.secondary;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(280,145);ctx.lineTo(520,145);ctx.stroke();
+// "This certifies that"
+ctx.fillStyle='#c8c8d0';ctx.font='14px -apple-system,sans-serif';
+ctx.fillText('This certifies that',400,185);
+// Name
+ctx.fillStyle=t.primary;ctx.font='bold 36px Georgia,serif';
+ctx.fillText(document.getElementById('name').value||'Name',400,235);
+// "has successfully completed"
+ctx.fillStyle='#c8c8d0';ctx.font='14px -apple-system,sans-serif';
+ctx.fillText('has successfully completed',400,270);
+// Course
+ctx.fillStyle='#e8e8f0';ctx.font='bold 22px Georgia,serif';
+ctx.fillText(document.getElementById('course').value||'Course',400,305);
+// Date
+var date=document.getElementById('certDate').value||new Date().toLocaleDateString();
+ctx.fillStyle='#6b6b80';ctx.font='12px -apple-system,sans-serif';
+ctx.fillText('Date: '+date,400,360);
+// Issuer
+ctx.fillStyle='#c8c8d0';ctx.font='14px -apple-system,sans-serif';
+ctx.fillText('Issued by',400,400);
+ctx.fillStyle=t.primary;ctx.font='bold 18px Georgia,serif';
+ctx.fillText(document.getElementById('issuer').value||'Organization',400,425);
+// Seal
+ctx.strokeStyle=t.primary;ctx.lineWidth=3;ctx.beginPath();ctx.arc(400,475,30,0,Math.PI*2);ctx.stroke();
+ctx.fillStyle=t.primary;ctx.font='20px Georgia,serif';
+ctx.fillText('★',400,482);
+}
+function download(){var canvas=document.getElementById('canvas');var a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='certificate.png';a.click()}
+document.getElementById('certDate').value=new Date().toISOString().split('T')[0];
+draw();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

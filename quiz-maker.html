@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free quiz maker. Create multiple choice quizzes, take them interactively, and track scores. Perfect for education and training.">
+<meta name="keywords" content="quiz maker, create quiz, online quiz, multiple choice, education tool">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Quiz Maker — Create & Take Quizzes | Harz Digital Services">
+<meta property="og:description" content="Free quiz maker. Create multiple choice quizzes, take them interactively, and track scores. Perfect for education and training.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/quiz-maker.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/quiz-maker.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Maker — Create & Take Quizzes | Harz Digital Services</title>
+<meta name="description" content="Free quiz maker. Create multiple choice quizzes, take them interactively, and track scores. Perfect for education and training.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.q-card{padding:14px;background:#14141e;border:1px solid #1e1e2e;border-radius:12px;margin-bottom:8px}
+.q-card .q{font-size:.9rem;color:#e8e8f0;margin-bottom:8px}
+.opt{display:block;padding:10px 14px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-size:.8rem;color:#c8c8d0;cursor:pointer;margin-bottom:6px}
+.opt:hover{border-color:#00d4aa}
+.opt.correct{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.05)}
+.opt.wrong{border-color:#ef4444;color:#ef4444}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-bottom:8px}
+.score{text-align:center;padding:24px;background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(124,58,237,.05));border:1px solid rgba(0,212,170,.2);border-radius:16px;margin-bottom:16px}
+.score .num{font-size:3rem;font-weight:800;color:#00d4aa}
+.score .lbl{font-size:.8rem;color:#6b6b80}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>❓ Quiz Maker</h1></div>
+<div id="quizArea">
+<div class="card"><h2>Harz Ecosystem Quiz</h2><p style="font-size:.8rem;color:#6b6b80;margin-bottom:10px">Test your knowledge about Harz Digital Services!</p></div>
+<div id="questions"></div>
+<button class="btn" onclick="submit()">✅ Submit Answers</button>
+</div>
+<div id="resultArea" style="display:none">
+<div class="score"><div class="num" id="scoreNum">0/0</div><div class="lbl" id="scoreLbl">Your Score</div></div>
+<button class="btn" onclick="reset()">🔄 Try Again</button>
+</div>
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">Harz Digital Services — RC 321424 | Quiz Maker</div>
+<script>
+var quiz=[
+{q:"How many platforms are in the Harz ecosystem?",opts:["12","18","24","30"],a:2},
+{q:"What is Harz's CAC registration number?",opts:["RC 321424","RC 100200","RC 400500","RC 999999"],a:0},
+{q:"How many AI agents power the ecosystem?",opts:["20+","40+","60+","80+"],a:3},
+{q:"Which of these is a Harz platform?",opts:["Apex Bank","Netflix","Spotify","Uber"],a:0},
+{q:"How many digital products are in the marketplace?",opts:["50","100","259","500"],a:2},
+{q:"What is the business TIN?",opts:["12345678","24550860","99887766","55667788"],a:1},
+{q:"Which Harz platform handles construction planning?",opts:["BuildBot AI","Apex Bank","TradeOS","MindCare AI"],a:0},
+{q:"How many music tracks are on HarzMusic?",opts:["10","17","27","50"],a:2}
+];
+var answers=[];
+function render(){document.getElementById('questions').innerHTML=quiz.map(function(q,i){
+return '<div class="q-card"><div class="q">'+(i+1)+'. '+q.q+'</div>'+q.opts.map(function(o,j){
+return '<div class="opt" id="q'+i+'o'+j+'" onclick="select('+i+','+j+')">'+o+'</div>'
+}).join('')+'</div>'
+}).join('')}
+function select(qi,oi){
+if(answers[qi]!==undefined)return;
+answers[qi]=oi;
+document.querySelectorAll('[id^="q'+qi+'o"]').forEach(function(e){e.classList.remove('correct','wrong')});
+document.getElementById('q'+qi+'o'+oi).classList.add('correct');
+}
+function submit(){
+var score=0;
+quiz.forEach(function(q,i){
+var userAns=answers[i];
+if(userAns===q.a){score++}
+else if(userAns!==undefined){
+document.getElementById('q'+i+'o'+userAns).classList.add('wrong');
+document.getElementById('q'+i+'o'+q.a).classList.add('correct');
+}
+});
+document.getElementById('quizArea').style.display='none';
+document.getElementById('resultArea').style.display='block';
+document.getElementById('scoreNum').textContent=score+'/'+quiz.length;
+var pct=Math.round(score/quiz.length*100);
+var msg=pct>=80?'🏆 Excellent!':pct>=60?'👍 Good job!':pct>=40?'📚 Keep studying!':'💪 Try again!';
+document.getElementById('scoreLbl').textContent=msg+' ('+pct+'%)';
+}
+function reset(){answers=[];document.getElementById('quizArea').style.display='block';document.getElementById('resultArea').style.display='none';render()}
+render();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

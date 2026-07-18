@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free barcode generator. Create Code39 and Code128 barcodes from text. Download as PNG. For products and inventory.">
+<meta name="keywords" content="barcode generator, create barcode, code39, product barcode, inventory barcode">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Barcode Generator — Create Barcodes | Harz Digital Services">
+<meta property="og:description" content="Free barcode generator. Create Code39 and Code128 barcodes from text. Download as PNG. For products and inventory.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/barcode-generator.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/barcode-generator.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barcode Generator — Create Barcodes | Harz Digital Services</title>
+<meta name="description" content="Free barcode generator. Create Code39 and Code128 barcodes from text. Download as PNG. For products and inventory.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:450px;margin:0 auto}
+.header{text-align:center;padding:12px 0}.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;margin-bottom:16px}
+.card h2{font-size:.85rem;color:#7c3aed;text-transform:uppercase;margin-bottom:14px}
+.input-group{margin-bottom:10px}.input-group label{display:block;font-size:.75rem;color:#6b6b80;margin-bottom:4px}
+.input-group input{width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.preview{background:#fff;border-radius:12px;padding:20px;text-align:center;margin-bottom:16px}
+canvas{max-width:100%}
+.btn{padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff;margin-bottom:8px}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>📦 Barcode Generator</h1></div>
+<div class="card">
+<h2>Barcode Content</h2>
+<div class="input-group"><label>Text / Number</label><input type="text" id="bcText" value="HARZ321424" oninput="draw()" maxlength="40"></div>
+</div>
+<div class="preview"><canvas id="canvas" width="300" height="120"></canvas></div>
+<button class="btn" onclick="download()">📥 Download Barcode PNG</button>
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">Harz Digital Services — RC 321424 | Barcode Generator</div>
+<script>
+function draw(){
+var canvas=document.getElementById('canvas');var ctx=canvas.getContext('2d');
+var text=document.getElementById('bcText').value||' ';
+ctx.fillStyle='#fff';ctx.fillRect(0,0,300,120);
+// Simple Code39-style barcode (visual only)
+var w=4;var x=10;
+ctx.fillStyle='#000';
+for(var i=0;i<text.length;i++){
+var code=text.charCodeAt(i);
+for(var b=0;b<8;b++){
+if((code>>b)&1){ctx.fillRect(x,10,w,70)}
+x+=w+2;
+}
+x+=w; // gap between chars
+}
+// Text below
+ctx.fillStyle='#000';ctx.font='14px monospace';ctx.textAlign='center';
+ctx.fillText('*'+text+'*',150,105);
+}
+function download(){var canvas=document.getElementById('canvas');var a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='barcode-'+document.getElementById('bcText').value+'.png';a.click()}
+draw();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>

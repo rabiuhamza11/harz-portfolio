@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Free stopwatch and countdown timer. Track time with millisecond precision. Lap times. Perfect for sports and productivity.">
+<meta name="keywords" content="stopwatch, timer, countdown, lap timer, precision timer">
+<meta name="author" content="Harz Digital Services (RC 321424)">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Stopwatch & Timer — Precision Time | Harz Digital Services">
+<meta property="og:description" content="Free stopwatch and countdown timer. Track time with millisecond precision. Lap times. Perfect for sports and productivity.">
+<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/stopwatch.html">
+<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/stopwatch.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch & Timer — Precision Time | Harz Digital Services</title>
+<meta name="description" content="Free stopwatch and countdown timer. Track time with millisecond precision. Lap times. Perfect for sports and productivity.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:400px;margin:0 auto}
+.header{text-align:center;padding:12px 0}.header h1{font-size:1.2rem;color:#00d4aa}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.mode-tabs{display:flex;gap:6px;margin-bottom:16px}
+.mode-tab{flex:1;padding:10px;text-align:center;background:#14141e;border:1px solid #1e1e2e;border-radius:10px;font-size:.8rem;color:#c8c8d0;cursor:pointer}
+.mode-tab.active{border-color:#00d4aa;color:#00d4aa}
+.display{text-align:center;padding:30px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;margin-bottom:16px}
+.display .time{font-size:3.5rem;font-weight:800;color:#00d4aa;font-family:monospace}
+.controls{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+.ctrl{padding:14px 24px;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;min-width:80px}
+.ctrl.start{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.ctrl.stop{background:#ef4444;color:#fff}
+.ctrl.reset{background:#14141e;border:1px solid #1e1e2e;color:#c8c8d0}
+.ctrl.lap{background:#14141e;border:1px solid #7c3aed;color:#7c3aed}
+.laps{max-height:200px;overflow-y:auto}
+.lap-row{display:flex;justify-content:space-between;padding:8px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;margin-bottom:4px;font-size:.8rem}
+.lap-row .num{color:#7c3aed;font-weight:600}
+.lap-row .time{color:#00d4aa;font-family:monospace}
+.timer-input{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.timer-input input{width:60px;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:1.5rem;text-align:center;font-family:monospace}
+.timer-input label{text-align:center;font-size:.6rem;color:#6b6b80;text-transform:uppercase}
+</style>
+</head>
+<body>
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<div class="header"><h1>⏱️ Stopwatch & Timer</h1></div>
+<div class="mode-tabs"><div class="mode-tab active" onclick="setMode('stopwatch')" data-m="sw">Stopwatch</div><div class="mode-tab" onclick="setMode('timer')" data-m="tm">Timer</div></div>
+<div id="timerSetup" style="display:none"><div class="timer-input"><div><label>Hours</label><input type="number" id="th" value="0" min="0" max="23" oninput="setTimer()"></div><div><label>Min</label><input type="number" id="tm" value="5" min="0" max="59" oninput="setTimer()"></div><div><label>Sec</label><input type="number" id="ts" value="0" min="0" max="59" oninput="setTimer()"></div></div></div>
+<div class="display"><div class="time" id="display">00:00.000</div></div>
+<div class="controls" id="controls"></div>
+<div class="laps" id="laps"></div>
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.7rem">Harz Digital Services — RC 321424 | Stopwatch</div>
+<script>
+var mode='stopwatch';var running=false;var startTime=0;var elapsed=0;var interval=null;var lapTimes=[];var timerDuration=0;var timerRemaining=0;
+function setMode(m){mode=m==='sw'?'stopwatch':'timer';document.querySelectorAll('.mode-tab').forEach(function(e){e.classList.toggle('active',e.dataset.m===(m==='sw'?'sw':'tm'))});document.getElementById('timerSetup').style.display=m==='sw'?'none':'block';reset()}
+function fmt(ms){var s=Math.floor(ms/1000);var ms2=ms%1000;var m=Math.floor(s/60);var s2=s%60;return String(m).padStart(2,'0')+':'+String(s2).padStart(2,'0')+'.'+String(ms2).padStart(3,'0')}
+function fmtTimer(ms){var s=Math.floor(ms/1000);var m=Math.floor(s/60);var h=Math.floor(m/60);return String(h).padStart(2,'0')+':'+String(m%60).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function update(){if(mode==='stopwatch'){elapsed=Date.now()-startTime;document.getElementById('display').textContent=fmt(elapsed)}else{timerRemaining=timerDuration-(Date.now()-startTime);if(timerRemaining<=0){timerRemaining=0;clearInterval(interval);running=false;if(navigator.vibrate)navigator.vibrate([200,100,200,100,200]);renderControls()}document.getElementById('display').textContent=fmtTimer(timerRemaining)}}
+function toggle(){if(running){clearInterval(interval);running=false;startTime=0}else{running=true;startTime=Date.now()-(mode==='stopwatch'?elapsed:0);interval=setInterval(update,10)}renderControls()}
+function reset(){clearInterval(interval);running=false;elapsed=0;timerRemaining=timerDuration;lapTimes=[];document.getElementById('display').textContent=mode==='stopwatch'?'00:00.000':fmtTimer(timerDuration);document.getElementById('laps').innerHTML='';renderControls()}
+function lap(){if(!running)return;lapTimes.unshift({num:lapTimes.length+1,time:elapsed});document.getElementById('laps').innerHTML=lapTimes.map(function(l){return '<div class="lap-row"><span class="num">Lap '+l.num+'</span><span class="time">'+fmt(l.time)+'</span></div>'}).join('')}
+function setTimer(){var h=parseInt(document.getElementById('th').value)||0;var m=parseInt(document.getElementById('tm').value)||0;var s=parseInt(document.getElementById('ts').value)||0;timerDuration=(h*3600+m*60+s)*1000;timerRemaining=timerDuration;document.getElementById('display').textContent=fmtTimer(timerRemaining)}
+function renderControls(){var c=document.getElementById('controls');if(mode==='stopwatch'){c.innerHTML='<button class="ctrl '+(running?'stop':'start')+'" onclick="toggle()">'+(running?'⏸ Pause':'▶ Start')+'</button>'+(running?'<button class="ctrl lap" onclick="lap()">⏱ Lap</button>':'')+'<button class="ctrl reset" onclick="reset()">↻ Reset</button>'}else{c.innerHTML='<button class="ctrl '+(running?'stop':'start')+'" onclick="toggle()">'+(running?'⏸ Pause':'▶ Start')+'</button><button class="ctrl reset" onclick="reset()">↻ Reset</button>'}}
+setTimer();renderControls();
+</script>
+<!-- Magani Chat Widget -->
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
+</a>
+</div>
+</body>
+</html>
