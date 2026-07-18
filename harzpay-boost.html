@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzPay Boost — Sell Smarter | Harz Digital Services</title>
+<meta name="description" content="HarzPay Boost — QR codes, affiliate links, USSD payments, WhatsApp ordering. Sell more with multiple payment rails.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:480px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#00d4aa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tagline{font-size:.75rem;color:#6b6b80;margin-top:4px}
+.boost-grid{display:grid;gap:12px;margin:16px 0}
+.boost-card{padding:16px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;cursor:pointer;transition:all .15s;text-decoration:none;color:inherit}
+.boost-card:hover{border-color:#00d4aa;transform:translateY(-2px)}
+.boost-card .bicon{font-size:2rem;margin-bottom:8px}
+.boost-card .btitle{font-size:.9rem;font-weight:700;color:#00d4aa;margin-bottom:4px}
+.boost-card .bdesc{font-size:.72rem;color:#6b6b80;line-height:1.5}
+.btn{display:block;padding:14px;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;text-align:center;text-decoration:none;width:100%;margin-bottom:8px}
+.btn.primary{background:linear-gradient(135deg,#00d4aa,#7c3aed);color:#fff}
+.btn.outline{background:transparent;border:1px solid #1e1e2e;color:#c8c8d0}
+.section{display:none}
+.section.active{display:block}
+.back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.qr-box{text-align:center;padding:20px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;margin-bottom:12px}
+.qr-box img{border-radius:12px;margin:8px 0}
+.aff-box{padding:20px;background:#0e0e16;border:1px solid rgba(124,58,237,.3);border-radius:14px;margin-bottom:12px}
+.aff-box .link{padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;font-family:monospace;font-size:.7rem;color:#00d4aa;word-break:break-all;margin:8px 0}
+.usdt-box{padding:20px;background:#0e0e16;border:1px solid rgba(255,184,0,.2);border-radius:14px;margin-bottom:12px}
+.ussd-code{font-size:1.3rem;font-weight:800;color:#f59e0b;font-family:monospace;text-align:center;padding:12px;background:#14141e;border-radius:10px;margin:8px 0}
+.wa-box{padding:20px;background:#0e0e16;border:1px solid rgba(37,211,102,.2);border-radius:14px;margin-bottom:12px;text-align:center}
+.copy-btn{padding:6px 12px;background:#14141e;border:1px solid #1e1e2e;border-radius:6px;color:#6b6b80;font-size:.7rem;cursor:pointer;margin:4px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#00d4aa;color:#000;border-radius:10px;font-size:.8rem;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<a href="harzpay.html" class="back">← Back to HarzPay</a>
+
+<div class="header">
+<div class="logo">HarzPay Boost</div>
+<div class="tagline">5 Ways to Sell More</div>
+</div>
+
+<div class="section active" id="mainView">
+<div class="boost-grid">
+<a href="#" class="boost-card" onclick="show('qrView');return false">
+<div class="bicon">📱</div>
+<div class="btitle">QR Code Payments</div>
+<div class="bdesc">Generate QR codes for each product. Customers scan and pay instantly. Print on flyers, share on WhatsApp status.</div>
+</a>
+<a href="#" class="boost-card" onclick="show('affView');return false">
+<div class="bicon">🤝</div>
+<div class="btitle">Affiliate Links</div>
+<div class="bdesc">Let anyone sell your products and earn 10% commission. Share affiliate links with influencers, friends, followers.</div>
+</a>
+<a href="#" class="boost-card" onclick="show('ussdView');return false">
+<div class="bicon">📞</div>
+<div class="btitle">USSD Payment</div>
+<div class="bdesc">No internet? No problem. Customers dial a USSD code to pay directly from their phone. Works on every network.</div>
+</a>
+<a href="#" class="boost-card" onclick="show('waView');return false">
+<div class="bicon">💬</div>
+<div class="btitle">WhatsApp Ordering</div>
+<div class="bdesc">Customers order via WhatsApp. They get a text menu, pick a product, get bank details, pay, receive product. All automated.</div>
+</a>
+<a href="#" class="boost-card" onclick="show('socialView');return false">
+<div class="bicon">📲</div>
+<div class="btitle">Social Media Links</div>
+<div class="bdesc">Short checkout links for Instagram bio, TikTok, Twitter. One link per product. Direct to payment.</div>
+</a>
+</div>
+<a href="harzpay-checkout.html" class="btn primary">🛒 Go to Checkout →</a>
+</div>
+
+<!-- QR View -->
+<div class="section" id="qrView">
+<a href="#" class="back" onclick="show('mainView');return false">← Back</a>
+<div class="qr-box">
+<h3 style="color:#00d4aa;font-size:.9rem;margin-bottom:8px">📱 QR Code — Notion Productivity OS</h3>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html?product=notion-os" alt="QR Code" width="250" height="250">
+<p style="font-size:.72rem;color:#6b6b80;margin-top:8px">Scan to open checkout page<br>Save image and share on WhatsApp status, flyers, business cards</p>
+<button class="copy-btn" onclick="copy('https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html?product=notion-os')">Copy Link</button>
+</div>
+<div class="qr-box">
+<h3 style="color:#00d4aa;font-size:.9rem;margin-bottom:8px">📱 QR Code — BuildBot AI Pro</h3>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html?product=buildbot-pro" alt="QR Code" width="250" height="250">
+<p style="font-size:.72rem;color:#6b6b80;margin-top:8px">Scan to pay ₦45,000 for BuildBot Pro</p>
+<button class="copy-btn" onclick="copy('https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html?product=buildbot-pro')">Copy Link</button>
+</div>
+<div class="qr-box">
+<h3 style="color:#00d4aa;font-size:.9rem;margin-bottom:8px">📱 QR Code — All Products</h3>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html" alt="QR Code" width="250" height="250">
+<p style="font-size:.72rem;color:#6b6b80;margin-top:8px">Scan to browse all 15 products</p>
+<button class="copy-btn" onclick="copy('https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html')">Copy Link</button>
+</div>
+</div>
+
+<!-- Affiliate View -->
+<div class="section" id="affView">
+<a href="#" class="back" onclick="show('mainView');return false">← Back</a>
+<div class="aff-box">
+<h3 style="color:#a78bfa;font-size:.9rem;margin-bottom:8px">🤝 Affiliate Program — Earn 10%</h3>
+<p style="font-size:.75rem;color:#6b6b80;margin-bottom:12px">Share your unique link. When someone buys through your link, you earn 10% commission. No signup needed.</p>
+<div style="margin-bottom:12px">
+<label style="font-size:.7rem;color:#6b6b80;display:block;margin-bottom:4px">Your Name (for affiliate code)</label>
+<input type="text" id="affName" placeholder="e.g. Aisha" style="width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.8rem">
+</div>
+<button class="btn primary" onclick="genAff()">Generate My Link →</button>
+<div id="affResult" style="margin-top:12px"></div>
+</div>
+<div style="padding:12px;background:#14141e;border-radius:10px;font-size:.72rem;color:#6b6b80;line-height:1.6">
+<b style="color:#00d4aa">How it works:</b><br>
+1. Generate your link above<br>
+2. Share on WhatsApp, Instagram, Twitter, TikTok<br>
+3. When someone buys through your link, you get 10%<br>
+4. Example: Notion OS $17.99 → you earn $1.80<br>
+5. BuildBot Pro ₦45,000 → you earn ₦4,500<br>
+6. Payouts via bank transfer every Friday
+</div>
+</div>
+
+<!-- USSD View -->
+<div class="section" id="ussdView">
+<a href="#" class="back" onclick="show('mainView');return false">← Back</a>
+<div class="usdt-box">
+<h3 style="color:#f59e0b;font-size:.9rem;margin-bottom:8px">📞 USSD Payment</h3>
+<p style="font-size:.75rem;color:#6b6b80;margin-bottom:12px">Customer dials this code on their phone. No internet needed. Works on MTN, Glo, Airtel, 9Mobile.</p>
+<div style="margin-bottom:12px">
+<label style="font-size:.7rem;color:#6b6b80;display:block;margin-bottom:4px">Enter amount (₦)</label>
+<input type="number" id="ussdAmount" placeholder="e.g. 15000" style="width:100%;padding:10px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.8rem">
+</div>
+<button class="btn primary" onclick="genUssd()">Generate USSD Code →</button>
+<div id="ussdResult" style="margin-top:12px"></div>
+</div>
+<div style="padding:12px;background:#14141e;border-radius:10px;font-size:.72rem;color:#6b6b80;line-height:1.6">
+<b style="color:#f59e0b">Supported banks:</b><br>
+GTBank: *737*000*2034326424*AMOUNT#<br>
+UBA: *919*2034326424*AMOUNT#<br>
+Access: *901*2034326424*AMOUNT#<br>
+Zenith: *966*2034326424*AMOUNT#<br>
+First Bank: *894*2034326424*AMOUNT#<br>
+<br>
+Customer dials the code → enters PIN → payment done → you get alert
+</div>
+</div>
+
+<!-- WhatsApp View -->
+<div class="section" id="waView">
+<a href="#" class="back" onclick="show('mainView');return false">← Back</a>
+<div class="wa-box">
+<h3 style="color:#25d366;font-size:.9rem;margin-bottom:8px">💬 WhatsApp Ordering</h3>
+<p style="font-size:.75rem;color:#6b6b80;margin-bottom:12px">Customers can order directly through WhatsApp. They get a text menu, pick a product, receive payment details, and get their product after payment.</p>
+<a href="https://wa.me/2348028687857?text=I%20want%20to%20buy%20a%20product%20from%20HarzPay.%20Show%20me%20the%20menu." class="btn primary" style="background:#25d366">💬 Start WhatsApp Order</a>
+<p style="font-size:.7rem;color:#6b6b80;margin-top:8px">Or save this number: 08028687857<br>Send "BUY" to get the product menu</p>
+</div>
+<div style="padding:12px;background:#14141e;border-radius:10px;font-size:.72rem;color:#6b6b80;line-height:1.6">
+<b style="color:#25d366">How it works:</b><br>
+1. Customer messages 08028687857 with "BUY"<br>
+2. Magani sends product menu (10 products)<br>
+3. Customer replies with product number<br>
+4. Magani sends UBA details + USDT wallet + reference code<br>
+5. Customer pays and sends transaction ID<br>
+6. Rabiu confirms → Magani delivers product<br>
+<br>
+This works on ANY phone with WhatsApp. No website needed.
+</div>
+</div>
+
+<!-- Social View -->
+<div class="section" id="socialView">
+<a href="#" class="back" onclick="show('mainView');return false">← Back</a>
+<div style="padding:16px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;margin-bottom:12px">
+<h3 style="color:#00d4aa;font-size:.9rem;margin-bottom:12px">📲 Direct Product Links</h3>
+<div style="font-size:.72rem;color:#6b6b80;margin-bottom:8px">One link per product. Put in Instagram bio, TikTok, Twitter, WhatsApp status:</div>
+<div id="socialLinks" style="display:grid;gap:8px"></div>
+</div>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+function show(id){
+document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
+document.getElementById(id).classList.add('active');
+}
+
+function copy(text){
+navigator.clipboard.writeText(text);
+var t=document.getElementById('toast');
+t.textContent='Copied!';
+t.classList.add('show');
+setTimeout(function(){t.classList.remove('show')},2000);
+}
+
+function genAff(){
+var name=document.getElementById('affName').value||'USER';
+var code='AFF-'+name.slice(0,4).toUpperCase()+'-'+Math.random().toString(36).slice(2,4).toUpperCase();
+var link='https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html?aff='+code;
+document.getElementById('affResult').innerHTML=
+'<div style="padding:10px;background:#14141e;border:1px solid rgba(0,212,170,.3);border-radius:8px">'+
+'<div style="font-size:.7rem;color:#6b6b80;margin-bottom:4px">Your affiliate link:</div>'+
+'<div style="font-family:monospace;font-size:.65rem;color:#00d4aa;word-break:break-all;margin-bottom:8px">'+link+'</div>'+
+'<button class="copy-btn" onclick="copy(\''+link+'\')">📋 Copy Link</button>'+
+'<div style="font-size:.7rem;color:#a78bfa;margin-top:8px">Your code: '+code+' | 10% commission on every sale</div>'+
+'</div>';
+}
+
+function genUssd(){
+var amt=document.getElementById('ussdAmount').value;
+if(!amt){alert('Enter amount');return}
+document.getElementById('ussdResult').innerHTML=
+'<div style="padding:12px;background:#14141e;border-radius:10px">'+
+'<div style="font-size:.7rem;color:#6b6b80;margin-bottom:4px">GTBank USSD:</div>'+
+'<div class="ussd-code">*737*000*2034326424*'+amt+'#</div>'+
+'<button class="copy-btn" onclick="copy(\'*737*000*2034326424*'+amt+'#\')">Copy</button>'+
+'<div style="font-size:.7rem;color:#6b6b80;margin-top:8px">Customer dials this code → enters PIN → done</div>'+
+'</div>';
+}
+
+var products=[
+{id:'notion-os',name:'Notion OS',price:'$17.99'},
+{id:'freelancer-kit',name:'Freelancer Kit',price:'$11.99'},
+{id:'dm-masterclass',name:'DM Masterclass',price:'$49.99'},
+{id:'buildbot-pro',name:'BuildBot Pro',price:'₦45,000'},
+{id:'mindcare-pro',name:'MindCare Pro',price:'₦5,000/mo'},
+{id:'estate-pro',name:'Estate Estimator',price:'₦15,000'}
+];
+document.getElementById('socialLinks').innerHTML=products.map(function(p){
+var url='https://rabiuhamza11.github.io/harz-portfolio/harzpay-checkout.html?product='+p.id;
+return '<div style="padding:8px;background:#14141e;border-radius:8px">'+
+'<div style="font-size:.75rem;color:#00d4aa;font-weight:600">'+p.name+' ('+p.price+')</div>'+
+'<div style="font-family:monospace;font-size:.6rem;color:#6b6b80;word-break:break-all">'+url+'</div>'+
+'<button class="copy-btn" onclick="copy(\''+url+'\')">📋 Copy</button>'+
+'</div>';
+}).join('');
+</script>
+<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999"><a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3)">🧙‍♂️ Chat with Magani</a></div>
+</body>
+</html>
