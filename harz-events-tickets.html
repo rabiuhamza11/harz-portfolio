@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Events — Buy Tickets for Concerts, Tech Events & Conferences in Nigeria</title>
+<meta name="description" content="Discover and buy tickets for concerts, tech meetups, conferences, and events across Nigeria. Pay via bank transfer or USDT.">
+<meta property="og:title" content="Harz Events — Nigerian Events & Ticketing">
+<meta name="theme-color" content="#0a0a0a">
+<style>
+:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--primary:#f97316;--primary2:#ea580c;--accent:#7c3aed;--text:#fff;--text2:#a3a3a3;--border:#2a2a2a;--radius:16px;--radius-sm:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(10,10,10,0.85);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:18px;color:var(--primary)}
+.logo span{font-size:11px;color:var(--text2);display:block}
+.hero{padding:100px 20px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 30%,rgba(249,115,22,0.08),transparent 50%)}
+.hero h1{font-size:36px;font-weight:800;position:relative}
+.hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:15px;margin-top:8px;position:relative}
+.hero-stats{display:flex;justify-content:center;gap:30px;margin-top:24px;position:relative}
+.hero-stat .num{font-size:22px;font-weight:800;color:var(--primary)}
+.hero-stat .label{font-size:11px;color:var(--text2)}
+.section{max-width:1000px;margin:0 auto;padding:20px}
+.section-title{font-size:20px;font-weight:700;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:960px){.grid{grid-template-columns:repeat(3,1fr)}}
+.event-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all 0.3s}
+.event-card:hover{border-color:var(--primary);transform:translateY(-3px)}
+.event-banner{height:120px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:40px}
+.event-body{padding:16px}
+.event-type{font-size:10px;color:var(--primary);font-weight:600;text-transform:uppercase}
+.event-card h3{font-size:16px;margin:4px 0 6px}
+.event-meta{font-size:12px;color:var(--text2);margin-bottom:8px}
+.event-meta b{color:var(--text)}
+.event-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:10px;margin-top:8px}
+.event-price{font-size:16px;font-weight:800;color:var(--primary)}
+.event-tickets{font-size:10px;color:var(--text2)}
+.buy-btn{background:var(--primary);color:#000;padding:8px 16px;border-radius:6px;font-weight:600;font-size:13px;border:none;cursor:pointer}
+.buy-btn:hover{background:var(--primary2)}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:200;justify-content:center;align-items:flex-start;padding:20px;overflow-y:auto}
+.modal-overlay.active{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);max-width:440px;width:100%;padding:24px;margin-top:20px}
+.modal-close{float:right;font-size:22px;color:var(--text2);cursor:pointer}
+.modal h3{font-size:17px;margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:14px}
+.form-group{margin-bottom:10px}
+.form-group label{font-size:12px;font-weight:600;margin-bottom:3px;display:block}
+.form-group input,.form-group select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px;font-size:14px}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary)}
+.qty-row{display:flex;gap:8px;align-items:center}
+.qty-btn{width:36px;height:36px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;font-size:18px;cursor:pointer}
+.qty-display{font-size:18px;font-weight:700;min-width:30px;text-align:center}
+.pay-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:12px}
+.pay-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)}
+.pay-row span:first-child{color:var(--text2)}
+.total-row{display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:8px 0 0}
+.total-row span:last-child{color:var(--primary)}
+.btn{width:100%;background:var(--primary);color:#000;padding:12px;border-radius:var(--radius-sm);font-weight:700;font-size:15px;border:none;cursor:pointer;margin-top:12px}
+.btn:hover{background:var(--primary2)}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--primary);color:#000;padding:8px 18px;border-radius:6px;font-weight:600;font-size:13px;z-index:300;display:none}
+.toast.show{display:block}
+.chat-float{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:20px;z-index:99}
+footer{text-align:center;padding:30px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--text2)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Harz<span>Events</span></div>
+</nav>
+
+<div class="hero">
+  <h1>Buy <span class="grad">Event Tickets</span></h1>
+  <p>Concerts, tech meetups, conferences, and more across Nigeria</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">6</div><div class="label">Live Events</div></div>
+    <div class="hero-stat"><div class="num">3</div><div class="label">Cities</div></div>
+    <div class="hero-stat"><div class="num">2,400</div><div class="label">Tickets Sold</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Upcoming Events</div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>Harz Events by Harz Digital Services (RC: 321424)<br>2026 Harz Ecosystem</footer>
+
+<div class="modal-overlay" id="ticketModal">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal()">x</span>
+    <h3 id="modalTitle">Buy Tickets</h3>
+    <p class="modal-sub" id="modalSub"></p>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="buyerName" placeholder="Full name">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="buyerEmail" placeholder="you@email.com">
+    </div>
+    <div class="form-group">
+      <label>Phone (WhatsApp)</label>
+      <input type="tel" id="buyerPhone" placeholder="08012345678">
+    </div>
+    <div class="form-group">
+      <label>Ticket Quantity</label>
+      <div class="qty-row">
+        <button class="qty-btn" onclick="changeQty(-1)">-</button>
+        <span class="qty-display" id="qty">1</span>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+    </div>
+    <div class="pay-box">
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">Payment</div>
+      <div class="pay-row"><span>Bank Transfer</span><span>UBA 2034326424</span></div>
+      <div class="pay-row"><span>Account Name</span><span>Rabiu Hamza Mohammed</span></div>
+      <div class="pay-row"><span>USDT TRC20</span><span>TVE2ia3UTXUsp8V...</span></div>
+      <div class="total-row"><span>Total</span><span id="totalAmt">N0</span></div>
+    </div>
+    <button class="btn" onclick="submitTicket()">Buy Tickets</button>
+  </div>
+</div>
+
+<a href="https://wa.me/2348028687857" class="chat-float">Chat</a>
+<div class="toast" id="toast"></div>
+
+<script>
+const EVENTS = [
+  {name:'AfroBeat Live Concert',type:'Concert',icon:'MIC',date:'Aug 15, 2026',time:'6:00 PM',venue:'Eko Convention Center',city:'Lagos',price:5000,sold:840,total:1000},
+  {name:'Nigeria Tech Summit 2026',type:'Conference',icon:'TECH',date:'Sep 20, 2026',time:'9:00 AM',venue:'Abuja International Conf Center',city:'Abuja',price:15000,sold:320,total:500},
+  {name:'AI and Business Workshop',type:'Workshop',icon:'AI',date:'Aug 30, 2026',time:'10:00 AM',venue:'Civic Center',city:'Port Harcourt',price:10000,sold:180,total:200},
+  {name:'Northern Creative Festival',type:'Festival',icon:'ART',date:'Oct 5, 2026',time:'12:00 PM',venue:'Bauchi Township Stadium',city:'Bauchi',price:3000,sold:620,total:1000},
+  {name:'Startup Pitch Night',type:'Networking',icon:'NET',date:'Aug 25, 2026',time:'5:00 PM',venue:'George Hotel',city:'Lagos',price:5000,sold:280,total:300},
+  {name:'Gospel Night Live',type:'Concert',icon:'MUS',date:'Sep 12, 2026',time:'7:00 PM',venue:'Transcorp Hilton',city:'Abuja',price:7500,sold:160,total:500},
+];
+
+let currentEvent = null;
+let qty = 1;
+
+function formatN(n) { return 'N' + n.toLocaleString(); }
+
+function renderEvents() {
+  document.getElementById('grid').innerHTML = EVENTS.map((e, i) => `
+    <div class="event-card">
+      <div class="event-banner">${e.icon}</div>
+      <div class="event-body">
+        <div class="event-type">${e.type}</div>
+        <h3>${e.name}</h3>
+        <div class="event-meta"><b>${e.date}</b> at ${e.time}<br>${e.venue}, ${e.city}</div>
+        <div class="event-footer">
+          <div>
+            <div class="event-price">${formatN(e.price)}</div>
+            <div class="event-tickets">${e.sold}/${e.total} sold</div>
+          </div>
+          <button class="buy-btn" onclick="openTicket(${i})">Buy Ticket</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openTicket(idx) {
+  currentEvent = EVENTS[idx];
+  qty = 1;
+  document.getElementById('qty').textContent = qty;
+  document.getElementById('modalTitle').textContent = currentEvent.name;
+  document.getElementById('modalSub').textContent = currentEvent.date + ' at ' + currentEvent.venue + ', ' + currentEvent.city;
+  document.getElementById('totalAmt').textContent = formatN(currentEvent.price * qty);
+  document.getElementById('ticketModal').classList.add('active');
+}
+
+function changeQty(delta) {
+  qty = Math.max(1, Math.min(10, qty + delta));
+  document.getElementById('qty').textContent = qty;
+  document.getElementById('totalAmt').textContent = formatN(currentEvent.price * qty);
+}
+
+function closeModal() {
+  document.getElementById('ticketModal').classList.remove('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function submitTicket() {
+  const name = document.getElementById('buyerName').value.trim();
+  const phone = document.getElementById('buyerPhone').value.trim();
+  const email = document.getElementById('buyerEmail').value.trim();
+  
+  if (!name || !phone) {
+    showToast('Please enter name and phone');
+    return;
+  }
+  
+  const total = currentEvent.price * qty;
+  const msg = `Event Ticket Order\n\nEvent: ${currentEvent.name}\nDate: ${currentEvent.date} at ${currentEvent.time}\nVenue: ${currentEvent.venue}, ${currentEvent.city}\nQuantity: ${qty}\nTotal: ${formatN(total)}\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}`;
+  const waLink = 'https://wa.me/2348028687857?text=' + encodeURIComponent(msg);
+  
+  closeModal();
+  window.open(waLink, '_blank');
+  showToast('Opening WhatsApp to complete ticket purchase...');
+  
+  document.getElementById('buyerName').value = '';
+  document.getElementById('buyerEmail').value = '';
+  document.getElementById('buyerPhone').value = '';
+}
+
+renderEvents();
+</script>
+</body>
+</html>

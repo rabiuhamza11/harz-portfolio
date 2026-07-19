@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Freelance — Hire AI, Design, Code & Marketing Experts | Nigeria</title>
+<meta name="description" content="Hire vetted freelancers for AI chatbots, web development, design, SEO writing, social media, music production, and business plans. Fast delivery, fair prices.">
+<meta name="keywords" content="freelance nigeria, hire freelancer, AI chatbot, web developer, logo design, SEO writer, social media manager, fiverr alternative nigeria">
+<meta property="og:title" content="Harz Freelance — Hire Expert Freelancers in Nigeria">
+<meta property="og:description" content="8 vetted freelancers. AI, design, code, writing, marketing, music. From ₦5K.">
+<meta name="theme-color" content="#0a0a0a">
+<style>
+:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--primary:#00ff88;--accent:#7c3aed;--text:#fff;--text2:#a3a3a3;--border:#2a2a2a;--radius:16px;--radius-sm:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(10,10,10,0.85);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:18px;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo span{font-size:11px;color:var(--text2);display:block}
+.search-bar{flex:1;max-width:400px;margin:0 20px}
+.search-bar input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:20px;font-size:13px}
+.search-bar input:focus{outline:none;border-color:var(--primary)}
+.hero{padding:100px 20px 40px;text-align:center}
+.hero h1{font-size:36px;font-weight:800;margin-bottom:12px}
+.hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:15px;margin-bottom:24px;max-width:500px;margin:0 auto 24px}
+.hero-stats{display:flex;justify-content:center;gap:30px;margin-bottom:30px}
+.hero-stat .num{font-size:22px;font-weight:800;color:var(--primary)}
+.hero-stat .label{font-size:11px;color:var(--text2)}
+.filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:0 20px 20px}
+.filter-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;transition:all 0.2s}
+.filter-btn.active{background:var(--primary);color:#000;border-color:var(--primary)}
+.filter-btn:hover{border-color:var(--primary)}
+.section{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:960px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all 0.3s;position:relative}
+.card:hover{border-color:var(--primary);transform:translateY(-3px)}
+.card .featured-tag{position:absolute;top:-8px;right:16px;background:var(--accent);color:#fff;padding:2px 10px;border-radius:20px;font-size:9px;font-weight:700}
+.card .cat{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;margin-bottom:8px}
+.card h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.card p{font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.5}
+.skills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.skill{background:var(--surface2);border:1px solid var(--border);padding:2px 8px;border-radius:12px;font-size:10px;color:var(--text2)}
+.card-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;margin-top:4px}
+.price{font-size:18px;font-weight:800;color:var(--primary)}
+.delivery{font-size:11px;color:var(--text2)}
+.rating{color:#ffd700;font-size:13px;margin-bottom:8px}
+.fseller{font-size:12px;color:var(--text2);margin-bottom:8px}
+.fseller b{color:var(--text)}
+.order-btn{width:100%;background:var(--surface2);color:var(--text);padding:10px;border-radius:var(--radius-sm);font-weight:600;font-size:14px;border:1px solid var(--border);cursor:pointer;margin-top:10px;transition:all 0.2s}
+.order-btn:hover{background:var(--primary);color:#000}
+footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--text2)}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:200;justify-content:center;align-items:flex-start;padding:20px;overflow-y:auto}
+.modal-overlay.active{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);max-width:460px;width:100%;padding:24px;margin-top:20px}
+.modal-close{float:right;font-size:22px;color:var(--text2);cursor:pointer}
+.modal h3{font-size:18px;margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+.form-group{margin-bottom:10px}
+.form-group label{font-size:12px;font-weight:600;margin-bottom:3px;display:block}
+.form-group input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px;font-size:14px}
+.form-group input:focus{outline:none;border-color:var(--primary)}
+.pay-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:12px}
+.pay-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)}
+.pay-row span:first-child{color:var(--text2)}
+.btn{width:100%;background:var(--primary);color:#000;padding:12px;border-radius:var(--radius-sm);font-weight:700;font-size:15px;border:none;cursor:pointer;margin-top:12px}
+.btn:hover{background:#00cc6a}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--primary);color:#000;padding:8px 18px;border-radius:6px;font-weight:600;font-size:13px;z-index:300;display:none}
+.toast.show{display:block}
+.chat-float{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:20px;z-index:99;box-shadow:0 4px 20px rgba(0,255,136,0.3)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Harz<span>Freelance</span></div>
+  <div class="search-bar"><input type="text" id="search" placeholder="Search services..."></div>
+</nav>
+
+<div class="hero">
+  <h1>Hire Expert <span class="grad">Freelancers</span></h1>
+  <p>AI, design, code, writing, marketing — vetted professionals with fast delivery. From N5,000.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">8</div><div class="label">Services</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="label">Categories</div></div>
+    <div class="hero-stat"><div class="num">459</div><div class="label">Orders Done</div></div>
+    <div class="hero-stat"><div class="num">4.9</div><div class="label">Avg Rating</div></div>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCat('all',this)">All Services</button>
+  <button class="filter-btn" onclick="filterCat('AI Services',this)">AI</button>
+  <button class="filter-btn" onclick="filterCat('Programming',this)">Programming</button>
+  <button class="filter-btn" onclick="filterCat('Design',this)">Design</button>
+  <button class="filter-btn" onclick="filterCat('Writing',this)">Writing</button>
+  <button class="filter-btn" onclick="filterCat('Marketing',this)">Marketing</button>
+  <button class="filter-btn" onclick="filterCat('Music',this)">Music</button>
+  <button class="filter-btn" onclick="filterCat('Business',this)">Business</button>
+</div>
+
+<div class="section">
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>
+  Harz Freelance by Harz Digital Services (RC: 321424)<br>
+  2026 Harz Ecosystem. All rights reserved.
+</footer>
+
+<div class="modal-overlay" id="orderModal">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal()">x</span>
+    <h3 id="modalTitle">Order Service</h3>
+    <p class="modal-sub" id="modalSub"></p>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="clientName" placeholder="Full name">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="clientEmail" placeholder="you@email.com">
+    </div>
+    <div class="form-group">
+      <label>Phone (WhatsApp)</label>
+      <input type="tel" id="clientPhone" placeholder="08012345678">
+    </div>
+    <div class="form-group">
+      <label>Project Details</label>
+      <input type="text" id="projectDetails" placeholder="Brief description of what you need">
+    </div>
+    <div class="pay-box">
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">Payment</div>
+      <div class="pay-row"><span>Bank Transfer</span><span>UBA 2034326424</span></div>
+      <div class="pay-row"><span>Account Name</span><span>Rabiu Hamza Mohammed</span></div>
+      <div class="pay-row"><span>USDT TRC20</span><span>TVE2ia3UTXUsp8V...</span></div>
+      <div class="pay-row"><span>Amount</span><span id="payAmt" style="color:var(--primary);font-weight:700"></span></div>
+    </div>
+    <button class="btn" onclick="submitOrder()">Confirm Order</button>
+  </div>
+</div>
+
+<a href="https://wa.me/2348028687857" class="chat-float">Chat</a>
+<div class="toast" id="toast"></div>
+
+<script>
+const SERVICES = [
+  {title:'AI Chatbot Development',cat:'AI Services',seller:'CodeNinja',desc:'Custom AI chatbots using GPT, Claude, or open-source models. WhatsApp, Telegram, web integration.',price:50000,delivery:5,revisions:3,rating:5.0,orders:42,skills:['AI','Chatbots','WhatsApp','Telegram'],featured:true},
+  {title:'WhatsApp Bot Setup',cat:'Programming',seller:'CodeNinja',desc:'Automated WhatsApp bot — auto-replies, CRM, order processing, broadcast messages.',price:40000,delivery:3,revisions:2,rating:5.0,orders:38,skills:['WhatsApp','API','Node.js','Automation'],featured:true},
+  {title:'React/Next.js Web App',cat:'Programming',seller:'TechRabbit',desc:'Custom web app with React, Next.js, Tailwind. Responsive, fast, deployable to Vercel.',price:80000,delivery:7,revisions:3,rating:5.0,orders:28,skills:['React','Next.js','Tailwind','API'],featured:true},
+  {title:'Business Plan Writing',cat:'Business',seller:'BizPlan NG',desc:'Comprehensive business plan with financial projections, market analysis, investor pitch deck.',price:35000,delivery:5,revisions:2,rating:4.8,orders:23,skills:['Business Plans','Financial Modeling','Pitch Decks'],featured:false},
+  {title:'Social Media Management',cat:'Marketing',seller:'Mide Socials',desc:'Full social media management — content creation, scheduling, engagement, monthly report.',price:30000,delivery:30,revisions:0,rating:4.8,orders:34,skills:['Instagram','Facebook','Content','Analytics'],featured:false},
+  {title:'Music Production & Mixing',cat:'Music',seller:'BeatLab',desc:'Full music production — beat making, recording, mixing, mastering. Afrobeats, hip-hop, gospel.',price:25000,delivery:5,revisions:3,rating:5.0,orders:51,skills:['Mixing','Mastering','Beat Making'],featured:false},
+  {title:'Logo & Brand Identity Design',cat:'Design',seller:'Studio Zara',desc:'Professional logo design with full brand kit — colors, fonts, business cards, social media templates.',price:15000,delivery:3,revisions:5,rating:5.0,orders:87,skills:['Logo','Branding','Illustrator','Photoshop'],featured:true},
+  {title:'SEO Article Writing (1000 words)',cat:'Writing',seller:'Daniel W.',desc:'SEO-optimized articles for your blog or website. Keyword research included, plagiarism-free.',price:5000,delivery:2,revisions:2,rating:4.9,orders:156,skills:['SEO','Blogging','Copywriting'],featured:false},
+];
+
+let currentService = null;
+
+function formatN(n) { return 'N' + n.toLocaleString(); }
+
+function renderServices(filter, search) {
+  const grid = document.getElementById('grid');
+  let items = SERVICES;
+  
+  if (filter && filter !== 'all') {
+    items = items.filter(s => s.cat === filter);
+  }
+  if (search) {
+    const q = search.toLowerCase();
+    items = items.filter(s => 
+      s.title.toLowerCase().includes(q) || 
+      s.desc.toLowerCase().includes(q) ||
+      s.skills.some(sk => sk.toLowerCase().includes(q))
+    );
+  }
+  
+  grid.innerHTML = items.map((s, i) => `
+    <div class="card">
+      ${s.featured ? '<div class="featured-tag">FEATURED</div>' : ''}
+      <div class="cat">${s.cat}</div>
+      <h3>${s.title}</h3>
+      <p>${s.desc}</p>
+      <div class="skills">${s.skills.map(sk => `<span class="skill">${sk}</span>`).join('')}</div>
+      <div class="rating">${s.rating} stars (${s.orders} orders)</div>
+      <div class="fseller">by <b>${s.seller}</b> · ${s.delivery} days · ${s.revisions} revisions</div>
+      <div class="card-footer">
+        <div class="price">${formatN(s.price)}</div>
+        <div class="delivery">${s.delivery} days delivery</div>
+      </div>
+      <button class="order-btn" onclick="openOrder(${SERVICES.indexOf(s)})">Order Now</button>
+    </div>
+  `).join('');
+  
+  if (items.length === 0) {
+    grid.innerHTML = '<p style="text-align:center;color:var(--text2);padding:40px">No services found. Try a different search.</p>';
+  }
+}
+
+function filterCat(cat, el) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderServices(cat, document.getElementById('search').value);
+}
+
+document.getElementById('search').addEventListener('input', function() {
+  const activeFilter = document.querySelector('.filter-btn.active');
+  const cat = activeFilter ? activeFilter.textContent : 'all';
+  const filterMap = {'All Services':'all','AI':'AI Services','Programming':'Programming','Design':'Design','Writing':'Writing','Marketing':'Marketing','Music':'Music','Business':'Business'};
+  renderServices(filterMap[cat] || 'all', this.value);
+});
+
+function openOrder(idx) {
+  currentService = SERVICES[idx];
+  document.getElementById('modalTitle').textContent = currentService.title;
+  document.getElementById('modalSub').textContent = formatN(currentService.price) + ' - ' + currentService.delivery + ' days delivery by ' + currentService.seller;
+  document.getElementById('payAmt').textContent = formatN(currentService.price);
+  document.getElementById('orderModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('orderModal').classList.remove('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function submitOrder() {
+  const name = document.getElementById('clientName').value.trim();
+  const phone = document.getElementById('clientPhone').value.trim();
+  const email = document.getElementById('clientEmail').value.trim();
+  const details = document.getElementById('projectDetails').value.trim();
+  
+  if (!name || !phone) {
+    showToast('Please enter name and phone');
+    return;
+  }
+  
+  const msg = `New Freelance Order\n\nService: ${currentService.title}\nSeller: ${currentService.seller}\nAmount: ${formatN(currentService.price)}\nDelivery: ${currentService.delivery} days\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nDetails: ${details || 'Not specified'}`;
+  const waLink = 'https://wa.me/2348028687857?text=' + encodeURIComponent(msg);
+  
+  closeModal();
+  window.open(waLink, '_blank');
+  showToast('Opening WhatsApp to complete order...');
+  
+  document.getElementById('clientName').value = '';
+  document.getElementById('clientEmail').value = '';
+  document.getElementById('clientPhone').value = '';
+  document.getElementById('projectDetails').value = '';
+}
+
+renderServices('all');
+</script>
+</body>
+</html>
