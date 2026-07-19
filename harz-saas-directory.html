@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz SaaS Directory — Best AI, Business & Productivity Tools for Nigerians</title>
+<meta name="description" content="Discover the best SaaS tools for Nigerian businesses. AI, productivity, marketing, design, development, and finance tools with pricing and features.">
+<meta name="theme-color" content="#0a0a0a">
+<style>
+:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--primary:#3b82f6;--primary2:#2563eb;--accent:#8b5cf6;--text:#fff;--text2:#a3a3a3;--border:#2a2a2a;--radius:16px;--radius-sm:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(10,10,10,0.85);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:18px;color:var(--primary)}
+.logo span{font-size:11px;color:var(--text2);display:block}
+.search-bar{flex:1;max-width:400px;margin:0 20px}
+.search-bar input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:20px;font-size:13px}
+.search-bar input:focus{outline:none;border-color:var(--primary)}
+.hero{padding:100px 20px 30px;text-align:center}
+.hero h1{font-size:32px;font-weight:800;margin-bottom:8px}
+.hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:14px;margin-bottom:20px}
+.hero-stats{display:flex;justify-content:center;gap:24px}
+.hero-stat .num{font-size:20px;font-weight:800;color:var(--primary)}
+.hero-stat .label{font-size:10px;color:var(--text2)}
+.filters{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:0 16px 16px}
+.filter-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:5px 12px;border-radius:16px;font-size:12px;cursor:pointer;transition:all 0.2s}
+.filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.section{max-width:1200px;margin:0 auto;padding:16px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:960px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:all 0.3s;position:relative}
+.card:hover{border-color:var(--primary);transform:translateY(-3px)}
+.card .free-tag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;background:rgba(59,130,246,0.15);color:var(--primary);padding:2px 8px;border-radius:10px}
+.card .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;margin-bottom:10px}
+.card h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.card p{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5}
+.features{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
+.feature{background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:10px;font-size:9px;color:var(--text2)}
+.card-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:10px}
+.price{font-size:14px;font-weight:700}
+.price .free{color:var(--primary)}
+.price .paid{color:var(--text)}
+.rating{font-size:11px;color:#fbbf24}
+.visit-btn{display:block;text-align:center;background:var(--surface2);color:var(--text);padding:8px;border-radius:6px;font-size:13px;font-weight:600;border:1px solid var(--border);margin-top:8px;transition:all 0.2s}
+.visit-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+footer{text-align:center;padding:30px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--text2)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Harz<span>SaaS Directory</span></div>
+  <div class="search-bar"><input type="text" id="search" placeholder="Search tools..."></div>
+</nav>
+<div class="hero">
+  <h1>Best <span class="grad">SaaS Tools</span> for Nigerian Businesses</h1>
+  <p>Curated AI, productivity, marketing, and finance tools — with pricing in Naira</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">12</div><div class="label">Tools Listed</div></div>
+    <div class="hero-stat"><div class="num">6</div><div class="label">Categories</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="label">Free Tools</div></div>
+  </div>
+</div>
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCat('all',this)">All</button>
+  <button class="filter-btn" onclick="filterCat('AI',this)">AI</button>
+  <button class="filter-btn" onclick="filterCat('Productivity',this)">Productivity</button>
+  <button class="filter-btn" onclick="filterCat('Marketing',this)">Marketing</button>
+  <button class="filter-btn" onclick="filterCat('Design',this)">Design</button>
+  <button class="filter-btn" onclick="filterCat('Development',this)">Development</button>
+  <button class="filter-btn" onclick="filterCat('Finance',this)">Finance</button>
+</div>
+<div class="section"><div class="grid" id="grid"></div></div>
+<footer>Harz SaaS Directory by Harz Digital Services (RC: 321424)<br>2026 Harz Ecosystem</footer>
+<script>
+const TOOLS = [
+  {name:'HarzAI Superagent',cat:'AI',icon:'AI',color:'#00ff88',desc:'Your personal AI agent. Builds apps, sends emails, manages calendar, automates tasks. 24/7.',price:'Paid',priceVal:'Credits-based',rating:5.0,users:'500+',features:['WhatsApp','Telegram','Calendar','Email','Automation'],url:'https://app.base44.com/superagent/6a1e2efdc14fbb292286fb2f',isFree:false},
+  {name:'OMEGA Commander',cat:'AI',icon:'OC',color:'#7c3aed',desc:'Enterprise AI orchestrator with 9 executive agents, approval workflows, and audit logging.',price:'Free',priceVal:'Free',rating:4.9,users:'50+',features:['9 Agents','Approvals','Audit Log','Telegram'],url:'https://omega-commander-ai.onrender.com',isFree:true},
+  {name:'HarzPay',cat:'Finance',icon:'HP',color:'#f59e0b',desc:'Payment aggregator for Nigeria. Bank transfers, USDT crypto, USSD, affiliate tracking.',price:'Free',priceVal:'Free',rating:4.8,users:'100+',features:['Bank Transfer','USDT','USSD','Affiliate'],url:'https://harzpay.vercel.app',isFree:true},
+  {name:'Apex Bank',cat:'Finance',icon:'AB',color:'#3b82f6',desc:'Digital banking simulation. Accounts, transfers, cards, loans, savings goals, bill payments.',price:'Free',priceVal:'Free',rating:4.7,users:'200+',features:['Accounts','Cards','Loans','Savings'],url:'https://apex-bank.vercel.app',isFree:true},
+  {name:'HarzFX',cat:'Finance',icon:'FX',color:'#10b981',desc:'Currency exchange platform. Live rates, P2P trading, multi-currency support.',price:'Free',priceVal:'Free',rating:4.6,users:'80+',features:['Live Rates','P2P Trade','Multi-currency'],url:'https://harzfx.vercel.app',isFree:true},
+  {name:'EduWealth AI',cat:'Productivity',icon:'ED',color:'#8b5cf6',desc:'Online learning platform. 12 courses, certificates, career tracking, live classes.',price:'Freemium',priceVal:'N8K-N25K',rating:4.9,users:'500+',features:['12 Courses','Certificates','Careers','Live Classes'],url:'https://eduwealth-ai.vercel.app',isFree:false},
+  {name:'ContentPilot AI',cat:'Marketing',icon:'CP',color:'#ec4899',desc:'AI content creation and scheduling. YouTube, TikTok, Instagram automation.',price:'Paid',priceVal:'$15-$99/mo',rating:4.8,users:'120+',features:['AI Scripts','Scheduling','Analytics','Multi-platform'],url:'https://cp-checkout-harz.vercel.app',isFree:false},
+  {name:'HarzDM Marketplace',cat:'Productivity',icon:'DM',color:'#06b6d4',desc:'Digital product marketplace. 259 products, search, filter, WhatsApp checkout.',price:'Freemium',priceVal:'N500-N15K',rating:4.7,users:'300+',features:['259 Products','Search','WhatsApp Checkout'],url:'https://harzdm-marketplace.vercel.app',isFree:false},
+  {name:'MindCare AI',cat:'Productivity',icon:'MC',color:'#a78bfa',desc:'Mental wellness companion. Mood tracking, journaling, therapy exercises, crisis support.',price:'Free',priceVal:'Free',rating:4.9,users:'150+',features:['Mood Track','Journal','Therapy','Crisis Support'],url:'https://mindcare-ai.vercel.app',isFree:true},
+  {name:'Cyber Shield X',cat:'Development',icon:'CS',color:'#ef4444',desc:'Cybersecurity monitoring. 37 agents, threat detection, vulnerability scanning, compliance.',price:'Free',priceVal:'Free',rating:4.8,users:'60+',features:['37 Agents','Threat Detection','Vuln Scan','Compliance'],url:'https://cyber-shield-x.vercel.app',isFree:true},
+  {name:'Abuja Estate City',cat:'Productivity',icon:'EC',color:'#f97316',desc:'Real estate platform. Browse properties, find pros, compare materials, get quotes.',price:'Freemium',priceVal:'Free browsing',rating:4.6,users:'100+',features:['Properties','Pros','Materials','Quotes'],url:'https://abuja-estate-city-ai.vercel.app',isFree:true},
+  {name:'Harz CRM',cat:'Marketing',icon:'CRM',color:'#14b8a6',desc:'WhatsApp CRM. Auto-reply, customer pipeline, inquiry tracking, follow-up management.',price:'Free',priceVal:'Free',rating:4.7,users:'40+',features:['Auto-Reply','Pipeline','Inquiry Tracking'],url:'https://harz-crm.vercel.app',isFree:true},
+];
+
+function renderTools(filter, search) {
+  const grid = document.getElementById('grid');
+  let items = TOOLS;
+  if (filter && filter !== 'all') items = items.filter(t => t.cat === filter);
+  if (search) {
+    const q = search.toLowerCase();
+    items = items.filter(t => t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || t.features.some(f => f.toLowerCase().includes(q)));
+  }
+  grid.innerHTML = items.map(t => `
+    <div class="card">
+      ${t.isFree ? '<div class="free-tag">FREE</div>' : ''}
+      <div class="icon" style="background:${t.color}22;color:${t.color}">${t.icon}</div>
+      <h3>${t.name}</h3>
+      <p>${t.desc}</p>
+      <div class="features">${t.features.map(f => `<span class="feature">${f}</span>`).join('')}</div>
+      <div class="card-footer">
+        <div class="price ${t.isFree ? 'free' : 'paid'}">${t.priceVal}</div>
+        <div class="rating">${t.rating} stars (${t.users})</div>
+      </div>
+      <a href="${t.url}" class="visit-btn" target="_blank">Visit Tool</a>
+    </div>
+  `).join('');
+  if (!items.length) grid.innerHTML = '<p style="text-align:center;color:var(--text2);padding:40px">No tools found.</p>';
+}
+
+function filterCat(cat, el) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderTools(cat, document.getElementById('search').value);
+}
+
+document.getElementById('search').addEventListener('input', function() {
+  const active = document.querySelector('.filter-btn.active');
+  const catMap = {'All':'all','AI':'AI','Productivity':'Productivity','Marketing':'Marketing','Design':'Design','Development':'Development','Finance':'Finance'};
+  renderTools(catMap[active?.textContent] || 'all', this.value);
+});
+
+renderTools('all');
+</script>
+</body>
+</html>

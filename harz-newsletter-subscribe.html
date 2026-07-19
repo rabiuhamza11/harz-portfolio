@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Newsletter — Weekly AI, Business & Tech Insights for Nigerians</title>
+<meta name="description" content="Get weekly insights on AI, business, technology, and digital marketing for Nigerian entrepreneurs. Free subscription.">
+<meta name="theme-color" content="#0a0a0a">
+<style>
+:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--primary:#ec4899;--accent:#8b5cf6;--text:#fff;--text2:#a3a3a3;--border:#2a2a2a;--radius:16px;--radius-sm:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(10,10,10,0.85);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:18px;color:var(--primary)}
+.logo span{font-size:11px;color:var(--text2);display:block}
+.hero{padding:100px 20px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 40%,rgba(236,72,153,0.06),transparent 50%)}
+.hero h1{font-size:34px;font-weight:800;margin-bottom:12px;position:relative}
+.hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:15px;max-width:500px;margin:0 auto 30px;position:relative}
+.subscribe-box{max-width:480px;margin:0 auto 30px;position:relative}
+.subscribe-box input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:14px 18px;border-radius:12px;font-size:15px;margin-bottom:10px}
+.subscribe-box input:focus{outline:none;border-color:var(--primary)}
+.subscribe-btn{width:100%;background:var(--primary);color:#fff;padding:14px;border-radius:12px;font-weight:700;font-size:16px;border:none;cursor:pointer}
+.subscribe-btn:hover{background:#db2777}
+.hero-stats{display:flex;justify-content:center;gap:30px;margin-bottom:40px;position:relative}
+.hero-stat .num{font-size:22px;font-weight:800;color:var(--primary)}
+.hero-stat .label{font-size:11px;color:var(--text2)}
+.section{max-width:800px;margin:0 auto;padding:30px 20px}
+.section-title{font-size:20px;font-weight:700;margin-bottom:16px;text-align:center}
+.benefits{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:40px}
+@media(min-width:640px){.benefits{grid-template-columns:repeat(2,1fr)}}
+.benefit{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.benefit-icon{font-size:28px;margin-bottom:8px}
+.benefit h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.benefit p{font-size:13px;color:var(--text2)}
+.topics{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:40px}
+.topic{background:var(--surface);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:12px;color:var(--text2)}
+.topic.active{background:rgba(236,72,153,0.1);border-color:var(--primary);color:var(--primary)}
+.plans{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:40px}
+@media(min-width:640px){.plans{grid-template-columns:repeat(3,1fr)}}
+.plan{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center}
+.plan.featured{border-color:var(--primary);position:relative}
+.plan.featured::after{content:'POPULAR';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700}
+.plan h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.plan-price{font-size:28px;font-weight:800;color:var(--primary);margin-bottom:4px}
+.plan-price .per{font-size:12px;color:var(--text2)}
+.plan-features{font-size:13px;color:var(--text2);text-align:left;margin-top:12px}
+.plan-features div{padding:3px 0}
+.plan-features div::before{content:'✓ ';color:var(--primary)}
+footer{text-align:center;padding:30px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--text2)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Harz<span>Insider Newsletter</span></div>
+</nav>
+<div class="hero">
+  <h1>Weekly <span class="grad">AI & Business Insights</span><br>for Nigerian Entrepreneurs</h1>
+  <p>Get curated insights on AI, tech, digital marketing, and business growth — delivered every Sunday. Join 500+ subscribers.</p>
+  <div class="subscribe-box">
+    <input type="email" id="emailInput" placeholder="Enter your email address">
+    <button class="subscribe-btn" onclick="subscribe()">Subscribe Free</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">500+</div><div class="label">Subscribers</div></div>
+    <div class="hero-stat"><div class="num">52</div><div class="label">Issues/Year</div></div>
+    <div class="hero-stat"><div class="num">4.8</div><div class="label">Rating</div></div>
+  </div>
+</div>
+<div class="section">
+  <div class="section-title">Why Subscribe?</div>
+  <div class="benefits">
+    <div class="benefit">
+      <div class="benefit-icon">AI</div>
+      <h3>Latest AI Tools & Trends</h3>
+      <p>Discover new AI tools, automation ideas, and how Nigerian businesses are using AI to scale.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">BIZ</div>
+      <h3>Business Growth Strategies</h3>
+      <p>Real tactics for growing your business online — marketing, sales, and operations.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">TECH</div>
+      <h3>Tech & Development Updates</h3>
+      <p>What's happening in tech, new tools, and how to leverage them for your business.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">MKT</div>
+      <h3>Digital Marketing Tips</h3>
+      <p>Social media, content marketing, and paid ads strategies that actually work in Nigeria.</p>
+    </div>
+  </div>
+  <div class="section-title">Topics We Cover</div>
+  <div class="topics">
+    <span class="topic active">AI & Automation</span>
+    <span class="topic active">Business Strategy</span>
+    <span class="topic active">Digital Marketing</span>
+    <span class="topic">Web Development</span>
+    <span class="topic">Fintech</span>
+    <span class="topic">Cryptocurrency</span>
+    <span class="topic">E-commerce</span>
+    <span class="topic">Content Creation</span>
+    <span class="topic">Productivity</span>
+  </div>
+  <div class="section-title">Choose Your Plan</div>
+  <div class="plans">
+    <div class="plan">
+      <h3>Free</h3>
+      <div class="plan-price">N0<span class="per">/month</span></div>
+      <div class="plan-features">
+        <div>Weekly newsletter</div>
+        <div>AI insights digest</div>
+        <div>Business tips</div>
+      </div>
+    </div>
+    <div class="plan featured">
+      <h3>Pro</h3>
+      <div class="plan-price">N2,500<span class="per">/month</span></div>
+      <div class="plan-features">
+        <div>Everything in Free</div>
+        <div>Exclusive deep-dives</div>
+        <div>Tool reviews & tutorials</div>
+        <div>Priority WhatsApp support</div>
+      </div>
+    </div>
+    <div class="plan">
+      <h3>Business</h3>
+      <div class="plan-price">N10,000<span class="per">/month</span></div>
+      <div class="plan-features">
+        <div>Everything in Pro</div>
+        <div>Custom AI strategy session</div>
+        <div>Team access (5 seats)</div>
+        <div>Monthly 1-on-1 consultation</div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>Harz Insider Newsletter by Harz Digital Services (RC: 321424)<br>2026 Harz Ecosystem</footer>
+<script>
+function subscribe() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email || !email.includes('@')) { alert('Please enter a valid email'); return; }
+  const msg = `Newsletter Subscription\n\nEmail: ${email}\nPlan: Free\n\nPlease add me to the Harz Insider Newsletter.`;
+  window.open('https://wa.me/2348028687857?text=' + encodeURIComponent(msg), '_blank');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Pricing Calculator — Calculate Digital Service Costs | Nigeria</title>
+<meta name="description" content="Calculate costs for AI development, web apps, chatbots, marketing, design, and more. Instant pricing for Nigerian businesses.">
+<meta name="theme-color" content="#0a0a0a">
+<style>
+:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--primary:#06b6d4;--accent:#8b5cf6;--text:#fff;--text2:#a3a3a3;--border:#2a2a2a;--radius:16px;--radius-sm:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(10,10,10,0.85);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:18px;color:var(--primary)}
+.logo span{font-size:11px;color:var(--text2);display:block}
+.hero{padding:100px 20px 30px;text-align:center}
+.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
+.hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:14px;margin-bottom:20px}
+.calculator{max-width:600px;margin:0 auto;padding:20px}
+.calc-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.calc-section h3{font-size:15px;font-weight:700;margin-bottom:12px;color:var(--primary)}
+.calc-option{display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all 0.2s}
+.calc-option:hover{border-color:var(--primary)}
+.calc-option.selected{border-color:var(--primary);background:rgba(6,182,212,0.05)}
+.calc-option .label{font-size:14px}
+.calc-option .price{font-size:14px;font-weight:700;color:var(--primary)}
+.qty-control{display:flex;align-items:center;gap:8px;margin-top:8px}
+.qty-btn{width:36px;height:36px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;font-size:16px;cursor:pointer}
+.qty-display{font-size:18px;font-weight:700;min-width:30px;text-align:center}
+.total-box{background:linear-gradient(135deg,rgba(6,182,212,0.1),rgba(139,92,246,0.1));border:2px solid var(--primary);border-radius:var(--radius);padding:24px;text-align:center;margin-bottom:16px}
+.total-box .label{font-size:14px;color:var(--text2)}
+.total-box .amount{font-size:36px;font-weight:800;color:var(--primary);margin:4px 0}
+.total-box .breakdown{font-size:12px;color:var(--text2);margin-top:8px}
+.action-btns{display:flex;gap:10px}
+.action-btn{flex:1;padding:14px;border-radius:10px;font-weight:700;font-size:15px;border:none;cursor:pointer}
+.btn-order{background:var(--primary);color:#000}
+.btn-whatsapp{background:#25D366;color:#fff}
+footer{text-align:center;padding:30px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--text2)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Harz<span>Pricing Calculator</span></div>
+</nav>
+<div class="hero">
+  <h1>Calculate Your <span class="grad">Project Cost</span></h1>
+  <p>Select what you need and get instant pricing</p>
+</div>
+<div class="calculator">
+  <div class="calc-section">
+    <h3>1. Development</h3>
+    <div class="calc-option" onclick="toggleOption(this,'Web App',80000)">
+      <span class="label">Custom Web App (React/Next.js)</span><span class="price">N80,000</span>
+    </div>
+    <div class="calc-option" onclick="toggleOption(this,'AI Chatbot',50000)">
+      <span class="label">AI Chatbot Development</span><span class="price">N50,000</span>
+    </div>
+    <div class="calc-option" onclick="toggleOption(this,'WhatsApp Bot',40000)">
+      <span class="label">WhatsApp Bot Setup</span><span class="price">N40,000</span>
+    </div>
+  </div>
+  <div class="calc-section">
+    <h3>2. Design & Brand</h3>
+    <div class="calc-option" onclick="toggleOption(this,'Logo & Brand',15000)">
+      <span class="label">Logo & Brand Identity Kit</span><span class="price">N15,000</span>
+    </div>
+    <div class="calc-option" onclick="toggleOption(this,'Social Media Design',12000)">
+      <span class="label">Social Media Design Pack</span><span class="price">N12,000</span>
+    </div>
+  </div>
+  <div class="calc-section">
+    <h3>3. Marketing</h3>
+    <div class="calc-option" onclick="toggleOption(this,'Social Media Mgmt',30000)">
+      <span class="label">Social Media Management (Monthly)</span><span class="price">N30,000</span>
+    </div>
+    <div class="calc-option" onclick="toggleOption(this,'SEO Articles',5000)">
+      <span class="label">SEO Article Writing (per article)</span><span class="price">N5,000</span>
+    </div>
+    <div class="calc-option" onclick="toggleOption(this,'Ad Campaign Setup',20000)">
+      <span class="label">Ad Campaign Setup (Facebook/Google)</span><span class="price">N20,000</span>
+    </div>
+  </div>
+  <div class="calc-section">
+    <h3>4. Business Services</h3>
+    <div class="calc-option" onclick="toggleOption(this,'Business Plan',35000)">
+      <span class="label">Business Plan Writing</span><span class="price">N35,000</span>
+    </div>
+    <div class="calc-option" onclick="toggleOption(this,'Consultation',15000)">
+      <span class="label">AI Strategy Consultation (60 min)</span><span class="price">N15,000</span>
+    </div>
+    <div class="calc-option" onclick="toggleOption(this,'Music Production',25000)">
+      <span class="label">Music Production & Mixing</span><span class="price">N25,000</span>
+    </div>
+  </div>
+  <div class="total-box">
+    <div class="label">Estimated Total</div>
+    <div class="amount" id="totalAmount">N0</div>
+    <div class="breakdown" id="breakdown">Select services to calculate</div>
+  </div>
+  <div class="action-btns">
+    <button class="action-btn btn-order" onclick="orderNow()">Order Now</button>
+    <button class="action-btn btn-whatsapp" onclick="quoteWhatsApp()">Get WhatsApp Quote</button>
+  </div>
+</div>
+<footer>Harz Pricing Calculator by Harz Digital Services (RC: 321424)<br>2026 Harz Ecosystem</footer>
+<script>
+let selected = {};
+function toggleOption(el, name, price) {
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    delete selected[name];
+  } else {
+    el.classList.add('selected');
+    selected[name] = price;
+  }
+  updateTotal();
+}
+function formatN(n) { return 'N' + n.toLocaleString(); }
+function updateTotal() {
+  const items = Object.entries(selected);
+  const total = items.reduce((sum, [_, p]) => sum + p, 0);
+  document.getElementById('totalAmount').textContent = formatN(total);
+  if (items.length === 0) {
+    document.getElementById('breakdown').textContent = 'Select services to calculate';
+  } else {
+    document.getElementById('breakdown').textContent = items.map(([n, p]) => `${n}: ${formatN(p)}`).join(' · ');
+  }
+}
+function orderNow() {
+  const items = Object.entries(selected);
+  if (!items.length) { alert('Select at least one service'); return; }
+  const total = items.reduce((s, [_, p]) => s + p, 0);
+  const msg = `Project Order\n\nSelected Services:\n${items.map(([n, p]) => `${n} - ${formatN(p)}`).join('\n')}\n\nTotal: ${formatN(total)}\n\nI'd like to proceed with this order.`;
+  window.open('https://wa.me/2348028687857?text=' + encodeURIComponent(msg), '_blank');
+}
+function quoteWhatsApp() {
+  const items = Object.entries(selected);
+  if (!items.length) { alert('Select at least one service'); return; }
+  const total = items.reduce((s, [_, p]) => s + p, 0);
+  const msg = `Quote Request\n\nI'm interested in:\n${items.map(([n]) => n).join(', ')}\n\nEstimated: ${formatN(total)}\n\nCan we discuss details?`;
+  window.open('https://wa.me/2348028687857?text=' + encodeURIComponent(msg), '_blank');
+}
+</script>
+</body>
+</html>

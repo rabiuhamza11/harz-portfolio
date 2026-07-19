@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Service Onboarding — From Idea to Launch | Nigeria</title>
+<meta name="description" content="Start your project with Harz Digital Services. 5-step onboarding flow: needs assessment, service selection, payment, and delivery.">
+<meta name="theme-color" content="#0a0a0a">
+<style>
+:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--primary:#3b82f6;--accent:#8b5cf6;--text:#fff;--text2:#a3a3a3;--border:#2a2a2a;--radius:16px;--radius-sm:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(10,10,10,0.85);border-bottom:1px solid var(--border);padding:14px 20px}
+.logo{font-weight:800;font-size:18px;color:var(--primary)}
+.logo span{font-size:11px;color:var(--text2);display:block}
+.hero{padding:100px 20px 20px;text-align:center}
+.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
+.hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:14px}
+.wizard{max-width:600px;margin:0 auto;padding:20px}
+.steps-bar{display:flex;justify-content:space-between;margin-bottom:24px;position:relative}
+.steps-bar::before{content:'';position:absolute;top:20px;left:10%;right:10%;height:2px;background:var(--border);z-index:0}
+.step-dot{width:40px;height:40px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;z-index:1;transition:all 0.3s}
+.step-dot.active{background:var(--primary);border-color:var(--primary);color:#000}
+.step-dot.done{background:var(--primary);border-color:var(--primary);color:#000}
+.step-label{font-size:9px;color:var(--text2);text-align:center;margin-top:4px}
+.step-container{position:relative}
+.step-panel{display:none;animation:fadeIn 0.3s}
+.step-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.panel-title{font-size:18px;font-weight:700;margin-bottom:12px}
+.panel-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+.choice-grid{display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:480px){.choice-grid{grid-template-columns:repeat(2,1fr)}}
+.choice{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s;font-size:13px}
+.choice:hover{border-color:var(--primary)}
+.choice.selected{border-color:var(--primary);background:rgba(59,130,246,0.05)}
+.choice .icon{font-size:20px;margin-bottom:4px}
+.choice .title{font-weight:600}
+.choice .price{font-size:11px;color:var(--primary);margin-top:2px}
+.form-group{margin-bottom:10px}
+.form-group label{font-size:12px;font-weight:600;margin-bottom:3px;display:block}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:14px;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary)}
+.summary-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
+.summary-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--border)}
+.summary-row span:first-child{color:var(--text2)}
+.summary-total{font-size:18px;font-weight:800;color:var(--primary);text-align:right;margin-top:8px}
+.nav-btns{display:flex;gap:10px;margin-top:16px}
+.nav-btn{padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;border:none;cursor:pointer;flex:1}
+.btn-next{background:var(--primary);color:#000}
+.btn-prev{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.success-box{text-align:center;padding:40px 20px}
+.success-icon{font-size:48px;margin-bottom:12px}
+.success-box h2{font-size:22px;margin-bottom:8px}
+.success-box p{font-size:14px;color:var(--text2);margin-bottom:20px}
+footer{text-align:center;padding:20px;font-size:12px;color:var(--text2)}
+</style>
+</head>
+<body>
+<nav><div class="logo">Harz<span>Onboarding</span></div></nav>
+<div class="hero">
+  <h1>Let's Build <span class="grad">Something Great</span></h1>
+  <p>5 quick steps from idea to launch</p>
+</div>
+<div class="wizard">
+  <div class="steps-bar">
+    <div><div class="step-dot active" id="dot1">1</div><div class="step-label">Needs</div></div>
+    <div><div class="step-dot" id="dot2">2</div><div class="step-label">Service</div></div>
+    <div><div class="step-dot" id="dot3">3</div><div class="step-label">Details</div></div>
+    <div><div class="step-dot" id="dot4">4</div><div class="step-label">Payment</div></div>
+    <div><div class="step-dot" id="dot5">5</div><div class="step-label">Done</div></div>
+  </div>
+  <div class="step-container">
+    <!-- Step 1 -->
+    <div class="step-panel active" id="panel1">
+      <div class="panel-title">What do you need?</div>
+      <div class="panel-desc">Choose the category that best describes your project</div>
+      <div class="choice-grid">
+        <div class="choice" onclick="selectNeed('AI/Chatbot',this)"><div class="icon">AI</div><div class="title">AI / Chatbot</div><div class="price">From N40K</div></div>
+        <div class="choice" onclick="selectNeed('Web App',this)"><div class="icon">WEB</div><div class="title">Web Application</div><div class="price">From N80K</div></div>
+        <div class="choice" onclick="selectNeed('Design',this)"><div class="icon">ART</div><div class="title">Logo & Brand Design</div><div class="price">From N15K</div></div>
+        <div class="choice" onclick="selectNeed('Marketing',this)"><div class="icon">MKT</div><div class="title">Social Media / Marketing</div><div class="price">From N5K</div></div>
+        <div class="choice" onclick="selectNeed('Business Plan',this)"><div class="icon">BIZ</div><div class="title">Business Plan</div><div class="price">From N35K</div></div>
+        <div class="choice" onclick="selectNeed('Consultation',this)"><div class="icon">CHAT</div><div class="title">Strategy Consultation</div><div class="price">From N10K</div></div>
+      </div>
+      <div class="nav-btns"><button class="nav-btn btn-next" onclick="nextStep(1)">Continue</button></div>
+    </div>
+    <!-- Step 2 -->
+    <div class="step-panel" id="panel2">
+      <div class="panel-title">Choose Your Service</div>
+      <div class="panel-desc">Select the specific service you want</div>
+      <div class="choice-grid" id="serviceChoices"></div>
+      <div class="nav-btns"><button class="nav-btn btn-prev" onclick="prevStep(2)">Back</button><button class="nav-btn btn-next" onclick="nextStep(2)">Continue</button></div>
+    </div>
+    <!-- Step 3 -->
+    <div class="step-panel" id="panel3">
+      <div class="panel-title">Your Details</div>
+      <div class="panel-desc">Tell us about yourself and your project</div>
+      <div class="form-group"><label>Full Name</label><input type="text" id="custName" placeholder="Your name"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="custEmail" placeholder="you@email.com"></div>
+      <div class="form-group"><label>Phone (WhatsApp)</label><input type="tel" id="custPhone" placeholder="08012345678"></div>
+      <div class="form-group"><label>Project Description</label><textarea id="custDesc" rows="3" placeholder="Briefly describe what you need" style="resize:vertical"></textarea></div>
+      <div class="form-group"><label>Timeline</label><select id="custTimeline"><option>ASAP (Rush)</option><option>1-2 weeks</option><option>1 month</option><option>Flexible</option></select></div>
+      <div class="nav-btns"><button class="nav-btn btn-prev" onclick="prevStep(3)">Back</button><button class="nav-btn btn-next" onclick="nextStep(3)">Continue</button></div>
+    </div>
+    <!-- Step 4 -->
+    <div class="step-panel" id="panel4">
+      <div class="panel-title">Review & Pay</div>
+      <div class="panel-desc">Confirm your order and choose a payment method</div>
+      <div class="summary-box" id="summaryBox"></div>
+      <div class="form-group"><label>Payment Method</label><select id="payMethod"><option>Bank Transfer (UBA)</option><option>USDT TRC20</option><option>WhatsApp — Discuss Payment</option></select></div>
+      <div class="nav-btns"><button class="nav-btn btn-prev" onclick="prevStep(4)">Back</button><button class="nav-btn btn-next" onclick="submitOrder()">Confirm & Submit</button></div>
+    </div>
+    <!-- Step 5 -->
+    <div class="step-panel" id="panel5">
+      <div class="success-box">
+        <div class="success-icon">DONE</div>
+        <h2>Order Submitted!</h2>
+        <p>We've received your order and will contact you on WhatsApp shortly to get started.</p>
+        <button class="nav-btn btn-next" onclick="window.open('https://wa.me/2348028687857','_blank')" style="background:#25D366;color:#fff;padding:14px 32px;border-radius:10px;border:none;cursor:pointer;font-weight:700">Open WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>Harz Onboarding by Harz Digital Services (RC: 321424)<br>2026 Harz Ecosystem</footer>
+<script>
+let currentStep = 1;
+let selections = { need: null, service: null, price: 0 };
+
+const SERVICES = {
+  'AI/Chatbot': [{name:'AI Chatbot Development',price:50000},{name:'WhatsApp Bot Setup',price:40000},{name:'AI Strategy Consultation',price:15000}],
+  'Web App': [{name:'React/Next.js Web App',price:80000},{name:'Landing Page Design',price:20000},{name:'Tech Product Building',price:25000}],
+  'Design': [{name:'Logo & Brand Identity',price:15000},{name:'Social Media Design Pack',price:12000}],
+  'Marketing': [{name:'Social Media Management',price:30000},{name:'SEO Article Writing',price:5000},{name:'Digital Marketing Masterclass',price:10000}],
+  'Business Plan': [{name:'Business Plan Writing',price:35000},{name:'Business Strategy Session',price:20000}],
+  'Consultation': [{name:'AI Automation Strategy',price:15000},{name:'Monthly Retainer',price:75000},{name:'Music & Film Distribution',price:12000}],
+};
+
+function selectNeed(need, el) {
+  document.querySelectorAll('#panel1 .choice').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selections.need = need;
+  selections.service = null;
+  selections.price = 0;
+  const choices = SERVICES[need] || [];
+  document.getElementById('serviceChoices').innerHTML = choices.map((s, i) => 
+    `<div class="choice" onclick="selectService(${i},this)"><div class="title">${s.name}</div><div class="price">N${s.price.toLocaleString()}</div></div>`
+  ).join('');
+}
+
+function selectService(idx, el) {
+  document.querySelectorAll('#panel2 .choice').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const need = selections.need;
+  selections.service = SERVICES[need][idx].name;
+  selections.price = SERVICES[need][idx].price;
+}
+
+function nextStep(from) {
+  if (from === 1 && !selections.need) { alert('Please select a category'); return; }
+  if (from === 2 && !selections.service) { alert('Please select a service'); return; }
+  if (from === 3) {
+    if (!document.getElementById('custName').value || !document.getElementById('custPhone').value) { alert('Please enter name and phone'); return; }
+    updateSummary();
+  }
+  document.getElementById('panel' + from).classList.remove('active');
+  document.getElementById('panel' + (from + 1)).classList.add('active');
+  document.getElementById('dot' + from).classList.add('done');
+  document.getElementById('dot' + (from + 1)).classList.add('active');
+  currentStep = from + 1;
+}
+
+function prevStep(from) {
+  document.getElementById('panel' + from).classList.remove('active');
+  document.getElementById('panel' + (from - 1)).classList.add('active');
+  document.getElementById('dot' + from).classList.remove('active');
+  document.getElementById('dot' + (from - 1)).classList.remove('done').classList.add('active');
+  currentStep = from - 1;
+}
+
+function updateSummary() {
+  const name = document.getElementById('custName').value;
+  const email = document.getElementById('custEmail').value;
+  const phone = document.getElementById('custPhone').value;
+  const desc = document.getElementById('custDesc').value;
+  const timeline = document.getElementById('custTimeline').value;
+  document.getElementById('summaryBox').innerHTML = `
+    <div class="summary-row"><span>Category</span><span>${selections.need}</span></div>
+    <div class="summary-row"><span>Service</span><span>${selections.service}</span></div>
+    <div class="summary-row"><span>Name</span><span>${name}</span></div>
+    <div class="summary-row"><span>Phone</span><span>${phone}</span></div>
+    <div class="summary-row"><span>Timeline</span><span>${timeline}</span></div>
+    <div class="summary-total">Total: N${selections.price.toLocaleString()}</div>
+  `;
+}
+
+function submitOrder() {
+  const name = document.getElementById('custName').value;
+  const email = document.getElementById('custEmail').value;
+  const phone = document.getElementById('custPhone').value;
+  const desc = document.getElementById('custDesc').value;
+  const timeline = document.getElementById('custTimeline').value;
+  const pay = document.getElementById('payMethod').value;
+  
+  const msg = `New Order (Onboarding)\n\nCategory: ${selections.need}\nService: ${selections.service}\nPrice: N${selections.price.toLocaleString()}\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nTimeline: ${timeline}\nDescription: ${desc}\nPayment: ${pay}`;
+  window.open('https://wa.me/2348028687857?text=' + encodeURIComponent(msg), '_blank');
+  
+  document.getElementById('panel4').classList.remove('active');
+  document.getElementById('panel5').classList.add('active');
+  document.getElementById('dot4').classList.add('done');
+  document.getElementById('dot5').classList.add('active');
+}
+</script>
+</body>
+</html>

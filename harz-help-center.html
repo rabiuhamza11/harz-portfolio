@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Help Center — Support, FAQ & Guides | Nigeria</title>
+<meta name="description" content="Get help with Harz Digital Services. Find answers to common questions, browse guides, and contact support.">
+<meta name="theme-color" content="#0a0a0a">
+<style>
+:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--primary:#3b82f6;--accent:#8b5cf6;--text:#fff;--text2:#a3a3a3;--border:#2a2a2a;--radius:16px;--radius-sm:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(10,10,10,0.85);border-bottom:1px solid var(--border);padding:14px 20px}
+.logo{font-weight:800;font-size:18px;color:var(--primary)}
+.hero{padding:100px 20px 20px;text-align:center}
+.hero h1{font-size:28px;font-weight:800;margin-bottom:8px}
+.hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:14px;margin-bottom:20px}
+.search-box{max-width:500px;margin:0 auto 20px}
+.search-box input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:14px 18px;border-radius:12px;font-size:15px}
+.search-box input:focus{outline:none;border-color:var(--primary)}
+.quick-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.quick-link{background:var(--surface);border:1px solid var(--border);padding:6px 16px;border-radius:20px;font-size:12px;color:var(--text2);cursor:pointer}
+.quick-link:hover{border-color:var(--primary);color:var(--primary)}
+.section{max-width:800px;margin:0 auto;padding:20px}
+.faq-category{margin-bottom:24px}
+.faq-cat-title{font-size:16px;font-weight:700;margin-bottom:10px;color:var(--primary)}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;overflow:hidden}
+.faq-q{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
+.faq-q:hover{color:var(--primary)}
+.faq-arrow{transition:transform 0.2s}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{display:none;padding:0 16px 14px;font-size:13px;color:var(--text2)}
+.faq-item.open .faq-a{display:block}
+.contact-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;margin-bottom:20px}
+.contact-section h3{font-size:16px;margin-bottom:8px}
+.contact-section p{font-size:13px;color:var(--text2);margin-bottom:16px}
+.contact-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.contact-btn{padding:10px 24px;border-radius:10px;font-weight:600;font-size:13px;border:none;cursor:pointer}
+.btn-wa{background:#25D366;color:#fff}
+.btn-tg{background:#0088cc;color:#fff}
+.btn-email{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+footer{text-align:center;padding:20px;font-size:12px;color:var(--text2)}
+</style>
+</head>
+<body>
+<nav><div class="logo">Harz<span>Help Center</span></div></nav>
+<div class="hero">
+  <h1>How Can We <span class="grad">Help?</span></h1>
+  <p>Search our help center or browse common questions</p>
+  <div class="search-box"><input type="text" placeholder="Search for help..." oninput="filterFAQ(this.value)"></div>
+  <div class="quick-links">
+    <span class="quick-link" onclick="scrollToCat('payment')">Payments</span>
+    <span class="quick-link" onclick="scrollToCat('services')">Services</span>
+    <span class="quick-link" onclick="scrollToCat('delivery')">Delivery</span>
+    <span class="quick-link" onclick="scrollToCat('account')">Account</span>
+    <span class="quick-link" onclick="scrollToCat('technical')">Technical</span>
+  </div>
+</div>
+<div class="section">
+  <div class="faq-category" id="payment">
+    <div class="faq-cat-title">Payment Questions</div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What payment methods do you accept? <span class="faq-arrow">v</span></div><div class="faq-a">We accept bank transfers (UBA 2034326424, Rabiu Hamza Mohammed), USDT TRC20 crypto transfers (wallet provided at checkout), and WhatsApp-based payment discussions. Card payments via Paystack and Stripe are coming soon.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Do I pay before or after the work? <span class="faq-arrow">v</span></div><div class="faq-a">For services under N30,000, full payment is required upfront. For larger projects, we accept 50% deposit and 50% on completion. Consultations require full payment to confirm your slot.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Can I get a refund? <span class="faq-arrow">v</span></div><div class="faq-a">If work hasn't started, you get a full refund. If work is in progress, you get a proportional refund for uncompleted work. Completed and delivered work is non-refundable but comes with free revisions (2-5 rounds depending on service).</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Do you accept USDT/crypto? <span class="faq-arrow">v</span></div><div class="faq-a">Yes! We accept USDT TRC20 (Tron network). You'll receive our wallet address at checkout. Crypto payments are confirmed within 10 minutes of blockchain verification.</div></div>
+  </div>
+  <div class="faq-category" id="services">
+    <div class="faq-cat-title">Services Questions</div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What services do you offer? <span class="faq-arrow">v</span></div><div class="faq-a">We offer 8 main services: AI Chatbot Development, WhatsApp Bot Setup, React/Next.js Web Apps, Logo & Brand Identity, SEO Article Writing, Social Media Management, Music Production, and Business Plan Writing. Plus 6 consultation packages.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Can you build custom AI solutions? <span class="faq-arrow">v</span></div><div class="faq-a">Yes. We have 80+ AI agents already deployed across 24 platforms. We can build custom chatbots, automation systems, content generators, and more. Book an AI Automation Strategy consultation to discuss your needs.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Do you work with businesses outside Nigeria? <span class="faq-arrow">v</span></div><div class="faq-a">Yes, we work with clients globally. International payments can be made via USDT crypto. All communication is in English. We've served clients in 8 countries across Africa.</div></div>
+  </div>
+  <div class="faq-category" id="delivery">
+    <div class="faq-cat-title">Delivery Questions</div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">How long does delivery take? <span class="faq-arrow">v</span></div><div class="faq-a">Delivery times vary by service: SEO articles (2 days), Logo design (3 days), WhatsApp bots (3 days), AI chatbots (5 days), Business plans (5 days), Music production (5 days), Social media management (ongoing), Web apps (7 days).</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Can I request rush delivery? <span class="faq-arrow">v</span></div><div class="faq-a">Yes, rush delivery is available for most services at a 50% surcharge. This typically cuts delivery time in half. Contact us on WhatsApp to check availability.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">How many revisions are included? <span class="faq-arrow">v</span></div><div class="faq-a">Revisions vary by service: SEO articles (2), Business plans (2), AI chatbots (3), Web apps (3), WhatsApp bots (2), Logo design (5), Music production (3). Additional revisions cost N2,000 each.</div></div>
+  </div>
+  <div class="faq-category" id="account">
+    <div class="faq-cat-title">Account Questions</div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Do I need to create an account? <span class="faq-arrow">v</span></div><div class="faq-a">No account needed. Simply book a service or consultation, complete payment, and we communicate via WhatsApp throughout the project. Your phone number is your project ID.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">How do I track my project progress? <span class="faq-arrow">v</span></div><div class="faq-a">You receive regular progress updates via WhatsApp. For larger projects, we share a live tracking link. You can also message us anytime on WhatsApp or Telegram for updates.</div></div>
+  </div>
+  <div class="faq-category" id="technical">
+    <div class="faq-cat-title">Technical Questions</div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What tech stack do you use? <span class="faq-arrow">v</span></div><div class="faq-a">Web apps: React, Next.js, Tailwind CSS, deployed to Vercel. Bots: Node.js, Express, deployed to Render. AI: GPT-4, Claude, Llama via Groq. Database: Base44 managed backend. Payments: Paystack, Stripe, USDT, bank transfer.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Do you provide source code? <span class="faq-arrow">v</span></div><div class="faq-a">Yes, for web apps and custom development, you receive full source code on GitHub. For bots, you get the deployed version plus documentation. We can transfer ownership of GitHub repos on request.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Can you integrate with my existing systems? <span class="faq-arrow">v</span></div><div class="faq-a">Yes. We can integrate with most APIs, CRM systems, payment gateways, and databases. Book a Tech Product Building consultation to discuss your integration needs.</div></div>
+  </div>
+  <div class="contact-section">
+    <h3>Still Need Help?</h3>
+    <p>Our support team is available 24/7 on WhatsApp and Telegram</p>
+    <div class="contact-btns">
+      <button class="contact-btn btn-wa" onclick="window.open('https://wa.me/2348028687857','_blank')">WhatsApp Us</button>
+      <button class="contact-btn btn-tg" onclick="window.open('https://t.me/b44_e609780e17959020_bot','_blank')">Telegram</button>
+      <button class="contact-btn btn-email" onclick="window.open('mailto:harzco.business@gmail.com','_blank')">Email</button>
+    </div>
+  </div>
+</div>
+<footer>Harz Help Center by Harz Digital Services (RC: 321424)<br>2026 Harz Ecosystem</footer>
+<script>
+function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
+function scrollToCat(cat) { document.getElementById(cat).scrollIntoView({behavior:'smooth'}); }
+function filterFAQ(query) {
+  const items = document.querySelectorAll('.faq-item');
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.style.display = !query || text.includes(query.toLowerCase()) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
