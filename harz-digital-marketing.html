@@ -453,35 +453,51 @@ function updatePackageInfo(){
 // could update platform limits based on package
 }
 
-function submitAd(e){
+async function submitAd(e){
 e.preventDefault();
+const btn=e.target.querySelector('button[type=submit]');
+btn.disabled=true;btn.textContent='Submitting...';
+const msg=document.getElementById('formMsg');
+msg.className='form-msg';msg.innerHTML='';
+
+const pkg=document.getElementById('package').value;
 const data={
 business_name:document.getElementById('bizName').value,
 contact_phone:document.getElementById('contactPhone').value,
 contact_email:document.getElementById('contactEmail').value,
-package:document.getElementById('package').value,
+package:pkg,
 platforms:Array.from(document.getElementById('platforms').selectedOptions).map(o=>o.value),
 ad_headline:document.getElementById('adHeadline').value,
 ad_description:document.getElementById('adDescription').value,
 media_url:document.getElementById('mediaUrl').value||'',
-amount:{'Starter':15000,'Growth':50000,'Pro':150000}[document.getElementById('package').value],
-currency:'NGN',
-payment_status:'pending',
-publish_status:'awaiting_payment'
+amount:{'Starter':15000,'Growth':50000,'Pro':150000}[pkg],
+currency:'NGN'
 };
 
-const msg=document.getElementById('formMsg');
-msg.className='form-msg show success';
+try{
+const res=await fetch('https://superagent-2286fb2f.base44.app/functions/nexalMedia?action=submit_ad',{
+method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)
+});
+const result=await res.json();
+
+if(result.ok){
+const ref=result.payment_instructions.reference;
 const pkgPrices={'Starter':'₦15,000','Growth':'₦50,000','Pro':'₦150,000'};
-msg.innerHTML=`✅ Campaign submitted! Your <strong>${data.package}</strong> package (${pkgPrices[data.package]}) is ready.<br><br>Next step: Send your payment to:<br>🏦 UBA 2034326424 (Rabiu Hamza Mohammed)<br>Then message us on WhatsApp: 08028687857<br><br>A Nexal Media agent will contact you within 2 hours.`;
+msg.className='form-msg show success';
+msg.innerHTML=`✅ Campaign submitted! Ref: <strong>${ref}</strong><br>Package: ${pkg} (${pkgPrices[pkg]})<br><br>Pay to: 🏦 UBA 2034326424 (Rabiu Hamza Mohammed)<br>Or: ₿ USDT TRC20 to the wallet shown<br><br>Then send receipt to 08028687857 on WhatsApp.`;
 
-// Create WhatsApp link with campaign details
-const waText=`*Nexal Media Ad Campaign*%0A%0A*Business:* ${data.business_name}%0A*Package:* ${data.package} (${pkgPrices[data.package]})%0A*Platforms:* ${data.platforms.join(', ')}%0A*Headline:* ${data.ad_headline}%0A*Description:* ${data.ad_description}%0A*Phone:* ${data.contact_phone}%0A*Email:* ${data.contact_email}`;
-setTimeout(()=>{
-window.open(`https://wa.me/2348028687857?text=${waText}`,'_blank');
-},1500);
-
+const waText=`*Nexal Media — New Ad Campaign*%0A%0A*Ref:* ${ref}%0A*Business:* ${data.business_name}%0A*Package:* ${pkg} (${pkgPrices[pkg]})%0A*Platforms:* ${data.platforms.join(', ')}%0A*Headline:* ${data.ad_headline}%0A*Phone:* ${data.contact_phone}%0A*Email:* ${data.contact_email}`;
+setTimeout(()=>{window.open(`https://wa.me/2348028687857?text=${waText}`,'_blank');},1500);
 document.getElementById('adForm').reset();
+}else{
+msg.className='form-msg show error';
+msg.innerHTML='❌ Error: '+(result.error||'Submission failed. Please try again or contact us on WhatsApp.');
+}
+}catch(err){
+msg.className='form-msg show error';
+msg.innerHTML='❌ Network error. Please try again or message us on WhatsApp: 08028687857.';
+}
+btn.disabled=false;btn.textContent='Submit Campaign →';
 }
 </script>
 </body>
