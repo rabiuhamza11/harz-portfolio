@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Distribution Kit — Get Your Music on 150+ Stores | Harz Digital Services</title>
+<meta name="description" content="Prepare your 27 music tracks for distribution to Spotify, Apple Music, Boomplay, TikTok, and 150+ stores. Step-by-step guide and upload checklist.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#e0e0e0;line-height:1.6}
+.hero{text-align:center;padding:50px 20px 40px;background:linear-gradient(135deg,#0a0a0f 0%,#1a1a2e 50%,#0a0a0f 100%)}
+.hero h1{font-size:2.2rem;margin-bottom:10px;background:linear-gradient(135deg,#1db954,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#888;max-width:500px;margin:0 auto}
+.section{max-width:800px;margin:0 auto;padding:40px 20px}
+.section h2{font-size:1.5rem;margin-bottom:20px;text-align:center}
+.platforms{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:20px 0}
+.platform{text-align:center;padding:20px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;transition:transform .2s}
+.platform:hover{transform:translateY(-3px)}
+.platform .icon{font-size:2rem;margin-bottom:8px}
+.platform h3{font-size:.9rem;margin-bottom:4px}
+.platform p{font-size:.75rem;color:#666}
+.platform a{color:#1db954;font-size:.8rem;text-decoration:none;display:block;margin-top:6px}
+.steps{display:grid;grid-template-columns:1fr;gap:15px;margin:20px 0}
+.step{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:25px;display:flex;gap:15px;align-items:start}
+.step .num{width:40px;height:40px;background:linear-gradient(135deg,#1db954,#7c3aed);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;flex-shrink:0}
+.step h3{font-size:1.1rem;margin-bottom:6px}
+.step p{font-size:.9rem;color:#aaa;margin-bottom:8px}
+.step .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.step .links a{padding:6px 14px;background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.3);border-radius:8px;color:#1db954;font-size:.85rem;text-decoration:none}
+.checklist{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:25px;margin:20px 0}
+.checklist h3{margin-bottom:15px;font-size:1.1rem}
+.checklist-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.checklist-item:last-child{border-bottom:none}
+.checklist-item input[type=checkbox]{width:20px;height:20px;accent-color:#1db954;cursor:pointer}
+.checklist-item label{color:#aaa;font-size:.9rem;cursor:pointer}
+.checklist-item label.done{text-decoration:line-through;color:#666}
+.tracks{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:20px 0}
+.track{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:15px;display:flex;align-items:center;gap:12px}
+.track .play{font-size:1.5rem}
+.track-info h4{font-size:.85rem;margin-bottom:2px}
+.track-info p{font-size:.75rem;color:#666}
+.revenue-calc{background:linear-gradient(135deg,rgba(29,185,84,.05),rgba(124,58,237,.05));border:1px solid rgba(29,185,84,.2);border-radius:16px;padding:30px;margin:20px 0}
+.revenue-calc h3{text-align:center;margin-bottom:20px;font-size:1.2rem}
+.calc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.calc-row:last-child{border-bottom:none}
+.calc-row label{color:#aaa;font-size:.9rem}
+.calc-row .val{font-weight:bold;color:#1db954}
+.calc-total{display:flex;justify-content:space-between;align-items:center;padding:15px 0;margin-top:10px;border-top:2px solid rgba(29,185,84,.3);font-size:1.1rem}
+.calc-total .val{font-size:1.5rem;color:#1db954}
+.cta{text-align:center;padding:30px 20px}
+.cta button{padding:14px 28px;background:linear-gradient(135deg,#1db954,#7c3aed);border:none;border-radius:12px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .2s}
+.cta button:hover{transform:translateY(-2px)}
+.fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,.3);z-index:999;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>🎵 Music Distribution Kit</h1>
+<p>Get your 27 tracks on Spotify, Apple Music, Boomplay, TikTok, and 150+ stores worldwide.</p>
+</div>
+
+<div class="section">
+<h2>🎯 Distribution Platforms</h2>
+<div class="platforms">
+<div class="platform"><div class="icon">🎧</div><h3>Spotify</h3><p>~₦2/stream</p><a href="https://distrokid.com/signup/" target="_blank">via DistroKid</a></div>
+<div class="platform"><div class="icon">🍎</div><h3>Apple Music</h3><p>100M+ subs</p><a href="https://distrokid.com/signup/" target="_blank">via DistroKid</a></div>
+<div class="platform"><div class="icon">🎵</div><h3>Boomplay</h3><p>50M+ Africa</p><a href="https://www.boomplay.com/artist-center/" target="_blank">Direct Upload</a></div>
+<div class="platform"><div class="icon">🎶</div><h3>Audiomack</h3><p>Free, NG focus</p><a href="https://audiomack.com" target="_blank">Direct Upload</a></div>
+<div class="platform"><div class="icon">📱</div><h3>TikTok</h3><p>1B+ users</p><a href="https://distrokid.com/signup/" target="_blank">via DistroKid</a></div>
+<div class="platform"><div class="icon">🎬</div><h3>YouTube Music</h3><p>2B+ users</p><a href="https://distrokid.com/signup/" target="_blank">via DistroKid</a></div>
+<div class="platform"><div class="icon">电台</div><h3>Deezer</h3><p>90M+ users</p><a href="https://distrokid.com/signup/" target="_blank">via DistroKid</a></div>
+<div class="platform"><div class="icon">📲</div><h3>150+ stores</h3><p>All platforms</p><a href="https://distrokid.com/signup/" target="_blank">via DistroKid</a></div>
+</div>
+</div>
+
+<div class="section">
+<h2>📋 Distribution Steps</h2>
+<div class="steps">
+<div class="step">
+<div class="num">1</div>
+<div>
+<h3>Sign up for DistroKid ($23/year)</h3>
+<p>Unlimited uploads, keep 100% royalties, auto-deliver to 150+ stores. Pays for itself with 1 stream day.</p>
+<div class="links">
+<a href="https://distrokid.com/signup/" target="_blank">DistroKid Signup</a>
+</div>
+</div>
+</div>
+<div class="step">
+<div class="num">2</div>
+<div>
+<h3>Sign up for Boomplay (Free)</h3>
+<p>Direct upload to Africa's biggest music platform. 50M+ users. No distributor needed.</p>
+<div class="links">
+<a href="https://www.boomplay.com/artist-center/" target="_blank">Boomplay Artists</a>
+</div>
+</div>
+</div>
+<div class="step">
+<div class="num">3</div>
+<div>
+<h3>Sign up for Audiomack (Free)</h3>
+<p>Free monetization. Huge Nigerian audience. Direct upload, no middleman.</p>
+<div class="links">
+<a href="https://audiomack.com" target="_blank">Audiomack</a>
+</div>
+</div>
+</div>
+<div class="step">
+<div class="num">4</div>
+<div>
+<h3>Prepare Your Audio Files</h3>
+<p>For each track you need: WAV file (16-bit, 44.1kHz), album art (3000x3000px JPG), track title, artist name, genre, and ISRC code (DistroKid provides free ISRCs).</p>
+</div>
+</div>
+<div class="step">
+<div class="num">5</div>
+<div>
+<h3>Upload to DistroKid</h3>
+<p>Upload all 27 tracks. DistroKid auto-delivers to Spotify, Apple Music, TikTok, YouTube Music, Deezer, and 150+ stores within 2-7 days.</p>
+</div>
+</div>
+<div class="step">
+<div class="num">6</div>
+<div>
+<h3>Upload to Boomplay directly</h3>
+<p>Upload the same tracks to Boomplay for direct African audience reach. Set your own pricing for premium content.</p>
+</div>
+</div>
+<div class="step">
+<div class="num">7</div>
+<div>
+<h3>Upload to Audiomack</h3>
+<p>Upload tracks for free. Enable monetization program. Get paid from ad revenue.</p>
+</div>
+</div>
+<div class="step">
+<div class="num">8</div>
+<div>
+<h3>Claim artist profiles</h3>
+<p>Claim your Spotify for Artists, Apple Music for Artists, and Boomplay for Artists profiles. Add bios, photos, and pin your top tracks.</p>
+<div class="links">
+<a href="https://artists.spotify.com" target="_blank">Spotify Artists</a>
+<a href="https://artists.apple.com" target="_blank">Apple Artists</a>
+</div>
+</div>
+</div>
+<div class="step">
+<div class="num">9</div>
+<div>
+<h3>Promote your music</h3>
+<p>Share Spotify links on WhatsApp, Instagram, TikTok. Run Nexal Media ad campaigns. Use your Harz Partner affiliate links.</p>
+</div>
+</div>
+<div class="step">
+<div class="num">10</div>
+<div>
+<h3>Collect royalties</h3>
+<p>DistroKid pays monthly to your bank account. Boomplay pays from $1 minimum. Audiomack pays monthly. Spotify pays ~₦2 per stream.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>✅ Upload Checklist</h2>
+<div class="checklist">
+<h3>For Each of Your 27 Tracks</h3>
+<div class="checklist-item"><input type="checkbox" id="c1"><label for="c1" onclick="toggleLabel(this)">WAV audio file (16-bit, 44.1kHz minimum quality)</label></div>
+<div class="checklist-item"><input type="checkbox" id="c2"><label for="c2" onclick="toggleLabel(this)">Album art / cover image (3000x3000px, JPG, no logos/text)</label></div>
+<div class="checklist-item"><input type="checkbox" id="c3"><label for="c3" onclick="toggleLabel(this)">Track title (correct spelling, no ALL CAPS)</label></div>
+<div class="checklist-item"><input type="checkbox" id="c4"><label for="c4" onclick="toggleLabel(this)">Artist name (consistent across all tracks)</label></div>
+<div class="checklist-item"><input type="checkbox" id="c5"><label for="c5" onclick="toggleLabel(this)">Genre and sub-genre selected</label></div>
+<div class="checklist-item"><input type="checkbox" id="c6"><label for="c6" onclick="toggleLabel(this)">Language specified</label></div>
+<div class="checklist-item"><input type="checkbox" id="c7"><label for="c7" onclick="toggleLabel(this)">Release date set (or "release immediately")</label></div>
+<div class="checklist-item"><input type="checkbox" id="c8"><label for="c8" onclick="toggleLabel(this)">Explicit content marked if applicable</label></div>
+<div class="checklist-item"><input type="checkbox" id="c9"><label for="c9" onclick="toggleLabel(this)">Lyrics uploaded (for Spotify karaoke feature)</label></div>
+<div class="checklist-item"><input type="checkbox" id="c10"><label for="c10" onclick="toggleLabel(this)">ISRC code assigned (DistroKid provides free)</label></div>
+</div>
+</div>
+
+<div class="section">
+<h2>💰 Revenue Projection</h2>
+<div class="revenue-calc">
+<h3>If your 27 tracks get 100K streams/month</h3>
+<div class="calc-row"><label>Spotify streams (₦2/stream)</label><span class="val">₦200,000/mo</span></div>
+<div class="calc-row"><label>Apple Music streams (₦3/stream)</label><span class="val">₦60,000/mo</span></div>
+<div class="calc-row"><label>Boomplay streams (₦0.5/stream)</label><span class="val">₦25,000/mo</span></div>
+<div class="calc-row"><label>Audiomack ad revenue</label><span class="val">₦15,000/mo</span></div>
+<div class="calc-row"><label>YouTube Music streams</label><span class="val">₦30,000/mo</span></div>
+<div class="calc-row"><label>TikTok sound royalties</label><span class="val">₦10,000/mo</span></div>
+<div class="calc-total"><label>Total monthly revenue</label><span class="val">₦340,000</span></div>
+<p style="text-align:center;color:#666;font-size:.85rem;margin-top:10px">Based on 100K total streams across all platforms. At 500K streams: ₦1.7M/month</p>
+</div>
+</div>
+
+<div class="cta">
+<button onclick="window.open('https://distrokid.com/signup/','_blank')">Start Distributing — $23/Year →</button>
+</div>
+
+<a href="https://wa.me/2348028687857" class="fab">💬</a>
+
+<script>
+function toggleLabel(el){
+el.classList.toggle('done');
+}
+</script>
+</body>
+</html>
