@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain Name Generator — Find Available Domains | Harz</title>
+<meta name="description" content="Generate creative domain name ideas for your business. Check availability and get suggestions.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.input-bar{display:flex;gap:8px;margin-bottom:20px}
+.input-bar input{flex:1;background:#141414;border:1px solid #2a2a2a;color:#fff;padding:14px;border-radius:8px;font-size:15px}
+.input-bar button{background:#06b6d4;color:#000;padding:14px 24px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+.results{display:grid;gap:8px}
+.domain-card{display:flex;justify-content:space-between;align-items:center;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:12px}
+.domain-name{font-weight:600;font-size:15px}
+.domain-tld{color:#a3a3a3;font-size:12px}
+.domain-check{background:#06b6d4;color:#000;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none}
+.tips{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-top:20px}
+.tips h3{font-size:14px;color:#06b6d4;margin-bottom:8px}
+.tips ul{list-style:none;padding:0}
+.tips li{font-size:12px;color:#a3a3a3;padding:3px 0}
+.tips li::before{content:'→ ';color:#06b6d4}
+</style>
+</head>
+<body>
+<h1>Domain Name Generator</h1>
+<div class="app">
+  <div class="input-bar">
+    <input type="text" id="keyword" placeholder="Enter your business keyword..." onkeypress="if(event.key==='Enter')generate()">
+    <button onclick="generate()">Generate</button>
+  </div>
+  <div class="results" id="results"></div>
+  <div class="tips">
+    <h3>Domain Tips</h3>
+    <ul>
+      <li>Keep it short (under 15 characters if possible)</li>
+      <li>Use .com for global trust, .com.ng for Nigeria</li>
+      <li>Avoid numbers and hyphens</li>
+      <li>Make it easy to spell and pronounce</li>
+      <li>Check social media handles match</li>
+    </ul>
+  </div>
+</div>
+<script>
+function generate() {
+  const kw = document.getElementById('keyword').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
+  if (!kw) { alert('Enter a keyword'); return; }
+  const prefixes = ['my','the','get','go','try','best','top','pro','smart','easy','quick','new','hello','hi'];
+  const suffixes = ['hub','app','io','ly','ify','now','zone','lab','pro','360','x','go','it','box'];
+  const tlds = ['.com','.com.ng','.ng','.net','.org','.co','.ai','.tech','.store','.online'];
+  let domains = [];
+  prefixes.forEach(p => { tlds.slice(0,5).forEach(t => domains.push(`${p}${kw}${t}`)); });
+  suffixes.forEach(s => { tlds.slice(0,5).forEach(t => domains.push(`${kw}${s}${t}`)); });
+  tlds.forEach(t => domains.push(`${kw}${t}`));
+  // Remove duplicates, pick 20 random
+  domains = [...new Set(domains)].sort(() => Math.random()-0.5).slice(0,20);
+  document.getElementById('results').innerHTML = domains.map(d => {
+    const tld = '.' + d.split('.').slice(1).join('.');
+    const name = d.replace(tld,'');
+    return `<div class="domain-card"><div><div class="domain-name">${name}<span class="domain-tld">${tld}</span></div></div><a href="https://www.namecheap.com/domains/registration/results/?domain=${d}" class="domain-check" target="_blank">Check</a></div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

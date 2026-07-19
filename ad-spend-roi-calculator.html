@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad Spend ROI Calculator — Measure Your Marketing Returns | Harz</title>
+<meta name="description" content="Calculate return on ad spend (ROAS), ROI, and cost per acquisition for your Facebook, Google, and Instagram ads.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.calc{max-width:500px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:20px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;margin-bottom:4px;color:#a3a3a3}
+.input-group input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:15px}
+.btn{width:100%;background:#ec4899;color:#fff;padding:14px;border-radius:8px;font-weight:700;font-size:16px;border:none;cursor:pointer}
+.results{display:none;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-top:14px}
+.results.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:14px}
+.result-row span:first-child{color:#a3a3a3}
+.result-row span:last-child{font-weight:700}
+.highlight{font-size:18px !important}
+.good{color:#10b981 !important}
+.warn{color:#f59e0b !important}
+.bad{color:#ef4444 !important}
+</style>
+</head>
+<body>
+<h1>Ad Spend ROI Calculator</h1>
+<div class="calc">
+  <div class="input-group"><label>Ad Spend (N)</label><input type="number" id="spend" value="50000"></div>
+  <div class="input-group"><label>Revenue Generated (N)</label><input type="number" id="revenue" value="150000"></div>
+  <div class="input-group"><label>Cost per Product (N)</label><input type="number" id="costPerUnit" value="2000"></div>
+  <div class="input-group"><label>Units Sold</label><input type="number" id="units" value="30"></div>
+  <button class="btn" onclick="calculate()">Calculate ROI</button>
+  <div class="results" id="results">
+    <div class="result-row"><span>ROAS (Return on Ad Spend)</span><span id="roas" class="highlight">0x</span></div>
+    <div class="result-row"><span>ROI %</span><span id="roi" class="highlight">0%</span></div>
+    <div class="result-row"><span>Profit</span><span id="profit">N0</span></div>
+    <div class="result-row"><span>Cost Per Acquisition (CPA)</span><span id="cpa">N0</span></div>
+    <div class="result-row"><span>Revenue Per Unit</span><span id="revPerUnit">N0</span></div>
+    <div class="result-row"><span>Verdict</span><span id="verdict">—</span></div>
+  </div>
+</div>
+<script>
+function formatN(n) { return 'N' + Math.round(n).toLocaleString(); }
+function calculate() {
+  const spend = parseFloat(document.getElementById('spend').value) || 0;
+  const revenue = parseFloat(document.getElementById('revenue').value) || 0;
+  const costPerUnit = parseFloat(document.getElementById('costPerUnit').value) || 0;
+  const units = parseInt(document.getElementById('units').value) || 0;
+  const cogs = costPerUnit * units;
+  const profit = revenue - spend - cogs;
+  const roas = spend > 0 ? revenue / spend : 0;
+  const roi = spend > 0 ? (profit / spend * 100) : 0;
+  const cpa = units > 0 ? spend / units : 0;
+  const revPerUnit = units > 0 ? revenue / units : 0;
+  document.getElementById('roas').textContent = roas.toFixed(2) + 'x';
+  document.getElementById('roi').textContent = roi.toFixed(1) + '%';
+  document.getElementById('profit').textContent = formatN(profit);
+  document.getElementById('cpa').textContent = formatN(cpa);
+  document.getElementById('revPerUnit').textContent = formatN(revPerUnit);
+  const verdictEl = document.getElementById('verdict');
+  if (roas >= 4) { verdictEl.textContent = 'EXCELLENT'; verdictEl.className = 'good'; }
+  else if (roas >= 2) { verdictEl.textContent = 'GOOD'; verdictEl.className = 'good'; }
+  else if (roas >= 1) { verdictEl.textContent = 'BREAK EVEN'; verdictEl.className = 'warn'; }
+  else { verdictEl.textContent = 'LOSING MONEY'; verdictEl.className = 'bad'; }
+  document.getElementById('results').classList.add('show');
+}
+calculate();
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Template Builder — Create Professional Emails | Harz</title>
+<meta name="description" content="Build professional email templates for business, marketing, and customer communication. Copy and paste into Gmail.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.controls{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.control-group{display:flex;align-items:center;gap:4px}
+.control-group label{font-size:12px;color:#a3a3a3}
+.control-group select,.control-group input{background:#141414;border:1px solid #2a2a2a;color:#fff;padding:6px 10px;border-radius:6px;font-size:13px}
+.preview{background:#fff;color:#333;border-radius:12px;padding:20px;margin-bottom:16px;font-family:Arial,sans-serif;min-height:200px}
+.preview h1{color:#1a1a1a;font-size:20px;margin:10px 0}
+.preview h2{color:#333;font-size:16px;margin:8px 0}
+.preview p{color:#555;font-size:14px;margin:8px 0}
+.preview .btn{display:inline-block;background:#0066cc;color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;font-size:14px;margin:10px 0}
+.fields{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.fields input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:14px;margin-bottom:8px}
+.fields textarea{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:14px;margin-bottom:8px;resize:vertical;min-height:60px;font-family:inherit}
+.btn-copy{width:100%;background:#10b981;color:#000;padding:14px;border-radius:8px;font-weight:700;font-size:15px;border:none;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Email Template Builder</h1>
+<div class="app">
+  <div class="controls">
+    <div class="control-group"><label>Type:</label><select id="emailType" onchange="loadTemplate()">
+      <option value="welcome">Welcome Email</option>
+      <option value="newsletter">Newsletter</option>
+      <option value="promo">Promo/Sales</option>
+      <option value="followup">Follow Up</option>
+      <option value="thankyou">Thank You</option>
+      <option value="invoice">Invoice/Payment</option>
+    </select></div>
+    <div class="control-group"><label>Color:</label><input type="color" id="color" value="#0066cc" oninput="updatePreview()"></div>
+    <div class="control-group"><label>Font:</label><select id="font" onchange="updatePreview()"><option>Arial</option><option>Georgia</option><option>Helvetica</option><option>Times New Roman</option></select></div>
+  </div>
+  <div class="fields">
+    <input type="text" id="senderName" placeholder="Your Name" value="Harz Digital Services" oninput="updatePreview()">
+    <input type="text" id="subject" placeholder="Email Subject" oninput="updatePreview()">
+    <input type="text" id="recipient" placeholder="Recipient Name" value="Dear Customer" oninput="updatePreview()">
+    <textarea id="body" placeholder="Email body..." oninput="updatePreview()"></textarea>
+    <input type="text" id="buttonText" placeholder="Button Text (optional)" oninput="updatePreview()">
+    <input type="text" id="buttonUrl" placeholder="Button Link (optional)" oninput="updatePreview()">
+    <input type="text" id="footer" placeholder="Footer text" value="Harz Digital Services · RC 321424 · 08028687857" oninput="updatePreview()">
+  </div>
+  <div class="preview" id="preview"></div>
+  <button class="btn-copy" onclick="copyHTML()">Copy HTML</button>
+</div>
+<script>
+const templates = {
+  welcome: {subject:'Welcome to Harz Digital Services!',body:'Thank you for joining us. We are excited to have you on board. Our team is here to help you grow your business with AI, automation, and digital solutions.\n\nReply to this email or WhatsApp 08028687857 if you have any questions.',button:'Get Started',buttonUrl:'https://rabiuhamza11.github.io/harz-portfolio/'},
+  newsletter: {subject:'Weekly AI & Business Insights',body:'Here are this week\'s top stories in AI, tech, and business for Nigerian entrepreneurs.\n\n1. New AI tools launched\n2. Business growth strategies\n3. Digital marketing tips\n\nRead the full newsletter below.',button:'Read More',buttonUrl:'#'},
+  promo: {subject:'Special Offer Just For You!',body:'We are offering 20% off all AI automation services this month. From chatbots to web apps, get professional solutions at unbeatable prices.\n\nOffer ends soon. Don\'t miss out!',button:'Claim Offer',buttonUrl:'https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html'},
+  followup: {subject:'Following Up on Our Conversation',body:'I wanted to follow up on our recent discussion. Have you had a chance to review the proposal?\n\nI am happy to answer any questions or schedule a call to discuss further.',button:'Schedule a Call',buttonUrl:'https://wa.me/2348028687857'},
+  thankyou: {subject:'Thank You for Your Purchase!',body:'Thank you for your order. Your payment has been received and we are now working on your project.\n\nYou will receive regular updates via WhatsApp. If you need anything, don\'t hesitate to reach out.',button:'Track Order',buttonUrl:'https://wa.me/2348028687857'},
+  invoice: {subject:'Invoice from Harz Digital Services',body:'Please find your invoice details below. Payment can be made via bank transfer (UBA 2034326424) or USDT.\n\nContact us on WhatsApp 08028687857 for any billing questions.',button:'Pay Now',buttonUrl:'#'},
+};
+function loadTemplate() {
+  const type = document.getElementById('emailType').value;
+  const t = templates[type];
+  document.getElementById('subject').value = t.subject;
+  document.getElementById('body').value = t.body;
+  document.getElementById('buttonText').value = t.button;
+  document.getElementById('buttonUrl').value = t.buttonUrl;
+  updatePreview();
+}
+function updatePreview() {
+  const color = document.getElementById('color').value;
+  const font = document.getElementById('font').value;
+  const sender = document.getElementById('senderName').value;
+  const subject = document.getElementById('subject').value;
+  const recipient = document.getElementById('recipient').value;
+  const body = document.getElementById('body').value.replace(/\n/g,'<br>');
+  const btnText = document.getElementById('buttonText').value;
+  const btnUrl = document.getElementById('buttonUrl').value;
+  const footer = document.getElementById('footer').value;
+  let html = `<div style="font-family:${font},sans-serif;max-width:600px;margin:0 auto">`;
+  html += `<div style="background:${color};color:#fff;padding:20px;border-radius:8px 8px 0 0"><h1 style="margin:0">${sender}</h1></div>`;
+  html += `<div style="padding:20px"><h2 style="color:${color}">${subject}</h2><p>${recipient},</p><p>${body}</p>`;
+  if (btnText && btnUrl) html += `<a href="${btnUrl}" style="display:inline-block;background:${color};color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;font-weight:bold">${btnText}</a>`;
+  html += `</div><div style="background:#f5f5f5;padding:16px;text-align:center;font-size:12px;color:#666;border-radius:0 0 8px 8px">${footer}<br>Unsubscribe | Update preferences</div>`;
+  html += `</div>`;
+  document.getElementById('preview').innerHTML = html;
+}
+function copyHTML() {
+  const html = document.getElementById('preview').innerHTML;
+  navigator.clipboard.writeText(html);
+  alert('Email HTML copied! Paste into Gmail compose.');
+}
+loadTemplate();
+</script>
+</body>
+</html>

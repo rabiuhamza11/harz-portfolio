@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Agenda Builder — Create & Share Agendas | Harz</title>
+<meta name="description" content="Build structured meeting agendas with time allocations, presenters, and topics. Share via WhatsApp.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.meta{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.meta input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:14px;margin-bottom:8px}
+.meta select{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:14px}
+.items{display:grid;gap:8px;margin-bottom:16px}
+.item{display:flex;gap:6px;align-items:center;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:8px}
+.item input{background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:6px 10px;border-radius:6px;font-size:13px}
+.item input:first-child{flex:1}
+.item input:nth-child(2){width:60px}
+.item input:nth-child(3){flex:1}
+.add-btn{background:#1c1c1c;border:1px dashed #2a2a2a;color:#a3a3a3;padding:10px;border-radius:8px;width:100%;cursor:pointer;margin-bottom:16px}
+.summary{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
+.summary-row span:first-child{color:#a3a3a3}
+.actions{display:flex;gap:10px}
+.btn{flex:1;padding:14px;border-radius:8px;font-weight:700;font-size:15px;border:none;cursor:pointer}
+.btn-wa{background:#25D366;color:#fff}
+.btn-copy{background:#1c1c1c;color:#fff;border:1px solid #2a2a2a}
+</style>
+</head>
+<body>
+<h1>Meeting Agenda Builder</h1>
+<div class="app">
+  <div class="meta">
+    <input type="text" id="meetingTitle" placeholder="Meeting Title" value="Weekly Team Sync">
+    <input type="text" id="meetingDate" placeholder="Date" type="date">
+    <select id="meetingType"><option>Weekly Sync</option><option>Project Review</option><option>Brainstorm</option><option>Client Meeting</option><option>Strategy Session</option><option>1-on-1</option></select>
+  </div>
+  <div class="items" id="items"></div>
+  <button class="add-btn" onclick="addItem()">+ Add Agenda Item</button>
+  <div class="summary">
+    <div class="summary-row"><span>Total Items</span><span id="totalItems">0</span></div>
+    <div class="summary-row"><span>Total Duration</span><span id="totalTime">0 min</span></div>
+  </div>
+  <div class="actions">
+    <button class="btn btn-wa" onclick="shareWA()">Share via WhatsApp</button>
+    <button class="btn btn-copy" onclick="copyAgenda()">Copy Text</button>
+  </div>
+</div>
+<script>
+let items = [{topic:'Opening & Updates',mins:10,presenter:'All'},{topic:'Progress Review',mins:15,presenter:'Lead'},{topic:'Action Items',mins:10,presenter:'All'},{topic:'Next Steps',mins:5,presenter:'Lead'}];
+function addItem() { items.push({topic:'',mins:5,presenter:''}); render(); }
+function delItem(i) { items.splice(i,1); render(); }
+function updateItem(i,field,val) { items[i][field] = field==='mins'?parseInt(val)||0:val; updateSummary(); }
+function render() {
+  document.getElementById('items').innerHTML = items.map((it,i) => `
+    <div class="item">
+      <input type="text" placeholder="Topic" value="${it.topic}" oninput="updateItem(${i},'topic',this.value)">
+      <input type="number" placeholder="Min" value="${it.mins}" oninput="updateItem(${i},'mins',this.value)">
+      <input type="text" placeholder="Presenter" value="${it.presenter}" oninput="updateItem(${i},'presenter',this.value)">
+      <button onclick="delItem(${i})" style="background:none;border:1px solid #2a2a2a;color:#ef4444;padding:6px 10px;border-radius:6px;cursor:pointer">X</button>
+    </div>
+  `).join('');
+  updateSummary();
+}
+function updateSummary() {
+  document.getElementById('totalItems').textContent = items.length;
+  const total = items.reduce((s,i)=>s+i.mins,0);
+  document.getElementById('totalTime').textContent = total + ' min (' + Math.floor(total/60) + 'h ' + (total%60) + 'm)';
+}
+function buildText() {
+  const title = document.getElementById('meetingTitle').value;
+  const date = document.getElementById('meetingDate').value || 'TBD';
+  const type = document.getElementById('meetingType').value;
+  let text = `Meeting Agenda\n\nTitle: ${title}\nDate: ${date}\nType: ${type}\n\n`;
+  items.forEach((it,i) => { text += `${i+1}. ${it.topic} (${it.mins} min) - ${it.presenter}\n`; });
+  text += `\nTotal: ${items.reduce((s,i)=>s+i.mins,0)} minutes`;
+  return text;
+}
+function shareWA() { window.open('https://wa.me/2348028687857?text=' + encodeURIComponent(buildText()), '_blank'); }
+function copyAgenda() { navigator.clipboard.writeText(buildText()); alert('Agenda copied!'); }
+render();
+</script>
+</body>
+</html>
