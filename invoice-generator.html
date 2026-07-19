@@ -1,114 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="description" content="Harz Digital Services (RC 321424) — 24 platforms, 80+ AI agents, 259 digital products, AI automation, and business tools for Nigerian entrepreneurs.">
-<meta name="keywords" content="harz digital services, digital products, AI automation, business tools nigeria">
-<meta name="author" content="Harz Digital Services (RC 321424)">
-<meta name="robots" content="index, follow">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Harz Digital Services — Digital Products, AI Automation, Nigeria">
-<meta property="og:description" content="Harz Digital Services (RC 321424) — 24 platforms, 80+ AI agents, 259 digital products, AI automation, and business tools for Nigerian entrepreneurs.">
-<meta property="og:url" content="https://rabiuhamza11.github.io/harz-portfolio/invoice-generator.html">
-<meta property="og:site_name" content="Harz Digital Services">
-<meta property="og:image" content="https://rabiuhamza11.github.io/harz-portfolio/harz-logo.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Harz Digital Services — Digital Products, AI Automation, Nigeria">
-<meta name="twitter:description" content="Harz Digital Services (RC 321424) — 24 platforms, 80+ AI agents, 259 digital products, AI automation, and business tools for Nigerian entrepreneurs.">
-<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/invoice-generator.html">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Harz Digital Services","legalName":"HI Water/Block Industry","url":"https://rabiuhamza11.github.io/harz-portfolio","description":"Harz Digital Services (RC 321424) — 24 platforms, 80+ AI agents, 259 digital products, AI automation, and business tools for Nigerian entrepreneurs.","foundingDate":"2014-08-05","address":{"@type":"PostalAddress","addressCountry":"NG","addressRegion":"Bauchi","addressLocality":"Bauchi","streetAddress":"232 Kafin Galadima"},"contactPoint":{"@type":"ContactPoint","telephone":"+2348028687857","contactType":"customer service"}}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harz Digital Services — Digital Products, AI Automation, Nigeria</title>
+<title>Invoice Generator — Create & Send Invoices | Harz</title>
+<meta name="description" content="Create professional invoices with line items, totals, and WhatsApp delivery. Free for Nigerian businesses.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,sans-serif;background:#0a0a0f;color:#e8e8f0;padding:20px}
-.header{text-align:center;padding:20px 0 30px}
-.header h1{color:#00d4aa;font-size:1.6rem;margin-bottom:5px}
-.header p{color:#8888a0;font-size:.85rem}
-.form-section{max-width:800px;margin:0 auto;background:#12121a;border:1px solid #2a2a3e;border-radius:16px;padding:24px;margin-bottom:20px}
-.form-section h2{font-size:1rem;color:#7c3aed;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-group{margin-bottom:12px}
-.form-group label{display:block;font-size:.8rem;color:#8888a0;margin-bottom:4px}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#1a1a2e;border:1px solid #2a2a3e;border-radius:8px;color:#e8e8f0;font-size:.9rem}
-.form-group input:focus,.form-group textarea:focus{border-color:#00d4aa;outline:none}
-.form-full{grid-column:1/-1}
-.items-table{width:100%;margin-top:10px}
-.items-table th{text-align:left;padding:8px;font-size:.75rem;color:#8888a0;border-bottom:1px solid #2a2a3e}
-.items-table td{padding:8px}
-.items-table input{width:100%;padding:8px;background:#1a1a2e;border:1px solid #2a2a3e;border-radius:6px;color:#e8e8f0;font-size:.85rem}
-.btn{padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;border:none;font-size:.9rem}
-.btn-add{background:rgba(124,58,237,.2);color:#7c3aed;margin-top:8px}
-.btn-gen{background:#00d4aa;color:#000;padding:14px 32px;width:100%;font-size:1rem;margin-top:16px}
-.btn-print{background:#7c3aed;color:#fff;margin-top:10px}
-.invoice-preview{max-width:800px;margin:20px auto;background:#fff;color:#000;border-radius:16px;overflow:hidden;display:none}
-.invoice-header{padding:30px;background:linear-gradient(135deg,#0a0a0f,#1a1a2e);color:#fff;display:flex;justify-content:space-between}
-.invoice-header h2{color:#00d4aa;font-size:1.4rem}
-.invoice-header p{font-size:.8rem;opacity:.8}
-.invoice-body{padding:30px}
-.invoice-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.9rem}
-.invoice-row.total{border-top:2px solid #000;font-weight:700;font-size:1.1rem;padding-top:12px;margin-top:8px}
-.invoice-items{width:100%;border-collapse:collapse;margin:16px 0}
-.invoice-items th{text-align:left;padding:10px;background:#f5f5f5;font-size:.8rem;border-bottom:2px solid #ddd}
-.invoice-items td{padding:10px;border-bottom:1px solid #eee;font-size:.85rem}
-.invoice-footer{padding:20px 30px;border-top:1px solid #eee;text-align:center;font-size:.75rem;color:#888}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.invoice-header{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.invoice-header input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:8px 12px;border-radius:6px;font-size:13px;margin-bottom:6px}
+.row{display:flex;gap:8px}
+.row input{flex:1}
+.invoice-num{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.invoice-num label{font-size:13px;color:#a3a3a3}
+.invoice-num input{width:120px}
+.items{margin-bottom:16px}
+.item-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.item-row input{background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:6px 10px;border-radius:6px;font-size:12px}
+.item-row input:first-child{flex:2}
+.item-row input:nth-child(2){flex:1}
+.item-row input:nth-child(3){flex:1}
+.item-row span{flex:1;font-size:12px;font-weight:700;text-align:right;color:#10b981}
+.add-item-btn{background:#1c1c1c;border:1px dashed #2a2a2a;color:#a3a3a3;padding:8px;border-radius:8px;width:100%;cursor:pointer;font-size:12px}
+.totals{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.total-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;border-bottom:1px solid #2a2a2a}
+.total-row.grand{font-size:20px;font-weight:800;color:#10b981;border:none;padding-top:10px}
+.btn{width:100%;background:#10b981;color:#000;padding:14px;border-radius:8px;border:none;font-weight:700;font-size:16px;cursor:pointer}
 </style>
 </head>
 <body>
-<div class="header">
-<h1>Harz Invoice Generator</h1>
-<p>Nigerian business invoices with VAT (7.5%) and WHT (5%) calculations</p>
+<h1>Invoice Generator</h1>
+<div class="app">
+  <div class="invoice-header">
+    <div class="invoice-num"><label>Invoice #</label><input type="text" id="invNum" value="INV-001"></div>
+    <div class="row">
+      <input type="text" id="fromName" placeholder="From: Your Business Name" value="Harz Digital Services">
+      <input type="date" id="invDate">
+    </div>
+    <input type="text" id="toName" placeholder="Bill To: Client Name">
+    <input type="text" id="toEmail" placeholder="Client Email (optional)">
+  </div>
+  <div class="items" id="items"></div>
+  <button class="add-item-btn" onclick="addItem()">+ Add Line Item</button>
+  <div class="totals" id="totals"></div>
+  <button class="btn" onclick="sendInvoice()">Send Invoice via WhatsApp</button>
 </div>
-<div class="form-section">
-<h2>Business Details</h2>
-<div class="form-grid">
-<div class="form-group"><label>Business Name</label><input id="bizName" value="Harz Digital Services" type="text"></div>
-<div class="form-group"><label>CAC Number</label><input id="cacNum" value="RC 321424" type="text"></div>
-<div class="form-group"><label>TIN</label><input id="tin" value="24550860" type="text"></div>
-<div class="form-group"><label>Phone</label><input id="phone" value="08028687857" type="text"></div>
-<div class="form-group"><label>Email</label><input id="email" value="harzco.business@gmail.com" type="text"></div>
-<div class="form-group"><label>Bank</label><input id="bank" value="UBA 2034326424" type="text"></div>
-</div>
-</div>
-<div class="form-section">
-<h2>Client Details</h2>
-<div class="form-grid">
-<div class="form-group"><label>Client Name</label><input id="clientName" type="text" placeholder="Client name"></div>
-<div class="form-group"><label>Client Phone</label><input id="clientPhone" type="text" placeholder="Phone"></div>
-<div class="form-group form-full"><label>Client Address</label><input id="clientAddr" type="text" placeholder="Address"></div>
-</div>
-</div>
-<div class="form-section">
-<h2>Invoice Items</h2>
-<table class="items-table">
-<thead><tr><th>Description</th><th style="width:80px">Qty</th><th style="width:120px">Unit Price</th><th style="width:120px">Amount</th><th style="width:40px"></th></tr></thead>
-<tbody id="itemsBody">
-<tr><td><input type="text" class="desc" placeholder="Product or service"></td><td><input type="number" class="qty" value="1" onchange="calcRow(this)"></td><td><input type="number" class="price" placeholder="0" onchange="calcRow(this)"></td><td class="amount">0</td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#ef4444;cursor:pointer">X</button></td></tr>
-</tbody>
-</table>
-<button class="btn btn-add" onclick="addRow()">+ Add Item</button>
-<div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-<div class="form-group"><label>VAT (7.5%)</label><input id="vat" type="checkbox" checked onchange="calcTotals()"> <span style="font-size:.8rem;color:#888">Include VAT</span></div>
-<div class="form-group"><label>WHT (5%)</label><input id="wht" type="checkbox" onchange="calcTotals()"> <span style="font-size:.8rem;color:#888">Deduct WHT</span></div>
-<div class="form-group"><label>Currency</label><select id="currency"><option value="NGN">NGN</option><option value="USD">USD</option></select></div>
-</div>
-<button class="btn btn-gen" onclick="generateInvoice()">Generate Invoice</button>
-</div>
-<div class="invoice-preview" id="invoicePreview"></div>
 <script>
-function addRow(){var b=document.getElementById('itemsBody');var r=document.createElement('tr');r.innerHTML='<td><input type="text" class="desc" placeholder="Product or service"></td><td><input type="number" class="qty" value="1" onchange="calcRow(this)"></td><td><input type="number" class="price" placeholder="0" onchange="calcRow(this)"></td><td class="amount">0</td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#ef4444;cursor:pointer">X</button></td>';b.appendChild(r)}
-function removeRow(b){if(document.querySelectorAll('#itemsBody tr').length>1){b.closest('tr').remove();calcTotals()}}
-function calcRow(i){var r=i.closest('tr');var q=parseFloat(r.querySelector('.qty').value)||0;var p=parseFloat(r.querySelector('.price').value)||0;r.querySelector('.amount').textContent=(q*p).toLocaleString();calcTotals()}
-function calcTotals(){var t=0;document.querySelectorAll('#itemsBody tr').forEach(function(r){var q=parseFloat(r.querySelector('.qty').value)||0;var p=parseFloat(r.querySelector('.price').value)||0;t+=q*p});var v=document.getElementById('vat').checked?t*0.075:0;var w=document.getElementById('wht').checked?t*0.05:0;var g=t+v-w;return{sub:t,vat:v,wht:w,grand:g}}
-function generateInvoice(){var c=calcTotals();var now=new Date();var inv='INV-'+now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*999);var items='';document.querySelectorAll('#itemsBody tr').forEach(function(r){var d=r.querySelector('.desc').value||'-';var q=r.querySelector('.qty').value||1;var p=parseFloat(r.querySelector('.price').value)||0;var a=q*p;items+='<tr><td>'+d+'</td><td>'+q+'</td><td>'+p.toLocaleString()+'</td><td>'+a.toLocaleString()+'</td></tr>'});var vRow=document.getElementById('vat').checked?'<div class="invoice-row"><span>VAT (7.5%)</span><span>'+c.vat.toLocaleString()+'</span></div>':'<div class="invoice-row"><span>VAT</span><span>0 (exempted)</span></div>';var wRow=document.getElementById('wht').checked?'<div class="invoice-row"><span>Withholding Tax (5%)</span><span>-'+c.wht.toLocaleString()+'</span></div>':'';document.getElementById('invoicePreview').style.display='block';document.getElementById('invoicePreview').innerHTML='<div class="invoice-header"><div><h2>Harz Digital Services</h2><p>CAC: '+document.getElementById('cacNum').value+' | TIN: '+document.getElementById('tin').value+'</p><p>'+document.getElementById('phone').value+' | '+document.getElementById('email').value+'</p><p>Bank: '+document.getElementById('bank').value+'</p></div><div style="text-align:right"><h2 style="font-size:1rem">INVOICE</h2><p>'+inv+'</p><p>'+now.toDateString()+'</p></div></div><div class="invoice-body"><div class="invoice-row"><span style="font-weight:600">Bill To:</span><span></span></div><div class="invoice-row"><span>'+document.getElementById('clientName').value+'</span><span></span></div><div class="invoice-row"><span>'+document.getElementById('clientAddr').value+'</span><span></span></div><div class="invoice-row"><span>'+document.getElementById('clientPhone').value+'</span><span></span></div><table class="invoice-items"><thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>Amount</th></tr></thead><tbody>'+items+'</tbody></table><div class="invoice-row"><span>Subtotal</span><span>'+c.sub.toLocaleString()+'</span></div>'+vRow+wRow+'<div class="invoice-row total"><span>TOTAL PAYABLE</span><span>'+c.grand.toLocaleString()+'</span></div><div style="margin-top:24px;padding:16px;background:#f8f9fa;border-radius:8px;font-size:.8rem"><strong>Payment Details:</strong><br>Bank: '+document.getElementById('bank').value+'<br>Make payment within 14 days of invoice date.</div></div><div class="invoice-footer"><p>This invoice was generated by Harz Digital Services Invoice Generator</p><p>HI Water/Block Industry (RC 321424, TIN 24550860) - Registered since August 5, 2014</p></div><div style="text-align:center;padding:20px"><button class="btn btn-print" onclick="window.print()">Print / Save as PDF</button></div>';document.getElementById('invoicePreview').scrollIntoView({behavior:'smooth'})}
+let items=[{desc:'AI Chatbot Development',qty:1,price:50000},{desc:'WhatsApp Bot Setup',qty:1,price:40000}];
+function formatN(n){return 'N'+Math.round(n).toLocaleString()}
+function addItem(){items.push({desc:'',qty:1,price:0});render();}
+function delItem(i){items.splice(i,1);render();}
+function render(){
+  document.getElementById('items').innerHTML=items.map((it,i)=>`
+    <div class="item-row">
+      <input type="text" placeholder="Description" value="${it.desc}" oninput="items[${i}].desc=this.value;updateTotals()">
+      <input type="number" placeholder="Qty" value="${it.qty}" oninput="items[${i}].qty=parseInt(this.value)||0;updateTotals()">
+      <input type="number" placeholder="Price" value="${it.price}" oninput="items[${i}].price=parseFloat(this.value)||0;updateTotals()">
+      <span id="row${i}">${formatN(it.qty*it.price)}</span>
+      <button onclick="delItem(${i})" style="background:none;border:1px solid #2a2a2a;color:#ef4444;padding:4px 8px;border-radius:4px;cursor:pointer">X</button>
+    </div>`).join('');
+  updateTotals();
+}
+function updateTotals(){
+  items.forEach((it,i)=>{const el=document.getElementById('row'+i);if(el)el.textContent=formatN(it.qty*it.price);});
+  const sub=items.reduce((s,i)=>s+i.qty*i.price,0);
+  const vat=sub*0.075;
+  const total=sub+vat;
+  document.getElementById('totals').innerHTML=`<div class="total-row"><span>Subtotal</span><span>${formatN(sub)}</span></div><div class="total-row"><span>VAT (7.5%)</span><span>${formatN(vat)}</span></div><div class="total-row grand"><span>Total</span><span>${formatN(total)}</span></div>`;
+}
+function sendInvoice(){
+  const num=document.getElementById('invNum').value;
+  const date=document.getElementById('invDate').value||new Date().toLocaleDateString();
+  const from=document.getElementById('fromName').value;
+  const to=document.getElementById('toName').value;
+  const sub=items.reduce((s,i)=>s+i.qty*i.price,0);
+  const vat=sub*0.075;
+  const total=sub+vat;
+  let msg=`INVOICE ${num}\nDate: ${date}\nFrom: ${from}\nTo: ${to}\n\n`;
+  items.forEach(it=>{if(it.desc)msg+=`${it.desc} x${it.qty} - ${formatN(it.qty*it.price)}\n`;});
+  msg+=`\nSubtotal: ${formatN(sub)}\nVAT (7.5%): ${formatN(vat)}\nTOTAL: ${formatN(total)}\n\nPayment: UBA 2034326424\nRabiu Hamza Mohammed`;
+  window.open('https://wa.me/2348028687857?text='+encodeURIComponent(msg),'_blank');
+}
+render();
 </script>
-
-<!-- Magani Chat Widget -->
-<div id="magani-chat-float" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
-<a href="chat.html" style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border-radius:30px;color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,212,170,.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-<span style="font-size:1.3rem;">🧙‍♂️</span> Chat with Magani
-</a>
-</div>
-
 </body>
 </html>

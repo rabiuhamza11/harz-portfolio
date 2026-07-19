@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Task Board — Kanban Style | Harz</title>
+<meta name="description" content="Manage team tasks with a Kanban board. Drag-free columns: To Do, In Progress, Review, Done.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.add-bar{max-width:700px;margin:0 auto 16px;display:flex;gap:8px}
+.add-bar input{flex:1;background:#141414;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:8px;font-size:14px}
+.add-bar select{background:#141414;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:14px}
+.add-bar button{background:#8b5cf6;color:#fff;padding:10px 24px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+.board{max-width:700px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:600px){.board{grid-template-columns:repeat(2,1fr)}}
+.column{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:10px;min-height:200px}
+.column h3{font-size:13px;font-weight:700;margin-bottom:8px;text-align:center;padding:4px;border-radius:6px}
+.col-todo h3{color:#a3a3a3}.col-progress h3{color:#f59e0b}.col-review h3{color:#8b5cf6}.col-done h3{color:#10b981}
+.task-card{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:8px;margin-bottom:6px;font-size:12px}
+.task-card .task-text{margin-bottom:4px}
+.task-actions{display:flex;gap:4px}
+.move-btn{background:#141414;border:1px solid #2a2a2a;color:#a3a3a3;padding:2px 8px;border-radius:4px;font-size:10px;cursor:pointer}
+.move-btn:hover{border-color:#8b5cf6;color:#8b5cf6}
+.del-btn{background:none;border:1px solid #2a2a2a;color:#ef4444;padding:2px 8px;border-radius:4px;font-size:10px;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Team Task Board</h1>
+<div class="add-bar">
+  <input type="text" id="taskText" placeholder="Add a task..." onkeypress="if(event.key==='Enter')addTask()">
+  <select id="taskCol"><option value="todo">To Do</option><option value="progress">In Progress</option><option value="review">Review</option><option value="done">Done</option></select>
+  <button onclick="addTask()">Add Task</button>
+</div>
+<div class="board">
+  <div class="column col-todo"><h3>TO DO</h3><div id="col-todo"></div></div>
+  <div class="column col-progress"><h3>IN PROGRESS</h3><div id="col-progress"></div></div>
+  <div class="column col-review"><h3>REVIEW</h3><div id="col-review"></div></div>
+  <div class="column col-done"><h3>DONE</h3><div id="col-done"></div></div>
+</div>
+<script>
+let tasks=JSON.parse(localStorage.getItem('kanbanTasks')||'[]');
+const cols=['todo','progress','review','done'];
+function addTask(){
+  const t=document.getElementById('taskText').value.trim();
+  const c=document.getElementById('taskCol').value;
+  if(!t)return;
+  tasks.push({text:t,col:c,id:Date.now()});
+  localStorage.setItem('kanbanTasks',JSON.stringify(tasks));
+  document.getElementById('taskText').value='';
+  render();
+}
+function moveTask(id,dir){
+  const task=tasks.find(t=>t.id===id);
+  if(!task)return;
+  const idx=cols.indexOf(task.col);
+  const newIdx=idx+dir;
+  if(newIdx<0||newIdx>=cols.length)return;
+  task.col=cols[newIdx];
+  localStorage.setItem('kanbanTasks',JSON.stringify(tasks));
+  render();
+}
+function delTask(id){tasks=tasks.filter(t=>t.id!==id);localStorage.setItem('kanbanTasks',JSON.stringify(tasks));render();}
+function render(){
+  cols.forEach(c=>{
+    const items=tasks.filter(t=>t.col===c);
+    const idx=cols.indexOf(c);
+    document.getElementById('col-'+c).innerHTML=items.length?items.map(t=>`
+      <div class="task-card">
+        <div class="task-text">${t.text}</div>
+        <div class="task-actions">
+          ${idx>0?`<button class="move-btn" onclick="moveTask(${t.id},-1)">←</button>`:''}
+          ${idx<3?`<button class="move-btn" onclick="moveTask(${t.id},1)">→</button>`:''}
+          <button class="del-btn" onclick="delTask(${t.id})">Del</button>
+        </div>
+      </div>`).join(''):'<p style="color:#555;font-size:11px;text-align:center">No tasks</p>';
+  });
+}
+render();
+</script>
+</body>
+</html>

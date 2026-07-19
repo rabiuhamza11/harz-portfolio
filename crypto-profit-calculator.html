@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crypto Profit Calculator — Bitcoin, ETH, USDT | Harz</title>
+<meta name="description" content="Calculate crypto trading profits. Compare buy and sell prices, compute ROI and fees for BTC, ETH, USDT.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.calc{max-width:500px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:20px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;margin-bottom:4px;color:#a3a3a3}
+.input-group select,.input-group input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:15px}
+.btn{width:100%;background:#f59e0b;color:#000;padding:14px;border-radius:8px;font-weight:700;font-size:16px;border:none;cursor:pointer;margin-bottom:16px}
+.results{display:none;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px}
+.results.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:14px}
+.result-row span:first-child{color:#a3a3a3}
+.result-row span:last-child{font-weight:700}
+.highlight{font-size:18px !important}
+.good{color:#10b981 !important}.bad{color:#ef4444 !important}
+</style>
+</head>
+<body>
+<h1>Crypto Profit Calculator</h1>
+<div class="calc">
+  <div class="input-group"><label>Cryptocurrency</label><select id="coin"><option value="BTC">Bitcoin (BTC)</option><option value="ETH">Ethereum (ETH)</option><option value="USDT">USDT (Tether)</option><option value="BNB">BNB</option><option value="SOL">Solana (SOL)</option><option value="XRP">Ripple (XRP)</option><option value="custom">Custom</option></select></div>
+  <div class="input-group"><label>Buy Price (USD)</label><input type="number" id="buyPrice" value="65000" step="any"></div>
+  <div class="input-group"><label>Sell Price (USD)</label><input type="number" id="sellPrice" value="72000" step="any"></div>
+  <div class="input-group"><label>Amount (coins)</label><input type="number" id="amount" value="0.5" step="any"></div>
+  <div class="input-group"><label>Trading Fee % (per trade)</label><input type="number" id="fee" value="0.1" step="0.01"></div>
+  <button class="btn" onclick="calculate()">Calculate Profit</button>
+  <div class="results" id="results">
+    <div class="result-row"><span>Investment</span><span id="invest">$0</span></div>
+    <div class="result-row"><span>Buy Fee</span><span id="buyFee">$0</span></div>
+    <div class="result-row"><span>Sell Revenue</span><span id="revenue">$0</span></div>
+    <div class="result-row"><span>Sell Fee</span><span id="sellFee">$0</span></div>
+    <div class="result-row"><span>Net Profit</span><span id="profit" class="highlight good">$0</span></div>
+    <div class="result-row"><span>ROI</span><span id="roi" class="highlight">0%</span></div>
+    <div class="result-row"><span>In Naira (at N1,500/USD)</span><span id="naira" class="highlight">N0</span></div>
+  </div>
+</div>
+<script>
+function fmt(n){return '$'+Math.round(n*100)/100}
+function fmtN(n){return 'N'+Math.round(n).toLocaleString()}
+function calculate(){
+  const buy=parseFloat(document.getElementById('buyPrice').value)||0;
+  const sell=parseFloat(document.getElementById('sellPrice').value)||0;
+  const amt=parseFloat(document.getElementById('amount').value)||0;
+  const feePct=(parseFloat(document.getElementById('fee').value)||0)/100;
+  const invest=buy*amt;
+  const buyFee=invest*feePct;
+  const revenue=sell*amt;
+  const sellFee=revenue*feePct;
+  const profit=revenue-sellFee-invest-buyFee;
+  const roi=invest>0?(profit/invest*100):0;
+  document.getElementById('invest').textContent=fmt(invest);
+  document.getElementById('buyFee').textContent=fmt(buyFee);
+  document.getElementById('revenue').textContent=fmt(revenue);
+  document.getElementById('sellFee').textContent=fmt(sellFee);
+  const profitEl=document.getElementById('profit');
+  profitEl.textContent=(profit>=0?'+':'')+fmt(profit);
+  profitEl.className='highlight '+(profit>=0?'good':'bad');
+  document.getElementById('roi').textContent=roi.toFixed(2)+'%';
+  document.getElementById('roi').className='highlight '+(profit>=0?'good':'bad');
+  document.getElementById('naira').textContent=fmtN(profit*1500);
+  document.getElementById('results').classList.add('show');
+}
+calculate();
+</script>
+</body>
+</html>

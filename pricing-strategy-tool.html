@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Pricing Strategy Tool | Harz</title>
+<meta name="description" content="Compare pricing strategies: cost-plus, value-based, competitive, penetration, and skimming.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.calc{max-width:500px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:20px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;margin-bottom:4px;color:#a3a3a3}
+.input-group input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:15px}
+.btn{width:100%;background:#3b82f6;color:#fff;padding:14px;border-radius:8px;font-weight:700;font-size:16px;border:none;cursor:pointer;margin-bottom:16px}
+.strategies{display:grid;gap:10px}
+.strategy{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:14px}
+.strategy h4{font-size:14px;font-weight:700;margin-bottom:4px;color:#3b82f6}
+.strategy .price{font-size:20px;font-weight:800;color:#10b981;margin:4px 0}
+.strategy .desc{font-size:12px;color:#a3a3a3}
+.strategy .margin{font-size:12px;font-weight:600;color:#f59e0b}
+</style>
+</head>
+<body>
+<h1>Product Pricing Strategy</h1>
+<div class="calc">
+  <div class="input-group"><label>Cost to Produce (N)</label><input type="number" id="cost" value="5000"></div>
+  <div class="input-group"><label>Competitor Price (N)</label><input type="number" id="competitor" value="12000"></div>
+  <div class="input-group"><label>Perceived Value to Customer (N)</label><input type="number" id="value" value="25000"></div>
+  <div class="input-group"><label>Target Market Size</label><select id="market"><option value="mass">Mass Market (price-sensitive)</option><option value="premium">Premium (quality-focused)</option><option value="niche">Niche (specialized)</option></select></div>
+  <button class="btn" onclick="calculate()">Compare Strategies</button>
+  <div class="strategies" id="strategies"></div>
+</div>
+<script>
+function formatN(n){return 'N'+Math.round(n).toLocaleString()}
+function calculate(){
+  const cost=parseFloat(document.getElementById('cost').value)||0;
+  const comp=parseFloat(document.getElementById('competitor').value)||0;
+  const value=parseFloat(document.getElementById('value').value)||0;
+  const market=document.getElementById('market').value;
+  const costPlus=cost*1.3;
+  const valueBased=value*0.8;
+  const competitive=comp*0.9;
+  const penetration=comp*0.7;
+  const skimming=value*0.95;
+  document.getElementById('strategies').innerHTML=`
+    <div class="strategy"><h4>Cost-Plus (30% markup)</h4><div class="price">${formatN(costPlus)}</div><div class="desc">Simple: cost + fixed markup</div><div class="margin">Margin: ${formatN(costPlus-cost)} (${((costPlus-cost)/costPlus*100).toFixed(0)}%)</div></div>
+    <div class="strategy"><h4>Value-Based (80% of perceived value)</h4><div class="price">${formatN(valueBased)}</div><div class="desc">Price based on what customers think it's worth</div><div class="margin">Margin: ${formatN(valueBased-cost)} (${((valueBased-cost)/valueBased*100).toFixed(0)}%)</div></div>
+    <div class="strategy"><h4>Competitive (10% below competitor)</h4><div class="price">${formatN(competitive)}</div><div class="desc">Undercut the competition slightly</div><div class="margin">Margin: ${formatN(competitive-cost)} (${((competitive-cost)/competitive*100).toFixed(0)}%)</div></div>
+    <div class="strategy"><h4>Penetration (30% below competitor)</h4><div class="price">${formatN(penetration)}</div><div class="desc">Low price to grab market share fast</div><div class="margin">Margin: ${formatN(penetration-cost)} (${Math.max(0,((penetration-cost)/penetration*100)).toFixed(0)}%)</div></div>
+    <div class="strategy"><h4>Skimming (95% of perceived value)</h4><div class="price">${formatN(skimming)}</div><div class="desc">High price for early adopters, lower later</div><div class="margin">Margin: ${formatN(skimming-cost)} (${((skimming-cost)/skimming*100).toFixed(0)}%)</div></div>
+    <div class="strategy" style="border-color:#10b981"><h4 style="color:#10b981">RECOMMENDED for ${market}</h4><div class="price">${market==='mass'?formatN(penetration):market==='premium'?formatN(skimming):formatN(valueBased)}</div><div class="desc">${market==='mass'?'Low price to capture volume':market==='premium'?'High price signals quality':'Balanced approach for specialized market'}</div></div>`;
+}
+calculate();
+</script>
+</body>
+</html>
