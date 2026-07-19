@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWOT Analysis Tool — Strengths, Weaknesses, Opportunities, Threats | Harz</title>
+<meta name="description" content="Create a SWOT analysis for your business. Identify internal and external factors affecting your strategy.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.swot-grid{max-width:700px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.swot-box{border-radius:12px;padding:16px;min-height:180px}
+.swot-box h3{font-size:15px;font-weight:700;margin-bottom:8px}
+.swot-box textarea{width:100%;background:rgba(0,0,0,0.3);border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:13px;resize:vertical;min-height:120px;font-family:inherit}
+.swot-box textarea:focus{outline:none}
+.swot-s{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3)}
+.swot-s h3{color:#10b981}
+.swot-w{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3)}
+.swot-w h3{color:#ef4444}
+.swot-o{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.3)}
+.swot-o h3{color:#3b82f6}
+.swot-t{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3)}
+.swot-t h3{color:#f59e0b}
+.export-btn{display:block;width:200px;margin:0 auto;background:#3b82f6;color:#fff;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;text-align:center}
+@media(max-width:600px){.swot-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<h1>SWOT Analysis</h1>
+<div class="swot-grid">
+  <div class="swot-box swot-s"><h3>Strengths</h3><textarea id="strengths" placeholder="What does your business do well? What advantages do you have?"></textarea></div>
+  <div class="swot-box swot-w"><h3>Weaknesses</h3><textarea id="weaknesses" placeholder="What can you improve? What resources do you lack?"></textarea></div>
+  <div class="swot-box swot-o"><h3>Opportunities</h3><textarea id="opportunities" placeholder="What market trends can you exploit? What partnerships are possible?"></textarea></div>
+  <div class="swot-box swot-t"><h3>Threats</h3><textarea id="threats" placeholder="Who are your competitors? What external risks exist?"></textarea></div>
+</div>
+<button class="export-btn" onclick="exportSWOT()">Export to WhatsApp</button>
+<script>
+['strengths','weaknesses','opportunities','threats'].forEach(id => {
+  const saved = localStorage.getItem('swot_' + id);
+  if (saved) document.getElementById(id).value = saved;
+  document.getElementById(id).addEventListener('input', function() { localStorage.setItem('swot_' + id, this.value); });
+});
+function exportSWOT() {
+  const s = document.getElementById('strengths').value || '(empty)';
+  const w = document.getElementById('weaknesses').value || '(empty)';
+  const o = document.getElementById('opportunities').value || '(empty)';
+  const t = document.getElementById('threats').value || '(empty)';
+  const text = `SWOT Analysis\n\nSTRENGTHS:\n${s}\n\nWEAKNESSES:\n${w}\n\nOPPORTUNITIES:\n${o}\n\nTHREATS:\n${t}`;
+  window.open('https://wa.me/2348028687857?text=' + encodeURIComponent(text), '_blank');
+}
+</script>
+</body>
+</html>
