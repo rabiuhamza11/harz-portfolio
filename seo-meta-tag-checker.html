@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO Meta Tag Checker & Generator | Harz</title>
+<meta name="description" content="Generate and validate SEO meta tags. Title, description, Open Graph, Twitter Cards, and schema markup.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.form{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.form input,.form textarea{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:8px;font-size:14px;margin-bottom:8px;font-family:inherit}
+.form textarea{resize:vertical;min-height:50px}
+.form label{font-size:12px;color:#a3a3a3;margin-bottom:3px;display:block}
+.form input:focus,.form textarea:focus{outline:none;border-color:#f59e0b}
+.preview{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.serp{background:#fff;color:#333;border-radius:8px;padding:14px;margin-bottom:12px;font-family:Arial,sans-serif}
+.serp-url{font-size:12px;color:#006621;margin-bottom:2px}
+.serp-title{font-size:18px;color:#1a0dab;margin-bottom:2px;cursor:pointer}
+.serp-desc{font-size:13px;color:#545454;line-height:1.4}
+.serp .red{color:#d93025;font-weight:700}
+.social{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:14px;margin-bottom:8px}
+.social-domain{font-size:11px;color:#a3a3a3;text-transform:uppercase;margin-bottom:4px}
+.social-title{font-size:14px;font-weight:700;margin-bottom:2px}
+.social-desc{font-size:12px;color:#a3a3a3}
+.code{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:14px;font-family:monospace;font-size:11px;color:#f59e0b;word-break:break-all;white-space:pre-wrap;max-height:300px;overflow:auto;margin-bottom:16px}
+.btn{background:#f59e0b;color:#000;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;width:100%;font-size:15px}
+.score{display:flex;justify-content:center;gap:20px;margin-bottom:16px}
+.score-item{text-align:center}
+.score-item .num{font-size:22px;font-weight:800}
+.score-item .label{font-size:10px;color:#a3a3a3}
+.good{color:#10b981}.warn{color:#f59e0b}.bad{color:#ef4444}
+</style>
+</head>
+<body>
+<h1>SEO Meta Tag Generator</h1>
+<div class="app">
+  <div class="score" id="score"></div>
+  <div class="form">
+    <div><label>Page Title (max 60 chars)</label><input type="text" id="title" value="Harz Digital Services — AI, Web Apps & Digital Solutions" oninput="update()" maxlength="70"></div>
+    <div><label>Meta Description (max 160 chars)</label><textarea id="desc" oninput="update()" maxlength="170">We build AI chatbots, web apps, and digital solutions for Nigerian businesses. CAC registered. 500+ projects delivered.</textarea></div>
+    <div><label>Page URL</label><input type="text" id="url" value="https://rabiuhamza11.github.io/harz-portfolio/" oninput="update()"></div>
+    <div><label>Image URL (for social sharing)</label><input type="text" id="image" value="https://rabiuhamza11.github.io/harz-portfolio/og-image.png" oninput="update()"></div>
+    <div><label>Keywords (comma separated)</label><input type="text" id="keywords" value="AI Nigeria, web apps, chatbots, digital services" oninput="update()"></div>
+  </div>
+  <div class="preview" id="preview"></div>
+  <div class="code" id="code"></div>
+  <button class="btn" onclick="copyCode()">Copy All Meta Tags</button>
+</div>
+<script>
+function update(){
+  const title=document.getElementById('title').value;
+  const desc=document.getElementById('desc').value;
+  const url=document.getElementById('url').value;
+  const image=document.getElementById('image').value;
+  const keywords=document.getElementById('keywords').value;
+  const titleScore=title.length<=60?'good':title.length<=70?'warn':'bad';
+  const descScore=desc.length<=160?'good':desc.length<=170?'warn':'bad';
+  const total=desc.length<=160&&title.length<=60?2:1;
+  document.getElementById('score').innerHTML=`<div class="score-item"><div class="num ${titleScore}">${title.length}</div><div class="label">Title (${title.length<=60?'good':'too long'})</div></div><div class="score-item"><div class="num ${descScore}">${desc.length}</div><div class="label">Desc (${desc.length<=160?'good':'too long'})</div></div><div class="score-item"><div class="num good">${keywords.split(',').length}</div><div class="label">Keywords</div></div>`;
+  const domain=url.replace(/^https?:\/\//,'').split('/')[0];
+  document.getElementById('preview').innerHTML=`
+    <div style="font-size:12px;color:#a3a3a3;margin-bottom:8px">Google Search Preview:</div>
+    <div class="serp"><div class="serp-url">${domain}</div><div class="serp-title">${title}</div><div class="serp-desc">${desc}</div></div>
+    <div style="font-size:12px;color:#a3a3a3;margin-bottom:8px">Social Card Preview:</div>
+    <div class="social"><div class="social-domain">${domain}</div><div class="social-title">${title}</div><div class="social-desc">${desc}</div></div>`;
+  const code=`<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<meta name="description" content="${desc}">
+<meta name="keywords" content="${keywords}">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${desc}">
+<meta property="og:url" content="${url}">
+<meta property="og:image" content="${image}">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${desc}">
+<meta name="twitter:image" content="${image}">
+
+<!-- Schema.org -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"${title}","description":"${desc}","url":"${url}","image":"${image}"}
+</${'script'}>`;
+  document.getElementById('code').textContent=code;
+}
+function copyCode(){navigator.clipboard.writeText(document.getElementById('code').textContent);alert('Meta tags copied!');}
+update();
+</script>
+</body>
+</html>

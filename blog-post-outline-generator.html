@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog Post Outline Generator | Harz</title>
+<meta name="description" content="Generate structured blog post outlines with sections, headings, and talking points. SEO-friendly.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.input-bar{display:flex;gap:8px;margin-bottom:16px}
+.input-bar input{flex:1;background:#141414;border:1px solid #2a2a2a;color:#fff;padding:12px 16px;border-radius:8px;font-size:14px}
+.input-bar select{background:#141414;border:1px solid #2a2a2a;color:#fff;padding:12px 16px;border-radius:8px;font-size:14px}
+.input-bar button{background:#ec4899;color:#fff;padding:12px 24px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+.outline{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:20px;margin-bottom:16px}
+.outline-title{font-size:18px;font-weight:700;color:#ec4899;margin-bottom:12px}
+.outline-section{margin-bottom:14px}
+.outline-section h3{font-size:15px;font-weight:600;color:#fff;margin-bottom:4px}
+.outline-section p{font-size:13px;color:#a3a3a3;padding-left:16px}
+.outline-meta{font-size:12px;color:#555;margin-top:10px;border-top:1px solid #2a2a2a;padding-top:10px}
+.copy-btn{display:block;width:200px;margin:0 auto;background:#ec4899;color:#fff;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;text-align:center}
+</style>
+</head>
+<body>
+<h1>Blog Post Outline Generator</h1>
+<div class="app">
+  <div class="input-bar">
+    <input type="text" id="topic" placeholder="Enter your blog topic..." onkeypress="if(event.key==='Enter')generate()">
+    <select id="type"><option value="howto">How-To Guide</option><option value="listicle">Listicle</option><option value="comparison">Comparison</option><option value="guide">Comprehensive Guide</option><option value="tutorial">Tutorial</option><option value="opinion">Opinion Piece</option><option value="case">Case Study</option></select>
+    <button onclick="generate()">Generate</button>
+  </div>
+  <div class="outline" id="outline" style="display:none"></div>
+</div>
+<script>
+const TEMPLATES={
+  howto:{title:'How to {topic}: A Step-by-Step Guide',sections:[
+    ['Introduction','Explain why {topic} matters and what readers will learn','Hook: Ask a question or share a stat'],
+    ['Prerequisites','What readers need before starting','Tools, knowledge, and resources required'],
+    ['Step 1: Getting Started','First action to take','Detailed instructions with examples'],
+    ['Step 2: Core Process','Main implementation steps','Walk through each sub-step'],
+    ['Step 3: Advanced Tips','Pro tips and best practices','Common mistakes to avoid'],
+    ['Troubleshooting','Common problems and solutions','FAQ-style format'],
+    ['Conclusion','Summarize key points','Call-to-action and next steps']
+  ]},
+  listicle:{title:'{count} {topic} Tips You Need to Know',sections:[
+    ['Introduction','Why {topic} is important for Nigerian businesses','Promise of value'],
+    ['Why {topic} Matters','The problem and the solution','Brief context'],
+    ['Tips 1-5','First batch of actionable tips','Each with example and explanation'],
+    ['Tips 6-10','Second batch of tips','Real-world applications'],
+    ['Tips 11-15','Advanced tips','For experienced readers'],
+    ['Key Takeaways','Summary of all tips','Quick reference list'],
+    ['Conclusion','Wrap up and encouragement','Share your own tip in comments']
+  ]},
+  comparison:{title:'{topic}: Complete Comparison Guide',sections:[
+    ['Introduction','Why compare {topic} options','What to expect in this article'],
+    ['What is {topic}?','Define and explain the concept','Background and context'],
+    ['Option A: Overview','Features, pros, and cons','Who it\'s best for'],
+    ['Option B: Overview','Features, pros, and cons','Who it\'s best for'],
+    ['Feature-by-Feature Comparison','Detailed comparison table','Head-to-head analysis'],
+    ['Pricing Comparison','Cost breakdown','Value for money'],
+    ['Which Should You Choose?','Decision framework','Use case recommendations'],
+    ['Conclusion','Final recommendation','Next steps']
+  ]},
+  guide:{title:'The Complete Guide to {topic} (2026)',sections:[
+    ['Introduction','What is {topic} and why it matters','Target audience and reading time'],
+    ['Understanding {topic}','Core concepts and terminology','How it works'],
+    ['Benefits of {topic}','Why you should care','Real-world examples'],
+    ['Getting Started','Step-by-step setup','Tools and resources'],
+    ['Best Practices','Proven strategies','Expert tips'],
+    ['Common Mistakes','What to avoid','How to fix them'],
+    ['Tools and Resources','Recommended tools','Free vs paid options'],
+    ['Advanced Strategies','For experienced users','Next-level techniques'],
+    ['Case Studies','Real success stories','Measurable results'],
+    ['Conclusion','Key takeaways and action plan','Further reading']
+  ]},
+  tutorial:{title:'{topic} Tutorial: From Zero to Hero',sections:[
+    ['Prerequisites','What you need to follow along','Software, tools, accounts'],
+    ['Setup','Initial configuration','Environment setup'],
+    ['Lesson 1: Basics','First concepts and simple examples','Hands-on exercise'],
+    ['Lesson 2: Intermediate','More complex usage','Build a mini-project'],
+    ['Lesson 3: Advanced','Expert techniques','Real-world scenarios'],
+    ['Project: Build Something Real','Combine all lessons','Complete walkthrough'],
+    ['Resources','Documentation and further learning','Community and support']
+  ]},
+  opinion:{title:'My Take on {topic}: What Nobody Is Talking About',sections:[
+    ['The Hook','A bold statement about {topic}','Why conventional wisdom is wrong'],
+    ['The Current Narrative','What everyone says about {topic}','The mainstream view'],
+    ['My Contrarian View','Why I disagree','Evidence and reasoning'],
+    ['Real-World Evidence','Data and examples','Case studies'],
+    ['What This Means For You','Practical implications','Action steps'],
+    ['Counterarguments','What critics might say','My responses'],
+    ['Conclusion','Final thoughts','Call to action']
+  ]},
+  case:{title:'Case Study: How We Solved {topic}',sections:[
+    ['Executive Summary','Brief overview of the challenge and results','Key metrics'],
+    ['The Challenge','What problem were we solving','Why it mattered'],
+    ['The Approach','Our strategy and methodology','Why we chose this path'],
+    ['Implementation','Step-by-step what we did','Tools and processes used'],
+    ['Results','Quantitative outcomes','Before and after comparison'],
+    ['Lessons Learned','What worked and what didn\'t','Would we do differently'],
+    ['Takeaways','What you can apply to your business','Action items']
+  ]}
+};
+function generate(){
+  const topic=document.getElementById('topic').value.trim()||'Business Growth';
+  const type=document.getElementById('type').value;
+  const tmpl=TEMPLATES[type];
+  const count=Math.floor(Math.random()*10)+7;
+  const title=tmpl.title.replace('{topic}',topic).replace('{count}',count);
+  const sections=tmpl.sections.map(([h,d,n])=>{
+    const heading=h.replace('{topic}',topic);
+    const desc=d.replace('{topic}',topic);
+    const note=n.replace('{topic}',topic);
+    return `<div class="outline-section"><h3>${heading}</h3><p>${desc}</p><p style="color:#555">💡 ${note}</p></div>`;
+  }).join('');
+  const meta=`Word count target: ${count*150} words · Reading time: ~${Math.ceil(count*150/200)} min · SEO keywords: ${topic.toLowerCase()}, ${topic.toLowerCase()} Nigeria, ${topic.toLowerCase()} guide`;
+  document.getElementById('outline').style.display='block';
+  document.getElementById('outline').innerHTML=`<div class="outline-title">${title}</div>${sections}<div class="outline-meta">${meta}</div>`;
+}
+</script>
+</body>
+</html>

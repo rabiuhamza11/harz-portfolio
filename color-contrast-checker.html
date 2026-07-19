@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Contrast Checker — WCAG Accessibility | Harz</title>
+<meta name="description" content="Check color contrast ratios for WCAG AA and AAA accessibility compliance. For web designers and developers.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:500px;margin:0 auto}
+.preview-box{border-radius:12px;padding:40px;text-align:center;margin-bottom:16px;font-size:20px;font-weight:700;border:1px solid #2a2a2a}
+.controls{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.control{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.control label{font-size:13px;color:#a3a3a3;width:80px}
+.control input[type="color"]{width:50px;height:36px;border:1px solid #2a2a2a;border-radius:6px;cursor:pointer}
+.control input[type="text"]{flex:1;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:8px;border-radius:6px;font-family:monospace;font-size:13px}
+.results{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #2a2a2a}
+.result-row span:first-child{font-size:13px;color:#a3a3a3}
+.badge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px}
+.pass{background:rgba(16,185,129,0.15);color:#10b981}
+.fail{background:rgba(239,68,68,0.15);color:#ef4444}
+.ratio{font-size:20px;font-weight:800}
+</style>
+</head>
+<body>
+<h1>Color Contrast Checker</h1>
+<div class="app">
+  <div class="preview-box" id="preview">Sample Text</div>
+  <div class="controls">
+    <div class="control"><label>Text:</label><input type="color" id="fgColor" value="#ffffff" oninput="update()"><input type="text" id="fgHex" value="#FFFFFF" oninput="syncColor('fg',this.value)" style="flex:1"></div>
+    <div class="control"><label>Background:</label><input type="color" id="bgColor" value="#0a0a0a" oninput="update()"><input type="text" id="bgHex" value="#0A0A0A" oninput="syncColor('bg',this.value)" style="flex:1"></div>
+  </div>
+  <div class="results" id="results"></div>
+</div>
+<script>
+function hexToRgb(hex){hex=hex.replace('#','');if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');return {r:parseInt(hex.slice(0,2),16),g:parseInt(hex.slice(2,4),16),b:parseInt(hex.slice(4,6),16)};}
+function luminance(r,g,b){const a=[r,g,b].map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];}
+function contrast(fg,bg){const l1=luminance(fg.r,fg.g,fg.b);const l2=luminance(bg.r,bg.b,bg.b);return (Math.max(l1,l2)+0.05)/(Math.min(l1,l2)+0.05);}
+function syncColor(which,val){const hex=val.startsWith('#')?val:'#'+val;const input=document.getElementById(which==='fg'?'fgColor':'bgColor');const textInput=document.getElementById(which==='fg'?'fgHex':'bgHex');if(/^#[0-9A-Fa-f]{6}$/.test(hex)){input.value=hex;textInput.value=hex.toUpperCase();update();}}
+function update(){
+  const fg=document.getElementById('fgColor').value;
+  const bg=document.getElementById('bgColor').value;
+  document.getElementById('fgHex').value=fg.toUpperCase();
+  document.getElementById('bgHex').value=bg.toUpperCase();
+  document.getElementById('preview').style.color=fg;
+  document.getElementById('preview').style.background=bg;
+  const ratio=contrast(hexToRgb(fg),hexToRgb(bg));
+  const normalAA=ratio>=4.5?'pass':'fail';
+  const normalAAA=ratio>=7?'pass':'fail';
+  const largeAA=ratio>=3?'pass':'fail';
+  const largeAAA=ratio>=4.5?'pass':'fail';
+  document.getElementById('results').innerHTML=`
+    <div class="result-row"><span>Contrast Ratio</span><span class="ratio">${ratio.toFixed(2)}:1</span></div>
+    <div class="result-row"><span>Normal Text (AA)</span><span class="badge ${normalAA}">${normalAA==='pass'?'PASS':'FAIL'} (4.5:1)</span></div>
+    <div class="result-row"><span>Normal Text (AAA)</span><span class="badge ${normalAAA}">${normalAAA==='pass'?'PASS':'FAIL'} (7:1)</span></div>
+    <div class="result-row"><span>Large Text (AA)</span><span class="badge ${largeAA}">${largeAA==='pass'?'PASS':'FAIL'} (3:1)</span></div>
+    <div class="result-row"><span>Large Text (AAA)</span><span class="badge ${largeAAA}">${largeAAA==='pass'?'PASS':'FAIL'} (4.5:1)</span></div>`;
+}
+update();
+</script>
+</body>
+</html>
