@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Status Scheduler — Plan & Track Your Status Updates | Harz</title>
+<meta name="description" content="Plan your WhatsApp Business status updates. Schedule content, track engagement, and organize your weekly status calendar.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.input-bar{display:flex;gap:8px;margin-bottom:16px}
+.input-bar select,.input-bar input{background:#141414;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:8px;font-size:14px}
+.input-bar select{width:120px}
+.input-bar input{flex:1}
+.input-bar button{background:#25D366;color:#fff;padding:10px 16px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+.list{display:grid;gap:8px}
+.day-card{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:14px}
+.day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.day-name{font-weight:700;font-size:14px;color:#25D366}
+.status-count{font-size:11px;color:#555}
+.status-item{display:flex;justify-content:space-between;align-items:center;padding:8px;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;margin-bottom:4px;font-size:13px}
+.status-type{font-weight:600}
+.status-time{color:#a3a3a3;font-size:12px}
+.del-btn{background:#1c1c1c;border:1px solid #2a2a2a;color:#ef4444;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:11px}
+.empty{text-align:center;color:#555;padding:20px;font-size:13px}
+.summary{display:flex;justify-content:center;gap:20px;margin-bottom:20px;font-size:12px;color:#a3a3a3}
+.summary strong{display:block;font-size:18px;color:#25D366}
+</style>
+</head>
+<body>
+<h1>WhatsApp Status Scheduler</h1>
+<div class="app">
+  <div class="summary">
+    <div><strong id="totalCount">0</strong>Planned</div>
+    <div><strong id="textCount">0</strong>Text</div>
+    <div><strong id="imageCount">0</strong>Image</div>
+    <div><strong id="videoCount">0</strong>Video</div>
+  </div>
+  <div class="input-bar">
+    <select id="day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+    <select id="type"><option value="Text">Text</option><option value="Image">Image</option><option value="Video">Video</option><option value="Link">Link</option></select>
+    <input type="text" id="content" placeholder="Status content...">
+    <button onclick="addStatus()">Add</button>
+  </div>
+  <div class="list" id="statusList"></div>
+</div>
+<script>
+let statuses = JSON.parse(localStorage.getItem('waStatuses') || '[]');
+const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+function save() { localStorage.setItem('waStatuses', JSON.stringify(statuses)); }
+function addStatus() {
+  const day = document.getElementById('day').value;
+  const type = document.getElementById('type').value;
+  const content = document.getElementById('content').value.trim();
+  if (!content) { alert('Enter status content'); return; }
+  statuses.push({day,type,content,id:Date.now()});
+  document.getElementById('content').value = '';
+  save(); render();
+}
+function deleteStatus(id) {
+  statuses = statuses.filter(s => s.id !== id);
+  save(); render();
+}
+function render() {
+  const list = document.getElementById('statusList');
+  document.getElementById('totalCount').textContent = statuses.length;
+  document.getElementById('textCount').textContent = statuses.filter(s=>s.type==='Text'||s.type==='Link').length;
+  document.getElementById('imageCount').textContent = statuses.filter(s=>s.type==='Image').length;
+  document.getElementById('videoCount').textContent = statuses.filter(s=>s.type==='Video').length;
+  if (statuses.length === 0) { list.innerHTML = '<div class="empty">No status updates planned yet. Add your first one above.</div>'; return; }
+  list.innerHTML = days.map(day => {
+    const dayStatuses = statuses.filter(s => s.day === day);
+    if (dayStatuses.length === 0) return '';
+    return `<div class="day-card"><div class="day-header"><span class="day-name">${day}</span><span class="status-count">${dayStatuses.length} status${dayStatuses.length>1?'es':''}</span></div>${dayStatuses.map(s => `<div class="status-item"><div><div class="status-type">[${s.type}] ${s.content.substring(0,40)}${s.content.length>40?'...':''}</div></div><button class="del-btn" onclick="deleteStatus(${s.id})">Del</button></div>`).join('')}</div>`;
+  }).join('');
+}
+render();
+</script>
+</body>
+</html>

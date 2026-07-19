@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profit Margin Calculator — Calculate Selling Price & Profit | Harz</title>
+<meta name="description" content="Calculate profit margins, markup, and selling prices for your products. Nigerian Naira support.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.calc{max-width:450px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:20px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;margin-bottom:4px;color:#a3a3a3}
+.input-group input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:15px}
+.mode{display:flex;gap:8px;margin-bottom:12px}
+.mode-btn{flex:1;background:#1c1c1c;border:1px solid #2a2a2a;color:#a3a3a3;padding:8px;border-radius:8px;text-align:center;font-size:13px;cursor:pointer}
+.mode-btn.active{background:#00ff88;color:#000;border-color:#00ff88;font-weight:700}
+.btn{width:100%;background:#00ff88;color:#000;padding:14px;border-radius:8px;font-weight:700;font-size:16px;border:none;cursor:pointer;margin-top:6px}
+.results{display:none;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-top:14px}
+.results.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:14px}
+.result-row span:first-child{color:#a3a3a3}
+.result-row span:last-child{font-weight:700}
+.highlight{color:#00ff88 !important;font-size:18px}
+</style>
+</head>
+<body>
+<h1>Profit Margin Calculator</h1>
+<div class="calc">
+  <div class="mode">
+    <div class="mode-btn active" onclick="setMode('margin',this)">By Margin %</div>
+    <div class="mode-btn" onclick="setMode('markup',this)">By Markup %</div>
+  </div>
+  <div class="input-group"><label>Cost Price (N)</label><input type="number" id="cost" value="5000"></div>
+  <div class="input-group"><label id="pctLabel">Desired Margin %</label><input type="number" id="pct" value="30"></div>
+  <div class="input-group"><label>Quantity (optional)</label><input type="number" id="qty" value="1"></div>
+  <button class="btn" onclick="calculate()">Calculate</button>
+  <div class="results" id="results">
+    <div class="result-row"><span>Selling Price (per unit)</span><span id="sellPrice" class="highlight">N0</span></div>
+    <div class="result-row"><span>Profit (per unit)</span><span id="profit">N0</span></div>
+    <div class="result-row"><span>Markup %</span><span id="markupPct">0%</span></div>
+    <div class="result-row"><span>Margin %</span><span id="marginPct">0%</span></div>
+    <div class="result-row"><span>Total Revenue</span><span id="totalRev">N0</span></div>
+    <div class="result-row"><span>Total Profit</span><span id="totalProfit" class="highlight">N0</span></div>
+  </div>
+</div>
+<script>
+let mode = 'margin';
+function setMode(m, el) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pctLabel').textContent = m === 'margin' ? 'Desired Margin %' : 'Desired Markup %';
+  calculate();
+}
+function formatN(n) { return 'N' + Math.round(n).toLocaleString(); }
+function calculate() {
+  const cost = parseFloat(document.getElementById('cost').value) || 0;
+  const pct = parseFloat(document.getElementById('pct').value) || 0;
+  const qty = parseInt(document.getElementById('qty').value) || 1;
+  let sellPrice, profit, markupPct, marginPct;
+  if (mode === 'margin') {
+    sellPrice = cost / (1 - pct / 100);
+    profit = sellPrice - cost;
+    markupPct = (profit / cost * 100);
+    marginPct = pct;
+  } else {
+    sellPrice = cost * (1 + pct / 100);
+    profit = sellPrice - cost;
+    markupPct = pct;
+    marginPct = (profit / sellPrice * 100);
+  }
+  document.getElementById('sellPrice').textContent = formatN(sellPrice);
+  document.getElementById('profit').textContent = formatN(profit);
+  document.getElementById('markupPct').textContent = markupPct.toFixed(1) + '%';
+  document.getElementById('marginPct').textContent = marginPct.toFixed(1) + '%';
+  document.getElementById('totalRev').textContent = formatN(sellPrice * qty);
+  document.getElementById('totalProfit').textContent = formatN(profit * qty);
+  document.getElementById('results').classList.add('show');
+}
+calculate();
+</script>
+</body>
+</html>

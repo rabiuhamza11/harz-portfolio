@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nigerian Salary Calculator — Net Pay After Tax & Pension | Harz</title>
+<meta name="description" content="Calculate your take-home pay in Nigeria. Includes PAYE tax, pension, and NHF deductions.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.calc{max-width:450px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:20px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;margin-bottom:4px;color:#a3a3a3}
+.input-group input,.input-group select{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:15px}
+.btn{width:100%;background:#3b82f6;color:#fff;padding:14px;border-radius:8px;font-weight:700;font-size:16px;border:none;cursor:pointer}
+.results{display:none;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-top:14px}
+.results.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:14px}
+.result-row span:first-child{color:#a3a3a3}
+.result-row span:last-child{font-weight:700}
+.highlight{color:#3b82f6 !important;font-size:20px}
+</style>
+</head>
+<body>
+<h1>Nigerian Salary Calculator</h1>
+<div class="calc">
+  <div class="input-group"><label>Gross Monthly Salary (N)</label><input type="number" id="gross" value="200000"></div>
+  <div class="input-group"><label>Pension Rate</label><select id="pension"><option value="8">8% (Standard)</option><option value="0">0% (Exempt)</option></select></div>
+  <div class="input-group"><label>NHF (Housing Fund)</label><select id="nhf"><option value="2.5">2.5% (Standard)</option><option value="0">0% (Exempt)</option></select></div>
+  <button class="btn" onclick="calculate()">Calculate</button>
+  <div class="results" id="results">
+    <div class="result-row"><span>Gross Salary</span><span id="grossVal">N0</span></div>
+    <div class="result-row"><span>Pension (8%)</span><span id="pensionVal">N0</span></div>
+    <div class="result-row"><span>NHF (2.5%)</span><span id="nhfVal">N0</span></div>
+    <div class="result-row"><span>Taxable Income</span><span id="taxable">N0</span></div>
+    <div class="result-row"><span>PAYE Tax</span><span id="tax">N0</span></div>
+    <div class="result-row"><span>Total Deductions</span><span id="deductions">N0</span></div>
+    <div class="result-row"><span>Net Pay (Take Home)</span><span id="net" class="highlight">N0</span></div>
+  </div>
+</div>
+<script>
+function formatN(n) { return 'N' + Math.round(n).toLocaleString(); }
+function calculate() {
+  const gross = parseFloat(document.getElementById('gross').value) || 0;
+  const pensionRate = parseFloat(document.getElementById('pension').value) / 100;
+  const nhfRate = parseFloat(document.getElementById('nhf').value) / 100;
+  const pension = gross * pensionRate;
+  const nhf = gross * nhfRate;
+  const taxable = gross - pension - nhf;
+  let tax = 0;
+  let remaining = taxable;
+  const brackets = [
+    {limit: 30000, rate: 0.07},
+    {limit: 30000, rate: 0.11},
+    {limit: 50000, rate: 0.15},
+    {limit: 50000, rate: 0.19},
+    {limit: 160000, rate: 0.21},
+    {limit: Infinity, rate: 0.24}
+  ];
+  for (const b of brackets) {
+    if (remaining <= 0) break;
+    const amt = Math.min(remaining, b.limit);
+    tax += amt * b.rate;
+    remaining -= amt;
+  }
+  const totalDeductions = pension + nhf + tax;
+  const net = gross - totalDeductions;
+  document.getElementById('grossVal').textContent = formatN(gross);
+  document.getElementById('pensionVal').textContent = formatN(pension);
+  document.getElementById('nhfVal').textContent = formatN(nhf);
+  document.getElementById('taxable').textContent = formatN(taxable);
+  document.getElementById('tax').textContent = formatN(tax);
+  document.getElementById('deductions').textContent = formatN(totalDeductions);
+  document.getElementById('net').textContent = formatN(net);
+  document.getElementById('results').classList.add('show');
+}
+calculate();
+</script>
+</body>
+</html>

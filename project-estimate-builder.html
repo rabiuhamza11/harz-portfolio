@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Estimate Builder — Instant Quotes for Clients | Harz</title>
+<meta name="description" content="Build professional project estimates and quotes for clients. Add line items, calculate totals, and export.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.header-form{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.header-form input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:14px;margin-bottom:8px}
+.line-item{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.line-item input{background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:8px;border-radius:6px;font-size:13px}
+.line-item input:first-child{flex:2}
+.line-item input:nth-child(2){flex:1}
+.line-item input:nth-child(3){flex:1}
+.line-item .item-total{flex:1;font-weight:700;color:#00ff88;font-size:13px;text-align:right}
+.add-btn{background:#1c1c1c;border:1px dashed #2a2a2a;color:#a3a3a3;padding:10px;border-radius:8px;width:100%;cursor:pointer;margin-bottom:16px}
+.add-btn:hover{border-color:#00ff88;color:#00ff88}
+.summary{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
+.summary-row span:first-child{color:#a3a3a3}
+.summary-total{font-size:20px;font-weight:800;color:#00ff88;border-top:1px solid #2a2a2a;padding-top:10px;margin-top:6px}
+.actions{display:flex;gap:10px}
+.btn{flex:1;padding:14px;border-radius:8px;font-weight:700;font-size:15px;border:none;cursor:pointer}
+.btn-wa{background:#25D366;color:#fff}
+.btn-copy{background:#1c1c1c;color:#fff;border:1px solid #2a2a2a}
+.del-item{background:#1c1c1c;border:1px solid #2a2a2a;color:#ef4444;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px}
+</style>
+</head>
+<body>
+<h1>Project Estimate Builder</h1>
+<div class="app">
+  <div class="header-form">
+    <input type="text" id="clientName" placeholder="Client Name">
+    <input type="text" id="projectTitle" placeholder="Project Title">
+  </div>
+  <div id="lineItems"></div>
+  <button class="add-btn" onclick="addLine()">+ Add Line Item</button>
+  <div class="summary">
+    <div class="summary-row"><span>Subtotal</span><span id="subtotal">N0</span></div>
+    <div class="summary-row"><span>VAT (7.5%)</span><span id="vat">N0</span></div>
+    <div class="summary-row summary-total"><span>Total</span><span id="grandTotal">N0</span></div>
+  </div>
+  <div class="actions">
+    <button class="btn btn-wa" onclick="sendWhatsApp()">Send via WhatsApp</button>
+    <button class="btn btn-copy" onclick="copyEstimate()">Copy Text</button>
+  </div>
+</div>
+<script>
+let items = [{desc:'',qty:1,price:0}];
+function formatN(n) { return 'N' + Math.round(n).toLocaleString(); }
+function addLine() { items.push({desc:'',qty:1,price:0}); render(); }
+function delLine(i) { items.splice(i,1); render(); }
+function updateItem(i, field, val) {
+  items[i][field] = field === 'desc' ? val : (parseFloat(val) || 0);
+  renderTotals();
+}
+function render() {
+  document.getElementById('lineItems').innerHTML = items.map((item, i) => `
+    <div class="line-item">
+      <input type="text" placeholder="Description" value="${item.desc}" oninput="updateItem(${i},'desc',this.value)">
+      <input type="number" placeholder="Qty" value="${item.qty}" oninput="updateItem(${i},'qty',this.value)">
+      <input type="number" placeholder="Price" value="${item.price}" oninput="updateItem(${i},'price',this.value)">
+      <span class="item-total">N${Math.round(item.qty*item.price).toLocaleString()}</span>
+      <button class="del-item" onclick="delLine(${i})">X</button>
+    </div>
+  `).join('');
+  renderTotals();
+}
+function renderTotals() {
+  const subtotal = items.reduce((s, i) => s + i.qty * i.price, 0);
+  const vat = subtotal * 0.075;
+  const total = subtotal + vat;
+  document.getElementById('subtotal').textContent = formatN(subtotal);
+  document.getElementById('vat').textContent = formatN(vat);
+  document.getElementById('grandTotal').textContent = formatN(total);
+}
+function sendWhatsApp() {
+  const client = document.getElementById('clientName').value || 'Client';
+  const title = document.getElementById('projectTitle').value || 'Project Estimate';
+  const subtotal = items.reduce((s, i) => s + i.qty * i.price, 0);
+  const vat = subtotal * 0.075;
+  const total = subtotal + vat;
+  let msg = `Project Estimate\n\nClient: ${client}\nProject: ${title}\n\n`;
+  items.forEach(i => { if (i.desc) msg += `${i.desc} x${i.qty} - ${formatN(i.qty*i.price)}\n`; });
+  msg += `\nSubtotal: ${formatN(subtotal)}\nVAT (7.5%): ${formatN(vat)}\nTotal: ${formatN(total)}`;
+  window.open('https://wa.me/2348028687857?text=' + encodeURIComponent(msg), '_blank');
+}
+function copyEstimate() {
+  const client = document.getElementById('clientName').value || 'Client';
+  const title = document.getElementById('projectTitle').value || 'Project Estimate';
+  const subtotal = items.reduce((s, i) => s + i.qty * i.price, 0);
+  const vat = subtotal * 0.075;
+  const total = subtotal + vat;
+  let msg = `Project Estimate\n\nClient: ${client}\nProject: ${title}\n\n`;
+  items.forEach(i => { if (i.desc) msg += `${i.desc} x${i.qty} - ${formatN(i.qty*i.price)}\n`; });
+  msg += `\nSubtotal: ${formatN(subtotal)}\nVAT: ${formatN(vat)}\nTotal: ${formatN(total)}`;
+  navigator.clipboard.writeText(msg);
+  alert('Estimate copied to clipboard!');
+}
+render();
+</script>
+</body>
+</html>

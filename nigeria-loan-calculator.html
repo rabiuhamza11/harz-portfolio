@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nigerian Business Loan Calculator — Microfinance & Bank Loans | Harz</title>
+<meta name="description" content="Calculate loan payments for Nigerian banks and microfinance. Compare interest rates, tenure, and monthly payments.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:20px}
+h1{text-align:center;font-size:24px;margin:20px 0}
+.calc{max-width:500px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:24px}
+.input-group{margin-bottom:14px}
+.input-group label{display:block;font-size:13px;margin-bottom:4px;color:#a3a3a3}
+.input-group input,.input-group select{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:8px;font-size:15px}
+.btn{width:100%;background:#00ff88;color:#000;padding:14px;border-radius:8px;font-weight:700;font-size:16px;border:none;cursor:pointer;margin-top:10px}
+.result{display:none;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-top:16px}
+.result.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:14px}
+.result-row span:first-child{color:#a3a3a3}
+.result-row span:last-child{font-weight:700}
+.total{color:#00ff88 !important;font-size:18px !important}
+.note{text-align:center;font-size:12px;color:#555;margin-top:16px}
+</style>
+</head>
+<body>
+<h1>Nigerian Loan Calculator</h1>
+<div class="calc">
+  <div class="input-group"><label>Loan Amount (Naira)</label><input type="number" id="amount" value="500000" min="1000"></div>
+  <div class="input-group"><label>Annual Interest Rate (%)</label><input type="number" id="rate" value="26" step="0.1"></div>
+  <div class="input-group"><label>Loan Tenure</label><select id="tenure"><option value="6">6 months</option><option value="12" selected>12 months</option><option value="24">24 months</option><option value="36">36 months</option><option value="48">48 months</option><option value="60">60 months</option></select></div>
+  <div class="input-group"><label>Lender Type</label><select id="lender"><option value="26">Commercial Bank (avg 26%)</option><option value="5">CBN Intervention (5%)</option><option value="15">Microfinance (15-30%)</option><option value="30">Digital Lender (30-45%)</option><option value="0">Custom Rate</option></select></div>
+  <button class="btn" onclick="calculate()">Calculate</button>
+  <div class="result" id="result">
+    <div class="result-row"><span>Monthly Payment</span><span id="monthly" class="total">N0</span></div>
+    <div class="result-row"><span>Total Payment</span><span id="totalPay">N0</span></div>
+    <div class="result-row"><span>Total Interest</span><span id="totalInterest">N0</span></div>
+    <div class="result-row"><span>Interest %</span><span id="interestPct">0%</span></div>
+  </div>
+  <p class="note">Rates are estimates. Actual rates vary by lender and borrower profile.</p>
+</div>
+<script>
+document.getElementById('lender').addEventListener('change', function() {
+  document.getElementById('rate').value = this.value;
+});
+function formatN(n) { return 'N' + Math.round(n).toLocaleString(); }
+function calculate() {
+  const p = parseFloat(document.getElementById('amount').value);
+  const r = parseFloat(document.getElementById('rate').value) / 100 / 12;
+  const n = parseInt(document.getElementById('tenure').value);
+  if (!p || !r || !n) { alert('Enter valid values'); return; }
+  const monthly = p * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  const total = monthly * n;
+  const interest = total - p;
+  document.getElementById('monthly').textContent = formatN(monthly);
+  document.getElementById('totalPay').textContent = formatN(total);
+  document.getElementById('totalInterest').textContent = formatN(interest);
+  document.getElementById('interestPct').textContent = ((interest / p) * 100).toFixed(1) + '%';
+  document.getElementById('result').classList.add('show');
+}
+calculate();
+</script>
+</body>
+</html>

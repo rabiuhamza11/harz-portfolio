@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Content Planner — Plan Posts for All Platforms | Harz</title>
+<meta name="description" content="Plan and schedule social media content across Instagram, Facebook, Twitter, TikTok, and LinkedIn.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.composer{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.composer textarea{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:14px;font-family:inherit;resize:vertical;min-height:60px;margin-bottom:10px}
+.composer textarea:focus{outline:none;border-color:#8b5cf6}
+.platforms{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.platform-tag{display:flex;align-items:center;gap:4px;padding:6px 12px;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:20px;font-size:12px;cursor:pointer}
+.platform-tag.active{border-color:#8b5cf6;background:rgba(139,92,246,0.1);color:#a78bfa}
+.composer-row{display:flex;gap:8px}
+.composer-row input,.composer-row select{flex:1;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:13px}
+.btn{background:#8b5cf6;color:#fff;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:14px}
+.posts{display:grid;gap:10px}
+.post-card{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:14px}
+.post-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.post-platforms{display:flex;gap:4px}
+.post-plat{font-size:10px;background:#1c1c1c;padding:2px 6px;border-radius:8px;color:#a3a3a3}
+.post-date{font-size:11px;color:#555}
+.post-text{font-size:13px;color:#d4d4d8}
+.post-del{background:none;border:none;color:#ef4444;cursor:pointer;font-size:12px}
+.empty{text-align:center;color:#555;padding:20px}
+.stats{display:flex;justify-content:center;gap:20px;margin-bottom:16px;font-size:12px;color:#a3a3a3}
+.stats strong{display:block;font-size:18px;color:#8b5cf6}
+</style>
+</head>
+<body>
+<h1>Social Media Content Planner</h1>
+<div class="app">
+  <div class="stats">
+    <div><strong id="totalPosts">0</strong>Posts Planned</div>
+    <div><strong id="thisWeek">0</strong>This Week</div>
+    <div><strong id="scheduled">0</strong>Scheduled</div>
+  </div>
+  <div class="composer">
+    <textarea id="content" placeholder="What's your post about? Write your content here..."></textarea>
+    <div class="platforms" id="platforms">
+      <div class="platform-tag active" onclick="togglePlat(this)">Instagram</div>
+      <div class="platform-tag" onclick="togglePlat(this)">Facebook</div>
+      <div class="platform-tag" onclick="togglePlat(this)">Twitter/X</div>
+      <div class="platform-tag active" onclick="togglePlat(this)">WhatsApp Status</div>
+      <div class="platform-tag" onclick="togglePlat(this)">TikTok</div>
+      <div class="platform-tag" onclick="togglePlat(this)">LinkedIn</div>
+    </div>
+    <div class="composer-row">
+      <input type="date" id="postDate">
+      <input type="time" id="postTime" value="09:00">
+      <button class="btn" onclick="addPost()">Schedule</button>
+    </div>
+  </div>
+  <div class="posts" id="postList"></div>
+</div>
+<script>
+let posts = JSON.parse(localStorage.getItem('socialPosts') || '[]');
+function togglePlat(el) { el.classList.toggle('active'); }
+function getActivePlats() {
+  return [...document.querySelectorAll('.platform-tag.active')].map(e => e.textContent);
+}
+function addPost() {
+  const content = document.getElementById('content').value.trim();
+  const date = document.getElementById('postDate').value;
+  const time = document.getElementById('postTime').value;
+  const plats = getActivePlats();
+  if (!content) { alert('Write your post content first'); return; }
+  if (!plats.length) { alert('Select at least one platform'); return; }
+  posts.unshift({content, date: date || 'TBD', time, platforms: plats, id: Date.now()});
+  localStorage.setItem('socialPosts', JSON.stringify(posts));
+  document.getElementById('content').value = '';
+  render();
+}
+function deletePost(id) {
+  posts = posts.filter(p => p.id !== id);
+  localStorage.setItem('socialPosts', JSON.stringify(posts));
+  render();
+}
+function render() {
+  document.getElementById('totalPosts').textContent = posts.length;
+  const now = new Date();
+  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
+  const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 7);
+  const thisWeek = posts.filter(p => {
+    if (!p.date || p.date === 'TBD') return false;
+    const d = new Date(p.date);
+    return d >= weekStart && d < weekEnd;
+  }).length;
+  document.getElementById('thisWeek').textContent = thisWeek;
+  document.getElementById('scheduled').textContent = posts.filter(p => p.date && p.date !== 'TBD').length;
+  if (!posts.length) {
+    document.getElementById('postList').innerHTML = '<div class="empty">No posts planned yet. Start composing above.</div>';
+    return;
+  }
+  document.getElementById('postList').innerHTML = posts.map(p => `
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-platforms">${p.platforms.map(pl => `<span class="post-plat">${pl}</span>`).join('')}</div>
+        <div class="post-date">${p.date} ${p.time || ''}</div>
+        <button class="post-del" onclick="deletePost(${p.id})">Delete</button>
+      </div>
+      <div class="post-text">${p.content}</div>
+    </div>
+  `).join('');
+}
+render();
+</script>
+</body>
+</html>

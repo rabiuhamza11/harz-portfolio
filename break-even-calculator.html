@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Break-Even Calculator — Find Your Profit Point | Harz</title>
+<meta name="description" content="Calculate break-even point for your business. Find out how many units you need to sell to cover costs.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.calc{max-width:450px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:20px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;margin-bottom:4px;color:#a3a3a3}
+.input-group input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:15px}
+.btn{width:100%;background:#f59e0b;color:#000;padding:14px;border-radius:8px;font-weight:700;font-size:16px;border:none;cursor:pointer}
+.results{display:none;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-top:14px}
+.results.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:14px}
+.result-row span:first-child{color:#a3a3a3}
+.result-row span:last-child{font-weight:700}
+.highlight{color:#f59e0b !important;font-size:18px}
+.viz{margin-top:16px}
+.viz-bar{height:24px;border-radius:4px;margin:4px 0;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600}
+.viz-cost{background:#ef4444;color:#fff}
+.viz-profit{background:#10b981;color:#fff}
+</style>
+</head>
+<body>
+<h1>Break-Even Calculator</h1>
+<div class="calc">
+  <div class="input-group"><label>Fixed Costs (N/month)</label><input type="number" id="fixed" value="200000"></div>
+  <div class="input-group"><label>Selling Price per Unit (N)</label><input type="number" id="price" value="5000"></div>
+  <div class="input-group"><label>Variable Cost per Unit (N)</label><input type="number" id="variable" value="2000"></div>
+  <button class="btn" onclick="calculate()">Calculate</button>
+  <div class="results" id="results">
+    <div class="result-row"><span>Break-Even Units</span><span id="beUnits" class="highlight">0</span></div>
+    <div class="result-row"><span>Break-Even Revenue</span><span id="beRev" class="highlight">N0</span></div>
+    <div class="result-row"><span>Contribution Margin</span><span id="cm">N0</span></div>
+    <div class="result-row"><span>Contribution Margin %</span><span id="cmPct">0%</span></div>
+    <div class="viz">
+      <div class="viz-bar viz-cost">Fixed Costs: <span id="fixedViz">N0</span></div>
+      <div class="viz-bar viz-profit">At Break-Even: <span id="beViz">N0</span></div>
+    </div>
+  </div>
+</div>
+<script>
+function formatN(n) { return 'N' + Math.round(n).toLocaleString(); }
+function calculate() {
+  const fixed = parseFloat(document.getElementById('fixed').value) || 0;
+  const price = parseFloat(document.getElementById('price').value) || 0;
+  const variable = parseFloat(document.getElementById('variable').value) || 0;
+  if (price <= variable) { alert('Price must be greater than variable cost'); return; }
+  const cm = price - variable;
+  const beUnits = Math.ceil(fixed / cm);
+  const beRev = beUnits * price;
+  const cmPct = (cm / price * 100);
+  document.getElementById('beUnits').textContent = beUnits.toLocaleString() + ' units';
+  document.getElementById('beRev').textContent = formatN(beRev);
+  document.getElementById('cm').textContent = formatN(cm);
+  document.getElementById('cmPct').textContent = cmPct.toFixed(1) + '%';
+  document.getElementById('fixedViz').textContent = formatN(fixed);
+  document.getElementById('beViz').textContent = formatN(beRev);
+  document.getElementById('results').classList.add('show');
+}
+calculate();
+</script>
+</body>
+</html>
