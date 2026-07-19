@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzMusic Checkout — Buy & Download Music | Harz Digital Services</title>
+<meta name="description" content="Purchase and download music tracks from HarzMusic. Pay with bank transfer, USDT crypto, or USSD. Instant download after payment.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.3rem;background:linear-gradient(135deg,#00d4aa,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{font-size:.7rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.track-card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;padding:16px;margin-bottom:12px}
+.track-cover{width:80px;height:80px;border-radius:12px;background:linear-gradient(135deg,#00d4aa,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:12px}
+.track-title{font-size:1rem;font-weight:700;color:#e8e8f0}
+.track-artist{font-size:.8rem;color:#6b6b80;margin-top:2px}
+.track-meta{display:flex;gap:12px;font-size:.7rem;color:#6b6b80;margin-top:8px}
+.track-meta span{background:#14141e;padding:3px 8px;border-radius:6px}
+.price-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #1e1e2e}
+.price{font-size:1.3rem;font-weight:800;color:#f59e0b}
+.price.ngn{color:#00d4aa}
+.btn-buy{padding:10px 20px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;font-size:.85rem}
+.btn-buy:active{transform:scale(.96)}
+.cart-bar{position:sticky;top:0;background:#0e0e16;border:1px solid #1e1e2e;border-radius:12px;padding:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.cart-bar .total{font-size:.8rem;color:#6b6b80}
+.cart-bar .total span{color:#f59e0b;font-weight:700;font-size:1rem}
+.cart-bar button{padding:10px 16px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;font-size:.8rem}
+.checkout-form{background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;padding:16px;margin-bottom:12px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:.7rem;color:#6b6b80;margin-bottom:4px;text-transform:uppercase}
+.form-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.form-group input:focus{border-color:#00d4aa;outline:none}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.pay-method{padding:12px;background:#14141e;border:2px solid #1e1e2e;border-radius:10px;text-align:center;cursor:pointer;font-size:.75rem;color:#6b6b80}
+.pay-method.selected{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.05)}
+.pay-method .icon{font-size:1.2rem;display:block;margin-bottom:4px}
+.payment-detail{background:#14141e;border:1px solid #1e1e2e;border-radius:10px;padding:14px;margin-bottom:12px;font-size:.8rem;line-height:1.6;display:none}
+.payment-detail.active{display:block}
+.payment-detail .key{color:#6b6b80;font-size:.7rem}
+.payment-detail .val{color:#e8e8f0;font-weight:600}
+.payment-detail .copy{color:#00d4aa;cursor:pointer;font-size:.7rem;float:right}
+.success-msg{text-align:center;padding:20px;display:none}
+.success-msg.active{display:block}
+.success-msg .icon{font-size:3rem}
+.success-msg h2{color:#00d4aa;margin:8px 0}
+</style>
+</head>
+<body>
+<a href="harz-music-platform.html" class="nav-back">← Back to HarzMusic</a>
+<div class="header"><h1>🎵 HarzMusic Checkout</h1><p>Instant download after payment confirmation</p></div>
+
+<div id="trackList"></div>
+
+<div class="cart-bar" id="cartBar" style="display:none">
+<div class="total">Total: <span id="cartTotal">₦0</span></div>
+<button onclick="showCheckout()">🛒 Checkout</button>
+</div>
+
+<div id="checkoutSection" style="display:none">
+<div class="checkout-form">
+<h2 style="font-size:.8rem;color:#7c3aed;text-transform:uppercase;margin-bottom:12px">Your Details</h2>
+<div class="form-group"><label>Name</label><input id="custName" placeholder="Your full name"></div>
+<div class="form-group"><label>Email (for download link)</label><input id="custEmail" type="email" placeholder="you@email.com"></div>
+<div class="form-group"><label>Phone (WhatsApp)</label><input id="custPhone" placeholder="080..."></div>
+</div>
+
+<div class="checkout-form">
+<h2 style="font-size:.8rem;color:#7c3aed;text-transform:uppercase;margin-bottom:12px">Payment Method</h2>
+<div class="pay-methods">
+<div class="pay-method selected" onclick="selectPay('bank')"><span class="icon">🏦</span>Bank Transfer</div>
+<div class="pay-method" onclick="selectPay('crypto')"><span class="icon">₿</span>USDT Crypto</div>
+<div class="pay-method" onclick="selectPay('ussd')"><span class="icon">📱</span>USSD</div>
+<div class="pay-method" onclick="selectPay('whatsapp')"><span class="icon">💬</span>WhatsApp</div>
+</div>
+
+<div class="payment-detail active" id="payBank">
+<div><span class="key">Bank:</span> <span class="val">UBA</span> <span class="copy" onclick="copyText('UBA')">copy</span></div>
+<div><span class="key">Account Name:</span> <span class="val">Rabiu Hamza Mohammed</span></div>
+<div><span class="key">Account Number:</span> <span class="val">2034326424</span> <span class="copy" onclick="copyText('2034326424')">copy</span></div>
+<div style="margin-top:8px;font-size:.7rem;color:#f59e0b">Send payment, then tap "I've Paid" below. We'll confirm and send your download link via email + WhatsApp.</div>
+</div>
+
+<div class="payment-detail" id="payCrypto">
+<div><span class="key">Network:</span> <span class="val">TRC20 (Tron)</span></div>
+<div><span class="key">Wallet:</span> <span class="val" style="font-size:.7rem;word-break:break-all">TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr</span> <span class="copy" onclick="copyText('TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr')">copy</span></div>
+<div style="margin-top:8px;font-size:.7rem;color:#f59e0b">Send USDT to this address, then tap "I've Paid". Your tracks unlock instantly after confirmation.</div>
+</div>
+
+<div class="payment-detail" id="payUssd">
+<div style="margin-bottom:8px">Dial any of these to pay:</div>
+<div><span class="val">*737*2034326424*AMOUNT#</span> <span class="copy" onclick="copyText('*737*2034326424*AMOUNT#')">copy</span></div>
+<div style="font-size:.7rem;color:#6b6b80;margin-top:4px">GTBank USSD</div>
+<div style="margin-top:8px"><span class="val">*919*2034326424*AMOUNT#</span></div>
+<div style="font-size:.7rem;color:#6b6b80">UBA USSD</div>
+</div>
+
+<div class="payment-detail" id="payWhatsapp">
+<div style="margin-bottom:8px">Click below to chat with us on WhatsApp and complete your purchase:</div>
+<a href="https://wa.me/2348028687857?text=I%20want%20to%20buy%20music%20tracks" style="display:block;padding:12px;background:#25d366;border-radius:10px;color:#fff;text-align:center;font-weight:700;text-decoration:none;font-size:.85rem">💬 Chat to Pay on WhatsApp</a>
+</div>
+
+<button onclick="submitOrder()" style="width:100%;padding:14px;background:linear-gradient(135deg,#00d4aa,#7c3aed);border:none;border-radius:12px;color:#fff;font-weight:800;font-size:.95rem;cursor:pointer;margin-top:8px">✓ I've Paid — Confirm Order</button>
+</div>
+
+<div class="success-msg" id="successMsg">
+<div class="icon">✅</div>
+<h2>Order Received!</h2>
+<p style="font-size:.8rem;color:#6b6b80">Your reference: <span id="orderRef" style="color:#00d4aa;font-weight:700"></span></p>
+<p style="font-size:.8rem;color:#6b6b80;margin-top:8px">We're confirming your payment. Your download link will be sent to your email and WhatsApp shortly.</p>
+<a href="harz-music-platform.html" style="display:block;margin-top:16px;padding:10px;background:#0e0e16;border:1px solid #1e1e2e;border-radius:8px;color:#00d4aa;text-decoration:none;font-size:.8rem;text-align:center">← Back to HarzMusic</a>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.65rem">
+HarzMusic | HI Water/Block Industry RC 321424 | Powered by HarzPay
+</div>
+
+<script>
+var tracks=[
+{id:'trk1',title:'Naija Vibes Anthem',artist:'DJ Harz',genre:'Afrobeats',duration:'3:45',price:500,currency:'NGN',icon:'🎵'},
+{id:'trk2',title:'Sahara Nights',artist:'Aisha Sound',genre:'Afro-House',duration:'4:12',price:500,currency:'NGN',icon:'🌙'},
+{id:'trk3',title:'Taraba Flow',artist:'Harz MC',genre:'Hip-Hop',duration:'3:28',price:500,currency:'NGN',icon:'🔥'},
+{id:'trk4',title:'Unity Beat',artist:'Naija Collective',genre:'Afropop',duration:'3:55',price:1000,currency:'NGN',icon:'🤝'},
+{id:'trk5',title:'Digital Hustle',artist:'Harz MC',genre:'Trap',duration:'3:10',price:500,currency:'NGN',icon:'💪'},
+{id:'trk6',title:'African Queen Remix',artist:'Aisha Sound',genre:'R&B',duration:'4:30',price:500,currency:'NGN',icon:'👑'},
+{id:'trk7',title:'Lagos to Jalingo',artist:'DJ Harz',genre:'Afrobeats',duration:'3:40',price:500,currency:'NGN',icon:'🛣️'},
+{id:'trk8',title:'Maganu Theme',artist:'Harz Digital',genre:'Electronic',duration:'2:55',price:1000,currency:'NGN',icon:'🤖'}
+];
+
+var cart=[];
+
+function renderTracks(){
+document.getElementById('trackList').innerHTML=tracks.map(function(t){
+return '<div class="track-card">'+
+'<div class="track-cover">'+t.icon+'</div>'+
+'<div class="track-title">'+t.title+'</div>'+
+'<div class="track-artist">by '+t.artist+'</div>'+
+'<div class="track-meta"><span>'+t.genre+'</span><span>⏱ '+t.duration+'</span></div>'+
+'<div class="price-row"><div class="price '+(t.currency==='NGN'?'ngn':'')+'">'+(t.currency==='NGN'?'₦':'$')+t.price+'</div>'+
+'<button class="btn-buy" onclick="addToCart(\''+t.id+'\')">+ Add</button></div>'+
+'</div>';
+}).join('');
+}
+
+function addToCart(id){
+var t=tracks.find(function(x){return x.id===id});
+if(!t)return;
+cart.push(t);
+updateCart();
+}
+
+function updateCart(){
+if(cart.length===0){document.getElementById('cartBar').style.display='none';return;}
+document.getElementById('cartBar').style.display='flex';
+var total=cart.reduce(function(s,t){return s+t.price},0);
+document.getElementById('cartTotal').textContent='₦'+total.toLocaleString();
+}
+
+function showCheckout(){
+document.getElementById('trackList').style.display='none';
+document.getElementById('cartBar').style.display='none';
+document.getElementById('checkoutSection').style.display='block';
+}
+
+var payMethod='bank';
+function selectPay(m){
+payMethod=m;
+document.querySelectorAll('.pay-method').forEach(function(e){e.classList.remove('selected')});
+event.currentTarget.classList.add('selected');
+document.querySelectorAll('.payment-detail').forEach(function(e){e.classList.remove('active')});
+document.getElementById('pay'+m.charAt(0).toUpperCase()+m.slice(1)).classList.add('active');
+}
+
+function copyText(t){navigator.clipboard.writeText(t);alert('Copied: '+t);}
+
+async function submitOrder(){
+var name=document.getElementById('custName').value||'Unknown';
+var email=document.getElementById('custEmail').value||'';
+var phone=document.getElementById('custPhone').value||'';
+
+if(!name||!email){alert('Please enter your name and email');return;}
+
+var total=cart.reduce(function(s,t){return s+t.price},0);
+var ref='MUSIC-'+Math.random().toString(36).slice(2,7).toUpperCase();
+
+// Submit to HarzPay backend
+try{
+await fetch('https://superagent-2286fb2f.base44.app/functions/harzPayOrders',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+action:'create_order',
+reference:ref,
+product_id:cart.map(function(t){return t.id}).join(','),
+product_name:cart.map(function(t){return t.title+' - '+t.artist}).join(' | '),
+amount:total,
+currency:'NGN',
+customer_name:name,
+customer_email:email,
+customer_phone:phone,
+payment_method:payMethod
+})
+});
+}catch(e){console.log('Backend sync will complete on confirmation');}
+
+document.getElementById('checkoutSection').style.display='none';
+document.getElementById('successMsg').classList.add('active');
+document.getElementById('orderRef').textContent=ref;
+}
+
+renderTracks();
+</script>
+</body>
+</html>

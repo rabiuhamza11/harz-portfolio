@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzFilm Checkout — Buy & Rent Films | Harz Digital Services</title>
+<meta name="description" content="Buy or rent films from HarzFilm. Pay with bank transfer, USDT crypto, or USSD. Instant streaming access after payment.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#050508;color:#e8e8f0;padding:16px;max-width:500px;margin:0 auto}
+.header{text-align:center;padding:12px 0}
+.header h1{font-size:1.3rem;background:linear-gradient(135deg,#7c3aed,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{font-size:.7rem;color:#6b6b80;margin-top:4px}
+.nav-back{display:inline-block;padding:8px 16px;border-radius:8px;background:#0e0e16;border:1px solid #1e1e2e;color:#6b6b80;text-decoration:none;font-size:.8rem;margin-bottom:12px}
+.film-card{background:#0e0e16;border:1px solid #1e1e2e;border-radius:14px;overflow:hidden;margin-bottom:12px}
+.film-poster{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#7c3aed,#0e0e16);display:flex;align-items:center;justify-content:center;font-size:3rem}
+.film-info{padding:14px}
+.film-title{font-size:1rem;font-weight:700}
+.film-meta{font-size:.7rem;color:#6b6b80;margin-top:4px}
+.film-desc{font-size:.75rem;color:#a0a0b0;margin-top:8px;line-height:1.5}
+.film-actions{display:flex;gap:8px;margin-top:12px}
+.btn-rent,.btn-buy{flex:1;padding:12px;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.8rem}
+.btn-rent{background:#0e0e16;border:1px solid #7c3aed;color:#7c3aed}
+.btn-buy{background:linear-gradient(135deg,#7c3aed,#ef4444);color:#fff}
+.btn-rent:active,.btn-buy:active{transform:scale(.96)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);display:none;z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.active{display:flex}
+.modal{background:#0e0e16;border:1px solid #1e1e2e;border-radius:16px;padding:20px;max-width:400px;width:100%;max-height:90vh;overflow-y:auto}
+.modal h2{font-size:1rem;margin-bottom:12px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:.7rem;color:#6b6b80;margin-bottom:4px;text-transform:uppercase}
+.form-group input{width:100%;padding:12px;background:#14141e;border:1px solid #1e1e2e;border-radius:8px;color:#e8e8f0;font-size:.85rem}
+.form-group input:focus{border-color:#7c3aed;outline:none}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.pay-method{padding:12px;background:#14141e;border:2px solid #1e1e2e;border-radius:10px;text-align:center;cursor:pointer;font-size:.75rem;color:#6b6b80}
+.pay-method.selected{border-color:#7c3aed;color:#7c3aed;background:rgba(124,58,237,.05)}
+.pay-method .icon{font-size:1.2rem;display:block;margin-bottom:4px}
+.payment-detail{background:#14141e;border:1px solid #1e1e2e;border-radius:10px;padding:14px;font-size:.8rem;line-height:1.6;display:none;margin-bottom:12px}
+.payment-detail.active{display:block}
+.payment-detail .key{color:#6b6b80;font-size:.7rem}
+.payment-detail .val{color:#e8e8f0;font-weight:600}
+.payment-detail .copy{color:#7c3aed;cursor:pointer;font-size:.7rem;float:right}
+.summary-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.85rem;border-bottom:1px solid #1e1e2e}
+.summary-row.total{font-weight:800;color:#ef4444;font-size:1.1rem;border:none;margin-top:8px}
+.btn-confirm{width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#ef4444);border:none;border-radius:12px;color:#fff;font-weight:800;font-size:.95rem;cursor:pointer;margin-top:8px}
+.success-icon{font-size:3rem;text-align:center}
+</style>
+</head>
+<body>
+<a href="harz-film-platform.html" class="nav-back">← Back to HarzFilm</a>
+<div class="header"><h1>🎬 HarzFilm Checkout</h1><p>Buy or rent films — instant streaming access</p></div>
+
+<div id="filmList"></div>
+
+<div class="modal-overlay" id="checkoutModal">
+<div class="modal">
+<span onclick="closeModal()" style="float:right;cursor:pointer;color:#6b6b80;font-size:1.2rem">✕</span>
+<h2 id="modalTitle">Checkout</h2>
+
+<div style="margin-bottom:12px">
+<div class="summary-row"><span>Film:</span><span id="sumFilm">-</span></div>
+<div class="summary-row"><span>Type:</span><span id="sumType">-</span></div>
+<div class="summary-row total"><span>Total:</span><span id="sumTotal">₦0</span></div>
+</div>
+
+<div class="form-group"><label>Name</label><input id="custName" placeholder="Your full name"></div>
+<div class="form-group"><label>Email (for streaming link)</label><input id="custEmail" type="email" placeholder="you@email.com"></div>
+<div class="form-group"><label>Phone (WhatsApp)</label><input id="custPhone" placeholder="080..."></div>
+
+<div class="pay-methods">
+<div class="pay-method selected" onclick="selectPay('bank')"><span class="icon">🏦</span>Bank Transfer</div>
+<div class="pay-method" onclick="selectPay('crypto')"><span class="icon">₿</span>USDT</div>
+<div class="pay-method" onclick="selectPay('ussd')"><span class="icon">📱</span>USSD</div>
+<div class="pay-method" onclick="selectPay('whatsapp')"><span class="icon">💬</span>WhatsApp</div>
+</div>
+
+<div class="payment-detail active" id="payBank">
+<div><span class="key">Bank:</span> <span class="val">UBA</span></div>
+<div><span class="key">Account:</span> <span class="val">Rabiu Hamza Mohammed — 2034326424</span> <span class="copy" onclick="copyText('2034326424')">copy</span></div>
+</div>
+<div class="payment-detail" id="payCrypto">
+<div><span class="key">USDT TRC20:</span> <span class="val" style="font-size:.7rem;word-break:break-all">TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr</span> <span class="copy" onclick="copyText('TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr')">copy</span></div>
+</div>
+<div class="payment-detail" id="payUssd">
+<div><span class="val">*737*2034326424*AMOUNT#</span> <span class="copy" onclick="copyText('*737*2034326424*AMOUNT#')">copy</span></div>
+</div>
+<div class="payment-detail" id="payWhatsapp">
+<a href="https://wa.me/2348028687857?text=I%20want%20to%20buy%20a%20film" style="display:block;padding:12px;background:#25d366;border-radius:10px;color:#fff;text-align:center;font-weight:700;text-decoration:none">💬 Chat to Pay</a>
+</div>
+
+<button class="btn-confirm" onclick="submitFilmOrder()">✓ I've Paid — Confirm</button>
+<div id="successDiv" style="display:none;text-align:center;padding:16px">
+<div class="success-icon">✅</div>
+<h2 style="color:#7c3aed;margin:8px 0">Order Confirmed!</h2>
+<p style="font-size:.8rem;color:#6b6b80">Reference: <span id="filmOrderRef" style="color:#7c3aed;font-weight:700"></span></p>
+<p style="font-size:.8rem;color:#6b6b80;margin-top:8px">Your streaming link will be sent to your email and WhatsApp after payment confirmation.</p>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:16px;color:#6b6b80;font-size:.65rem">
+HarzFilm | HI Water/Block Industry RC 321424 | Powered by HarzPay
+</div>
+
+<script>
+var films=[
+{id:'flm1',title:'The Last Emir',creator:'Harz Studios',category:'Drama',duration:'1h 42m',country:'Nigeria',buy:2000,rent:500,poster:'🎭',desc:'A powerful story of tradition, power, and the price of leadership in Northern Nigeria.'},
+{id:'flm2',title:'Lagos Nights',creator:'Naija Films',category:'Thriller',duration:'1h 28m',country:'Nigeria',buy:2000,rent:500,poster:'🌃',desc:'A gripping thriller set in the bustling streets of Lagos after dark.'},
+{id:'flm3',title:'Jalingo Express',creator:'Harz Studios',category:'Action',duration:'1h 55m',country:'Nigeria',buy:2000,rent:500,poster:'🚆',desc:'An action-packed journey through the heart of Taraba State.'},
+{id:'flm4',title:'Digital Hustle',creator:'Tech Films',category:'Documentary',duration:'58m',country:'Nigeria',buy:1500,rent:300,poster:'💻',desc:'The untold story of Nigeria\'s tech revolution and the young founders changing everything.'},
+{id:'flm5',title:'The Healer\'s Gift',creator:'Aisha Productions',category:'Drama',duration:'1h 38m',country:'Nigeria',buy:2000,rent:500,poster:'🌿',desc:'A mystical journey of a traditional healer torn between ancient wisdom and modern medicine.'},
+{id:'flm6',title:'Naija Comedy Night',creator:'Laugh Factory',category:'Comedy',duration:'1h 12m',country:'Nigeria',buy:1500,rent:300,poster:'😂',desc:'The funniest comedians in Nigeria on one stage. Pure entertainment.'},
+{id:'flm7',title:'Sahara Crossing',creator:'Epic Films',category:'Adventure',duration:'2h 5m',country:'Nigeria',buy:2500,rent:800,poster:'🏜️',desc:'An epic adventure across the Sahara Desert that will leave you breathless.'},
+{id:'flm8',title:'Echoes of Yesterday',creator:'Harz Studios',category:'Romance',duration:'1h 35m',country:'Nigeria',buy:2000,rent:500,poster:'💔',desc:'A love story that transcends time, culture, and distance.'}
+];
+
+var selectedFilm=null;
+var selectedType=null;
+
+function renderFilms(){
+document.getElementById('filmList').innerHTML=films.map(function(f){
+return '<div class="film-card">'+
+'<div class="film-poster">'+f.poster+'</div>'+
+'<div class="film-info">'+
+'<div class="film-title">'+f.title+'</div>'+
+'<div class="film-meta">by '+f.creator+' • '+f.category+' • '+f.duration+' • '+f.country+'</div>'+
+'<div class="film-desc">'+f.desc+'</div>'+
+'<div class="film-actions">'+
+'<button class="btn-rent" onclick="openCheckout(\''+f.id+'\',\'rent\')">Rent ₦'+f.rent+'</button>'+
+'<button class="btn-buy" onclick="openCheckout(\''+f.id+'\',\'buy\')">Buy ₦'+f.buy+'</button>'+
+'</div>'+
+'</div></div>';
+}).join('');
+}
+
+function openCheckout(id,type){
+selectedFilm=films.find(function(f){return f.id===id});
+selectedType=type;
+var amount=type==='buy'?selectedFilm.buy:selectedFilm.rent;
+document.getElementById('modalTitle').textContent=selectedFilm.title+' — '+(type==='buy'?'Buy':'Rent');
+document.getElementById('sumFilm').textContent=selectedFilm.title;
+document.getElementById('sumType').textContent=type==='buy'?'Purchase (lifetime access)':'48-hour rental';
+document.getElementById('sumTotal').textContent='₦'+amount.toLocaleString();
+document.getElementById('checkoutModal').classList.add('active');
+document.getElementById('successDiv').style.display='none';
+document.querySelector('.modal .btn-confirm').style.display='block';
+document.querySelectorAll('.form-group').forEach(function(e){e.style.display='block'});
+document.querySelectorAll('.pay-methods').forEach(function(e){e.style.display='grid'});
+document.querySelectorAll('.payment-detail').forEach(function(e){e.style.display='block'});
+}
+
+function closeModal(){document.getElementById('checkoutModal').classList.remove('active');}
+
+var payMethod='bank';
+function selectPay(m){
+payMethod=m;
+document.querySelectorAll('.pay-method').forEach(function(e){e.classList.remove('selected')});
+event.currentTarget.classList.add('selected');
+document.querySelectorAll('.payment-detail').forEach(function(e){e.classList.remove('active')});
+document.getElementById('pay'+m.charAt(0).toUpperCase()+m.slice(1)).classList.add('active');
+}
+
+function copyText(t){navigator.clipboard.writeText(t);alert('Copied: '+t);}
+
+async function submitFilmOrder(){
+var name=document.getElementById('custName').value||'Unknown';
+var email=document.getElementById('custEmail').value||'';
+var phone=document.getElementById('custPhone').value||'';
+if(!name||!email){alert('Please enter your name and email');return;}
+var amount=selectedType==='buy'?selectedFilm.buy:selectedFilm.rent;
+var ref='FILM-'+Math.random().toString(36).slice(2,7).toUpperCase();
+try{
+await fetch('https://superagent-2286fb2f.base44.app/functions/harzPayOrders',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+action:'create_order',
+reference:ref,
+product_id:selectedFilm.id,
+product_name:selectedFilm.title+' - '+selectedType.toUpperCase(),
+amount:amount,
+currency:'NGN',
+customer_name:name,
+customer_email:email,
+customer_phone:phone,
+payment_method:payMethod
+})
+});
+}catch(e){}
+document.querySelector('.btn-confirm').style.display='none';
+document.querySelectorAll('.form-group').forEach(function(e){e.style.display='none'});
+document.querySelectorAll('.pay-methods').forEach(function(e){e.style.display='none'});
+document.querySelectorAll('.payment-detail').forEach(function(e){e.style.display='none'});
+document.getElementById('successDiv').style.display='block';
+document.getElementById('filmOrderRef').textContent=ref;
+}
+
+renderFilms();
+</script>
+</body>
+</html>
