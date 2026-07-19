@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Clip Path Generator | Harz</title>
+<meta name="description" content="Generate CSS clip-path shapes. Polygons, circles, ellipses, and custom shapes with live preview.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:700px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.app{grid-template-columns:1fr}}
+.controls{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px}
+.shape-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.shape-btn{background:#1c1c1c;border:1px solid #2a2a2a;color:#a3a3a3;padding:10px;border-radius:8px;text-align:center;font-size:12px;cursor:pointer}
+.shape-btn.active{background:#06b6d4;border-color:#06b6d4;color:#000;font-weight:700}
+.preview{background:#141414;border:1px solid #2a2a2a;border-radius:12px;min-height:300px;display:flex;align-items:center;justify-content:center;padding:30px}
+.shape{width:180px;height:180px;background:linear-gradient(135deg,#06b6d4,#8b5cf6);transition:clip-path 0.2s}
+.code{grid-column:1/-1;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:14px;font-family:monospace;font-size:13px;color:#06b6d4;word-break:break-all}
+.copy-btn{grid-column:1/-1;background:#06b6d4;color:#000;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;text-align:center}
+</style>
+</head>
+<body>
+<h1>CSS Clip Path Generator</h1>
+<div class="app">
+  <div class="controls">
+    <div class="shape-grid" id="shapes">
+      <div class="shape-btn active" onclick="setShape('polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',this)">Diamond</div>
+      <div class="shape-btn" onclick="setShape('polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',this)">Pentagon</div>
+      <div class="shape-btn" onclick="setShape('polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',this)">Hexagon</div>
+      <div class="shape-btn" onclick="setShape('polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',this)">Octagon</div>
+      <div class="shape-btn" onclick="setShape('polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 100%, 20% 100%, 0% 70%, 0% 35%, 20% 10%)',this)">Star</div>
+      <div class="shape-btn" onclick="setShape('circle(50% at 50% 50%)',this)">Circle</div>
+      <div class="shape-btn" onclick="setShape('ellipse(50% 40% at 50% 50%)',this)">Ellipse</div>
+      <div class="shape-btn" onclick="setShape('polygon(0% 0%, 100% 0%, 100% 75%, 50% 100%, 0% 75%)',this)">Arrow</div>
+      <div class="shape-btn" onclick="setShape('polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%)',this)">Right Arrow</div>
+      <div class="shape-btn" onclick="setShape('polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)',this)">Octagon 2</div>
+      <div class="shape-btn" onclick="setShape('polygon(50% 0%, 100% 100%, 0% 100%)',this)">Triangle</div>
+      <div class="shape-btn" onclick="setShape('inset(20% 20% 20% 20% round 10px)',this)">Inset Round</div>
+    </div>
+  </div>
+  <div class="preview"><div class="shape" id="shape"></div></div>
+  <div class="code" id="code"></div>
+  <button class="copy-btn" onclick="copyCode()">Copy CSS</button>
+</div>
+<script>
+function setShape(clip,el){
+  document.querySelectorAll('.shape-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('shape').style.clipPath=clip;
+  document.getElementById('code').textContent='clip-path: '+clip+';';
+}
+setShape('polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',document.querySelector('.shape-btn'));
+function copyCode(){navigator.clipboard.writeText(document.getElementById('code').textContent);alert('Clip-path CSS copied!');}
+</script>
+</body>
+</html>
