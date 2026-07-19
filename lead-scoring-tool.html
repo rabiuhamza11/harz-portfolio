@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead Scoring Tool — Rank Your Prospects | Harz</title>
+<meta name="description" content="Score and rank your leads based on budget, need, authority, and timeline. Focus on the best prospects.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.add-bar{display:flex;gap:6px;margin-bottom:16px}
+.add-bar input{flex:1;background:#141414;border:1px solid #2a2a2a;color:#fff;padding:12px 16px;border-radius:8px;font-size:14px}
+.add-bar button{background:#10b981;color:#000;padding:12px 24px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+.list{display:grid;gap:10px}
+.lead{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:14px}
+.lead-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.lead-name{font-weight:700;font-size:15px}
+.lead-score{font-weight:800;font-size:20px;padding:4px 12px;border-radius:20px}
+.score-high{background:rgba(16,185,129,0.15);color:#10b981}
+.score-mid{background:rgba(245,158,11,0.15);color:#f59e0b}
+.score-low{background:rgba(239,68,68,0.15);color:#ef4444}
+.lead-attrs{font-size:12px;color:#a3a3a3}
+.lead-attrs span{margin-right:8px}
+.lead-del{background:none;border:none;color:#ef4444;cursor:pointer;font-size:12px}
+</style>
+</head>
+<body>
+<h1>Lead Scoring Tool</h1>
+<div class="app">
+  <div class="add-bar">
+    <input type="text" id="leadName" placeholder="Lead name..." onkeypress="if(event.key==='Enter')addLead()">
+    <button onclick="addLead()">Add Lead</button>
+  </div>
+  <div class="list" id="list"></div>
+</div>
+<script>
+let leads = JSON.parse(localStorage.getItem('leadScores')||'[]');
+function addLead() {
+  const n=document.getElementById('leadName').value.trim();
+  if(!n)return;
+  leads.push({name:n,budget:5,need:5,authority:5,timeline:5,id:Date.now()});
+  localStorage.setItem('leadScores',JSON.stringify(leads));
+  document.getElementById('leadName').value='';
+  render();
+}
+function delLead(i){leads.splice(i,1);localStorage.setItem('leadScores',JSON.stringify(leads));render();}
+function updateScore(i,f,v){leads[i][f]=parseInt(v);localStorage.setItem('leadScores',JSON.stringify(leads));render();}
+function render() {
+  if(!leads.length){document.getElementById('list').innerHTML='<p style="text-align:center;color:#555;padding:20px">No leads yet. Add one above.</p>';return;}
+  const sorted=[...leads].sort((a,b)=>(b.budget+b.need+b.authority+b.timeline)-(a.budget+a.need+a.authority+a.timeline));
+  document.getElementById('list').innerHTML=sorted.map(l=>{
+    const total=l.budget+l.need+l.authority+l.timeline;
+    const cls=total>=30?'score-high':total>=20?'score-mid':'score-low';
+    return `<div class="lead">
+      <div class="lead-header"><span class="lead-name">${l.name}</span><span class="lead-score ${cls}">${total}/40</span></div>
+      <div class="lead-attrs">
+        Budget:<select onchange="updateScore(${leads.indexOf(l)},'budget',this.value)"><option value="1" ${l.budget==1?'selected':''}>1</option><option value="2" ${l.budget==2?'selected':''}>2</option><option value="3" ${l.budget==3?'selected':''}>3</option><option value="4" ${l.budget==4?'selected':''}>4</option><option value="5" ${l.budget==5?'selected':''}>5</option></select>
+        Need:<select onchange="updateScore(${leads.indexOf(l)},'need',this.value)"><option value="1" ${l.need==1?'selected':''}>1</option><option value="2" ${l.need==2?'selected':''}>2</option><option value="3" ${l.need==3?'selected':''}>3</option><option value="4" ${l.need==4?'selected':''}>4</option><option value="5" ${l.need==5?'selected':''}>5</option></select>
+        Authority:<select onchange="updateScore(${leads.indexOf(l)},'authority',this.value)"><option value="1" ${l.authority==1?'selected':''}>1</option><option value="2" ${l.authority==2?'selected':''}>2</option><option value="3" ${l.authority==3?'selected':''}>3</option><option value="4" ${l.authority==4?'selected':''}>4</option><option value="5" ${l.authority==5?'selected':''}>5</option></select>
+        Timeline:<select onchange="updateScore(${leads.indexOf(l)},'timeline',this.value)"><option value="1" ${l.timeline==1?'selected':''}>1</option><option value="2" ${l.timeline==2?'selected':''}>2</option><option value="3" ${l.timeline==3?'selected':''}>3</option><option value="4" ${l.timeline==4?'selected':''}>4</option><option value="5" ${l.timeline==5?'selected':''}>5</option></select>
+      </div>
+      <button class="lead-del" onclick="delLead(${leads.indexOf(l)})">Delete</button>
+    </div>`;
+  }).join('');
+}
+render();
+</script>
+</body>
+</html>

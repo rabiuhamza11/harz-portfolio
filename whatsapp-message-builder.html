@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Message Template Builder | Harz</title>
+<meta name="description" content="Create reusable WhatsApp message templates for sales, support, follow-ups, and broadcasts.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.selector{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.selector button{background:#141414;border:1px solid #2a2a2a;color:#a3a3a3;padding:8px 16px;border-radius:20px;font-size:13px;cursor:pointer}
+.selector button.active{background:#25D366;border-color:#25D366;color:#000;font-weight:700}
+.editor{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.editor textarea{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:12px;border-radius:8px;font-size:14px;font-family:inherit;resize:vertical;min-height:120px;margin-bottom:10px}
+.editor input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:14px;margin-bottom:8px}
+.preview{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.preview-label{font-size:12px;color:#a3a3a3;margin-bottom:8px}
+.preview-text{font-size:14px;white-space:pre-wrap;font-family:inherit}
+.actions{display:flex;gap:10px}
+.btn{flex:1;padding:14px;border-radius:8px;font-weight:700;font-size:15px;border:none;cursor:pointer}
+.btn-wa{background:#25D366;color:#fff}
+.btn-copy{background:#1c1c1c;color:#fff;border:1px solid #2a2a2a}
+</style>
+</head>
+<body>
+<h1>WhatsApp Message Builder</h1>
+<div class="app">
+  <div class="selector" id="selector"></div>
+  <div class="editor">
+    <input type="text" id="templateName" placeholder="Template name (e.g. 'Welcome Message')">
+    <textarea id="msgText" placeholder="Type your message..."></textarea>
+  </div>
+  <div class="preview">
+    <div class="preview-label">Preview:</div>
+    <div class="preview-text" id="preview"></div>
+  </div>
+  <div class="actions">
+    <button class="btn btn-wa" onclick="sendWA()">Send via WhatsApp</button>
+    <button class="btn btn-copy" onclick="copyMsg()">Copy Message</button>
+  </div>
+</div>
+<script>
+const TEMPLATES={
+  'Welcome':'Welcome to Harz Digital Services!\n\nThank you for reaching out. How can I help you today?\n\nOur services:\n1. AI Chatbots\n2. Web Apps\n3. Logo Design\n4. Business Plans\n5. Consultations\n\nType the number or tell me what you need.',
+  'Follow Up':'Hi {name},\n\nFollowing up on our conversation about {topic}. Have you had a chance to review?\n\nHappy to answer any questions. Just reply here or call 08028687857.',
+  'Payment Request':'Hi {name},\n\nPayment of N{amount} for {product/service}.\n\nBank Transfer:\nUBA - 2034326424\nRabiu Hamza Mohammed\n\nUSDT TRC20:\nTVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr\n\nSend proof of payment here after transfer. Thank you!',
+  'Order Confirmation':'Order Confirmed!\n\nProduct: {product}\nAmount: N{amount}\nReference: {ref}\n\nWe are now processing your order. You will receive updates here.\n\nThank you for your business!',
+  'Delivery Ready':'Hi {name},\n\nYour order is ready!\n\nProduct: {product}\nDelivery: {method}\n\nYou can download it here: {link}\n\nAny issues? WhatsApp 08028687857.',
+  'Broadcast':'Hello!\n\n{announcement}\n\nVisit our website: https://rabiuhamza11.github.io/harz-portfolio/\nWhatsApp: 08028687857\n\nHarz Digital Services',
+  'Support Reply':'Hi {name},\n\nThank you for reaching out about {issue}.\n\nHere\'s what I suggest: {solution}\n\nNeed more help? Call 08028687857 or reply here.',
+  'Promo':'SPECIAL OFFER!\n\n{offer details}\n\nValid until {date}. Don\'t miss out!\n\nOrder now: https://rabiuhamza11.github.io/harz-portfolio/\nWhatsApp: 08028687857'
+};
+function buildSelector(){
+  document.getElementById('selector').innerHTML=Object.keys(TEMPLATES).map(t=>`<button onclick="loadTemplate('${t}',this)">${t}</button>`).join('');
+  loadTemplate('Welcome',document.querySelector('#selector button'));
+}
+function loadTemplate(name,el){
+  document.querySelectorAll('#selector button').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('templateName').value=name;
+  document.getElementById('msgText').value=TEMPLATES[name];
+  updatePreview();
+}
+function updatePreview(){
+  document.getElementById('preview').textContent=document.getElementById('msgText').value;
+}
+document.getElementById('msgText').addEventListener('input',updatePreview);
+function sendWA(){
+  window.open('https://wa.me/2348028687857?text='+encodeURIComponent(document.getElementById('msgText').value),'_blank');
+}
+function copyMsg(){
+  navigator.clipboard.writeText(document.getElementById('msgText').value);
+  alert('Message copied!');
+}
+buildSelector();
+</script>
+</body>
+</html>

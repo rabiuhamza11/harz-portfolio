@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Startup Cost Calculator — Estimate Your Launch Costs | Harz</title>
+<meta name="description" content="Calculate startup costs for your Nigerian business. One-time and monthly costs with break-even analysis.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:500px;margin:0 auto}
+.section{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.section h3{font-size:14px;color:#f59e0b;margin-bottom:10px}
+.cost-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:13px}
+.cost-row input{width:120px;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:6px 10px;border-radius:6px;font-size:13px;text-align:right}
+.cost-row input.name{width:auto;flex:1;text-align:left;margin-right:8px}
+.add-btn{background:#1c1c1c;border:1px dashed #2a2a2a;color:#a3a3a3;padding:8px;border-radius:8px;width:100%;cursor:pointer;font-size:13px;margin-top:6px}
+.totals{background:#1c1c1c;border:2px solid #f59e0b;border-radius:12px;padding:16px;margin-bottom:16px}
+.total-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;border-bottom:1px solid #2a2a2a}
+.total-row span:first-child{color:#a3a3a3}
+.total-row span:last-child{font-weight:700}
+.highlight{color:#f59e0b !important;font-size:18px !important}
+</style>
+</head>
+<body>
+<h1>Startup Cost Calculator</h1>
+<div class="app">
+  <div class="section"><h3>One-Time Costs</h3><div id="oneTimeItems"></div><button class="add-btn" onclick="addItem('oneTime')">+ Add One-Time Cost</button></div>
+  <div class="section"><h3>Monthly Costs</h3><div id="monthlyItems"></div><button class="add-btn" onclick="addItem('monthly')">+ Add Monthly Cost</button></div>
+  <div class="totals">
+    <div class="total-row"><span>Total One-Time Costs</span><span id="oneTimeTotal" class="highlight">N0</span></div>
+    <div class="total-row"><span>Monthly Operating Costs</span><span id="monthlyTotal">N0</span></div>
+    <div class="total-row"><span>3-Month Runway</span><span id="runway3">N0</span></div>
+    <div class="total-row"><span>6-Month Runway</span><span id="runway6">N0</span></div>
+    <div class="total-row"><span>12-Month Runway</span><span id="runway12" class="highlight">N0</span></div>
+  </div>
+</div>
+<script>
+let oneTime=[{name:'CAC Registration',amount:25000},{name:'Website/Domain',amount:15000},{name:'Equipment',amount:100000}];
+let monthly=[{name:'Internet',amount:15000},{name:'Phone/Data',amount:10000},{name:'Software',amount:5000},{name:'Marketing',amount:20000}];
+function formatN(n){return 'N'+Math.round(n).toLocaleString()}
+function addItem(type){
+  const arr=type==='oneTime'?oneTime:monthly;
+  arr.push({name:'',amount:0});
+  render();
+}
+function updateItem(type,i,field,val){
+  const arr=type==='oneTime'?oneTime:monthly;
+  arr[i][field]=field==='amount'?(parseFloat(val)||0):val;
+  renderTotals();
+}
+function delItem(type,i){
+  const arr=type==='oneTime'?oneTime:monthly;
+  arr.splice(i,1);
+  render();
+}
+function render(){
+  document.getElementById('oneTimeItems').innerHTML=oneTime.map((it,i)=>`
+    <div class="cost-row"><input class="name" type="text" value="${it.name}" placeholder="Cost name" oninput="updateItem('oneTime',${i},'name',this.value)"><input type="number" value="${it.amount}" oninput="updateItem('oneTime',${i},'amount',this.value)"><button onclick="delItem('oneTime',${i})" style="background:none;border:none;color:#ef4444;cursor:pointer">X</button></div>
+  `).join('');
+  document.getElementById('monthlyItems').innerHTML=monthly.map((it,i)=>`
+    <div class="cost-row"><input class="name" type="text" value="${it.name}" placeholder="Cost name" oninput="updateItem('monthly',${i},'name',this.value)"><input type="number" value="${it.amount}" oninput="updateItem('monthly',${i},'amount',this.value)"><button onclick="delItem('monthly',${i})" style="background:none;border:none;color:#ef4444;cursor:pointer">X</button></div>
+  `).join('');
+  renderTotals();
+}
+function renderTotals(){
+  const ot=oneTime.reduce((s,i)=>s+i.amount,0);
+  const mt=monthly.reduce((s,i)=>s+i.amount,0);
+  document.getElementById('oneTimeTotal').textContent=formatN(ot);
+  document.getElementById('monthlyTotal').textContent=formatN(mt);
+  document.getElementById('runway3').textContent=formatN(ot+mt*3);
+  document.getElementById('runway6').textContent=formatN(ot+mt*6);
+  document.getElementById('runway12').textContent=formatN(ot+mt*12);
+}
+render();
+</script>
+</body>
+</html>

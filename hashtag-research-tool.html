@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hashtag Research Tool — Find Trending Hashtags | Harz</title>
+<meta name="description" content="Generate and organize hashtags for Instagram, TikTok, Twitter, and LinkedIn. Copy and paste ready.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.input-bar{display:flex;gap:8px;margin-bottom:20px}
+.input-bar input{flex:1;background:#141414;border:1px solid #2a2a2a;color:#fff;padding:12px 16px;border-radius:8px;font-size:14px}
+.input-bar button{background:#ec4899;color:#fff;padding:12px 24px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+.platforms{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.platform-btn{padding:6px 16px;background:#141414;border:1px solid #2a2a2a;border-radius:20px;font-size:13px;color:#a3a3a3;cursor:pointer}
+.platform-btn.active{background:#ec4899;border-color:#ec4899;color:#fff}
+.hashtag-groups{display:grid;gap:12px}
+.hashtag-group{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:14px}
+.group-title{font-size:13px;font-weight:700;color:#ec4899;margin-bottom:8px}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.tag{background:#1c1c1c;border:1px solid #2a2a2a;padding:3px 10px;border-radius:12px;font-size:12px;color:#a3a3a3}
+.copy-group-btn{background:#1c1c1c;border:1px solid #2a2a2a;color:#a3a3a3;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer}
+.copy-group-btn:hover{border-color:#ec4899;color:#ec4899}
+.copy-all-btn{display:block;width:200px;margin:16px auto;background:#ec4899;color:#fff;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;text-align:center}
+</style>
+</head>
+<body>
+<h1>Hashtag Research Tool</h1>
+<div class="app">
+  <div class="platforms">
+    <div class="platform-btn active" onclick="setPlatform('instagram',this)">Instagram</div>
+    <div class="platform-btn" onclick="setPlatform('tiktok',this)">TikTok</div>
+    <div class="platform-btn" onclick="setPlatform('twitter',this)">Twitter/X</div>
+    <div class="platform-btn" onclick="setPlatform('linkedin',this)">LinkedIn</div>
+  </div>
+  <div class="input-bar">
+    <input type="text" id="topic" placeholder="Enter your topic (e.g. fashion, food, AI)" onkeypress="if(event.key==='Enter')generate()">
+    <button onclick="generate()">Generate</button>
+  </div>
+  <div class="hashtag-groups" id="groups"></div>
+  <button class="copy-all-btn" onclick="copyAll()">Copy All Hashtags</button>
+</div>
+<script>
+let platform='instagram';
+let allTags=[];
+function setPlatform(p,el){
+  platform=p;
+  document.querySelectorAll('.platform-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  generate();
+}
+function generate(){
+  const topic=document.getElementById('topic').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'')||'business';
+  const base=[`#${topic}`,`#${topic}nigeria`,`#${topic}lagos`,`#${topic}africa`];
+  const broad=['#nigeria','#naija','#lagos','#abuja','#madeinnigeria','#nigerianbusiness','#africanbusiness','#entrepreneur','#smallbusiness','#startup','#hustle','#growth'];
+  const trending=['#trending','#viral','#fyp','#explore','#discover','#new','#2026','#content','#creator','#digitalmarketing'];
+  const niche={
+    instagram:['#instadaily','#instagood','#reels','#instabusiness','#instalike','#follow','#like4like'],
+    tiktok:['#fyp','#foryou','#viral','#tiktoknigeria','#tiktokbusiness','#duet','#trending'],
+    twitter:['#thread','#nigeria Twitter','#NGbiz','#startupNG','#techNigeria'],
+    linkedin:['#professional','#business','#networking','#career','#leadership','#industry','#thoughtleadership']
+  };
+  allTags=[...base,...broad,...trending,...niche[platform]];
+  const groups=[
+    {title:'Topic-Specific',tags:base},
+    {title:'Broad Reach',tags:broad},
+    {title:'Trending',tags:trending},
+    {title:platform.charAt(0).toUpperCase()+platform.slice(1)+' Specific',tags:niche[platform]}
+  ];
+  document.getElementById('groups').innerHTML=groups.map((g,i)=>`
+    <div class="hashtag-group">
+      <div class="group-title">${g.title} (${g.tags.length})</div>
+      <div class="tags">${g.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <button class="copy-group-btn" onclick="copyGroup(${i})">Copy Group</button>
+    </div>
+  `).join('');
+  window.groups=groups;
+}
+function copyGroup(i){
+  navigator.clipboard.writeText(window.groups[i].tags.join(' '));
+  alert('Copied '+window.groups[i].tags.length+' hashtags!');
+}
+function copyAll(){
+  navigator.clipboard.writeText(allTags.join(' '));
+  alert('Copied '+allTags.length+' hashtags!');
+}
+generate();
+</script>
+</body>
+</html>
