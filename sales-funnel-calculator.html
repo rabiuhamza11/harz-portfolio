@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Funnel Calculator — Calculate Conversion Rates | Harz</title>
+<meta name="description" content="Calculate conversion rates at each stage of your sales funnel. Identify bottlenecks and optimize.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.calc{max-width:500px;margin:0 auto}
+.funnel-stage{background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:8px}
+.funnel-stage label{font-size:12px;color:#a3a3a3;margin-bottom:4px;display:block}
+.funnel-stage input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:15px}
+.funnel-vis{margin:20px 0}
+.fbar{text-align:center;padding:10px;border-radius:6px;margin:3px auto;font-size:13px;font-weight:600}
+.summary{background:#1c1c1c;border:2px solid #06b6d4;border-radius:12px;padding:16px;margin-bottom:16px}
+.summary-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;border-bottom:1px solid #2a2a2a}
+.summary-row span:first-child{color:#a3a3a3}
+.summary-row span:last-child{font-weight:700}
+.highlight{color:#06b6d4;font-size:18px}
+</style>
+</head>
+<body>
+<h1>Sales Funnel Calculator</h1>
+<div class="calc">
+  <div class="funnel-stage"><label>1. Visitors / Leads</label><input type="number" id="s1" value="1000" oninput="calc()"></div>
+  <div class="funnel-stage"><label>2. Engaged (viewed product/content)</label><input type="number" id="s2" value="300" oninput="calc()"></div>
+  <div class="funnel-stage"><label>3. Interested (added to cart / inquired)</label><input type="number" id="s3" value="80" oninput="calc()"></div>
+  <div class="funnel-stage"><label>4. Purchased</label><input type="number" id="s4" value="20" oninput="calc()"></div>
+  <div class="funnel-stage"><label>5. Returned / Referred</label><input type="number" id="s5" value="5" oninput="calc()"></div>
+  <div class="funnel-vis" id="vis"></div>
+  <div class="summary" id="summary"></div>
+</div>
+<script>
+function pct(a,b){return b>0?((a/b)*100).toFixed(1):'0.0'}
+function w(s1,s2){return s1>0?Math.max(20,(s2/s1*100)):20}
+function calc(){
+  const s=[parseInt(document.getElementById('s1').value)||0,parseInt(document.getElementById('s2').value)||0,parseInt(document.getElementById('s3').value)||0,parseInt(document.getElementById('s4').value)||0,parseInt(document.getElementById('s5').value)||0];
+  const cols=['#06b6d4','#3b82f6','#8b5cf6','#ec4899','#f59e0b'];
+  const labels=['Visitors','Engaged','Interested','Purchased','Returned'];
+  document.getElementById('vis').innerHTML=s.map((v,i)=>`<div class="fbar" style="width:${w(s[0],v)}%;background:${cols[i]}22;color:${cols[i]};border:1px solid ${cols[i]}44">${labels[i]}: ${v} (${pct(v,s[0])}%)</div>`).join('');
+  document.getElementById('summary').innerHTML=`
+    <div class="summary-row"><span>Engagement Rate</span><span>${pct(s[1],s[0])}%</span></div>
+    <div class="summary-row"><span>Interest Rate</span><span>${pct(s[2],s[1])}%</span></div>
+    <div class="summary-row"><span>Conversion Rate (visit→buy)</span><span class="highlight">${pct(s[3],s[0])}%</span></div>
+    <div class="summary-row"><span>Checkout Rate (interest→buy)</span><span>${pct(s[3],s[2])}%</span></div>
+    <div class="summary-row"><span>Retention Rate</span><span>${pct(s[4],s[3])}%</span></div>
+    <div class="summary-row"><span>Overall Funnel Efficiency</span><span class="highlight">${pct(s[4],s[0])}%</span></div>`;
+}
+calc();
+</script>
+</body>
+</html>

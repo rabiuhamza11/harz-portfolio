@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Persona Builder — Know Your Audience | Harz</title>
+<meta name="description" content="Create detailed customer personas for your business. Define demographics, pain points, goals, and buying behavior.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.persona-list{display:grid;gap:12px;margin-bottom:20px}
+.persona-card{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:20px;position:relative}
+.persona-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.persona-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+.persona-name{font-weight:700;font-size:16px;flex:1}
+.persona-name input{background:transparent;border:none;color:#fff;font-size:16px;font-weight:700;width:100%}
+.persona-name input:focus{outline:none;border-bottom:1px solid #06b6d4}
+.del-btn{background:none;border:1px solid #2a2a2a;color:#ef4444;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px}
+.field{margin-bottom:10px}
+.field label{font-size:12px;color:#a3a3a3;margin-bottom:3px;display:block}
+.field input,.field select,.field textarea{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:8px 12px;border-radius:6px;font-size:13px;font-family:inherit}
+.field textarea{resize:vertical;min-height:50px}
+.add-btn{background:#1c1c1c;border:1px dashed #2a2a2a;color:#a3a3a3;padding:12px;border-radius:8px;width:100%;cursor:pointer;font-size:14px}
+.add-btn:hover{border-color:#06b6d4;color:#06b6d4}
+.export-btn{display:block;width:200px;margin:20px auto;background:#06b6d4;color:#000;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;text-align:center}
+</style>
+</head>
+<body>
+<h1>Customer Persona Builder</h1>
+<div class="app">
+  <div class="persona-list" id="list"></div>
+  <button class="add-btn" onclick="addPersona()">+ Add Customer Persona</button>
+  <button class="export-btn" onclick="exportAll()">Export to WhatsApp</button>
+</div>
+<script>
+const colors=['#06b6d4','#8b5cf6','#ec4899','#f59e0b','#10b981'];
+let personas=JSON.parse(localStorage.getItem('personas')||'[]')||[];
+function addPersona(){
+  personas.push({name:'New Persona',age:'',gender:'Male',location:'',income:'',job:'',goals:'',pain:'',channels:'',objections:''});
+  save();render();
+}
+function delPersona(i){personas.splice(i,1);save();render();}
+function update(i,f,v){personas[i][f]=v;save();}
+function save(){localStorage.setItem('personas',JSON.stringify(personas));}
+function render(){
+  if(!personas.length){document.getElementById('list').innerHTML='<p style="text-align:center;color:#555;padding:20px">No personas yet. Click "Add Customer Persona" to start.</p>';return;}
+  document.getElementById('list').innerHTML=personas.map((p,i)=>`
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar" style="background:${colors[i%5]}22;color:${colors[i%5]}">${(p.name||'?')[0].toUpperCase()}</div>
+        <div class="persona-name"><input type="text" value="${p.name}" oninput="update(${i},'name',this.value)"></div>
+        <button class="del-btn" onclick="delPersona(${i})">Delete</button>
+      </div>
+      <div class="field"><label>Age Range</label><input type="text" value="${p.age}" placeholder="e.g. 25-35" oninput="update(${i},'age',this.value)"></div>
+      <div class="field"><label>Gender</label><select onchange="update(${i},'gender',this.value)"><option ${p.gender==='Male'?'selected':''}>Male</option><option ${p.gender==='Female'?'selected':''}>Female</option><option ${p.gender==='Any'?'selected':''}>Any</option></select></div>
+      <div class="field"><label>Location</label><input type="text" value="${p.location}" placeholder="e.g. Lagos, Nigeria" oninput="update(${i},'location',this.value)"></div>
+      <div class="field"><label>Income Range</label><input type="text" value="${p.income}" placeholder="e.g. N100K-N300K/month" oninput="update(${i},'income',this.value)"></div>
+      <div class="field"><label>Job/Occupation</label><input type="text" value="${p.job}" placeholder="e.g. Small business owner" oninput="update(${i},'job',this.value)"></div>
+      <div class="field"><label>Goals & Needs</label><textarea oninput="update(${i},'goals',this.value)" placeholder="What are they trying to achieve?">${p.goals}</textarea></div>
+      <div class="field"><label>Pain Points</label><textarea oninput="update(${i},'pain',this.value)" placeholder="What problems do they face?">${p.pain}</textarea></div>
+      <div class="field"><label>Preferred Channels</label><input type="text" value="${p.channels}" placeholder="e.g. WhatsApp, Instagram" oninput="update(${i},'channels',this.value)"></div>
+      <div class="field"><label>Common Objections</label><input type="text" value="${p.objections}" placeholder="e.g. Too expensive, no time" oninput="update(${i},'objections',this.value)"></div>
+    </div>`).join('');
+}
+function exportAll(){
+  let text='Customer Personas\n\n';
+  personas.forEach((p,i)=>{
+    text+=`Persona ${i+1}: ${p.name}\nAge: ${p.age}\nGender: ${p.gender}\nLocation: ${p.location}\nIncome: ${p.income}\nJob: ${p.job}\nGoals: ${p.goals}\nPain Points: ${p.pain}\nChannels: ${p.channels}\nObjections: ${p.objections}\n\n`;
+  });
+  window.open('https://wa.me/2348028687857?text='+encodeURIComponent(text),'_blank');
+}
+render();
+</script>
+</body>
+</html>

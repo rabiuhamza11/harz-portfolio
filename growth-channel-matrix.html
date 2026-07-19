@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Channel Matrix — Find Your Best Marketing Channels | Harz</title>
+<meta name="description" content="Score and compare marketing channels based on cost, effort, impact, and speed. Find your best growth channels.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.matrix{display:grid;gap:8px;margin-bottom:20px}
+.channel{display:flex;align-items:center;gap:8px;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:10px}
+.channel-name{flex:1;font-weight:600;font-size:13px}
+.score-cell{text-align:center;min-width:50px}
+.score-cell label{font-size:9px;color:#555;display:block}
+.score-cell select{background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:3px;border-radius:4px;font-size:12px}
+.total{font-weight:800;font-size:16px;text-align:center;min-width:40px}
+.del{background:none;border:1px solid #2a2a2a;color:#ef4444;padding:2px 8px;border-radius:4px;cursor:pointer;font-size:11px}
+.header-row{display:flex;align-items:center;gap:8px;padding:0 10px;margin-bottom:6px}
+.header-row .channel-name{color:#a3a3a3;font-size:12px}
+.header-row .score-cell{color:#06b6d4;font-size:10px;font-weight:700}
+.add-btn{background:#1c1c1c;border:1px dashed #2a2a2a;color:#a3a3a3;padding:10px;border-radius:8px;width:100%;cursor:pointer;margin-bottom:16px}
+.ranking{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px}
+.ranking h3{font-size:14px;color:#06b6d4;margin-bottom:10px}
+.rank-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #2a2a2a;font-size:13px}
+.rank-item span:first-child{font-weight:600}
+.rank-score{font-weight:800}
+.gold{color:#fbbf24}.silver{color:#a3a3a3}.bronze{color:#f59e0b}
+</style>
+</head>
+<body>
+<h1>Growth Channel Matrix</h1>
+<div class="app">
+  <div class="header-row">
+    <div class="channel-name">Channel</div>
+    <div class="score-cell">Cost<br>(1=low)</div>
+    <div class="score-cell">Effort<br>(1=easy)</div>
+    <div class="score-cell">Impact<br>(5=high)</div>
+    <div class="score-cell">Speed<br>(5=fast)</div>
+    <div class="score-cell">Total</div>
+  </div>
+  <div class="matrix" id="matrix"></div>
+  <button class="add-btn" onclick="addChannel()">+ Add Channel</button>
+  <div class="ranking" id="ranking"></div>
+</div>
+<script>
+let channels=JSON.parse(localStorage.getItem('growthChannels')||JSON.stringify([
+  {name:'WhatsApp Marketing',cost:1,effort:2,impact:4,speed:5},
+  {name:'Instagram Ads',cost:4,effort:3,impact:4,speed:4},
+  {name:'Facebook Groups',cost:1,effort:3,impact:3,speed:3},
+  {name:'SEO/Blog',cost:2,effort:5,impact:5,speed:1},
+  {name:'Referral Program',cost:2,effort:2,impact:5,speed:3},
+  {name:'TikTok Content',cost:1,effort:4,impact:5,speed:4},
+]));
+function save(){localStorage.setItem('growthChannels',JSON.stringify(channels));}
+function addChannel(){channels.push({name:'New Channel',cost:3,effort:3,impact:3,speed:3});save();render();}
+function delChannel(i){channels.splice(i,1);save();render();}
+function update(i,f,v){channels[i][f]=parseInt(v);save();renderRanking();}
+function render(){
+  document.getElementById('matrix').innerHTML=channels.map((c,i)=>{
+    const total=c.cost+(6-c.effort)+c.impact+c.speed;
+    return `<div class="channel">
+      <div class="channel-name"><input type="text" value="${c.name}" oninput="channels[${i}].name=this.value;save()" style="background:transparent;border:none;color:#fff;font-weight:600;font-size:13px;width:100%"></div>
+      <div class="score-cell"><select onchange="update(${i},'cost',this.value)">${[1,2,3,4,5].map(n=>`<option value="${n}" ${c.cost===n?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="score-cell"><select onchange="update(${i},'effort',this.value)">${[1,2,3,4,5].map(n=>`<option value="${n}" ${c.effort===n?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="score-cell"><select onchange="update(${i},'impact',this.value)">${[1,2,3,4,5].map(n=>`<option value="${n}" ${c.impact===n?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="score-cell"><select onchange="update(${i},'speed',this.value)">${[1,2,3,4,5].map(n=>`<option value="${n}" ${c.speed===n?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="total">${total}</div>
+      <button class="del" onclick="delChannel(${i})">X</button>
+    </div>`;
+  }).join('');
+  renderRanking();
+}
+function renderRanking(){
+  const ranked=[...channels].map((c,i)=>({...c,total:c.cost+(6-c.effort)+c.impact+c.speed,idx:i})).sort((a,b)=>b.total-a.total);
+  const medals=['gold','silver','bronze'];
+  document.getElementById('ranking').innerHTML=`<h3>Channel Rankings (by score)</h3>${ranked.map((c,i)=>`<div class="rank-item"><span>${i+1}. ${c.name}</span><span class="rank-score ${medals[i]||''}">${c.total}/18</span></div>`).join('')}`;
+}
+render();
+</script>
+</body>
+</html>

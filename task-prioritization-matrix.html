@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Prioritization Matrix — Urgent vs Important | Harz</title>
+<meta name="description" content="Prioritize tasks using the Eisenhower Matrix. Sort by urgent/important quadrants and focus on what matters.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.add-bar{display:flex;gap:6px;margin-bottom:16px;max-width:600px;margin:0 auto 16px}
+.add-bar input{flex:1;background:#141414;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:8px;font-size:14px}
+.add-bar select{background:#141414;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:8px;font-size:14px}
+.add-bar button{background:#8b5cf6;color:#fff;padding:10px 20px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+.matrix{max-width:600px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quadrant{border-radius:12px;padding:14px;min-height:150px}
+.q1{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3)}
+.q2{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.3)}
+.q3{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3)}
+.q4{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3)}
+.quadrant h3{font-size:13px;margin-bottom:8px;font-weight:700}
+.q1 h3{color:#ef4444}.q2 h3{color:#3b82f6}.q3 h3{color:#f59e0b}.q4 h3{color:#10b981}
+.quadrant p{font-size:10px;color:#555;margin-bottom:8px}
+.task{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.3);border-radius:6px;padding:6px 10px;margin-bottom:4px;font-size:12px}
+.task-del{background:none;border:none;color:#ef4444;cursor:pointer;font-size:10px}
+.empty{font-size:11px;color:#555;text-align:center;padding:8px}
+</style>
+</head>
+<body>
+<h1>Task Prioritization Matrix</h1>
+<div class="add-bar">
+  <input type="text" id="taskText" placeholder="Add a task..." onkeypress="if(event.key==='Enter')addTask()">
+  <select id="taskQ"><option value="1">Urgent + Important</option><option value="2">Important, Not Urgent</option><option value="3">Urgent, Not Important</option><option value="4">Not Urgent, Not Important</option></select>
+  <button onclick="addTask()">Add</button>
+</div>
+<div class="matrix">
+  <div class="quadrant q1"><h3>DO NOW</h3><p>Urgent + Important — Crisis, deadlines</p><div id="q1"></div></div>
+  <div class="quadrant q2"><h3>SCHEDULE</h3><p>Important, Not Urgent — Planning, growth</p><div id="q2"></div></div>
+  <div class="quadrant q3"><h3>DELEGATE</h3><p>Urgent, Not Important — Interruptions</p><div id="q3"></div></div>
+  <div class="quadrant q4"><h3>ELIMINATE</h3><p>Not Urgent, Not Important — Time wasters</p><div id="q4"></div></div>
+</div>
+<script>
+let tasks=JSON.parse(localStorage.getItem('eisenhowerTasks')||'[]');
+function addTask(){
+  const t=document.getElementById('taskText').value.trim();
+  const q=document.getElementById('taskQ').value;
+  if(!t)return;
+  tasks.push({text:t,q:q,id:Date.now()});
+  localStorage.setItem('eisenhowerTasks',JSON.stringify(tasks));
+  document.getElementById('taskText').value='';
+  render();
+}
+function delTask(id){tasks=tasks.filter(t=>t.id!==id);localStorage.setItem('eisenhowerTasks',JSON.stringify(tasks));render();}
+function render(){
+  [1,2,3,4].forEach(q=>{
+    const items=tasks.filter(t=>t.q===String(q));
+    document.getElementById('q'+q).innerHTML=items.length?items.map(t=>`<div class="task"><span>${t.text}</span><button class="task-del" onclick="delTask(${t.id})">X</button></div>`).join(''):'<div class="empty">No tasks</div>';
+  });
+}
+render();
+</script>
+</body>
+</html>
