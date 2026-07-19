@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL Parser — Harz Tools</title>
+<meta name="description" content="Parse any URL into its components. Protocol, host, path, query params, fragment, and port.">
+<meta name="keywords" content="url, parser, components, query, fragment, parse">
+<meta property="og:title" content="URL Parser">
+<meta property="og:description" content="Parse any URL into its components. Protocol, host, path, query params, fragment, and port.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#080810;color:#e0e0e0;min-height:100vh;padding:20px}
+.container{max-width:800px;margin:0 auto}
+header{text-align:center;padding:30px 0 20px}
+header h1{font-size:1.7rem;color:#fff;margin-bottom:8px}
+header p{color:#888;font-size:0.9rem}
+.tool{background:#12121e;border-radius:16px;padding:28px;margin:20px 0;border:1px solid #252535}
+.input-group{margin-bottom:18px}
+label{display:block;margin-bottom:8px;color:#aaa;font-size:0.85rem;font-weight:600}
+input,textarea,select{width:100%;padding:12px 14px;background:#0a0a14;border:1px solid #2a2a3a;border-radius:8px;color:#fff;font-size:1rem;font-family:inherit;outline:none;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:#06b6d4}
+textarea{min-height:120px;resize:vertical;font-family:'Courier New',monospace;font-size:0.9rem}
+button{padding:12px 24px;background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;transition:all .2s;width:100%;font-weight:600}
+button:hover{opacity:.92;transform:translateY(-1px)}
+button:active{transform:scale(.98)}
+.output{margin-top:18px;padding:16px;background:#0a0a14;border-radius:8px;min-height:50px;border:1px solid #2a2a3a;white-space:pre-wrap;word-break:break-all;font-family:'Courier New',monospace;font-size:0.85rem;color:#22d3ee;overflow-x:auto;max-height:400px;overflow-y:auto}
+.copy-btn{margin-top:10px;padding:8px 16px;background:#2a2a3a;color:#ccc;border:1px solid #3a3a4a;border-radius:6px;cursor:pointer;font-size:0.82rem;transition:all .2s}
+.copy-btn:hover{background:#3a3a4a;border-color:#06b6d4}
+.info-box{background:#06b6d415;border-left:3px solid #06b6d4;padding:14px;border-radius:0 8px 8px 0;margin:18px 0;color:#bbb;font-size:0.85rem;line-height:1.6}
+.back-link{text-align:center;margin:20px 0}
+.back-link a{color:#06b6d4;text-decoration:none;font-size:0.88rem}
+footer{text-align:center;padding:30px;color:#444;font-size:0.78rem}
+.chat-fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;font-size:1.4rem;box-shadow:0 4px 12px rgba(6,182,212,.4);z-index:999;transition:transform .2s}
+.chat-fab:hover{transform:scale(1.1)}
+@media(max-width:600px){.container{padding:0}.tool{padding:16px}header h1{font-size:1.35rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>URL Parser</h1>
+<p>Parse any URL into its components. Protocol, host, path, query params, fragment, and port.</p>
+</header>
+<div class="tool">
+<div class="input-group"><label>URL</label><input type="text" id="url" placeholder="https://example.com:8080/path?q=1#hash" oninput="parse()"></div><div class="output" id="output"></div><script>function parse(){const u=document.getElementById('url').value;if(!u){document.getElementById('output').textContent='Enter a URL...';return}try{const p=new URL(u);let result='';result+=`Protocol: ${p.protocol}\n`;result+=`Host: ${p.host}\n`;result+=`Hostname: ${p.hostname}\n`;result+=`Port: ${p.port||'(default)'}\n`;result+=`Path: ${p.pathname}\n`;result+=`Search: ${p.search||'(none)'}\n`;result+=`Hash: ${p.hash||'(none)'}\n`;if(p.searchParams){result+='\nQuery Parameters:\n';p.searchParams.forEach((v,k)=>{result+=`  ${k}: ${v}\n`})}document.getElementById('output').textContent=result}catch(e){document.getElementById('output').textContent='Invalid URL: '+e.message}}parse()</script>
+</div>
+<div class="back-link"><a href="https://rabiuhamza11.github.io/harz-portfolio/tools.html">← All Tools</a> | <a href="https://rabiuhamza11.github.io/harz-portfolio/index.html">← Home</a></div>
+<div class="info-box">⚡ Harz Digital Services ecosystem — 450+ free online tools. All processing happens in your browser — your data stays private.</div>
+<footer>© 2026 Harz Digital Services · RC 321424 · Built by Magani</footer>
+</div>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/chat.html" class="chat-fab">💬</a>
+<script>
+function copyText(text,btn){navigator.clipboard.writeText(text).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy',2000)})}
+</script>
+</body>
+</html>
