@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading Spinner Generator — Harz Tools</title>
+<meta name="description" content="Generate CSS loading spinners with live preview. Customize size, color, speed, and style. Copy clean CSS code instantly.">
+<meta name="keywords" content="loading spinner generator, css loader, spinner animation, web design tool, loading indicator">
+<meta property="og:title" content="Loading Spinner Generator — Harz Tools">
+<meta property="og:description" content="Generate CSS loading spinners with live preview and copy code.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏳</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f1117;color:#e0e0e0;min-height:100vh;padding:16px}
+.header{text-align:center;padding:20px 0 30px}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#00d4ff,#7b2ff7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header p{color:#888;font-size:0.85rem;margin-top:6px}
+.container{max-width:600px;margin:0 auto}
+.preview-box{background:#1a1d29;border:1px solid #2a2d3a;border-radius:14px;padding:60px 20px;text-align:center;margin-bottom:20px;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.spinner-stage{display:flex;align-items:center;justify-content:center;min-height:100px}
+.controls{background:#1a1d29;border:1px solid #2a2d3a;border-radius:14px;padding:20px;margin-bottom:20px}
+.control-group{margin-bottom:18px}
+.control-group label{display:block;font-size:0.8rem;color:#999;margin-bottom:8px;font-weight:600}
+.control-group select{width:100%;padding:10px 12px;background:#0f1117;border:1px solid #2a2d3a;border-radius:8px;color:#e0e0e0;font-size:0.9rem;outline:none}
+.control-group select:focus{border-color:#00d4ff}
+.range-row{display:flex;align-items:center;gap:12px}
+.range-row input[type="range"]{flex:1;accent-color:#00d4ff}
+.range-val{font-size:0.85rem;color:#00d4ff;min-width:50px;text-align:right;font-weight:600}
+.color-row{display:flex;align-items:center;gap:12px}
+.color-row input[type="color"]{width:50px;height:40px;border:1px solid #2a2d3a;border-radius:8px;background:#0f1117;cursor:pointer}
+.color-hex{flex:1;padding:10px;background:#0f1117;border:1px solid #2a2d3a;border-radius:8px;color:#e0e0e0;font-size:0.85rem;text-align:center;outline:none}
+.btn-row{display:flex;gap:10px;margin-bottom:20px}
+.btn{flex:1;padding:12px;border:none;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-copy{background:linear-gradient(135deg,#00d4ff,#7b2ff7);color:#fff}
+.btn-copy:active{transform:scale(0.97)}
+.btn-reset{background:#2a2d3a;color:#e0e0e0}
+.btn-reset:active{transform:scale(0.97)}
+.code-output{background:#0a0c12;border:1px solid #2a2d3a;border-radius:12px;padding:16px;font-family:'Courier New',monospace;font-size:0.75rem;line-height:1.6;overflow-x:auto;color:#00ff88;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto}
+.spinner-label{color:#666;font-size:0.8rem}
+.chat-btn{position:fixed;bottom:20px;right:20px;width:56px;height:56px;background:linear-gradient(135deg,#00d4ff,#7b2ff7);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(0,212,255,0.4);z-index:999;text-decoration:none}
+.nav-back{display:inline-block;margin-bottom:16px;color:#00d4ff;text-decoration:none;font-size:0.85rem}
+.footer{text-align:center;color:#444;font-size:0.75rem;margin-top:30px;padding:20px 0}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#00d4ff;color:#000;padding:10px 20px;border-radius:20px;font-size:0.85rem;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+@media(max-width:400px){.preview-box{padding:40px 16px}.controls{padding:14px}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<a href="tools.html" class="nav-back">← Back to Tools</a>
+<h1>⏳ Loading Spinner Generator</h1>
+<p>Custom CSS spinners with live preview</p>
+</div>
+<div class="preview-box">
+<div class="spinner-stage" id="spinnerStage"></div>
+<div class="spinner-label" id="spinnerLabel">Ring Spinner</div>
+</div>
+<div class="controls">
+<div class="control-group">
+<label>Spinner Type</label>
+<select id="spinnerType" onchange="updateSpinner()">
+<option value="ring">Ring Spinner</option>
+<option value="dual">Dual Ring</option>
+<option value="dots">Pulse Dots (3)</option>
+<option value="bars">Loading Bars (5)</option>
+<option value="bounce">Bounce Balls (3)</option>
+<option value="ripple">Ripple Wave</option>
+<option value="square">Spinning Square</option>
+<option value="flip">Flip Card</option>
+</select>
+</div>
+<div class="control-group">
+<label>Spinner Color</label>
+<div class="color-row">
+<input type="color" id="spinnerColor" value="#00d4ff" onchange="updateSpinner()">
+<input type="text" class="color-hex" id="colorHex" value="#00d4ff" onchange="syncColor()" placeholder="#00d4ff">
+</div>
+</div>
+<div class="control-group">
+<label>Size (px)</label>
+<div class="range-row">
+<input type="range" id="spinnerSize" min="20" max="120" step="5" value="50" oninput="updateSpinner()">
+<span class="range-val" id="sizeVal">50px</span>
+</div>
+</div>
+<div class="control-group">
+<label>Speed (seconds per rotation)</label>
+<div class="range-row">
+<input type="range" id="spinnerSpeed" min="0.3" max="3" step="0.1" value="1" oninput="updateSpinner()">
+<span class="range-val" id="speedVal">1.0s</span>
+</div>
+</div>
+<div class="control-group">
+<label>Border Thickness (ring styles)</label>
+<div class="range-row">
+<input type="range" id="spinnerBorder" min="2" max="12" step="1" value="5" oninput="updateSpinner()">
+<span class="range-val" id="borderVal">5px</span>
+</div>
+</div>
+</div>
+<div class="btn-row">
+<button class="btn btn-copy" onclick="copyCode()">📋 Copy CSS + HTML</button>
+<button class="btn btn-reset" onclick="resetAll()">↻ Reset</button>
+</div>
+<div class="code-output" id="codeOutput"></div>
+<div class="footer">Built by <strong>Harz Digital Services</strong> · <a href="index.html" style="color:#00d4ff;text-decoration:none">harz-portfolio</a></div>
+</div>
+<a href="chat.html" class="chat-btn">💬</a>
+<div class="toast" id="toast">Copied!</div>
+<script>
+let spinStyle='';
+function updateSpinner(){
+const type=document.getElementById('spinnerType').value;
+const color=document.getElementById('spinnerColor').value;
+const size=parseInt(document.getElementById('spinnerSize').value);
+const speed=document.getElementById('spinnerSpeed').value;
+const border=parseInt(document.getElementById('spinnerBorder').value);
+document.getElementById('sizeVal').textContent=size+'px';
+document.getElementById('speedVal').textContent=parseFloat(speed).toFixed(1)+'s';
+document.getElementById('borderVal').textContent=border+'px';
+document.getElementById('colorHex').value=color;
+const labels={ring:'Ring Spinner',dual:'Dual Ring',dots:'Pulse Dots',bars:'Loading Bars',bounce:'Bounce Balls',ripple:'Ripple Wave',square:'Spinning Square',flip:'Flip Card'};
+document.getElementById('spinnerLabel').textContent=labels[type];
+const stage=document.getElementById('spinnerStage');
+let html='',css='';
+if(type==='ring'){
+html=`<div class="spinner-ring"></div>`;
+css=`.spinner-ring{width:${size}px;height:${size}px;border:${border}px solid #333;border-top:${border}px solid ${color};border-radius:50%;animation:spin ${speed}s linear infinite}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}`;
+}else if(type==='dual'){
+html=`<div class="spinner-dual"></div>`;
+css=`.spinner-dual{width:${size}px;height:${size}px;border:${border}px solid transparent;border-top:${border}px solid ${color};border-bottom:${border}px solid ${color};border-radius:50%;animation:spin ${speed}s linear infinite}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}`;
+}else if(type==='dots'){
+const ds=size/3;
+html=`<div class="spinner-dots"><span></span><span></span><span></span></div>`;
+css=`.spinner-dots{display:flex;gap:6px}.spinner-dots span{width:${ds}px;height:${ds}px;background:${color};border-radius:50%;animation:pulse ${speed}s ease-in-out infinite}.spinner-dots span:nth-child(2){animation-delay:${(parseFloat(speed)/3).toFixed(2)}s}.spinner-dots span:nth-child(3){animation-delay:${(parseFloat(speed)/1.5).toFixed(2)}s}@keyframes pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}`;
+}else if(type==='bars'){
+const bw=Math.max(4,size/8);
+const bh=size;
+html=`<div class="spinner-bars"><span></span><span></span><span></span><span></span><span></span></div>`;
+css=`.spinner-bars{display:flex;gap:4px;align-items:center}.spinner-bars span{width:${bw}px;height:${bh}px;background:${color};border-radius:2px;animation:stretch ${speed}s ease-in-out infinite}.spinner-bars span:nth-child(2){animation-delay:0.1s}.spinner-bars span:nth-child(3){animation-delay:0.2s}.spinner-bars span:nth-child(4){animation-delay:0.3s}.spinner-bars span:nth-child(5){animation-delay:0.4s}@keyframes stretch{0%,100%{transform:scaleY(0.4)}50%{transform:scaleY(1)}}`;
+}else if(type==='bounce'){
+const bs=size/3;
+html=`<div class="spinner-bounce"><span></span><span></span><span></span></div>`;
+css=`.spinner-bounce{display:flex;gap:4px}.spinner-bounce span{width:${bs}px;height:${bs}px;background:${color};border-radius:50%;animation:bounce ${speed}s ease-in-out infinite}.spinner-bounce span:nth-child(2){animation-delay:0.15s}.spinner-bounce span:nth-child(3){animation-delay:0.3s}@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-${size/3}px)}}`;
+}else if(type==='ripple'){
+html=`<div class="spinner-ripple"></div>`;
+css=`.spinner-ripple{width:${size}px;height:${size}px;border-radius:50%;border:${Math.max(2,border-1)}px solid ${color};animation:ripple ${speed}s ease-out infinite}@keyframes ripple{0%{transform:scale(0.5);opacity:1}100%{transform:scale(1.5);opacity:0}}`;
+}else if(type==='square'){
+html=`<div class="spinner-square"></div>`;
+css=`.spinner-square{width:${size}px;height:${size}px;background:${color};animation:sqspin ${speed}s ease-in-out infinite}@keyframes sqspin{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(0.5);border-radius:50%}100%{transform:rotate(360deg) scale(1);border-radius:0}}`;
+}else if(type==='flip'){
+html=`<div class="spinner-flip"></div>`;
+css=`.spinner-flip{width:${size}px;height:${size}px;background:${color};border-radius:8px;animation:flip ${speed}s ease-in-out infinite}@keyframes flip{0%{transform:perspective(120px) rotateX(0) rotateY(0)}50%{transform:perspective(120px) rotateX(180deg) rotateY(0)}100%{transform:perspective(120px) rotateX(180deg) rotateY(180deg)}}`;
+}
+stage.innerHTML='<style>'+css+'</style>'+html;
+spinStyle=css;
+document.getElementById('codeOutput').textContent='<!-- HTML -->\n'+html+'\n\n<!-- CSS -->\n'+css;
+}
+function syncColor(){
+document.getElementById('spinnerColor').value=document.getElementById('colorHex').value;
+updateSpinner();
+}
+function copyCode(){
+navigator.clipboard.writeText(document.getElementById('codeOutput').textContent).then(()=>showToast('Copied!'));
+}
+function showToast(msg){
+const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);
+}
+function resetAll(){
+document.getElementById('spinnerType').value='ring';
+document.getElementById('spinnerColor').value='#00d4ff';
+document.getElementById('colorHex').value='#00d4ff';
+document.getElementById('spinnerSize').value=50;
+document.getElementById('spinnerSpeed').value=1;
+document.getElementById('spinnerBorder').value=5;
+updateSpinner();
+}
+updateSpinner();
+</script>
+</body>
+</html>
