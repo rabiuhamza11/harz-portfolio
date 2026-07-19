@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy Generator — NDPR Compliant | Harz</title>
+<meta name="description" content="Generate a NDPR-compliant privacy policy for your Nigerian business. Free and copy-ready.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.form{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.form input,.form select{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:8px;font-size:14px;margin-bottom:8px}
+.form label{font-size:12px;color:#a3a3a3;margin-bottom:3px;display:block}
+.form .checkbox{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:13px}
+.form .checkbox input{width:auto}
+.output{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:20px;font-size:13px;line-height:1.8;white-space:pre-wrap;max-height:500px;overflow:auto;margin-bottom:12px}
+.btn{width:100%;background:#3b82f6;color:#fff;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;font-size:15px}
+</style>
+</head>
+<body>
+<h1>Privacy Policy Generator</h1>
+<div class="app">
+  <div class="form">
+    <label>Business Name</label><input type="text" id="bizName" value="Harz Digital Services" oninput="gen()">
+    <label>Website URL</label><input type="text" id="url" value="https://rabiuhamza11.github.io/harz-portfolio/" oninput="gen()">
+    <label>Contact Email</label><input type="text" id="email" value="harzco.business@gmail.com" oninput="gen()">
+    <label>What data do you collect?</label>
+    <div class="checkbox"><input type="checkbox" id="name" checked onchange="gen()"><label for="name">Name</label></div>
+    <div class="checkbox"><input type="checkbox" id="emailData" checked onchange="gen()"><label for="emailData">Email</label></div>
+    <div class="checkbox"><input type="checkbox" id="phone" checked onchange="gen()"><label for="phone">Phone</label></div>
+    <div class="checkbox"><input type="checkbox" id="payment" checked onchange="gen()"><label for="payment">Payment Info</label></div>
+    <div class="checkbox"><input type="checkbox" id="location" onchange="gen()"><label for="location">Location</label></div>
+  </div>
+  <div class="output" id="output"></div>
+  <button class="btn" onclick="copyPolicy()">Copy Privacy Policy</button>
+</div>
+<script>
+function gen(){
+  const biz=document.getElementById('bizName').value;
+  const url=document.getElementById('url').value;
+  const email=document.getElementById('email').value;
+  const dataTypes=[];
+  if(document.getElementById('name').checked)dataTypes.push('Name');
+  if(document.getElementById('emailData').checked)dataTypes.push('Email address');
+  if(document.getElementById('phone').checked)dataTypes.push('Phone number');
+  if(document.getElementById('payment').checked)dataTypes.push('Payment information (bank details, transaction references)');
+  if(document.getElementById('location').checked)dataTypes.push('Location data');
+  let policy=`PRIVACY POLICY\n${biz}\n\nLast Updated: ${new Date().toLocaleDateString('en-NG')}\n\n`;
+  policy+=`1. INTRODUCTION\n${biz} ("we", "us", "our") is committed to protecting your privacy. This policy explains how we collect, use, and protect your personal data in compliance with the Nigeria Data Protection Regulation (NDPR) 2019.\n\n`;
+  policy+=`2. DATA WE COLLECT\nWe collect the following personal information:\n`;
+  dataTypes.forEach(d=>policy+=`- ${d}\n`);
+  policy+=`\n3. HOW WE USE YOUR DATA\nWe use your data to:\n- Process orders and payments\n- Provide products and services\n- Communicate with you about your orders\n- Send marketing communications (with your consent)\n- Improve our products and services\n- Comply with legal obligations\n\n`;
+  policy+=`4. LEGAL BASIS\nWe process your data based on:\n- Your consent (marketing communications)\n- Contract performance (processing orders)\n- Legal obligation (tax and regulatory compliance)\n- Legitimate interest (improving services)\n\n`;
+  policy+=`5. DATA STORAGE AND SECURITY\nWe store your data securely and take reasonable measures to protect it from unauthorized access, alteration, or deletion. Payment data is processed through secure payment gateways and we do not store full card details.\n\n`;
+  policy+=`6. DATA SHARING\nWe do not sell your personal data. We may share data with:\n- Payment processors (banks, payment gateways)\n- Hosting providers (Vercel, GitHub)\n- Government agencies when legally required\n\n`;
+  policy+=`7. YOUR RIGHTS\nUnder NDPR, you have the right to:\n- Access your personal data\n- Correct inaccurate data\n- Request deletion of your data\n- Object to processing\n- Withdraw consent at any time\n- Data portability\n\n`;
+  policy+=`8. COOKIES\nOur website uses cookies to improve user experience. You can disable cookies in your browser settings.\n\n`;
+  policy+=`9. DATA RETENTION\nWe retain your data only as long as necessary to fulfill the purposes outlined in this policy or as required by law.\n\n`;
+  policy+=`10. CHILDREN'S PRIVACY\nOur services are not directed to children under 13. We do not knowingly collect data from children.\n\n`;
+  policy+=`11. CHANGES TO THIS POLICY\nWe may update this policy from time to time. Changes will be posted on our website.\n\n`;
+  policy+=`12. CONTACT US\nFor privacy questions or requests:\n${biz}\nWebsite: ${url}\nEmail: ${email}\n\nThis policy complies with the Nigeria Data Protection Regulation (NDPR) 2019 and the Data Protection Act 2023.`;
+  document.getElementById('output').textContent=policy;
+}
+function copyPolicy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Privacy policy copied!');}
+gen();
+</script>
+</body>
+</html>

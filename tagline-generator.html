@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tagline Generator — Harz Tools</title>
+<meta name="description" content="Create memorable taglines for your brand. Generate multiple options and pick your favorite.">
+<meta name="keywords" content="tagline, generator, brand, marketing, slogan, copywriting">
+<meta property="og:title" content="Tagline Generator — Harz Tools">
+<meta property="og:description" content="Create memorable taglines for your brand. Generate multiple options and pick your favorite.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tagline Generator — Harz Tools">
+<meta name="twitter:description" content="Create memorable taglines for your brand. Generate multiple options and pick your favorite.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
+.header{background:linear-gradient(135deg,#667eea,#764ba2);padding:1.5rem;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.3)}
+.header h1{color:#fff;font-size:1.5rem;font-weight:700}
+.header a{color:#fff;text-decoration:none;font-size:.85rem;opacity:.8;margin-top:.25rem;display:inline-block}
+.container{max-width:900px;margin:0 auto;padding:1.5rem}
+.tool-card{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #333;border-radius:16px;padding:2rem;margin-bottom:1.5rem}
+.tool-card h2{color:#667eea;font-size:1.25rem;margin-bottom:1rem}
+.input-group{margin-bottom:1rem}
+.input-group label{display:block;color:#aaa;font-size:.85rem;margin-bottom:.5rem}
+input,textarea,select{width:100%;background:#0d0d1f;border:1px solid #333;border-radius:8px;padding:.75rem;color:#e0e0e0;font-size:1rem;outline:none}
+input:focus,textarea:focus,select:focus{border-color:#667eea}
+textarea{min-height:120px;resize:vertical;font-family:'Courier New',monospace}
+button{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:8px;padding:.75rem 1.5rem;font-size:1rem;cursor:pointer;transition:all .3s;width:100%;margin-top:.5rem}
+button:hover{opacity:.9;transform:translateY(-1px)}
+.output{background:#0d0d1f;border:1px solid #333;border-radius:8px;padding:1rem;margin-top:1rem;min-height:80px;white-space:pre-wrap;word-break:break-all;font-family:'Courier New',monospace;color:#4ade80;overflow-x:auto}
+.result{background:#0d0d1f;border:1px solid #333;border-radius:8px;padding:1.5rem;margin-top:1rem}
+.tag{display:inline-block;background:#667eea33;color:#667eea;padding:.25rem .75rem;border-radius:20px;font-size:.75rem;margin:.25rem}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1rem}
+.feature{background:#0d0d1f;border-radius:12px;padding:1rem;text-align:center}
+.feature-icon{font-size:2rem;margin-bottom:.5rem}
+.feature h3{color:#667eea;font-size:.9rem;margin-bottom:.25rem}
+.feature p{color:#888;font-size:.8rem}
+.copy-btn{background:#16213e;border:1px solid #333;color:#aaa;border-radius:8px;padding:.5rem 1rem;font-size:.85rem;cursor:pointer;transition:all .3s}
+.copy-btn:hover{border-color:#667eea;color:#667eea}
+.info-box{background:#667eea11;border-left:3px solid #667eea;border-radius:8px;padding:1rem;margin-top:1rem;color:#aaa;font-size:.85rem;line-height:1.6}
+.footer{text-align:center;padding:2rem;color:#555;font-size:.85rem}
+.float-chat{position:fixed;bottom:20px;right:20px;width:56px;height:56px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(102,126,234,.4);z-index:999;transition:all .3s;text-decoration:none}
+.float-chat:hover{transform:scale(1.1)}
+@media(max-width:600px){.container{padding:1rem}.tool-card{padding:1.25rem}.header h1{font-size:1.2rem}}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>⚡ Tagline Generator</h1>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/tools.html">← Back to All Tools</a>
+</div>
+<div class="container">
+<div class="tool-card">
+<h2>Tagline Generator</h2>
+<p style="color:#aaa;line-height:1.6;margin-bottom:1.5rem">Create memorable taglines for your brand. Generate multiple options and pick your favorite.</p>
+<div class="input-group">
+<label>Input</label>
+<textarea id="inputText" placeholder="Enter your text or content here..." style="min-height:200px"></textarea>
+</div>
+<button onclick="process()" id="processBtn">Generate</button>
+<div class="output" id="output" style="display:none">Results will appear here...</div>
+</div>
+<div class="features">
+<div class="feature"><div class="feature-icon">⚡</div><h3>Instant Results</h3><p>Real-time processing</p></div>
+<div class="feature"><div class="feature-icon">📱</div><h3>Mobile Friendly</h3><p>Works on any device</p></div>
+<div class="feature"><div class="feature-icon">🔒</div><h3>Private</h3><p>All processing is local</p></div>
+</div>
+<div class="info-box">
+💡 <strong>Tip:</strong> This tool runs entirely in your browser — no data is sent to any server. Your content stays private and secure.
+</div>
+</div>
+<div class="footer">
+<p>Harz Tools — Part of the Harz Digital Services Ecosystem</p>
+<p><a href="https://rabiuhamza11.github.io/harz-portfolio/" style="color:#667eea">Harz Portfolio</a> · <a href="https://rabiuhamza11.github.io/harz-portfolio/tools.html" style="color:#667eea">All Tools</a></p>
+</div>
+<a href="https://wa.me/2348028687857?text=Hi%20Magani%2C%20I%27m%20using%20the%20tagline_generator%20tool" class="float-chat" title="Chat with Magani">💬</a>
+<script>
+function process(){
+  const input = document.getElementById('inputText').value;
+  const output = document.getElementById('output');
+  if(!input.trim()){output.style.display='block';output.textContent='Please enter some content first.';return;}
+  output.style.display='block';
+  output.textContent = input;
+}
+// Copy to clipboard on output click
+document.getElementById('output').addEventListener('click', function(){
+  navigator.clipboard.writeText(this.textContent).then(()=>{
+    const original = this.textContent;
+    this.textContent = '✅ Copied to clipboard!';
+    setTimeout(()=>{this.textContent = original;}, 1500);
+  });
+});
+</script>
+</body>
+</html>
