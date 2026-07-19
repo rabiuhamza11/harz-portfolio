@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Text Shadow Generator | Harz</title>
+<meta name="description" content="Generate CSS text-shadow effects. Multiple shadows, glow, neon, and 3D text effects.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:700px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.app{grid-template-columns:1fr}}
+.controls{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px}
+.preset-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.preset-btn{background:#1c1c1c;border:1px solid #2a2a2a;color:#a3a3a3;padding:8px;border-radius:6px;font-size:12px;cursor:pointer;text-align:center}
+.preset-btn.active{background:#ec4899;border-color:#ec4899;color:#fff;font-weight:700}
+.control{margin-bottom:10px}
+.control label{font-size:12px;color:#a3a3a3;margin-bottom:3px;display:block}
+.control input[type="range"]{width:100%}
+.control input[type="color"]{width:100%;height:36px;border:1px solid #2a2a2a;border-radius:6px;cursor:pointer;background:#1c1c1c}
+.control .val{font-size:12px;color:#ec4899;font-weight:700;float:right}
+.preview{background:#141414;border:1px solid #2a2a2a;border-radius:12px;min-height:300px;display:flex;align-items:center;justify-content:center;padding:30px}
+.text-sample{font-size:36px;font-weight:800;font-family:Arial,sans-serif}
+.code{grid-column:1/-1;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:14px;font-family:monospace;font-size:12px;color:#ec4899;word-break:break-all}
+.copy-btn{grid-column:1/-1;background:#ec4899;color:#fff;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;text-align:center}
+</style>
+</head>
+<body>
+<h1>Text Shadow Generator</h1>
+<div class="app">
+  <div class="controls">
+    <div class="preset-btns">
+      <div class="preset-btn active" onclick="preset('glow',this)">Glow</div>
+      <div class="preset-btn" onclick="preset('neon',this)">Neon</div>
+      <div class="preset-btn" onclick="preset('3d',this)">3D</div>
+      <div class="preset-btn" onclick="preset('retro',this)">Retro</div>
+      <div class="preset-btn" onclick="preset('fire',this)">Fire</div>
+      <div class="preset-btn" onclick="preset('custom',this)">Custom</div>
+    </div>
+    <div class="control"><label>X Offset <span class="val" id="xVal">0px</span></label><input type="range" id="x" min="-20" max="20" value="0" oninput="update()"></div>
+    <div class="control"><label>Y Offset <span class="val" id="yVal">0px</span></label><input type="range" id="y" min="-20" max="20" value="0" oninput="update()"></div>
+    <div class="control"><label>Blur <span class="val" id="bVal">10px</span></label><input type="range" id="blur" min="0" max="30" value="10" oninput="update()"></div>
+    <div class="control"><label>Shadow Color</label><input type="color" id="color" value="#ec4899" oninput="update()"></div>
+    <div class="control"><label>Text Color</label><input type="color" id="textColor" value="#ffffff" oninput="update()"></div>
+  </div>
+  <div class="preview"><div class="text-sample" id="sample">HARZ</div></div>
+  <div class="code" id="code"></div>
+  <button class="copy-btn" onclick="copyCode()">Copy CSS</button>
+</div>
+<script>
+function preset(type,el){
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const presets={
+    glow:{x:0,y:0,blur:20,color:'#ec4899',text:'#fff'},
+    neon:{x:0,y:0,blur:5,color:'#0ff',text:'#0ff'},
+    '3d':{x:2,y:3,blur:0,color:'#555',text:'#fff'},
+    retro:{x:4,y:4,blur:0,color:'#f59e0b',text:'#fff'},
+    fire:{x:0,y:-3,blur:10,color:'#ef4444',text:'#f59e0b'},
+    custom:{x:0,y:0,blur:0,color:'#000',text:'#fff'}
+  };
+  const p=presets[type];
+  document.getElementById('x').value=p.x;document.getElementById('y').value=p.y;document.getElementById('blur').value=p.blur;
+  document.getElementById('color').value=p.color;document.getElementById('textColor').value=p.text;
+  update();
+}
+function update(){
+  const x=document.getElementById('x').value,y=document.getElementById('y').value;
+  const b=document.getElementById('blur').value,c=document.getElementById('color').value;
+  const tc=document.getElementById('textColor').value;
+  document.getElementById('xVal').textContent=x+'px';
+  document.getElementById('yVal').textContent=y+'px';
+  document.getElementById('bVal').textContent=b+'px';
+  let shadow;
+  if(c==='#0ff'&&b=='5'){shadow=`0 0 5px ${c}, 0 0 10px ${c}, 0 0 20px ${c}, 0 0 40px ${c}`;}
+  else{shadow=`${x}px ${y}px ${b}px ${c}`;}
+  const sample=document.getElementById('sample');
+  sample.style.color=tc;
+  sample.style.textShadow=shadow;
+  document.getElementById('code').textContent=`color: ${tc};\ntext-shadow: ${shadow};`;
+}
+function copyCode(){navigator.clipboard.writeText(document.getElementById('code').textContent);alert('Text shadow CSS copied!');}
+preset('glow',document.querySelector('.preset-btn'));
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Cost Calculator | Harz</title>
+<meta name="description" content="Calculate the real cost of meetings. Track time, attendees, and hourly rates to see the true cost.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.calc{max-width:500px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:20px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;margin-bottom:4px;color:#a3a3a3}
+.input-group input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:15px}
+.btn{width:100%;background:#ef4444;color:#fff;padding:14px;border-radius:8px;font-weight:700;font-size:16px;border:none;cursor:pointer;margin-bottom:16px}
+.results{display:none;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px}
+.results.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:14px}
+.result-row span:first-child{color:#a3a3a3}
+.result-row span:last-child{font-weight:700}
+.highlight{color:#ef4444 !important;font-size:20px}
+.tip{font-size:12px;color:#a3a3a3;text-align:center;margin-top:12px;padding:10px;background:rgba(245,158,11,0.08);border-radius:8px}
+</style>
+</head>
+<body>
+<h1>Meeting Cost Calculator</h1>
+<div class="calc">
+  <div class="input-group"><label>Number of Attendees</label><input type="number" id="attendees" value="5"></div>
+  <div class="input-group"><label>Average Hourly Rate (N)</label><input type="number" id="rate" value="2000"></div>
+  <div class="input-group"><label>Meeting Duration (minutes)</label><input type="number" id="duration" value="60"></div>
+  <div class="input-group"><label>Meetings per Week</label><input type="number" id="perWeek" value="3"></div>
+  <button class="btn" onclick="calculate()">Calculate Cost</button>
+  <div class="results" id="results">
+    <div class="result-row"><span>Per Meeting Cost</span><span id="perMeeting" class="highlight">N0</span></div>
+    <div class="result-row"><span>Weekly Cost</span><span id="weekly">N0</span></div>
+    <div class="result-row"><span>Monthly Cost</span><span id="monthly">N0</span></div>
+    <div class="result-row"><span>Yearly Cost</span><span id="yearly" class="highlight">N0</span></div>
+    <div class="result-row"><span>Hours Wasted/Year</span><span id="hoursWasted">0h</span></div>
+  </div>
+  <div class="tip" id="tip"></div>
+</div>
+<script>
+function formatN(n){return 'N'+Math.round(n).toLocaleString()}
+function calculate(){
+  const att=parseInt(document.getElementById('attendees').value)||0;
+  const rate=parseFloat(document.getElementById('rate').value)||0;
+  const dur=parseInt(document.getElementById('duration').value)||0;
+  const pw=parseInt(document.getElementById('perWeek').value)||0;
+  const perMeeting=att*rate*(dur/60);
+  const weekly=perMeeting*pw;
+  const monthly=weekly*4.33;
+  const yearly=weekly*52;
+  const hours=att*(dur/60)*pw*52;
+  document.getElementById('perMeeting').textContent=formatN(perMeeting);
+  document.getElementById('weekly').textContent=formatN(weekly);
+  document.getElementById('monthly').textContent=formatN(monthly);
+  document.getElementById('yearly').textContent=formatN(yearly);
+  document.getElementById('hoursWasted').textContent=hours.toFixed(0)+'h';
+  document.getElementById('results').classList.add('show');
+  let tip='💡 ';
+  if(yearly>1000000)tip+='This meeting costs over N1M/year. Consider making it shorter or less frequent.';
+  else if(yearly>500000)tip+='This meeting costs N500K+/year. Could it be an email instead?';
+  else if(yearly>100000)tip+='This meeting costs N100K+/year. Make sure it adds value.';
+  else tip+='This meeting is reasonably priced. Keep it productive.';
+  document.getElementById('tip').textContent=tip;
+}
+calculate();
+</script>
+</body>
+</html>
