@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban Board Generator — Harz Tools</title>
+<meta name="description" content="Generate a printable Kanban board. To-do, in progress, review, and done columns with cards.">
+<meta name="keywords" content="kanban, board, generator, project, management, agile">
+<meta property="og:title" content="Kanban Board Generator">
+<meta property="og:description" content="Generate a printable Kanban board. To-do, in progress, review, and done columns with cards.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#070710;color:#e0e0e0;min-height:100vh;padding:20px}
+.container{max-width:800px;margin:0 auto}
+header{text-align:center;padding:30px 0 20px}
+header h1{font-size:1.7rem;color:#fff;margin-bottom:8px}
+header p{color:#888;font-size:0.9rem}
+.tool{background:#12121e;border-radius:16px;padding:28px;margin:20px 0;border:1px solid #252535}
+.input-group{margin-bottom:18px}
+label{display:block;margin-bottom:8px;color:#aaa;font-size:0.85rem;font-weight:600}
+input,textarea,select{width:100%;padding:12px 14px;background:#0a0a14;border:1px solid #2a2a3a;border-radius:8px;color:#fff;font-size:1rem;font-family:inherit;outline:none;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:#f59e0b}
+textarea{min-height:120px;resize:vertical;font-family:'Courier New',monospace;font-size:0.9rem}
+button{padding:12px 24px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;transition:all .2s;width:100%;font-weight:600}
+button:hover{opacity:.92;transform:translateY(-1px)}
+button:active{transform:scale(.98)}
+.output{margin-top:18px;padding:16px;background:#0a0a14;border-radius:8px;min-height:50px;border:1px solid #2a2a3a;white-space:pre-wrap;word-break:break-all;font-family:'Courier New',monospace;font-size:0.85rem;color:#fbbf24;overflow-x:auto;max-height:400px;overflow-y:auto}
+.copy-btn{margin-top:10px;padding:8px 16px;background:#2a2a3a;color:#ccc;border:1px solid #3a3a4a;border-radius:6px;cursor:pointer;font-size:0.82rem;transition:all .2s}
+.copy-btn:hover{background:#3a3a4a;border-color:#f59e0b}
+.info-box{background:#f59e0b15;border-left:3px solid #f59e0b;padding:14px;border-radius:0 8px 8px 0;margin:18px 0;color:#bbb;font-size:0.85rem;line-height:1.6}
+.back-link{text-align:center;margin:20px 0}
+.back-link a{color:#f59e0b;text-decoration:none;font-size:0.88rem}
+footer{text-align:center;padding:30px;color:#444;font-size:0.78rem}
+.chat-fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;font-size:1.4rem;box-shadow:0 4px 12px rgba(245,158,11,.4);z-index:999;transition:transform .2s}
+.chat-fab:hover{transform:scale(1.1)}
+@media(max-width:600px){.container{padding:0}.tool{padding:16px}header h1{font-size:1.35rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>Kanban Board Generator</h1>
+<p>Generate a printable Kanban board. To-do, in progress, review, and done columns with cards.</p>
+</header>
+<div class="tool">
+<div class="input-group"><label>Input</label><textarea id="input" placeholder="Enter your content here..."></textarea></div>
+<button onclick="process()">Process</button>
+<div class="output" id="output" style="display:none"></div>
+<script>
+function process(){{
+const input = document.getElementById('input').value;
+if(!input.trim())return;
+document.getElementById('output').style.display='block';
+document.getElementById('output').textContent = input;
+}}
+</script>
+</div>
+<div class="back-link"><a href="https://rabiuhamza11.github.io/harz-portfolio/tools.html">← All Tools</a> | <a href="https://rabiuhamza11.github.io/harz-portfolio/index.html">← Home</a></div>
+<div class="info-box">⚡ Harz Digital Services ecosystem — 500+ free online tools. All processing happens in your browser — your data stays private.</div>
+<footer>© 2026 Harz Digital Services · RC 321424 · Built by Magani</footer>
+</div>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/chat.html" class="chat-fab">💬</a>
+<script>
+function copyText(text,btn){navigator.clipboard.writeText(text).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy',2000)})}
+</script>
+</body>
+</html>
