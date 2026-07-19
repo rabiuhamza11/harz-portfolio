@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Habit Tracker — Build Better Routines | Harz</title>
+<meta name="description" content="Track daily habits, build streaks, and visualize your progress. Stay accountable.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.stats{display:flex;justify-content:center;gap:20px;margin-bottom:20px}
+.stat{text-align:center}
+.stat .num{font-size:22px;font-weight:800;color:#10b981}
+.stat .label{font-size:10px;color:#a3a3a3}
+.add-bar{display:flex;gap:6px;margin-bottom:16px}
+.add-bar input{flex:1;background:#141414;border:1px solid #2a2a2a;color:#fff;padding:12px;border-radius:8px;font-size:14px}
+.add-bar button{background:#10b981;color:#000;padding:12px 24px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+.list{display:grid;gap:10px}
+.habit{display:flex;justify-content:space-between;align-items:center;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:12px}
+.habit-info{flex:1}
+.habit-name{font-weight:600;font-size:14px}
+.habit-streak{font-size:12px;color:#a3a3a3}
+.streak-num{color:#f59e0b;font-weight:700}
+.habit-days{display:flex;gap:3px}
+.day-btn{width:28px;height:28px;border-radius:6px;border:1px solid #2a2a2a;background:#1c1c1c;color:#555;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.day-btn.done{background:#10b981;color:#000;border-color:#10b981}
+.day-btn:hover{border-color:#10b981}
+.habit-del{background:none;border:none;color:#ef4444;cursor:pointer;font-size:12px}
+</style>
+</head>
+<body>
+<h1>Daily Habit Tracker</h1>
+<div class="stats">
+  <div class="stat"><div class="num" id="totalHabits">0</div><div class="label">Habits</div></div>
+  <div class="stat"><div class="num" id="totalDone">0</div><div class="label">Done Today</div></div>
+  <div class="stat"><div class="num" id="bestStreak">0</div><div class="label">Best Streak</div></div>
+</div>
+<div class="add-bar">
+  <input type="text" id="habitName" placeholder="New habit (e.g. Drink water, Read 10 pages)" onkeypress="if(event.key==='Enter')addHabit()">
+  <button onclick="addHabit()">Add Habit</button>
+</div>
+<div class="list" id="list"></div>
+<script>
+let habits=JSON.parse(localStorage.getItem('habits')||'[]');
+const today=new Date().toISOString().split('T')[0];
+const days=['M','T','W','T','F','S','S'];
+function addHabit(){
+  const n=document.getElementById('habitName').value.trim();
+  if(!n)return;
+  habits.push({name:n,streak:0,days:{},id:Date.now()});
+  localStorage.setItem('habits',JSON.stringify(habits));
+  document.getElementById('habitName').value='';
+  render();
+}
+function toggleDay(i,d){
+  const key=Object.keys(habits[i].days||{});
+  const lastKey=key[key.length-1];
+  if(d==='today'){
+    if(habits[i].days[today]){delete habits[i].days[today];habits[i].streak=Math.max(0,habits[i].streak-1);}
+    else{habits[i].days[today]=true;habits[i].streak=(habits[i].streak||0)+1;}
+  }
+  localStorage.setItem('habits',JSON.stringify(habits));
+  render();
+}
+function delHabit(i){habits.splice(i,1);localStorage.setItem('habits',JSON.stringify(habits));render();}
+function render(){
+  document.getElementById('totalHabits').textContent=habits.length;
+  document.getElementById('totalDone').textContent=habits.filter(h=>h.days&&h.days[today]).length;
+  document.getElementById('bestStreak').textContent=habits.reduce((m,h)=>Math.max(m,h.streak||0),0);
+  if(!habits.length){document.getElementById('list').innerHTML='<p style="text-align:center;color:#555;padding:20px">No habits yet</p>';return;}
+  document.getElementById('list').innerHTML=habits.map((h,i)=>`
+    <div class="habit">
+      <div class="habit-info"><div class="habit-name">${h.name}</div><div class="habit-streak">Streak: <span class="streak-num">${h.streak||0} days</span></div></div>
+      <div class="habit-days"><button class="day-btn ${h.days&&h.days[today]?'done':''}" onclick="toggleDay(${i},'today')">✓</button></div>
+      <button class="habit-del" onclick="delHabit(${i})">Del</button>
+    </div>
+  `).join('');
+}
+render();
+</script>
+</body>
+</html>
