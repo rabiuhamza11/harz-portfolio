@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTM Link Builder — Track Your Campaigns | Harz</title>
+<meta name="description" content="Build UTM tracking links for your marketing campaigns. Track source, medium, and campaign performance.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.form{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.form input,.form select{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:8px;font-size:14px;margin-bottom:8px}
+.form label{font-size:12px;color:#a3a3a3;margin-bottom:3px;display:block}
+.form input:focus{outline:none;border-color:#06b6d4}
+.output-box{background:#1c1c1c;border:1px solid #06b6d4;border-radius:10px;padding:14px;margin-bottom:12px;word-break:break-all;font-size:13px}
+.btn{width:100%;background:#06b6d4;color:#000;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;font-size:15px;margin-bottom:8px}
+.examples{background:#141414;border:1px solid #2a2a2a;border-radius:8px;padding:12px;margin-top:12px}
+.examples h3{font-size:13px;color:#06b6d4;margin-bottom:6px}
+.examples p{font-size:11px;color:#a3a3a3;padding:2px 0}
+</style>
+</head>
+<body>
+<h1>UTM Link Builder</h1>
+<div class="app">
+  <div class="form">
+    <label>Website URL *</label><input type="url" id="url" value="https://rabiuhamza11.github.io/harz-portfolio/" oninput="build()">
+    <label>Campaign Source * (e.g. facebook, google, newsletter)</label><input type="text" id="source" value="whatsapp" oninput="build()">
+    <label>Campaign Medium * (e.g. cpc, social, email)</label><input type="text" id="medium" value="social" oninput="build()">
+    <label>Campaign Name * (e.g. summer_sale, ai_agency)</label><input type="text" id="campaign" value="ai_agency_launch" oninput="build()">
+    <label>Campaign Term (optional, e.g. keywords)</label><input type="text" id="term" oninput="build()">
+    <label>Campaign Content (optional, e.g. ad_variant)</label><input type="text" id="content" oninput="build()">
+  </div>
+  <div class="output-box" id="output"></div>
+  <button class="btn" onclick="copyLink()">Copy UTM Link</button>
+  <div class="examples">
+    <h3>Common UTM Values</h3>
+    <p>Sources: facebook, google, twitter, instagram, whatsapp, telegram, newsletter</p>
+    <p>Mediums: cpc, social, email, referral, organic, paid-social, banner</p>
+    <p>Names: product_launch, holiday_sale, webinar_promo, demo_offer</p>
+  </div>
+</div>
+<script>
+function build(){
+  const url=document.getElementById('url').value.trim();
+  if(!url){document.getElementById('output').textContent='Enter a URL to start';return;}
+  const params=[];
+  const s=document.getElementById('source').value;
+  const m=document.getElementById('medium').value;
+  const c=document.getElementById('campaign').value;
+  const t=document.getElementById('term').value;
+  const ct=document.getElementById('content').value;
+  if(s)params.push('utm_source='+encodeURIComponent(s));
+  if(m)params.push('utm_medium='+encodeURIComponent(m));
+  if(c)params.push('utm_campaign='+encodeURIComponent(c));
+  if(t)params.push('utm_term='+encodeURIComponent(t));
+  if(ct)params.push('utm_content='+encodeURIComponent(ct));
+  const sep=url.includes('?')?'&':'?';
+  const final=url+sep+params.join('&');
+  document.getElementById('output').textContent=final;
+}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('UTM link copied!');}
+build();
+</script>
+</body>
+</html>

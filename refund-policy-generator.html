@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refund Policy Generator | Harz</title>
+<meta name="description" content="Generate a professional refund policy for your business. Customize terms and copy-ready text.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:600px;margin:0 auto}
+.form{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px}
+.form input,.form select{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:8px;font-size:14px;margin-bottom:8px}
+.form label{font-size:12px;color:#a3a3a3;margin-bottom:3px;display:block}
+.output{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:20px;font-size:13px;line-height:1.8;white-space:pre-wrap;max-height:500px;overflow:auto;margin-bottom:12px}
+.btn{width:100%;background:#ef4444;color:#fff;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;font-size:15px}
+</style>
+</head>
+<body>
+<h1>Refund Policy Generator</h1>
+<div class="app">
+  <div class="form">
+    <label>Business Name</label><input type="text" id="bizName" value="Harz Digital Services" oninput="gen()">
+    <label>Refund Window (days)</label><input type="number" id="window" value="7" oninput="gen()">
+    <label>Product Type</label><select id="type" onchange="gen()"><option value="digital">Digital Products</option><option value="services">Services</option><option value="physical">Physical Products</option><option value="mixed">Mixed (Digital + Services)</option></select>
+    <label>Contact Email</label><input type="text" id="email" value="harzco.business@gmail.com" oninput="gen()">
+    <label>Contact Phone</label><input type="text" id="phone" value="08028687857" oninput="gen()">
+  </div>
+  <div class="output" id="output"></div>
+  <button class="btn" onclick="copyPolicy()">Copy Refund Policy</button>
+</div>
+<script>
+function gen(){
+  const biz=document.getElementById('bizName').value;
+  const w=document.getElementById('window').value;
+  const type=document.getElementById('type').value;
+  const email=document.getElementById('email').value;
+  const phone=document.getElementById('phone').value;
+  let policy=`REFUND POLICY\n${biz}\n\nLast Updated: ${new Date().toLocaleDateString('en-NG')}\n\n`;
+  if(type==='digital'||type==='mixed'){
+    policy+=`1. DIGITAL PRODUCTS\n`;
+    policy+=`Due to the nature of digital products (templates, ebooks, software, downloads), all sales are final once the product has been accessed or downloaded.\n\n`;
+    policy+=`However, we offer refunds within ${w} days of purchase if:\n`;
+    policy+=`- The product is significantly different from what was described\n`;
+    policy+=`- You received a corrupted or unusable file\n`;
+    policy+=(`- Technical issues prevent you from accessing the product (that we cannot resolve)\n\n`);
+  }
+  if(type==='services'||type==='mixed'){
+    policy+=`${type==='mixed'?'2':'1'}. SERVICES\n`;
+    policy+=`- Full refund if cancelled before work begins\n`;
+    policy+=(`- 50% refund if cancelled after work has started but before 50% completion\n`);
+    policy+=(`- No refund for completed and delivered work\n`);
+    policy+=(`- Rush delivery surcharges are non-refundable\n\n`);
+  }
+  if(type==='physical'){
+    policy+=`1. PHYSICAL PRODUCTS\n`;
+    policy+=(`- Items must be returned in original condition within ${w} days\n`);
+    policy+=(`- Return shipping costs are the customer's responsibility\n`);
+    policy+=(`- Refund processed within 5 business days of receiving returned item\n\n`);
+  }
+  policy+=`HOW TO REQUEST A REFUND\n`;
+  policy+=(`Contact us within ${w} days of purchase:\n`);
+  policy+=(`Email: ${email}\n`);
+  policy+=(`Phone/WhatsApp: ${phone}\n`);
+  policy+=(`Include your order number and reason for refund request.\n\n`);
+  policy+=`REFUND PROCESSING\n`;
+  policy+=(`- Approved refunds are processed within 5-7 business days\n`);
+  policy+=(`- Refunds are returned to the original payment method\n`);
+  policy+=(`- Bank transfer refunds may take 3-5 business days to reflect\n\n`);
+  policy+=`NON-REFUNDABLE ITEMS\n`;
+  policy+=(`- Custom/bespoke development work that has been delivered\n`);
+  policy+=(`- Downloaded and accessed digital products (except as noted above)\n`);
+  policy+=(`- Consultation fees for sessions already conducted\n\n`);
+  policy+=`CONTACT\n`);
+  policy+=(`For refund questions, contact us:\n`);
+  policy+=(`${biz}\n`);
+  policy+=(`Email: ${email}\n`);
+  policy+=(`WhatsApp: ${phone}\n\n`);
+  policy+=(`This policy is subject to Nigerian Consumer Protection regulations.`;
+  document.getElementById('output').textContent=policy;
+}
+function copyPolicy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Refund policy copied!');}
+gen();
+</script>
+</body>
+</html>

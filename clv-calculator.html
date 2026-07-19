@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Lifetime Value Calculator | Harz</title>
+<meta name="description" content="Calculate Customer Lifetime Value (CLV). Know how much each customer is worth over time.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.calc{max-width:500px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:20px}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;margin-bottom:4px;color:#a3a3a3}
+.input-group input{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:10px;border-radius:8px;font-size:15px}
+.btn{width:100%;background:#8b5cf6;color:#fff;padding:14px;border-radius:8px;font-weight:700;font-size:16px;border:none;cursor:pointer;margin-bottom:16px}
+.results{display:none;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:16px}
+.results.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:14px}
+.result-row span:first-child{color:#a3a3a3}
+.result-row span:last-child{font-weight:700}
+.highlight{color:#8b5cf6 !important;font-size:20px}
+.tip{font-size:12px;color:#a3a3a3;text-align:center;margin-top:12px;padding:10px;background:rgba(139,92,246,0.08);border-radius:8px}
+</style>
+</head>
+<body>
+<h1>Customer Lifetime Value</h1>
+<div class="calc">
+  <div class="input-group"><label>Average Purchase Value (N)</label><input type="number" id="avgPurchase" value="5000"></div>
+  <div class="input-group"><label>Purchases per Year</label><input type="number" id="freq" value="12"></div>
+  <div class="input-group"><label>Customer Lifespan (years)</label><input type="number" id="lifespan" value="3" step="0.5"></div>
+  <div class="input-group"><label>Customer Acquisition Cost (N)</label><input type="number" id="cac" value="2000"></div>
+  <div class="input-group"><label>Profit Margin %</label><input type="number" id="margin" value="30" step="1"></div>
+  <button class="btn" onclick="calculate()">Calculate CLV</button>
+  <div class="results" id="results">
+    <div class="result-row"><span>Annual Revenue per Customer</span><span id="annualRev">N0</span></div>
+    <div class="result-row"><span>Annual Profit per Customer</span><span id="annualProfit">N0</span></div>
+    <div class="result-row"><span>Customer Lifetime Value (CLV)</span><span id="clv" class="highlight">N0</span></div>
+    <div class="result-row"><span>CLV:CAC Ratio</span><span id="ratio">0:1</span></div>
+    <div class="result-row"><span>Payback Period</span><span id="payback">0 months</span></div>
+  </div>
+  <div class="tip" id="tip"></div>
+</div>
+<script>
+function formatN(n){return 'N'+Math.round(n).toLocaleString()}
+function calculate(){
+  const apv=parseFloat(document.getElementById('avgPurchase').value)||0;
+  const freq=parseInt(document.getElementById('freq').value)||0;
+  const life=parseFloat(document.getElementById('lifespan').value)||0;
+  const cac=parseFloat(document.getElementById('cac').value)||0;
+  const margin=parseFloat(document.getElementById('margin').value)/100||0;
+  const annualRev=apv*freq;
+  const annualProfit=annualRev*margin;
+  const clv=annualProfit*life;
+  const ratio=cac>0?(clv/cac):0;
+  const payback=cac>0?(cac/annualProfit*12):0;
+  document.getElementById('annualRev').textContent=formatN(annualRev);
+  document.getElementById('annualProfit').textContent=formatN(annualProfit);
+  document.getElementById('clv').textContent=formatN(clv);
+  document.getElementById('ratio').textContent=ratio.toFixed(1)+':1';
+  document.getElementById('payback').textContent=payback.toFixed(1)+' months';
+  document.getElementById('results').classList.add('show');
+  let tip='💡 ';
+  if(ratio>=4)tip+='Excellent! Your CLV:CAC ratio is '+ratio.toFixed(1)+':1. Customers generate 4x+ their acquisition cost.';
+  else if(ratio>=3)tip+='Good! Ratio of '+ratio.toFixed(1)+':1. Industry benchmark is 3:1 or higher.';
+  else if(ratio>=1)tip+='Warning: Ratio of '+ratio.toFixed(1)+':1. You should reduce CAC or increase CLV.';
+  else tip+='Danger: CLV is less than CAC. You\'re losing money per customer.';
+  document.getElementById('tip').textContent=tip;
+}
+calculate();
+</script>
+</body>
+</html>

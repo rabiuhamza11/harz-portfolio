@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Button Generator — Design Beautiful Buttons | Harz</title>
+<meta name="description" content="Generate CSS buttons with gradients, shadows, hover effects, and animations. Copy-ready code.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;padding:16px}
+h1{text-align:center;font-size:22px;margin:16px 0}
+.app{max-width:700px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.app{grid-template-columns:1fr}}
+.controls{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px}
+.control{margin-bottom:10px}
+.control label{font-size:12px;color:#a3a3a3;margin-bottom:3px;display:block}
+.control input[type="text"],.control input[type="number"]{width:100%;background:#1c1c1c;border:1px solid #2a2a2a;color:#fff;padding:8px;border-radius:6px;font-size:13px}
+.control input[type="color"]{width:100%;height:36px;border:1px solid #2a2a2a;border-radius:6px;cursor:pointer;background:#1c1c1c}
+.control input[type="range"]{width:100%}
+.control .val{font-size:12px;color:#3b82f6;font-weight:700;float:right}
+.preview{background:#141414;border:1px solid #2a2a2a;border-radius:12px;min-height:300px;display:flex;align-items:center;justify-content:center;padding:30px}
+.btn{font-size:16px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s}
+.code{grid-column:1/-1;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:14px;font-family:monospace;font-size:12px;color:#3b82f6;word-break:break-all;white-space:pre-wrap}
+.copy-btn{grid-column:1/-1;background:#3b82f6;color:#fff;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;text-align:center}
+</style>
+</head>
+<body>
+<h1>CSS Button Generator</h1>
+<div class="app">
+  <div class="controls">
+    <div class="control"><label>Button Text</label><input type="text" id="text" value="Click Me" oninput="update()"></div>
+    <div class="control"><label>Background</label><input type="color" id="bg" value="#3b82f6" oninput="update()"></div>
+    <div class="control"><label>Text Color</label><input type="color" id="textColor" value="#ffffff" oninput="update()"></div>
+    <div class="control"><label>Padding X <span class="val" id="pxVal">24px</span></label><input type="range" id="px" min="8" max="60" value="24" oninput="update()"></div>
+    <div class="control"><label>Padding Y <span class="val" id="pyVal">12px</span></label><input type="range" id="py" min="4" max="30" value="12" oninput="update()"></div>
+    <div class="control"><label>Border Radius <span class="val" id="brVal">8px</span></label><input type="range" id="br" min="0" max="50" value="8" oninput="update()"></div>
+    <div class="control"><label>Font Size <span class="val" id="fsVal">16px</span></label><input type="range" id="fs" min="10" max="30" value="16" oninput="update()"></div>
+    <div class="control"><label>Shadow <span class="val" id="shVal">4px</span></label><input type="range" id="sh" min="0" max="30" value="4" oninput="update()"></div>
+    <div class="control"><label>Use Gradient?</label><input type="checkbox" id="gradient" oninput="update()"></div>
+    <div class="control" id="grad2" style="display:none"><label>Gradient End</label><input type="color" id="bg2" value="#8b5cf6" oninput="update()"></div>
+  </div>
+  <div class="preview"><button class="btn" id="btn">Click Me</button></div>
+  <div class="code" id="code"></div>
+  <button class="copy-btn" onclick="copyCode()">Copy CSS</button>
+</div>
+<script>
+function update(){
+  const text=document.getElementById('text').value;
+  const bg=document.getElementById('bg').value;
+  const tc=document.getElementById('textColor').value;
+  const px=document.getElementById('px').value;
+  const py=document.getElementById('py').value;
+  const br=document.getElementById('br').value;
+  const fs=document.getElementById('fs').value;
+  const sh=document.getElementById('sh').value;
+  const grad=document.getElementById('gradient').checked;
+  const bg2=document.getElementById('bg2').value;
+  document.getElementById('grad2').style.display=grad?'block':'none';
+  document.getElementById('pxVal').textContent=px+'px';
+  document.getElementById('pyVal').textContent=py+'px';
+  document.getElementById('brVal').textContent=br+'px';
+  document.getElementById('fsVal').textContent=fs+'px';
+  document.getElementById('shVal').textContent=sh+'px';
+  const btn=document.getElementById('btn');
+  btn.textContent=text;
+  btn.style.background=grad?`linear-gradient(135deg,${bg},${bg2})`:bg;
+  btn.style.color=tc;
+  btn.style.padding=py+'px '+px+'px';
+  btn.style.borderRadius=br+'px';
+  btn.style.fontSize=fs+'px';
+  btn.style.boxShadow=sh>0?`0 ${sh/2}px ${sh}px rgba(0,0,0,0.3)`:''none';
+  const bgCSS=grad?`linear-gradient(135deg, ${bg}, ${bg2})`:bg;
+  document.getElementById('code').textContent=`.btn {\n  background: ${bgCSS};\n  color: ${tc};\n  padding: ${py}px ${px}px;\n  border-radius: ${br}px;\n  font-size: ${fs}px;\n  font-weight: bold;\n  border: none;\n  cursor: pointer;\n  box-shadow: 0 ${sh/2}px ${sh}px rgba(0,0,0,0.3);\n  transition: all 0.2s;\n}\n\n.btn:hover {\n  opacity: 0.9;\n  transform: translateY(-2px);\n}`;
+}
+function copyCode(){navigator.clipboard.writeText(document.getElementById('code').textContent);alert('Button CSS copied!');}
+update();
+</script>
+</body>
+</html>
