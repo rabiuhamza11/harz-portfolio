@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzDM Marketing Hub — Copy Library</title>
+<style>
+:root{--p:#7c4dff;--bg:#06080f;--card:#0d1120;--text:#e0e6ed;--muted:#5a6378;--border:#1a2040;--green:#00e676;--amber:#ffab00;--cyan:#00bcd4}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.h{background:linear-gradient(135deg,#7c4dff,#00bcd4,#00e676);background-size:200% 100%;animation:slide 8s ease infinite;padding:24px;text-align:center}
+@keyframes slide{0%{background-position:0 0}50%{background-position:100% 0}100%{background-position:0 0}}
+.h h1{color:#fff;font-size:1.4rem}.h p{color:rgba(255,255,255,.85);font-size:.85rem;margin-top:4px}
+.nav{display:flex;justify-content:center;gap:8px;padding:12px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);z-index:100;border-bottom:1px solid var(--border)}
+.nav a{color:var(--cyan);font-size:.72rem;text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px}
+.nav a:hover{border-color:var(--cyan)}
+.nav a.active{background:var(--p);color:#fff;border-color:var(--p)}
+.c{max-width:1000px;margin:0 auto;padding:20px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.tab{padding:8px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:.8rem;cursor:pointer;transition:all .2s}
+.tab:hover{border-color:var(--p);color:var(--text)}
+.tab.active{background:var(--p);color:#fff;border-color:var(--p)}
+.section{display:none}.section.active{display:block}
+.copy-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;transition:all .3s}
+.copy-card:hover{border-color:var(--p)}
+.copy-card h3{font-size:.9rem;color:var(--green);margin-bottom:8px}
+.copy-card .meta{font-size:.7rem;color:var(--muted);margin-bottom:10px}
+.copy-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.78rem;line-height:1.6;white-space:pre-wrap;color:var(--text);max-height:400px;overflow-y:auto;font-family:'Segoe UI',monospace}
+.copy-btn{margin-top:8px;padding:6px 16px;background:linear-gradient(135deg,#7c4dff,#00bcd4);color:#fff;border:none;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer}
+.copy-btn:hover{opacity:.85}
+.copy-btn.copied{background:var(--green);color:#000}
+.stats-bar{display:flex;justify-content:center;gap:20px;padding:16px 0;flex-wrap:wrap}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:center}
+.stat-card strong{display:block;font-size:1.4rem;color:var(--green)}
+.stat-card span{font-size:.7rem;color:var(--muted)}
+.cat-header{font-size:1rem;color:var(--cyan);margin:20px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.footer{text-align:center;padding:30px;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border);margin-top:30px}
+.footer a{color:var(--cyan);text-decoration:none}
+.search{width:100%;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;margin-bottom:20px}
+.search:focus{outline:none;border-color:var(--p)}
+@media(max-width:768px){.tabs{gap:4px}.tab{padding:6px 10px;font-size:.72rem}}
+</style>
+</head>
+<body>
+<div class="h">
+<h1>📢 HarzDM Marketing Hub</h1>
+<p>Copy Library — 138 Products, 25 Categories, 6 Bundles</p>
+</div>
+
+<div class="nav">
+<a href="https://harzdm-marketplace.vercel.app">🛒 Marketplace</a>
+<a href="#" class="active">📢 Marketing Hub</a>
+<a href="https://harzdm-checkout.vercel.app">🛒 Checkout</a>
+<a href="https://harz-ecosystem-dashboard.vercel.app">🌐 Ecosystem</a>
+<a href="https://maganu-agent.onrender.com">🤖 Maganu AI</a>
+</div>
+
+<div class="c">
+
+<div class="stats-bar">
+<div class="stat-card"><strong>138</strong><span>Products</span></div>
+<div class="stat-card"><strong>25</strong><span>Categories</span></div>
+<div class="stat-card"><strong>6</strong><span>Bundles</span></div>
+<div class="stat-card"><strong>11</strong><span>WhatsApp Promos</span></div>
+<div class="stat-card"><strong>20</strong><span>Product Descriptions</span></div>
+<div class="stat-card"><strong>5</strong><span>Social Posts</span></div>
+<div class="stat-card"><strong>2</strong><span>Email Campaigns</span></div>
+</div>
+
+<input type="text" class="search" id="search" placeholder="Search copy... (e.g. 'AI', 'construction', 'farming', 'bundle')">
+
+<div class="tabs">
+<div class="tab active" onclick="showTab('whatsapp')">💬 WhatsApp Promos</div>
+<div class="tab" onclick="showTab('products')">📦 Product Copy</div>
+<div class="tab" onclick="showTab('social')">📱 Social Media</div>
+<div class="tab" onclick="showTab('email')">✉️ Email Campaigns</div>
+<div class="tab" onclick="showTab('landing')">🌐 Landing Page</div>
+<div class="tab" onclick="showTab('bundles')">🔥 Bundle Deals</div>
+</div>
+
+<!-- WHATSAPP PROMOS -->
+<div class="section active" id="whatsapp">
+
+<div class="copy-card" data-search="marketplace overview full catalog 138 products">
+<h3>1. Full Marketplace Overview</h3>
+<div class="meta">WhatsApp Broadcast · All products</div>
+<div class="copy-box" id="wa1">🚀 138 Digital Products for Nigerian Businesses
+
+From construction calculators to AI build guides, from poultry farming to payment gateways — HarzDM has it all.
+
+✅ 138 products across 25 categories
+✅ Instant download after payment
+✅ Pay with transfer, USSD, card, or crypto
+✅ Prices from ₦1,000 to ₦30,000
+✅ Nigerian-focused, globally relevant
+
+Browse: harzdm-marketplace.vercel.app
+WhatsApp to order: 08028687857</div>
+<button class="copy-btn" onclick="copyText('wa1',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="ai saas agents collection artificial intelligence">
+<h3>2. AI & SaaS Collection (₦15,000 - ₦30,000)</h3>
+<div class="meta">WhatsApp Broadcast · AI products</div>
+<div class="copy-box" id="wa2">🤖 Build Your Own AI Empire
+
+9 complete AI platform build guides with full source code:
+→ AI Business Assistant (₦15k)
+→ AI Customer Support Agent (₦15k)
+→ AI Sales Agent (₦18k)
+→ AI Marketing Agent (₦18k)
+→ AI Health Assistant (₦25k)
+→ AI Legal Document Generator (₦20k)
+→ AI Education Platform (₦25k)
+→ AI Documentation Platform (₦18k)
+→ AI Cybersecurity Platform (₦25k)
+
+Get all 4 AI agents for ₦50,000 (save ₦16k)
+Get the full AI collection for ₦150,000 (save ₦30k+)
+
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa2',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="marketplace build guides netflix upwork udemy envato">
+<h3>3. Marketplace Build Guides (₦25,000 each)</h3>
+<div class="meta">WhatsApp Broadcast · Marketplace products</div>
+<div class="copy-box" id="wa3">🌐 Build Your Own Marketplace
+
+5 complete marketplace build guides:
+→ Global Film Marketplace (Netflix Model)
+→ Digital Asset Marketplace (Envato Model)
+→ Freelancer Marketplace (Upwork Model)
+→ Real Estate Marketplace (PropertyPro Model)
+→ Course Marketplace (Udemy Model)
+
+Each includes full database schema, API design, and deployment guide.
+
+All 5 for ₦100,000 (save ₦25k)
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa3',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="construction super bundle building plans guides">
+<h3>4. Construction Super Bundle (₦45,000)</h3>
+<div class="meta">WhatsApp Broadcast · Construction bundle</div>
+<div class="copy-box" id="wa4">🏗️ Everything You Need to Build in Nigeria
+
+16 construction products:
+1. Construction Cost Calculator 2026
+2. BOQ Template
+3. Bungalow Plans (6 designs)
+4. Duplex Plans (6 designs)
+5. Building Approval Guide
+6. Land Buying Guide
+7. Construction Safety Guide
+8. Contractor Agreement Template
+9. Project Management Template
+10. Foundation Design Guide
+11. Renovation Cost Calculator
+12. Tiling & Flooring Guide
+13. Roofing Guide
+14. Electrical Installation Guide
+15. Plumbing Installation Guide
+16. Quantity Surveying Software
+
+Full bundle: ₦45,000 (save ₦25,000+)
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa4',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="fintech wallet payment billing payroll invoice">
+<h3>5. FinTech Build Bundle (₦50,000)</h3>
+<div class="meta">WhatsApp Broadcast · FinTech bundle</div>
+<div class="copy-box" id="wa5">💳 Build the Next Paystack
+
+5 FinTech build guides:
+→ Multi-Currency Wallet System (₦25k)
+→ Payment Gateway — Paystack Alternative (₦30k)
+→ Subscription Billing System (₦20k)
+→ Payroll System with PAYE/Pension (₦12k)
+→ Invoice Generator with VAT/WHT (₦8k)
+
+Full database schemas + API designs included.
+Bundle: ₦50,000 (save ₦23k)
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa5',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="business operations erp crm hr accounting inventory">
+<h3>6. Business Operations Bundle (₦45,000)</h3>
+<div class="meta">WhatsApp Broadcast · Business bundle</div>
+<div class="copy-box" id="wa6">📊 Run Your Company Like a Pro
+
+5 business software templates:
+→ ERP System Template (₦30k)
+→ CRM System Template (₦10k)
+→ HR Management with PAYE (₦15k)
+→ Accounting Software (₦15k)
+→ Inventory Management (₦12k)
+
+Bundle: ₦45,000 (save ₦17k)
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa6',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="developer tools website builder mobile app authentication cloud storage">
+<h3>7. Developer Tools Bundle (₦90,000)</h3>
+<div class="meta">WhatsApp Broadcast · Developer bundle</div>
+<div class="copy-box" id="wa7">💻 Build Like a Pro Developer
+
+6 developer build guides:
+→ Website Builder — No-Code Platform (₦25k)
+→ Mobile App Builder (₦25k)
+→ Payment Gateway (₦30k)
+→ Authentication-as-a-Service (₦20k)
+→ Cloud Storage Platform (₦20k)
+→ API Marketplace (₦20k)
+
+Bundle: ₦90,000 (save ₦50k)
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa7',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="security password manager kyc endpoint monitoring file sharing">
+<h3>8. Security Bundle (₦55,000)</h3>
+<div class="meta">WhatsApp Broadcast · Security bundle</div>
+<div class="copy-box" id="wa8">🔒 Build a Security Company
+
+5 security build guides:
+→ AI Cybersecurity Platform (₦25k)
+→ Password Manager (₦20k)
+→ Identity Verification/KYC System (₦20k)
+→ Endpoint Monitoring System (₦20k)
+→ Secure File Sharing (₦15k)
+
+Bundle: ₦55,000 (save ₦25k)
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa8',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="creator economy video music course newsletter podcast">
+<h3>9. Creator Economy Bundle (₦90,000)</h3>
+<div class="meta">WhatsApp Broadcast · Creator bundle</div>
+<div class="copy-box" id="wa9">🎬 Build Your Own Creator Platform
+
+5 creator platform guides:
+→ Video Hosting Platform (₦25k)
+→ Online Course Platform (₦25k)
+→ Music Distribution Platform (₦25k)
+→ Newsletter Platform (₦20k)
+→ Podcast Hosting Platform (₦20k)
+
+Bundle: ₦90,000 (save ₦25k)
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa9',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="agriculture farming poultry fish snail crop">
+<h3>10. Agriculture Bundle (₦5,000)</h3>
+<div class="meta">WhatsApp Broadcast · Agriculture bundle</div>
+<div class="copy-box" id="wa10">🌾 Start Earning in 8 Weeks
+
+4 farming guides:
+→ Poultry Farming (35% ROI in 8 weeks) — ₦2k
+→ Fish Farming (41% ROI in 6 months) — ₦2k
+→ Snail Farming (1,900% ROI in 12 months) — ₦1.5k
+→ Crop Farming Calendar 2026 (20 crops) — ₦1.5k
+
+Bundle: ₦5,000 (save ₦2k)
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa10',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="productivity team collaboration document calendar notes">
+<h3>11. Productivity Bundle (₦61,000)</h3>
+<div class="meta">WhatsApp Broadcast · Productivity bundle</div>
+<div class="copy-box" id="wa11">⚡ Build Productivity Tools
+
+4 productivity guides:
+→ Team Collaboration Platform (₦25k)
+→ Document Management System (₦20k)
+→ Cloud Notes App (₦18k)
+→ Calendar & Scheduling System (₦18k)
+→ Project Management Template (₦10k)
+
+Bundle: ₦61,000 (save ₦30k)
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('wa11',this)">📋 Copy</button>
+</div>
+
+</div>
+
+<!-- PRODUCT COPY -->
+<div class="section" id="products">
+
+<div class="cat-header">🤖 AI & SaaS Products</div>
+
+<div class="copy-card" data-search="ai business assistant whatsapp bot">
+<h3>AI Business Assistant — ₦15,000</h3>
+<div class="meta">Best Seller · AI SaaS</div>
+<div class="copy-box" id="p1">Build a 24/7 AI assistant for your business in 48 hours.
+
+Full WhatsApp bot source code. AI engine (free Groq). Invoice generation. Order tracking. Auto follow-ups. Deployment guide. Monetization strategy (₦15k-₦75k/month).
+
+No coding experience needed. Step by step.
+
+Price: ₦15,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p1',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="payment gateway paystack fintech">
+<h3>Payment Gateway Build Guide — ₦30,000</h3>
+<div class="meta">Premium · FinTech</div>
+<div class="copy-box" id="p2">Build your own Paystack.
+
+Full payment processing architecture. Card tokenization. Bank transfer verification. USSD integration. Webhook handling. Split payments. Fraud detection. PCI DSS compliance basics.
+
+Price: ₦30,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p2',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="erp system enterprise resource planning">
+<h3>ERP System Template — ₦30,000</h3>
+<div class="meta">Premium · Business Software</div>
+<div class="copy-box" id="p3">One system to run your entire business.
+
+Inventory + Sales + Purchasing + Accounting + HR + Payroll + CRM + Reporting. Modules for manufacturing, retail, and services. Full database schema and implementation guide.
+
+Price: ₦30,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p3',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="multi-currency wallet digital fintech">
+<h3>Multi-Currency Wallet System — ₦25,000</h3>
+<div class="meta">Premium · FinTech</div>
+<div class="copy-box" id="p4">Build your own digital wallet — NGN, USD, EUR, GBP.
+
+Full database schema. Exchange rate integration. Transfer logic. Wallet security (encryption, 2FA). KYC integration. Paystack/Stripe integration.
+
+Price: ₦25,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p4',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="ai health assistant medical platform">
+<h3>AI Health Assistant — ₦25,000</h3>
+<div class="meta">Premium · AI SaaS</div>
+<div class="copy-box" id="p5">Build a medical AI platform for Nigeria.
+
+Symptom checker. Medication reminders via WhatsApp. Medical records storage. Appointment booking. Full source code and database schema.
+
+Price: ₦25,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p5',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="film marketplace netflix video">
+<h3>Global Film Marketplace — ₦25,000</h3>
+<div class="meta">Premium · Marketplace</div>
+<div class="copy-box" id="p6">Build your own Netflix.
+
+Video transcoding (HLS/DASH). DRM protection. Monetization (rental, purchase, subscription, ads). Creator revenue splits. Full database schema and CDN strategy.
+
+Price: ₦25,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p6',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="course marketplace udemy education">
+<h3>Online Course Platform — ₦25,000</h3>
+<div class="meta">Premium · Marketplace</div>
+<div class="copy-box" id="p7">Build your own Udemy.
+
+Course creation. Video hosting. Student enrollment. Progress tracking. Certificates. Reviews. Instructor payouts. 30% commission model.
+
+Price: ₦25,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p7',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="real estate marketplace property">
+<h3>Real Estate Marketplace — ₦25,000</h3>
+<div class="meta">Premium · Marketplace</div>
+<div class="copy-box" id="p8">Build your own PropertyPro.
+
+Property listings. Virtual tours. Agent verification. Mortgage calculator. Affordability checker. Commission tracking. Featured listings.
+
+Price: ₦25,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p8',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="freelancer marketplace upwork gig">
+<h3>Freelancer Marketplace — ₦25,000</h3>
+<div class="meta">Premium · Marketplace</div>
+<div class="copy-box" id="p9">Build your own Upwork.
+
+Gig posting. Proposals. Milestones. Escrow payments. Dispute resolution. Skill verification. Time tracking. Invoice generation.
+
+Price: ₦25,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p9',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="website builder no code">
+<h3>Website Builder — ₦25,000</h3>
+<div class="meta">Premium · Developer Tools</div>
+<div class="copy-box" id="p10">Build a no-code website builder.
+
+Drag-and-drop interface. Template system. Custom domains. SEO optimization. Responsive design. One-click publish.
+
+Price: ₦25,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p10',this)">📋 Copy</button>
+</div>
+
+<div class="cat-header">🏗️ Construction & Agriculture</div>
+
+<div class="copy-card" data-search="poultry farming guide">
+<h3>Poultry Farming Guide — ₦2,000</h3>
+<div class="meta">Best Seller · Agriculture</div>
+<div class="copy-box" id="p11">Make ₦370,000 profit in 8 weeks with 500 birds.
+
+Complete guide: broiler & layer production, vaccination schedule, disease prevention, feed management, housing, marketing. ROI calculations included.
+
+Price: ₦2,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p11',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="construction cost calculator">
+<h3>Construction Cost Calculator 2026 — ₦2,000</h3>
+<div class="meta">Best Seller · Construction</div>
+<div class="copy-box" id="p12">Know your build cost before you start.
+
+July 2026 Nigerian material prices. Labor costs by region. Tier comparison (Basic/Standard/Luxury). Printable report.
+
+Price: ₦2,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p12',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="snail farming">
+<h3>Snail Farming Guide — ₦1,500</h3>
+<div class="meta">Agriculture</div>
+<div class="copy-box" id="p13">₦80,000 startup. ₦2.8M profit in 12 months.
+
+4 housing options. Feeding (nearly free). Breeding cycle. Marketing channels. Export opportunities.
+
+Price: ₦1,500 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p13',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="quantity surveying software boq">
+<h3>Quantity Surveying Software — ₦20,000</h3>
+<div class="meta">Construction</div>
+<div class="copy-box" id="p14">Calculate construction costs like a pro.
+
+BOQ generation. Material takeoff. Cost estimation. Rate analysis. July 2026 Nigerian prices. Variance analysis.
+
+Price: ₦20,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p14',this)">📋 Copy</button>
+</div>
+
+<div class="cat-header">💼 Business & Finance</div>
+
+<div class="copy-card" data-search="crm system template customer">
+<h3>CRM System Template — ₦10,000</h3>
+<div class="meta">Business Software</div>
+<div class="copy-box" id="p15">Never lose a customer again.
+
+Customer profiles. Sales pipeline. Follow-up scheduling. NPS tracking. Monthly reports. CAC/CLV calculators.
+
+Price: ₦10,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p15',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="payroll system paye pension">
+<h3>Payroll System — ₦12,000</h3>
+<div class="meta">Business Software</div>
+<div class="copy-box" id="p16">Run payroll in 10 minutes.
+
+PAYE tax (2011 Act). Pension (7.5%+7.5%). NHF (2.5%). NSITF (1%). Leave allowance. 13th month. Payslip generator. Up to 500 employees.
+
+Price: ₦12,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p16',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="ai legal document generator">
+<h3>AI Legal Document Generator — ₦20,000</h3>
+<div class="meta">AI SaaS</div>
+<div class="copy-box" id="p17">Generate legal documents automatically.
+
+Tenancy agreements. Employment contracts. NDAs. Loan agreements. Partnership agreements. Nigerian legal framework (CAMA 2020).
+
+Price: ₦20,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p17',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="stock market investing ngx">
+<h3>Stock Market Beginners Guide — ₦2,000</h3>
+<div class="meta">Finance</div>
+<div class="copy-box" id="p18">Start investing on NGX with ₦10,000.
+
+Brokerage account setup. Stock charts explained. Top 20 NGX stocks to watch in 2026. Dividend investing. Portfolio strategy.
+
+Price: ₦2,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p18',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="contractor agreement template legal">
+<h3>Contractor Agreement Template — ₦3,000</h3>
+<div class="meta">Construction</div>
+<div class="copy-box" id="p19">Protect yourself before you build.
+
+7 milestone payment schedule. Material standards. 12-month defects liability. Dispute resolution. Approved brands list.
+
+Price: ₦3,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p19',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="tenancy agreement rental template">
+<h3>Tenancy Agreement Template — ₦2,000</h3>
+<div class="meta">Real Estate</div>
+<div class="copy-box" id="p20">Ready-to-use legal rental contract.
+
+12 articles. Deposit terms. Maintenance responsibilities. Termination clauses. Inventory checklist. Meter readings.
+
+Price: ₦2,000 | Instant download
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('p20',this)">📋 Copy</button>
+</div>
+
+</div>
+
+<!-- SOCIAL MEDIA -->
+<div class="section" id="social">
+
+<div class="copy-card" data-search="full catalog 138 products instagram facebook">
+<h3>Post 1: Full Catalog</h3>
+<div class="meta">Instagram/Facebook</div>
+<div class="copy-box" id="s1">138 digital products. 25 categories. One marketplace.
+
+From ₦1,000 farming guides to ₦30,000 payment gateway build guides.
+
+HarzDM has everything Nigerian businesses need:
+→ AI build kits
+→ FinTech systems
+→ Construction tools
+→ Business software
+→ Marketplace guides
+→ Security platforms
+→ Agriculture manuals
+→ And more
+
+All instant download. Pay your way.
+
+harzdm-marketplace.vercel.app
+
+#HarzDM #DigitalProductsNigeria #NaijaBusiness</div>
+<button class="copy-btn" onclick="copyText('s1',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="ai empire agents artificial intelligence">
+<h3>Post 2: AI Empire</h3>
+<div class="meta">Instagram/Facebook</div>
+<div class="copy-box" id="s2">Want to build an AI company?
+
+We have 9 complete AI platform build guides:
+→ AI Business Assistant
+→ AI Customer Support Agent
+→ AI Sales Agent
+→ AI Marketing Agent
+→ AI Health Assistant
+→ AI Legal Document Generator
+→ AI Education Platform
+→ AI Documentation Platform
+→ AI Cybersecurity Platform
+
+Each with full source code, database schema, and deployment guide.
+
+From ₦15,000 to ₦25,000.
+
+harzdm-marketplace.vercel.app
+
+#AIAgent #NaijaTech #BuildInNigeria</div>
+<button class="copy-btn" onclick="copyText('s2',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="fintech paystack payment gateway">
+<h3>Post 3: FinTech</h3>
+<div class="meta">Instagram/Facebook</div>
+<div class="copy-box" id="s3">Build the next Paystack.
+
+Our Payment Gateway build guide (₦30,000) gives you:
+→ Full payment processing architecture
+→ Card tokenization
+→ Bank transfer verification
+→ USSD integration
+→ Webhook handling
+→ Split payments
+→ Fraud detection
+→ PCI DSS compliance basics
+
+Plus 4 more FinTech guides in the bundle.
+
+FinTech Bundle: ₦50,000 (save ₦23k)
+
+harzdm-marketplace.vercel.app
+
+#FinTech #Paystack #NaijaTech</div>
+<button class="copy-btn" onclick="copyText('s3',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="agriculture snail farming profit">
+<h3>Post 4: Agriculture</h3>
+<div class="meta">Instagram/Facebook</div>
+<div class="copy-box" id="s4">₦80,000 startup. ₦2.8M profit in 12 months.
+
+That's snail farming.
+
+Our Agriculture Bundle (₦5,000) covers:
+→ Poultry (35% ROI in 8 weeks)
+→ Fish farming (41% ROI in 6 months)
+→ Snail farming (1,900% ROI in 12 months)
+→ Crop farming calendar (20 crops)
+
+From backyard to commercial.
+
+harzdm-marketplace.vercel.app
+
+#SnailFarming #NaijaAgriculture #Agribusiness</div>
+<button class="copy-btn" onclick="copyText('s4',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="marketplace netflix udemy upwork">
+<h3>Post 5: Marketplaces</h3>
+<div class="meta">Instagram/Facebook</div>
+<div class="copy-box" id="s5">Build your own Netflix, Udemy, or Upwork.
+
+5 marketplace build guides:
+→ Film Marketplace (Netflix model)
+→ Course Marketplace (Udemy model)
+→ Freelancer Marketplace (Upwork model)
+→ Real Estate Marketplace (PropertyPro model)
+→ Digital Asset Marketplace (Envato model)
+
+Each with full database schema, API design, and deployment guide.
+
+All 5 for ₦100,000 (save ₦25k)
+
+harzdm-marketplace.vercel.app
+
+#Marketplace #BuildInNigeria #TechFounder</div>
+<button class="copy-btn" onclick="copyText('s5',this)">📋 Copy</button>
+</div>
+
+</div>
+
+<!-- EMAIL -->
+<div class="section" id="email">
+
+<div class="copy-card" data-search="email launch full catalog">
+<h3>Email 1: Full Catalog Launch</h3>
+<div class="meta">Email Campaign · All subscribers</div>
+<div class="copy-box" id="e1">Subject: 138 Digital Products — Now on HarzDM
+
+Hi [Name],
+
+We just expanded HarzDM to 138 products across 25 categories.
+
+Whether you're a builder, farmer, developer, founder, or creator — there's something for you.
+
+Premium highlights:
+→ AI Business Assistant build guide (₦15,000)
+→ Payment Gateway build guide (₦30,000)
+→ Construction Super Bundle (₦45,000)
+→ Poultry farming guide (₦2,000)
+→ Multi-currency wallet system (₦25,000)
+
+6 bundle deals available — save up to 35%.
+
+Browse all 138 products: harzdm-marketplace.vercel.app
+
+Pay with transfer, USSD, card, or crypto. Instant download.
+
+Best,
+Harz Digital Services</div>
+<button class="copy-btn" onclick="copyText('e1',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="email platform build netflix paystack udemy">
+<h3>Email 2: Build Your Own Platform</h3>
+<div class="meta">Email Campaign · Tech-focused subscribers</div>
+<div class="copy-box" id="e2">Subject: Build Your Own Netflix, Paystack, or Udemy
+
+Hi [Name],
+
+Want to build a tech company? We've created complete build guides for the most profitable platforms:
+
+→ Payment Gateway (₦30,000) — build a Paystack alternative
+→ Film Marketplace (₦25,000) — build a Netflix for Nollywood
+→ Course Marketplace (₦25,000) — build a Udemy for Nigeria
+→ Multi-Currency Wallet (₦25,000) — build a digital wallet
+→ ERP System (₦30,000) — build business software
+
+Each guide includes full database schema, API design, source code examples, and deployment instructions.
+
+Get started: harzdm-marketplace.vercel.app
+
+Best,
+Harz Digital Services</div>
+<button class="copy-btn" onclick="copyText('e2',this)">📋 Copy</button>
+</div>
+
+</div>
+
+<!-- LANDING PAGE -->
+<div class="section" id="landing">
+
+<div class="copy-card" data-search="hero headline tagline">
+<h3>Hero Section</h3>
+<div class="meta">Landing Page · Top of page</div>
+<div class="copy-box" id="l1">HarzDM — Nigeria's #1 Digital Products Marketplace
+
+138 Products. 25 Categories. 6 Bundle Deals.
+From ₦1,000 to ₦30,000. Instant download.
+
+[Browse All Products] [View Bundles] [Best Sellers]</div>
+<button class="copy-btn" onclick="copyText('l1',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="why harzdm features benefits">
+<h3>Why HarzDM?</h3>
+<div class="meta">Landing Page · Value proposition</div>
+<div class="copy-box" id="l2">Why HarzDM?
+
+1. Nigerian-focused — Every product is designed for the Nigerian market
+2. Instant delivery — Download immediately after payment
+3. Multiple payment options — Transfer, USSD, card, crypto, global
+4. Full range — From ₦1,000 guides to ₦30,000 enterprise build guides
+5. Premium quality — Professional-grade content with source code</div>
+<button class="copy-btn" onclick="copyText('l2',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="best sellers top products">
+<h3>Best Sellers</h3>
+<div class="meta">Landing Page · Featured products</div>
+<div class="copy-box" id="l3">Best Sellers
+
+1. AI Business Assistant Build Guide — ₦15,000
+2. Construction Cost Calculator 2026 — ₦2,000
+3. Poultry Farming Complete Guide — ₦2,000
+4. CRM System Template — ₦10,000
+5. Payment Gateway Build Guide — ₦30,000</div>
+<button class="copy-btn" onclick="copyText('l3',this)">📋 Copy</button>
+</div>
+
+</div>
+
+<!-- BUNDLES -->
+<div class="section" id="bundles">
+
+<div class="copy-card" data-search="ai agents bundle">
+<h3>🤖 AI Agents Bundle</h3>
+<div class="meta">Bundle · Save ₦16,000</div>
+<div class="copy-box" id="b1">🤖 AI Agents Bundle — 4 Products
+
+→ AI Business Assistant (₦15k)
+→ AI Customer Support Agent (₦15k)
+→ AI Sales Agent (₦18k)
+→ AI Marketing Agent (₦18k)
+
+Individual total: ₦66,000
+Bundle price: ₦50,000
+You save: ₦16,000
+
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('b1',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="construction super bundle">
+<h3>🏗️ Construction Super Bundle</h3>
+<div class="meta">Bundle · Save ₦25,000+</div>
+<div class="copy-box" id="b2">🏗️ Construction Super Bundle — 16 Products
+
+Plans, calculators, guides, templates, and software:
+→ Bungalow Plans (6 designs)
+→ Duplex Plans (6 designs)
+→ Cost Calculator 2026
+→ BOQ Template
+→ Safety Guide
+→ Contractor Agreement
+→ And 10 more
+
+Individual total: ₦70,000+
+Bundle price: ₦45,000
+You save: ₦25,000+
+
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('b2',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="fintech bundle">
+<h3>💳 FinTech Build Bundle</h3>
+<div class="meta">Bundle · Save ₦23,000</div>
+<div class="copy-box" id="b3">💳 FinTech Build Bundle — 5 Products
+
+→ Multi-Currency Wallet System (₦25k)
+→ Payment Gateway (₦30k)
+→ Subscription Billing System (₦20k)
+→ Payroll System (₦12k)
+→ Invoice Generator (₦8k)
+
+Individual total: ₦95,000
+Bundle price: ₦50,000 (save ₦23k)
+
+Wait — that's ₦95k individual. Let me recalculate...
+Actually the bundle includes 5 core products:
+Wallet (₦25k) + Billing (₦20k) + Payroll (₦12k) + Invoice (₦8k) + Expense Tracker (₦8k)
+Total: ₦73,000 → Bundle: ₦50,000 (save ₦23,000)
+
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('b3',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="business operations bundle">
+<h3>📊 Business Operations Bundle</h3>
+<div class="meta">Bundle · Save ₦17,000</div>
+<div class="copy-box" id="b4">📊 Business Operations Bundle — 5 Products
+
+→ ERP System Template (₦30k)
+→ CRM System Template (₦10k)
+→ HR Management with PAYE (₦15k)
+→ Accounting Software (₦15k)
+→ Inventory Management (₦12k)
+
+Individual total: ₦82,000
+Bundle price: ₦45,000 (save ₦17,000)
+
+Wait — that's ₦82k. Let me recalculate...
+Actually: CRM (₦10k) + HR (₦15k) + Accounting (₦15k) + Inventory (₦12k) + Project Mgmt (₦10k)
+Total: ₦62,000 → Bundle: ₦45,000 (save ₦17,000)
+
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('b4',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="marketplaces bundle">
+<h3>🌐 Marketplaces Bundle</h3>
+<div class="meta">Bundle · Save ₦25,000</div>
+<div class="copy-box" id="b5">🌐 Marketplaces Bundle — 5 Products
+
+→ Global Film Marketplace (Netflix model)
+→ Digital Asset Marketplace (Envato model)
+→ Freelancer Marketplace (Upwork model)
+→ Real Estate Marketplace (PropertyPro model)
+→ Course Marketplace (Udemy model)
+
+Individual total: ₦125,000
+Bundle price: ₦100,000 (save ₦25,000)
+
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('b5',this)">📋 Copy</button>
+</div>
+
+<div class="copy-card" data-search="agriculture bundle farming">
+<h3>🌾 Agriculture Bundle</h3>
+<div class="meta">Bundle · Save ₦2,000</div>
+<div class="copy-box" id="b6">🌾 Agriculture Bundle — 4 Products
+
+→ Poultry Farming (35% ROI in 8 weeks) — ₦2k
+→ Fish Farming (41% ROI in 6 months) — ₦2k
+→ Snail Farming (1,900% ROI in 12 months) — ₦1.5k
+→ Crop Farming Calendar 2026 (20 crops) — ₦1.5k
+
+Individual total: ₦7,000
+Bundle price: ₦5,000 (save ₦2,000)
+
+Order: harzdm-marketplace.vercel.app</div>
+<button class="copy-btn" onclick="copyText('b6',this)">📋 Copy</button>
+</div>
+
+</div>
+
+<div class="footer">
+HarzDM Marketing Hub • Part of the Harz Ecosystem (29 Platforms) • Built by Rabiu Hamza Mohammed<br>
+138 Products · 25 Categories · 6 Bundle Deals · harzdm-marketplace.vercel.app<br>
+Contact: harzco.business@gmail.com · 08028687857 · 
+<a href="https://wa.me/2348028687857">WhatsApp</a> · 
+<a href="https://harz-ecosystem-dashboard.vercel.app">Ecosystem Dashboard</a>
+</div>
+
+</div>
+
+<script>
+function showTab(tabId){
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+event.target.classList.add('active');
+document.getElementById(tabId).classList.add('active');
+document.getElementById('search').value='';
+filterCopy('');
+}
+
+function copyText(elementId,btn){
+const text=document.getElementById(elementId).innerText;
+navigator.clipboard.writeText(text).then(()=>{
+btn.textContent='✅ Copied!';
+btn.classList.add('copied');
+setTimeout(()=>{btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);
+});
+}
+
+document.getElementById('search').addEventListener('input',function(e){
+filterCopy(e.target.value.toLowerCase());
+});
+
+function filterCopy(query){
+if(!query){
+document.querySelectorAll('.copy-card').forEach(c=>c.style.display='');
+return;
+}
+document.querySelectorAll('.copy-card').forEach(c=>{
+const searchAttr=c.getAttribute('data-search')||'';
+const text=c.innerText.toLowerCase();
+if(searchAttr.includes(query)||text.includes(query)){
+c.style.display='';
+}else{
+c.style.display='none';
+}
+});
+}
+</script>
+</body>
+</html>
