@@ -1,0 +1,2068 @@
+============================================================
+HARZ ECOSYSTEM — SELAR PRODUCT LIST
+Total Products: 259 (88 USD + 171 NGN)
+============================================================
+
+
+============================================================
+CATEGORY: AI Agents (3 products)
+============================================================
+
+--- Product 1 ---
+Name: AI Marketing Agent — Content & Campaign Automation
+Price: 18000 NGN
+Type: Digital Product
+Category: AI Agents
+Description: Complete build guide for an AI marketing agent that creates content, schedules posts, analyzes campaigns, optimizes ad spend, and generates reports. Includes content calendar automation, A/B testing logic, ROI calculator, social media API integration, and brand voice training. Source code and deployment guide included.
+
+--- Product 2 ---
+Name: AI Customer Support Agent — Build & Deploy Guide
+Price: 15000 NGN
+Type: Digital Product
+Category: AI Agents
+Description: Complete build guide for creating an AI customer support agent. Covers NLP setup, intent detection, knowledge base creation, multi-channel deployment (WhatsApp, Telegram, Email, Web), escalation logic, sentiment analysis, and performance metrics. Includes source code examples and deployment guide.
+
+--- Product 3 ---
+Name: AI Sales Agent — Lead Generation & Closing System
+Price: 18000 NGN
+Type: Digital Product
+Category: AI Agents
+Description: Complete build guide for an AI sales agent that can qualify leads, send follow-ups, generate quotes, negotiate pricing, and close deals. Includes lead scoring model, conversation scripts, objection handling library, CRM integration, and performance tracking. Source code and deployment guide included.
+
+
+============================================================
+CATEGORY: AI Automation (10 products)
+============================================================
+
+--- Product 1 ---
+Name: AI Real Estate Listing Assistant — Custom GPT Configuration
+Price: 4700 USD
+Type: Digital Product
+Category: AI Automation
+Description: Pre-configured AI assistant setup for real estate agents. This is a complete custom GPT configuration file that you import into ChatGPT. The assistant: 1) Generates compelling property descriptions from basic details (bedrooms, location, price), 2) Writes social media captions for Instagram, Facebook, and WhatsApp Status, 3) Creates email newsletters featuring new listings, 4) Answers buyer questions about properties, 5) Generates MLS-compliant listing text, 6) Writes follow-up messages for leads, 7) Creates virtual tour scripts. Includes: system prompt, knowledge base template, 15 example conversations, and setup guide. Just import and start listing like a pro.
+
+--- Product 2 ---
+Name: AI Customer Support Agent — Pre-Configured for Nigerian Businesses
+Price: 9700 USD
+Type: Digital Product
+Category: AI Automation
+Description: Complete pre-configured AI customer support agent. Handles: order inquiries, product questions, complaint triage, refund requests, shipping questions, account issues, and FAQ responses. Includes: system prompt optimized for Nigerian customer service tone (respectful, warm, professional), knowledge base structure for your products, escalation rules, sentiment detection, multi-language support (English, Pidgin, Yoruba, Hausa, Igbo basics), WhatsApp Business integration guide, and 50 example conversations. Works with: ChatGPT API, Claude API, or any LLM. Deploy on WhatsApp, Telegram, web chat, or email. Cuts support response time by 90%.
+
+--- Product 3 ---
+Name: AI Sales Pipeline Automation — End-to-End Zapier System
+Price: 6700 USD
+Type: Digital Product
+Category: AI Automation
+Description: Complete Zapier automation that manages your entire sales pipeline. Workflow: 1) Lead enters via form, ad, or WhatsApp, 2) AI scores the lead (hot/warm/cold) based on their responses, 3) Hot leads get instant WhatsApp message + calendar booking, 4) Warm leads enter a 5-day nurture email sequence, 5) Cold leads get monthly newsletter, 6) All leads logged in CRM with AI-generated notes, 7) Follow-up reminders set based on lead temperature, 8) Won deals trigger onboarding workflow, 9) Lost deals trigger win-back sequence after 30 days. Includes: 7 email templates, 5 WhatsApp templates, lead scoring rubric, CRM setup guide. Connect: Typeform, WhatsApp, Gmail, Calendly, Notion. Close 3x more deals with zero manual follow-up.
+
+--- Product 4 ---
+Name: AI Social Media Manager Workflow — Make.com Automation
+Price: 3700 USD
+Type: Digital Product
+Category: AI Automation
+Description: Complete Make.com automation that runs your social media on autopilot. Workflow: 1) You add content ideas to a Notion board, 2) AI generates posts for Instagram, Facebook, Twitter/X, and LinkedIn (adapted for each platform), 3) AI generates hashtags based on trending topics, 4) Posts scheduled automatically via Buffer or native scheduling, 5) AI responds to comments with personalized replies, 6) Weekly performance report generated and emailed to you. Includes: content idea bank (50 Nigerian business topics), 30-day content calendar template, hashtag research guide, platform-specific formatting rules. Just add ideas and the system does the rest. Saves 15+ hours per week.
+
+--- Product 5 ---
+Name: Nigerian Business Compliance AI Assistant — Custom GPT
+Price: 2700 USD
+Type: Digital Product
+Category: AI Automation
+Description: Pre-configured AI assistant for Nigerian business compliance. Handles: CAC filing requirements and deadlines, PAYE tax calculations for all 36 states, VAT (7.5%) filing and remittance, WHT rates and applications, Company Income Tax (30%) planning, NHF (2.5%) and NSITF (1%) compliance, NDPR data protection requirements, PENCOM pension compliance, FIRS filing procedures, state-specific tax obligations, business registration types and requirements, annual returns filing. Includes: system prompt, compliance calendar template, state-by-state PAYE rate table, filing deadline tracker, document checklist generator. Never miss a compliance deadline again. Just ask the assistant any compliance question and get instant, accurate answers.
+
+--- Product 6 ---
+Name: AI Email Marketing Automation — Make.com End-to-End
+Price: 4700 USD
+Type: Digital Product
+Category: AI Automation
+Description: Complete Make.com automation for email marketing. Workflow: 1) New subscriber joins via landing page, 2) AI generates a personalized welcome email, 3) Subscriber enters a 7-day nurture sequence (AI-written based on their interests), 4) AI generates weekly newsletter from your content, 5) Abandoned cart emails triggered automatically, 6) Re-engagement sequence for inactive subscribers, 7) AI A/B tests subject lines and picks the winner, 8) Monthly performance report with AI recommendations. Includes: 15 email templates, subject line formula, segmentation rules, unsubscribe handling. Works with: Mailchimp, ConvertKit, Brevo, Gmail. Increase email revenue by 3x without writing a single email.
+
+--- Product 7 ---
+Name: AI Bookkeeping Automation Workflow — Zapier + Google Sheets
+Price: 5700 USD
+Type: Digital Product
+Category: AI Automation
+Description: Complete bookkeeping automation for small businesses. Workflow: 1) Every Paystack/Stripe transaction auto-logged in Google Sheets, 2) AI categorizes each transaction (revenue, expense, tax, payroll), 3) AI generates monthly P&L statement, 4) VAT liability calculated automatically, 5) Tax payment reminders set 7 days before deadlines, 6) Receipt extraction from email (AI reads receipt emails and logs amounts), 7) Monthly cash flow forecast generated, 8) Year-end summary for your accountant. Includes: Google Sheets bookkeeping template, category rules, VAT calculator, tax calendar. Never hire a bookkeeper. Just connect and watch it run.
+
+--- Product 8 ---
+Name: AI Lead Generation System — End-to-End Automation
+Price: 9700 USD
+Type: Digital Product
+Category: AI Automation
+Description: Complete AI-powered lead generation system. Workflow: 1) AI scrapes potential leads from LinkedIn, Google Maps, and business directories, 2) AI qualifies leads based on your ICP criteria, 3) AI generates personalized outreach messages for each lead, 4) Emails sent automatically via your SMTP, 5) WhatsApp messages sent to Nigerian leads, 6) Responses routed to your CRM with AI sentiment analysis, 7) Hot leads get instant Slack notification, 8) Weekly lead report with conversion predictions. Includes: ICP template, 20 outreach email templates, 10 WhatsApp outreach templates, scraping rules for Nigerian businesses, CRM integration guide. Generate 100+ qualified leads per week on autopilot. For B2B businesses only.
+
+--- Product 9 ---
+Name: Automated Client Onboarding Workflow — Zapier Template
+Price: 2700 USD
+Type: Digital Product
+Category: AI Automation
+Description: Complete Zapier automation template for onboarding new clients. Triggers when a client signs up via your form or payment. Automatically: 1) Sends welcome email with onboarding checklist, 2) Creates a Google Drive folder for client documents, 3) Creates a Slack channel and invites the client, 4) Sets up a Trello/Asana project board with pre-built tasks, 5) Schedules a kickoff call via Calendly, 6) Sends a 7-day check-in sequence. Just import the Zap, connect your accounts, and every new client gets a professional onboarding experience automatically. Saves 3+ hours per client. Works with: Google Workspace, Slack, Trello, Asana, Calendly, Stripe, Paystack.
+
+--- Product 10 ---
+Name: Automated Invoice-to-Payment Workflow — Make.com Template
+Price: 1900 USD
+Type: Digital Product
+Category: AI Automation
+Description: Make.com automation template that turns invoices into collected payments automatically. Workflow: 1) You create an invoice in Google Sheets or Notion, 2) Make.com generates a professional PDF invoice, 3) Sends it to the client via email + WhatsApp, 4) Sends automatic payment reminders on day 3, 7, and 14, 5) Marks invoice as paid when payment hits Paystack/Stripe, 6) Sends receipt automatically, 7) Updates your dashboard. Includes: invoice template, 3 reminder email templates, WhatsApp reminder template, receipt template. Just import and connect. Never chase a payment again.
+
+
+============================================================
+CATEGORY: AI Prompts (8 products)
+============================================================
+
+--- Product 1 ---
+Name: AI Prompt Pack for Developers — 150+ Prompts
+Price: 4000 NGN
+Type: Digital Product
+Category: AI Prompts
+Description: 150+ tested AI prompts for developers: code generation, debugging, architecture, testing, documentation, DevOps, code review, and pair programming. Organized by language (JS, Python, Go, Rust) and skill level. Works with ChatGPT, Claude, Groq, and Gemini.
+Image: https://placehold.co/600x400/16213e/e94560?text=Dev+Prompt+Pack
+
+--- Product 2 ---
+Name: Legal Contract Review Prompts — 50 Engineered Prompts for Lawyers & Founders
+Price: 4700 USD
+Type: Digital Product
+Category: AI Prompts
+Description: 50 highly engineered AI prompts for reviewing legal contracts. Covers: NDAs (8), service agreements (8), employment contracts (6), lease agreements (5), partnership agreements (5), vendor contracts (5), IP assignment (4), loan agreements (4), terms of service (3), privacy policies (2). Each prompt: identifies risky clauses, flags missing protections, suggests alternative language, summarizes key obligations, and generates a redline version. Pre-tested with ChatGPT-4, Claude, and Gemini. Includes a master prompt that adapts to any contract type. Just paste your contract and run the prompt. Saves $500+ per contract review.
+
+--- Product 3 ---
+Name: SEO Content Generation Prompts — 30 Prompts for #1 Rankings
+Price: 3700 USD
+Type: Digital Product
+Category: AI Prompts
+Description: 30 engineered AI prompts for generating SEO content that actually ranks. Keyword research prompts (5), content brief generation (5), long-form article writing (5), meta descriptions (3), internal linking strategy (3), schema markup generation (3), content gap analysis (3), competitor content audit (3). Each prompt includes: target keyword placement rules, LSI keyword suggestions, search intent matching, readability scoring, and SERP feature optimization. Pre-tested on live sites — average 40% organic traffic increase in 90 days. Works with ChatGPT, Claude, and Gemini. Just fill in your keyword and generate.
+
+--- Product 4 ---
+Name: ChatGPT Prompts for Nigerian Content Creators — 50 Prompts
+Price: 2000 NGN
+Type: Digital Product
+Category: AI Prompts
+Description: 50 ChatGPT prompts for Nigerian content creators. YouTube scripts (10), Instagram captions (10), blog posts (10), email newsletters (5), podcast outlines (5), TikTok ideas (10). Pre-tested for Nigerian audience engagement. Just copy, paste, and create content in minutes.
+
+--- Product 5 ---
+Name: Midjourney Prompt Pack for Nigerian Designers — 30 Prompts
+Price: 2500 NGN
+Type: Digital Product
+Category: AI Prompts
+Description: 30 Midjourney prompts for Nigerian graphic designers and marketers. Product photography style, Nigerian fashion photography, food photography, architectural visualization, logo concepts, social media graphics, and brand identity. Pre-tested with Midjourney v6. Just copy and generate professional images.
+
+--- Product 6 ---
+Name: AI Workflow Templates for Nigerian Businesses — 75 Automations
+Price: 4000 NGN
+Type: Digital Product
+Category: AI Prompts
+Description: 75 AI workflow templates for Nigerian businesses. Sales (15), marketing (15), customer support (10), HR (10), finance (10), operations (10), content (5). Each workflow: trigger, AI prompt, expected output, and integration steps. Works with ChatGPT, Claude, and Gemini. Just follow the workflow and automate your business.
+
+--- Product 7 ---
+Name: AI Prompts for Nigerian E-Commerce — 60 Product & Marketing Prompts
+Price: 2500 NGN
+Type: Digital Product
+Category: AI Prompts
+Description: 60 AI prompt templates for Nigerian e-commerce owners. Product descriptions (20), ad copy (15), email sequences (10), customer reviews response (5), SEO content (5), chatbot scripts (5). Pre-tested for Nigerian market (Jumia, Konga, Instagram shops). Just fill in product name and generate.
+
+--- Product 8 ---
+Name: ChatGPT Prompt Library for Nigerian Small Businesses — 100 Prompts
+Price: 2000 NGN
+Type: Digital Product
+Category: AI Prompts
+Description: 100 ChatGPT prompts for Nigerian small business owners. Categories: marketing (25), operations (15), finance (15), customer service (15), HR (10), strategy (10), content creation (10). Pre-tested with Nigerian context. Just copy, paste into ChatGPT, and get instant results.
+
+
+============================================================
+CATEGORY: AIPrompt (5 products)
+============================================================
+
+--- Product 1 ---
+Name: 500 ChatGPT Prompts for Business Growth & Marketing
+Price: 14.99 USD
+Type: Digital Product
+Category: AIPrompt
+Description: Boost your business with 500 proven AI prompts for marketing, sales, content creation, and strategy. Categorized and ready to copy-paste.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/09407a3f5_generated_image.png
+
+--- Product 2 ---
+Name: AI Art Prompt Engineering Bible — 1000 Prompts
+Price: 19.99 USD
+Type: Digital Product
+Category: AIPrompt
+Description: The ultimate collection of 1000 AI art prompts for Midjourney, DALL-E 3, and Stable Diffusion. Organized by style, mood, lighting, and subject. Includes negative prompts.
+
+--- Product 3 ---
+Name: 100 AI Art Prompts for African Aesthetics & Culture
+Price: 9.99 USD
+Type: Digital Product
+Category: AIPrompt
+Description: 100 curated AI prompts celebrating African art, fashion, architecture, and landscapes. Create stunning visuals with Midjourney, DALL-E, and Stable Diffusion.
+
+--- Product 4 ---
+Name: AI Prompt Engineering Pack — 100+ Prompts for Nigerian Businesses
+Price: 2000 NGN
+Type: Digital Product
+Category: AIPrompt
+Description: 100+ ready-to-use AI prompts for marketing, business strategy, content creation, customer service, financial planning, social media, and business documents. All tailored for the Nigerian market. Copy, replace, paste into any AI assistant.
+
+--- Product 5 ---
+Name: AI Prompt Engineering Pack — 100+ Prompts for Nigerian Businesses
+Price: 2000 NGN
+Type: Digital Product
+Category: AIPrompt
+Description: Curated collection of 100+ AI prompts for marketing, content creation, business planning, customer service, and productivity. Includes prompts for ChatGPT, Claude, and image generation. Organized by business use case. Perfect for entrepreneurs, marketers, and content creators.
+
+
+============================================================
+CATEGORY: Agriculture (4 products)
+============================================================
+
+--- Product 1 ---
+Name: Crop Farming Calendar 2026 — 20 Crops, Monthly Guide
+Price: 1500 NGN
+Type: Digital Product
+Category: Agriculture
+Description: Complete crop farming calendar for Nigeria 2026. Covers 20 profitable crops (maize, cassava, rice, yam, tomato, pepper, onion, groundnut, soybean, watermelon and more) with planting dates, harvest timelines, yield per hectare, cost estimates, revenue projections, and ROI. Month-by-month planting and harvesting guide.
+
+--- Product 2 ---
+Name: Snail Farming Business Guide — Heliculture
+Price: 1500 NGN
+Type: Digital Product
+Category: Agriculture
+Description: Low-cost, high-profit snail farming (heliculture) guide. Startup from ₦80,000 with 50 breeder snails. Covers 4 housing options (trench, tyre, wooden box, free-range), feeding (nearly free using leaves and fruits), breeding cycle (50 snails to 4,200+ in 12 months, 1,900% ROI), environmental requirements, and marketing channels including export.
+
+--- Product 3 ---
+Name: Poultry Farming Complete Guide — Nigeria 2026
+Price: 2000 NGN
+Type: Digital Product
+Category: Agriculture
+Description: Complete poultry farming guide for Nigerian farmers. Covers broiler production (100-500 birds with cost breakdowns), layer production (500 birds, 146% ROI), vaccination schedule, disease prevention, feed management by growth stage, housing construction, and marketing channels. Includes top feed suppliers and breed selection.
+
+--- Product 4 ---
+Name: Fish Farming Setup Guide — Catfish & Tiliba
+Price: 2000 NGN
+Type: Digital Product
+Category: Agriculture
+Description: Complete catfish and tilapia farming setup guide. Covers 5 farming systems (concrete pond, earthen, plastic tank, tarpaulin, biofloc), 6-month cost breakdown for 1,000 fish (41% ROI), feed management by growth stage, water quality parameters, breeding and hatchery setup, disease prevention, and marketing channels.
+
+
+============================================================
+CATEGORY: Business Software (6 products)
+============================================================
+
+--- Product 1 ---
+Name: ERP System Template — Complete Enterprise Resource Planning
+Price: 30000 NGN
+Type: Digital Product
+Category: Business Software
+Description: Complete ERP system template for Nigerian businesses. Integrates inventory, sales, purchasing, accounting, HR, payroll, CRM, and reporting into one unified system. Includes modules for manufacturing, retail, and services. Full database schema, workflow diagrams, and implementation guide. Works as a template for building or migrating to a full ERP.
+
+--- Product 2 ---
+Name: CRM System Template — Nigerian Business Edition
+Price: 10000 NGN
+Type: Digital Product
+Category: Business Software
+Description: Complete CRM system template designed for Nigerian businesses. Includes customer profile template, sales pipeline tracker (Lead to Closed), lead sources tracker, follow-up schedule, customer satisfaction (NPS) tracker, monthly report template, CAC and CLV calculators, and daily sales dashboard. Works in Excel, Google Sheets, or Notion.
+
+--- Product 3 ---
+Name: Invoice Generator Template — Nigerian Edition with VAT & WHT
+Price: 8000 NGN
+Type: Digital Product
+Category: Business Software
+Description: Professional invoicing system template with automatic VAT (7.5%) calculation, Withholding Tax (WHT) support, multi-currency support (NGN/USD/EUR/GBP), payment tracking, receipt generation, credit notes, recurring invoice scheduling, and invoice tracking dashboard. Includes Nigerian tax calculation guide and compliance checklist.
+
+--- Product 4 ---
+Name: Inventory Management System Template — Nigerian Retail
+Price: 12000 NGN
+Type: Digital Product
+Category: Business Software
+Description: Complete inventory management system template for Nigerian businesses. Includes stock tracking, reorder alerts, supplier management, purchase orders, stock valuation (FIFO/LIFO/Weighted Average), barcode-ready product catalog, multi-warehouse support, and low stock reports. Designed for retail, wholesale, and manufacturing.
+
+--- Product 5 ---
+Name: HR Management Template — Nigerian SME Edition (PAYE & Pension)
+Price: 15000 NGN
+Type: Digital Product
+Category: Business Software
+Description: Complete HR management template for Nigerian SMEs. Includes employee records, payroll calculator with PAYE tax and pension (7.5%), NHF (2.5%), leave management, performance review template, attendance tracker, recruitment tracker, onboarding checklist, and disciplinary procedure guide. Compliant with Nigerian labour law.
+
+--- Product 6 ---
+Name: Accounting Software Template — Nigerian Tax Compliant
+Price: 15000 NGN
+Type: Digital Product
+Category: Business Software
+Description: Complete accounting system template for Nigerian businesses. Includes general ledger, balance sheet, profit & loss statement, cash flow statement, bank reconciliation, accounts payable/receivable, trial balance, and financial ratios calculator. Supports VAT, WHT, and company income tax (CIT) calculations. Works in Excel or Google Sheets.
+
+
+============================================================
+CATEGORY: Business Templates (1 products)
+============================================================
+
+--- Product 1 ---
+Name: Business Plan Template — Nigeria 2026 (Tax + CAC Compliant)
+Price: 7000 NGN
+Type: Digital Product
+Category: Business Templates
+Description: Comprehensive business plan template designed for Nigerian startups and SMEs. Includes CAC registration format, FIRS tax compliance sections, financial projections in Naira, market analysis for Nigerian market, and investor-ready formatting. Word + PDF + Google Docs.
+Image: https://placehold.co/600x400/0f3460/e94560?text=Business+Plan+NG
+
+
+============================================================
+CATEGORY: Business-in-a-Box (8 products)
+============================================================
+
+--- Product 1 ---
+Name: Start a Digital Marketing Agency Kit — Complete Business-in-a-Box
+Price: 9700 USD
+Type: Digital Product
+Category: Business-in-a-Box
+Description: Everything you need to start a digital marketing agency in Nigeria. Includes: 1) Business plan template (filled example), 2) Service catalog with pricing (SEO, social media, PPC, content, email marketing), 3) Client proposal template (close 70% of pitches), 4) Contract template (Nigerian law compliant), 5) Client onboarding checklist, 6) Reporting templates (monthly, weekly), 7) 50 email templates for every client situation, 8) Social media content calendar template, 9) Google Ads setup guide, 10) Facebook Ads setup guide, 11) SEO audit checklist, 12) Logo and brand identity brief, 13) Website copy template for your agency, 14) Pricing calculator, 15) First 90 days roadmap. Just follow the roadmap and you are running an agency in 30 days.
+
+--- Product 2 ---
+Name: Start a Food Delivery Business Kit (Nigeria) — Business-in-a-Box
+Price: 6700 USD
+Type: Digital Product
+Category: Business-in-a-Box
+Description: Complete kit to start a food delivery business in Nigeria. Includes: 1) Business plan with financial projections, 2) Restaurant partner agreement template, 3) Driver onboarding checklist and contract, 4) Customer order flow design, 5) Pricing strategy (delivery fee + commission model), 6) WhatsApp order management system, 7) Kitchen setup checklist for cloud kitchen, 8) Food safety compliance guide (NAFDAC), 9) Marketing plan (first 100 customers), 10) Delivery route optimization guide, 11) POS and payment integration guide (Paystack), 12) Customer feedback system, 13) Daily operations checklist, 14) Profitability calculator. Everything you need to launch in 14 days.
+
+--- Product 3 ---
+Name: Start a Real Estate Agency Kit — Complete Business-in-a-Box
+Price: 9700 USD
+Type: Digital Product
+Category: Business-in-a-Box
+Description: Complete kit to start a real estate agency in Nigeria. Includes: 1) Business plan template, 2) Property listing templates (sales, rentals, commercial), 3) Buyer/seller agreement templates, 4) Commission structure guide, 5) Property inspection checklist, 6) Tenant screening process and forms, 7) Lease agreement template (Nigerian law), 8) Title verification guide (C of O, survey, deeds), 9) Marketing plan for listings, 10) WhatsApp marketing templates for property listings, 11) CRM setup guide, 12) Property valuation guide, 13) Land registry guide by state, 14) Agency registration guide (NIESV, NIOB), 15) First 90 days roadmap. Start closing deals in 30 days.
+
+--- Product 4 ---
+Name: Start a WhatsApp Consulting Business Kit — Business-in-a-Box
+Price: 4700 USD
+Type: Digital Product
+Category: Business-in-a-Box
+Description: Complete kit to start a WhatsApp consulting business. Includes: 1) Service menu (WhatsApp Business setup, automation, CRM, broadcast marketing, customer support), 2) Pricing guide (₦15k-₦150k per project), 3) Client proposal template, 4) WhatsApp Business audit checklist, 5) Automation setup guide (Baileys, Twilio, Meta API), 6) CRM integration guide, 7) Broadcast strategy template, 8) 20 client acquisition templates (cold outreach), 9) Case study template, 10) Monthly retainer contract template, 11) Portfolio website copy, 12) First 10 clients roadmap. Monetize your WhatsApp skills in 14 days.
+
+--- Product 5 ---
+Name: Start a Print-on-Demand Business Kit — Business-in-a-Box
+Price: 6700 USD
+Type: Digital Product
+Category: Business-in-a-Box
+Description: Complete kit to start a print-on-demand business. Includes: 1) Niche research guide (profitable niches for Nigerian and global market), 2) Design tools guide (Canva, Kittl, Midjourney), 3) 50 design templates you can sell immediately, 4) Printify/Printful setup guide, 5) Shopify store setup guide, 6) Product pricing calculator, 7) Instagram and Facebook marketing guide, 8) TikTok organic marketing for print-on-demand, 9) SEO guide for product listings, 10) Customer service templates, 11) Return and refund policy, 12) Supplier comparison guide, 13) Profit margin calculator, 14) 30-day launch plan. Start selling custom products with zero inventory.
+
+--- Product 6 ---
+Name: Start a Freelance Writing Business Kit — Business-in-a-Box
+Price: 4700 USD
+Type: Digital Product
+Category: Business-in-a-Box
+Description: Complete kit to start a freelance writing business. Includes: 1) Niche selection guide (most profitable writing niches), 2) Portfolio template (no experience needed), 3) 30 cold email templates that get responses, 4) Rate card guide ($0.05-$1/word pricing), 5) Proposal template, 6) Contract template, 7) Client onboarding checklist, 8) SEO writing guide, 9) Content brief template, 10) Editing checklist, 11) Invoice template, 12) Client retention strategy, 13) Upwork and Fiverr profile optimization guide, 14) First 10 clients roadmap, 15) Productivity tools guide. Start earning $500+/month in 30 days.
+
+--- Product 7 ---
+Name: Start an Online Course Business Kit — Complete Business-in-a-Box
+Price: 9700 USD
+Type: Digital Product
+Category: Business-in-a-Box
+Description: Complete kit to start an online course business. Includes: 1) Course topic validator (find what people will pay for), 2) Course outline template (12-module structure), 3) Video production guide (shoot with your phone), 4) Slide deck templates (Canva), 5) Workbook template, 6) Landing page copy that converts, 7) Sales funnel design, 8) Email sequence (7 emails to launch), 9) Pricing strategy ($27-$997), 10) Platform comparison (Teachable, Gumroad, Getly, Payhip), 11) Affiliate program setup, 12) Student onboarding sequence, 13) Review collection system, 14) Course launch calendar (30 days), 15) Post-launch optimization guide. Turn your knowledge into a 6-figure course business.
+
+--- Product 8 ---
+Name: Start a Cybersecurity Consulting Kit — Business-in-a-Box
+Price: 9700 USD
+Type: Digital Product
+Category: Business-in-a-Box
+Description: Complete kit to start a cybersecurity consulting business. Includes: 1) Service catalog (security audits, penetration testing, compliance, training, incident response), 2) Pricing guide ($50-$300/hour), 3) Security audit checklist (50 items), 4) Penetration testing methodology guide, 5) Compliance framework guide (ISO 27001, NDPR, PCI-DSS), 6) Client proposal template, 7) SOW (Statement of Work) template, 8) NDA template, 9) Risk assessment template, 10) Security policy templates (15 policies), 11) Incident response plan template, 12) Employee security training curriculum, 13) Vendor risk assessment template, 14) Monthly retainer contract, 15) First 5 clients roadmap. Start a high-paying cybersecurity consulting practice.
+
+
+============================================================
+CATEGORY: CAD/BIM Tools (3 products)
+============================================================
+
+--- Product 1 ---
+Name: Construction Cost Estimator Pro — React Web App
+Price: 20000 NGN
+Type: Digital Product
+Category: CAD/BIM Tools
+Description: Browser-based construction cost calculator built with React. Nigerian building code compliant. Calculates materials, labor, and total project costs for residential and commercial builds. Includes quantity takeoff, material prices (2026 Nigerian rates), and PDF export.
+Image: https://placehold.co/600x400/1a1a2e/e94560?text=Cost+Estimator+Pro
+
+--- Product 2 ---
+Name: BIM Drawing Template Pack — Nigerian Building Code
+Price: 15000 NGN
+Type: Digital Product
+Category: CAD/BIM Tools
+Description: Standardized CAD/BIM drawing templates, annotation libraries, and compliance checklists for Nigerian construction projects. Compatible with AutoCAD, Revit, and SketchUp. Includes floor plan templates, elevation templates, section templates, and title blocks.
+Image: https://placehold.co/600x400/0f3460/e94560?text=BIM+Template+Pack
+
+--- Product 3 ---
+Name: Material Takeoff App — React + PDF Export
+Price: 18000 NGN
+Type: Digital Product
+Category: CAD/BIM Tools
+Description: Browser-based material takeoff application built with React. Input building dimensions, get instant material quantities (blocks, cement, sand, gravel, rods, roofing). 2026 Nigerian market prices included. Export professional PDF reports for clients.
+
+
+============================================================
+CATEGORY: Career Resources (2 products)
+============================================================
+
+--- Product 1 ---
+Name: Tech Career Roadmap — Nigeria to Remote Global
+Price: 5000 NGN
+Type: Digital Product
+Category: Career Resources
+Description: Complete career roadmap for Nigerian developers: skills tracking, learning resources, portfolio building, job search strategy, remote work playbook, salary negotiation guide, and interview prep. Includes templates for CV, cover letter, and portfolio site.
+Image: https://placehold.co/600x400/16213e/e94560?text=Tech+Career+Roadmap
+
+--- Product 2 ---
+Name: Freelancing Playbook — Nigerian Developer Edition
+Price: 6000 NGN
+Type: Digital Product
+Category: Career Resources
+Description: Step-by-step guide for Nigerian developers to start freelancing globally. Includes: Upwork/Fiverr setup, pricing strategy, client acquisition, payment methods (Paystack, Stripe, crypto), contract templates, and scaling to agency. Real case studies from Nigerian freelancers.
+Image: https://placehold.co/600x400/0f3460/e94560?text=Freelance+Playbook
+
+
+============================================================
+CATEGORY: Cheat Sheet (8 products)
+============================================================
+
+--- Product 1 ---
+Name: WhatsApp Marketing Cheat Sheet for Nigerian Businesses
+Price: 2000 NGN
+Type: Digital Product
+Category: Cheat Sheet
+Description: One-page cheat sheet for WhatsApp marketing in Nigeria. 50 proven message templates, best posting times, broadcast rules (anti-ban), group marketing strategy, status ad format, catalog setup checklist. Printable PDF. Just keep it next to you and copy-paste.
+
+--- Product 2 ---
+Name: SEO Cheat Sheet for Nigerian Businesses — Rank on Google
+Price: 2000 NGN
+Type: Digital Product
+Category: Cheat Sheet
+Description: One-page SEO cheat sheet for Nigerian businesses. Google Business Profile setup, keyword research for Nigerian market, on-page SEO checklist, local SEO tips, backlink sources for .ng domains, schema markup snippets, and page speed checklist. Printable PDF. Just follow the checklist step by step.
+
+--- Product 3 ---
+Name: Paystack Integration Cheat Sheet — Setup to Live in 30 Minutes
+Price: 2000 NGN
+Type: Digital Product
+Category: Cheat Sheet
+Description: One-page cheat sheet for Paystack integration. Step-by-step setup, test keys vs live keys, payment button code, webhook handling, transfer API, customer API, subscription API, verification endpoints, and common error fixes. Copy-paste code examples. Just follow and integrate.
+
+--- Product 4 ---
+Name: Social Media Growth Cheat Sheet — Nigerian Edition
+Price: 2000 NGN
+Type: Digital Product
+Category: Cheat Sheet
+Description: One-page social media growth cheat sheet for Nigerian businesses. Instagram growth formula (hashtags, posting time, Reels), Facebook page optimization, Twitter/X engagement strategy, TikTok for business basics, content pillars (5 types), engagement rate calculator. Printable PDF. Just follow the formula daily.
+
+--- Product 5 ---
+Name: Nigerian Tax Compliance Cheat Sheet for Small Businesses
+Price: 2000 NGN
+Type: Digital Product
+Category: Cheat Sheet
+Description: One-page Nigerian tax compliance cheat sheet for small businesses. PAYE calculation table, VAT (7.5%) rules, WHT rates (5% and 10%), Company Tax (30%), NHF (2.5%), NSITF (1%), filing deadlines, tax office requirements, and penalty rates. Printable PDF. Just pin it on your wall.
+
+--- Product 6 ---
+Name: Google Ads Cheat Sheet for Nigerian Businesses
+Price: 2500 NGN
+Type: Digital Product
+Category: Cheat Sheet
+Description: One-page Google Ads cheat sheet for Nigerian businesses. Campaign setup checklist, keyword match types, negative keywords for Nigerian market, ad copy formula (7 templates), bidding strategy, conversion tracking setup, budget recommendations (₦500/day to ₦10k/day), and common mistakes to avoid. Printable PDF. Just follow and launch.
+
+--- Product 7 ---
+Name: Facebook Ads Cheat Sheet for Nigerian Businesses
+Price: 2500 NGN
+Type: Digital Product
+Category: Cheat Sheet
+Description: One-page Facebook Ads cheat sheet for Nigerian businesses. Campaign objectives guide, audience targeting for Nigeria (states, interests, behaviors), ad creative sizes, retargeting setup, pixel installation, budget strategy (₦500/day minimum), and 10 ad copy templates. Printable PDF. Just follow and run ads.
+
+--- Product 8 ---
+Name: Import-Export Cheat Sheet for Nigerian Traders
+Price: 3000 NGN
+Type: Digital Product
+Category: Cheat Sheet
+Description: One-page import-export cheat sheet for Nigerian traders. List of 50 profitable import products, 30 export-ready Nigerian products, import procedure (Form M, PAAR, clearing), export procedure (NEPC registration, documentation), shipping terms (FOB, CIF, EXW), and customs duty rates. Printable PDF. Just use it as your reference.
+
+
+============================================================
+CATEGORY: Construction Tech (3 products)
+============================================================
+
+--- Product 1 ---
+Name: Quantity Surveying Software Template — Nigerian Construction
+Price: 20000 NGN
+Type: Digital Product
+Category: Construction Tech
+Description: Complete quantity surveying software template for Nigerian construction. Includes BOQ generation, material takeoff calculator, cost estimation by building type, rate analysis, cost database (July 2026 prices), project cost tracking, and variance analysis. Covers residential, commercial, and industrial projects.
+
+--- Product 2 ---
+Name: Contractor Management System — Construction Edition
+Price: 12000 NGN
+Type: Digital Product
+Category: Construction Tech
+Description: Complete contractor management system template. Includes contractor database, contract templates, performance scoring, payment tracking, project assignment, work order management, compliance checklist, and rating system. Designed for Nigerian construction companies managing multiple contractors.
+
+--- Product 3 ---
+Name: Building Material Marketplace — Complete Build Guide
+Price: 25000 NGN
+Type: Digital Product
+Category: Construction Tech
+Description: Complete building material marketplace design guide. Includes supplier database schema, price comparison logic, inventory aggregation, order management, delivery tracking, quality rating system, and payment integration. Full database schema, API design, and frontend wireframe included. Covers cement, blocks, iron, roofing, tiles, and more.
+
+
+============================================================
+CATEGORY: Construction Tools (16 products)
+============================================================
+
+--- Product 1 ---
+Name: Foundation Design Guide for Nigerian Buildings
+Price: 1500 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Complete foundation design guide for Nigerian buildings. Covers strip foundation, raft foundation, pad foundation, pile foundation, and slab foundation. Includes soil types in Nigeria, load calculations, reinforcement details, and cost estimates for each type. Essential before starting any construction.
+
+--- Product 2 ---
+Name: Renovation Cost Calculator — Nigeria 2026
+Price: 2000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Complete renovation cost calculator for Nigerian homes. Covers kitchen, bathroom, living room, bedroom, and full house renovation. Includes material prices (July 2026), labor costs, timeline estimates, and DIY vs professional cost comparison. Perfect for homeowners and property investors.
+
+--- Product 3 ---
+Name: Electrical Installation Guide for Nigerian Homes
+Price: 2000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Complete guide to electrical installation for Nigerian homes. Covers wiring types, cable sizing, conduit installation, consumer unit setup, lighting circuits, socket circuits, safety devices (RCCB, MCB), grounding, and inspection checklist. Includes material list with current prices.
+
+--- Product 4 ---
+Name: Plumbing Installation Guide for Nigerian Homes
+Price: 2000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Complete plumbing installation guide for Nigerian buildings. Covers water supply systems, drainage systems, pipe sizing, fixture installation (WC, basin, sink, shower), septic tank design, water tank setup, and pressure testing. Includes material list with current prices and common mistakes to avoid.
+
+--- Product 5 ---
+Name: Tiling & Flooring Complete Guide
+Price: 1500 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Complete tiling and flooring guide for Nigerian buildings. Covers tile types (porcelain, ceramic, vitrified, terrazzo), subfloor preparation, tile laying techniques, grouting, sealing, and finishing. Includes cost calculator, tools checklist, and pro tips for perfect results.
+
+--- Product 6 ---
+Name: Roofing Types & Cost Guide for Nigeria
+Price: 1500 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Complete roofing guide for Nigerian houses. Covers roofing types (long span aluminum, stone coat, shingle, thatch), cost comparison per sqm, rafter design, gutter installation, ceiling types (PVC, POP, asbestos), and waterproofing. Includes contractor pricing and DIY tips.
+
+--- Product 7 ---
+Name: Construction Project Management Template — Complete Tracker
+Price: 3500 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Complete project management tracker for Nigerian construction projects. Includes 10-phase timeline (Foundation to Handover), material tracking sheet, labour tracking sheet, payment schedule, and daily site log. Tracks budget vs actual costs at every stage.
+
+--- Product 8 ---
+Name: Bill of Quantities (BOQ) Template — Nigerian Construction
+Price: 3000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Professional Bill of Quantities template with detailed cost breakdown for a 3-bedroom bungalow. Includes 9 sections (Substructure, Superstructure, Roofing, Doors, Electrical, Plumbing, Tiling, Painting, External), material quantities, unit rates, and 10% contingency calculation. Standard Nigerian construction format.
+
+--- Product 9 ---
+Name: Complete Bungalow Plans Collection — 6 Designs
+Price: 5000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: 6 complete bungalow house plans: 2-bed compact (65sqm), 2-bed modern (85sqm), 3-bed standard (120sqm), 3-bed open plan (135sqm), 4-bed family (165sqm), and 4-bed luxury (220sqm). Each includes floor layout, room dimensions, material list, cost estimates (Basic/Standard/Luxury), and construction timeline. Prices from ₦11.7M to ₦110M.
+
+--- Product 10 ---
+Name: Complete Duplex Plans Collection — 6 Designs
+Price: 5000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: 6 complete duplex house plans: 4-bed terrace (130sqm), 4-bed semi-detached (160sqm), 5-bed standard (200sqm), 5-bed contemporary (230sqm), 6-bed luxury (260sqm), and 6-bed mansion (360sqm). Ground and first floor layouts, room dimensions, material estimates, and cost breakdowns. Prices from ₦23.4M to ₦180M.
+
+--- Product 11 ---
+Name: Building Approval Process Guide — Get Your Permit
+Price: 2000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Complete guide to getting building approval/permit in Nigeria. Covers requirements, step-by-step process, costs by state (Lagos, Abuja, Rivers, Kano, Taraba, Bauchi), common rejection reasons, and site inspection protocol. Essential before starting any construction.
+
+--- Product 12 ---
+Name: Land Buying Guide for Nigeria — Complete Checklist
+Price: 2500 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Complete land buying checklist with document hierarchy (C of O, Governor's Consent, Excision, Gazette), step-by-step verification process, cost calculator (stamp duty, registration, legal fees), red flags to avoid, current land prices across Nigeria (Lagos, Abuja, Kano, PH, Enugu, Jalingo, Bauchi), and investment strategies.
+
+--- Product 13 ---
+Name: Construction Safety Guide — Site Standards for Nigeria
+Price: 1500 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Construction site safety standards for Nigerian building projects. Covers PPE requirements, daily safety checklist, common accident prevention (falls, falling objects, electrocution, machine injuries, chemical burns), emergency protocol with numbers, first aid kit list, scaffolding safety, and excavation safety.
+
+--- Product 14 ---
+Name: Contractor Agreement Template — Legal Construction Contract
+Price: 3000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Ready-to-use legal contract template for building construction in Nigeria. 12 articles covering scope of work, contract sum, payment schedule, project duration, materials and workmanship standards, site management, defects liability, variations, termination, insurance, and dispute resolution. Just fill in the blanks.
+
+--- Product 15 ---
+Name: Nigerian Construction Cost Calculator 2026
+Price: 2000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Live July 2026 material prices for all construction inputs in Nigeria. Includes cement, blocks, iron rods, roofing, doors, windows, tiles, electrical, plumbing, and painting. Complete estimation formulas for 3-bedroom bungalow at Basic/Standard/Luxury tiers. Cost reduction tips included.
+
+--- Product 16 ---
+Name: Construction Estimator
+Price: 15000 NGN
+Type: Digital Product
+Category: Construction Tools
+Description: Interactive web-based construction cost estimator with live July 2026 Nigerian material prices. Calculate total build costs for any project size. Features: material calculator, labor cost estimator, tier comparison (Basic/Standard/Luxury), and printable report. Accessible online — no download needed. Powered by BuildBot AI.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/f533cedee_generated_image.png
+
+
+============================================================
+CATEGORY: Course (3 products)
+============================================================
+
+--- Product 1 ---
+Name: Complete Digital Marketing Masterclass 2026
+Price: 49.99 USD
+Type: Digital Product
+Category: Course
+Description: 12-hour video course covering SEO, social media ads, email marketing, and content strategy. Includes templates, checklists, and private community access.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/b0144003d_generated_image.png
+
+--- Product 2 ---
+Name: Digital Marketing Course — Zero to Hero 2026
+Price: 49.99 USD
+Type: Digital Product
+Category: Course
+Description: Complete 12-hour video course covering SEO, social media marketing, email marketing, paid ads, content strategy, and analytics. Includes templates and checklists.
+
+--- Product 3 ---
+Name: Crypto Trading Course — Beginner to Advanced
+Price: 39.99 USD
+Type: Digital Product
+Category: Course
+Description: Learn crypto trading from scratch. 8 hours of video content covering technical analysis, risk management, DeFi, spot and futures trading. Includes trading bot setup guide.
+
+
+============================================================
+CATEGORY: Courses (1 products)
+============================================================
+
+--- Product 1 ---
+Name: React Masterclass — Build 3 SaaS Apps (Video + Code)
+Price: 35000 NGN
+Type: Digital Product
+Category: Courses
+Description: Project-based React course: build a CRM, expense tracker, and AI chat app from scratch. 15+ hours of content, full source code, deployment guides, and lifetime access. Perfect for Nigerian developers wanting to level up to SaaS building.
+Image: https://placehold.co/600x400/1a1a2e/e94560?text=React+Masterclass
+
+
+============================================================
+CATEGORY: Creator Economy (5 products)
+============================================================
+
+--- Product 1 ---
+Name: Newsletter Platform — Complete Build Guide (Substack Model)
+Price: 20000 NGN
+Type: Digital Product
+Category: Creator Economy
+Description: Complete build guide for a newsletter platform. Covers email composition, subscriber management, scheduling, A/B testing, analytics (open rate, click rate, unsubscribe rate), paid newsletters, RSS-to-email, and monetization (subscriptions, sponsored content, tips). Full database schema, API design, and SendGrid/Resend integration.
+
+--- Product 2 ---
+Name: Podcast Hosting Platform — Complete Build Guide
+Price: 20000 NGN
+Type: Digital Product
+Category: Creator Economy
+Description: Complete build guide for a podcast hosting platform. Covers audio upload, transcoding, RSS feed generation, episode management, analytics (downloads, geography, devices), monetization (ads, subscriptions, donations), and distribution to Spotify, Apple Podcasts, and Google. Full database schema, API design, and storage optimization.
+
+--- Product 3 ---
+Name: Online Course Platform — Complete Build Guide
+Price: 25000 NGN
+Type: Digital Product
+Category: Creator Economy
+Description: Complete online course platform design guide. Includes course creation workflow, video hosting strategy, payment integration (Paystack/Stripe), student dashboard, progress tracking, certificate generation, quiz system, discussion forum, and instructor analytics. Full database schema and API design included.
+
+--- Product 4 ---
+Name: Music Distribution Platform — Complete Build Guide
+Price: 25000 NGN
+Type: Digital Product
+Category: Creator Economy
+Description: Complete music distribution platform design guide. Covers artist registration, track upload, audio streaming, download management, royalty calculation, payment splits, analytics dashboard, and integration with streaming platforms. Full database schema, API design, and monetization strategies included.
+
+--- Product 5 ---
+Name: Video Hosting Platform — Complete Build Guide
+Price: 25000 NGN
+Type: Digital Product
+Category: Creator Economy
+Description: Complete video hosting platform design guide. Covers video upload, transcoding, streaming (HLS/DASH), monetization (ads, subscription, pay-per-view), analytics, content moderation, and CDN strategy. Full database schema, API design, and cost optimization strategies included.
+
+
+============================================================
+CATEGORY: Developer Tools (18 products)
+============================================================
+
+--- Product 1 ---
+Name: React Pro UI Kit — 50+ African-Inspired Components
+Price: 15000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Production-ready React/JSX component library with 50+ responsive components featuring African UI patterns, accessibility-ready, dark mode, and Tailwind CSS. Includes buttons, cards, navigation, forms, modals, tables, charts, and more. Perfect for Nigerian startups building modern web apps.
+Image: https://placehold.co/600x400/1a1a2e/e94560?text=React+Pro+UI+Kit
+
+--- Product 2 ---
+Name: SaaS Starter Kit — React + Node + Stripe + Auth
+Price: 25000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Complete production-ready SaaS boilerplate with React frontend, Node.js backend, Stripe/Paystack payment integration, JWT authentication, user dashboard, admin panel, email templates, and deployment configs for Vercel + Railway. Save 40+ hours of setup time.
+Image: https://placehold.co/600x400/0f3460/e94560?text=SaaS+Starter+Kit
+
+--- Product 3 ---
+Name: AI Agent Boilerplate — Telegram Bot + Groq + Base44
+Price: 30000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Full-source code for building an AI Telegram bot with Groq LLM integration, memory system, scheduler, command handler, and Base44 backend bridge. Based on the Maganu AI architecture (500+ commands). Includes deployment guide for Render/Railway.
+Image: https://placehold.co/600x400/16213e/e94560?text=AI+Agent+Boilerplate
+
+--- Product 4 ---
+Name: White-Label Admin Dashboard — React + Charts
+Price: 22000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Fully customizable admin dashboard template built with React, Tailwind CSS, and Recharts. Includes 20+ chart types, data tables, user management, dark mode, multi-language support, and one-click branding. Perfect for SaaS products, agencies, and startups.
+Image: https://placehold.co/600x400/1a1a2e/e94560?text=Admin+Dashboard
+
+--- Product 5 ---
+Name: GitHub Workflow Templates — CI/CD Pipeline Pack
+Price: 8000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: 30+ production-ready GitHub Actions workflow templates for React, Node.js, Vercel, Railway, Render, and Docker. Includes testing pipelines, auto-deploy, security scanning, and release management. Just copy, paste, and ship.
+Image: https://placehold.co/600x400/0f3460/e94560?text=CI/CD+Pack
+
+--- Product 6 ---
+Name: Blockchain Asset Tracker — React + Web3 Template
+Price: 28000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Full-source React + Web3.js template for tracking blockchain assets, NFTs, and crypto portfolios. Supports Ethereum, Polygon, and Tron. Includes wallet integration, transaction history, and real-time price tracking. Production-ready with deployment guide.
+Image: https://placehold.co/600x400/1a1a2e/e94560?text=Web3+Tracker
+
+--- Product 7 ---
+Name: WhatsApp Bot Starter Kit — Node.js + Baileys
+Price: 12000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Complete source code for building a WhatsApp bot using Node.js and Baileys library. Includes command handler, message routing, media handling, group management, and deployment guide. Production-ready with Docker support.
+Image: https://placehold.co/600x400/16213e/e94560?text=WhatsApp+Bot+Kit
+
+--- Product 8 ---
+Name: Next.js SaaS Boilerplate — Auth, Payments, Dashboard (Production Ready)
+Price: 15000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Production-ready Next.js 14 SaaS boilerplate. Includes: authentication (NextAuth + Google), Stripe + Paystack integration, dashboard layout, email templates (Resend), database schema (Prisma + PostgreSQL), admin panel, landing page, and deployment guide. TypeScript. Tailwind CSS. Just add your business logic and deploy. Saves 40+ hours of setup.
+
+--- Product 9 ---
+Name: React Native Fintech App Boilerplate — Wallet, Transfer, Auth
+Price: 12000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Complete React Native app boilerplate for Nigerian fintech apps. Includes: navigation setup, authentication flow, biometric login, wallet UI, transaction history, transfer screens, Paystack integration, push notifications, and API service layer. TypeScript. Just connect your backend and ship.
+
+--- Product 10 ---
+Name: WhatsApp Bot Boilerplate — Node.js + Baileys (20 Starter Commands)
+Price: 8000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Production-ready WhatsApp bot boilerplate using Node.js + Baileys library. Includes: command handler, message routing, session management, broadcast system, media handling, group management, and deployment guide for Render. Pre-built with 20 starter commands. Just add your commands and deploy.
+
+--- Product 11 ---
+Name: Code Snippets Pack — 50 Fintech Integrations (Paystack, Stripe, BVN)
+Price: 5000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: 50 ready-to-use code snippets for Nigerian fintech developers. Paystack integration (10), Stripe integration (8), bank verification (5), BVN validation (3), OTP verification (4), webhooks (5), pagination (3), error handling (4), middleware (4), and deployment (4). TypeScript + JavaScript. Just copy, paste, and customize.
+
+--- Product 12 ---
+Name: API Starter Kit for Nigerian Fintechs — Express + JWT + Paystack
+Price: 10000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Complete API starter kit for Nigerian fintechs. Includes: Express.js server setup, JWT authentication, rate limiting, input validation, error handling middleware, Paystack webhook handler, database models (Mongoose), API documentation (Swagger), testing setup (Jest), and deployment guide. TypeScript. Just add your endpoints and deploy.
+
+--- Product 13 ---
+Name: Telegram Bot Boilerplate — Node.js + Telegraf (15 Starter Commands)
+Price: 6000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Production-ready Telegram bot boilerplate using Node.js + Telegraf. Includes: command handler, inline keyboards, conversation flow, payment integration (Paystack), broadcast system, admin panel, user database (SQLite), and deployment guide for Render. Pre-built with 15 starter commands. Just customize and deploy.
+
+--- Product 14 ---
+Name: Website Builder — No-Code Platform Build Guide
+Price: 25000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Complete build guide for a no-code website builder. Drag-and-drop interface, template system, custom domain support, SEO optimization, responsive design, and one-click publish. Covers the full stack: React frontend, Node.js backend, template engine, asset management, and hosting. Includes monetization strategy (freemium to ₦50,000/mo enterprise).
+
+--- Product 15 ---
+Name: Mobile App Builder — No-Code Platform Guide
+Price: 25000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Complete build guide for a mobile app builder. Create native Android and iOS apps without coding. Covers component library, drag-and-drop builder, API integration, push notifications, offline support, and App Store/Play Store publishing. Full architecture, database schema, and deployment pipeline.
+
+--- Product 16 ---
+Name: Authentication-as-a-Service — Build Guide (JWT, OAuth2, 2FA)
+Price: 20000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Complete build guide for an authentication-as-a-service system. Covers JWT tokens, OAuth2 (Google, Facebook, Apple), 2FA with SMS/OTP, biometric auth, session management, role-based access control (RBAC), password reset flows, and NDPR compliance. Full source code, API design, and integration examples for Nigerian apps.
+
+--- Product 17 ---
+Name: Cloud Storage Platform — Complete Build Guide
+Price: 20000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Complete build guide for a cloud storage platform. Covers file upload/download, chunked uploads for large files, virus scanning, encryption at rest, CDN integration, file sharing with expiring links, versioning, and storage quotas. Full database schema, API design, and cost optimization for Nigerian hosting.
+
+--- Product 18 ---
+Name: API Marketplace — Complete Build Guide
+Price: 20000 NGN
+Type: Digital Product
+Category: Developer Tools
+Description: Complete API marketplace design guide. Covers provider registration, API key management, usage metering, rate limiting, billing (per-call/monthly), documentation hosting, testing sandbox, and rating system. Full database schema, API gateway design, and monetization strategies included.
+
+
+============================================================
+CATEGORY: Done-For-You (8 products)
+============================================================
+
+--- Product 1 ---
+Name: Canva Social Media Kit for Nigerian Businesses — 50 Templates
+Price: 3500 NGN
+Type: Digital Product
+Category: Done-For-You
+Description: 50 ready-to-edit Canva templates for Nigerian businesses. Instagram posts (20), Facebook covers (5), WhatsApp status ads (10), flyers (10), business cards (5). All pre-sized and ready. Nigerian-appropriate designs (colors, fonts, layouts). Edit in free Canva. Just change text and download.
+
+--- Product 2 ---
+Name: Website Theme Pack for Nigerian E-Commerce — 10 Templates
+Price: 5000 NGN
+Type: Digital Product
+Category: Done-For-You
+Description: 10 high-converting landing page templates for Nigerian e-commerce. Built with HTML/CSS/Tailwind. Mobile-first design. Sections: hero, products, testimonials, contact, WhatsApp order. Pre-integrated with Paystack checkout. Just replace images and text, deploy to Vercel free.
+
+--- Product 3 ---
+Name: Marketing Swipe File Pack — 85 Ready-to-Use Templates
+Price: 4000 NGN
+Type: Digital Product
+Category: Done-For-You
+Description: Complete marketing swipe file for Nigerian businesses. 30 email sequences (welcome, abandoned cart, re-engagement, promo, thank you). 20 ad copy variations (Facebook + Instagram). 10 landing page headlines. 15 WhatsApp broadcast templates. 10 SMS marketing templates. All proven formats. Just fill in the blanks and send.
+
+--- Product 4 ---
+Name: Business Plan Template for Nigerian Startups — Investor Ready
+Price: 3000 NGN
+Type: Digital Product
+Category: Done-For-You
+Description: Professional business plan template for Nigerian startups seeking funding. 25-page Word document with sections: executive summary, market analysis, financial projections, SWOT, competitive analysis. Pre-set with Nigerian market data (population, GDP, sectors). Investor-ready format. Bank loan application format included. Just fill in your business details.
+
+--- Product 5 ---
+Name: Grant Proposal Template Pack for Nigerian NGOs — 5 Templates
+Price: 4000 NGN
+Type: Digital Product
+Category: Done-For-You
+Description: Complete grant proposal template pack for Nigerian NGOs and social enterprises. 5 proposal templates (education, health, agriculture, women empowerment, youth development). Budget template with Nigerian cost standards. Log frame template. M&E framework template. Pre-set with donor requirements (USAID, EU, Ford Foundation, MacArthur). Just customize and submit.
+
+--- Product 6 ---
+Name: Employee Handbook Template for Nigerian SMEs — NDPR Compliant
+Price: 3500 NGN
+Type: Digital Product
+Category: Done-For-You
+Description: Complete employee handbook template for Nigerian SMEs. 40 pages covering: employment terms, code of conduct, leave policy (Nigerian labor law), disciplinary procedure, remuneration, health & safety, remote work policy, data protection (NDPR). Pre-set with Nigerian labor law requirements. Just add your company name and logo.
+
+--- Product 7 ---
+Name: Legal Document Templates Pack — 100+ Nigerian Business Forms
+Price: 8000 NGN
+Type: Digital Product
+Category: Done-For-You
+Description: 100+ legal document templates for Nigerian businesses. Contracts, agreements, NDAs, employment letters, tenancy agreements, partnership agreements, sales agreements, loan agreements, service agreements. All Nigerian-law compliant (CAMA 2020). Editable Word format. Just fill in names and terms.
+
+--- Product 8 ---
+Name: Pitch Deck Templates for Nigerian Startups — 5 Designs
+Price: 5000 NGN
+Type: Digital Product
+Category: Done-For-You
+Description: 5 professional pitch deck templates for Nigerian startups raising capital. Pre-built slides: problem, solution, market size, business model, traction, team, financials, ask. Investor-ready designs (YC, Techstars format). PowerPoint + Google Slides versions. Pre-set with Nigerian startup metrics. Just add your data and pitch.
+
+
+============================================================
+CATEGORY: Ebook (10 products)
+============================================================
+
+--- Product 1 ---
+Name: AI Image Generation Mastery — Midjourney & DALL-E Guide
+Price: 12.99 USD
+Type: Digital Product
+Category: Ebook
+Description: Complete guide to creating stunning AI art with Midjourney and DALL-E. 200+ prompt formulas, style cheat sheets, and commercial use tips.
+
+--- Product 2 ---
+Name: Viral TikTok Hooks Formula — 200 Proven Hooks
+Price: 12.99 USD
+Type: Digital Product
+Category: Ebook
+Description: 200 proven TikTok hooks that generate millions of views. Organized by niche: business, fitness, comedy, education, food. Includes script templates and posting strategy.
+
+--- Product 3 ---
+Name: Email Marketing Playbook — 50 Templates That Convert
+Price: 16.99 USD
+Type: Digital Product
+Category: Ebook
+Description: 50 proven email templates for welcome sequences, abandoned carts, newsletters, and launches. Works with Mailchimp, ConvertKit, and Klaviyo. Copy-paste ready.
+
+--- Product 4 ---
+Name: Nigerian Recipe eBook — 100 Traditional Dishes
+Price: 9.99 USD
+Type: Digital Product
+Category: Ebook
+Description: Complete guide to cooking 100 authentic Nigerian dishes. Jollof, Suya, Egusi, Pounded Yam, Suya, Moimoi and more. Step-by-step photos, ingredient lists, and video links.
+
+--- Product 5 ---
+Name: WordPress Security Hardening Guide
+Price: 7.99 USD
+Type: Digital Product
+Category: Ebook
+Description: Step-by-step guide to secure your WordPress site against hackers. Covers firewalls, SSL, malware scanning, brute force protection, and backup strategies.
+
+--- Product 6 ---
+Name: The Complete Genius 365 — Full Ebook Edition
+Price: 5000 NGN
+Type: Digital Product
+Category: Ebook
+Description: 365 days of daily transformation lessons by Rabiu Hamza Mohammed. Complete ebook with all chapters covering mindset, action, relationships, business growth, and personal development. Tailored for African entrepreneurs and dreamers.
+
+--- Product 7 ---
+Name: CAC Corporate Registration Guide — Upgrade to LTD
+Price: 1500 NGN
+Type: Digital Product
+Category: Ebook
+Description: Step-by-step guide to upgrading your business name to a Limited Liability Company (LTD) via the CAC i-CRP portal. Includes requirements, costs, timeline, document templates, and tips. Written specifically for Nigerian entrepreneurs.
+
+--- Product 8 ---
+Name: Facebook & Google Ads Setup Guide for Nigerian Businesses
+Price: 2500 NGN
+Type: Digital Product
+Category: Ebook
+Description: Complete guide to setting up and running profitable Facebook and Google Ads campaigns from Nigeria. Includes campaign structure, targeting strategies, budget recommendations, ad copy templates, and troubleshooting tips. Campaign plan for Harz ecosystem included.
+
+--- Product 9 ---
+Name: Hauwa and the Star Seed
+Price: 2500 NGN
+Type: Digital Product
+Category: Ebook
+Description: A magical African children's fantasy story about a young girl named Hauwa who discovers a glowing star seed that takes her on an extraordinary journey through the cosmos. A tale of courage, wonder, and destiny written by Rabiu Hamza.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/0a3530b3b_generated_image.png
+
+--- Product 10 ---
+Name: The Complete Genius 365 — A Year of Transformation
+Price: 9.99 USD
+Type: Digital Product
+Category: Ebook
+Description: 365 days of daily wisdom, mindset shifts, and action steps to transform your life and business. Written by Nigerian entrepreneur Rabiu Hamza Mohammed, founder of the 24-platform Harz Digital Ecosystem. Each day brings a new lesson on mindset, productivity, relationships, wealth building, and personal growth. Covers 52 weeks of themed chapters from Foundation to Legacy. Perfect for entrepreneurs, students, and anyone committed to daily self-improvement.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/aecd4f0d1_generated_image.png
+
+
+============================================================
+CATEGORY: Education (3 products)
+============================================================
+
+--- Product 1 ---
+Name: JAMB/UTME Prep Pack — 500+ Practice Questions
+Price: 2500 NGN
+Type: Digital Product
+Category: Education
+Description: JAMB/UTME preparation pack with 500+ practice questions across Mathematics, English, Physics, Chemistry, and Biology. Includes study schedule, subject combination guide, tips for scoring 300+, and common mistakes to avoid. Designed for 2026/2027 UTME candidates.
+
+--- Product 2 ---
+Name: Scholarship Application Guide — Local & International
+Price: 1500 NGN
+Type: Digital Product
+Category: Education
+Description: Complete scholarship application guide for Nigerian students. Covers local scholarships (NNPC, Shell, Chevron, MTN, Agip) and international scholarships (Chevening, Fulbright, DAAD, MasterCard Foundation). Includes application timeline, essay templates, recommendation letter guide, and interview preparation tips.
+
+--- Product 3 ---
+Name: Study Abroad Guide — Step by Step
+Price: 2500 NGN
+Type: Digital Product
+Category: Education
+Description: Complete study abroad guide for Nigerian students. Covers choosing a country (USA, UK, Canada, Germany, Australia), university application process, visa requirements, scholarship opportunities, IELTS/TOEFL preparation, and budget planning. Includes step-by-step timeline from research to departure.
+
+
+============================================================
+CATEGORY: FinTech (5 products)
+============================================================
+
+--- Product 1 ---
+Name: Payment Gateway — Complete Build Guide (Paystack Alternative)
+Price: 30000 NGN
+Type: Digital Product
+Category: FinTech
+Description: Complete build guide for a payment gateway. Covers payment processing architecture, card tokenization, bank transfer verification, USSD integration, webhook handling, split payments, refunds, settlement, and fraud detection. Includes Paystack/Stripe alternative design, database schema, API design, and PCI DSS compliance basics.
+
+--- Product 2 ---
+Name: Multi-Currency Wallet System — Complete Build Guide
+Price: 25000 NGN
+Type: Digital Product
+Category: FinTech
+Description: Complete multi-currency wallet system design and build guide. Includes architecture for NGN/USD/EUR/GBP wallets, exchange rate integration, transfer logic, wallet security (encryption, 2FA), transaction history, KYC integration plan, and Paystack/Stripe payment integration. Full database schema and API design included.
+
+--- Product 3 ---
+Name: Payroll System Template — Nigerian PAYE, Pension & NHF
+Price: 12000 NGN
+Type: Digital Product
+Category: FinTech
+Description: Complete payroll system template for Nigerian businesses. Includes PAYE tax calculation (2011 Act), pension (7.5% employee + 7.5% employer), NHF (2.5%), NSITF (1%), leave allowance, 13th month, gross-to-net calculator, payslip generator, and payroll summary report. Supports up to 500 employees.
+
+--- Product 4 ---
+Name: Subscription Billing System — Complete Build Guide
+Price: 20000 NGN
+Type: Digital Product
+Category: FinTech
+Description: Complete subscription billing system design guide. Includes recurring payment logic, plan management (free/trial/basic/premium/enterprise), proration calculation, dunning management (failed payment retry), upgrade/downgrade logic, invoice generation, and Paystack/Stripe subscription integration. Full database schema and API endpoints included.
+
+--- Product 5 ---
+Name: Expense Tracker — Nigerian Business Edition
+Price: 8000 NGN
+Type: Digital Product
+Category: FinTech
+Description: Business expense tracker template for Nigerian companies. Includes expense categories, receipt logging, mileage tracker, per diem calculator, approval workflow, budget vs actual comparison, monthly/quarterly/annual reports, and tax-deductible expense classifier. Works in Excel or Google Sheets.
+
+
+============================================================
+CATEGORY: Finance (6 products)
+============================================================
+
+--- Product 1 ---
+Name: Budget Planner Template — Nigerian Context
+Price: 1500 NGN
+Type: Digital Product
+Category: Finance
+Description: Complete budget planner template designed for Nigerian income earners. Monthly and annual budget sheets, expense categories (food, transport, rent, school, healthcare, etc.), savings tracker, debt tracker, and financial goals worksheet. Includes the 50/30/20 rule adapted for Nigerian context with VAT and tax calculations.
+
+--- Product 2 ---
+Name: Stock Market Beginners Guide — NGX 2026
+Price: 2000 NGN
+Type: Digital Product
+Category: Finance
+Description: Beginner-friendly guide to investing in the Nigerian Stock Exchange (NGX). Covers how to open a brokerage account, understanding stock charts, fundamental analysis of Nigerian companies (Dangote, MTN, GTCO, Zenith Bank), dividend investing, and portfolio strategy. Includes top 20 NGX stocks to watch in 2026.
+
+--- Product 3 ---
+Name: Crypto Investment Guide for Nigerians
+Price: 2000 NGN
+Type: Digital Product
+Category: Finance
+Description: Practical crypto investment guide for Nigerians. Covers how to buy crypto with Naira (Binance, Quidax, Bundle), Bitcoin vs altcoins, wallet security, staking, DeFi basics, and risk management. Includes Nigerian tax considerations, scam warning signs, and a starter portfolio for ₦50,000.
+
+--- Product 4 ---
+Name: Savings Challenge Tracker — 52 Week
+Price: 1000 NGN
+Type: Digital Product
+Category: Finance
+Description: 52-week savings challenge tracker. Start with ₦100 in week 1 and increase by ₦100 each week. Save ₦137,800 in one year. Includes 3 challenge variations (ascending, descending, fixed amount), monthly progress tracker, and tips for staying consistent. Perfect for Nigerian salary earners and business owners.
+
+--- Product 5 ---
+Name: Import/Export Business Guide — Nigeria
+Price: 3000 NGN
+Type: Digital Product
+Category: Finance
+Description: Complete import/export business guide for Nigeria. Covers product sourcing (China, Dubai, Turkey), shipping methods (air, sea, land), customs clearance, SONCAP and NAFDAC requirements, import duties calculation, finding buyers, and payment methods. Includes 20 profitable products to import/export in 2026.
+
+--- Product 6 ---
+Name: Grant Application Template Pack for SMEs
+Price: 2500 NGN
+Type: Digital Product
+Category: Finance
+Description: Complete grant application template pack for Nigerian SMEs. Includes cover letter template, project proposal template, budget template, and supporting document checklist. Covers major Nigerian and international grants: Tony Elumelu Foundation, BOI, SMEDAN, World Bank, and AfDB. Tips for writing winning applications.
+
+
+============================================================
+CATEGORY: Guide (1 products)
+============================================================
+
+--- Product 1 ---
+Name: CAC Corporate Registration Guide — Business Name to LTD
+Price: 1500 NGN
+Type: Digital Product
+Category: Guide
+Description: Complete step-by-step guide to upgrade your business name to a Limited Liability Company via the CAC i-CRP portal. Includes requirements, costs breakdown, document templates, post-registration steps, and tips.
+
+
+============================================================
+CATEGORY: Health (3 products)
+============================================================
+
+--- Product 1 ---
+Name: Weight Loss Tracker — 90 Day Nigerian Edition
+Price: 1000 NGN
+Type: Digital Product
+Category: Health
+Description: 90-day weight loss tracker with Nigerian diet plan. Includes calorie calculator, 7-day meal plan using local foods (moin moin, pap, egusi, jollof rice), weekly tracking template (weight, calories, water, steps), monthly measurement tracker, and 3-phase home workout plan (no equipment needed). Tips for portion control with Nigerian foods.
+
+--- Product 2 ---
+Name: Nigerian Meal Planning Guide — 30 Days
+Price: 1500 NGN
+Type: Digital Product
+Category: Health
+Description: Nigerian meal planning guide with 30 days of healthy, affordable meal plans. Uses locally available ingredients. Includes weekly shopping lists, preparation tips, nutritional breakdowns, and budget-friendly alternatives. Covers breakfast, lunch, and dinner for ₦2,000-5,000 per person per day.
+
+--- Product 3 ---
+Name: Home Workout Plan — No Equipment Needed
+Price: 1000 NGN
+Type: Digital Product
+Category: Health
+Description: 30-day home workout plan requiring zero equipment. Covers cardio, strength training, core workouts, and flexibility exercises. Each session is 20-30 minutes. Includes weekly progression, rest day schedule, and nutrition tips. Suitable for all fitness levels.
+
+
+============================================================
+CATEGORY: Interactive Workbook (6 products)
+============================================================
+
+--- Product 1 ---
+Name: 30-Day Brand Identity Workbook — Build Your Brand in 30 Days
+Price: 2700 USD
+Type: Digital Product
+Category: Interactive Workbook
+Description: 30-day interactive workbook to build a complete brand identity from scratch. Day 1-5: brand strategy (mission, vision, values, positioning). Day 6-10: audience research (personas, pain points, buying triggers). Day 11-15: visual identity (color psychology, font pairing, logo concepts). Day 16-20: brand voice and messaging (tagline, elevator pitch, brand story). Day 21-25: brand application (social media, email, packaging). Day 26-30: brand launch (guidelines, assets, rollout plan). Each day: 1 lesson + 3 exercises + 1 self-assessment. Fill-in-the-blank format forces action. Includes: AI prompts for each day, Canva template links, and color/font picker guide. By Day 30 you have a complete brand. Just open and start.
+
+--- Product 2 ---
+Name: 14-Day Business Model Validation Workbook
+Price: 1900 USD
+Type: Digital Product
+Category: Interactive Workbook
+Description: 14-day interactive workbook to validate any business idea before you spend money. Day 1-2: idea clarity (problem, solution, transformation). Day 3-4: market sizing (TAM, SAM, SOM, competitor analysis). Day 5-6: customer validation (10 interview questions, survey template). Day 7-8: pricing validation (willingness to pay test). Day 9-10: MVP design (build the smallest thing that works). Day 11-12: pre-sale (sell before you build). Day 13-14: go/no-go decision (pass/fail criteria, next steps). Each day: lesson + action worksheet + validation checklist. Fill-in format. By Day 14 you KNOW if your idea will make money. Don't waste months building something nobody wants.
+
+--- Product 3 ---
+Name: 30-Day Social Media Growth Workbook
+Price: 1900 USD
+Type: Digital Product
+Category: Interactive Workbook
+Description: 30-day interactive workbook to grow your social media from 0 to 1,000+ engaged followers. Day 1-5: profile optimization (bio formula, highlight covers, link strategy). Day 6-10: content system (5 content pillars, 30 post ideas, batch creation). Day 11-15: engagement engine (daily routine, 30-minute engagement strategy, hashtag research). Day 16-20: growth tactics (collaboration, reposts, viral hooks). Day 21-25: monetization prep (products, services, affiliate, sponsorships). Day 26-30: automation and scale (scheduling, analytics, team). Each day: lesson + action step + progress tracker. Fill-in format. Platform-specific versions for Instagram, TikTok, and LinkedIn included. By Day 30 you have a real audience.
+
+--- Product 4 ---
+Name: 7-Day Pricing Strategy Workbook
+Price: 1700 USD
+Type: Digital Product
+Category: Interactive Workbook
+Description: 7-day interactive workbook to build a pricing strategy that maximizes profit. Day 1: cost analysis (true cost of your product/service). Day 2: competitor pricing audit (10 competitors, price map). Day 3: value-based pricing (what is your transformation worth?). Day 4: pricing models (tiered, bundle, subscription, usage-based). Day 5: psychological pricing (anchors, decoys, charm prices). Day 6: testing plan (A/B testing framework). Day 7: implementation (price increase plan, customer communication). Each day: lesson + worksheet + pricing calculator. Fill-in format. By Day 7 you have a data-backed pricing strategy. Stop guessing your prices.
+
+--- Product 5 ---
+Name: 30-Day Content Calendar Workbook
+Price: 1700 USD
+Type: Digital Product
+Category: Interactive Workbook
+Description: 30-day interactive workbook to plan and create 30 days of content in one sitting. Day 1-5: content audit (what worked, what didn't). Day 6-10: content pillars (define 5 pillars for your brand). Day 11-15: idea generation (90 ideas using 6 frameworks). Day 16-20: batch creation system (write, design, schedule). Day 21-25: distribution strategy (platform-specific posting). Day 26-30: analytics and optimization. Each day: lesson + worksheet + content template. Fill-in format. Includes: 30-day content calendar template, 50 hook formulas, batch creation checklist. By Day 30 you have a month of content ready to publish. Never stare at a blank screen again.
+
+--- Product 6 ---
+Name: 14-Day Startup Launch Workbook
+Price: 2700 USD
+Type: Digital Product
+Category: Interactive Workbook
+Description: 14-day interactive workbook to launch your startup. Day 1-2: idea validation (problem-solution fit). Day 3-4: MVP definition (features, user flow, wireframes). Day 5-6: landing page (copy, design, email capture). Day 7-8: pre-launch (waitlist, social media, community). Day 9-10: build/assemble MVP (no-code tools guide). Day 11-12: launch day (checklist, channels, announcement). Day 13-14: post-launch (feedback, metrics, iteration plan). Each day: lesson + action checklist + resource links. Fill-in format. Includes: no-code tool comparison, launch announcement templates, press kit template. By Day 14 your product is live and you have your first users. Go from idea to launch in 2 weeks.
+
+
+============================================================
+CATEGORY: Lead Magnet (3 products)
+============================================================
+
+--- Product 1 ---
+Name: FREE: 10 AI Prompts Every Nigerian Business Owner Needs
+Price: 0 USD
+Type: Digital Product
+Category: Lead Magnet
+Description: FREE: 10 AI prompts every Nigerian business owner needs. Covers: generating product descriptions, creating WhatsApp broadcast messages, writing Facebook ad copy, drafting customer complaint responses, creating business plans, generating SEO content, writing email sequences, creating social media captions, generating sales scripts, and crafting business proposals. Each prompt pre-tested with Nigerian context. Just copy, paste into ChatGPT, and get instant results. Download free and join our WhatsApp community of 2,000+ Nigerian entrepreneurs.
+
+--- Product 2 ---
+Name: FREE: Nigerian Business Registration Checklist — CAC Step by Step
+Price: 0 USD
+Type: Digital Product
+Category: Lead Magnet
+Description: FREE: Complete checklist for registering your business with CAC in Nigeria. Step-by-step guide: 1) Choose business type (BN vs LTD vs LLP), 2) Name availability check, 3) Required documents, 4) Online portal registration, 5) Payment and submission, 6) Certificate collection, 7) TIN registration, 8) Bank account opening. Includes: links to CAC portal, document templates, cost breakdown (₦12,000-₦60,000), common rejection reasons, and how to avoid them. Download free and get your business registered this week.
+
+--- Product 3 ---
+Name: FREE: 50 Profitable Digital Product Ideas for Nigerians
+Price: 0 USD
+Type: Digital Product
+Category: Lead Magnet
+Description: FREE: 50 profitable digital product ideas you can create and sell from Nigeria. Each idea: product type, target audience, problem it solves, pricing recommendation, tools to create it, time to create, and where to sell it. Covers: templates, courses, prompts, swipe files, Notion workspaces, UI kits, SOPs, data sets, workbooks, and memberships. No coding required for most ideas. Includes: revenue potential estimate, competition level, and beginner-friendly rating. Download free and start building your first product today.
+
+
+============================================================
+CATEGORY: Marketplace (5 products)
+============================================================
+
+--- Product 1 ---
+Name: Global Film Marketplace — Complete Build Guide (Netflix Model)
+Price: 25000 NGN
+Type: Digital Product
+Category: Marketplace
+Description: Complete build guide for a global film marketplace. Covers video upload and transcoding (HLS/DASH), DRM protection, monetization (rental, purchase, subscription, ads), creator revenue splits, search and discovery, ratings and reviews, multi-language subtitles, and payment integration. Full database schema, API design, and CDN strategy.
+
+--- Product 2 ---
+Name: Digital Asset Marketplace — Complete Build Guide (Envato Model)
+Price: 25000 NGN
+Type: Digital Product
+Category: Marketplace
+Description: Complete build guide for a digital asset marketplace. Covers file upload, preview generation, watermarking, license management (personal, commercial, extended), download tracking, creator payouts, and dispute resolution. Supports images, templates, icons, fonts, 3D models, and audio. Full database schema, API design, and monetization.
+
+--- Product 3 ---
+Name: Freelancer Marketplace — Complete Build Guide (Upwork Model)
+Price: 25000 NGN
+Type: Digital Product
+Category: Marketplace
+Description: Complete build guide for a freelancer marketplace. Covers gig posting, proposals, milestones, escrow payments, dispute resolution, skill verification, ratings, and portfolio hosting. Includes chat system, video calls, time tracking, and invoice generation. Full database schema, API design, and monetization (commission model).
+
+--- Product 4 ---
+Name: Real Estate Marketplace — Complete Build Guide (PropertyPro Model)
+Price: 25000 NGN
+Type: Digital Product
+Category: Marketplace
+Description: Complete build guide for a real estate marketplace. Covers property listings (rent/sale/shortlet), virtual tours, agent verification, mortgage calculator, affordability checker, saved searches, alert notifications, offer management, and commission tracking. Full database schema, API design, and monetization (listing fees, featured listings, agent subscriptions).
+
+--- Product 5 ---
+Name: Course Marketplace — Complete Build Guide (Udemy Model)
+Price: 25000 NGN
+Type: Digital Product
+Category: Marketplace
+Description: Complete build guide for a course marketplace. Covers course creation, video hosting, student enrollment, progress tracking, certificates, reviews, instructor payouts, coupon codes, bundles, and affiliate program. Includes search, recommendations, and multi-currency pricing. Full database schema, API design, and monetization (30% commission).
+
+
+============================================================
+CATEGORY: Membership (4 products)
+============================================================
+
+--- Product 1 ---
+Name: Harz Templates Club — Monthly Template Membership (₦5,000/month)
+Price: 5000 NGN
+Type: Digital Product
+Category: Membership
+Description: Monthly membership for Nigerian entrepreneurs. Get 4 new templates every month (Canva, Notion, Excel, Google Sheets). Access to private WhatsApp group. Monthly live Q&A. Early access to new products. Member-only discounts on all HarzDM products. Cancel anytime. Annual billing saves 2 months.
+
+--- Product 2 ---
+Name: Harz Dev Club — Monthly Developer Toolkit Membership (₦7,000/month)
+Price: 7000 NGN
+Type: Digital Product
+Category: Membership
+Description: Monthly membership for Nigerian developers. Get 2 new code boilerplates/snippets every month. Access to private Telegram group. Code review by AI. Early access to new developer tools. Monthly coding challenge. Member-only API access to Harz tools. Cancel anytime. Annual billing saves 2 months.
+
+--- Product 3 ---
+Name: Harz Growth Club — Monthly Business Growth Membership (₦3,000/month)
+Price: 3000 NGN
+Type: Digital Product
+Category: Membership
+Description: Monthly membership for Nigerian business owners. Weekly AI-powered business audit (marketing, sales, operations). Monthly growth report. Access to all cheat sheets. Private WhatsApp group with other founders. Monthly expert guest session. AI prompt updates. Cancel anytime.
+
+--- Product 4 ---
+Name: Harz Insider Membership — Monthly Access to All Tools & Resources
+Price: 2000 NGN
+Type: Digital Product
+Category: Membership
+Description: Monthly membership giving you access to ALL Harz digital products, templates, tools, early content releases, and exclusive community. Includes Construction Calculator, Business Toolkit, AI Prompt Packs, and all future products. Cancel anytime.
+
+
+============================================================
+CATEGORY: Micro-Niche (13 products)
+============================================================
+
+--- Product 1 ---
+Name: Notion Freelance Designer System — Nigerian Edition
+Price: 3500 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Ready-to-use Notion dashboard for Nigerian freelance graphic designers. Track clients, projects, invoices, deadlines, and income. Pre-built with Nigerian tax rates (VAT 7.5%), invoice generator, client CRM, project pipeline, and portfolio tracker. Just duplicate and start. No setup needed.
+
+--- Product 2 ---
+Name: Budget Tracker for Nigerian Teachers — Google Sheets Template
+Price: 2000 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Done-for-you Google Sheets budget tracker built for Nigerian teachers. Auto-calculates salary allocation (PAYE, pension, NHF). Tracks rent, food, transport, school fees, savings. Visual dashboard with charts. Pre-set with Nigerian expense categories. Just enter your salary and start tracking.
+
+--- Product 3 ---
+Name: Meal Plans for Busy Nigerian Nurses — 4-Week Quick Prep System
+Price: 2000 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: 4-week meal plan designed for Nigerian nurses working 12-hour shifts. 28 meals that take under 20 minutes to prep. Nigerian ingredients only (rice, beans, plantain, eggs, suya, moi-moi). Grocery list included. Nutrition breakdown per meal. Batch-cooking guide for night shifts. Just print and cook.
+
+--- Product 4 ---
+Name: WhatsApp Business Automation Kit for Nigerian SMEs
+Price: 3000 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Complete WhatsApp Business automation kit for Nigerian SMEs. Auto-reply templates for 15 common scenarios (pricing, hours, location, order, delivery, complaint). Quick reply shortcuts. Business profile setup guide. Catalog upload template. Broadcast message templates (12 ready-to-use). Label system for customer tracking. Just copy, paste, and customize.
+
+--- Product 5 ---
+Name: Social Media Content Calendar for Nigerian Restaurants
+Price: 2500 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: 30-day social media content calendar for Nigerian restaurants. 90 ready-to-post captions (3 per day). Hashtags for Nigerian food scene. Post ideas for: menu highlights, behind-the-scenes, customer reviews, promotions, holidays. Works for Instagram, Facebook, and Twitter. Just schedule and post.
+
+--- Product 6 ---
+Name: Invoice Template Pack for Nigerian Freelancers — 5 Designs
+Price: 2000 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Professional invoice template pack for Nigerian freelancers. 5 invoice designs (minimal, modern, corporate, creative, classic). Auto-calculates VAT (7.5%), WHT (5% or 10%), and total. Excel + Google Sheets versions. Pre-set with Nigerian banking details field. Payment terms template included. Just fill in and send.
+
+--- Product 7 ---
+Name: CRM Spreadsheet for Nigerian Real Estate Agents
+Price: 3000 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Complete CRM spreadsheet for Nigerian real estate agents. Track listings, buyers, sellers, commissions, viewings, and deals. Auto-calculates commission (5-10%). Property comparison sheet. Client follow-up tracker with reminders. Closing checklist. Pre-built with Nigerian property categories (land, bungalow, duplex, commercial). Just start adding clients.
+
+--- Product 8 ---
+Name: Patient Tracker for Nigerian Clinic Owners — Excel Template
+Price: 3500 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Patient tracking spreadsheet for Nigerian clinics. Track patient visits, diagnoses, prescriptions, follow-ups, and payments. Pre-set with common Nigerian health conditions. Automatic appointment reminders. Monthly revenue dashboard. Stock tracker for pharmacy. Works offline. Just enter patient data and everything auto-updates.
+
+--- Product 9 ---
+Name: Inventory Tracker for Nigerian Provision Stores
+Price: 2500 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Inventory and sales tracker for Nigerian provision stores. Track 200+ products with stock levels, reorder alerts, and profit margins. Pre-set with common Nigerian provisions (rice, beans, oil, sugar, milk, soap, etc.). Auto-calculates restocking dates. Daily/weekly/monthly sales dashboard. Supplier contact tracker. Works on any phone with Google Sheets. Just scan and enter.
+
+--- Product 10 ---
+Name: Student Grade Tracker for Nigerian Teachers — Excel Template
+Price: 2500 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Student grade tracker for Nigerian teachers (primary & secondary). Track 100 students across all subjects. Auto-calculates averages, positions, and term results. Report card generator. CASS/CA tracker. Pre-set with Nigerian grading system (A1-F9). Parent contact log. Just enter scores and reports generate automatically.
+
+--- Product 11 ---
+Name: Construction Project Tracker for Nigerian Contractors
+Price: 4000 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Project tracker for Nigerian construction contractors. Track 50+ projects with milestones, payments, materials, and labor. Auto-calculates profit/loss per project. Material usage tracker. Worker attendance + daily pay calculator. Client payment schedule with reminders. Pre-set with Nigerian construction categories. Just enter project details and track everything in one place.
+
+--- Product 12 ---
+Name: Pharmacy Accounting Dashboard for Nigerian Pharmacists
+Price: 4000 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Complete accounting dashboard for Nigerian pharmacy owners. Track sales (OTC and prescription), stock levels, expiry dates, supplier payments, and daily profit. Pre-set with 100+ common Nigerian drugs. Auto-alert for low stock and expiring drugs. Monthly P&L statement. Tax calculator (PAYE for staff, VAT for sales). Just enter daily sales and everything updates.
+
+--- Product 13 ---
+Name: Salon Booking & Client Tracker for Nigerian Hair Salons
+Price: 3000 NGN
+Type: Digital Product
+Category: Micro-Niche
+Description: Complete salon management template for Nigerian hair and beauty businesses. Track 200+ clients with service history, preferred style, and spending. Appointment scheduler with SMS reminder templates. Product inventory for hair products. Daily/weekly revenue tracker. Stylist commission calculator (30/70, 40/60 split). Pre-set with Nigerian hair services (braids, weave, locks, etc.). Just add clients and start.
+
+
+============================================================
+CATEGORY: Mini-Course (6 products)
+============================================================
+
+--- Product 1 ---
+Name: WhatsApp Business in 7 Days — Mini-Course for Nigerian SMEs
+Price: 3000 NGN
+Type: Digital Product
+Category: Mini-Course
+Description: 7-day mini-course: Launch your WhatsApp Business in 7 days. Day 1: Profile setup. Day 2: Catalog upload. Day 3: Auto-reply setup. Day 4: Broadcast lists. Day 5: Labels & CRM. Day 6: Status ads. Day 7: First sale. Each day: 10-minute video + checklist + template. Just follow along daily and sell by Day 7.
+
+--- Product 2 ---
+Name: 1K Instagram Followers in 5 Days — Mini-Course for Nigerian Businesses
+Price: 2500 NGN
+Type: Digital Product
+Category: Mini-Course
+Description: 5-day mini-course: Get your first 1,000 Instagram followers as a Nigerian business. Day 1: Profile optimization. Day 2: Content strategy. Day 3: Hashtag research. Day 4: Engagement system. Day 5: Reels formula. Each day: video lesson + action checklist. Just follow and grow.
+
+--- Product 3 ---
+Name: Paystack Integration in 3 Days — Mini-Course for Developers
+Price: 3000 NGN
+Type: Digital Product
+Category: Mini-Course
+Description: 3-day mini-course: Integrate Paystack and start collecting payments. Day 1: Account setup + test mode. Day 2: Payment button + webhook. Day 3: Go live + dashboard. Each day: 15-minute video + code snippets + checklist. By Day 3 you are collecting real payments. Just follow along.
+
+--- Product 4 ---
+Name: Poultry Farming in 7 Days — Mini-Course (100 Birds Start)
+Price: 2500 NGN
+Type: Digital Product
+Category: Mini-Course
+Description: 7-day mini-course: Start poultry farming with 100 birds. Day 1: Housing setup. Day 2: Bird selection & purchase. Day 3: Feeding plan. Day 4: Vaccination schedule. Day 5: Daily routine. Day 6: Health monitoring. Day 7: Selling your first batch. Each day: video + checklist + cost tracker. By Day 7 your farm is running. Just follow and start.
+
+--- Product 5 ---
+Name: Landing Page in 5 Days — Mini-Course for Nigerian Businesses
+Price: 3000 NGN
+Type: Digital Product
+Category: Mini-Course
+Description: 5-day mini-course: Build and launch a landing page for your Nigerian business. Day 1: Choose template. Day 2: Copy writing. Day 3: Images & branding. Day 4: Paystack checkout. Day 5: Deploy to Vercel free. Each day: 15-minute video + step-by-step guide. By Day 5 your page is live and collecting orders. Just follow along.
+
+--- Product 6 ---
+Name: CAC Registration in 3 Days — Mini-Course for Nigerian Entrepreneurs
+Price: 2000 NGN
+Type: Digital Product
+Category: Mini-Course
+Description: 3-day mini-course: Register your business with CAC. Day 1: Choose business type (BN vs LTD). Day 2: Gather documents. Day 3: Submit on CAC portal. Each day: step-by-step video + document checklist + portal screenshots. By Day 3 your application is submitted. Just follow along.
+
+
+============================================================
+CATEGORY: Music (4 products)
+============================================================
+
+--- Product 1 ---
+Name: Lo-Fi Study Beats Collection — 100 Tracks
+Price: 19.99 USD
+Type: Digital Product
+Category: Music
+Description: 100 relaxing lo-fi hip hop beats perfect for studying, working, and streaming. Royalty-free for content creators. MP3 and WAV formats.
+
+--- Product 2 ---
+Name: Afrobeats Producer Pack — 50 Royalty-Free Beats
+Price: 29.99 USD
+Type: Digital Product
+Category: Music
+Description: 50 high-quality Afrobeats instrumentals for content creators, filmmakers, and artists. WAV + MP3 formats. Royalty-free commercial license included.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/50f18aae9_generated_image.png
+
+--- Product 3 ---
+Name: Afrobeats Producer Pack — 50 Premium Beats
+Price: 29.99 USD
+Type: Digital Product
+Category: Music
+Description: Royalty-free Afrobeats instrumentals for content creators, filmmakers, and artists. Includes 50 WAV + MP3 files with commercial license. Genres: Afrobeats, Amapiano, Highlife, Fuji fusion.
+
+--- Product 4 ---
+Name: Harz Music Producer Pack — 50 Royalty-Free Beats
+Price: 1500 NGN
+Type: Digital Product
+Category: Music
+Description: 50 royalty-free beats across Afrobeats (15), Amapiano (10), Hip-Hop/Trap (10), R&B/Soul (10), and Gospel (5). High-quality WAV + MP3 format. Use for YouTube, social media, podcasts, and commercial content. Non-exclusive license.
+
+
+============================================================
+CATEGORY: Niche Data Sets (5 products)
+============================================================
+
+--- Product 1 ---
+Name: 500 Active Angel Investors in African Tech — Curated Database
+Price: 9700 USD
+Type: Digital Product
+Category: Niche Data Sets
+Description: Curated database of 500 active angel investors funding African tech startups. Each entry: investor name, firm, investment range, sectors of interest, portfolio companies, stage preference (pre-seed, seed, Series A), geographic focus, contact email/LinkedIn, portfolio size, notable investments, investment thesis, and warm intro path. Covers investors active in: Nigeria, Kenya, South Africa, Egypt, Ghana, and pan-African funds. Data cleaned and verified as of July 2026. Delivered as CSV + Notion database. Save 100+ hours of research. The fastest way to find your next investor.
+
+--- Product 2 ---
+Name: 1,000 Nigerian SME Grants & Funding Sources — Complete Database
+Price: 6700 USD
+Type: Digital Product
+Category: Niche Data Sets
+Description: 1,000 Nigerian SME grants and funding sources. Each entry: program name, provider (government, NGO, corporate), eligibility criteria, funding amount, application deadline, application link, required documents, success rate, geographic coverage, sector focus, and tips from past winners. Covers: federal government grants (150), state grants (200), international donor programs (200), corporate SME support (150), accelerator programs (100), microfinance options (100), cooperative funding (50), diaspora investment programs (50). Updated July 2026. Delivered as CSV + Notion database + PDF guide. Never miss a funding opportunity again.
+
+--- Product 3 ---
+Name: 200 Nigerian Government Procurement Opportunities — Active Database
+Price: 4700 USD
+Type: Digital Product
+Category: Niche Data Sets
+Description: 200 active Nigerian government procurement opportunities. Each entry: procuring entity, project description, contract value range, submission deadline, eligibility, required documents, bid submission portal, contact person, and past contract award amounts. Covers: federal ministries (50), state governments (50), LGAs (30), agencies and parastatals (40), military and paramilitary (15), educational institutions (15). Updated July 2026 with active opportunities. Includes: BPP registration guide, certificate of compliance requirements, and bid preparation checklist. Delivered as CSV + PDF. The shortcut to winning government contracts.
+
+--- Product 4 ---
+Name: 500 Nigerian Import/Export Contacts — Supplier & Buyer Database
+Price: 4700 USD
+Type: Digital Product
+Category: Niche Data Sets
+Description: 500 Nigerian import/export contacts for traders. Import side: 200 verified suppliers from China, Turkey, India, Vietnam, and Dubai — each with: company name, product category, contact (WhatsApp/WeChat/email), minimum order quantity, price range, quality certification, shipping terms, and Nigerian agent contact. Export side: 300 Nigerian export-ready products with: product name, supplier location, export volume capacity, quality standards, NEPC registration status, target markets, pricing, and documentation requirements. Includes: Form M guide, PAAR process, NEPC registration steps, and shipping agent contacts. Delivered as CSV + PDF. Start importing or exporting this week.
+
+--- Product 5 ---
+Name: 100 Construction Material Suppliers in Nigeria — Verified Database
+Price: 3700 USD
+Type: Digital Product
+Category: Niche Data Sets
+Description: 100 verified construction material suppliers in Nigeria. Each entry: supplier name, materials available (cement, rods, blocks, sand, granite, timber, paint, roofing, electrical, plumbing), location (state + LGA), phone number, WhatsApp, delivery range, price list, bulk discount terms, payment options, quality grade, and customer rating. Covers all 6 geopolitical zones. Includes: material price comparison guide (current market prices), quality checklist for each material, delivery cost calculator, and negotiation tips. Updated July 2026. Delivered as CSV + PDF. Save ₦50,000+ on your next construction project by knowing exactly who to call.
+
+
+============================================================
+CATEGORY: Notion OS (10 products)
+============================================================
+
+--- Product 1 ---
+Name: The Freelance Designer OS — Complete Notion Workspace
+Price: 4700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion workspace for freelance designers. Includes: client CRM with project tracking, invoice generator with payment tracker, proposal template library (10 templates), brand brief template, design brief template, revision request tracker, time tracker with billable hours, mood board database, asset library organizer, client feedback database, contract template, pricing calculator, expense tracker, quarterly business review dashboard, goal tracker, content calendar for your own marketing, referral tracker. Pre-built with formulas, rollups, and automations. Just duplicate and customize your brand. Saves 10+ hours per week on admin work.
+
+--- Product 2 ---
+Name: The ADHD Life Management Dashboard — Notion OS
+Price: 3700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion dashboard designed for ADHD brains. Features: visual task board (not overwhelming lists), body doubling session tracker, dopamine menu (reward system), time blindness tools (time-blocked schedule with visual timers), hyperfocus project tracker, medication/therapy log, energy level tracker, habit streaks with visual progress, brain dump inbox for racing thoughts, priority matrix (urgent vs important), daily focus page (one thing at a time), weekly review with ADHD-friendly prompts, sensory needs tracker, sleep quality log, meal reminder system, accountability partner tracker. Designed by someone with ADHD, for people with ADHD. Visual, color-coded, low-clutter. Just duplicate and start managing your life.
+
+--- Product 3 ---
+Name: The Nigerian SME Operating System — Notion Workspace
+Price: 3700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion operating system for Nigerian small business owners. Modules: inventory management with reorder alerts, sales tracker (daily/weekly/monthly), customer database with purchase history, supplier database with payment terms, expense tracker with categories, staff attendance and payroll calculator, tax calculator (PAYE, VAT, WHT), profit margin calculator, business goal tracker, daily cash flow log, debt tracker, business plan template, marketing calendar, competitor analysis grid, monthly business review dashboard. All formulas pre-built for Nigerian tax rates and currency. Just duplicate and run your entire business from one dashboard.
+
+--- Product 4 ---
+Name: Content Creator OS — Notion Workspace for YouTubers & Creators
+Price: 4700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion workspace for content creators. Includes: content calendar with platform tags, content idea bank with AI prompt integration, script/outline database, asset library (thumbnails, b-roll, music), video performance tracker with analytics, audience persona builder, brand kit (colors, fonts, voice), collaboration hub for team members, sponsorship tracker with rate card, monetization dashboard (revenue by platform), SEO keyword tracker, trend research database, posting schedule optimizer, engagement tracker, content repurposing planner. Pre-built for YouTube, Instagram, TikTok, and blog creators. Just duplicate and scale your content operation.
+
+--- Product 5 ---
+Name: Real Estate Agent Command Center — Notion OS
+Price: 4700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion command center for real estate agents. Features: property listings database with status tracking (active, pending, sold, rented), buyer/seller CRM with match-making algorithm, showing scheduler with feedback notes, offer tracker with terms comparison, commission calculator, marketing campaign tracker, open house planner with RSVP tracking, lead source analyzer, neighborhood database with amenities, price comparison tool, document checklist per transaction, closing timeline tracker, referral network database, weekly sales pipeline review. Pre-built for Nigerian real estate market. Just duplicate and close more deals.
+
+--- Product 6 ---
+Name: Developer Project OS — Notion + GitHub Workflow
+Price: 5700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion workspace for software developers. Includes: project manager with sprint planning, bug tracker with priority matrix, code snippet library with syntax highlighting, API documentation database, deployment tracker with environment management, Git workflow checklist, code review template, tech debt tracker, learning roadmap with course tracker, side project incubator, client project portal, time tracking with billable rates, invoice generator, retainer tracker, tech stack decision matrix, architecture decision records template. Integrates with GitHub URLs. Just duplicate and manage your dev workflow.
+
+--- Product 7 ---
+Name: Restaurant Manager OS — Notion Workspace
+Price: 4700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion workspace for restaurant owners. Features: recipe database with cost per serving, menu engineering matrix (profitability vs popularity), inventory tracker with low-stock alerts, staff schedule with shift preferences, daily sales tracker by menu item, supplier database with price comparison, food cost calculator, waste log, health inspection checklist, customer feedback database, table reservation system, special events planner, monthly P&L dashboard, staff performance tracker, cleaning schedule, equipment maintenance log. Pre-built for Nigerian restaurant operations. Just duplicate and run your restaurant from one place.
+
+--- Product 8 ---
+Name: Pharmacy Operations Dashboard — Notion OS
+Price: 4700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion dashboard for pharmacy operations. Features: medication inventory with expiry date tracking and auto-reorder alerts, prescription database with patient history, drug interaction checker reference, controlled substance log, supplier database with pricing, daily sales tracker, insurance claim tracker, staff shift scheduler, temperature log for storage compliance, NAFDAC registration tracker, patient consultation notes, vaccination log, financial dashboard with profit margins per category, expiry alert system (90/60/30 days). Pre-built for Nigerian pharmacies. Just duplicate and manage your pharmacy efficiently.
+
+--- Product 9 ---
+Name: Construction Project OS — Notion Workspace for Contractors
+Price: 5700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion workspace for construction project management. Features: project database with phases and milestones, task tracker with dependencies and critical path, budget manager with cost categories (materials, labor, equipment, permits), material ordering tracker with supplier links, daily site report template, safety incident log, change order tracker with cost impact, subcontractor database with performance ratings, RF1 and RF1 log, drawing/document control system, photo log with location tags, weather delay tracker, equipment maintenance schedule, progress claim generator. Pre-built for Nigerian construction standards. Just duplicate and manage projects like a pro.
+
+--- Product 10 ---
+Name: Student Productivity OS — Notion Workspace for Students
+Price: 2700 USD
+Type: Digital Product
+Category: Notion OS
+Description: Complete Notion workspace for students. Features: semester planner with course database, assignment tracker with due dates and grade calculator, exam prep dashboard with study sessions, note-taking database with AI-linked summaries, reading list tracker, GPA calculator, scholarship tracker with deadlines, internship application tracker, study group organizer, habit tracker (sleep, exercise, study hours), budget tracker for student expenses, meal planner, project management for group assignments, flashcard database. Clean, minimal, distraction-free design. Just duplicate and ace your semester.
+
+
+============================================================
+CATEGORY: Photo (2 products)
+============================================================
+
+--- Product 1 ---
+Name: Stock Photo Bundle — 500 African Business Photos
+Price: 34.99 USD
+Type: Digital Product
+Category: Photo
+Description: 500 high-resolution photos featuring African business professionals, workplaces, and urban scenes. Perfect for marketing campaigns and website design.
+
+--- Product 2 ---
+Name: 4K Nature Video B-Roll Pack — 80 Clips
+Price: 49.99 USD
+Type: Digital Product
+Category: Photo
+Description: 80 stunning 4K nature b-roll clips for filmmakers and content creators. Forests, oceans, mountains, and sunsets. Royalty-free commercial license.
+
+
+============================================================
+CATEGORY: Plugin (1 products)
+============================================================
+
+--- Product 1 ---
+Name: WordPress Plugin Developer Toolkit — 15 Premium Plugins
+Price: 59.99 USD
+Type: Digital Product
+Category: Plugin
+Description: 15 production-ready WordPress plugins with full source code. Includes SEO optimizer, speed booster, contact form, and security suite. Developer license included.
+
+
+============================================================
+CATEGORY: Productivity (6 products)
+============================================================
+
+--- Product 1 ---
+Name: Team Collaboration Platform — Build Guide (Slack Model)
+Price: 25000 NGN
+Type: Digital Product
+Category: Productivity
+Description: Complete build guide for a team collaboration platform. Covers real-time chat, channels, threads, file sharing, video calls, screen sharing, task management, calendar integration, and search. Full database schema (WebSocket architecture), API design, and deployment guide. Competitor analysis: Slack, Microsoft Teams, Discord.
+
+--- Product 2 ---
+Name: Document Management System — Build Guide (DocuSign Model)
+Price: 20000 NGN
+Type: Digital Product
+Category: Productivity
+Description: Complete build guide for a document management system. Covers document upload, version control, approval workflows, electronic signatures, access control, full-text search, audit trails, and retention policies. Full database schema, API design, and NDPR compliance framework. Includes mobile app architecture.
+
+--- Product 3 ---
+Name: Cloud Notes App — Complete Build Guide (Notion Model)
+Price: 18000 NGN
+Type: Digital Product
+Category: Productivity
+Description: Complete build guide for cloud notes app. Covers rich text editing, markdown support, tags, notebooks, sharing, sync across devices, offline mode, search, and templates. Full database schema (CRDT for conflict-free sync), API design, and deployment. Competitor analysis: Notion, Evernote, Obsidian.
+
+--- Product 4 ---
+Name: Calendar & Scheduling System — Build Guide (Calendly Model)
+Price: 18000 NGN
+Type: Digital Product
+Category: Productivity
+Description: Complete build guide for a calendar and scheduling system. Covers event creation, recurring events, reminders, shared calendars, availability checking, booking links, group scheduling, time zone handling, and Google/Outlook sync. Full database schema, API design, and WhatsApp/Telegram notification integration.
+
+--- Product 5 ---
+Name: Project Management Template — Team Edition
+Price: 10000 NGN
+Type: Digital Product
+Category: Productivity
+Description: Complete project management template for Nigerian teams. Includes task tracker, Gantt chart, team workload calculator, time tracking, milestone tracking, risk register, meeting notes template, and project dashboard. Works in Excel, Google Sheets, or Notion. Designed for teams of 2-50 people.
+
+--- Product 6 ---
+Name: Digital Signature System — Nigerian Legal Compliant
+Price: 15000 NGN
+Type: Digital Product
+Category: Productivity
+Description: Complete digital signature system design guide. Includes document workflow, signature capture, audit trail, legal validity in Nigeria (Evidence Act 2011), template builder, multi-signer support, and API design. Covers integration with existing document management systems.
+
+
+============================================================
+CATEGORY: Real Estate Tools (7 products)
+============================================================
+
+--- Product 1 ---
+Name: Property Management Template — Landlord Edition
+Price: 3000 NGN
+Type: Digital Product
+Category: Real Estate Tools
+Description: Complete property management template for Nigerian landlords and property managers. Includes tenant tracking, rent collection log, maintenance request tracker, expense tracker, property inspection checklist, and financial summary. Works for single or multiple properties.
+
+--- Product 2 ---
+Name: Short-Let Business Guide — Airbnb Nigeria
+Price: 2500 NGN
+Type: Digital Product
+Category: Real Estate Tools
+Description: Complete short-let (Airbnb) business guide for Nigeria. Covers setup costs, property requirements, furnishing checklist, pricing strategy, listing optimization, guest communication templates, cleaning management, and income projections for Lagos and Abuja. Includes legal requirements and NDPR compliance.
+
+--- Product 3 ---
+Name: Real Estate Marketing Playbook — Nigeria
+Price: 2500 NGN
+Type: Digital Product
+Category: Real Estate Tools
+Description: Real estate marketing playbook for Nigerian agents and developers. Covers lead generation, social media marketing, property photography tips, virtual tours, WhatsApp marketing, email campaigns, and closing techniques. Includes 30-day marketing calendar and ad templates.
+
+--- Product 4 ---
+Name: Tenancy Agreement Template — Nigeria
+Price: 2000 NGN
+Type: Digital Product
+Category: Real Estate Tools
+Description: Ready-to-use legal tenancy agreement template for Nigerian landlords and tenants. 12 articles covering duration, rent, deposits, maintenance responsibilities, utilities, access, prohibited activities, termination, and renewal. Includes inventory checklist and meter readings section. Just fill in the blanks.
+
+--- Product 5 ---
+Name: Real Estate Investment Calculator — Nigeria 2026
+Price: 3000 NGN
+Type: Digital Product
+Category: Real Estate Tools
+Description: Complete ROI calculator with current land prices across Lagos and Abuja, rental yields by location, build costs, and 4 real investment examples (land appreciation, build-to-let, flip, short-let). Decision framework and buying checklist included.
+
+--- Product 6 ---
+Name: Real Estate Investment Calculator — Nigerian Market Edition
+Price: 3000 NGN
+Type: Digital Product
+Category: Real Estate Tools
+Description: Calculate ROI, rental yield, and investment potential for Nigerian properties. Pre-loaded with Abuja and Lagos market data. Includes mortgage calculator, rental yield calculator, and property comparison tool. Based on Abuja Estate City AI market data.
+
+--- Product 7 ---
+Name: Estate Estimator
+Price: 15000 NGN
+Type: Digital Product
+Category: Real Estate Tools
+Description: Professional Nigerian property valuation, construction cost, ROI analysis, and mortgage calculator in one tool. Built for real estate investors, developers, and homeowners in Nigeria.  Features: 4 calculators: Property Valuation, Construction Cost, ROI Investment Analysis, and Mortgage Calculator Nigerian market-specific pricing benchmarks (2026) for 12+ cities including Lagos, Abuja, Port Harcourt, Kano, Ibadan Construction cost estimator with quality tiers (Basic to Luxury), foundation types, roof types, and add-on features (borehole, solar, swimming pool, elevator, etc.) ROI analyzer with DSCR, cash-on-cash return, cap rate, appreciation projection, and annualized ROI Mortgage calculator with NHF (6%), FMBN (15%), and commercial bank rates (18-28%) Printable PDF reports with professional formatting Fully offline — runs in any browser, no internet needed after download Mobile-responsive design Self-contained HTML file — zero dependencies, no installation required
+
+
+============================================================
+CATEGORY: SOPs & Swipe Files (8 products)
+============================================================
+
+--- Product 1 ---
+Name: 50 High-Converting Email Swipe Files for SaaS
+Price: 4700 USD
+Type: Digital Product
+Category: SOPs & Swipe Files
+Description: 50 proven email templates for SaaS businesses that generate revenue. Categories: onboarding (8), activation (6), upgrade/cross-sell (6), win-back (5), trial conversion (5), feature announcement (4), re-engagement (4), referral request (3), feedback collection (3), billing/payment (3), churn prevention (3). Each template: subject line, preview text, body copy, CTA, and timing recommendation. Pre-tested across 100+ SaaS companies with average 35% open rate and 8% click rate. Includes subject line formula that works for any SaaS niche. Just fill in your product name and send.
+
+--- Product 2 ---
+Name: SOPs for Running a Shopify Store — 40 Step-by-Step Procedures
+Price: 3700 USD
+Type: Digital Product
+Category: SOPs & Swipe Files
+Description: Complete standard operating procedures for running a Shopify store. 40 SOPs covering: store setup (5), product listing (4), inventory management (4), order fulfillment (5), customer service (6), returns and refunds (3), marketing (5), SEO (3), email marketing (3), social media (3), financial reporting (3), supplier management (2). Each SOP: step-by-step instructions, time estimate, tools needed, quality checklist, common mistakes, and a video link placeholder. Just assign to your team and your store runs itself. Perfect for VAs and remote teams.
+
+--- Product 3 ---
+Name: SOPs for Managing Remote Teams (Nigeria) — 35 Procedures
+Price: 3700 USD
+Type: Digital Product
+Category: SOPs & Swipe Files
+Description: Complete SOPs for managing remote teams in Nigeria. 35 procedures covering: team onboarding (5), daily standups (3), weekly reports (3), performance reviews (4), communication protocols (4), file sharing and version control (3), time tracking (3), payroll management (3), tax compliance (3), data security (3), conflict resolution (2), offboarding (3). Each SOP includes: Nigerian labor law compliance notes, recommended tools (WhatsApp, Slack, Notion, Google Workspace), time zone management, cultural considerations, and quality standards. Perfect for managing teams across Nigeria and internationally.
+
+--- Product 4 ---
+Name: 30 Cold Email Templates for Nigerian B2B Sales
+Price: 2700 USD
+Type: Digital Product
+Category: SOPs & Swipe Files
+Description: 30 cold email templates specifically crafted for Nigerian B2B businesses. Categories: introduction (5), product demo offer (5), partnership proposal (4), follow-up after no response (5), case study sharing (3), event invitation (3), webinar promotion (2), re-engagement (3). Each template: subject line, body copy adapted for Nigerian business culture (respectful, formal, direct), CTA, and personalization tips. Pre-tested with Nigerian companies across fintech, real estate, agriculture, and retail sectors. Average 12% reply rate. Includes: email tracking guide, best send times for Nigerian business emails, and B2B email compliance checklist.
+
+--- Product 5 ---
+Name: SOPs for Customer Onboarding — 25 Procedures
+Price: 2700 USD
+Type: Digital Product
+Category: SOPs & Swipe Files
+Description: Complete customer onboarding SOP system. 25 procedures covering: welcome sequence (5), account setup (4), product walkthrough (3), first-week check-in (3), success milestone tracking (3), feedback collection (2), upsell identification (3), at-risk detection (2). Each SOP: trigger, steps, expected outcome, escalation path, automation suggestions. Includes: onboarding email sequence (7 emails), in-app checklist template, success metrics dashboard, customer health score formula. Works for SaaS, services, and product businesses. Reduce churn by 40% with a professional onboarding system.
+
+--- Product 6 ---
+Name: 50 Sales Call Scripts for Nigerian Market
+Price: 3700 USD
+Type: Digital Product
+Category: SOPs & Swipe Files
+Description: 50 sales call scripts for the Nigerian market. Categories: cold calls (8), warm calls (5), demo calls (5), proposal follow-up (5), objection handling (10), closing calls (5), upsell calls (4), win-back calls (4), referral requests (4). Each script: opening line, discovery questions, value proposition, objection responses (3 per objection), closing technique, and follow-up action. Adapted for Nigerian business culture — respectful, relationship-focused, yet assertive. Covers common Nigerian objections: price too high, need to consult boss, not ready yet, comparing with competitors. Includes: call preparation checklist, call tracking template, and conversion tips. Just read and close.
+
+--- Product 7 ---
+Name: SOPs for Social Media Management — 25 Procedures
+Price: 2700 USD
+Type: Digital Product
+Category: SOPs & Swipe Files
+Description: 25 SOPs for social media management. Procedures: content calendar setup (3), daily posting (2), community management (3), influencer outreach (2), crisis response (2), analytics reporting (3), competitor monitoring (2), hashtag research (2), user-generated content management (2), paid social (2), brand voice guidelines (2). Each SOP: step-by-step, tools, time estimate, quality standards, common mistakes. Includes: content pillar template, posting frequency guide by platform, engagement rate benchmarks, hashtag strategy worksheet. Works for Instagram, Facebook, Twitter/X, TikTok, LinkedIn. Perfect for solo founders or social media managers.
+
+--- Product 8 ---
+Name: 100 WhatsApp Business Message Templates — Nigerian Edition
+Price: 1900 USD
+Type: Digital Product
+Category: SOPs & Swipe Files
+Description: 100 WhatsApp Business message templates for Nigerian businesses. Categories: customer welcome (10), product inquiry response (15), price quote (10), order confirmation (10), payment reminder (10), delivery notification (10), follow-up after purchase (10), customer support (10), complaint handling (5), referral request (5), broadcast marketing (10), festive greeting (5). Each template: fill-in-the-blank format, Nigerian English tone, emoji suggestions, and best send time. Pre-tested with Nigerian customers across e-commerce, services, and B2B. Includes: WhatsApp Business setup checklist, broadcast rules (anti-ban), and label system guide. Just copy, fill, and send. Works with WhatsApp Business and regular WhatsApp.
+
+
+============================================================
+CATEGORY: SaaS (6 products)
+============================================================
+
+--- Product 1 ---
+Name: AI Health Assistant — Complete Build Guide & Source Code
+Price: 25000 NGN
+Type: Digital Product
+Category: SaaS
+Description: Complete build guide for an AI health assistant platform. Covers symptom checker with AI, medication reminder system via WhatsApp, medical records storage, appointment booking, database schema (PostgreSQL), AI engine setup (Groq free tier), certificate generation, and deployment. Includes monetization tiers (Free to ₦10,000/month). Full source code examples included.
+
+--- Product 2 ---
+Name: AI Legal Document Generator — Build Guide for Nigerian Law
+Price: 20000 NGN
+Type: Digital Product
+Category: SaaS
+Description: Complete build guide for an AI legal document generator. Automatically generates tenancy agreements, employment contracts, NDAs, loan agreements, partnership agreements, freelance contracts, sales agreements, and more. Covers Nigerian legal framework (CAMA 2020, Labour Act, Contract Law), AI prompt engineering for legal docs, database schema, and monetization (₦1,000 per doc to ₦50,000/mo enterprise).
+
+--- Product 3 ---
+Name: AI Education Platform — Complete Build Guide
+Price: 25000 NGN
+Type: Digital Product
+Category: SaaS
+Description: Complete build guide for an AI-powered education platform. Features AI course generator (creates 10-lesson courses from any topic), 24/7 AI tutor chat, adaptive learning paths, quiz engine, progress tracking, certificate generation (jsPDF), and multi-language support. Full database schema, source code, and monetization tiers (Free to ₦150,000/mo institution). Targets students, professionals, schools, and government.
+
+--- Product 4 ---
+Name: AI Documentation Platform — Auto-Generate Docs from Code
+Price: 18000 NGN
+Type: Digital Product
+Category: SaaS
+Description: Complete build guide for an AI documentation platform. Automatically generates API documentation, user guides, code documentation, and technical tutorials from source code. Covers AI-powered doc generation using Groq, markdown-to-HTML rendering, search functionality, version control integration, and auto-update on git push. Full source code and deployment guide.
+
+--- Product 5 ---
+Name: AI Cybersecurity Platform — Threat Detection & Response
+Price: 25000 NGN
+Type: Digital Product
+Category: SaaS
+Description: Complete build guide for an AI cybersecurity platform. Covers threat detection using AI anomaly analysis, log monitoring, SIEM architecture, automated incident response, OWASP Top 10 protection, API security, NDPR compliance framework, and real-time alerting. Includes database schema, AI model setup, and deployment guide. Full source code examples.
+
+--- Product 6 ---
+Name: AI Business Assistant — Complete Build Guide & Source Code
+Price: 15000 NGN
+Type: Digital Product
+Category: SaaS
+Description: Complete build guide and template for creating an AI business assistant. Includes full source code for WhatsApp bot integration, AI engine setup using Groq (free), invoice generation, customer support automation, and deployment to Render. Covers monetization strategies (₦15k-₦75k/month tiers) and competitor analysis. Build a SaaS product with zero monthly cost.
+
+
+============================================================
+CATEGORY: Security (5 products)
+============================================================
+
+--- Product 1 ---
+Name: Password Manager — Complete Build Guide (1Password Model)
+Price: 20000 NGN
+Type: Digital Product
+Category: Security
+Description: Complete build guide for a password manager. Covers encrypted vault (AES-256), master password, password generation, autofill browser extension, secure sharing, emergency access, breach monitoring, and cross-platform sync. Full source code, security architecture, and zero-knowledge encryption implementation.
+
+--- Product 2 ---
+Name: Secure File Sharing — End-to-End Encryption Build Guide
+Price: 15000 NGN
+Type: Digital Product
+Category: Security
+Description: Complete build guide for secure file sharing system. Covers end-to-end encryption, expiring download links, password-protected shares, view-only mode, download tracking, watermarking, and NDPR compliance. Full source code, API design, and deployment guide for Nigerian businesses.
+
+--- Product 3 ---
+Name: Endpoint Monitoring System — Build Guide (CrowdStrike Model)
+Price: 20000 NGN
+Type: Digital Product
+Category: Security
+Description: Complete build guide for endpoint monitoring system. Covers agent installation, real-time monitoring, threat detection, patch management, device inventory, compliance reporting, alert system, and remote remediation. Full architecture, agent source code, server design, and dashboard wireframe.
+
+--- Product 4 ---
+Name: Identity Verification (KYC) System — Nigerian Edition
+Price: 20000 NGN
+Type: Digital Product
+Category: Security
+Description: Complete identity verification (KYC) system design guide for Nigerian platforms. Covers NIN verification, BVN validation, phone number verification, document upload, selfie verification, liveness detection, and integration with Smile ID, YouVerify, and Paystack KYC. Includes database schema, API design, and compliance requirements (NDPR).
+
+--- Product 5 ---
+Name: Threat Detection System — Design & Implementation Guide
+Price: 18000 NGN
+Type: Digital Product
+Category: Security
+Description: Complete threat detection system design guide. Covers log monitoring, anomaly detection, SIEM architecture, alert rules, incident response playbook, and compliance reporting. Includes OWASP Top 10 protection guide, API security checklist, and Nigerian data protection (NDPR) compliance framework.
+
+
+============================================================
+CATEGORY: Software (3 products)
+============================================================
+
+--- Product 1 ---
+Name: Social Media Scheduler Pro — Lifetime License
+Price: 39.99 USD
+Type: Digital Product
+Category: Software
+Description: Schedule posts across Instagram, Twitter, LinkedIn, and TikTok from one dashboard. Analytics, AI captions, and bulk upload included. Lifetime license, no subscription.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/8ca2a8119_generated_image.png
+
+--- Product 2 ---
+Name: WhatsApp Business Automation Script — Python
+Price: 24.99 USD
+Type: Digital Product
+Category: Software
+Description: Automate WhatsApp messages, broadcasts, and auto-replies with this Python script. Includes scheduling, contact management, and message templates. Works with WhatsApp Web.
+
+--- Product 3 ---
+Name: Crypto Trading Bot Script — Python Source Code
+Price: 79.99 USD
+Type: Digital Product
+Category: Software
+Description: Automated crypto trading bot with backtesting, risk management, and exchange API integration. Python source code with documentation and setup guide.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/81bb756ea_generated_image.png
+
+
+============================================================
+CATEGORY: Subscription (2 products)
+============================================================
+
+--- Product 1 ---
+Name: Harz Insider Membership — Monthly
+Price: 2000 NGN
+Type: Digital Product
+Category: Subscription
+Description: Monthly subscription: 5 new marketing templates, access to all Harz calculators, 20 new AI prompts, industry reports, video tutorials, private WhatsApp group, monthly Q&A sessions, and discounts on all Harz products.
+
+--- Product 2 ---
+Name: ContentPilot Social Media Template Pack — Monthly
+Price: 5000 NGN
+Type: Digital Product
+Category: Subscription
+Description: Monthly delivery of 30 social media content templates: hooks, scripts, CTAs, hashtag sets, and caption frameworks. Designed for Nigerian brands and creators. Optimized for Instagram, TikTok, Facebook, and X.
+
+
+============================================================
+CATEGORY: Technology (4 products)
+============================================================
+
+--- Product 1 ---
+Name: WhatsApp Business API Setup Guide — Nigeria
+Price: 2500 NGN
+Type: Digital Product
+Category: Technology
+Description: Complete WhatsApp Business API setup guide for Nigerian businesses. Covers WhatsApp Business App (free), Meta Cloud API (direct), and BSP options (Twilio, WATI, Interakt). Step-by-step setup, message templates, cost breakdown per message, automation ideas (order confirmation, payment reminders, FAQ bots), and website integration (click-to-chat, QR code, widget).
+
+--- Product 2 ---
+Name: No-Code Website Setup Guide for Nigerian Businesses
+Price: 2000 NGN
+Type: Digital Product
+Category: Technology
+Description: No-code website setup guide for Nigerian businesses. Build a professional website without coding using WordPress, Wix, or Carrd. Covers domain registration (.ng and .com), hosting setup, template selection, SEO basics, and payment integration (Paystack). Step-by-step from zero to live site in 2 hours.
+
+--- Product 3 ---
+Name: Domain & Hosting Guide for Nigerians
+Price: 1500 NGN
+Type: Digital Product
+Category: Technology
+Description: Complete domain and hosting guide for Nigerians. Covers domain registration, choosing a hosting provider, DNS configuration, SSL certificates, email setup, and website migration. Includes comparison of Nigerian and international hosting providers with pricing. Perfect for beginners.
+
+--- Product 4 ---
+Name: Notion Business Dashboard Template for SMEs
+Price: 2000 NGN
+Type: Digital Product
+Category: Technology
+Description: Notion business dashboard template for Nigerian SMEs. Includes project management, CRM, task tracker, meeting notes, content calendar, financial tracker, and goal setting. Pre-built and ready to use. Works on free Notion account. Includes video setup guide.
+
+
+============================================================
+CATEGORY: Template (14 products)
+============================================================
+
+--- Product 1 ---
+Name: Notion Productivity OS — All-in-One Life Dashboard
+Price: 17.99 USD
+Type: Digital Product
+Category: Template
+Description: Complete Notion template for managing tasks, goals, habits, finances, and notes. Includes video walkthrough and lifetime updates.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/1789d7b79_generated_image.png
+
+--- Product 2 ---
+Name: Freelancer Starter Kit — Contracts, Invoices & Proposals
+Price: 11.99 USD
+Type: Digital Product
+Category: Template
+Description: Complete legal and business templates for freelancers. Includes contracts, proposals, invoices, and pricing calculators. Editable in Google Docs and Word.
+
+--- Product 3 ---
+Name: Ultimate Canva Business Template Bundle — 200 Slides
+Price: 19.99 USD
+Type: Digital Product
+Category: Template
+Description: 200 professionally designed Canva templates for business presentations, social media posts, and marketing materials. Fully editable, royalty-free license.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/b2640a497_generated_image.png
+
+--- Product 4 ---
+Name: Resume Builder Pro — 50 ATS-Ready Templates
+Price: 14.99 USD
+Type: Digital Product
+Category: Template
+Description: Professional resume templates designed to pass ATS screening systems. Includes Word, Google Docs, and PDF formats. Cover letter templates included. Nigerian and international formats.
+
+--- Product 5 ---
+Name: Instagram Reels Editing Pack — 200 Transitions & Effects
+Price: 22.99 USD
+Type: Digital Product
+Category: Template
+Description: 200 trending transitions, effects, and templates for Premiere Pro and CapCut. Create viral reels in minutes. Step-by-step tutorial included.
+
+--- Product 6 ---
+Name: UI/UX Design System Kit — Figma Components
+Price: 44.99 USD
+Type: Digital Product
+Category: Template
+Description: Complete Figma design system with 500+ components, 50 screen layouts, and a full style guide. Perfect for web and mobile app designers.
+Image: https://media.base44.com/images/public/6a1e2efdc14fbb292286fb2f/8dc1cc111_generated_image.png
+
+--- Product 7 ---
+Name: Minimalist Logo Pack — 100 Editable SVG Logos
+Price: 24.99 USD
+Type: Digital Product
+Category: Template
+Description: 100 modern minimalist logo templates in SVG and PNG format. Perfect for startups, freelancers, and small businesses. Fully editable in Illustrator and Figma.
+
+--- Product 8 ---
+Name: Social Media Content Calendar — 365 Days
+Price: 17.99 USD
+Type: Digital Product
+Category: Template
+Description: Never run out of content ideas. 365 days of social media post ideas, hashtags, and captions for Instagram, Twitter, Facebook, and LinkedIn. Organized by niche.
+
+--- Product 9 ---
+Name: Nollywood Film Production Toolkit
+Price: 27.99 USD
+Type: Digital Product
+Category: Template
+Description: Complete toolkit for indie filmmakers in Nigeria. Includes budget templates, call sheet templates, location release forms, actor contracts, and distribution guide.
+
+--- Product 10 ---
+Name: Flutter App Template — E-Commerce UI Kit
+Price: 34.99 USD
+Type: Digital Product
+Category: Template
+Description: Complete Flutter app template with 40+ screens for e-commerce. Dark mode, cart, checkout, product details, order tracking. Ready to deploy on Android and iOS.
+
+--- Product 11 ---
+Name: CV/Resume Templates for Nigerian Jobs — 10 Designs
+Price: 2000 NGN
+Type: Digital Product
+Category: Template
+Description: 10 ATS-friendly CV/resume templates designed for the Nigerian job market. Includes templates for graduates, experienced professionals, career changers, and tech roles. Each template is editable in Word and Google Docs. Includes cover letter templates and LinkedIn optimization tips.
+
+--- Product 12 ---
+Name: Harz Digital Business Toolkit — 10 Templates
+Price: 5000 NGN
+Type: Digital Product
+Category: Template
+Description: Complete bundle: Business Plan, Invoice, Proposal, Marketing Calendar, CRM Tracker, Cash Flow Tracker, Employee Agreement, Partnership Agreement, Meeting Minutes, and SWOT Analysis templates. All tailored for Nigerian SMEs with VAT 7.5% calculations and local context.
+
+--- Product 13 ---
+Name: ContentPilot Templates Pack — 365 Days of Content
+Price: 5000 NGN
+Type: Digital Product
+Category: Template
+Description: 365 pre-written social media posts, 50 hook formulas, 30 video script templates, 16 email marketing templates, 140 caption templates by platform, and hashtag banks. Complete content calendar for Nigerian businesses. Post every day for a full year.
+
+--- Product 14 ---
+Name: Harz Digital Business Toolkit — 50 Templates for Nigerian SMEs
+Price: 5000 NGN
+Type: Digital Product
+Category: Template
+Description: Complete business template bundle: business plan, invoice template, proposal template, marketing calendar, CRM tracker, expense tracker, partnership agreement, NDAs, and more. All designed specifically for Nigerian businesses. Includes Canva-editable templates and Google Sheets formats.
+
+
+============================================================
+CATEGORY: UI/UX Kits (5 products)
+============================================================
+
+--- Product 1 ---
+Name: Fintech Mobile App UI Kit — 80+ Figma Screens
+Price: 6700 USD
+Type: Digital Product
+Category: UI/UX Kits
+Description: Complete Fintech mobile app UI kit in Figma. 80+ screens covering: onboarding flow (6), KYC verification (4), dashboard (5), wallet (4), send money (5), request money (3), bills payment (4), savings goals (3), investments (4), cards management (5), transaction history (3), notifications (2), profile (4), settings (6), help center (3), dark mode (all screens). Design system: 150+ components, color tokens, typography scale, spacing system, icon library (100+ icons), chart components, state variations (loading, error, success). Optimized for React Native and Flutter development. Just copy, paste, and build. Saves 200+ hours of design work.
+
+--- Product 2 ---
+Name: E-Commerce Mobile App UI Kit — 65+ Figma Screens
+Price: 4700 USD
+Type: Digital Product
+Category: UI/UX Kits
+Description: Complete e-commerce mobile app UI kit in Figma. 65+ screens covering: splash and onboarding (5), home/browse (8), product details (5), cart (4), checkout flow (6), payment (4), order tracking (4), wishlist (3), search and filters (4), reviews (3), user profile (5), address book (3), coupons (3), notifications (3), customer support chat (3), dark mode (all screens). Design system: 120+ components, product card variations, color tokens, typography, icon set (80+), spacing system. Optimized for React Native and Flutter. Just copy, paste, and launch your store app. Saves 150+ hours of design.
+
+--- Product 3 ---
+Name: Real Estate Website UI Kit — 40+ Figma Screens
+Price: 4700 USD
+Type: Digital Product
+Category: UI/UX Kits
+Description: Complete real estate website UI kit in Figma. 40+ screens covering: homepage (3 variations), property listing page (2), property details page (2), search results (2), agent profile (2), contact page, about page, blog listing, blog post, mortgage calculator, map view, virtual tour page, dashboard for agents, add listing page, lead management, analytics, dark mode. Design system: 90+ components, property card variations, map components, filter components, chart components, color tokens, typography, icon set (60+). Optimized for Next.js, React, and Webflow. Just copy and build your real estate platform.
+
+--- Product 4 ---
+Name: SaaS Dashboard UI Kit — 50+ Figma Screens with Design System
+Price: 6700 USD
+Type: Digital Product
+Category: UI/UX Kits
+Description: Complete SaaS dashboard UI kit in Figma. 50+ screens covering: login/signup (4), onboarding (3), main dashboard (3 variations), analytics page, user management, settings (5), billing (4), team management (3), notifications, activity log, API keys, integrations (2), help/support (3), profile, 404 page, dark mode (all screens). Design system: 130+ components including charts (bar, line, pie, area, heatmap), tables, forms, cards, navigation (sidebar, top bar, tabs), modal dialogs, toast notifications, badges, progress bars, avatars, dropdowns. Color tokens, typography scale, spacing system, shadow system. Works with: React, Vue, Svelte. Just copy and ship your SaaS.
+
+--- Product 5 ---
+Name: Nigerian Banking App UI Kit — 55+ Figma Screens
+Price: 5700 USD
+Type: Digital Product
+Category: UI/UX Kits
+Description: Complete Nigerian banking app UI kit in Figma. 55+ screens covering: account creation (5), BVN verification (3), login/biometric (3), main dashboard (3), account details (2), transfer (5: bank transfer, same bank, other bank, scheduled, international), airtime/data purchase (3), bill payment (4: electricity, water, cable, betting), card management (5: create, freeze, limit, request, manage), savings (3: target, fixed, auto-save), loans (4: apply, status, repayment, history), statements (2), beneficiaries (2), QR payments (2), dark mode. Design system: 140+ components optimized for Nigerian banking standards. Includes Naira formatting, Nigerian bank logos, and local payment methods. Just copy and build.
+
