@@ -82,11 +82,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="hero">
 <h1>Harz AI Cloud</h1>
 <p>Enterprise-grade AI agents for every business. Subscribe, integrate via API, or white-label your own.</p>
-<div><span class="badge">20 AI Agents</span><span class="badge">llama-3.3-70b</span><span class="badge">Stripe + Paystack</span><span class="badge">White-Label Ready</span></div>
+<div><span class="badge">20 AI Agents</span><span class="badge">llama-3.3-70b</span><span class="badge">Stripe + Paystack</span><span class="badge">White-Label Ready</span><span class="badge">⛽ HGC Token</span></div>
 <div class="stats">
 <div class="stat"><div class="num">20</div><div class="label">AI Agents</div></div>
 <div class="stat"><div class="num">70B</div><div class="label">Param Model</div></div>
-<div class="stat"><div class="num">4</div><div class="label">Payment Methods</div></div>
+<div class="stat"><div class="num">5</div><div class="label">Payment Methods</div></div>
 <div class="stat"><div class="num">$19</div><div class="label">Starting Price</div></div>
 </div>
 </div>
@@ -111,6 +111,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div style="text-align:center"><div style="font-size:2rem">🏦</div><div style="font-size:.8rem;color:#aaa">Paystack (NGN)</div></div>
 <div style="text-align:center"><div style="font-size:2rem">💸</div><div style="font-size:.8rem;color:#aaa">HarzPay Transfer</div></div>
 <div style="text-align:center"><div style="font-size:2rem">₮</div><div style="font-size:.8rem;color:#aaa">USDT TRC20</div></div>
+<div style="text-align:center"><div style="font-size:2rem">⛽</div><div style="font-size:.8rem;color:#FFD700">HGC (10% off)</div></div>
 </div>
 </div>
 <h2>How It Works</h2>
@@ -255,6 +256,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <input id="coEmail" type="email" placeholder="Email Address">
 <p style="color:#666;font-size:.75rem;margin:8px 0 4px">Choose payment method:</p>
 <div class="pay-method">
+<div class="pay-btn" onclick="doCheckout('hgc')" style="border-color:#FFD700;background:#1a1505"><div class="pm-icon">⛽</div><div class="pm-name" style="color:#FFD700">Harz Gas Coin</div><div class="pm-cur">10% OFF</div></div>
 <div class="pay-btn" onclick="doCheckout('stripe')"><div class="pm-icon">💳</div><div class="pm-name">Stripe</div><div class="pm-cur">USD/EUR/GBP</div></div>
 <div class="pay-btn" onclick="doCheckout('paystack')"><div class="pm-icon">🏦</div><div class="pm-name">Paystack</div><div class="pm-cur">NGN</div></div>
 <div class="pay-btn" onclick="doCheckout('harzpay')"><div class="pm-icon">💸</div><div class="pm-name">HarzPay</div><div class="pm-cur">Bank Transfer</div></div>
@@ -283,7 +285,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="footer">
-Harz AI Cloud v1.1.0 | Powered by llama-3.3-70b | Stripe + Paystack + HarzPay<br>
+Harz AI Cloud v1.2.0 | Powered by llama-3.3-70b | Stripe + Paystack + HarzPay<br>
 &copy; 2026 Harz Digital Services | RC: 321424 | TIN: 24550860
 </div>
 
@@ -344,6 +346,7 @@ const res=await fetch(BILLING,{method:'POST',headers:{'Content-Type':'applicatio
 const data=await res.json();
 if(data.ok){
 if(data.free){document.getElementById('keyDisplay').textContent=data.api_key;document.getElementById('planInfo').textContent='Plan: '+data.plan;document.getElementById('keyModal').classList.add('show');return}
+if(data.method==='hgc'){document.getElementById('payResultTitle').textContent='⛽ Harz Gas Coin Payment';let h='<div style="background:#0a0a0f;border:1px solid #FFD700;border-radius:8px;padding:12px;margin:8px 0">';h+='<p style="color:#FFD700;font-size:.85rem;font-weight:bold">'+data.token.name+' ('+data.token.symbol+')</p>';h+='<p style="color:#aaa;font-size:.8rem">Network: <b style="color:#fff">'+data.token.network+'</b></p>';h+='<p style="color:#aaa;font-size:.8rem">Send to:</p>';h+='<p style="color:#10b981;font-family:monospace;font-size:.75rem;word-break:break-all">'+data.token.receive_address+'</p>';h+='<p style="color:#aaa;font-size:.8rem">Amount: <b style="color:#FFD700">'+data.token.amount_hgc+' HGC</b></p>';h+='<p style="color:#10b981;font-size:.75rem">10% discount applied! Original: $'+data.token.original_price_usd+' → Now: $'+data.token.discounted_price_usd+'</p>';h+='<p style="color:#aaa;font-size:.8rem">Rate: '+data.token.rate+'</p>';h+='<p style="color:#666;font-size:.7rem">Ref: '+data.reference+'</p>';h+='<p style="color:#aaa;font-size:.75rem;margin-top:8px">'+data.token.instructions+'</p>';h+='</div>';h+='<p style="color:#888;font-size:.7rem">After sending HGC, contact us with the reference to verify your payment and activate your account.</p>';document.getElementById('payResultBody').innerHTML=h;document.getElementById('payResultModal').classList.add('show');return}
 if(data.checkout_url){window.open(data.checkout_url,'_blank');document.getElementById('payResultTitle').textContent='Redirecting to Payment';document.getElementById('payResultBody').innerHTML='<p style="color:#888;font-size:.8rem">You have been redirected to '+method+' to complete your payment of '+cur+' '+(data.instructions?.amount||'')+'.</p>';document.getElementById('payResultModal').classList.add('show');}
 else if(data.instructions){document.getElementById('payResultTitle').textContent='Bank Transfer Details';let h='<div style="background:#0a0a0f;border:1px solid var(--border);border-radius:8px;padding:12px;margin:8px 0">';h+='<p style="color:#aaa;font-size:.8rem">Bank: <b style="color:#fff">'+data.instructions.bank+'</b></p>';h+='<p style="color:#aaa;font-size:.8rem">Account: <b style="color:#fff">'+data.instructions.account_name+'</b></p>';h+='<p style="color:#aaa;font-size:.8rem">Number: <b style="color:#fff" style="font-family:monospace">'+data.instructions.account_number+'</b></p>';h+='<p style="color:#aaa;font-size:.8rem">Amount: <b style="color:var(--gold)">₦'+data.instructions.amount.toLocaleString()+'</b></p>';h+='<p style="color:#aaa;font-size:.8rem">Ref: <b style="color:var(--green);font-family:monospace">'+data.instructions.reference+'</b></p>';h+='</div>';h+='<p style="color:#888;font-size:.75rem">Or pay via USDT TRC20:</p>';h+='<p style="color:var(--green);font-size:.75rem;font-family:monospace;word-break:break-all">'+data.usdt.address+'</p>';h+='<p style="color:#888;font-size:.75rem">Amount: $'+data.usdt.amount+' USDT</p>';document.getElementById('payResultBody').innerHTML=h;document.getElementById('payResultModal').classList.add('show');}
 else if(data.address){document.getElementById('payResultTitle').textContent='USDT Payment';let h='<div style="background:#0a0a0f;border:1px solid var(--green);border-radius:8px;padding:12px;margin:8px 0">';h+='<p style="color:#aaa;font-size:.8rem">Network: <b style="color:#fff">TRC20</b></p>';h+='<p style="color:#aaa;font-size:.8rem">Address:</p>';h+='<p style="color:var(--green);font-family:monospace;font-size:.75rem;word-break:break-all">'+data.address+'</p>';h+='<p style="color:#aaa;font-size:.8rem">Amount: <b style="color:var(--gold)">$'+data.amount_usd+'</b></p>';h+='<p style="color:#aaa;font-size:.8rem">Ref: <b style="color:var(--green);font-family:monospace">'+data.reference+'</b></p>';h+='</div>';document.getElementById('payResultBody').innerHTML=h;document.getElementById('payResultModal').classList.add('show');}
