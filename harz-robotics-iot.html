@@ -572,6 +572,58 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 <script>
 function switchPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const p=document.getElementById('page-'+n);if(p)p.classList.add('active');window.scrollTo(0,0)}
+
+// Live IoT data loader
+const IOT_API='https://superagent-2286fb2f.base44.app/functions/harzIoT?action=dashboard';
+async function loadIoTData(){
+try{
+const r=await fetch(IOT_API);
+const d=await r.json();
+if(d.status!=='ok'||!d.modules)return;
+const m=d.modules;
+const o=m.overview;
+// Update KPIs on home
+const kpis=document.querySelectorAll('#page-home .kpi-value');
+if(kpis.length>=4){
+kpis[0].textContent=o.total_devices;kpis[0].parentElement.querySelector('.kpi-sub').textContent=o.online+' online \u00b7 '+(o.offline+o.warning+o.error+o.maintenance)+' offline';
+kpis[3].textContent=(m.alerts.critical+m.alerts.warnings);kpis[3].parentElement.querySelector('.kpi-sub').textContent=m.alerts.critical+' critical \u00b7 '+m.alerts.warnings+' warnings';
+if(kpis[5])kpis[5].textContent=m.drones.filter(d=>d.status==='online').length+'/'+m.drones.length;
+}
+// Update drone page
+const droneCards=document.querySelectorAll('#page-drones .device-card');
+if(droneCards&&m.drones.length>0){
+m.drones.slice(0,droneCards.length).forEach((d,i)=>{
+const title=droneCards[i].querySelector('.device-name');
+if(title)title.textContent='\ud83d\ude81 '+d.name;
+const metrics=droneCards[i].querySelectorAll('.device-metric .val');
+if(d.metadata){try{const md=JSON.parse(d.metadata);if(metrics[0])metrics[0].textContent=d.battery+'%';if(metrics[1])metrics[1].textContent=md.altitude||md.speed||'--';}catch(e){}}
+});
+}
+// Update sensor page
+const sensorCards=document.querySelectorAll('#page-sensors .device-card');
+if(sensorCards&&m.sensors.length>0){
+m.sensors.slice(0,sensorCards.length).forEach((s,i)=>{
+const title=sensorCards[i].querySelector('.device-name');
+if(title)title.textContent=s.name;
+const metrics=sensorCards[i].querySelectorAll('.device-metric .val');
+if(metrics[0])metrics[0].textContent=s.battery+'%';
+});
+}
+// Update factory page
+const factoryCards=document.querySelectorAll('#page-factory .device-card');
+if(factoryCards&&m.factory.length>0){
+m.factory.slice(0,factoryCards.length).forEach((f2,i)=>{
+const title=factoryCards[i].querySelector('.device-name');
+if(title)title.textContent=f2.name;
+const metrics=factoryCards[i].querySelectorAll('.device-metric .val');
+if(f2.metadata){try{const md=JSON.parse(f2.metadata);if(metrics[0])metrics[0].textContent=md.units||md.batches||'--';if(metrics[1])metrics[1].textContent=(md.efficiency||0)+'%';}catch(e){}}
+});
+}
+console.log('HARZ IoT: Live data loaded \u2014 '+o.total_devices+' devices');
+}catch(e){console.log('IoT: demo mode ('+e.message+')');}
+}
+document.addEventListener('DOMContentLoaded',function(){setTimeout(loadIoTData,500);});
+
 </script>
 </body>
 </html>
