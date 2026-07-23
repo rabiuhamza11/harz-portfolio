@@ -472,6 +472,63 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <script>
 function switchPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const p=document.getElementById('page-'+n);if(p)p.classList.add('active');window.scrollTo(0,0)}
+
+// Live Identity data loader
+const ID_API='https://superagent-2286fb2f.base44.app/functions/harzIdentity?action=dashboard';
+async function loadIdentityData(){
+try{
+const r=await fetch(ID_API);
+const d=await r.json();
+if(d.status!=='ok'||!d.profile)return;
+const p=d.profile;
+const c=d.credentials;
+const s=d.sessions;
+// Update ID card
+const idName=document.querySelector('.id-name');
+if(idName)idName.textContent=p.name;
+const idRole=document.querySelector('.id-role');
+if(idRole)idRole.textContent=p.role+' \u00b7 '+p.organization;
+const idNumber=document.querySelector('.id-number');
+if(idNumber)idNumber.textContent='HARZ-ID-'+p.id_number.split('-').pop()+'-2026';
+// Update KPIs
+const kpis=document.querySelectorAll('#page-home .kpi-value');
+if(kpis.length>=8){
+kpis[0].textContent=p.reputation_score;kpis[0].parentElement.querySelector('.kpi-sub').textContent=p.tier+' tier \u00b7 Top 3%';
+kpis[1].textContent=p.connected_apps;
+kpis[3].textContent=c.total;kpis[3].parentElement.querySelector('.kpi-sub').textContent=c.verified+' verified \u00b7 '+c.pending+' pending';
+kpis[4].textContent=p.kyc_status.charAt(0).toUpperCase()+p.kyc_status.slice(1);kpis[4].parentElement.querySelector('.kpi-sub').textContent='Level '+p.kyc_level+' \u00b7 Full access';
+kpis[5].textContent=p.trust_score+'%';
+kpis[6].textContent=p.tier.charAt(0).toUpperCase()+p.tier.slice(1);
+}
+// Update credentials page
+const credCards=document.querySelectorAll('#page-credentials .cred-card');
+if(credCards&&c.verified_list&&c.verified_list.length>0){
+c.verified_list.slice(0,8).forEach((cred,i)=>{
+if(credCards[i]){
+const title=credCards[i].querySelector('.cred-name');
+if(title)title.textContent=cred.name;
+const issuer=credCards[i].querySelector('.cred-issuer');
+if(issuer)issuer.textContent='Issued by '+cred.issuer;
+const date=credCards[i].querySelector('.cred-date');
+if(date)date.textContent='Verified: '+cred.date+' \u00b7 '+(cred.network||'IPFS');
+}
+});
+}
+// Update sessions
+const sessCards=document.querySelectorAll('#page-sso .sso-app');
+if(sessCards&&s.list&&s.list.length>0){
+s.list.slice(0,sessCards.length).forEach((sess,i)=>{
+const name=sessCards[i].querySelector('.sso-name');
+if(name)name.textContent=sess.app;
+const url=sessCards[i].querySelector('.sso-url');
+if(url)url.textContent=sess.device+' \u00b7 '+sess.location;
+});
+}
+console.log('HARZ Identity: Live data loaded \u2014 '+c.total+' credentials, '+s.active+' sessions');
+}catch(e){console.log('Identity: demo mode ('+e.message+')');}
+}
+document.addEventListener('DOMContentLoaded',function(){setTimeout(loadIdentityData,500);});
+
 </script>
 </body>
 </html>
