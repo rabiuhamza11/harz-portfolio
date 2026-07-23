@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0d1117">
+<title>HARZ Data Cloud — Storage, Databases, Analytics & AI Data</title>
+<meta name="description" content="Unified data platform: file storage, databases, automated backups, analytics, AI training datasets, and document intelligence for the Harz ecosystem.">
+<style>
+:root{--p1:#00d4ff;--p2:#7c4dff;--p3:#00e676;--p4:#ffab00;--p5:#ff5252;--bg:#0d1117;--card:#161b22;--card2:#1c2333;--text:#e6edf3;--muted:#7d8590;--border:#30363d;--cyan:#00d4ff;--green:#00e676}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--p1);border-radius:5px}
+.header{background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(0,230,118,.04));border-bottom:1px solid var(--border);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header h1{font-size:1rem;font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.62rem;color:var(--muted);margin-top:2px}
+.badge-live{background:rgba(0,230,118,.12);color:var(--p3);padding:2px 8px;border-radius:10px;font-size:.58rem;font-weight:700}
+.badge-v{background:rgba(0,212,255,.12);color:var(--cyan);padding:2px 8px;border-radius:10px;font-size:.58rem;font-weight:700}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:16px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-card.blue::before{background:var(--p1)}.kpi-card.green::before{background:var(--p3)}.kpi-card.purple::before{background:var(--p2)}.kpi-card.orange::before{background:var(--p4)}.kpi-card.red::before{background:var(--p5)}
+.kpi-label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.kpi-value{font-size:1.35rem;font-weight:800;margin:4px 0}
+.kpi-sub{font-size:.65rem;color:var(--muted)}
+.kpi-trend{font-size:.6rem;font-weight:600;display:inline-block;padding:1px 6px;border-radius:8px;margin-top:4px}
+.kpi-trend.up{background:rgba(0,230,118,.12);color:var(--p3)}.kpi-trend.down{background:rgba(255,82,82,.12);color:var(--p5)}.kpi-trend.warn{background:rgba(255,171,0,.12);color:var(--p4)}
+.module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px;margin-bottom:16px}
+.module-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .25s}
+.module-card:active{transform:scale(.95)}
+.module-card:hover{border-color:var(--cyan);box-shadow:0 2px 12px rgba(0,212,255,.15)}
+.module-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 8px}
+.module-name{font-size:.65rem;font-weight:700;margin-bottom:2px}
+.module-desc{font-size:.52rem;color:var(--muted);line-height:1.3}
+.section{padding:0 16px;margin-bottom:20px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.section-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.section-link{font-size:.65rem;color:var(--cyan);cursor:pointer}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.card:active{transform:scale(.98)}
+.card-row{display:flex;align-items:center;gap:10px}
+.card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-title{font-size:.75rem;font-weight:600}
+.card-desc{font-size:.62rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-meta{font-size:.68rem;font-weight:600;text-align:right;flex-shrink:0}
+.tbl{width:100%;border-collapse:collapse;font-size:.7rem}
+.tbl th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-size:.58rem;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--border)}
+.pill{display:inline-block;padding:1px 6px;border-radius:6px;font-size:.56rem;font-weight:600}
+.pill.green{background:rgba(0,230,118,.12);color:var(--p3)}.pill.blue{background:rgba(0,212,255,.12);color:var(--p1)}.pill.orange{background:rgba(255,171,0,.12);color:var(--p4)}.pill.red{background:rgba(255,82,82,.12);color:var(--p5)}.pill.purple{background:rgba(124,77,255,.12);color:var(--p2)}
+.page{display:none;animation:fadeIn .3s ease}.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.page-head .back{font-size:1.2rem;cursor:pointer;color:var(--muted)}
+.page-head h2{font-size:.88rem;font-weight:700}
+/* Progress ring */
+.storage-ring{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative}
+.storage-ring::after{content:'';width:80px;height:80px;border-radius:50%;background:var(--card);position:absolute}
+.storage-center{position:relative;z-index:1;text-align:center}
+.storage-center .num{font-size:1.1rem;font-weight:800}
+.storage-center .lbl{font-size:.55rem;color:var(--muted)}
+/* Bar */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bar-label{width:90px;font-size:.62rem;font-weight:600;flex-shrink:0}
+.bar-track{flex:1;height:20px;background:var(--bg);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:#fff;font-size:.52rem;font-weight:700;transition:width 1s}
+.bar-val{width:55px;font-size:.62rem;font-weight:700;text-align:right;flex-shrink:0}
+/* File row */
+.file-row{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px}
+.file-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:.72rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-meta{font-size:.58rem;color:var(--muted)}
+.file-size{font-size:.65rem;font-weight:600;color:var(--muted);flex-shrink:0}
+/* DB table */
+.db-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px}
+.db-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.db-name{font-size:.78rem;font-weight:700}
+.db-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.db-stat{text-align:center;background:var(--bg);border-radius:8px;padding:6px}
+.db-stat .val{font-size:.78rem;font-weight:700}
+.db-stat .lbl{font-size:.5rem;color:var(--muted);text-transform:uppercase}
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:.62rem}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--p3);animation:pulse 2s infinite}
+@keyframes pulse{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+@media(max-width:640px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.module-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:641px){.kpi-grid{grid-template-columns:repeat(4,1fr)}.module-grid{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+<div class="header">
+<div><h1>HARZ Data Cloud</h1><div class="sub">Storage · Databases · Backups · Analytics · AI Data · Doc Intelligence</div></div>
+<div style="display:flex;gap:6px;align-items:center"><span class="badge-v">v1.0</span><span class="badge-live"><span class="live-dot"></span> LIVE</span></div>
+</div>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+<div class="kpi-grid">
+<div class="kpi-card blue"><div class="kpi-label">Total Storage</div><div class="kpi-value">142 GB</div><div class="kpi-sub">of 500 GB · 28% used</div><span class="kpi-trend up">▲ 12 GB</span></div>
+<div class="kpi-card green"><div class="kpi-label">Databases</div><div class="kpi-value">68</div><div class="kpi-sub">2.4M records · 38 tables</div><span class="kpi-trend up">▲ 3</span></div>
+<div class="kpi-card purple"><div class="kpi-label">AI Datasets</div><div class="kpi-value">24</div><div class="kpi-sub">8.4M rows · 12 trained</div><span class="kpi-trend up">▲ 2</span></div>
+<div class="kpi-card orange"><div class="kpi-label">Backups Today</div><div class="kpi-value">42</div><div class="kpi-sub">Auto · 0 failed</div><span class="kpi-trend up">100%</span></div>
+<div class="kpi-card blue"><div class="kpi-label">Files Stored</div><div class="kpi-value">12,840</div><div class="kpi-sub">8,420 public · 4,420 private</div><span class="kpi-trend up">▲ 340</span></div>
+<div class="kpi-card green"><div class="kpi-label">Queries/min</div><div class="kpi-value">8,420</div><div class="kpi-sub"><span class="live-dot"></span> Real-time</div><span class="kpi-trend up">▲ 12%</span></div>
+<div class="kpi-card purple"><div class="kpi-label">Docs Processed</div><div class="kpi-value">3,842</div><div class="kpi-sub">AI extracted · 94% accuracy</div><span class="kpi-trend up">▲ 120</span></div>
+<div class="kpi-card red"><div class="kpi-label">Data Sources</div><div class="kpi-value">14</div><div class="kpi-sub">12 connected · 2 sync errors</div><span class="kpi-trend warn">⚠ 2</span></div>
+</div>
+
+<div class="section"><div class="section-head"><span class="section-title">Platform Modules</span></div>
+<div class="module-grid">
+<div class="module-card" onclick="switchPage('storage')"><div class="module-icon" style="background:rgba(0,212,255,.12)">💾</div><div class="module-name">File Storage</div><div class="module-desc">Public · Private · CDN</div></div>
+<div class="module-card" onclick="switchPage('databases')"><div class="module-icon" style="background:rgba(0,230,118,.12)">🗄️</div><div class="module-name">Databases</div><div class="module-desc">38 tables · 2.4M rows</div></div>
+<div class="module-card" onclick="switchPage('backups')"><div class="module-icon" style="background:rgba(124,77,255,.12)">🔄</div><div class="module-name">Backups</div><div class="module-desc">Auto · Manual · Restore</div></div>
+<div class="module-card" onclick="switchPage('analytics')"><div class="module-icon" style="background:rgba(255,171,0,.12)">📊</div><div class="module-name">Analytics</div><div class="module-desc">Dashboards · Reports</div></div>
+<div class="module-card" onclick="switchPage('datasets')"><div class="module-icon" style="background:rgba(124,77,255,.12)">🧠</div><div class="module-name">AI Datasets</div><div class="module-desc">Training · Test · Validation</div></div>
+<div class="module-card" onclick="switchPage('docintel')"><div class="module-icon" style="background:rgba(0,212,255,.12)">📄</div><div class="module-name">Doc Intelligence</div><div class="module-desc">OCR · NLP · Extract</div></div>
+<div class="module-card" onclick="switchPage('sources')"><div class="module-icon" style="background:rgba(0,230,118,.12)">🔌</div><div class="module-name">Data Sources</div><div class="module-desc">14 connected · Sync</div></div>
+<div class="module-card" onclick="switchPage('pipelines')"><div class="module-icon" style="background:rgba(255,171,0,.12)">⚡</div><div class="module-name">Pipelines</div><div class="module-desc">ETL · Transform · Load</div></div>
+<div class="module-card" onclick="switchPage('security')"><div class="module-icon" style="background:rgba(255,82,82,.12)">🔒</div><div class="module-name">Security</div><div class="module-desc">Encryption · Access · Audit</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">Storage Overview</span></div>
+<div class="storage-ring" style="background:conic-gradient(var(--p1) 0% 28%,var(--border) 28% 100%)"><div class="storage-center"><div class="num">28%</div><div class="lbl">Used · 142/500GB</div></div></div>
+<div class="bar-row"><div class="bar-label">📄 Documents</div><div class="bar-track"><div class="bar-fill" style="width:35%;background:var(--p1)">50GB</div></div><div class="bar-val">50 GB</div></div>
+<div class="bar-row"><div class="bar-label">🖼️ Images</div><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--p3)">40GB</div></div><div class="bar-val">40 GB</div></div>
+<div class="bar-row"><div class="bar-label">🎬 Video</div><div class="bar-track"><div class="bar-fill" style="width:21%;background:var(--p4)">30GB</div></div><div class="bar-val">30 GB</div></div>
+<div class="bar-row"><div class="bar-label">🎵 Audio</div><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--p2)">10GB</div></div><div class="bar-val">10 GB</div></div>
+<div class="bar-row"><div class="bar-label">🗄️ Database</div><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--p5)">8GB</div></div><div class="bar-val">8 GB</div></div>
+<div class="bar-row"><div class="bar-label">📦 Backups</div><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--muted)">4GB</div></div><div class="bar-val">4 GB</div></div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Activity</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">Auto backup completed — Full DB snapshot</div><div class="card-desc">68 tables · 2.4M records · 4.2 GB · 0 errors</div></div><div class="card-meta" style="color:var(--p3)">12m ago</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">📄</div><div class="card-info"><div class="card-title">Doc intelligence — CAC certificate processed</div><div class="card-desc">OCR 98% · Extracted: RC 321424, TIN 24550860, Address</div></div><div class="card-meta" style="color:var(--p1)">1h ago</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🧠</div><div class="card-info"><div class="card-title">AI dataset — CRM training set updated</div><div class="card-desc">842 new samples · Sentiment labeled · Ready for training</div></div><div class="card-meta" style="color:var(--p2)">2h ago</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">⚡</div><div class="card-info"><div class="card-title">Pipeline — ETL run completed</div><div class="card-desc">Source: WhatsAppCRM → Transform: clean+tag → Load: analytics DB</div></div><div class="card-meta" style="color:var(--p4)">3h ago</div></div></div>
+</div>
+</div>
+
+<!-- STORAGE -->
+<div id="page-storage" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>💾 File Storage</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Total Files</div><div class="kpi-value">12,840</div><div class="kpi-sub">8,420 public · 4,420 private</div></div>
+<div class="kpi-card green"><div class="kpi-label">CDN Hits</div><div class="kpi-value">842K</div><div class="kpi-sub">This month · 12ms avg</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Uploads Today</div><div class="kpi-value">340</div><div class="kpi-sub">2.4 GB total</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Bandwidth</div><div class="kpi-value">42 GB</div><div class="kpi-sub">This month · CDN served</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Files</span></div>
+<div class="file-row"><div class="file-icon" style="background:rgba(0,212,255,.12)">📄</div><div class="file-info"><div class="file-name">CAC-RC-321424-certificate.pdf</div><div class="file-meta">Private · Uploaded Jul 17 · Identity</div></div><div class="file-size">2.4 MB</div></div>
+<div class="file-row"><div class="file-icon" style="background:rgba(0,230,118,.12)">🖼️</div><div class="file-info"><div class="file-name">engineering-collection-8in1-cover.png</div><div class="file-meta">Public · CDN · Marketplace</div></div><div class="file-size">1.8 MB</div></div>
+<div class="file-row"><div class="file-icon" style="background:rgba(255,82,82,.12)">🎬</div><div class="file-info"><div class="file-name">harzfilm-trailer-01.mp4</div><div class="file-meta">Public · CDN · HarzFilm</div></div><div class="file-size">84 MB</div></div>
+<div class="file-row"><div class="file-icon" style="background:rgba(124,77,255,.12)">🎵</div><div class="file-info"><div class="file-name">harzmusic-track-27-preview.mp3</div><div class="file-meta">Public · CDN · HarzMusic</div></div><div class="file-size">3.2 MB</div></div>
+<div class="file-row"><div class="file-icon" style="background:rgba(0,212,255,.12)">📄</div><div class="file-info"><div class="file-name">business-os-dashboard-config.json</div><div class="file-meta">Private · System</div></div><div class="file-size">24 KB</div></div>
+<div class="file-row"><div class="file-icon" style="background:rgba(0,230,118,.12)">🖼️</div><div class="file-info"><div class="file-name">super-app-screenshot.png</div><div class="file-meta">Public · CDN · Portfolio</div></div><div class="file-size">420 KB</div></div>
+<div class="file-row"><div class="file-icon" style="background:rgba(255,171,0,.12)">📦</div><div class="file-info"><div class="file-name">backup-2026-07-23-full.tar.gz</div><div class="file-meta">Private · Encrypted · Backup</div></div><div class="file-size">4.2 GB</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Storage Buckets</span></div>
+<table class="tbl"><thead><tr><th>Bucket</th><th>Files</th><th>Size</th><th>Type</th><th>Status</th></tr></thead><tbody>
+<tr><td>harz-public-cdn</td><td>8,420</td><td>89 GB</td><td>Public</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>harz-private-docs</td><td>2,840</td><td>28 GB</td><td>Private</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>harz-media</td><td>1,180</td><td>18 GB</td><td>CDN</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>harz-backups</td><td>340</td><td>4 GB</td><td>Encrypted</td><td><td><span class="pill green">Active</span></td></tr>
+<tr><td>harz-ai-datasets</td><td>60</td><td>3 GB</td><td>Private</td><td><span class="pill green">Active</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- DATABASES -->
+<div id="page-databases" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🗄️ Databases</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Total Tables</div><div class="kpi-value">38</div><div class="kpi-sub">Across 12 databases</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Total Records</div><div class="kpi-value">2.4M</div><div class="kpi-sub">Growing 8K/day</div></div>
+<div class="kpi-card purple"><div class="kpi-label">DB Size</div><div class="kpi-value">8 GB</div><div class="kpi-sub">Compressed: 2.1 GB</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Query Avg</div><div class="kpi-value">42ms</div><div class="kpi-sub">P99: 120ms</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Database Overview</span></div>
+<div class="db-card">
+<div class="db-header"><div class="db-name">📊 Harz Ecosystem DB (Base44)</div><span class="pill green">Primary</span></div>
+<div class="db-stats"><div class="db-stat"><div class="val">38</div><div class="lbl">Tables</div></div><div class="db-stat"><div class="val">2.4M</div><div class="lbl">Records</div></div><div class="db-stat"><div class="val">6.8GB</div><div class="lbl">Size</div></div></div>
+</div>
+<div class="db-card">
+<div class="db-header"><div class="db-name">📈 Analytics Warehouse</div><span class="pill blue">Analytics</span></div>
+<div class="db-stats"><div class="db-stat"><div class="val">12</div><div class="lbl">Tables</div></div><div class="db-stat"><div class="val">842K</div><div class="lbl">Records</div></div><div class="db-stat"><div class="val">1.2GB</div><div class="lbl">Size</div></div></div>
+</div>
+<div class="db-card">
+<div class="db-header"><div class="db-name">🧠 AI Training Store</div><span class="pill purple">AI</span></div>
+<div class="db-stats"><div class="db-stat"><div class="val">24</div><div class="lbl">Datasets</div></div><div class="db-stat"><div class="val">8.4M</div><div class="lbl">Rows</div></div><div class="db-stat"><div class="val">3GB</div><div class="lbl">Size</div></div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Top Tables by Records</span></div>
+<div class="bar-row"><div class="bar-label">Product</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p1)">259</div></div><div class="bar-val">259</div></div>
+<div class="bar-row"><div class="bar-label">WhatsAppCRM</div><div class="bar-track"><div class="bar-fill" style="width:78%;background:var(--p3)">202</div></div><div class="bar-val">202</div></div>
+<div class="bar-row"><div class="bar-label">CloudAgent</div><div class="bar-track"><div class="bar-fill" style="width:73%;background:var(--p2)">190</div></div><div class="bar-val">190</div></div>
+<div class="bar-row"><div class="bar-label">EduCourse</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--p4)">47</div></div><div class="bar-val">47</div></div>
+<div class="bar-row"><div class="bar-label">MusicTrack</div><div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--p5)">27</div></div><div class="bar-val">27</div></div>
+<div class="bar-row"><div class="bar-label">IoTDevice</div><div class="bar-track"><div class="bar-fill" style="width:8%;background:var(--cyan)">20</div></div><div class="bar-val">20</div></div>
+<div class="bar-row"><div class="bar-label">Film</div><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--muted)">8</div></div><div class="bar-val">8</div></div>
+</div>
+</div>
+
+<!-- BACKUPS -->
+<div id="page-backups" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🔄 Backups & Recovery</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Backups Today</div><div class="kpi-value">42</div><div class="kpi-sub">40 auto · 2 manual · 0 failed</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Retention</div><div class="kpi-value">30d</div><div class="kpi-sub">Daily full · Hourly incremental</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Storage Used</div><div class="kpi-value">4 GB</div><div class="kpi-sub">Compressed · AES-256</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Restore Time</div><div class="kpi-value">8 min</div><div class="kpi-sub">Full DB recovery tested</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Backups</span></div>
+<table class="tbl"><thead><tr><th>Type</th><th>Source</th><th>Size</th><th>Status</th><th>Time</th></tr></thead><tbody>
+<tr><td>Full</td><td>Ecosystem DB</td><td>4.2 GB</td><td><span class="pill green">Success</span></td><td>12m ago</td></tr>
+<tr><td>Incremental</td><td>Analytics WH</td><td>280 MB</td><td><span class="pill green">Success</span></td><td>1h ago</td></tr>
+<tr><td>Full</td><td>AI Datasets</td><td>3 GB</td><td><span class="pill green">Success</span></td><td>2h ago</td></tr>
+<tr><td>Incremental</td><td>Ecosystem DB</td><td>42 MB</td><td><span class="pill green">Success</span></td><td>3h ago</td></tr>
+<tr><td>Full</td><td>File Storage</td><td>89 GB</td><td><span class="pill blue">Running</span></td><td>4h ago</td></tr>
+<tr><td>Incremental</td><td>Ecosystem DB</td><td>28 MB</td><td><span class="pill green">Success</span></td><td>5h ago</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Backup Schedule</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">🔄</div><div class="card-info"><div class="card-title">Full DB Snapshot</div><div class="card-desc">Daily at 2:00 AM · 30-day retention · Encrypted</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">🔄</div><div class="card-info"><div class="card-title">Incremental Backup</div><div class="card-desc">Every hour · Changed data only · 7-day retention</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🔄</div><div class="card-info"><div class="card-title">File Storage Backup</div><div class="card-desc">Daily at 4:00 AM · Full mirror · 14-day retention</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🔄</div><div class="card-info"><div class="card-title">AI Dataset Snapshot</div><div class="card-desc">Weekly on Sundays · Versioned · 12 versions kept</div></div><span class="pill green">Active</span></div></div>
+</div>
+</div>
+
+<!-- ANALYTICS -->
+<div id="page-analytics" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📊 Analytics & Reporting</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Dashboards</div><div class="kpi-value">12</div><div class="kpi-sub">Business · IoT · Content · Health</div></div>
+<div class="kpi-card green"><div class="kpi-label">Reports Generated</div><div class="kpi-value">842</div><div class="kpi-sub">This month · 0 errors</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Data Points</div><div class="kpi-value">8.4M</div><div class="kpi-sub">Processed · Real-time + batch</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Scheduled Reports</div><div class="kpi-value">8</div><div class="kpi-sub">Daily · Weekly · Monthly</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Active Dashboards</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">📊</div><div class="card-info"><div class="card-title">Business OS Dashboard</div><div class="card-desc">CRM · Sales · Revenue · Pipeline · 26 entities</div></div><span class="pill green">Live</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📊</div><div class="card-info"><div class="card-title">IoT Monitoring Dashboard</div><div class="card-desc">247 devices · Energy · Sensors · Alerts</div></div><span class="pill green">Live</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">📊</div><div class="card-info"><div class="card-title">Content Performance</div><div class="card-desc">Views · Engagement · Revenue · 25 agents</div></div><span class="pill green">Live</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">📊</div><div class="card-info"><div class="card-title">Marketplace Analytics</div><div class="card-desc">259 products · Sales · Views · Conversion</div></div><span class="pill green">Live</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.1)">📊</div><div class="card-info"><div class="card-title">Health AI Dashboard</div><div class="card-desc">Patients · Vitals · Appointments · 18 agents</div></div><span class="pill green">Live</span></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Scheduled Reports</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">📋</div><div class="card-info"><div class="card-title">Daily CRM Summary</div><div class="card-desc">8:15 AM · WhatsApp · Lead count + status breakdown</div></div><span class="pill blue">Daily</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📋</div><div class="card-info"><div class="card-title">Weekly Revenue Report</div><div class="card-desc">Every Monday · Email · All payment channels</div></div><span class="pill green">Weekly</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">📋</div><div class="card-info"><div class="card-title">Monthly Platform Health</div><div class="card-desc">1st of month · All 36 platforms · Uptime + performance</div></div><span class="pill purple">Monthly</span></div></div>
+</div>
+</div>
+
+<!-- DATASETS -->
+<div id="page-datasets" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🧠 AI Training Datasets</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card purple"><div class="kpi-label">Total Datasets</div><div class="kpi-value">24</div><div class="kpi-sub">12 trained · 8 pending · 4 new</div></div>
+<div class="kpi-card green"><div class="kpi-label">Total Rows</div><div class="kpi-value">8.4M</div><div class="kpi-sub">Labeled + unlabeled</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Models Trained</div><div class="kpi-value">12</div><div class="kpi-sub">80+ AI agents powered</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Avg Accuracy</div><div class="kpi-value">94.2%</div><div class="kpi-sub">Across all models</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Active Datasets</span></div>
+<table class="tbl"><thead><tr><th>Dataset</th><th>Rows</th><th>Type</th><th>Model</th><th>Accuracy</th><th>Status</th></tr></thead><tbody>
+<tr><td>CRM Sentiment</td><td>842K</td><td>NLP</td><td>LLaMA 3.3</td><td>96%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>Product Descriptions</td><td>259K</td><td>Text</td><td>GPT-4o</td><td>98%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>IoT Anomaly Detection</td><td>2.4M</td><td>Time Series</td><td>Custom</td><td>92%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>Health Symptoms</td><td>1.2M</td><td>Medical NLP</td><td>LLaMA 3.3</td><td>94%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>Music Genre Class.</td><td>840K</td><td>Audio</td><td>Custom CNN</td><td>89%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>Content Trends</td><td>420K</td><td>Social Media</td><td>GPT-4o</td><td>91%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>Construction Cost Est.</td><td>120K</td><td>Regression</td><td>Custom</td><td>95%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>Cyber Threat Intel</td><td>1.8M</td><td>Security</td><td>Custom</td><td>93%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>Estate Pricing</td><td>582K</td><td>Regression</td><td>Custom</td><td>97%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>WhatsApp Auto-Reply</td><td>340K</td><td>NLP</td><td>LLaMA 3.3</td><td>95%</td><td><span class="pill green">Trained</span></td></tr>
+<tr><td>Education Q&A</td><td>2.1M</td><td>NLP</td><td>GPT-4o</td><td>92%</td><td><span class="pill orange">Pending</span></td></tr>
+<tr><td>Finance Risk Score</td><td>480K</td><td>Classification</td><td>Custom</td><td>-</td><td><span class="pill orange">Pending</span></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Dataset Pipeline</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">📥</div><div class="card-info"><div class="card-title">1. Data Collection</div><div class="card-desc">CRM · IoT · Health · Content · Marketplace · 14 sources</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">🧹</div><div class="card-info"><div class="card-title">2. Cleaning & Labeling</div><div class="card-desc">Dedup · Normalize · Auto-label · Human review</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🔀</div><div class="card-info"><div class="card-title">3. Train / Test / Validate Split</div><div class="card-desc">80/10/10 · Stratified · Cross-validation</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🧠</div><div class="card-info"><div class="card-title">4. Model Training</div><div class="card-desc">Groq · LLaMA 3.3 70B · GPT-4o · Custom models</div></div><span class="pill blue">Running</span></div></div>
+</div>
+</div>
+
+<!-- DOC INTELLIGENCE -->
+<div id="page-docintel" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📄 Document Intelligence</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Docs Processed</div><div class="kpi-value">3,842</div><div class="kpi-sub">OCR · NLP · Extract</div></div>
+<div class="kpi-card green"><div class="kpi-label">OCR Accuracy</div><div class="kpi-value">98.2%</div><div class="kpi-sub">Above industry avg</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Entities Extracted</div><div class="kpi-value">12K</div><div class="kpi-sub">Names · Numbers · Dates · Address</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Avg Processing</div><div class="kpi-value">0.8s</div><div class="kpi-sub">Per document</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Supported Document Types</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,215,0,.12)">🏛️</div><div class="card-info"><div class="card-title">Government IDs</div><div class="card-desc">NIN · BVN · CAC certificate · TIN · International passport</div></div><span class="pill green">Supported</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.12)">📄</div><div class="card-info"><div class="card-title">Invoices & Receipts</div><div class="card-desc">Amount · Date · Vendor · Tax · Line items · Auto-categorize</div></div><span class="pill green">Supported</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.12)">📋</div><div class="card-info"><div class="card-title">Contracts & Agreements</div><div class="card-desc">Parties · Terms · Dates · Obligations · Risk flags</div></div><span class="pill green">Supported</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.12)">🧾</div><div class="card-info"><div class="card-title">Bank Statements</div><div class="card-desc">Transactions · Balance · Merchant detection · Categorization</div></div><span class="pill green">Supported</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.12)">🏥</div><div class="card-info"><div class="card-title">Medical Records</div><div class="card-desc">Diagnosis · Medications · Lab results · Vitals · Summaries</div></div><span class="pill green">Supported</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.12)">📄</div><div class="card-info"><div class="card-title">Any PDF / Image</div><div class="card-desc">OCR text extraction · Layout analysis · Table detection</div></div><span class="pill green">Supported</span></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Documents Processed</span></div>
+<table class="tbl"><thead><tr><th>Document</th><th>Type</th><th>Extracted</th><th>Accuracy</th><th>Status</th></tr></thead><tbody>
+<tr><td>CAC Certificate</td><td>Government</td><td>RC 321424, TIN 24550860</td><td>99%</td><td><span class="pill green">Done</span></td></tr>
+<tr><td>UBA Bank Statement</td><td>Financial</td><td>42 transactions, balance</td><td>97%</td><td><span class="pill green">Done</span></td></tr>
+<tr><td>Engineering Collection PDF</td><td>Document</td><td>154 pages, 8 chapters</td><td>98%</td><td><span class="pill green">Done</span></td></tr>
+<tr><td>HarzFilm Contract</td><td>Legal</td><td>Parties, terms, dates</td><td>95%</td><td><span class="pill green">Done</span></td></tr>
+<tr><td>Medical Report</td><td>Health</td><td>Diagnosis, medications</td><td>94%</td><td><span class="pill green">Done</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- SOURCES -->
+<div id="page-sources" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🔌 Data Sources</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Connected</div><div class="kpi-value">12</div><div class="kpi-sub">Of 14 total</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Sync Rate</div><div class="kpi-value">8.4K/min</div><div class="kpi-sub">All sources combined</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Last Sync</div><div class="kpi-value">2m</div><div class="kpi-sub">All healthy sources</div></div>
+<div class="kpi-card red"><div class="kpi-label">Errors</div><div class="kpi-value">2</div><div class="kpi-sub">Etsy API + Flutterwave</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Connected Sources</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.12)">💾</div><div class="card-info"><div class="card-title">Base44 Entities (Primary)</div><div class="card-desc">38 tables · Real-time · Webhook enabled</div></div><span class="pill green">Connected</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.12)">💬</div><div class="card-info"><div class="card-title">WhatsApp CRM</div><div class="card-desc">Messages · Leads · Auto-reply data · Real-time</div></div><span class="pill green">Connected</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.12)">🤖</div><div class="card-info"><div class="card-title">OMEGA Commander</div><div class="card-desc">Deploy logs · GitHub activity · Render status</div></div><span class="pill green">Connected</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.12)">🏭</div><div class="card-info"><div class="card-title">IoT Platform</div><div class="card-desc">20 devices · Sensor telemetry · Real-time</div></div><span class="pill green">Connected</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.12)">📊</div><div class="card-info"><div class="card-title">Business OS</div><div class="card-desc">CRM · Orders · Invoices · 26 entities</div></div><span class="pill green">Connected</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.12)">🎵</div><div class="card-info"><div class="card-title">HarzMusic + HarzFilm</div><div class="card-desc">27 tracks · 8 films · Sales · Plays · Views</div></div><span class="pill green">Connected</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.12)">🛒</div><div class="card-info"><div class="card-title">Marketplace (Gumroad + Getly)</div><div class="card-desc">259 products · Sales · Views · Daily sync</div></div><span class="pill green">Connected</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.12)">🎓</div><div class="card-info"><div class="card-title">EduWealth AI</div><div class="card-desc">Students · Courses · Enrollments · Progress</div></div><span class="pill green">Connected</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.12)">🌐</div><div class="card-info"><div class="card-title">Etsy API</div><div class="card-desc">Pending manual review · API key active</div></div><span class="pill orange">Pending</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.12)">💸</div><div class="card-info"><div class="card-title">Flutterwave</div><div class="card-desc">No response · Awaiting API credentials</div></div><span class="pill red">Error</span></div></div>
+</div>
+</div>
+
+<!-- PIPELINES -->
+<div id="page-pipelines" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>⚡ Data Pipelines (ETL)</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Active Pipelines</div><div class="kpi-value">18</div><div class="kpi-sub">16 running · 2 paused</div></div>
+<div class="kpi-card green"><div class="kpi-label">Runs Today</div><div class="kpi-value">842</div><div class="kpi-sub">0 failed</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Data Processed</div><div class="kpi-value">8.4M</div><div class="kpi-sub">Rows transformed today</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Avg Duration</div><div class="kpi-value">4.2s</div><div class="kpi-sub">Per pipeline run</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Active Pipelines</span></div>
+<table class="tbl"><thead><tr><th>Pipeline</th><th>Source → Target</th><th>Transform</th><th>Runs</th><th>Status</th></tr></thead><tbody>
+<tr><td>CRM → Analytics</td><td>WhatsAppCRM → WH</td><td>Clean + tag + aggregate</td><td>42</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Sales → Revenue</td><td>Orders → Ledger</td><td>Sum + categorize + report</td><td>28</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>IoT → Time Series</td><td>IoTDevice → InfluxDB</td><td>Window + downsample</td><td>840</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Products → Search</td><td>Product → Elasticsearch</td><td>Index + tokenize + rank</td><td>12</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Content → Trends</td><td>Social → Trends DB</td><td>NLP + classify + score</td><td>8</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Health → Anonymize</td><td>HealthRecord → Analytics</td><td>Scrub PII + aggregate</td><td>14</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Music → Recommend</td><td>Plays → Model</td><td>Embed + cluster + rank</td><td>6</td><td><span class="pill orange">Paused</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- SECURITY -->
+<div id="page-security" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🔒 Data Security</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Security Score</div><div class="kpi-value">96/100</div><div class="kpi-sub">Excellent · No threats</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Encryption</div><div class="kpi-value">AES-256</div><div class="kpi-sub">At rest + TLS 1.3 in transit</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Access Logs</div><div class="kpi-value">42K</div><div class="kpi-sub">This month · All audited</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Last Audit</div><div class="kpi-value">Today</div><div class="kpi-sub">No issues found</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Security Layers</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">🔒</div><div class="card-info"><div class="card-title">Encryption at Rest</div><div class="card-desc">AES-256-GCM · All databases and file storage</div></div><span class="pill green">Enabled</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">🔐</div><div class="card-info"><div class="card-title">Encryption in Transit</div><div class="card-desc">TLS 1.3 · All API calls and data transfers</div></div><span class="pill green">Enabled</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🔑</div><div class="card-info"><div class="card-title">Row-Level Security</div><div class="card-desc">Per-user data isolation · Admin override only</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🛡️</div><div class="card-info"><div class="card-title">PII Detection</div><div class="card-desc">Auto-detect sensitive data · Mask in analytics</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.1)">📋</div><div class="card-info"><div class="card-title">Access Audit Log</div><div class="card-desc">Every read/write logged · 30-day retention</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">🔄</div><div class="card-info"><div class="card-title">Backup Encryption</div><div class="card-desc">All backups AES-256 encrypted · Separate keys</div></div><span class="pill green">Enabled</span></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Access Control</span></div>
+<table class="tbl"><thead><tr><th>Role</th><th>Read</th><th>Write</th><th>Delete</th><th>Admin</th></tr></thead><tbody>
+<tr><td>Owner (Rabiu)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>Magani (Agent)</td><td>✅</td><td>✅</td><td>✅</td><td>—</td></tr>
+<tr><td>OMEGA (Agent)</td><td>✅</td><td>✅</td><td>—</td><td>—</td></tr>
+<tr><td>API Consumer</td><td>✅</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<div class="footer">HARZ Data Cloud v1.0 · Platform #37 in the Harz Ecosystem<br>Storage · Databases · Backups · Analytics · AI Data · Doc Intelligence<br>Built by Harz Digital Services · CAC RC 321424</div>
+
+<script>
+function switchPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const p=document.getElementById('page-'+n);if(p)p.classList.add('active');window.scrollTo(0,0)}
+</script>
+</body>
+</html>
