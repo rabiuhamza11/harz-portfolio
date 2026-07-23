@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Selar Quick Upload - Engineering Books</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0f;color:#e0e0e0;padding:12px}
+.header{text-align:center;padding:12px 0 16px}
+.header h1{font-size:1.1rem;color:#FFD700}
+.header p{font-size:.8rem;color:#666;margin-top:4px}
+.open-selar{display:block;text-align:center;padding:10px;background:#5c1b50;border:none;border-radius:8px;color:#fff;font-size:.9rem;text-decoration:none;margin-bottom:16px}
+.card{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:14px;margin-bottom:10px}
+.card .num{font-size:.7rem;color:#444}
+.card .title{font-size:.9rem;font-weight:600;margin:4px 0 6px}
+.card .price{color:#10b981;font-weight:bold;font-size:.9rem;margin-bottom:6px}
+.card .cat{color:#666;font-size:.75rem;margin-bottom:8px}
+.card .desc{font-size:.8rem;color:#888;margin-bottom:10px;line-height:1.4}
+.btn{padding:6px 12px;border-radius:6px;font-size:.78rem;cursor:pointer;border:1px solid #333;margin:2px;background:#1a1a2e;color:#8b9bb4}
+.btn.copied{background:#10b981;color:#fff;border-color:#10b981}
+.btn.done{background:#10b981;color:#fff;border-color:#10b981}
+.link-box{background:#0d1117;border:1px solid #1f2937;border-radius:6px;padding:8px;font-size:.72rem;color:#4A9EFF;word-break:break-all;margin:6px 0}
+.tip{background:#1a1a2e;border-left:3px solid #FFD700;padding:10px 12px;border-radius:4px;font-size:.78rem;color:#9ca3af;margin-bottom:14px;line-height:1.5}
+.fab{position:fixed;bottom:16px;right:16px;width:44px;height:44px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;text-decoration:none;z-index:99}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>Engineering Books - Selar Upload</h1>
+<p>9 products ready | Copy and paste into Selar</p>
+</div>
+<a href="https://selar.co/dashboard/products" target="_blank" class="open-selar">Open Selar Dashboard</a>
+<div class="tip">
+<b>How to use:</b><br>
+1. Open Selar dashboard (button above)<br>
+2. Tap Add Product in Selar<br>
+3. Come back here, tap each Copy button<br>
+4. Paste into Selar fields<br>
+5. Tap Mark Done after uploading
+</div>
+<div id="products"></div>
+<a href="https://wa.me/2348028687857" class="fab">Chat</a>
+<script>
+const products=[
+{n:1,t:"The Complete Engineering Collection - 8 Books in 1 (154 Pages)",p:"$89.99",c:"Ebook",d:"154-page professional engineering reference: Building (24p), Civil (20p), Software (33p), Architecture (30p), Electrical (12p), Mechanical (12p), Chemical (11p), Electronic (12p). SAVE $70 vs individual. Instant PDF download. Professional Edition 2026.",l:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Harz_Engineering_Collection_Complete.pdf",ci:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-covers/14-engineering-collection-8in1.png"},
+{n:2,t:"Building Engineering: Comprehensive Guide - Structural, HVAC, Plumbing and Acoustics",p:"$19.99",c:"Ebook",d:"24-page professional guide covering structural systems, HVAC design, electrical and plumbing systems, acoustics, sustainability, and building codes (IBC, ASHRAE, NEC, NFPA). Instant PDF download. Professional Edition 2026.",l:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Harz_Engineering_Collection_Complete.pdf",ci:""},
+{n:3,t:"Civil Engineering: Comprehensive Guide - Structures, Bridges and Geotechnical",p:"$19.99",c:"Ebook",d:"20-page professional guide covering structural design, bridge engineering, geotechnical engineering, transportation systems, water resources, earthquake design. Standards: AISC, ACI. Instant PDF download. Professional Edition 2026.",l:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Harz_Engineering_Collection_Complete.pdf",ci:""},
+{n:4,t:"Software Engineering Handbook - Algorithms, System Design and DevOps",p:"$19.99",c:"Ebook",d:"33-page professional handbook covering algorithms, data structures, system design, testing, QA, DevOps, CI/CD, security, APIs, databases. 100+ concepts. Instant PDF download. Professional Edition 2026.",l:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Harz_Engineering_Collection_Complete.pdf",ci:""},
+{n:5,t:"Architectural Drawing: Complete Guide - Drafting, CAD, BIM and Rendering",p:"$19.99",c:"Ebook",d:"30-page professional guide covering manual drafting, orthographic views, perspective drawing, CAD fundamentals, BIM, 3D rendering, construction documents. 300+ techniques. Instant PDF download. Professional Edition 2026.",l:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Architectural_Drawing_Complete_Guide.pdf",ci:""},
+{n:6,t:"Electrical Engineering: Comprehensive Guide - Circuits, Power Systems and Control",p:"$14.99",c:"Ebook",d:"12-page professional guide covering circuit analysis, power systems, motors, safety, renewable energy, measurements, power electronics, control systems. Standards: IEC, IEEE, NEC, NEMA. Instant PDF download. Professional Edition 2026.",l:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Electrical_Engineering_Guide.pdf",ci:""},
+{n:7,t:"Mechanical Engineering: Comprehensive Guide - Thermodynamics, Fluids and Design",p:"$14.99",c:"Ebook",d:"12-page professional guide covering statics, dynamics, strength of materials, thermodynamics, fluid mechanics, heat transfer, machine design, manufacturing, vibrations, HVAC. Standards: ASME, ISO, ASTM. Instant PDF download. Professional Edition 2026.",l:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Mechanical_Engineering_Guide.pdf",ci:""},
+{n:8,t:"Chemical Engineering: Comprehensive Guide - Reactions, Separations and Safety",p:"$14.99",c:"Ebook",d:"11-page professional guide covering material/energy balances, reaction engineering, separation processes, transport phenomena, process control, safety, petroleum refining, green engineering. Instant PDF download. Professional Edition 2026.",l:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Chemical_Engineering_Guide.pdf",ci:""},
+{n:9,t:"Electronic Engineering: Comprehensive Guide - Semiconductors, Digital and IoT",p:"$14.99",c:"Ebook",d:"12-page professional guide covering semiconductor physics, analog/digital electronics, microcontrollers, embedded systems, communications, VLSI, PCB design, IoT, emerging technologies. Instant PDF download. Professional Edition 2026.",l:"https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Electronic_Engineering_Guide.pdf",ci:""}
+];
+const done=JSON.parse(localStorage.getItem('selarEngDone')||'[]');
+const c=document.getElementById('products');
+products.forEach((p,i)=>{
+const isD=done.includes(i);
+const d=document.createElement('div');
+d.className='card';
+if(isD)d.style.borderColor='#10b981';
+let esc=p.d.replace(/'/g,"\\'");
+let escT=p.t.replace(/'/g,"\\'");
+let h='<div class="num">Product '+p.n+' of 9</div>';
+h+='<div class="title">'+p.t+'</div>';
+h+='<div class="price">'+p.p+'</div>';
+h+='<div class="cat">Category: '+p.c+' | Type: Digital | Currency: USD</div>';
+h+='<div class="desc">'+p.d+'</div>';
+if(p.ci)h+='<div style="margin-bottom:8px"><div style="font-size:.7rem;color:#666;margin-bottom:4px">Cover Image:</div><div class="link-box">'+p.ci+'</div></div>';
+h+='<div style="margin-bottom:8px"><div style="font-size:.7rem;color:#666;margin-bottom:4px">Download File Link:</div><div class="link-box">'+p.l+'</div></div>';
+h+='<div><button class="btn" onclick="cp(this,\''+escT+'\')">Copy Title</button>';
+h+='<button class="btn" onclick="cp(this,\''+p.p+'\')">Copy Price</button>';
+h+='<button class="btn" onclick="cp(this,\''+esc+'\')">Copy Description</button>';
+h+='<button class="btn" onclick="cp(this,\''+p.l+'\')">Copy File Link</button>';
+if(p.ci)h+='<button class="btn" onclick="cp(this,\''+p.ci+'\')">Copy Cover</button>';
+h+='<button class="btn '+(isD?'done':'')+'" onclick="md('+i+',this)">'+(isD?'Done':'Mark Done')+'</button></div>';
+d.innerHTML=h;
+c.appendChild(d);
+});
+function cp(b,t){navigator.clipboard.writeText(t).then(()=>{b.classList.add('copied');var o=b.textContent;b.textContent='Copied!';setTimeout(()=>{b.classList.remove('copied');b.textContent=o},1500)}).catch(()=>{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);b.classList.add('copied');var o=b.textContent;b.textContent='Copied!';setTimeout(()=>{b.classList.remove('copied');b.textContent=o},1500)})}
+function md(i,b){var d=JSON.parse(localStorage.getItem('selarEngDone')||'[]');if(!d.includes(i)){d.push(i);localStorage.setItem('selarEngDone',JSON.stringify(d));b.classList.add('done');b.textContent='Done';b.parentElement.parentElement.style.borderColor='#10b981'}}
+</script>
+</body>
+</html>
