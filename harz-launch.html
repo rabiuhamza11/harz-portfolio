@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0a0e27">
+<title>HARZ Digital Services — 38 Platforms. 80+ AI Agents. One Ecosystem.</title>
+<meta name="description" content="Harz Digital Services builds AI-powered platforms for Africa and the world. 38 live platforms, 80+ AI agents, 259 digital products. From payments to healthcare, education to cybersecurity.">
+<meta property="og:title" content="HARZ Digital Services — 38 Platforms. 80+ AI Agents. One Ecosystem.">
+<meta property="og:description" content="Africa's most ambitious AI ecosystem. 38 live platforms spanning fintech, health, education, cybersecurity, media, IoT, and more.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HARZ Digital Services — 38 Platforms. 80+ AI Agents.">
+<meta name="twitter:description" content="Africa's most ambitious AI ecosystem. Payments, healthcare, education, cybersecurity, media, IoT, and more.">
+<style>
+:root{--p1:#00d4ff;--p2:#7c4dff;--p3:#00e676;--p4:#ffab00;--p5:#ff5252;--bg:#0a0e27;--card:#11163a;--text:#e0f7ff;--muted:#6b7a99;--border:#1e2851;--gold:#ffd700}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--p1);border-radius:5px}
+
+/* HERO */
+.hero{text-align:center;padding:60px 20px 40px;background:radial-gradient(ellipse at center,rgba(0,212,255,.06),transparent 70%)}
+.hero-badge{display:inline-block;background:rgba(255,215,0,.12);color:var(--gold);padding:4px 14px;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:20px;border:1px solid rgba(255,215,0,.2)}
+.hero h1{font-size:2.2rem;font-weight:900;line-height:1.2;margin-bottom:12px;background:linear-gradient(135deg,var(--gold),var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .tagline{font-size:1rem;color:var(--muted);max-width:600px;margin:0 auto 24px}
+.hero-stats{display:flex;justify-content:center;gap:30px;flex-wrap:wrap;margin-top:20px}
+.hero-stat{text-align:center}
+.hero-stat .num{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stat .lbl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+
+/* CTA */
+.cta-section{text-align:center;padding:30px 20px}
+.cta-btn{display:inline-block;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;padding:14px 32px;border-radius:12px;font-size:.88rem;font-weight:700;text-decoration:none;margin:6px}
+.cta-btn.gold{background:linear-gradient(135deg,var(--gold),#ff9800);color:#0a0e27}
+.cta-btn.green{background:linear-gradient(135deg,var(--p3),#00b894)}
+
+/* SECTIONS */
+.section{padding:40px 20px;max-width:800px;margin:0 auto}
+.section h2{font-size:1.4rem;font-weight:800;text-align:center;margin-bottom:20px;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* PLATFORM GRID */
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:30px}
+.platform-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;transition:all .2s}
+.platform-item:hover{border-color:var(--p1);transform:translateY(-2px)}
+.platform-item .ico{font-size:1.6rem;margin-bottom:6px}
+.platform-item .name{font-size:.72rem;font-weight:700}
+.platform-item .cat{font-size:.55rem;color:var(--muted);margin-top:2px}
+
+/* CATEGORIES */
+.cat-section{margin-bottom:24px}
+.cat-title{font-size:.82rem;font-weight:700;color:var(--p1);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* FEATURES */
+.feature-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:30px}
+.feature{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+.feature .ico{font-size:1.8rem;margin-bottom:8px}
+.feature h3{font-size:.82rem;font-weight:700;margin-bottom:4px}
+.feature p{font-size:.68rem;color:var(--muted);line-height:1.5}
+
+/* NUMBERS */
+.numbers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
+.num-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center}
+.num-card .num{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.num-card .lbl{font-size:.65rem;color:var(--muted);margin-top:2px}
+
+/* STORY */
+.story{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:30px}
+.story p{font-size:.82rem;color:var(--text);margin-bottom:12px;line-height:1.7}
+.story .highlight{color:var(--gold);font-weight:700}
+
+/* PRESS */
+.press-kit{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+.press-kit h3{font-size:.88rem;font-weight:700;margin-bottom:10px}
+.press-kit p{font-size:.75rem;color:var(--muted);margin-bottom:8px}
+.press-link{display:inline-block;background:rgba(0,212,255,.08);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:.72rem;color:var(--p1);text-decoration:none;margin:4px 4px 4px 0}
+
+/* SOCIAL POSTS */
+.social-post{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s}
+.social-post:hover{border-color:var(--p1)}
+.social-post .platform-tag{font-size:.58rem;font-weight:700;padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:8px}
+.social-post .content{font-size:.75rem;color:var(--text);line-height:1.6;white-space:pre-wrap}
+.social-post .copy-hint{font-size:.6rem;color:var(--muted);margin-top:8px;font-style:italic}
+
+/* FOOTER */
+.footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:.72rem;border-top:1px solid var(--border)}
+.footer a{color:var(--p1);text-decoration:none}
+
+@media(max-width:640px){.hero h1{font-size:1.6rem}.hero-stats{gap:16px}.numbers{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+<div class="hero-badge">⭐ LAUNCH ANNOUNCEMENT — JULY 2026</div>
+<h1>38 Platforms.<br>80+ AI Agents.<br>One Ecosystem.</h1>
+<p class="tagline">Harz Digital Services is building Africa's most ambitious AI-powered ecosystem — fintech, healthcare, education, cybersecurity, media, IoT, and more. All live. All connected. All built from scratch.</p>
+<div class="hero-stats">
+<div class="hero-stat"><div class="num">38</div><div class="lbl">Live Platforms</div></div>
+<div class="hero-stat"><div class="num">80+</div><div class="lbl">AI Agents</div></div>
+<div class="hero-stat"><div class="num">259</div><div class="lbl">Products</div></div>
+<div class="hero-stat"><div class="num">664+</div><div class="lbl">Pages Built</div></div>
+</div>
+</div>
+
+<div class="cta-section">
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" class="cta-btn">📱 Open Super App</a>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html" class="cta-btn green">🌐 Ecosystem Dashboard</a>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/" class="cta-btn gold">🏢 About Harz</a>
+</div>
+
+<!-- THE STORY -->
+<div class="section">
+<h2>The Story</h2>
+<div class="story">
+<p>Founded in <span class="highlight">2014</span> as HI Water/Block Industry (CAC RC 321424) and reimagined as <span class="highlight">Harz Digital Services</span>, what started as a construction business in Bauchi State, Nigeria has become one of Africa's most ambitious technology ecosystems.</p>
+<p>In a single year, we've architected and deployed <span class="highlight">38 live platforms</span> — from AI-powered banking and healthcare to cybersecurity, education, media distribution, IoT, and venture automation. <span class="highlight">80+ AI agents</span> operate across the ecosystem, powered by models like LLaMA 3.3 70B and GPT-4o.</p>
+<p>This isn't a roadmap. This is <span class="highlight">what's live right now</span>.</p>
+<p>Every platform is built mobile-first, optimized for low-end devices like the Infinix Hot 10i (2GB RAM), and designed for the African market first — then the world.</p>
+<p>Built by one founder, one AI agent (Magani), and relentless execution.</p>
+</div>
+</div>
+
+<!-- NUMBERS -->
+<div class="section">
+<h2>By The Numbers</h2>
+<div class="numbers">
+<div class="num-card"><div class="num">38</div><div class="lbl">Live Platforms</div></div>
+<div class="num-card"><div class="num">80+</div><div class="lbl">AI Agents Deployed</div></div>
+<div class="num-card"><div class="num">259</div><div class="lbl">Digital Products</div></div>
+<div class="num-card"><div class="num">664+</div><div class="lbl">Web Pages Built</div></div>
+<div class="num-card"><div class="num">44+</div><div class="lbl">GitHub Repos</div></div>
+<div class="num-card"><div class="num">16+</div><div class="lbl">Backend Functions</div></div>
+<div class="num-card"><div class="num">32</div><div class="lbl">Active Automations</div></div>
+<div class="num-card"><div class="num">2</div><div class="lbl">AI Services on Render</div></div>
+</div>
+</div>
+
+<!-- PLATFORM CATEGORIES -->
+<div class="section">
+<h2>What We Built</h2>
+
+<div class="cat-section">
+<div class="cat-title">💳 Fintech & Payments</div>
+<div class="platform-grid">
+<div class="platform-item"><div class="ico">💳</div><div class="name">HarzPay</div><div class="cat">Payments + GDEG Token</div></div>
+<div class="platform-item"><div class="ico">🏦</div><div class="name">Apex Bank</div><div class="cat">Digital Banking</div></div>
+<div class="platform-item"><div class="ico">🤝</div><div class="name">HarzAjo</div><div class="cat">Group Savings</div></div>
+<div class="platform-item"><div class="ico">💱</div><div class="name">HarzFX</div><div class="cat">Forex Trading</div></div>
+<div class="platform-item"><div class="ico">💰</div><div class="name">HarzLend</div><div class="cat">Micro Loans</div></div>
+</div>
+</div>
+
+<div class="cat-section">
+<div class="cat-title">🤖 AI & Automation</div>
+<div class="platform-grid">
+<div class="platform-item"><div class="ico">🤖</div><div class="name">OMEGA Commander</div><div class="cat">10-tool orchestrator</div></div>
+<div class="platform-item"><div class="ico">🧠</div><div class="name">Harz AI Cloud</div><div class="cat">20 AI agents</div></div>
+<div class="platform-item"><div class="ico">📦</div><div class="name">OMEGA Infinity</div><div class="cat">1000 agents planned</div></div>
+<div class="platform-item"><div class="ico">💡</div><div class="name">Venture Studio</div><div class="cat">Idea → Business</div></div>
+<div class="platform-item"><div class="ico">🤖</div><div class="name">Maganu Agent</div><div class="cat">Autonomous AI</div></div>
+</div>
+</div>
+
+<div class="cat-section">
+<div class="cat-title">🏥 Health & Wellness</div>
+<div class="platform-grid">
+<div class="platform-item"><div class="ico">🏥</div><div class="name">OMEGA Health AI</div><div class="cat">18 health agents</div></div>
+<div class="platform-item"><div class="ico">🧠</div><div class="name">MindCare AI</div><div class="cat">Mental health</div></div>
+</div>
+</div>
+
+<div class="cat-section">
+<div class="cat-title">🛡️ Security</div>
+<div class="platform-grid">
+<div class="platform-item"><div class="ico">🛡️</div><div class="name">Cyber Shield X</div><div class="cat">37 security agents</div></div>
+</div>
+</div>
+
+<div class="cat-section">
+<div class="cat-title">🎓 Education</div>
+<div class="platform-grid">
+<div class="platform-item"><div class="ico">🎓</div><div class="name">EduWealth AI</div><div class="cat">18 edu agents</div></div>
+</div>
+</div>
+
+<div class="cat-section">
+<div class="cat-title">🎬 Media & Entertainment</div>
+<div class="platform-grid">
+<div class="platform-item"><div class="ico">🎵</div><div class="name">HarzMusic</div><div class="cat">27 tracks</div></div>
+<div class="platform-item"><div class="ico">🎬</div><div class="name">HarzFilm</div><div class="cat">8 films</div></div>
+<div class="platform-item"><div class="ico">📝</div><div class="name">ContentPilot AI</div><div class="cat">Content automation</div></div>
+</div>
+</div>
+
+<div class="cat-section">
+<div class="cat-title">🏗️ Real Estate & Construction</div>
+<div class="platform-grid">
+<div class="platform-item"><div class="ico">🏗️</div><div class="name">BuildBot AI</div><div class="cat">Construction estimator</div></div>
+<div class="platform-item"><div class="ico">🏠</div><div class="name">Abuja Estate City</div><div class="cat">Property platform</div></div>
+</div>
+</div>
+
+<div class="cat-section">
+<div class="cat-title">🛒 E-Commerce</div>
+<div class="platform-grid">
+<div class="platform-item"><div class="ico">🛒</div><div class="name">HarzDM Market</div><div class="cat">259 products</div></div>
+<div class="platform-item"><div class="ico">🛍️</div><div class="name">Getly Store</div><div class="cat">Auto-upload marketplace</div></div>
+<div class="platform-item"><div class="ico">🔧</div><div class="name">Freelance Market</div><div class="cat">Service marketplace</div></div>
+<div class="platform-item"><div class="ico">🎟️</div><div class="name">Harz Events</div><div class="cat">Event tickets</div></div>
+</div>
+</div>
+
+<div class="cat-section">
+<div class="cat-title">📊 Business & Infrastructure</div>
+<div class="platform-grid">
+<div class="platform-item"><div class="ico">📊</div><div class="name">Business OS</div><div class="cat">CRM, ERP, HR, Accounting</div></div>
+<div class="platform-item"><div class="ico">🪪</div><div class="name">Global Identity</div><div class="cat">SSO, KYC, Reputation</div></div>
+<div class="platform-item"><div class="ico">💾</div><div class="name">Data Cloud</div><div class="cat">Storage, AI datasets</div></div>
+<div class="platform-item"><div class="ico">🏭</div><div class="name">IoT & Robotics</div><div class="cat">20 devices, 4 locations</div></div>
+<div class="platform-item"><div class="ico">📡</div><div class="name">WhatsApp CRM</div><div class="cat">Auto-reply + leads</div></div>
+<div class="platform-item"><div class="ico">📱</div><div class="name">Super App</div><div class="cat">Unified gateway</div></div>
+</div>
+</div>
+</div>
+
+<!-- KEY FEATURES -->
+<div class="section">
+<h2>Why Harz Is Different</h2>
+<div class="feature-list">
+<div class="feature"><div class="ico">🌍</div><h3>Built for Africa First</h3><p>Every platform optimized for low-end devices, slow networks, and African payment systems. Mobile-first, always.</p></div>
+<div class="feature"><div class="ico">🤖</div><h3>AI-Native Architecture</h3><p>80+ AI agents powered by LLaMA 3.3 70B and GPT-4o. Autonomous operations across the entire ecosystem.</p></div>
+<div class="feature"><div class="ico">⚡</div><h3>GDEG Token Economy</h3><p>Native Polygon token for ecosystem payments with 10% discount. Crypto meets real-world utility.</p></div>
+<div class="feature"><div class="ico">🔗</div><h3>Everything Connected</h3><p>Single sign-on across 38 platforms. One identity, one wallet, one reputation. Build once, use everywhere.</p></div>
+<div class="feature"><div class="ico">🚀</div><h3>Ship Fast</h3><p>38 platforms built and deployed in one year. Average idea-to-launch: 42 minutes via Venture Studio.</p></div>
+<div class="feature"><div class="ico">📱</div><h3>Zero Dependencies</h3><p>Framework-free, SEO-optimized, PWA-ready. Loads on 2GB RAM phones. No bloat, just performance.</p></div>
+</div>
+</div>
+
+<!-- PRESS KIT -->
+<div class="section">
+<h2>Press & Media Kit</h2>
+<div class="press-kit">
+<h3>📋 Company Factsheet</h3>
+<p><b>Legal Name:</b> HI Water/Block Industry (trading as Harz Digital Services)</p>
+<p><b>CAC Registration:</b> RC 321424 (August 5, 2014)</p>
+<p><b>TIN:</b> 24550860 (FIRS Nigeria)</p>
+<p><b>Founder:</b> Rabiu Hamza Mohammed</p>
+<p><b>Headquarters:</b> Bauchi State, Nigeria</p>
+<p><b>Platforms:</b> 38 live | Agents: 80+ | Products: 259</p>
+</div>
+<div class="press-kit">
+<h3>🔗 Key Links</h3>
+<a class="press-link" href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html">Super App</a>
+<a class="press-link" href="https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html">Ecosystem Dashboard</a>
+<a class="press-link" href="https://rabiuhamza11.github.io/harz-portfolio/harz-portfolio.html">Portfolio</a>
+<a class="press-link" href="https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html">AI Cloud</a>
+<a class="press-link" href="https://github.com/rabiuhamza11">GitHub</a>
+</div>
+<div class="press-kit">
+<h3>📧 Contact</h3>
+<p>Email: hamzarabiu390@gmail.com</p>
+<p>Phone: +234 802 868 7857</p>
+<p>WhatsApp: +234 802 868 7857</p>
+<p>Telegram: @b44_e609780e17959020_bot</p>
+</div>
+</div>
+
+<!-- SOCIAL MEDIA KIT -->
+<div class="section">
+<h2>Social Media Kit — Ready to Post</h2>
+<p style="text-align:center;color:var(--muted);font-size:.72rem;margin-bottom:20px">Tap any post to copy. Paste directly to your platforms.</p>
+
+<div class="social-post" onclick="copyPost(this)">
+<span class="platform-tag" style="background:rgba(0,212,255,.12);color:var(--p1)">TWITTER/X</span>
+<div class="content">🚀 38 platforms. 80+ AI agents. 259 products. 664+ pages.
+
+All live. All connected. All built from Bauchi State, Nigeria.
+
+Harz Digital Services is Africa's most ambitious AI ecosystem.
+
+Fintech. Healthcare. Education. Cybersecurity. Media. IoT. Venture automation.
+
+This isn't a roadmap. This is what's live NOW.
+
+Explore: https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html
+
+#HarzEcosystem #AfricanTech #AI #BuildInPublic #NigeriaTech</div>
+<div class="copy-hint">Tap to copy →</div>
+</div>
+
+<div class="social-post" onclick="copyPost(this)">
+<span class="platform-tag" style="background:rgba(0,230,118,.12);color:var(--p3)">WHATSAPP STATUS</span>
+<div class="content">*HARZ DIGITAL SERVICES*
+
+38 platforms. 80+ AI agents. One ecosystem.
+
+From Bauchi to the world 🌍
+
+Payments. Healthcare. Education. Cybersecurity. Media. Construction. IoT.
+
+All live. All connected.
+
+Tap to explore:
+https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html</div>
+<div class="copy-hint">Tap to copy →</div>
+</div>
+
+<div class="social-post" onclick="copyPost(this)">
+<span class="platform-tag" style="background:rgba(124,77,255,.12);color:var(--p2)">LINKEDIN</span>
+<div class="content">I'm proud to announce that Harz Digital Services now operates 38 live AI-powered platforms — built entirely from Bauchi State, Nigeria.
+
+What started in 2014 as a construction business (HI Water/Block Industry, CAC RC 321424) has become Africa's most ambitious technology ecosystem:
+
+• 38 live platforms across fintech, healthcare, education, cybersecurity, media, IoT, and venture automation
+• 80+ AI agents powered by LLaMA 3.3 70B and GPT-4o
+• 259 digital products across 45 categories
+• 664+ web pages, 44+ GitHub repos, 16+ backend functions
+• 32 active automations running 24/7
+• GDEG token — our native Polygon payment token
+• A unified Super App connecting everything
+
+Every platform is:
+✅ Mobile-first (optimized for 2GB RAM phones)
+✅ Built for African payment systems
+✅ AI-native with autonomous agents
+✅ Connected via single sign-on
+
+We're not planning. We're shipping.
+
+Explore the ecosystem: https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html
+
+#HarzDigitalServices #AfricanTech #AI #BuildInPublic #NigeriaTech #Startups</div>
+<div class="copy-hint">Tap to copy →</div>
+</div>
+
+<div class="social-post" onclick="copyPost(this)">
+<span class="platform-tag" style="background:rgba(255,171,0,.12);color:var(--p4)">FACEBOOK</span>
+<div class="content">🚀 HARZ DIGITAL SERVICES — 38 PLATFORMS LIVE!
+
+From Bauchi State, Nigeria to the world.
+
+We've built Africa's most ambitious AI ecosystem:
+
+💳 Fintech — Payments, banking, forex, microloans, group savings
+🤖 AI — 80+ agents across 8 platforms
+🏥 Healthcare — 18 AI health agents + mental wellness
+🛡️ Cybersecurity — 37 security agents
+🎓 Education — 18 AI tutors + career guidance
+🎬 Media — Music, film, content automation
+🏗️ Construction — AI estimation + property platform
+🛒 E-Commerce — 259 products across marketplaces
+🏭 IoT — 20 devices across 4 locations
+📊 Business OS — CRM, ERP, HR, accounting
+🪪 Identity — SSO, KYC, verifiable credentials
+💾 Data Cloud — Storage, AI datasets, doc intelligence
+💡 Venture Studio — Turn ideas into businesses in 42 minutes
+
+All live. All connected. All mobile-first.
+
+Explore everything: https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html
+
+#HarzEcosystem #NigeriaTech #AfricanInnovation</div>
+<div class="copy-hint">Tap to copy →</div>
+</div>
+
+<div class="social-post" onclick="copyPost(this)">
+<span class="platform-tag" style="background:rgba(255,82,82,.12);color:var(--p5)">INSTAGRAM</span>
+<div class="content">38 platforms. 80+ AI agents. One ecosystem. 🌍
+
+Built from Bauchi State, Nigeria 🇳🇬
+
+This isn't a pitch deck. This is what's LIVE right now.
+
+From AI-powered banking to healthcare, cybersecurity, education, and venture automation — Harz Digital Services is building the future of African tech.
+
+Swipe up to explore the Super App 👆
+
+#HarzEcosystem #AfricanTech #AI #NigeriaTech #BuildInPublic #TechInAfrica #Innovation #StartupNigeria</div>
+<div class="copy-hint">Tap to copy →</div>
+</div>
+
+<div class="social-post" onclick="copyPost(this)">
+<span class="platform-tag" style="background:rgba(255,215,0,.12);color:var(--gold)">TELEGRAM BROADCAST</span>
+<div class="content">🌟 HARZ DIGITAL SERVICES — ECOSYSTEM LAUNCH 🌟
+
+38 platforms. 80+ AI agents. 259 products. All live.
+
+We've built Africa's most ambitious AI ecosystem from Bauchi State, Nigeria — and the world is invited to explore.
+
+What's live right now:
+✅ Fintech (HarzPay, Apex Bank, HarzFX, HarzLend, HarzAjo)
+✅ AI Cloud (20 agents, 3 revenue models)
+✅ Healthcare (18 AI agents + mental wellness)
+✅ Cybersecurity (37 agents)
+✅ Education (18 agents + career guidance)
+✅ Media (HarzMusic 27 tracks, HarzFilm 8 films)
+✅ Business OS (CRM, ERP, HR, Accounting)
+✅ IoT & Robotics (20 devices, 4 locations)
+✅ Global Identity (SSO, KYC, credentials, reputation)
+✅ Venture Studio (ideas → businesses in 42 min)
+
+Plus: GDEG token on Polygon, unified Super App, 32 automations running 24/7.
+
+🚀 Explore everything: https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html
+📊 Full dashboard: https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html</div>
+<div class="copy-hint">Tap to copy →</div>
+</div>
+
+<div class="social-post" onclick="copyPost(this)">
+<span class="platform-tag" style="background:rgba(0,212,255,.12);color:var(--p1)">REDDIT (r/Nigeria, r/Africa, r/programming)</span>
+<div class="content">I built 38 AI-powered platforms from Bauchi State, Nigeria. Here's what's live.
+
+I'm the founder of Harz Digital Services (CAC RC 321424, registered 2014). Over the past year, I've architected and deployed 38 live platforms with 80+ AI agents — all built mobile-first for the African market.
+
+What's live right now:
+
+**Fintech:** Digital bank, payments with native Polygon token (GDEG), forex, microloans, group savings (Ajo)
+**AI:** 20-agent cloud platform, autonomous AI agent (Maganu), 10-tool orchestrator (OMEGA Commander)
+**Healthcare:** 18 AI health agents, mental wellness platform with crisis detection
+**Cybersecurity:** 37 security agents with threat intelligence
+**Education:** 18 AI tutors, career guidance, live classes
+**Media:** Music distribution (27 tracks), film platform (8 films), content automation (25 agents)
+**Business:** CRM, ERP, HR, Accounting, IoT monitoring (20 devices), digital identity with KYC and blockchain credentials
+**Venture Studio:** Turn any idea into a business plan + code + marketing + deployment in ~42 minutes
+
+Tech stack: Vanilla HTML/CSS/JS (framework-free for 2GB RAM phones), Deno backends, Base44 entities, GitHub Pages + Vercel + Render, LLaMA 3.3 70B + GPT-4o for AI.
+
+Everything is connected via single sign-on. 32 automations run 24/7. 664+ pages. 44+ repos.
+
+No funding. No team. One founder + one AI agent (Magani on Base44).
+
+Super App: https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html
+
+AMA about building at scale from Nigeria with AI.</div>
+<div class="copy-hint">Tap to copy →</div>
+</div>
+</div>
+
+<!-- CTA BOTTOM -->
+<div class="cta-section" style="padding:40px 20px">
+<h2 style="margin-bottom:16px">Explore The Ecosystem</h2>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" class="cta-btn">📱 Super App</a>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html" class="cta-btn green">📊 Dashboard</a>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html" class="cta-btn gold">🧠 AI Cloud</a>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+<p><b>Harz Digital Services</b></p>
+<p>HI Water/Block Industry · CAC RC 321424 · TIN 24550860</p>
+<p>Bauchi State, Nigeria 🇳🇬</p>
+<p style="margin-top:8px">38 Platforms · 80+ AI Agents · 259 Products · 664+ Pages</p>
+<p style="margin-top:8px">hamzarabiu390@gmail.com · +234 802 868 7857</p>
+<p style="margin-top:12px">Built by one founder + one AI agent. Relentless execution.</p>
+</div>
+
+<script>
+function copyPost(el){
+const content=el.querySelector('.content');
+const text=content.innerText;
+navigator.clipboard.writeText(text).then(()=>{
+const hint=el.querySelector('.copy-hint');
+const orig=hint.textContent;
+hint.textContent='✓ Copied! Paste anywhere';
+hint.style.color='var(--p3)';
+setTimeout(()=>{hint.textContent=orig;hint.style.color='var(--muted)';},2000);
+}).catch(()=>{
+// Fallback
+const ta=document.createElement('textarea');
+ta.value=text;document.body.appendChild(ta);ta.select();
+document.execCommand('copy');document.body.removeChild(ta);
+const hint=el.querySelector('.copy-hint');
+hint.textContent='✓ Copied!';hint.style.color='var(--p3)';
+setTimeout(()=>{hint.textContent='Tap to copy →';hint.style.color='var(--muted)';},2000);
+});
+}
+</script>
+</body>
+</html>
