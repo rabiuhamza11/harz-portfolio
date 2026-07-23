@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notion Productivity OS — All-in-One Life Dashboard</title>
+<style>
+body{font-family:'Segoe UI',system-ui,sans-serif;max-width:900px;margin:0 auto;padding:40px;color:#333;background:#f9f9f9}
+h1{color:#1a1a1a;border-bottom:3px solid #007acc;padding-bottom:10px}
+h2{color:#007acc;margin-top:30px}
+h3{color:#444;margin-top:20px}
+.code-block{background:#1e1e1e;color:#d4d4d4;padding:20px;border-radius:8px;font-family:monospace;overflow-x:auto;white-space:pre-wrap}
+.template{background:#fff;border:1px solid #ddd;border-radius:8px;padding:20px;margin:15px 0;box-shadow:0 2px 4px rgba(0,0,0,0.05)}
+.nav{display:flex;gap:15px;flex-wrap:wrap;margin:20px 0}
+.nav a{text-decoration:none;color:#007acc;padding:8px 16px;border:1px solid #007acc;border-radius:4px}
+.section{background:#fff;padding:20px;border-radius:8px;margin:15px 0;border-left:4px solid #007acc}
+ul{padding-left:20px}
+li{margin:8px 0}
+</style>
+</head>
+<body>
+<h1>🚀 Notion Productivity OS — All-in-One Life Dashboard</h1>
+<p><strong>Version 2.0 | Updated July 2026 | By Harz Digital Services</strong></p>
+
+<div class="section">
+<h2>📋 What's Included</h2>
+<p>This comprehensive Notion template system transforms your workspace into a complete productivity command center. Import the JSON blocks below into your Notion workspace.</p>
+</div>
+
+<h2>🏠 Dashboard Layout</h2>
+<div class="code-block">
+{
+  "type": "page",
+  "title": "🏠 Life Dashboard",
+  "icon": "🏠",
+  "children": [
+    {
+      "type": "heading_1",
+      "text": "📅 Daily Command Center",
+      "children": [
+        {"type": "to_do", "text": "Morning Review (5 min)", "checked": false},
+        {"type": "to_do", "text": "Top 3 Priorities Today", "checked": false},
+        {"type": "to_do", "text": "Deep Work Block (2 hours)", "checked": false},
+        {"type": "to_do", "text": "Evening Reflection", "checked": false}
+      ]
+    },
+    {
+      "type": "heading_1",
+      "text": "🎯 Goals Tracker",
+      "children": [
+        {"type": "heading_3", "text": "Annual Goals 2026"},
+        {"type": "to_do", "text": "Revenue: $50K from digital products", "checked": false},
+        {"type": "to_do", "text": "Launch 5 new platforms", "checked": false},
+        {"type": "to_do", "text": "Build 1000-person community", "checked": false},
+        {"type": "to_do", "text": "Read 24 books", "checked": false},
+        {"type": "to_do", "text": "Get in best physical shape", "checked": false}
+      ]
+    },
+    {
+      "type": "heading_1",
+      "text": "💰 Finance Hub",
+      "children": [
+        {"type": "heading_3", "text": "Monthly Budget"},
+        {"type": "table", "rows": [
+          ["Category", "Budgeted", "Spent", "Remaining"],
+          ["Income", "", "", ""],
+          ["Business Expenses", "", "", ""],
+          ["Personal", "", "", ""],
+          ["Savings", "", "", ""],
+          ["Investments", "", "", ""]
+        ]}
+      ]
+    }
+  ]
+}
+</div>
+
+<h2>📐 Project Management Template</h2>
+<div class="code-block">
+{
+  "type": "database",
+  "title": "📊 Projects Database",
+  "properties": {
+    "Name": {"type": "title"},
+    "Status": {"type": "select", "options": ["Planning", "In Progress", "Review", "Complete", "On Hold"]},
+    "Priority": {"type": "select", "options": ["🔴 Critical", "🟡 High", "🟢 Medium", "⚪ Low"]},
+    "Deadline": {"type": "date"},
+    "Assignee": {"type": "text"},
+    "Progress": {"type": "number", "format": "percent"},
+    "Tags": {"type": "multi_select"},
+    "Notes": {"type": "text"}
+  },
+  "views": [
+    {"name": "📋 All Projects", "type": "table"},
+    {"name": "📅 Calendar", "type": "calendar", "date": "Deadline"},
+    {"name": "📊 Kanban", "type": "board", "group": "Status"},
+    {"name": "🔥 By Priority", "type": "board", "group": "Priority"}
+  ]
+}
+</div>
+
+<h2>📅 Weekly Planning System</h2>
+<div class="section">
+<h3>Monday Morning Review Template</h3>
+<ul>
+<li>Review last week's wins and losses</li>
+<li>Set 3 non-negotiable goals for the week</li>
+<li>Block calendar for deep work sessions</li>
+<li>Schedule one learning session</li>
+<li>Plan one social/family activity</li>
+<li>Review financial dashboard</li>
+<li>Declutter one area of workspace</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>Friday Evening Review Template</h3>
+<ul>
+<li>Score the week 1-10</li>
+<li>What went well? (3 things)</li>
+<li>What could be better? (2 things)</li>
+<li>What did I learn?</li>
+<li>Set top priority for next week</li>
+<li>Archive completed tasks</li>
+<li>Update goal progress</li>
+</ul>
+</div>
+
+<h2>📈 Habit Tracker</h2>
+<div class="code-block">
+{
+  "type": "database",
+  "title": "🔄 Habits",
+  "properties": {
+    "Habit": {"type": "title"},
+    "Frequency": {"type": "select", "options": ["Daily", "Weekly", "3x/week"]},
+    "Streak": {"type": "number"},
+    "Best Streak": {"type": "number"},
+    "Monday": {"type": "checkbox"},
+    "Tuesday": {"type": "checkbox"},
+    "Wednesday": {"type": "checkbox"},
+    "Thursday": {"type": "checkbox"},
+    "Friday": {"type": "checkbox"},
+    "Saturday": {"type": "checkbox"},
+    "Sunday": {"type": "checkbox"}
+  },
+  "sample_data": [
+    {"Habit": "Drink 2L water", "Frequency": "Daily"},
+    {"Habit": "30 min exercise", "Frequency": "Daily"},
+    {"Habit": "Read 20 pages", "Frequency": "Daily"},
+    {"Habit": "No phone first hour", "Frequency": "Daily"},
+    {"Habit": "Meditate 10 min", "Frequency": "Daily"},
+    {"Habit": "Journal", "Frequency": "Daily"}
+  ]
+}
+</div>
+
+<h2>📚 Knowledge Management System</h2>
+<div class="section">
+<h3>Book Notes Template</h3>
+<ul>
+<li>Book title and author</li>
+<li>Date read and rating (1-5)</li>
+<li>3 key takeaways</li>
+<li>Favorite quotes (with page numbers)</li>
+<li>How I'll apply this</li>
+<li>Who I should share this with</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>Course Learning Tracker</h3>
+<ul>
+<li>Course name and instructor</li>
+<li>Total duration and current progress</li>
+<li>Module-by-module notes</li>
+<li>Action items from each lesson</li>
+<li>Completion certificate saved</li>
+</ul>
+</div>
+
+<h2>🎯 OKR Framework</h2>
+<div class="code-block">
+{
+  "type": "template",
+  "title": "Quarterly OKRs",
+  "sections": [
+    {
+      "objective": "Grow digital product revenue to $15K",
+      "key_results": [
+        "Launch 30 new products across 5 platforms",
+        "Achieve 100 total sales",
+        "Build email list to 500 subscribers",
+        "Generate 10K monthly page views"
+      ]
+    },
+    {
+      "objective": "Build thought leadership in AI/tech",
+      "key_results": [
+        "Publish 12 blog posts",
+        "Create 50 social media posts",
+        "Speak at 2 events or podcasts",
+        "Grow LinkedIn to 2000 connections"
+      ]
+    }
+  ]
+}
+</div>
+
+<h2>💼 Business Dashboard</h2>
+<div class="section">
+<h3>Revenue Tracker</h3>
+<ul>
+<li>Monthly revenue goal vs actual</li>
+<li>Revenue by platform breakdown</li>
+<li>Top performing products</li>
+<li>Customer acquisition cost</li>
+<li>Profit margin calculator</li>
+</ul>
+</div>
+
+<h2>📤 How to Use This Template</h2>
+<ol>
+<li>Open Notion and create a new page</li>
+<li>Copy each JSON block and paste it into Notion</li>
+<li>Notion will auto-convert the JSON into blocks</li>
+<li>Customize properties, add your own data</li>
+<li>Share with team members if needed</li>
+<li>Bookmark the page as your daily start page</li>
+</ol>
+
+<div class="section">
+<p><strong>License:</strong> Personal use license. Not for resale.<br>
+<strong>Updates:</strong> Free lifetime updates included.<br>
+<strong>Support:</strong> harzco.business@gmail.com<br>
+<strong>Created by:</strong> Harz Digital Services</p>
+</div>
+
+<p style="text-align:center;color:#666;margin-top:40px;">© 2026 Harz Digital Services. All rights reserved.</p>
+</body>
+</html>
