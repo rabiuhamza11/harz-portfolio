@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Selar Quick Upload Helper — 259 Products Ready | Harz</title>
+<title>Selar Quick Upload Helper — 268 Products Ready | Harz</title>
 <meta name="description" content="Quick upload helper for Selar.co. All 259 products pre-loaded with copy-paste fields.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -48,7 +48,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="top-bar">
 <div>
 <h1>🛒 Selar Upload Helper</h1>
-<div class="count" id="count">Loading 259 products...</div>
+<div class="count" id="count">Loading 268 products...</div>
 <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
 </div>
 <a href="https://selar.co/dashboard/products" target="_blank" class="open-selar">Open Selar →</a>
@@ -105,7 +105,19 @@ try{
 const res=await fetch('https://superagent-2286fb2f.base44.app/functions/harzdmCatalog?action=products');
 const data=await res.json();
 if(data.ok&&data.products){
-allProducts=data.products;
+// Prepend engineering books so they show first
+const engBooks=[
+{name:'The Complete Engineering Collection - 8 Books in 1 (154 Pages)',price:'$89.99',category:'Ebook',description:'154-page professional engineering reference: 8 complete guides (Building, Civil, Software, Architecture, Electrical, Mechanical, Chemical, Electronic). SAVE $70. Instant PDF download.',image:'https://rabiuhamza11.github.io/harz-portfolio/gumroad-covers/14-engineering-collection-8in1.png',url:'https://rabiuhamza11.github.io/harz-portfolio/gumroad-products/Harz_Engineering_Collection_Complete.pdf'},
+{name:'Building Engineering: Comprehensive Guide',price:'$19.99',category:'Ebook',description:'24-page guide: structural systems, HVAC, plumbing, acoustics, building codes.',image:'',url:''},
+{name:'Civil Engineering: Comprehensive Guide',price:'$19.99',category:'Ebook',description:'20-page guide: structures, bridges, geotechnical, transportation, water resources.',image:'',url:''},
+{name:'Software Engineering Handbook',price:'$19.99',category:'Ebook',description:'33-page handbook: algorithms, system design, DevOps, security, databases.',image:'',url:''},
+{name:'Architectural Drawing: Complete Guide',price:'$19.99',category:'Ebook',description:'30-page guide: drafting, CAD, BIM, rendering, construction documents.',image:'',url:''},
+{name:'Electrical Engineering: Comprehensive Guide',price:'$14.99',category:'Ebook',description:'12-page guide: circuits, power systems, motors, control, renewable energy.',image:'',url:''},
+{name:'Mechanical Engineering: Comprehensive Guide',price:'$14.99',category:'Ebook',description:'12-page guide: thermodynamics, fluids, heat transfer, machine design.',image:'',url:''},
+{name:'Chemical Engineering: Comprehensive Guide',price:'$14.99',category:'Ebook',description:'11-page guide: reactions, separations, transport, safety, petroleum refining.',image:'',url:''},
+{name:'Electronic Engineering: Comprehensive Guide',price:'$14.99',category:'Ebook',description:'12-page guide: semiconductors, analog/digital, microcontrollers, IoT.',image:'',url:''}
+];
+allProducts=[...engBooks,...data.products];
 filtered=[...allProducts];
 document.getElementById('count').textContent=allProducts.length+' products loaded';
 updateSummary();
