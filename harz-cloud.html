@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz AI Cloud - Enterprise AI Agents</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0f;color:#e0e0e0}
+.hero{background:linear-gradient(135deg,#0a0a0f 0%,#1a0a2e 50%,#0a0a0f 100%);padding:60px 20px;text-align:center}
+.hero h1{font-size:2.2rem;background:linear-gradient(90deg,#FFD700,#4A9EFF,#FFD700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+.hero p{color:#888;font-size:1rem;max-width:600px;margin:0 auto 24px}
+.badge{display:inline-block;padding:4px 12px;background:#1a1a2e;border:1px solid #FFD700;border-radius:20px;font-size:.75rem;color:#FFD700;margin:4px}
+.stats{display:flex;justify-content:center;gap:32px;margin:24px 0;flex-wrap:wrap}
+.stat{text-align:center}
+.stat .num{font-size:1.8rem;font-weight:bold;color:#4A9EFF}
+.stat .label{font-size:.75rem;color:#666}
+.nav{display:flex;justify-content:center;gap:8px;padding:12px;flex-wrap:wrap;position:sticky;top:0;background:#0a0a0f;z-index:100;border-bottom:1px solid #1f2937}
+.nav a{padding:8px 16px;border-radius:8px;font-size:.85rem;color:#888;text-decoration:none;cursor:pointer;transition:.2s}
+.nav a:hover,.nav a.active{background:#1a1a2e;color:#FFD700}
+.section{max-width:900px;margin:0 auto;padding:32px 20px}
+.section h2{font-size:1.3rem;color:#FFD700;margin-bottom:16px}
+.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.plan{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:20px;text-align:center;transition:.3s}
+.plan:hover{border-color:#FFD700;transform:translateY(-4px)}
+.plan.featured{border-color:#FFD700;position:relative}
+.plan.featured::after{content:'POPULAR';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#FFD700;color:#0a0a0f;font-size:.65rem;padding:2px 10px;border-radius:10px;font-weight:bold}
+.plan h3{font-size:1rem;margin-bottom:8px;color:#fff}
+.plan .price{font-size:2rem;font-weight:bold;color:#4A9EFF;margin:8px 0}
+.plan .price small{font-size:.8rem;color:#666;font-weight:normal}
+.plan .cur{font-size:.85rem;color:#888;margin-bottom:12px}
+.plan ul{list-style:none;text-align:left;margin:12px 0}
+.plan ul li{font-size:.8rem;color:#aaa;padding:4px 0;padding-left:20px;position:relative}
+.plan ul li::before{content:'✓';position:absolute;left:0;color:#10b981}
+.plan button{padding:10px 20px;border:none;border-radius:8px;font-size:.85rem;cursor:pointer;width:100%;margin-top:8px}
+.plan button{background:#1a1a2e;color:#FFD700;border:1px solid #FFD700}
+.plan.featured button{background:#FFD700;color:#0a0a0f}
+.agent-card{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;transition:.2s}
+.agent-card:hover{border-color:#4A9EFF}
+.agent-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.agent-info{flex:1}
+.agent-info h3{font-size:.9rem;color:#fff;margin-bottom:4px}
+.agent-info p{font-size:.75rem;color:#888;margin-bottom:4px}
+.agent-tags{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0}
+.agent-tag{font-size:.65rem;padding:2px 8px;background:#1a1a2e;border-radius:10px;color:#666}
+.agent-price{text-align:right;flex-shrink:0}
+.agent-price .sub{font-size:.85rem;color:#10b981;font-weight:bold}
+.agent-price .wl{font-size:.7rem;color:#666}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:200;justify-content:center;align-items:center;padding:20px}
+.modal.show{display:flex}
+.modal-content{background:#111827;border:1px solid #1f2937;border-radius:16px;padding:24px;max-width:400px;width:100%}
+.modal-content h2{color:#FFD700;margin-bottom:16px;font-size:1.1rem}
+.modal-content input,.modal-content select{width:100%;padding:10px;margin:6px 0;background:#0a0a0f;border:1px solid #1f2937;border-radius:8px;color:#fff;font-size:.85rem}
+.modal-content button{padding:10px 20px;border:none;border-radius:8px;font-size:.85rem;cursor:pointer;width:100%;margin-top:8px}
+.btn-gold{background:#FFD700;color:#0a0a0f;font-weight:bold}
+.btn-dark{background:#1a1a2e;color:#888;border:1px solid #333}
+.api-key-display{background:#0a0a0f;border:1px solid #10b981;border-radius:8px;padding:12px;font-family:monospace;font-size:.85rem;color:#10b981;word-break:break-all;margin:12px 0;text-align:center}
+.chat-test{background:#0a0a0f;border:1px solid #1f2937;border-radius:12px;padding:16px;margin:16px 0}
+.chat-test input{width:100%;padding:10px;background:#111827;border:1px solid #1f2937;border-radius:8px;color:#fff;font-size:.85rem;margin:6px 0}
+.chat-test select{width:100%;padding:10px;background:#111827;border:1px solid #1f2937;border-radius:8px;color:#fff;font-size:.85rem;margin:6px 0}
+.chat-response{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:12px;font-size:.8rem;color:#aaa;margin:8px 0;min-height:40px;white-space:pre-wrap}
+.footer{text-align:center;padding:24px;color:#444;font-size:.75rem;border-top:1px solid #1f2937;margin-top:24px}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.filter-btn{padding:4px 12px;font-size:.75rem;border:1px solid #1f2937;border-radius:20px;background:#0a0a0f;color:#888;cursor:pointer}
+.filter-btn.active{background:#FFD700;color:#0a0a0f;border-color:#FFD700}
+@media(max-width:600px){.hero h1{font-size:1.5rem}.stats{gap:16px}.pricing{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<h1>Harz AI Cloud</h1>
+<p>Enterprise-grade AI agents for every business function. Subscribe, integrate via API, or white-label your own.</p>
+<div class="badge">20 AI Agents</div>
+<div class="badge">llama-3.3-70b</div>
+<div class="badge">99.9% Uptime</div>
+<div class="badge">Global Access</div>
+<div class="stats">
+<div class="stat"><div class="num">20</div><div class="label">AI Agents</div></div>
+<div class="stat"><div class="num">70B</div><div class="label">Param Model</div></div>
+<div class="stat"><div class="num">100</div><div class="label">Free Requests</div></div>
+<div class="stat"><div class="num">$19</div><div class="label">Starting Price</div></div>
+</div>
+</div>
+
+<div class="nav">
+<a class="active" onclick="show('home')">Home</a>
+<a onclick="show('agents')">Agents</a>
+<a onclick="show('pricing')">Pricing</a>
+<a onclick="show('api')">API Docs</a>
+<a onclick="show('test')">Try It</a>
+<a onclick="openSignup()">Get Started</a>
+</div>
+
+<div id="home" class="section">
+<h2>AI Agents for Every Business</h2>
+<p style="color:#888;font-size:.9rem;margin-bottom:16px">Harz AI Cloud provides 20 specialized AI agents powered by llama-3.3-70b. Each agent handles a specific business function — from marketing to cybersecurity to legal compliance.</p>
+
+<h2>How It Works</h2>
+<p style="color:#888;font-size:.85rem;margin-bottom:8px">1. Sign up and get your API key (free tier included)</p>
+<p style="color:#888;font-size:.85rem;margin-bottom:8px">2. Choose an agent from our marketplace</p>
+<p style="color:#888;font-size:.85rem;margin-bottom:8px">3. Integrate via simple REST API or use our dashboard</p>
+<p style="color:#888;font-size:.85rem;margin-bottom:8px">4. Pay monthly for subscriptions or one-time for white-label</p>
+</div>
+
+<div id="agents" class="section" style="display:none">
+<h2>AI Agent Marketplace</h2>
+<div class="filter-bar" id="filterBar"></div>
+<div id="agentList">Loading agents...</div>
+</div>
+
+<div id="pricing" class="section" style="display:none">
+<h2>Pricing Plans</h2>
+<div class="pricing">
+<div class="plan">
+<h3>Free</h3>
+<div class="price">$0</div>
+<div class="cur">forever</div>
+<ul><li>100 requests/month</li><li>1 agent</li><li>Community support</li><li>Basic API access</li></ul>
+<button onclick="openSignup('free')">Start Free</button>
+</div>
+<div class="plan featured">
+<h3>Starter</h3>
+<div class="price">$29<small>/mo</small></div>
+<div class="cur">or ₦15,000/mo</div>
+<ul><li>1,000 requests/month</li><li>3 agents</li><li>Email support</li><li>Full API access</li><li>Usage analytics</li></ul>
+<button onclick="openSignup('starter')">Choose Starter</button>
+</div>
+<div class="plan">
+<h3>Pro</h3>
+<div class="price">$99<small>/mo</small></div>
+<div class="cur">or ₦50,000/mo</div>
+<ul><li>10,000 requests/month</li><li>10 agents</li><li>Priority support</li><li>Custom agents</li><li>White-label option</li></ul>
+<button onclick="openSignup('pro')">Choose Pro</button>
+</div>
+<div class="plan">
+<h3>Enterprise</h3>
+<div class="price">$299<small>/mo</small></div>
+<div class="cur">or ₦150,000/mo</div>
+<ul><li>Unlimited requests</li><li>All 20 agents</li><li>24/7 support</li><li>Custom models</li><li>Full white-label</li><li>SLA guarantee</li></ul>
+<button onclick="openSignup('enterprise')">Contact Us</button>
+</div>
+</div>
+
+<h2 style="margin-top:32px">White-Label Pricing</h2>
+<p style="color:#888;font-size:.85rem">Buy any agent's code and branding kit outright. Host it on your own servers with your own brand.</p>
+<div class="pricing">
+<div class="plan"><h3>Starter Agents</h3><div class="price">$299</div><div class="cur">one-time</div><ul><li>Full source code</li><li>Branding kit</li><li>Setup guide</li></ul><button onclick="show('agents')">Browse Agents</button></div>
+<div class="plan"><h3>Pro Agents</h3><div class="price">$599</div><div class="cur">one-time</div><ul><li>Full source code</li><li>Branding kit</li><li>Custom training</li><li>30-day support</li></ul><button onclick="show('agents')">Browse Agents</button></div>
+<div class="plan"><h3>Premium Agents</h3><div class="price">$999</div><div class="cur">one-time</div><ul><li>Full source code</li><li>Branding kit</li><li>Custom training</li><li>90-day support</li><li>Priority updates</li></ul><button onclick="show('agents')">Browse Agents</button></div>
+</div>
+</div>
+
+<div id="api" class="section" style="display:none">
+<h2>API Documentation</h2>
+<p style="color:#888;font-size:.9rem;margin-bottom:16px">Simple REST API. Send a message, get an AI response.</p>
+
+<h3 style="color:#4A9EFF;font-size:.9rem;margin-bottom:8px">Base URL</h3>
+<div class="chat-response" style="color:#10b981">https://superagent-2286fb2f.base44.app/functions/harzCloud</div>
+
+<h3 style="color:#4A9EFF;font-size:.9rem;margin:12px 0 8px">Get API Key</h3>
+<div class="chat-response">POST ?action=key
+Body: { "email": "you@email.com", "name": "Your Name", "plan": "free" }</div>
+
+<h3 style="color:#4A9EFF;font-size:.9rem;margin:12px 0 8px">List Agents</h3>
+<div class="chat-response">GET ?action=agents</div>
+
+<h3 style="color:#4A9EFF;font-size:.9rem;margin:12px 0 8px">Chat with an Agent</h3>
+<div class="chat-response">POST ?action=chat
+Headers: X-API-Key: hzck_yourkey
+Body: { "message": "Your question", "agent": "Harz Marketing AI" }</div>
+
+<h3 style="color:#4A9EFF;font-size:.9rem;margin:12px 0 8px">Example Response</h3>
+<div class="chat-response">{
+  "ok": true,
+  "agent": "Harz Marketing AI",
+  "response": "Here are 3 marketing strategies...",
+  "usage": { "input_tokens": 45, "output_tokens": 320, "total_tokens": 365 },
+  "model": "llama-3.3-70b-versatile"
+}</div>
+</div>
+
+<div id="test" class="section" style="display:none">
+<h2>Try It Free</h2>
+<p style="color:#888;font-size:.85rem;margin-bottom:16px">Test any agent without signing up. Limited to basic responses.</p>
+<div class="chat-test">
+<select id="testAgent">
+<option>Harz Marketing AI</option>
+<option>Harz Sales AI</option>
+<option>Harz Finance AI</option>
+<option>Harz Content AI</option>
+<option>Harz Code AI</option>
+<option>Harz General AI</option>
+</select>
+<input id="testMessage" placeholder="Ask anything... e.g. 'Write a sales pitch for a fitness app'">
+<button class="btn-gold" onclick="testChat()" id="testBtn">Send</button>
+<div class="chat-response" id="testResponse">Response will appear here...</div>
+</div>
+</div>
+
+<div class="modal" id="signupModal">
+<div class="modal-content">
+<h2 id="modalTitle">Get Your API Key</h2>
+<input id="suName" placeholder="Full Name">
+<input id="suEmail" type="email" placeholder="Email Address">
+<input id="suCompany" placeholder="Company (optional)">
+<select id="suPlan">
+<option value="free">Free - $0/mo (100 requests)</option>
+<option value="starter">Starter - $29/mo (1,000 requests)</option>
+<option value="pro">Pro - $99/mo (10,000 requests)</option>
+<option value="enterprise">Enterprise - $299/mo (Unlimited)</option>
+</select>
+<button class="btn-gold" onclick="signup()">Generate API Key</button>
+<button class="btn-dark" onclick="closeModal()">Cancel</button>
+</div>
+</div>
+
+<div class="modal" id="keyModal">
+<div class="modal-content">
+<h2>Your API Key</h2>
+<p style="color:#888;font-size:.8rem;margin-bottom:8px">Save this key. You'll need it for all API requests.</p>
+<div class="api-key-display" id="keyDisplay"></div>
+<p style="color:#666;font-size:.75rem;margin-bottom:12px" id="planInfo"></p>
+<button class="btn-gold" onclick="closeModal();show('test')">Try It Now</button>
+<button class="btn-dark" onclick="closeModal()">Close</button>
+</div>
+</div>
+
+<div class="footer">
+Harz AI Cloud v1.0.0 | Powered by llama-3.3-70b | &copy; 2026 Harz Digital Services<br>
+RC: 321424 | TIN: 24550860 | Bauchi, Nigeria
+</div>
+
+<script>
+let allAgents=[];
+let currentFilter='all';
+
+async function loadAgents(){
+try{
+const res=await fetch('https://superagent-2286fb2f.base44.app/functions/harzCloud?action=agents');
+const data=await res.json();
+if(data.ok){allAgents=data.agents;renderAgents();renderFilters();}
+}catch(e){
+allAgents=[
+{name:'Harz Marketing AI',category:'Marketing',subscription_price:29,whitelabel_price:499,capabilities:['Content','SEO','Social'],description:'Marketing assistant'},
+{name:'Harz Sales AI',category:'Sales',subscription_price:29,whitelabel_price:499,capabilities:['Leads','Scripts','CRM'],description:'Sales intelligence'},
+{name:'Harz Finance AI',category:'Finance',subscription_price:39,whitelabel_price:599,capabilities:['Budget','Forecasting','Risk'],description:'Financial AI'},
+{name:'Harz Health AI',category:'Healthcare',subscription_price:49,whitelabel_price:799,capabilities:['Symptoms','Nutrition','Fitness'],description:'Health AI'},
+{name:'Harz Cyber AI',category:'Cybersecurity',subscription_price:49,whitelabel_price:799,capabilities:['Threats','Scanning','Response'],description:'Cybersecurity AI'},
+{name:'Harz Content AI',category:'Content',subscription_price:25,whitelabel_price:399,capabilities:['Blog','Video','SEO'],description:'Content creation AI'},
+{name:'Harz Edu AI',category:'Education',subscription_price:35,whitelabel_price:599,capabilities:['Courses','Grading','Tutoring'],description:'Education AI'},
+{name:'Harz Legal AI',category:'Legal',subscription_price:59,whitelabel_price:999,capabilities:['Documents','Contracts','Research'],description:'Legal AI'},
+{name:'Harz Code AI',category:'Development',subscription_price:39,whitelabel_price:599,capabilities:['CodeGen','Debug','Review'],description:'Developer AI'},
+{name:'Harz Real Estate AI',category:'Real Estate',subscription_price:35,whitelabel_price:599,capabilities:['Valuation','Analysis','Leads'],description:'Real estate AI'}
+];
+renderAgents();renderFilters();
+}
+}
+
+function renderFilters(){
+const cats=['all',...new Set(allAgents.map(a=>a.category))];
+const bar=document.getElementById('filterBar');
+bar.innerHTML=cats.map(c=>`<button class="filter-btn ${c===currentFilter?'active':''}" onclick="setFilter('${c}')">${c==='all'?'All':c}</button>`).join('');
+}
+
+function setFilter(cat){currentFilter=cat;renderFilters();renderAgents();}
+
+function renderAgents(){
+const filtered=currentFilter==='all'?allAgents:allAgents.filter(a=>a.category===currentFilter);
+const colors={'Marketing':'#FFD700','Sales':'#10b981','Finance':'#4A9EFF','Healthcare':'#ef4444','Cybersecurity':'#8b5cf6','Content':'#f59e0b','Education':'#06b6d4','Legal':'#6366f1','Development':'#10b981','Real Estate':'#ec4899'};
+document.getElementById('agentList').innerHTML=filtered.map(a=>{
+const c=colors[a.category]||'#666';
+return `<div class="agent-card">
+<div class="agent-icon" style="background:${c}22;border:1px solid ${c}44;color:${c}">${a.name.split(' ')[1][0]}</div>
+<div class="agent-info">
+<h3>${a.name}</h3>
+<p>${a.description}</p>
+<div class="agent-tags">${a.capabilities.map(t=>`<span class="agent-tag">${t}</span>`).join('')}</div>
+</div>
+<div class="agent-price">
+<div class="sub">$${a.subscription_price}/mo</div>
+<div class="wl">White-label: $${a.whitelabel_price}</div>
+</div>
+</div>`;
+}).join('');
+}
+
+function show(id){
+['home','agents','pricing','api','test'].forEach(s=>{document.getElementById(s).style.display=s===id?'block':'none'});
+document.querySelectorAll('.nav a').forEach(a=>{a.classList.remove('active')});
+event&&event.target&&event.target.classList.add('active');
+}
+
+function openSignup(plan){
+document.getElementById('signupModal').classList.add('show');
+if(plan)document.getElementById('suPlan').value=plan;
+}
+function closeModal(){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'))}
+
+async function signup(){
+const name=document.getElementById('suName').value.trim();
+const email=document.getElementById('suEmail').value.trim();
+const plan=document.getElementById('suPlan').value;
+if(!name||!email){alert('Please enter name and email');return;}
+try{
+const res=await fetch('https://superagent-2286fb2f.base44.app/functions/harzCloud?action=key',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,plan})});
+const data=await res.json();
+if(data.ok){
+document.getElementById('signupModal').classList.remove('show');
+document.getElementById('keyDisplay').textContent=data.api_key;
+document.getElementById('planInfo').textContent='Plan: '+plan+' | Save this key securely';
+document.getElementById('keyModal').classList.add('show');
+}
+}catch(e){alert('Error generating key. Try again.');}
+}
+
+async function testChat(){
+const msg=document.getElementById('testMessage').value.trim();
+const agent=document.getElementById('testAgent').value;
+if(!msg)return;
+document.getElementById('testResponse').textContent='Thinking...';
+document.getElementById('testBtn').disabled=true;
+try{
+const res=await fetch('https://superagent-2286fb2f.base44.app/functions/harzCloud?action=chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,agent:agent,api_key:'test_demo_key'})});
+const data=await res.json();
+if(data.ok){
+document.getElementById('testResponse').textContent=data.response;
+}else{
+document.getElementById('testResponse').textContent='Error: '+(data.error||'Unknown error')+'. Sign up for full access.';
+}
+}catch(e){
+document.getElementById('testResponse').textContent='Connection error. Try again.';
+}
+document.getElementById('testBtn').disabled=false;
+}
+
+loadAgents();
+</script>
+</body>
+</html>
