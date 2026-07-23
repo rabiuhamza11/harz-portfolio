@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#001529">
+<title>HARZ Robotics & IoT Platform — Smart Device & Automation OS</title>
+<meta name="description" content="Manage smart homes, factories, drones, sensors, robotics, and industrial automation. Real-time monitoring, device control, and AI-driven automation.">
+<style>
+:root{--p1:#00d4ff;--p2:#7c4dff;--p3:#00e676;--p4:#ffab00;--p5:#ff5252;--bg:#001529;--card:#002b4d;--card2:#003d6b;--text:#e0f7ff;--muted:#607d8b;--border:#014a7f;--accent:#00d4ff;--dark:#000a14}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--p1);border-radius:5px}
+
+.header{background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,77,255,.05));border-bottom:1px solid var(--border);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header h1{font-size:1rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.62rem;color:var(--muted);margin-top:2px}
+.badge-live{background:rgba(0,230,118,.12);color:var(--p3);padding:2px 8px;border-radius:10px;font-size:.58rem;font-weight:700}
+.badge-v{background:rgba(124,77,255,.15);color:var(--p2);padding:2px 8px;border-radius:10px;font-size:.58rem;font-weight:700}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:16px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-card.blue::before{background:var(--p1)}
+.kpi-card.green::before{background:var(--p3)}
+.kpi-card.purple::before{background:var(--p2)}
+.kpi-card.orange::before{background:var(--p4)}
+.kpi-card.red::before{background:var(--p5)}
+.kpi-label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.kpi-value{font-size:1.35rem;font-weight:800;margin:4px 0}
+.kpi-sub{font-size:.65rem;color:var(--muted)}
+.kpi-trend{font-size:.6rem;font-weight:600;display:inline-block;padding:1px 6px;border-radius:8px;margin-top:4px}
+.kpi-trend.up{background:rgba(0,230,118,.12);color:var(--p3)}
+.kpi-trend.down{background:rgba(255,82,82,.12);color:var(--p5)}
+.kpi-trend.warn{background:rgba(255,171,0,.12);color:var(--p4)}
+
+.module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px;margin-bottom:16px}
+.module-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .25s}
+.module-card:active{transform:scale(.95)}
+.module-card:hover{border-color:var(--p1);box-shadow:0 2px 12px rgba(0,212,255,.15)}
+.module-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 8px}
+.module-name{font-size:.65rem;font-weight:700;margin-bottom:2px}
+.module-desc{font-size:.52rem;color:var(--muted);line-height:1.3}
+.module-badge{position:absolute;top:6px;right:6px;background:rgba(124,77,255,.2);color:var(--p2);font-size:.48rem;font-weight:700;padding:1px 5px;border-radius:6px}
+
+.section{padding:0 16px;margin-bottom:20px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.section-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.section-link{font-size:.65rem;color:var(--accent);cursor:pointer}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.card:active{transform:scale(.98)}
+.card-row{display:flex;align-items:center;gap:10px}
+.card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-title{font-size:.75rem;font-weight:600}
+.card-desc{font-size:.62rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-meta{font-size:.68rem;font-weight:600;text-align:right;flex-shrink:0}
+
+.tbl{width:100%;border-collapse:collapse;font-size:.7rem}
+.tbl th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-size:.58rem;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--border)}
+.pill{display:inline-block;padding:1px 6px;border-radius:6px;font-size:.56rem;font-weight:600}
+.pill.green{background:rgba(0,230,118,.12);color:var(--p3)}
+.pill.blue{background:rgba(0,212,255,.12);color:var(--p1)}
+.pill.orange{background:rgba(255,171,0,.12);color:var(--p4)}
+.pill.red{background:rgba(255,82,82,.12);color:var(--p5)}
+.pill.purple{background:rgba(124,77,255,.12);color:var(--p2)}
+
+.page{display:none;animation:fadeIn .3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.page-head .back{font-size:1.2rem;cursor:pointer;color:var(--muted)}
+.page-head h2{font-size:.88rem;font-weight:700}
+
+/* Device card with toggle */
+.device-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px}
+.device-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.device-name{font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:6px}
+.device-status{font-size:.6rem;font-weight:600;padding:2px 8px;border-radius:8px}
+.device-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.device-metric{background:var(--bg);border-radius:8px;padding:8px;text-align:center}
+.device-metric .val{font-size:.85rem;font-weight:700}
+.device-metric .lbl{font-size:.52rem;color:var(--muted);text-transform:uppercase}
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--border);position:relative;cursor:pointer;transition:.3s;flex-shrink:0}
+.toggle.on{background:var(--p3)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.3s}
+.toggle.on::after{transform:translateX(20px)}
+
+/* Gauge */
+.gauge-wrap{display:flex;justify-content:center;align-items:center;gap:20px;flex-wrap:wrap}
+.gauge{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.gauge::after{content:'';width:60px;height:60px;border-radius:50%;background:var(--card);position:absolute}
+.gauge-center{position:relative;z-index:1;text-align:center}
+.gauge-center .num{font-size:.95rem;font-weight:800}
+.gauge-center .lbl{font-size:.5rem;color:var(--muted)}
+
+/* Bar */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bar-label{width:70px;font-size:.62rem;font-weight:600;flex-shrink:0}
+.bar-track{flex:1;height:20px;background:var(--dark);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:#fff;font-size:.52rem;font-weight:700;transition:width 1s}
+.bar-val{width:50px;font-size:.62rem;font-weight:700;text-align:right;flex-shrink:0}
+
+/* Map placeholder */
+.map-placeholder{background:var(--dark);border:1px solid var(--border);border-radius:14px;height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;margin-bottom:12px}
+.map-placeholder .icon{font-size:2rem}
+.map-placeholder .text{font-size:.68rem;color:var(--muted)}
+
+/* Live indicator */
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--p3);animation:pulse 2s infinite}
+@keyframes pulse{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+
+/* Alert */
+.alert-item{background:var(--card);border-left:3px solid;border-radius:8px;padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.alert-item.critical{border-color:var(--p5)}
+.alert-item.warning{border-color:var(--p4)}
+.alert-item.info{border-color:var(--p1)}
+.alert-icon{font-size:1.2rem}
+.alert-info{flex:1}
+.alert-title{font-size:.72rem;font-weight:600}
+.alert-desc{font-size:.6rem;color:var(--muted)}
+.alert-time{font-size:.55rem;color:var(--muted);text-align:right}
+
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:.62rem}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;max-width:600px;margin:0 auto}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;cursor:pointer;color:var(--muted);transition:color .2s}
+.nav-item.active{color:var(--p1)}
+.nav-icon{font-size:1.1rem}
+.nav-label{font-size:.52rem;font-weight:600}
+
+@media(max-width:640px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.module-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:641px){.kpi-grid{grid-template-columns:repeat(4,1fr)}.module-grid{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div><h1>HARZ Robotics & IoT</h1><div class="sub">Smart Device & Automation OS</div></div>
+<div style="display:flex;gap:6px;align-items:center"><span class="badge-v">v1.0</span><span class="badge-live"><span class="live-dot"></span> LIVE</span></div>
+</div>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+<div class="kpi-grid">
+<div class="kpi-card blue"><div class="kpi-label">Connected Devices</div><div class="kpi-value">247</div><div class="kpi-sub">218 online · 29 offline</div><span class="kpi-trend up">▲ 12</span></div>
+<div class="kpi-card green"><div class="kpi-label">Uptime</div><div class="kpi-value">99.2%</div><div class="kpi-sub">30-day average</div><span class="kpi-trend up">▲ 0.3%</span></div>
+<div class="kpi-card purple"><div class="kpi-label">Data Points/min</div><div class="kpi-value">8,420</div><div class="kpi-sub">Real-time telemetry</div><span class="kpi-trend up">▲ 340</span></div>
+<div class="kpi-card orange"><div class="kpi-label">Active Alerts</div><div class="kpi-value">7</div><div class="kpi-sub">2 critical · 5 warnings</div><span class="kpi-trend warn">⚠ Check</span></div>
+<div class="kpi-card blue"><div class="kpi-label">Energy Usage</div><div class="kpi-value">142 kW</div><div class="kpi-sub">Today · ₦18,420/hr</div><span class="kpi-trend down">▼ 8%</span></div>
+<div class="kpi-card green"><div class="kpi-label">Drones Active</div><div class="kpi-value">4/6</div><div class="kpi-sub">2 charging · 4 in flight</div><span class="kpi-trend up">▲ 2</span></div>
+<div class="kpi-card purple"><div class="kpi-label">Automation Rules</div><div class="kpi-value">89</div><div class="kpi-sub">84 active · 5 paused</div><span class="kpi-trend up">▲ 3</span></div>
+<div class="kpi-card red"><div class="kpi-label">Security Events</div><div class="kpi-value">3</div><div class="kpi-sub">2 resolved · 1 open</div><span class="kpi-trend down">▼ 2</span></div>
+</div>
+
+<div class="section"><div class="section-head"><span class="section-title">Platform Modules</span></div>
+<div class="module-grid">
+<div class="module-card" onclick="switchPage('smart-home')"><div class="module-icon" style="background:rgba(0,212,255,.12)">🏠</div><div class="module-name">Smart Home</div><div class="module-desc">Lights · AC · Security · Energy</div></div>
+<div class="module-card" onclick="switchPage('factory')"><div class="module-icon" style="background:rgba(255,171,0,.12)">🏭</div><div class="module-name">Factory</div><div class="module-desc">Machines · Lines · Maintenance</div></div>
+<div class="module-card" onclick="switchPage('drones')"><div class="module-icon" style="background:rgba(124,77,255,.12)">🚁</div><div class="module-name">Drones</div><div class="module-desc">Fleet · Flight · Payload</div></div>
+<div class="module-card" onclick="switchPage('sensors')"><div class="module-icon" style="background:rgba(0,230,118,.12)">📡</div><div class="module-name">Sensors</div><div class="module-desc">Temp · Humidity · Gas · Motion</div></div>
+<div class="module-card" onclick="switchPage('robotics')"><div class="module-icon" style="background:rgba(255,82,82,.12)">🤖</div><div class="module-name">Robotics</div><div class="module-desc">Arms · AGVs · Task Queue</div></div>
+<div class="module-card" onclick="switchPage('automation')"><div class="module-icon" style="background:rgba(0,212,255,.12)">⚙️</div><div class="module-name">Automation</div><div class="module-desc">Rules · Triggers · Scenes</div></div>
+<div class="module-card" onclick="switchPage('monitoring')"><div class="module-icon" style="background:rgba(0,230,118,.12)">📊</div><div class="module-name">Monitoring</div><div class="module-desc">Live Data · Analytics</div></div>
+<div class="module-card" onclick="switchPage('alerts')"><div class="module-icon" style="background:rgba(255,82,82,.12)">🚨</div><div class="module-name">Alerts</div><div class="module-desc">Critical · Warnings · Info</div></div>
+<div class="module-card" onclick="switchPage('protocols')"><div class="module-icon" style="background:rgba(124,77,255,.12)">🔌</div><div class="module-name">Protocols</div><div class="module-desc">MQTT · Zigbee · LoRaWAN</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">Active Alerts</span><span class="section-link" onclick="switchPage('alerts')">View all →</span></div>
+<div class="alert-item critical"><div class="alert-icon">🔴</div><div class="alert-info"><div class="alert-title">Factory Line 2: Motor overheat</div><div class="alert-desc">Temp 87°C · Threshold 80°C · Auto-shutdown triggered</div></div><div class="alert-time">2 min ago</div></div>
+<div class="alert-item warning"><div class="alert-icon">🟡</div><div class="alert-info"><div class="alert-title">Drone-03: Battery low</div><div class="alert-desc">18% remaining · Returning to base</div></div><div class="alert-time">5 min ago</div></div>
+<div class="alert-item warning"><div class="alert-icon">🟡</div><div class="alert-info"><div class="alert-title">Sensor Node-14: Signal weak</div><div class="alert-desc">RSSI -89dBm · Last reading 3 min ago</div></div><div class="alert-time">8 min ago</div></div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">Device Map</span></div>
+<div class="map-placeholder"><div class="icon">🗺️</div><div class="text">247 devices across 4 locations</div><div style="font-size:.58rem;color:var(--muted)">Jalingo HQ · Bauchi Plant · Gombe Hub · Abuja Site</div></div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Activity</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">Automation: Night mode activated</div><div class="card-desc">47 devices · Lights dimmed · AC adjusted · Doors locked</div></div><div class="card-meta" style="color:var(--p3)">DONE</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">🚁</div><div class="card-info"><div class="card-title">Drone-01: Inspection complete</div><div class="card-desc">Pipeline route · 12km surveyed · 84 photos</div></div><div class="card-meta" style="color:var(--p1)">Landed</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🤖</div><div class="card-info"><div class="card-title">Robot Arm-1: Task completed</div><div class="card-desc">Palletizing batch #847 · 120 units stacked</div></div><div class="card-meta" style="color:var(--p2)">DONE</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">📡</div><div class="card-info"><div class="card-title">Sensor: Temperature spike</div><div class="card-desc">Node-07 reading 42°C · Fan auto-activated</div></div><div class="card-meta" style="color:var(--p4)">RESOLVED</div></div></div>
+</div>
+</div>
+
+<!-- SMART HOME -->
+<div id="page-smart-home" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🏠 Smart Home Control</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Rooms</div><div class="kpi-value">8</div><div class="kpi-sub">47 connected devices</div></div>
+<div class="kpi-card green"><div class="kpi-label">Energy Today</div><div class="kpi-value">42 kW</div><div class="kpi-sub">₦5,460 · ▼ 8%</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Active Scenes</div><div class="kpi-value">6</div><div class="kpi-sub">Morning · Work · Night · Away</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Security</div><div class="kpi-value">Armed</div><div class="kpi-sub">4 cameras · 3 sensors active</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Living Room</span><span class="pill green">Active</span></div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">💡 Main Lights</div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div class="device-grid"><div class="device-metric"><div class="val">75%</div><div class="lbl">Brightness</div></div><div class="device-metric"><div class="val">Warm</div><div class="lbl">Color</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">❄️ AC Unit</div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div class="device-grid"><div class="device-metric"><div class="val">23°C</div><div class="lbl">Set Temp</div></div><div class="device-metric"><div class="val">Eco</div><div class="lbl">Mode</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">📺 Smart TV</div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div class="device-grid"><div class="device-metric"><div class="val">Netflix</div><div class="lbl">Source</div></div><div class="device-metric"><div class="val">45%</div><div class="lbl">Volume</div></div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Kitchen</span><span class="pill green">Active</span></div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">💡 Kitchen Lights</div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div class="device-grid"><div class="device-metric"><div class="val">100%</div><div class="lbl">Brightness</div></div><div class="device-metric"><div class="val">Cool</div><div class="lbl">Color</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🔥 Smart Stove</div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+<div class="device-grid"><div class="device-metric"><div class="val">Off</div><div class="lbl">Status</div></div><div class="device-metric"><div class="val">Safe</div><div class="lbl">Mode</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🧊 Refrigerator</div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div class="device-grid"><div class="device-metric"><div class="val">4°C</div><div class="lbl">Fridge</div></div><div class="device-metric"><div class="val">-18°C</div><div class="lbl">Freezer</div></div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Security Cameras</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📹</div><div class="card-info"><div class="card-title">Front Door Camera</div><div class="card-desc">1080p · Motion detected 2h ago</div></div><span class="pill green">Online</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📹</div><div class="card-info"><div class="card-title">Backyard Camera</div><div class="card-desc">1080p · Night vision active</div></div><span class="pill green">Online</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📹</div><div class="card-info"><div class="card-title">Garage Camera</div><div class="card-desc">720p · Door closed</div></div><span class="pill green">Online</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.1)">📹</div><div class="card-info"><div class="card-title">Side Gate Camera</div><div class="card-desc">4K · Offline since 2h ago</div></div><span class="pill red">Offline</span></div></div>
+</div>
+</div>
+
+<!-- FACTORY -->
+<div id="page-factory" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🏭 Factory Automation</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Production Lines</div><div class="kpi-value">4</div><div class="kpi-sub">3 running · 1 maintenance</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Output Today</div><div class="kpi-value">8,420</div><div class="kpi-sub">Units · Target 10,000</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Efficiency</div><div class="kpi-value">84.2%</div><div class="kpi-sub">OEE · ▼ 2% vs yesterday</div></div>
+<div class="kpi-card red"><div class="kpi-label">Downtime</div><div class="kpi-value">47 min</div><div class="kpi-sub">1 incident · Line 2</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Production Lines</span></div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">Line 1 — Block Making</div><span class="pill green">Running</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">2,840</div><div class="lbl">Units</div></div><div class="device-metric"><div class="val">94%</div><div class="lbl">Efficiency</div></div><div class="device-metric"><div class="val">38°C</div><div class="lbl">Motor Temp</div></div><div class="device-metric"><div class="val">12kW</div><div class="lbl">Power</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">Line 2 — Water Packaging</div><span class="pill red">Stopped</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">1,920</div><div class="lbl">Units</div></div><div class="device-metric"><div class="val">0%</div><div class="lbl">Efficiency</div></div><div class="device-metric"><div class="val">87°C</div><div class="lbl">Motor Temp</div></div><div class="device-metric"><div class="val">0kW</div><div class="lbl">Power</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">Line 3 — Mixing</div><span class="pill green">Running</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">2,100</div><div class="lbl">Batches</div></div><div class="device-metric"><div class="val">91%</div><div class="lbl">Efficiency</div></div><div class="device-metric"><div class="val">42°C</div><div class="lbl">Motor Temp</div></div><div class="device-metric"><div class="val">18kW</div><div class="lbl">Power</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">Line 4 — Curing</div><span class="pill orange">Maintenance</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">1,560</div><div class="lbl">Units</div></div><div class="device-metric"><div class="val">88%</div><div class="lbl">Efficiency</div></div><div class="device-metric"><div class="val">35°C</div><div class="lbl">Motor Temp</div></div><div class="device-metric"><div class="val">8kW</div><div class="lbl">Power</div></div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Machine Health</span></div>
+<table class="tbl"><thead><tr><th>Machine</th><th>Status</th><th>Temp</th><th>Vibration</th><th>Health</th></tr></thead><tbody>
+<tr><td>Hydraulic Press P1</td><td><span class="pill green">OK</span></td><td>42°C</td><td>0.8mm/s</td><td>96%</td></tr>
+<tr><td>Conveyor C2</td><td><span class="pill orange">Check</span></td><td>67°C</td><td>2.1mm/s</td><td>78%</td></tr>
+<tr><td>Mixer M3</td><td><span class="pill green">OK</span></td><td>38°C</td><td>0.5mm/s</td><td>99%</td></tr>
+<tr><td>Packaging P4</td><td><span class="pill red">Fault</span></td><td>87°C</td><td>3.4mm/s</td><td>42%</td></tr>
+<tr><td>Loader L5</td><td><span class="pill green">OK</span></td><td>44°C</td><td>1.1mm/s</td><td>94%</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Predictive Maintenance</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.1)">🔧</div><div class="card-info"><div class="card-title">Packaging P4 — Replace motor</div><div class="card-desc">Predicted failure: 3 days · Confidence 89%</div></div><div class="pill red">Urgent</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🔧</div><div class="card-info"><div class="card-title">Conveyor C2 — Bearing check</div><div class="card-desc">Predicted failure: 12 days · Vibration trending up</div></div><div class="pill orange">Soon</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">All other machines — Healthy</div><div class="card-desc">Next scheduled check: Aug 1, 2026</div></div><div class="pill green">OK</div></div></div>
+</div>
+</div>
+
+<!-- DRONES -->
+<div id="page-drones" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🚁 Drone Fleet</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Fleet Size</div><div class="kpi-value">6</div><div class="kpi-sub">4 in flight · 2 charging</div></div>
+<div class="kpi-card green"><div class="kpi-label">Flight Hours</div><div class="kpi-value">1,842</div><div class="kpi-sub">Total fleet hours</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Area Surveyed</div><div class="kpi-value">48 km²</div><div class="kpi-sub">This month</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Payload</div><div class="kpi-value">12 kg</div><div class="kpi-sub">Max per drone</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Active Drones</span></div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🚁 Drone-01 · Survey</div><span class="pill green">In Flight</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">87%</div><div class="lbl">Battery</div></div><div class="device-metric"><div class="val">142m</div><div class="lbl">Altitude</div></div><div class="device-metric"><div class="val">42 km/h</div><div class="lbl">Speed</div></div><div class="device-metric"><div class="val">GPS</div><div class="lbl">Lock</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🚁 Drone-02 · Delivery</div><span class="pill green">In Flight</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">64%</div><div class="lbl">Battery</div></div><div class="device-metric"><div class="val">85m</div><div class="lbl">Altitude</div></div><div class="device-metric"><div class="val">38 km/h</div><div class="lbl">Speed</div></div><div class="device-metric"><div class="val">3.2kg</div><div class="lbl">Payload</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🚁 Drone-03 · Patrol</div><span class="pill orange">Returning</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">18%</div><div class="lbl">Battery</div></div><div class="device-metric"><div class="val">120m</div><div class="lbl">Altitude</div></div><div class="device-metric"><div class="val">52 km/h</div><div class="lbl">Speed</div></div><div class="device-metric"><div class="val">Base</div><div class="lbl">Heading</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🚁 Drone-04 · Inspection</div><span class="pill green">In Flight</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">92%</div><div class="lbl">Battery</div></div><div class="device-metric"><div class="val">95m</div><div class="lbl">Altitude</div></div><div class="device-metric"><div class="val">35 km/h</div><div class="lbl">Speed</div></div><div class="device-metric"><div class="val">4K Cam</div><div class="lbl">Payload</div></div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Charging Bay</span></div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🚁 Drone-05</div><span class="pill blue">Charging</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">47%</div><div class="lbl">Battery</div></div><div class="device-metric"><div class="val">12 min</div><div class="lbl">ETA Full</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🚁 Drone-06</div><span class="pill blue">Charging</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">82%</div><div class="lbl">Battery</div></div><div class="device-metric"><div class="val">4 min</div><div class="lbl">ETA Full</div></div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Flights</span></div>
+<table class="tbl"><thead><tr><th>Drone</th><th>Mission</th><th>Duration</th><th>Distance</th><th>Status</th></tr></thead><tbody>
+<tr><td>Drone-01</td><td>Pipeline survey</td><td>42 min</td><td>12 km</td><td><span class="pill green">Done</span></td></tr>
+<tr><td>Drone-02</td><td>Parts delivery</td><td>18 min</td><td>4.2 km</td><td><span class="pill green">Done</span></td></tr>
+<tr><td>Drone-03</td><td>Perimeter patrol</td><td>35 min</td><td>8 km</td><td><span class="pill orange">Returning</span></td></tr>
+<tr><td>Drone-04</td><td>Roof inspection</td><td>22 min</td><td>2.1 km</td><td><span class="pill green">In Flight</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- SENSORS -->
+<div id="page-sensors" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📡 Sensor Network</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Total Nodes</div><div class="kpi-value">89</div><div class="kpi-sub">84 active · 5 offline</div></div>
+<div class="kpi-card green"><div class="kpi-label">Data Rate</div><div class="kpi-value">8,420</div><div class="kpi-sub">Readings/min</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Coverage</div><div class="kpi-value">96.4%</div><div class="kpi-sub">Across 4 sites</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Battery Avg</div><div class="kpi-value">78%</div><div class="kpi-sub">12 nodes below 30%</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Sensor Types</span></div>
+<div class="bar-row"><div class="bar-label">🌡️ Temp</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p5)">24</div></div><div class="bar-val">24</div></div>
+<div class="bar-row"><div class="bar-label">💧 Humidity</div><div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--p1)">18</div></div><div class="bar-val">18</div></div>
+<div class="bar-row"><div class="bar-label">🔥 Gas</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--p4)">12</div></div><div class="bar-val">12</div></div>
+<div class="bar-row"><div class="bar-label">👁️ Motion</div><div class="bar-track"><div class="bar-fill" style="width:42%;background:var(--p3)">10</div></div><div class="bar-val">10</div></div>
+<div class="bar-row"><div class="bar-label">📊 Pressure</div><div class="bar-track"><div class="bar-fill" style="width:33%;background:var(--p2)">8</div></div><div class="bar-val">8</div></div>
+<div class="bar-row"><div class="bar-label">⚡ Current</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--accent)">6</div></div><div class="bar-val">6</div></div>
+<div class="bar-row"><div class="bar-label">🌬️ Air Qual</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--p3)">4</div></div><div class="bar-val">4</div></div>
+<div class="bar-row"><div class="bar-label">🌊 Water</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--p1)">3</div></div><div class="bar-val">3</div></div>
+<div class="bar-row"><div class="bar-label">📳 Vibration</div><div class="bar-track"><div class="bar-fill" style="width:8%;background:var(--p2)">2</div></div><div class="bar-val">2</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Live Readings — Jalingo HQ</span></div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🌡️ Node-01 · Main Hall</div><span class="pill green">Online</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">28°C</div><div class="lbl">Temp</div></div><div class="device-metric"><div class="val">62%</div><div class="lbl">Humidity</div></div><div class="device-metric"><div class="val">98%</div><div class="lbl">Battery</div></div><div class="device-metric"><div class="val">-67</div><div class="lbl">RSSI</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🔥 Node-07 · Generator Room</div><span class="pill orange">Warning</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">42°C</div><div class="lbl">Temp</div></div><div class="device-metric"><div class="val">45%</div><div class="lbl">Humidity</div></div><div class="device-metric"><div class="val">12ppm</div><div class="lbl">CO Level</div></div><div class="device-metric"><div class="val">84%</div><div class="lbl">Battery</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">📊 Node-14 · Storage Bay</div><span class="pill red">Offline</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">--</div><div class="lbl">Temp</div></div><div class="device-metric"><div class="val">--</div><div class="lbl">Humidity</div></div><div class="device-metric"><div class="val">0%</div><div class="lbl">Battery</div></div><div class="device-metric"><div class="val">-89</div><div class="lbl">RSSI</div></div></div>
+</div>
+</div>
+</div>
+
+<!-- ROBOTICS -->
+<div id="page-robotics" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🤖 Robotics Control</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card purple"><div class="kpi-label">Robots</div><div class="kpi-value">8</div><div class="kpi-sub">6 active · 2 idle</div></div>
+<div class="kpi-card green"><div class="kpi-label">Tasks Today</div><div class="kpi-value">842</div><div class="kpi-sub">798 completed · 44 in queue</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Success Rate</div><div class="kpi-value">97.8%</div><div class="kpi-sub">18 failed today</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Utilization</div><div class="kpi-value">82%</div><div class="kpi-sub">Avg across fleet</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Robot Fleet</span></div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🦾 Arm-1 · Palletizer</div><span class="pill green">Active</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">120</div><div class="lbl">Units Stacked</div></div><div class="device-metric"><div class="val">94%</div><div class="lbl">Utilization</div></div><div class="device-metric"><div class="val">Batch 847</div><div class="lbl">Current Task</div></div><div class="device-metric"><div class="val">38°C</div><div class="lbl">Motor Temp</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🦾 Arm-2 · Welder</div><span class="pill green">Active</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">84</div><div class="lbl">Welds</div></div><div class="device-metric"><div class="val">88%</div><div class="lbl">Utilization</div></div><div class="device-metric"><div class="val">Frame 12</div><div class="lbl">Current Task</div></div><div class="device-metric"><div class="val">45°C</div><div class="lbl">Motor Temp</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🚗 AGV-1 · Transport</div><span class="pill green">Active</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">47</div><div class="lbl">Trips</div></div><div class="device-metric"><div class="val">76%</div><div class="lbl">Utilization</div></div><div class="device-metric"><div class="val">Zone B</div><div class="lbl">Location</div></div><div class="device-metric"><div class="val">82%</div><div class="lbl">Battery</div></div></div>
+</div>
+<div class="device-card">
+<div class="device-header"><div class="device-name">🚗 AGV-2 · Transport</div><span class="pill orange">Idle</span></div>
+<div class="device-grid"><div class="device-metric"><div class="val">38</div><div class="lbl">Trips</div></div><div class="device-metric"><div class="val">0%</div><div class="lbl">Utilization</div></div><div class="device-metric"><div class="val">Dock</div><div class="lbl">Location</div></div><div class="device-metric"><div class="val">100%</div><div class="lbl">Battery</div></div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Task Queue</span></div>
+<table class="tbl"><thead><tr><th>Task ID</th><th>Robot</th><th>Action</th><th>Priority</th><th>Status</th></tr></thead><tbody>
+<tr><td>T-0847</td><td>Arm-1</td><td>Palletize 200 units</td><td><span class="pill green">Normal</span></td><td><span class="pill blue">In Progress</span></td></tr>
+<tr><td>T-0848</td><td>Arm-2</td><td>Weld frame #13</td><td><span class="pill green">Normal</span></td><td><span class="pill blue">In Progress</span></td></tr>
+<tr><td>T-0849</td><td>AGV-1</td><td>Move pallet to Zone C</td><td><span class="pill orange">High</span></td><td><span class="pill blue">In Progress</span></td></tr>
+<tr><td>T-0850</td><td>Arm-1</td><td>Palletize 150 units</td><td><span class="pill green">Normal</span></td><td><span class="pill purple">Queued</span></td></tr>
+<tr><td>T-0851</td><td>AGV-2</td><td>Charge station pickup</td><td><span class="pill green">Normal</span></td><td><span class="pill purple">Queued</span></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Safety Zones</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">🟢</div><div class="card-info"><div class="card-title">Zone A — Safe</div><div class="card-desc">No humans detected · Robots operating normally</div></div><span class="pill green">Clear</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🟡</div><div class="card-info"><div class="card-title">Zone B — Caution</div><div class="card-desc">1 human detected · AGV speed reduced to 30%</div></div><span class="pill orange">Caution</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.1)">🔴</div><div class="card-info"><div class="card-title">Zone C — Restricted</div><div class="card-desc">Maintenance in progress · All robots paused</div></div><span class="pill red">Locked</span></div></div>
+</div>
+</div>
+
+<!-- AUTOMATION -->
+<div id="page-automation" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>⚙️ Automation Engine</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Active Rules</div><div class="kpi-value">84</div><div class="kpi-sub">5 paused · 89 total</div></div>
+<div class="kpi-card green"><div class="kpi-label">Executions Today</div><div class="kpi-value">3,420</div><div class="kpi-sub">2,847 successful</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Scenes</div><div class="kpi-value">12</div><div class="kpi-sub">6 active · 6 scheduled</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Avg Response</div><div class="kpi-value">0.4s</div><div class="kpi-sub">Trigger → Action</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Active Rules</span></div>
+<table class="tbl"><thead><tr><th>Rule</th><th>Trigger</th><th>Action</th><th>Runs</th><th>Status</th></tr></thead><tbody>
+<tr><td>Night Mode</td><td>Sunset + 30min</td><td>Dim lights · Lock doors · AC eco</td><td>1</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Morning Routine</td><td>6:00 AM</td><td>Lights on · AC 24°C · Coffee start</td><td>1</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Overheat Protection</td><td>Temp > 80°C</td><td>Shutdown machine · Alert team</td><td>1</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Low Battery Drone</td><td>Battery < 20%</td><td>Return to base · Log flight</td><td>1</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Energy Save</td><td>kWh > 150/day</td><td>Dim non-critical · Alert</td><td>0</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Gas Detection</td><td>CO > 50ppm</td><td>Alarm · Ventilate · Notify</td><td>0</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Intrusion Alert</td><td>Motion + No schedule</td><td>Camera record · Siren · Call</td><td>0</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Auto-Quality Check</td><td>Every 100 units</td><td>Robot scan · Log defects</td><td>84</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Water Leak</td><td>Water sensor wet</td><td>Shut valve · Alert · Log</td><td>0</td><td><span class="pill orange">Paused</span></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Scenes</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">🌅</div><div class="card-info"><div class="card-title">Morning Routine</div><div class="card-desc">6:00 AM daily · 8 devices · 3 actions</div></div><span class="pill green">Scheduled</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">💼</div><div class="card-info"><div class="card-title">Work Mode</div><div class="card-desc">Manual trigger · 12 devices · 5 actions</div></div><span class="pill blue">On Demand</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">🌙</div><div class="card-info"><div class="card-title">Night Mode</div><div class="card-desc">Sunset + 30 · 47 devices · 8 actions</div></div><span class="pill green">Scheduled</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🚪</div><div class="card-info"><div class="card-title">Away Mode</div><div class="card-desc">No motion 2h · 52 devices · 12 actions</div></div><span class="pill green">Auto</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.1)">🚨</div><div class="card-info"><div class="card-title">Emergency Mode</div><div class="card-desc">Critical alert · 67 devices · 18 actions</div></div><span class="pill red">Armed</span></div></div>
+</div>
+</div>
+
+<!-- MONITORING -->
+<div id="page-monitoring" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📊 Live Monitoring</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Data Points/min</div><div class="kpi-value">8,420</div><div class="kpi-sub"><span class="live-dot"></span> Real-time</div></div>
+<div class="kpi-card green"><div class="kpi-label">Uptime (30d)</div><div class="kpi-value">99.2%</div><div class="kpi-sub">4.3 hrs downtime</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Storage Used</div><div class="kpi-value">142 GB</div><div class="kpi-sub">of 500 GB · 28%</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Bandwidth</div><div class="kpi-value">24 Mbps</div><div class="kpi-sub">Ingest rate</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Energy Consumption — Last 12h</span></div>
+<div class="bar-row"><div class="bar-label">10 PM</div><div class="bar-track"><div class="bar-fill" style="width:35%;background:var(--p1)">42kW</div></div><div class="bar-val">42kW</div></div>
+<div class="bar-row"><div class="bar-label">12 AM</div><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--p1)">34kW</div></div><div class="bar-val">34kW</div></div>
+<div class="bar-row"><div class="bar-label">2 AM</div><div class="bar-track"><div class="bar-fill" style="width:22%;background:var(--p1)">28kW</div></div><div class="bar-val">28kW</div></div>
+<div class="bar-row"><div class="bar-label">4 AM</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--p1)">30kW</div></div><div class="bar-val">30kW</div></div>
+<div class="bar-row"><div class="bar-label">6 AM</div><div class="bar-track"><div class="bar-fill" style="width:48%;background:var(--p4)">58kW</div></div><div class="bar-val">58kW</div></div>
+<div class="bar-row"><div class="bar-label">8 AM</div><div class="bar-track"><div class="bar-fill" style="width:78%;background:var(--p4)">94kW</div></div><div class="bar-val">94kW</div></div>
+<div class="bar-row"><div class="bar-label">10 AM</div><div class="bar-track"><div class="bar-fill" style="width:92%;background:var(--p5)">110kW</div></div><div class="bar-val">110kW</div></div>
+<div class="bar-row"><div class="bar-label">12 PM</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p5)">120kW</div></div><div class="bar-val">120kW</div></div>
+<div class="bar-row"><div class="bar-label">2 PM</div><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--p5)">114kW</div></div><div class="bar-val">114kW</div></div>
+<div class="bar-row"><div class="bar-label">4 PM</div><div class="bar-track"><div class="bar-fill" style="width:88%;background:var(--p4)">106kW</div></div><div class="bar-val">106kW</div></div>
+<div class="bar-row"><div class="bar-label">6 PM</div><div class="bar-track"><div class="bar-fill" style="width:82%;background:var(--p4)">98kW</div></div><div class="bar-val">98kW</div></div>
+<div class="bar-row"><div class="bar-label">8 PM</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--p1)">86kW</div></div><div class="bar-val">86kW</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Device Distribution</span></div>
+<div class="gauge-wrap">
+<div class="gauge" style="background:conic-gradient(var(--p1) 0% 40%,var(--p3) 40% 65%,var(--p4) 65% 85%,var(--p2) 85% 100%)"><div class="gauge-center"><div class="num">247</div><div class="lbl">Devices</div></div></div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-size:.62rem;display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:var(--p1);display:inline-block"></span> Sensors (40%) 99</div>
+<div style="font-size:.62rem;display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:var(--p3);display:inline-block"></span> Smart Home (25%) 62</div>
+<div style="font-size:.62rem;display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:var(--p4);display:inline-block"></span> Factory (20%) 49</div>
+<div style="font-size:.62rem;display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:var(--p2);display:inline-block"></span> Drones+Robots (15%) 37</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ALERTS -->
+<div id="page-alerts" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🚨 Alerts & Events</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card red"><div class="kpi-label">Critical</div><div class="kpi-value">2</div><div class="kpi-sub">Requires immediate action</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Warnings</div><div class="kpi-value">5</div><div class="kpi-sub">Monitor closely</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Info</div><div class="kpi-value">14</div><div class="kpi-sub">Logged events</div></div>
+<div class="kpi-card green"><div class="kpi-label">Resolved Today</div><div class="kpi-value">23</div><div class="kpi-sub">Auto-resolved: 18</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Critical Alerts</span></div>
+<div class="alert-item critical"><div class="alert-icon">🔴</div><div class="alert-info"><div class="alert-title">Factory Line 2: Motor overheat</div><div class="alert-desc">Packaging P4 motor temp 87°C · Threshold 80°C · Auto-shutdown triggered · Maintenance dispatched</div></div><div class="alert-time">2 min ago</div></div>
+<div class="alert-item critical"><div class="alert-icon">🔴</div><div class="alert-info"><div class="alert-title">Side Gate Camera: Offline</div><div class="alert-desc">No signal for 2h 14min · Possible tampering · Security team notified</div></div><div class="alert-time">14 min ago</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Warnings</span></div>
+<div class="alert-item warning"><div class="alert-icon">🟡</div><div class="alert-info"><div class="alert-title">Drone-03: Battery low (18%)</div><div class="alert-desc">Returning to base · ETA 4 min</div></div><div class="alert-time">5 min ago</div></div>
+<div class="alert-item warning"><div class="alert-icon">🟡</div><div class="alert-info"><div class="alert-title">Sensor Node-14: Signal weak</div><div class="alert-desc">RSSI -89dBm · Last reading 3 min ago · Possible relocation needed</div></div><div class="alert-time">8 min ago</div></div>
+<div class="alert-item warning"><div class="alert-icon">🟡</div><div class="alert-info"><div class="alert-title">Conveyor C2: Vibration increasing</div><div class="alert-desc">2.1mm/s · Predictive maintenance scheduled</div></div><div class="alert-time">15 min ago</div></div>
+<div class="alert-item warning"><div class="alert-icon">🟡</div><div class="alert-info"><div class="alert-title">Energy: Above daily target</div><div class="alert-desc">142kW at 8PM · Target 130kW · Eco mode considered</div></div><div class="alert-time">22 min ago</div></div>
+<div class="alert-item warning"><div class="alert-icon">🟡</div><div class="alert-info"><div class="alert-title">Generator Room: CO elevated</div><div class="alert-desc">12ppm · Safe threshold 50ppm · Ventilation active</div></div><div class="alert-time">35 min ago</div></div>
+</div>
+</div>
+
+<!-- PROTOCOLS -->
+<div id="page-protocols" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🔌 Protocol & Connectivity</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Protocols</div><div class="kpi-value">7</div><div class="kpi-sub">MQTT · Zigbee · LoRaWAN · +4</div></div>
+<div class="kpi-card green"><div class="kpi-label">Gateways</div><div class="kpi-value">6</div><div class="kpi-sub">All online</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Edge Nodes</div><div class="kpi-value">12</div><div class="kpi-sub">Edge AI processing</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Avg Latency</div><div class="kpi-value">42ms</div><div class="kpi-sub">Device → Cloud</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Active Protocols</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">📡</div><div class="card-info"><div class="card-title">MQTT</div><div class="card-desc">142 devices · Port 1883/8883 · QoS 1</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📡</div><div class="card-info"><div class="card-title">Zigbee 3.0</div><div class="card-desc">47 devices · Coordinator on CH 15</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">📡</div><div class="card-info"><div class="card-title">LoRaWAN</div><div class="card-desc">28 devices · 868MHz · Spread Factor 7</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">📡</div><div class="card-info"><div class="card-title">Z-Wave</div><div class="card-desc">12 devices · 908MHz · Mesh network</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.1)">📡</div><div class="card-info"><div class="card-title">Modbus TCP</div><div class="card-desc">8 devices · Factory PLCs · Port 502</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">📡</div><div class="card-info"><div class="card-title">OPC-UA</div><div class="card-desc">6 devices · Industrial machines · Encrypted</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📡</div><div class="card-info"><div class="card-title">BLE Mesh</div><div class="card-desc">4 devices · Beacons · 2.4GHz</div></div><span class="pill orange">Limited</span></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Edge AI Nodes</span></div>
+<table class="tbl"><thead><tr><th>Node</th><th>Location</th><th>Model</th><th>Inference</th><th>Status</th></tr></thead><tbody>
+<tr><td>Edge-01</td><td>Jalingo HQ</td><td>Raspberry Pi 5</td><td>12 ms</td><td><span class="pill green">Online</span></td></tr>
+<tr><td>Edge-02</td><td>Bauchi Plant</td><td>Jetson Nano</td><td>8 ms</td><td><span class="pill green">Online</span></td></tr>
+<tr><td>Edge-03</td><td>Gombe Hub</td><td>Raspberry Pi 5</td><td>14 ms</td><td><span class="pill green">Online</span></td></tr>
+<tr><td>Edge-04</td><td>Abuja Site</td><td>Jetson Orin</td><td>5 ms</td><td><span class="pill green">Online</span></td></tr>
+<tr><td>Edge-05</td><td>Factory Floor</td><td>Industrial PC</td><td>3 ms</td><td><span class="pill green">Online</span></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Network Topology</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">🌐</div><div class="card-info"><div class="card-title">Cloud Gateway</div><div class="card-desc">AWS IoT Core · 247 things registered</div></div><span class="pill green">Connected</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">🔀</div><div class="card-info"><div class="card-title">Message Broker</div><div class="card-desc">Mosquitto · 8,420 msgs/min · QoS 1</div></div><span class="pill green">Running</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">💾</div><div class="card-info"><div class="card-title">Time Series DB</div><div class="card-desc">InfluxDB · 142 GB · 30-day retention</div></div><span class="pill green">Running</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🔄</div><div class="card-info"><div class="card-title">Data Pipeline</div><div class="card-desc">Kafka · 3 brokers · 24 partitions</div></div><span class="pill green">Running</span></div></div>
+</div>
+</div>
+
+<div class="footer">HARZ Robotics & IoT v1.0 · Platform #35 in the Harz Ecosystem<br>247 devices · 9 modules · 7 protocols · 6 locations · Built by Harz Digital Services</div>
+
+<script>
+function switchPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const p=document.getElementById('page-'+n);if(p)p.classList.add('active');window.scrollTo(0,0)}
+</script>
+</body>
+</html>
