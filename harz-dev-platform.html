@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Developer Platform — SDKs, APIs & CLI</title>
+<meta name="description" content="Official Harz Developer Platform — APIs, JavaScript SDK, CLI tools, code generators, and plugin marketplace for the Harz ecosystem.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#13131a;--card2:#1a1a24;--border:#2a2a3a;--text:#e0e0e8;--text2:#8888a0;--accent:#6366f1;--accent2:#818cf8;--green:#00ff8c;--orange:#ff9900;--red:#ff4466;--cyan:#00d4ff;--purple:#a855f7}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;overflow-x:hidden}
+.container{max-width:1200px;margin:0 auto;padding:16px}
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100}
+.logo{display:flex;align-items:center;gap:8px;cursor:pointer}
+.logo-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#a855f7);display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#fff}
+.logo-text{font-size:20px;font-weight:bold;color:var(--accent2)}
+.logo-sub{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+.header-right{display:flex;align-items:center;gap:12px}
+.badge{padding:4px 10px;border-radius:12px;background:rgba(0,255,140,0.15);color:var(--green);font-size:11px;font-weight:600}
+.version{padding:4px 10px;border-radius:12px;background:rgba(99,102,241,0.15);color:var(--accent2);font-size:11px}
+.tabs{display:flex;gap:4px;margin:16px 0;overflow-x:auto;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.tab{padding:10px 16px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--text2);font-size:14px;font-weight:500;white-space:nowrap;transition:all 0.2s;border-bottom:2px solid transparent}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:var(--accent2);border-bottom-color:var(--accent)}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.card-title{font-size:18px;font-weight:bold;margin-bottom:8px}
+.card-desc{color:var(--text2);font-size:14px;margin-bottom:16px;line-height:1.5}
+.api-item{background:var(--card2);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.api-header{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.2s}
+.api-header:hover{background:rgba(99,102,241,0.05)}
+.api-method{padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;font-family:monospace}
+.method-get{background:rgba(0,212,255,0.2);color:var(--cyan)}
+.method-post{background:rgba(0,255,140,0.2);color:var(--green)}
+.method-put{background:rgba(255,153,0,0.2);color:var(--orange)}
+.method-delete{background:rgba(255,68,102,0.2);color:var(--red)}
+.api-path{font-family:monospace;font-size:13px;color:var(--text);margin-left:8px;flex:1;overflow-x:auto;white-space:nowrap}
+.api-toggle{color:var(--text2);font-size:12px}
+.api-body{display:none;padding:16px;border-top:1px solid var(--border)}
+.api-body.open{display:block}
+.api-section{margin-bottom:12px}
+.api-label{font-size:11px;text-transform:uppercase;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px}
+.api-code{background:#0d0d14;border:1px solid var(--border);border-radius:6px;padding:12px;font-family:'Courier New',monospace;font-size:12px;overflow-x:auto;white-space:pre;color:var(--text);line-height:1.6}
+.param-row{display:flex;gap:12px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.param-name{font-family:monospace;color:var(--cyan);min-width:120px}
+.param-type{color:var(--text2);min-width:80px;font-size:12px}
+.param-desc{color:var(--text);flex:1}
+.param-req{color:var(--red);font-size:10px}
+.sdk-block{background:var(--card2);border:1px solid var(--border);border-radius:8px;margin-bottom:16px;overflow:hidden}
+.sdk-header{padding:14px 16px;font-weight:bold;border-bottom:1px solid var(--border)}
+.sdk-content{padding:16px}
+.sdk-code{background:#0d0d14;border:1px solid var(--border);border-radius:6px;padding:14px;font-family:'Courier New',monospace;font-size:12px;overflow-x:auto;white-space:pre;color:var(--text);line-height:1.6}
+.copy-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;float:right;margin-top:8px}
+.copy-btn:hover{background:var(--accent2)}
+.console-wrap{background:#0d0d14;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.console-header{padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.console-title{font-size:13px;color:var(--text2);font-family:monospace}
+.console-body{padding:16px;min-height:300px;font-family:monospace;font-size:12px;line-height:1.6;max-height:400px;overflow-y:auto}
+.console-line{color:var(--text);margin-bottom:4px}
+.console-line.prompt{color:var(--green)}
+.console-line.error{color:var(--red)}
+.console-line.info{color:var(--cyan)}
+.console-line.success{color:var(--green)}
+.console-input-row{display:flex;align-items:center;gap:8px;padding:8px 16px;border-top:1px solid var(--border)}
+.console-prompt{color:var(--green);font-family:monospace}
+.console-input{flex:1;background:transparent;border:none;color:var(--text);font-family:monospace;font-size:13px;outline:none}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:768px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.stat{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+.stat-num{font-size:24px;font-weight:bold;color:var(--accent2)}
+.stat-label{font-size:12px;color:var(--text2);margin-top:4px}
+.plugin-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.plugin-icon{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.plugin-info{flex:1}
+.plugin-name{font-weight:bold;font-size:14px}
+.plugin-desc{font-size:12px;color:var(--text2);margin-top:2px}
+.plugin-meta{font-size:11px;color:var(--text2);margin-top:4px}
+.plugin-btn{padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid var(--accent);color:var(--accent2);background:transparent;white-space:nowrap}
+.plugin-btn:hover{background:var(--accent);color:#fff}
+.gen-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.gen-select{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:6px;font-size:13px}
+.gen-label{font-size:12px;color:var(--text2);margin-bottom:4px}
+.gen-input{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:6px;font-size:13px;width:100%}
+.quick-links{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.quick-link{padding:8px 14px;background:var(--card2);border:1px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;color:var(--text);text-decoration:none;transition:all 0.2s}
+.quick-link:hover{border-color:var(--accent);color:var(--accent2)}
+.toast{position:fixed;bottom:80px;right:16px;background:var(--accent);color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;z-index:200;opacity:0;transform:translateY(20px);transition:all 0.3s}
+.toast.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="logo">
+<div class="logo-icon">H</div>
+<div>
+<div class="logo-text">HARZ</div>
+<div class="logo-sub">Developer Platform</div>
+</div>
+</div>
+<div class="header-right">
+<span class="badge">* LIVE</span>
+<span class="version">v1.0</span>
+</div>
+</div>
+
+<div class="grid-3" style="margin:16px 0">
+<div class="stat"><div class="stat-num">16+</div><div class="stat-label">API Endpoints</div></div>
+<div class="stat"><div class="stat-num">20</div><div class="stat-label">AI Agents</div></div>
+<div class="stat"><div class="stat-num">259</div><div class="stat-label">Products</div></div>
+</div>
+
+<div class="quick-links">
+<a class="quick-link" href="https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html">AI Cloud Dashboard</a>
+<a class="quick-link" href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html">Super App</a>
+<a class="quick-link" href="https://github.com/rabiuhamza11/harz-portfolio">GitHub Repo</a>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="showPanel('docs',this)">API Reference</div>
+<div class="tab" onclick="showPanel('sdk',this)">JavaScript SDK</div>
+<div class="tab" onclick="showPanel('console',this)">API Console</div>
+<div class="tab" onclick="showPanel('codegen',this)">Code Generator</div>
+<div class="tab" onclick="showPanel('plugins',this)">Plugin Marketplace</div>
+</div>
+
+<div class="panel active" id="panel-docs">
+<div class="card">
+<div class="card-title">Harz API Reference</div>
+<div class="card-desc">Complete REST API docs for all Harz backend functions. Base URL: <code style="color:var(--cyan)">https://superagent-2286fb2f.base44.app/functions</code></div>
+
+<div class="api-item">
+<div class="api-header" onclick="toggleApi(this)">
+<span class="api-method method-post">POST</span>
+<span class="api-path">/harzCloud -- AI Agent Chat</span>
+<span class="api-toggle">v</span>
+</div>
+<div class="api-body">
+<div class="api-section">
+<div class="api-label">Description</div>
+<div style="color:var(--text2);font-size:13px">Send messages to any of 20 AI agents powered by llama-3.3-70b. Returns AI responses with usage tracking.</div>
+</div>
+<div class="api-section">
+<div class="api-label">Parameters</div>
+<div class="param-row"><div class="param-name">action</div><div class="param-type">string</div><div class="param-desc">"chat", "agents", "info", "generate_key"</div><span class="param-req">required</span></div>
+<div class="param-row"><div class="param-name">message</div><div class="param-type">string</div><div class="param-desc">User message (for "chat")</div></div>
+<div class="param-row"><div class="param-name">agent_id</div><div class="param-type">string</div><div class="param-desc">Agent ID to chat with</div></div>
+<div class="param-row"><div class="param-name">api_key</div><div class="param-type">string</div><div class="param-desc">API key for auth</div></div>
+</div>
+<div class="api-section">
+<div class="api-label">Example Request</div>
+<div class="api-code">POST /functions/harzCloud
+Content-Type: application/json
+
+{
+  "action": "chat",
+  "message": "Explain GDEG token benefits",
+  "agent_id": "agent_01",
+  "api_key": "hk_your_key"
+}</div>
+</div>
+<div class="api-section">
+<div class="api-label">Example Response</div>
+<div class="api-code">{
+  "response": "GDEG offers 10% discount on all Harz services...",
+  "agent": "Business Advisor",
+  "usage": { "tokens": 142, "remaining": 9858 }
+}</div>
+</div>
+</div>
+</div>
+
+<div class="api-item">
+<div class="api-header" onclick="toggleApi(this)">
+<span class="api-method method-post">POST</span>
+<span class="api-path">/harzCRM -- CRM Management</span>
+<span class="api-toggle">v</span>
+</div>
+<div class="api-body">
+<div class="api-section">
+<div class="api-label">Description</div>
+<div style="color:var(--text2);font-size:13px">Manage WhatsApp CRM leads, auto-replies, and customer inquiries.</div>
+</div>
+<div class="api-section">
+<div class="api-label">Parameters</div>
+<div class="param-row"><div class="param-name">action</div><div class="param-type">string</div><div class="param-desc">"auto_reply", "log_customer", "get_stats", "get_leads"</div><span class="param-req">required</span></div>
+<div class="param-row"><div class="param-name">message</div><div class="param-type">string</div><div class="param-desc">Customer message (for auto_reply)</div></div>
+<div class="param-row"><div class="param-name">phone</div><div class="param-type">string</div><div class="param-desc">Customer phone number</div></div>
+</div>
+<div class="api-section">
+<div class="api-label">Example</div>
+<div class="api-code">POST /functions/harzCRM
+{
+  "action": "auto_reply",
+  "message": "How much is the Notion bundle?",
+  "phone": "2348012345678"
+}</div>
+</div>
+</div>
+</div>
+
+<div class="api-item">
+<div class="api-header" onclick="toggleApi(this)">
+<span class="api-method method-get">GET</span>
+<span class="api-path">/harzdmCatalog -- Product Catalog</span>
+<span class="api-toggle">v</span>
+</div>
+<div class="api-body">
+<div class="api-section">
+<div class="api-label">Description</div>
+<div style="color:var(--text2);font-size:13px">Browse 259 digital products across 45 categories. Supports filtering, search, and pagination.</div>
+</div>
+<div class="api-section">
+<div class="api-label">Parameters</div>
+<div class="param-row"><div class="param-name">action</div><div class="param-type">string</div><div class="param-desc">"list", "search", "category", "detail"</div><span class="param-req">required</span></div>
+<div class="param-row"><div class="param-name">query</div><div class="param-type">string</div><div class="param-desc">Search term (for "search")</div></div>
+<div class="param-row"><div class="param-name">category</div><div class="param-type">string</div><div class="param-desc">Category filter</div></div>
+</div>
+<div class="api-section">
+<div class="api-label">Example</div>
+<div class="api-code">POST /functions/harzdmCatalog
+{
+  "action": "search",
+  "query": "engineering"
+}
+
+// Returns matching products with prices and download links</div>
+</div>
+</div>
+</div>
+
+<div class="api-item">
+<div class="api-header" onclick="toggleApi(this)">
+<span class="api-method method-post">POST</span>
+<span class="api-path">/harzPayments -- Payment Processing</span>
+<span class="api-toggle">v</span>
+</div>
+<div class="api-body">
+<div class="api-section">
+<div class="api-label">Description</div>
+<div style="color:var(--text2);font-size:13px">Process payments via Paystack, USDT TRC20, bank transfer, or GDEG token.</div>
+</div>
+<div class="api-section">
+<div class="api-label">Parameters</div>
+<div class="param-row"><div class="param-name">action</div><div class="param-type">string</div><div class="param-desc">"checkout", "verify", "webhook"</div><span class="param-req">required</span></div>
+<div class="param-row"><div class="param-name">amount</div><div class="param-type">number</div><div class="param-desc">Amount in kobo (NGN) or cents (USD)</div></div>
+<div class="param-row"><div class="param-name">currency</div><div class="param-type">string</div><div class="param-desc">"NGN" or "USD"</div></div>
+<div class="param-row"><div class="param-name">email</div><div class="param-type">string</div><div class="param-desc">Customer email</div></div>
+</div>
+</div>
+</div>
+
+<div class="api-item">
+<div class="api-header" onclick="toggleApi(this)">
+<span class="api-method method-post">POST</span>
+<span class="api-path">/nigerianNumberLookup -- Phone Lookup</span>
+<span class="api-toggle">v</span>
+</div>
+<div class="api-body">
+<div class="api-section">
+<div class="api-label">Description</div>
+<div style="color:var(--text2);font-size:13px">Lookup Nigerian phone numbers -- network, region, and number type.</div>
+</div>
+<div class="api-section">
+<div class="api-label">Parameters</div>
+<div class="param-row"><div class="param-name">phone</div><div class="param-type">string</div><div class="param-desc">Nigerian phone number (11 digits)</div><span class="param-req">required</span></div>
+</div>
+<div class="api-section">
+<div class="api-label">Example</div>
+<div class="api-code">POST /functions/nigerianNumberLookup
+{
+  "phone": "08028687857"
+}
+
+// Returns: { network: "MTN", region: "Lagos", type: "GSM" }</div>
+</div>
+</div>
+</div>
+
+<div class="api-item">
+<div class="api-header" onclick="toggleApi(this)">
+<span class="api-method method-post">POST</span>
+<span class="api-path">/digitalMarketing -- Marketing Tools</span>
+<span class="api-toggle">v</span>
+</div>
+<div class="api-body">
+<div class="api-section">
+<div class="api-label">Description</div>
+<div style="color:var(--text2);font-size:13px">Generate marketing content, ad copy, social media posts, and SEO-optimized descriptions.</div>
+</div>
+<div class="api-section">
+<div class="api-label">Parameters</div>
+<div class="param-row"><div class="param-name">action</div><div class="param-type">string</div><div class="param-desc">"generate_ad", "social_post", "seo_content"</div><span class="param-req">required</span></div>
+<div class="param-row"><div class="param-name">product</div><div class="param-type">string</div><div class="param-desc">Product name or description</div></div>
+<div class="param-row"><div class="param-name">platform</div><div class="param-type">string</div><div class="param-desc">"whatsapp", "twitter", "facebook"</div></div>
+</div>
+</div>
+</div>
+
+<div class="api-item">
+<div class="api-header" onclick="toggleApi(this)">
+<span class="api-method method-post">POST</span>
+<span class="api-path">/apexBank -- Banking API</span>
+<span class="api-toggle">v</span>
+</div>
+<div class="api-body">
+<div class="api-section">
+<div class="api-label">Description</div>
+<div style="color:var(--text2);font-size:13px">Digital banking -- accounts, transfers, cards, loans, savings goals.</div>
+</div>
+<div class="api-section">
+<div class="api-label">Parameters</div>
+<div class="param-row"><div class="param-name">action</div><div class="param-type">string</div><div class="param-desc">"accounts", "transfer", "balance", "cards"</div><span class="param-req">required</span></div>
+<div class="param-row"><div class="param-name">account_id</div><div class="param-type">string</div><div class="param-desc">Account identifier</div></div>
+<div class="param-row"><div class="param-name">amount</div><div class="param-type">number</div><div class="param-desc">Transfer amount</div></div>
+</div>
+</div>
+</div>
+
+<div class="api-item">
+<div class="api-header" onclick="toggleApi(this)">
+<span class="api-method method-post">POST</span>
+<span class="api-path">/nexalAds -- Advertising Platform</span>
+<span class="api-toggle">v</span>
+</div>
+<div class="api-body">
+<div class="api-section">
+<div class="api-label">Description</div>
+<div style="color:var(--text2);font-size:13px">Submit and manage ad campaigns across multiple platforms with unified payment.</div>
+</div>
+<div class="api-section">
+<div class="api-label">Parameters</div>
+<div class="param-row"><div class="param-name">action</div><div class="param-type">string</div><div class="param-desc">"submit", "status", "campaigns"</div><span class="param-req">required</span></div>
+<div class="param-row"><div class="param-name">headline</div><div class="param-type">string</div><div class="param-desc">Ad headline</div></div>
+<div class="param-row"><div class="param-name">platforms</div><div class="param-type">array</div><div class="param-desc">Target platforms</div></div>
+<div class="param-row"><div class="param-name">budget</div><div class="param-type">number</div><div class="param-desc">Budget in NGN</div></div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="panel" id="panel-sdk">
+<div class="card">
+<div class="card-title">Harz JavaScript SDK</div>
+<div class="card-desc">Drop-in SDK for web and Node.js. No dependencies.</div>
+
+<div class="sdk-block">
+<div class="sdk-header">Installation</div>
+<div class="sdk-content">
+<div class="sdk-code">Browser:
+&lt;script src="https://rabiuhamza11.github.io/harz-portfolio/harz-sdk.js"&gt;&lt;/script&gt;
+
+Node.js:
+npm install @harz/sdk</div>
+</div>
+</div>
+
+<div class="sdk-block">
+<div class="sdk-header">Quick Start</div>
+<div class="sdk-content">
+<div class="sdk-code">// Initialize
+const harz = new HarzSDK({
+  apiKey: 'hk_your_api_key',
+  defaultAgent: 'agent_01'
+});
+
+// Chat with AI
+const reply = await harz.cloud.chat({
+  message: 'What products do you recommend?',
+  agentId: 'agent_03'
+});
+console.log(reply.response);
+
+// List agents
+const agents = await harz.cloud.agents();
+
+// Generate API key
+const key = await harz.cloud.generateKey('user@email.com');</div>
+</div>
+</div>
+
+<div class="sdk-block">
+<div class="sdk-header">Product Catalog</div>
+<div class="sdk-content">
+<div class="sdk-code">// Browse products
+const products = await harz.catalog.list({ limit: 20 });
+
+// Search
+const results = await harz.catalog.search('engineering');
+
+// Get details
+const product = await harz.catalog.get('product_id');
+
+// Filter by category
+const music = await harz.catalog.byCategory('music');</div>
+</div>
+</div>
+
+<div class="sdk-block">
+<div class="sdk-header">Payments</div>
+<div class="sdk-content">
+<div class="sdk-code">// Create checkout
+const checkout = await harz.pay.checkout({
+  amount: 1299, // $12.99 in cents
+  currency: 'USD',
+  email: 'customer@email.com',
+  productId: 'prod_123'
+});
+
+// Redirect to payment
+window.location.href = checkout.authorization_url;
+
+// Verify payment
+const status = await harz.pay.verify(checkout.reference);
+
+// GDEG token payment
+const gdeg = await harz.pay.gdeg({
+  amount: 2610,
+  wallet: '0x0B63...3C1'
+});</div>
+</div>
+</div>
+
+<div class="sdk-block">
+<div class="sdk-header">CRM</div>
+<div class="sdk-content">
+<div class="sdk-code">// Log inquiry
+await harz.crm.logCustomer({
+  phone: '2348012345678',
+  name: 'John Doe',
+  message: 'I want to buy the Notion bundle'
+});
+
+// Auto-reply
+const reply = await harz.crm.autoReply({
+  message: 'How much is the engineering collection?',
+  phone: '2348012345678'
+});
+
+// Stats
+const stats = await harz.crm.stats();</div>
+</div>
+</div>
+
+<div class="sdk-block">
+<div class="sdk-header">Phone Lookup</div>
+<div class="sdk-content">
+<div class="sdk-code">const info = await harz.lookup.phone('08028687857');
+console.log(info.network); // "MTN"
+console.log(info.region);  // "Lagos"
+console.log(info.type);     // "GSM"</div>
+</div>
+</div>
+
+<button class="copy-btn" onclick="downloadSDK()">Download SDK (harz-sdk.js)</button>
+</div>
+</div>
+
+<div class="panel" id="panel-console">
+<div class="card">
+<div class="card-title">Live API Console</div>
+<div class="card-desc">Test Harz API endpoints directly from your browser.</div>
+
+<div class="console-wrap">
+<div class="console-header">
+<span class="console-title">harz@developer ~ %</span>
+<button onclick="clearConsole()" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer">Clear</button>
+</div>
+<div class="console-body" id="consoleBody">
+<div class="console-line info">// Harz API Console v1.0</div>
+<div class="console-line info">// Type 'help' for commands</div>
+<div class="console-line info">// Base: https://superagent-2286fb2f.base44.app/functions</div>
+<div class="console-line"></div>
+</div>
+<div class="console-input-row">
+<span class="console-prompt">$</span>
+<input class="console-input" id="consoleInput" placeholder="Type a command... (e.g. agents)" onkeydown="if(event.key==='Enter')runCommand()">
+</div>
+</div>
+</div>
+</div>
+
+<div class="panel" id="panel-codegen">
+<div class="card">
+<div class="card-title">Code Generator</div>
+<div class="card-desc">Generate integration code for any Harz API in 5 languages.</div>
+
+<div class="gen-row">
+<div style="flex:1">
+<div class="gen-label">Language</div>
+<select class="gen-select" id="genLang" onchange="generateCode()">
+<option value="javascript">JavaScript (fetch)</option>
+<option value="python">Python (requests)</option>
+<option value="php">PHP (cURL)</option>
+<option value="curl">cURL</option>
+<option value="node">Node.js (axios)</option>
+</select>
+</div>
+<div style="flex:1">
+<div class="gen-label">API Endpoint</div>
+<select class="gen-select" id="genApi" onchange="generateCode()">
+<option value="harzCloud">harzCloud -- AI Chat</option>
+<option value="harzCRM">harzCRM -- CRM</option>
+<option value="harzdmCatalog">harzdmCatalog -- Catalog</option>
+<option value="harzPayments">harzPayments -- Payments</option>
+<option value="nigerianNumberLookup">Phone Lookup</option>
+<option value="digitalMarketing">Marketing Tools</option>
+<option value="nexalAds">Nexal Ads</option>
+</select>
+</div>
+</div>
+
+<div class="gen-row">
+<div style="flex:1">
+<div class="gen-label">Action</div>
+<select class="gen-select" id="genAction" onchange="generateCode()">
+<option value="chat">Chat with AI</option>
+<option value="agents">List Agents</option>
+<option value="generate_key">Generate API Key</option>
+<option value="info">Platform Info</option>
+</select>
+</div>
+<div style="flex:1">
+<div class="gen-label">Your API Key</div>
+<input class="gen-input" id="genApiKey" placeholder="hk_your_key" value="hk_demo_key">
+</div>
+</div>
+
+<div class="sdk-block">
+<div class="sdk-header">Generated Code</div>
+<div class="sdk-content">
+<div class="sdk-code" id="genOutput">// Select options to generate code...</div>
+<button class="copy-btn" onclick="copyGenCode()">Copy Code</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="panel" id="panel-plugins">
+<div class="card">
+<div class="card-title">Plugin Marketplace</div>
+<div class="card-desc">Official plugins and integrations for the Harz ecosystem.</div>
+
+<div class="plugin-card">
+<div class="plugin-icon" style="background:rgba(37,211,102,0.2)">W</div>
+<div class="plugin-info">
+<div class="plugin-name">WhatsApp CRM Connector</div>
+<div class="plugin-desc">Auto-log inquiries, generate AI replies, track leads from WhatsApp</div>
+<div class="plugin-meta">By Harz * v1.0 * 24 installs * Free</div>
+</div>
+<button class="plugin-btn" onclick="showToast('Plugin installed!')">Install</button>
+</div>
+
+<div class="plugin-card">
+<div class="plugin-icon" style="background:rgba(99,102,241,0.2)">AI</div>
+<div class="plugin-info">
+<div class="plugin-name">AI Agent Widget</div>
+<div class="plugin-desc">Embed any Harz AI agent into your website with one script tag</div>
+<div class="plugin-meta">By Harz * v1.0 * 12 installs * Free</div>
+</div>
+<button class="plugin-btn" onclick="showToast('Plugin installed!')">Install</button>
+</div>
+
+<div class="plugin-card">
+<div class="plugin-icon" style="background:rgba(255,153,0,0.2)">P</div>
+<div class="plugin-info">
+<div class="plugin-name">Paystack Checkout</div>
+<div class="plugin-desc">Accept payments via Paystack with HarzPay integration</div>
+<div class="plugin-meta">By Harz * v1.0 * 8 installs * Free</div>
+</div>
+<button class="plugin-btn" onclick="showToast('Plugin installed!')">Install</button>
+</div>
+
+<div class="plugin-card">
+<div class="plugin-icon" style="background:rgba(0,212,255,0.2)">C</div>
+<div class="plugin-info">
+<div class="plugin-name">Product Catalog Embed</div>
+<div class="plugin-desc">Display HarzDM products on any website with search and filtering</div>
+<div class="plugin-meta">By Harz * v1.0 * 5 installs * Free</div>
+</div>
+<button class="plugin-btn" onclick="showToast('Plugin installed!')">Install</button>
+</div>
+
+<div class="plugin-card">
+<div class="plugin-icon" style="background:rgba(168,85,247,0.2)">A</div>
+<div class="plugin-info">
+<div class="plugin-name">Analytics Tracker</div>
+<div class="plugin-desc">Track page views, clicks, and conversions across Harz platforms</div>
+<div class="plugin-meta">By Harz * v0.9 * 3 installs * Free</div>
+</div>
+<button class="plugin-btn" onclick="showToast('Plugin installed!')">Install</button>
+</div>
+
+<div class="plugin-card">
+<div class="plugin-icon" style="background:rgba(255,68,102,0.2)">N</div>
+<div class="plugin-info">
+<div class="plugin-name">Phone Lookup API</div>
+<div class="plugin-desc">Identify Nigerian phone networks, regions, and number types</div>
+<div class="plugin-meta">By Harz * v1.0 * 15 installs * Free</div>
+</div>
+<button class="plugin-btn" onclick="showToast('Plugin installed!')">Install</button>
+</div>
+
+<div class="plugin-card">
+<div class="plugin-icon" style="background:rgba(0,255,140,0.2)">G</div>
+<div class="plugin-info">
+<div class="plugin-name">GDEG Token Payment</div>
+<div class="plugin-desc">Accept GDEG cryptocurrency payments with 10% discount logic</div>
+<div class="plugin-meta">By Harz * v1.0 * 2 installs * Free</div>
+</div>
+<button class="plugin-btn" onclick="showToast('Plugin installed!')">Install</button>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px">
+Want to publish your own plugin? Contact harzco.business@gmail.com
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showPanel(name,el){
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+el.classList.add('active');
+document.getElementById('panel-'+name).classList.add('active');
+}
+
+function toggleApi(el){
+var body=el.nextElementSibling;
+body.classList.toggle('open');
+el.querySelector('.api-toggle').textContent=body.classList.contains('open')?'^':'v';
+}
+
+function showToast(msg){
+var t=document.getElementById('toast');
+t.textContent=msg;
+t.classList.add('show');
+setTimeout(function(){t.classList.remove('show')},2000);
+}
+
+function clearConsole(){
+document.getElementById('consoleBody').innerHTML='<div class="console-line info">// Console cleared</div><div class="console-line"></div>';
+}
+
+async function runCommand(){
+var input=document.getElementById('consoleInput');
+var cmd=input.value.trim();
+input.value='';
+if(!cmd)return;
+var body=document.getElementById('consoleBody');
+body.innerHTML+='<div class="console-line prompt">$ '+cmd+'</div>';
+
+var BASE='https://superagent-2286fb2f.base44.app/functions';
+
+if(cmd==='help'){
+body.innerHTML+='<div class="console-line info">Commands:</div>';
+body.innerHTML+='<div class="console-line">  agents     List AI agents</div>';
+body.innerHTML+='<div class="console-line">  info       Platform info</div>';
+body.innerHTML+='<div class="console-line">  chat &lt;msg&gt;  Chat with AI</div>';
+body.innerHTML+='<div class="console-line">  catalog    List products</div>';
+body.innerHTML+='<div class="console-line">  lookup &lt;n&gt;  Phone lookup</div>';
+body.innerHTML+='<div class="console-line">  clear      Clear console</div>';
+body.innerHTML+='<div class="console-line"></div>';
+return;
+}
+if(cmd==='clear'){clearConsole();return;}
+
+try{
+if(cmd==='agents'||cmd==='info'){
+body.innerHTML+='<div class="console-line info">Fetching from '+BASE+'/harzCloud...</div>';
+var res=await fetch(BASE+'/harzCloud',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:cmd})});
+var data=await res.json();
+body.innerHTML+='<div class="console-line success">'+JSON.stringify(data,null,2).replace(/</g,'&lt;').substring(0,1000)+'</div>';
+}else if(cmd.startsWith('chat ')){
+var msg=cmd.substring(5);
+body.innerHTML+='<div class="console-line info">Sending to AI agent...</div>';
+var res=await fetch(BASE+'/harzCloud',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'chat',message:msg})});
+var data=await res.json();
+body.innerHTML+='<div class="console-line success">Response: '+(data.response||data.reply||JSON.stringify(data)).replace(/</g,'&lt;')+'</div>';
+}else if(cmd.startsWith('lookup ')){
+var num=cmd.substring(7);
+body.innerHTML+='<div class="console-line info">Looking up '+num+'...</div>';
+var res=await fetch(BASE+'/nigerianNumberLookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:num})});
+var data=await res.json();
+body.innerHTML+='<div class="console-line success">'+JSON.stringify(data,null,2).replace(/</g,'&lt;')+'</div>';
+}else if(cmd==='catalog'){
+body.innerHTML+='<div class="console-line info">Fetching catalog...</div>';
+var res=await fetch(BASE+'/harzdmCatalog',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'list',limit:5})});
+var data=await res.json();
+body.innerHTML+='<div class="console-line success">'+JSON.stringify(data,null,2).replace(/</g,'&lt;').substring(0,800)+'...</div>';
+}else{
+body.innerHTML+='<div class="console-line error">Unknown command: '+cmd+'. Type "help".</div>';
+}
+}catch(e){
+body.innerHTML+='<div class="console-line error">Error: '+e.message+'</div>';
+}
+body.innerHTML+='<div class="console-line"></div>';
+body.scrollTop=body.scrollHeight;
+}
+
+function generateCode(){
+var lang=document.getElementById('genLang').value;
+var api=document.getElementById('genApi').value;
+var action=document.getElementById('genAction').value;
+var key=document.getElementById('genApiKey').value;
+var BASE='https://superagent-2286fb2f.base44.app/functions';
+var code='';
+var payloads={chat:{action:'chat',message:'Hello! Tell me about Harz.',api_key:key},agents:{action:'agents'},generate_key:{action:'generate_key',email:'user@example.com'},info:{action:'info'}};
+var payload=payloads[action]||payloads.chat;
+
+if(lang==='javascript'){
+code='// JavaScript (fetch)\nconst res = await fetch(\''+BASE+'/'+api+'\', {\n  method: \'POST\',\n  headers: { \'Content-Type\': \'application/json\' },\n  body: JSON.stringify('+JSON.stringify(payload,null,2)+')\n});\nconst data = await res.json();\nconsole.log(data);';
+}else if(lang==='python'){
+code='# Python (requests)\nimport requests\n\nurl = "'+BASE+'/'+api+'"\npayload = '+JSON.stringify(payload)+'\n\nresponse = requests.post(url, json=payload)\ndata = response.json()\nprint(data)';
+}else if(lang==='php'){
+code='<?php\n// PHP (cURL)\n$url = "'+BASE+'/'+api+'";\n$data = json_encode('+JSON.stringify(payload)+');\n\n$ch = curl_init($url);\ncurl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\ncurl_setopt($ch, CURLOPT_POST, true);\ncurl_setopt($ch, CURLOPT_POSTFIELDS, $data);\ncurl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);\n\n$response = curl_exec($ch);\ncurl_close($ch);\necho $response;';
+}else if(lang==='curl'){
+code='curl -X POST '+BASE+'/'+api+' \\\n  -H "Content-Type: application/json" \\\n  -d \''+JSON.stringify(payload)+'\'';
+}else if(lang==='node'){
+code='// Node.js (axios)\nconst axios = require(\'axios\');\n\nconst res = await axios.post(\''+BASE+'/'+api+'\', '+JSON.stringify(payload)+');\nconsole.log(res.data);';
+}
+document.getElementById('genOutput').textContent=code;
+}
+
+function copyGenCode(){
+navigator.clipboard.writeText(document.getElementById('genOutput').textContent);
+showToast('Code copied!');
+}
+
+function downloadSDK(){
+var sdk='// Harz JavaScript SDK v1.0\n// https://rabiuhamza11.github.io/harz-portfolio\n(function(root){\n  var BASE="https://superagent-2286fb2f.base44.app/functions";\n\n  function HarzSDK(opts){\n    this.apiKey=opts.apiKey||"";\n    this.defaultAgent=opts.defaultAgent||"agent_01";\n    this.cloud={\n      chat:function(o){return _call("harzCloud",{action:"chat",message:o.message,agent_id:o.agentId||this.defaultAgent}.bind(this))}.bind(this),\n      agents:function(){return _call("harzCloud",{action:"agents"})},\n      info:function(){return _call("harzCloud",{action:"info"})},\n      generateKey:function(email){return _call("harzCloud",{action:"generate_key",email:email})}\n    };\n    this.catalog={\n      list:function(o){return _call("harzdmCatalog",{action:"list",limit:(o||{}).limit||20})},\n      search:function(q){return _call("harzdmCatalog",{action:"search",query:q})},\n      get:function(id){return _call("harzdmCatalog",{action:"detail",product_id:id})},\n      byCategory:function(c){return _call("harzdmCatalog",{action:"category",category:c})}\n    };\n    this.pay={\n      checkout:function(o){return _call("harzPayments",{action:"checkout",amount:o.amount,currency:o.currency||"NGN",email:o.email,product_id:o.productId})},\n      verify:function(r){return _call("harzPayments",{action:"verify",reference:r})},\n      gdeg:function(o){return _call("harzPayments",{action:"gdeg",amount:o.amount,wallet:o.wallet})}\n    };\n    this.crm={\n      logCustomer:function(o){return _call("harzCRM",{action:"log_customer",phone:o.phone,name:o.name,message:o.message})},\n      autoReply:function(o){return _call("harzCRM",{action:"auto_reply",message:o.message,phone:o.phone})},\n      stats:function(){return _call("harzCRM",{action:"get_stats"})}\n    };\n    this.lookup={\n      phone:function(n){return _call("nigerianNumberLookup",{phone:n})}\n    };\n    this.marketing={\n      generateAd:function(o){return _call("digitalMarketing",{action:"generate_ad",product:o.product,platform:o.platform})},\n      socialPost:function(o){return _call("digitalMarketing",{action:"social_post",product:o.product,platform:o.platform})}\n    };\n    function _call(fn,data){\n      return fetch(BASE+"/"+fn,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.assign(data,{api_key:this.apiKey}))}).then(function(r){return r.json()});\n    }\n  }\n  root.HarzSDK=HarzSDK;\n})(typeof window!=="undefined"?window:this);';
+
+  var blob=new Blob([sdk],{type:'text/javascript'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='harz-sdk.js';a.click();
+  URL.revokeObjectURL(url);
+  showToast('SDK downloaded!');
+}
+
+generateCode();
+</script>
+</body>
+</html>
