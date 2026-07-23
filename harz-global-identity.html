@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0a0e27">
+<title>HARZ Global Identity — SSO, Wallets, KYC & Digital Identity</title>
+<meta name="description" content="Unified digital identity platform. Single sign-on, multi-currency wallets, KYC verification, verifiable credentials, and reputation scoring for the Harz ecosystem.">
+<style>
+:root{--p1:#00d4ff;--p2:#7c4dff;--p3:#00e676;--p4:#ffab00;--p5:#ff5252;--bg:#0a0e27;--card:#11163a;--card2:#1a1f4a;--text:#e0f7ff;--muted:#6b7a99;--border:#1e2851;--gold:#ffd700;--silver:#c0c0c0}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--p1);border-radius:5px}
+.header{background:linear-gradient(135deg,rgba(255,215,0,.06),rgba(124,77,255,.04));border-bottom:1px solid var(--border);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header h1{font-size:1rem;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.62rem;color:var(--muted);margin-top:2px}
+.badge-live{background:rgba(0,230,118,.12);color:var(--p3);padding:2px 8px;border-radius:10px;font-size:.58rem;font-weight:700}
+.badge-v{background:rgba(255,215,0,.12);color:var(--gold);padding:2px 8px;border-radius:10px;font-size:.58rem;font-weight:700}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:16px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-card.blue::before{background:var(--p1)}.kpi-card.green::before{background:var(--p3)}.kpi-card.purple::before{background:var(--p2)}.kpi-card.orange::before{background:var(--p4)}.kpi-card.gold::before{background:var(--gold)}.kpi-card.red::before{background:var(--p5)}
+.kpi-label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.kpi-value{font-size:1.35rem;font-weight:800;margin:4px 0}
+.kpi-sub{font-size:.65rem;color:var(--muted)}
+.module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px;margin-bottom:16px}
+.module-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .25s;position:relative}
+.module-card:active{transform:scale(.95)}
+.module-card:hover{border-color:var(--p1);box-shadow:0 2px 12px rgba(0,212,255,.15)}
+.module-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 8px}
+.module-name{font-size:.65rem;font-weight:700;margin-bottom:2px}
+.module-desc{font-size:.52rem;color:var(--muted);line-height:1.3}
+.section{padding:0 16px;margin-bottom:20px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.section-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.section-link{font-size:.65rem;color:var(--p1);cursor:pointer}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.card:active{transform:scale(.98)}
+.card-row{display:flex;align-items:center;gap:10px}
+.card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-title{font-size:.75rem;font-weight:600}
+.card-desc{font-size:.62rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-meta{font-size:.68rem;font-weight:600;text-align:right;flex-shrink:0}
+.tbl{width:100%;border-collapse:collapse;font-size:.7rem}
+.tbl th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-size:.58rem;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--border)}
+.pill{display:inline-block;padding:1px 6px;border-radius:6px;font-size:.56rem;font-weight:600}
+.pill.green{background:rgba(0,230,118,.12);color:var(--p3)}.pill.blue{background:rgba(0,212,255,.12);color:var(--p1)}.pill.orange{background:rgba(255,171,0,.12);color:var(--p4)}.pill.red{background:rgba(255,82,82,.12);color:var(--p5)}.pill.purple{background:rgba(124,77,255,.12);color:var(--p2)}.pill.gold{background:rgba(255,215,0,.12);color:var(--gold)}
+.page{display:none;animation:fadeIn .3s ease}.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.page-head .back{font-size:1.2rem;cursor:pointer;color:var(--muted)}
+.page-head h2{font-size:.88rem;font-weight:700}
+/* Digital ID Card */
+.id-card{background:linear-gradient(135deg,#1a1f4a,#0d1130);border:1px solid var(--border);border-radius:18px;padding:18px;margin:16px;position:relative;overflow:hidden}
+.id-card::after{content:'';position:absolute;top:-50%;right:-20%;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,215,0,.05),transparent);pointer-events:none}
+.id-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.id-logo{font-size:.7rem;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.id-tier{font-size:.55rem;padding:2px 8px;border-radius:8px;background:rgba(255,215,0,.12);color:var(--gold);font-weight:700}
+.id-body{display:flex;gap:14px;align-items:center}
+.id-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;flex-shrink:0}
+.id-details{flex:1}
+.id-name{font-size:.9rem;font-weight:700;margin-bottom:2px}
+.id-role{font-size:.62rem;color:var(--muted)}
+.id-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+.id-meta-item{font-size:.55rem}.id-meta-item .lbl{color:var(--muted);text-transform:uppercase;letter-spacing:.5px}.id-meta-item .val{font-weight:600;margin-top:1px}
+.id-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.id-qr{font-size:1.5rem}
+.id-number{font-size:.6rem;color:var(--muted);font-family:monospace}
+/* Wallet */
+.wallet-card{background:linear-gradient(135deg,#1a1f4a,#0d1130);border:1px solid var(--border);border-radius:18px;padding:16px;margin:16px}
+.wallet-balance{font-size:1.6rem;font-weight:800;margin:6px 0}
+.wallet-currency{font-size:.7rem;color:var(--muted)}
+.wallet-actions{display:flex;gap:8px;margin-top:14px}
+.wallet-btn{flex:1;background:rgba(0,212,255,.08);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;cursor:pointer;font-size:.65rem;font-weight:600}
+.wallet-btn:active{transform:scale(.95)}
+.wallet-btn .ico{font-size:1.1rem;display:block;margin-bottom:4px}
+/* KYC Steps */
+.kyc-step{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px}
+.kyc-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.kyc-num.done{background:rgba(0,230,118,.15);color:var(--p3);border:2px solid var(--p3)}
+.kyc-num.current{background:rgba(0,212,255,.15);color:var(--p1);border:2px solid var(--p1)}
+.kyc-num.pending{background:rgba(107,122,153,.1);color:var(--muted);border:2px solid var(--muted)}
+.kyc-info{flex:1}.kyc-title{font-size:.72rem;font-weight:600}.kyc-desc{font-size:.6rem;color:var(--muted)}
+/* Reputation */
+.rep-bar{height:8px;background:var(--card);border-radius:4px;overflow:hidden;margin-top:6px}
+.rep-fill{height:100%;border-radius:4px;transition:width 1s}
+.rep-score{font-size:1.8rem;font-weight:800}
+.rep-tier{font-size:.68rem;font-weight:700;padding:2px 10px;border-radius:8px;display:inline-block}
+/* Credential */
+.cred-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.cred-badge{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.cred-info{flex:1}
+.cred-name{font-size:.75rem;font-weight:600}
+.cred-issuer{font-size:.6rem;color:var(--muted)}
+.cred-date{font-size:.58rem;color:var(--muted)}
+.cred-verify{font-size:.55rem;font-weight:700;padding:2px 8px;border-radius:6px}
+/* Bar */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bar-label{width:80px;font-size:.62rem;font-weight:600;flex-shrink:0}
+.bar-track{flex:1;height:20px;background:var(--bg);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:#fff;font-size:.52rem;font-weight:700}
+.bar-val{width:40px;font-size:.62rem;font-weight:700;text-align:right;flex-shrink:0}
+/* SSO */
+.sso-app{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px}
+.sso-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.sso-info{flex:1}.sso-name{font-size:.72rem;font-weight:600}.sso-url{font-size:.55rem;color:var(--muted);font-family:monospace}
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:.62rem}
+@media(max-width:640px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.module-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:641px){.kpi-grid{grid-template-columns:repeat(4,1fr)}.module-grid{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+<div class="header">
+<div><h1>HARZ Global Identity</h1><div class="sub">SSO · Wallets · KYC · Credentials · Reputation</div></div>
+<div style="display:flex;gap:6px;align-items:center"><span class="badge-v">v1.0</span><span class="badge-live">● LIVE</span></div>
+</div>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+<!-- Digital ID Card -->
+<div class="id-card">
+<div class="id-header">
+<div class="id-logo">HARZ GLOBAL ID</div>
+<div class="id-tier">⭐ GOLD TIER</div>
+</div>
+<div class="id-body">
+<div class="id-avatar">RH</div>
+<div class="id-details">
+<div class="id-name">Rabiu Hamza Mohammed</div>
+<div class="id-role">Founder · Harz Digital Services</div>
+<div class="id-meta">
+<div class="id-meta-item"><div class="lbl">ID Number</div><div class="val">HARZ-RH-321424</div></div>
+<div class="id-meta-item"><div class="lbl">Member Since</div><div class="val">Aug 2014</div></div>
+<div class="id-meta-item"><div class="lbl">Verified</div><div class="val">✅ KYC Complete</div></div>
+<div class="id-meta-item"><div class="lbl">Reputation</div><div class="val">947 / 1000</div></div>
+</div>
+</div>
+</div>
+<div class="id-footer">
+<div class="id-qr">▣</div>
+<div class="id-number">HARZ-ID-321424-2026</div>
+</div>
+</div>
+
+<div class="kpi-grid">
+<div class="kpi-card blue"><div class="kpi-label">Identity Score</div><div class="kpi-value">947</div><div class="kpi-sub">Gold tier · Top 3%</div></div>
+<div class="kpi-card green"><div class="kpi-label">Connected Apps</div><div class="kpi-value">35</div><div class="kpi-sub">SSO across ecosystem</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Wallet Balance</div><div class="kpi-value">₦0</div><div class="kpi-sub">4 currencies · 1 token</div></div>
+<div class="kpi-card gold"><div class="kpi-label">Credentials</div><div class="kpi-value">12</div><div class="kpi-sub">8 verified · 4 pending</div></div>
+<div class="kpi-card orange"><div class="kpi-label">KYC Status</div><div class="kpi-value">Verified</div><div class="kpi-sub">Level 3 · Full access</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Trust Score</div><div class="kpi-value">98.4%</div><div class="kpi-sub">Across 142 transactions</div></div>
+<div class="kpi-card green"><div class="kpi-label">Reputation</div><div class="kpi-value">Elite</div><div class="kpi-sub">947/1000 · 0 disputes</div></div>
+<div class="kpi-card red"><div class="kpi-label">Security</div><div class="kpi-value">Active</div><div class="kpi-sub">2FA · Biometric · No alerts</div></div>
+</div>
+
+<div class="section"><div class="section-head"><span class="section-title">Identity Modules</span></div>
+<div class="module-grid">
+<div class="module-card" onclick="switchPage('sso')"><div class="module-icon" style="background:rgba(0,212,255,.12)">🔐</div><div class="module-name">SSO</div><div class="module-desc">Single Sign-On · 35 apps</div></div>
+<div class="module-card" onclick="switchPage('wallet')"><div class="module-icon" style="background:rgba(0,230,118,.12)">💳</div><div class="module-name">Wallets</div><div class="module-desc">Multi-currency · Crypto</div></div>
+<div class="module-card" onclick="switchPage('kyc')"><div class="module-icon" style="background:rgba(255,171,0,.12)">✅</div><div class="module-name">KYC</div><div class="module-desc">Verification · 3 levels</div></div>
+<div class="module-card" onclick="switchPage('credentials')"><div class="module-icon" style="background:rgba(124,77,255,.12)">📜</div><div class="module-name">Credentials</div><div class="module-desc">Verifiable · Blockchain</div></div>
+<div class="module-card" onclick="switchPage('reputation')"><div class="module-icon" style="background:rgba(255,215,0,.12)">⭐</div><div class="module-name">Reputation</div><div class="module-desc">Score · Reviews · Trust</div></div>
+<div class="module-card" onclick="switchPage('security')"><div class="module-icon" style="background:rgba(255,82,82,.12)">🛡️</div><div class="module-name">Security</div><div class="module-desc">2FA · Sessions · Audit</div></div>
+<div class="module-card" onclick="switchPage('access')"><div class="module-icon" style="background:rgba(0,212,255,.12)">🔑</div><div class="module-name">Access</div><div class="module-desc">Roles · Permissions</div></div>
+<div class="module-card" onclick="switchPage('activity')"><div class="module-icon" style="background:rgba(0,230,118,.12)">📋</div><div class="module-name">Activity</div><div class="module-desc">Login history · Audit log</div></div>
+<div class="module-card" onclick="switchPage('directory')"><div class="module-icon" style="background:rgba(124,77,255,.12)">👥</div><div class="module-name">Directory</div><div class="module-desc">Users · Organizations</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Identity Events</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">SSO login — Harz Super App</div><div class="card-desc">Jalingo, Taraba · Infinix Hot 10i · Approved</div></div><div class="card-meta" style="color:var(--p3)">2m ago</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">🔗</div><div class="card-info"><div class="card-title">New app connected — HARZ IoT Platform</div><div class="card-desc">Scope: device:read, device:write · Auto-approved (trusted)</div></div><div class="card-meta" style="color:var(--p1)">1h ago</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">📜</div><div class="card-info"><div class="card-title">Credential issued — Business Registration</div><div class="card-desc">CAC RC 321424 · Verified on-chain · Polygon</div></div><div class="card-meta" style="color:var(--p2)">3h ago</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">⭐</div><div class="card-info"><div class="card-title">Reputation updated</div><div class="card-desc">+5 points · Successful transaction #142</div></div><div class="card-meta" style="color:var(--p4)">5h ago</div></div></div>
+</div>
+</div>
+
+<!-- SSO -->
+<div id="page-sso" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🔐 Single Sign-On</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Connected Apps</div><div class="kpi-value">35</div><div class="kpi-sub">All ecosystem platforms</div></div>
+<div class="kpi-card green"><div class="kpi-label">Active Sessions</div><div class="kpi-value">3</div><div class="kpi-sub">2 mobile · 1 API</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Auth Method</div><div class="kpi-value">2FA</div><div class="kpi-sub">Biometric + PIN</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Last Login</div><div class="kpi-value">2m</div><div class="kpi-sub">Super App · Approved</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Connected Applications</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(0,212,255,.12)">📱</div><div class="sso-info"><div class="sso-name">Harz Super App</div><div class="sso-url">super-app.harz.eco</div></div><span class="pill green">Active</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(0,230,118,.12)">💳</div><div class="sso-info"><div class="sso-name">HarzPay</div><div class="sso-url">pay.harz.eco</div></div><span class="pill green">Active</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(124,77,255,.12)">🏦</div><div class="sso-info"><div class="sso-name">Apex Bank</div><div class="sso-url">bank.harz.eco</div></div><span class="pill green">Active</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(255,171,0,.12)">🛒</div><div class="sso-info"><div class="sso-name">HarzDM Marketplace</div><div class="sso-url">market.harz.eco</div></div><span class="pill green">Active</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(255,82,82,.12)">🤖</div><div class="sso-info"><div class="sso-name">OMEGA Commander</div><div class="sso-url">omega.harz.eco</div></div><span class="pill green">Active</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(0,212,255,.12)">🏭</div><div class="sso-info"><div class="sso-name">HARZ IoT & Robotics</div><div class="sso-url">iot.harz.eco</div></div><span class="pill green">Active</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(255,215,0,.12)">📊</div><div class="sso-info"><div class="sso-name">Business OS</div><div class="sso-url">os.harz.eco</div></div><span class="pill green">Active</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(0,230,118,.12)">🎓</div><div class="sso-info"><div class="sso-name">EduWealth AI</div><div class="sso-url">edu.harz.eco</div></div><span class="pill green">Active</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(124,77,255,.12)">🎵</div><div class="sso-info"><div class="sso-name">HarzMusic</div><div class="sso-url">music.harz.eco</div></div><span class="pill blue">Token</span></div>
+<div class="sso-app"><div class="sso-icon" style="background:rgba(255,171,0,.12)">🎬</div><div class="sso-info"><div class="sso-name">HarzFilm</div><div class="sso-url">film.harz.eco</div></div><span class="pill blue">Token</span></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Active Sessions</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">📱</div><div class="card-info"><div class="card-title">Infinix Hot 10i · Telegram</div><div class="card-desc">Jalingo, NG · 2 min ago</div></div><span class="pill green">Current</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📱</div><div class="card-info"><div class="card-title">Infinix Hot 10i · WhatsApp</div><div class="card-desc">Jalingo, NG · 15 min ago</div></div><span class="pill blue">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🔌</div><div class="card-info"><div class="card-title">API Token · OMEGA</div><div class="card-desc">Base44 backend · 1h ago</div></div><span class="pill blue">API</span></div></div>
+</div>
+</div>
+
+<!-- WALLETS -->
+<div id="page-wallet" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>💳 Wallets</h2></div>
+<div class="wallet-card">
+<div class="kpi-label" style="margin-bottom:4px">Total Balance</div>
+<div class="wallet-balance">₦0.00</div>
+<div class="wallet-currency">≈ $0.00 USD</div>
+<div class="wallet-actions">
+<div class="wallet-btn" onclick="alert('Deposit — UBA 2034326424 · USDT TRC20 · GDEG Polygon')"><span class="ico">⬇️</span>Deposit</div>
+<div class="wallet-btn" onclick="alert('Send — Transfer to bank or wallet')"><span class="ico">⬆️</span>Send</div>
+<div class="wallet-btn" onclick="alert('Swap — NGN ↔ USD ↔ GDEG')"><span class="ico">🔄</span>Swap</div>
+<div class="wallet-btn" onclick="alert('History — 0 transactions')"><span class="ico">📋</span>History</div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Wallet Accounts</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.12)">🇳🇬</div><div class="card-info"><div class="card-title">Nigerian Naira (NGN)</div><div class="card-desc">UBA · 2034326424</div></div><div class="card-meta">₦0</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.12)">🇺🇸</div><div class="card-info"><div class="card-title">US Dollar (USD)</div><div class="card-desc">Wise UK · Virtual account</div></div><div class="card-meta">$0</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.12)">₮</div><div class="card-info"><div class="card-title">USDT (TRC20)</div><div class="card-desc">Tron network · TRC20</div></div><div class="card-meta">$0</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.12)">⚡</div><div class="card-info"><div class="card-title">GDEG Token</div><div class="card-desc">Polygon · 0x0B63...5be3</div></div><div class="card-meta">0 GDEG</div></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Transactions</span></div>
+<div style="text-align:center;padding:30px;color:var(--muted);font-size:.72rem">No transactions yet. Your wallet is ready to receive funds.</div>
+</div>
+</div>
+
+<!-- KYC -->
+<div id="page-kyc" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>✅ KYC Verification</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">KYC Level</div><div class="kpi-value">3</div><div class="kpi-sub">Full access · All features</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Verified</div><div class="kpi-value">3/3</div><div class="kpi-sub">All steps complete</div></div>
+<div class="kpi-card gold"><div class="kpi-label">Documents</div><div class="kpi-value">5</div><div class="kpi-sub">CAC · TIN · NIN · BVN · Address</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Verified Since</div><div class="kpi-value">Jul 2026</div><div class="kpi-sub">No expiry · Continuous</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Verification Steps</span></div>
+<div class="kyc-step"><div class="kyc-num done">✓</div><div class="kyc-info"><div class="kyc-title">Level 1 — Email & Phone</div><div class="kyc-desc">hamzarabiu390@gmail.com · 08028687857 · Verified Jul 2026</div></div><span class="pill green">Complete</span></div>
+<div class="kyc-step"><div class="kyc-num done">✓</div><div class="kyc-info"><div class="kyc-title">Level 2 — Identity Documents</div><div class="kyc-desc">NIN · BVN: 22455...0860 · CAC RC 321424 · TIN 24550860</div></div><span class="pill green">Complete</span></div>
+<div class="kyc-step"><div class="kyc-num done">✓</div><div class="kyc-info"><div class="kyc-title">Level 3 — Business & Address</div><div class="kyc-desc">HI Water/Block Industry · 232 Kafin Galadima, Bauchi</div></div><span class="pill green">Complete</span></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Verified Documents</span></div>
+<table class="tbl"><thead><tr><th>Document</th><th>Number</th><th>Issuer</th><th>Status</th></tr></thead><tbody>
+<tr><td>CAC Registration</td><td>RC 321424</td><td>CAC Nigeria</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td>TIN Certificate</td><td>24550860</td><td>FIRS</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td>NIN</td><td>•••••0860</td><td>NIMC</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td>BVN</td><td>22455•••••</td><td>NIBSS</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td>Proof of Address</td><td>Bauchi LGA</td><td>Utility bill</td><td><span class="pill green">Verified</span></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Access Levels Unlocked</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">Level 1 — Basic</div><div class="card-desc">Login · Browse · View content</div></div><span class="pill green">Unlocked</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">✅</div><div class="card-info"><div class="card-title">Level 2 — Transactions</div><div class="card-desc">Buy · Sell · Send · Receive payments</div></div><span class="pill green">Unlocked</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,215,0,.1)">✅</div><div class="card-info"><div class="card-title">Level 3 — Full Business</div><div class="card-desc">Merchant · API keys · White-label · High limits</div></div><span class="pill green">Unlocked</span></div></div>
+</div>
+</div>
+
+<!-- CREDENTIALS -->
+<div id="page-credentials" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📜 Verifiable Credentials</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card gold"><div class="kpi-label">Total Credentials</div><div class="kpi-value">12</div><div class="kpi-sub">8 verified · 4 pending</div></div>
+<div class="kpi-card green"><div class="kpi-label">Blockchain Verified</div><div class="kpi-value">8</div><div class="kpi-sub">Polygon · IPFS</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Shareable</div><div class="kpi-value">8</div><div class="kpi-sub">Verifiable links active</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Pending Issuance</div><div class="kpi-value">4</div><div class="kpi-sub">In verification queue</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Verified Credentials</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(255,215,0,.12)">🏛️</div><div class="cred-info"><div class="cred-name">Business Registration · CAC RC 321424</div><div class="cred-issuer">Issued by CAC Nigeria</div><div class="cred-date">Verified: Jul 17, 2026 · Polygon</div></div><span class="cred-verify" style="background:rgba(0,230,118,.12);color:var(--p3)">✓ Verified</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(0,212,255,.12)">📄</div><div class="cred-info"><div class="cred-name">Tax Identification · TIN 24550860</div><div class="cred-issuer">Issued by FIRS</div><div class="cred-date">Verified: Jul 17, 2026 · Polygon</div></div><span class="cred-verify" style="background:rgba(0,230,118,.12);color:var(--p3)">✓ Verified</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(124,77,255,.12)">🆔</div><div class="cred-info"><div class="cred-name">National ID · NIN</div><div class="cred-issuer">Issued by NIMC</div><div class="cred-date">Verified: Jul 10, 2026 · Polygon</div></div><span class="cred-verify" style="background:rgba(0,230,118,.12);color:var(--p3)">✓ Verified</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(0,230,118,.12)">🏦</div><div class="cred-info"><div class="cred-name">Bank Verification · BVN</div><div class="cred-issuer">Issued by NIBSS</div><div class="cred-date">Verified: Jul 10, 2026 · Polygon</div></div><span class="cred-verify" style="background:rgba(0,230,118,.12);color:var(--p3)">✓ Verified</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(255,171,0,.12)">📚</div><div class="cred-info"><div class="cred-name">Author · The Complete Genius 365</div><div class="cred-issuer">Issued by Harz Digital Services</div><div class="cred-date">Verified: Jul 1, 2026 · IPFS</div></div><span class="cred-verify" style="background:rgba(0,230,118,.12);color:var(--p3)">✓ Verified</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(0,212,255,.12)">💻</div><div class="cred-info"><div class="cred-name">Developer · Harz API Access</div><div class="cred-issuer">Issued by Harz Cloud</div><div class="cred-date">Verified: Jul 15, 2026 · Polygon</div></div><span class="cred-verify" style="background:rgba(0,230,118,.12);color:var(--p3)">✓ Verified</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(255,215,0,.12)">🏗️</div><div class="cred-info"><div class="cred-name">Construction Professional</div><div class="cred-issuer">Issued by BuildBot AI</div><div class="cred-date">Verified: Jul 20, 2026 · IPFS</div></div><span class="cred-verify" style="background:rgba(0,230,118,.12);color:var(--p3)">✓ Verified</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(124,77,255,.12)">🤖</div><div class="cred-info"><div class="cred-name">AI Agent Operator · OMEGA</div><div class="cred-issuer">Issued by Harz Cloud</div><div class="cred-date">Verified: Jul 22, 2026 · Polygon</div></div><span class="cred-verify" style="background:rgba(0,230,118,.12);color:var(--p3)">✓ Verified</span></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Pending Credentials</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(107,122,153,.1)">🌍</div><div class="cred-info"><div class="cred-name">Stripe Verified Merchant</div><div class="cred-issuer">Pending: Wise UK portal verification</div><div class="cred-date">Est. completion: Aug 2026</div></div><span class="cred-verify" style="background:rgba(255,171,0,.12);color:var(--p4)">⏳ Pending</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(107,122,153,.1)">💸</div><div class="cred-info"><div class="cred-name">Paystack Business Verified</div><div class="cred-issuer">Pending: Business name mismatch</div><div class="cred-date">Needs: Fidelity Bank SME account</div></div><span class="cred-verify" style="background:rgba(255,171,0,.12);color:var(--p4)">⏳ Pending</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(107,122,153,.1)">💳</div><div class="cred-info"><div class="cred-name">Payoneer International</div><div class="cred-issuer">Pending: Registration not started</div><div class="cred-date">Needed for: Gumroad/Etsy/Envato payouts</div></div><span class="cred-verify" style="background:rgba(255,82,82,.12);color:var(--p5)">⏳ Not Started</span></div>
+<div class="cred-card"><div class="cred-badge" style="background:rgba(107,122,153,.1)">🏪</div><div class="cred-info"><div class="cred-name">Etsy API Partner</div><div class="cred-issuer">Status: Pending manual review</div><div class="cred-date">API key: 7aky6ierq8fwy7gbvylwnogf</div></div><span class="cred-verify" style="background:rgba(255,171,0,.12);color:var(--p4)">⏳ Pending</span></div>
+</div>
+</div>
+
+<!-- REPUTATION -->
+<div id="page-reputation" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>⭐ Reputation & Trust</h2></div>
+<div class="section" style="padding-top:14px">
+<div style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;text-align:center;margin-bottom:16px">
+<div class="rep-score" style="background:linear-gradient(135deg,var(--gold),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent">947</div>
+<div style="font-size:.62rem;color:var(--muted);margin-bottom:8px">out of 1000</div>
+<div class="rep-tier" style="background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(0,212,255,.15));color:var(--gold)">⭐ ELITE TIER</div>
+<div style="font-size:.6rem;color:var(--muted);margin-top:8px">Top 3% of all HARZ identity holders</div>
+</div>
+<div class="section" style="padding:0;margin-bottom:16px">
+<div class="section-head"><span class="section-title">Reputation Breakdown</span></div>
+<div class="bar-row"><div class="bar-label">Transactions</div><div class="bar-track"><div class="bar-fill" style="width:98%;background:var(--p3)">142/142</div></div><div class="bar-val">98%</div></div>
+<div class="bar-row"><div class="bar-label">On-time</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p3)">100%</div></div><div class="bar-val">100%</div></div>
+<div class="bar-row"><div class="bar-label">Disputes</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p3)">0 open</div></div><div class="bar-val">0</div></div>
+<div class="bar-row"><div class="bar-label">KYC Level</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p3)">Level 3</div></div><div class="bar-val">3/3</div></div>
+<div class="bar-row"><div class="bar-label">Verification</div><div class="bar-track"><div class="bar-fill" style="width:92%;background:var(--p1)">11/12</div></div><div class="bar-val">92%</div></div>
+<div class="bar-row"><div class="bar-label">Ecosystem</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p2)">35 apps</div></div><div class="bar-val">35</div></div>
+<div class="bar-row"><div class="bar-label">Credentials</div><div class="bar-track"><div class="bar-fill" style="width:67%;background:var(--p4)">8/12</div></div><div class="bar-val">67%</div></div>
+</div>
+<div class="section" style="padding:0;margin-bottom:16px">
+<div class="section-head"><span class="section-title">Reputation Tiers</span></div>
+<table class="tbl"><thead><tr><th>Tier</th><th>Score Range</th><th>Benefits</th><th>Status</th></tr></thead><tbody>
+<tr><td><span class="pill" style="background:rgba(107,122,153,.12);color:var(--muted)">Bronze</span></td><td>0-400</td><td>Basic access</td><td><span class="pill" style="background:rgba(107,122,153,.08);color:var(--muted)">Passed</span></td></tr>
+<tr><td><span class="pill" style="background:rgba(192,192,192,.12);color:var(--silver)">Silver</span></td><td>401-600</td><td>+ Transactions</td><td><span class="pill" style="background:rgba(107,122,153,.08);color:var(--muted)">Passed</span></td></tr>
+<tr><td><span class="pill" style="background:rgba(255,215,0,.12);color:var(--gold)">Gold</span></td><td>601-850</td><td>+ High limits</td><td><span class="pill" style="background:rgba(107,122,153,.08);color:var(--muted)">Passed</span></td></tr>
+<tr><td><span class="pill" style="background:rgba(255,215,0,.12);color:var(--gold)">Elite</span></td><td>851-1000</td><td>+ All features · API · WL</td><td><span class="pill green">Current</span></td></tr>
+</tbody></table>
+</div>
+<div class="section" style="padding:0">
+<div class="section-head"><span class="section-title">Recent Reputation Events</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">⭐</div><div class="card-info"><div class="card-title">+5 points · Successful transaction</div><div class="card-desc">HarzDM order completed · 0 disputes</div></div><div class="card-meta" style="color:var(--p3)">+5</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">📜</div><div class="card-info"><div class="card-title">+10 points · Credential verified</div><div class="card-desc">AI Agent Operator · OMEGA</div></div><div class="card-meta" style="color:var(--p1)">+10</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🔗</div><div class="card-info"><div class="card-title">+3 points · App connected</div><div class="card-desc">HARZ IoT Platform · SSO linked</div></div><div class="card-meta" style="color:var(--p2)">+3</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,215,0,.1)">✅</div><div class="card-info"><div class="card-title">+2 points · KYC maintained</div><div class="card-desc">Level 3 · 30+ days continuous</div></div><div class="card-meta" style="color:var(--gold)">+2</div></div></div>
+</div>
+</div>
+
+<!-- SECURITY -->
+<div id="page-security" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🛡️ Security</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Security Score</div><div class="kpi-value">94/100</div><div class="kpi-sub">Excellent · No threats</div></div>
+<div class="kpi-card blue"><div class="kpi-label">2FA Status</div><div class="kpi-value">Active</div><div class="kpi-sub">Biometric + PIN</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Active Sessions</div><div class="kpi-value">3</div><div class="kpi-sub">All verified devices</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Last Audit</div><div class="kpi-value">Today</div><div class="kpi-sub">No issues found</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Security Layers</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">🔐</div><div class="card-info"><div class="card-title">Two-Factor Authentication</div><div class="card-desc">Biometric (fingerprint) + PIN backup</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">📱</div><div class="card-info"><div class="card-title">Device Verification</div><div class="card-desc">Infinix Hot 10i · Trusted device</div></div><span class="pill green">Verified</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🔑</div><div class="card-info"><div class="card-title">API Key Security</div><div class="card-desc">3 active keys · Rate-limited · IP-restricted</div></div><span class="pill green">Secured</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🔒</div><div class="card-info"><div class="card-title">Encryption</div><div class="card-desc">AES-256 at rest · TLS 1.3 in transit</div></div><span class="pill green">Enabled</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">🛡️</div><div class="card-info"><div class="card-title">Anomaly Detection</div><div class="card-desc">AI-powered · Login pattern analysis</div></div><span class="pill green">Monitoring</span></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Security Audit Log</span></div>
+<table class="tbl"><thead><tr><th>Event</th><th>Device</th><th>Location</th><th>Status</th></tr></thead><tbody>
+<tr><td>SSO Login</td><td>Infinix Hot 10i</td><td>Jalingo, NG</td><td><span class="pill green">Approved</span></td></tr>
+<tr><td>API Key Used</td><td>Base44 Backend</td><td>Cloud</td><td><span class="pill green">Valid</span></td></tr>
+<tr><td>App Connected</td><td>Infinix Hot 10i</td><td>Jalingo, NG</td><td><span class="pill green">Approved</span></td></tr>
+<tr><td>Credential Issued</td><td>System</td><td>Polygon</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td>Settings Changed</td><td>Infinix Hot 10i</td><td>Jalingo, NG</td><td><span class="pill blue">Logged</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ACCESS -->
+<div id="page-access" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🔑 Access & Permissions</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card purple"><div class="kpi-label">Role</div><div class="kpi-value">Owner</div><div class="kpi-sub">Super admin · All access</div></div>
+<div class="kpi-card blue"><div class="kpi-label">API Keys</div><div class="kpi-value">3</div><div class="kpi-sub">2 active · 1 rotating</div></div>
+<div class="kpi-card green"><div class="kpi-label">Scopes</div><div class="kpi-value">24</div><div class="kpi-sub">read · write · admin</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Delegated</div><div class="kpi-value">2</div><div class="kpi-sub">Maganu · OMEGA</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Role & Permissions</span></div>
+<table class="tbl"><thead><tr><th>Module</th><th>Read</th><th>Write</th><th>Admin</th></tr></thead><tbody>
+<tr><td>Payments / Wallets</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>Marketplace</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>CRM / Business</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>AI Agents</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>IoT / Devices</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>Identity / Security</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>User Management</td><td>✅</td><td>✅</td><td>✅</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">API Keys</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">🔑</div><div class="card-info"><div class="card-title">Harz Cloud API</div><div class="card-desc">harz-cloud-prod · Rate: 1000/min</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🔑</div><div class="card-info"><div class="card-title">OMEGA Commander</div><div class="card-desc">omega-prod · Rate: 500/min</div></div><span class="pill green">Active</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🔑</div><div class="card-info"><div class="card-title">Maganu Agent</div><div class="card-desc">maganu-prod · Rate: 200/min</div></div><span class="pill orange">Rotating</span></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Delegated Agents</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🤖</div><div class="card-info"><div class="card-title">Magani (Base44 Superagent)</div><div class="card-desc">Full ecosystem access · Autonomous operations</div></div><span class="pill purple">Delegate</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.1)">🤖</div><div class="card-info"><div class="card-title">OMEGA Commander</div><div class="card-desc">10 tools · GitHub + Render + AI</div></div><span class="pill purple">Delegate</span></div></div>
+</div>
+</div>
+
+<!-- ACTIVITY -->
+<div id="page-activity" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📋 Activity & Audit Log</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Logins (30d)</div><div class="kpi-value">842</div><div class="kpi-sub">All verified</div></div>
+<div class="kpi-card green"><div class="kpi-label">Apps Accessed</div><div class="kpi-value">35</div><div class="kpi-sub">Full ecosystem</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Actions Logged</div><div class="kpi-value">3,420</div><div class="kpi-sub">This month</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Security Events</div><div class="kpi-value">0</div><div class="kpi-sub">No anomalies</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Login History</span></div>
+<table class="tbl"><thead><tr><th>Time</th><th>App</th><th>Device</th><th>Location</th><th>Status</th></tr></thead><tbody>
+<tr><td>2m ago</td><td>Super App</td><td>Infinix</td><td>Jalingo</td><td><span class="pill green">✓</span></td></tr>
+<tr><td>15m ago</td><td>WhatsApp</td><td>Infinix</td><td>Jalingo</td><td><span class="pill green">✓</span></td></tr>
+<tr><td>1h ago</td><td>OMEGA API</td><td>Cloud</td><td>Base44</td><td><span class="pill green">✓</span></td></tr>
+<tr><td>3h ago</td><td>Business OS</td><td>Infinix</td><td>Jalingo</td><td><span class="pill green">✓</span></td></tr>
+<tr><td>5h ago</td><td>IoT Platform</td><td>Infinix</td><td>Jalingo</td><td><span class="pill green">✓</span></td></tr>
+<tr><td>8h ago</td><td>HarzPay</td><td>Infinix</td><td>Jalingo</td><td><span class="pill green">✓</span></td></tr>
+<tr><td>12h ago</td><td>Dev Platform</td><td>Infinix</td><td>Jalingo</td><td><span class="pill green">✓</span></td></tr>
+<tr><td>1d ago</td><td>AI Cloud</td><td>Infinix</td><td>Jalingo</td><td><span class="pill green">✓</span></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Audit Trail</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">SSO login · Super App</div><div class="card-desc">Biometric verified · IP: 10.42.x.x · Token issued</div></div><div class="card-meta" style="color:var(--p3)">2m</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">🔗</div><div class="card-info"><div class="card-title">App authorized · IoT Platform</div><div class="card-desc">Scopes: device:read, device:write · Auto-approved</div></div><div class="card-meta" style="color:var(--p1)">1h</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">📜</div><div class="card-info"><div class="card-title">Credential issued · AI Agent Operator</div><div class="card-desc">Minted on Polygon · IPFS hash: QmX7...3fK</div></div><div class="card-meta" style="color:var(--p2)">3h</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">⭐</div><div class="card-info"><div class="card-title">Reputation updated · +5</div><div class="card-desc">Transaction #142 completed · Score: 947</div></div><div class="card-meta" style="color:var(--p4)">5h</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,215,0,.1)">🔑</div><div class="card-info"><div class="card-title">API key used · OMEGA</div><div class="card-desc">Tool: github_deploy · Repo: omega-commander</div></div><div class="card-meta" style="color:var(--gold)">8h</div></div></div>
+</div>
+</div>
+
+<!-- DIRECTORY -->
+<div id="page-directory" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>👥 Identity Directory</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Total Users</div><div class="kpi-value">1</div><div class="kpi-sub">1 owner · 0 members</div></div>
+<div class="kpi-card green"><div class="kpi-label">Organizations</div><div class="kpi-value">1</div><div class="kpi-sub">Harz Digital Services</div></div>
+<div class="kpi-card purple"><div class="kpi-label">AI Agents</div><div class="kpi-value">2</div><div class="kpi-sub">Magani · OMEGA</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Pending Invites</div><div class="kpi-value">0</div><div class="kpi-sub">No pending invitations</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Users</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:linear-gradient(135deg,var(--p1),var(--p2))">RH</div><div class="card-info"><div class="card-title">Rabiu Hamza Mohammed</div><div class="card-desc">Owner · Elite tier · KYC Level 3 · Score 947</div></div><span class="pill gold">Owner</span></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Organizations</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,215,0,.12)">🏢</div><div class="card-info"><div class="card-title">Harz Digital Services</div><div class="card-desc">HI Water/Block Industry · CAC RC 321424 · 35 platforms</div></div><span class="pill green">Active</span></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">AI Agent Identities</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.12)">🤖</div><div class="card-info"><div class="card-title">Magani · Base44 Superagent</div><div class="card-desc">Delegate · 35 app access · Full ecosystem</div></div><span class="pill purple">Delegate</span></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.12)">🤖</div><div class="card-info"><div class="card-title">OMEGA Commander</div><div class="card-desc">Delegate · 10 tools · GitHub + Render + AI</div></div><span class="pill purple">Delegate</span></div></div>
+</div>
+</div>
+
+<div class="footer">HARZ Global Identity v1.0 · Platform #36 in the Harz Ecosystem<br>SSO · Wallets · KYC · Credentials · Reputation · Security<br>Built by Harz Digital Services · CAC RC 321424</div>
+
+<script>
+function switchPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const p=document.getElementById('page-'+n);if(p)p.classList.add('active');window.scrollTo(0,0)}
+</script>
+</body>
+</html>
