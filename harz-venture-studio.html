@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0a0a0a">
+<title>HARZ Venture Studio — Ideas to Businesses, Automatically</title>
+<meta name="description" content="Turn any idea into a business: auto-generates business plans, code, websites, apps, marketing campaigns, and deployment pipelines.">
+<style>
+:root{--p1:#00d4ff;--p2:#7c4dff;--p3:#00e676;--p4:#ffab00;--p5:#ff5252;--bg:#0a0a0a;--card:#161616;--card2:#1e1e1e;--text:#f0f0f0;--muted:#777;--border:#2a2a2a;--accent:#00d4ff;--gold:#ffd700}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--p1);border-radius:5px}
+.header{background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(124,77,255,.04));border-bottom:1px solid var(--border);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header h1{font-size:1rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.62rem;color:var(--muted);margin-top:2px}
+.badge-live{background:rgba(0,230,118,.12);color:var(--p3);padding:2px 8px;border-radius:10px;font-size:.58rem;font-weight:700}
+.badge-v{background:rgba(0,212,255,.12);color:var(--p1);padding:2px 8px;border-radius:10px;font-size:.58rem;font-weight:700}
+
+/* Idea Input */
+.idea-box{margin:16px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
+.idea-box h3{font-size:.78rem;font-weight:700;margin-bottom:8px}
+.idea-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-size:.8rem;font-family:inherit;resize:none;min-height:70px;margin-bottom:10px}
+.idea-input:focus{outline:none;border-color:var(--p1)}
+.idea-btn{width:100%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:10px;padding:12px;color:#fff;font-size:.78rem;font-weight:700;cursor:pointer}
+.idea-btn:active{transform:scale(.97)}
+.idea-examples{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.idea-chip{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:.62rem;cursor:pointer}
+.idea-chip:active{border-color:var(--p1)}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 16px;margin-bottom:16px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-card.blue::before{background:var(--p1)}.kpi-card.green::before{background:var(--p3)}.kpi-card.purple::before{background:var(--p2)}.kpi-card.orange::before{background:var(--p4)}.kpi-card.red::before{background:var(--p5)}
+.kpi-label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.kpi-value{font-size:1.35rem;font-weight:800;margin:4px 0}
+.kpi-sub{font-size:.65rem;color:var(--muted)}
+
+.module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px;margin-bottom:16px}
+.module-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .25s}
+.module-card:active{transform:scale(.95)}
+.module-card:hover{border-color:var(--p1)}
+.module-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 8px}
+.module-name{font-size:.65rem;font-weight:700;margin-bottom:2px}
+.module-desc{font-size:.52rem;color:var(--muted);line-height:1.3}
+.section{padding:0 16px;margin-bottom:20px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.section-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.section-link{font-size:.65rem;color:var(--p1);cursor:pointer}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.card:active{transform:scale(.98)}
+.card-row{display:flex;align-items:center;gap:10px}
+.card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-title{font-size:.75rem;font-weight:600}
+.card-desc{font-size:.62rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-meta{font-size:.68rem;font-weight:600;text-align:right;flex-shrink:0}
+.tbl{width:100%;border-collapse:collapse;font-size:.7rem}
+.tbl th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-size:.58rem;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--border)}
+.pill{display:inline-block;padding:1px 6px;border-radius:6px;font-size:.56rem;font-weight:600}
+.pill.green{background:rgba(0,230,118,.12);color:var(--p3)}.pill.blue{background:rgba(0,212,255,.12);color:var(--p1)}.pill.orange{background:rgba(255,171,0,.12);color:var(--p4)}.pill.red{background:rgba(255,82,82,.12);color:var(--p5)}.pill.purple{background:rgba(124,77,255,.12);color:var(--p2)}
+.page{display:none;animation:fadeIn .3s ease}.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.page-head .back{font-size:1.2rem;cursor:pointer;color:var(--muted)}
+.page-head h2{font-size:.88rem;font-weight:700}
+
+/* Pipeline steps */
+.pipeline-step{display:flex;align-items:flex-start;gap:12px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:6px}
+.ps-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.ps-done{background:rgba(0,230,118,.15);color:var(--p3);border:2px solid var(--p3)}
+.ps-active{background:rgba(0,212,255,.15);color:var(--p1);border:2px solid var(--p1)}
+.ps-pending{background:rgba(119,119,119,.1);color:var(--muted);border:2px solid var(--muted)}
+.ps-info{flex:1}
+.ps-title{font-size:.72rem;font-weight:600}
+.ps-desc{font-size:.6rem;color:var(--muted);margin-top:2px}
+.ps-status{font-size:.55rem;font-weight:700;padding:2px 8px;border-radius:6px;flex-shrink:0}
+
+/* Venture card */
+.venture-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px}
+.venture-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.venture-name{font-size:.82rem;font-weight:700}
+.venture-stage{font-size:.55rem;font-weight:700;padding:2px 8px;border-radius:6px}
+.venture-pipeline{display:flex;gap:3px;margin:8px 0}
+.venture-step{flex:1;height:6px;border-radius:3px}
+.venture-step.done{background:var(--p3)}
+.venture-step.active{background:var(--p1)}
+.venture-step.pending{background:var(--border)}
+.venture-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.venture-stat{text-align:center;background:var(--bg);border-radius:6px;padding:4px}
+.venture-stat .val{font-size:.72rem;font-weight:700}
+.venture-stat .lbl{font-size:.5rem;color:var(--muted);text-transform:uppercase}
+
+/* Generated artifacts */
+.artifact{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.artifact-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.artifact-info{flex:1}
+.artifact-name{font-size:.72rem;font-weight:600}
+.artifact-desc{font-size:.58rem;color:var(--muted)}
+.artifact-action{font-size:.6rem;font-weight:700;color:var(--p1);cursor:pointer}
+
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:.62rem}
+@media(max-width:640px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.module-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:641px){.kpi-grid{grid-template-columns:repeat(4,1fr)}.module-grid{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+<div class="header">
+<div><h1>HARZ Venture Studio</h1><div class="sub">Ideas → Business Plans → Code → Apps → Marketing → Deploy</div></div>
+<div style="display:flex;gap:6px;align-items:center"><span class="badge-v">v1.0</span><span class="badge-live">● LIVE</span></div>
+</div>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+<div class="idea-box">
+<h3>💡 Describe your business idea</h3>
+<textarea class="idea-input" id="ideaInput" placeholder="e.g. A platform that connects Nigerian farmers directly with buyers, cutting out middlemen..."></textarea>
+<button class="idea-btn" onclick="generateVenture()">🚀 Generate Venture</button>
+<div class="idea-examples">
+<div class="idea-chip" onclick="document.getElementById('ideaInput').value='A subscription box service delivering local Nigerian snacks to diaspora monthly'">📦 Snack subscription for diaspora</div>
+<div class="idea-chip" onclick="document.getElementById('ideaInput').value='An AI-powered legal document generator for Nigerian SMEs'">⚖️ AI legal docs for SMEs</div>
+<div class="idea-chip" onclick="document.getElementById('ideaInput').value='A peer-to-peer solar panel financing platform for rural Nigeria'">☀️ Solar financing platform</div>
+<div class="idea-chip" onclick="document.getElementById('ideaInput').value='A marketplace connecting homeowners with verified local artisans'">🔧 Artisan marketplace</div>
+</div>
+</div>
+
+<div class="kpi-grid">
+<div class="kpi-card blue"><div class="kpi-label">Ventures Created</div><div class="kpi-value">8</div><div class="kpi-sub">3 live · 3 building · 2 ideation</div></div>
+<div class="kpi-card green"><div class="kpi-label">Avg Time to Launch</div><div class="kpi-value">42 min</div><div class="kpi-sub">Idea → deployed website</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Code Generated</div><div class="kpi-value">184K</div><div class="kpi-sub">Lines across 8 ventures</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Artifacts</div><div class="kpi-value">94</div><div class="kpi-sub">Plans · Sites · Apps · Campaigns</div></div>
+</div>
+
+<div class="section"><div class="section-head"><span class="section-title">Studio Modules</span></div>
+<div class="module-grid">
+<div class="module-card" onclick="switchPage('pipeline')"><div class="module-icon" style="background:rgba(0,212,255,.12)">⚙️</div><div class="module-name">Pipeline</div><div class="module-desc">8-step auto-builder</div></div>
+<div class="module-card" onclick="switchPage('ventures')"><div class="module-icon" style="background:rgba(0,230,118,.12)">🚀</div><div class="module-name">Ventures</div><div class="module-desc">All active ventures</div></div>
+<div class="module-card" onclick="switchPage('businessplan')"><div class="module-icon" style="background:rgba(124,77,255,.12)">📋</div><div class="module-name">Plan Builder</div><div class="module-desc">Auto business plans</div></div>
+<div class="module-card" onclick="switchPage('codegen')"><div class="module-icon" style="background:rgba(255,171,0,.12)">💻</div><div class="module-name">Code Gen</div><div class="module-desc">Sites · Apps · APIs</div></div>
+<div class="module-card" onclick="switchPage('marketing')"><div class="module-icon" style="background:rgba(255,82,82,.12)">📣</div><div class="module-name">Marketing</div><div class="module-desc">Campaigns · Content · SEO</div></div>
+<div class="module-card" onclick="switchPage('deploy')"><div class="module-icon" style="background:rgba(0,212,255,.12)">🚀</div><div class="module-name">Deploy</div><div class="module-desc">GitHub · Vercel · Render</div></div>
+<div class="module-card" onclick="switchPage('templates')"><div class="module-icon" style="background:rgba(0,230,118,.12)">🎨</div><div class="module-name">Templates</div><div class="module-desc">Pre-built venture kits</div></div>
+<div class="module-card" onclick="switchPage('analytics')"><div class="module-icon" style="background:rgba(124,77,255,.12)">📊</div><div class="module-name">Analytics</div><div class="module-desc">Venture performance</div></div>
+<div class="module-card" onclick="switchPage('library')"><div class="module-icon" style="background:rgba(255,171,0,.12)">📚</div><div class="module-name">Library</div><div class="module-desc">Generated artifacts</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">How It Works — 8-Step Pipeline</span></div>
+<div class="pipeline-step"><div class="ps-num ps-done">1</div><div class="ps-info"><div class="ps-title">📝 Idea Analysis</div><div class="ps-desc">AI analyzes your idea · Market size · Competition · Feasibility score</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">DONE</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">2</div><div class="ps-info"><div class="ps-title">📋 Business Plan Generation</div><div class="ps-desc">Executive summary · Market analysis · Financial projections · Revenue model</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">DONE</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">3</div><div class="ps-info"><div class="ps-title">🎨 Brand & Identity</div><div class="ps-desc">Name suggestions · Logo concept · Color palette · Tagline · Domain check</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">DONE</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">4</div><div class="ps-info"><div class="ps-title">💻 Code Generation</div><div class="ps-desc">Landing page · Web app · API backend · Database schema · Mobile PWA</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">DONE</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">5</div><div class="ps-info"><div class="ps-title">📊 Data & Analytics</div><div class="ps-desc">Entity schemas · Analytics dashboard · KPI tracking · Report templates</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">DONE</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">6</div><div class="ps-info"><div class="ps-title">📣 Marketing Campaign</div><div class="ps-desc">Social media plan · Content calendar · SEO strategy · Ad creatives · Email sequences</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">DONE</div></div>
+<div class="pipeline-step"><div class="ps-num ps-active">7</div><div class="ps-info"><div class="ps-title">🚀 Deployment</div><div class="ps-desc">GitHub repo · Vercel deploy · Render backend · DNS setup · SSL</div></div><div class="ps-status" style="background:rgba(0,212,255,.12);color:var(--p1)">RUNNING</div></div>
+<div class="pipeline-step"><div class="ps-num ps-pending">8</div><div class="ps-info"><div class="ps-title">📈 Launch & Scale</div><div class="ps-desc">Go-live checklist · Monitor · Optimize · Iterate based on metrics</div></div><div class="ps-status" style="background:rgba(119,119,119,.1);color:var(--muted)">PENDING</div></div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">Active Ventures</span><span class="section-link" onclick="switchPage('ventures')">View all →</span></div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">🌾 FarmDirect NG</div><span class="venture-stage" style="background:rgba(0,230,118,.12);color:var(--p3)">LIVE</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">Connecting Nigerian farmers directly with buyers</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">8/8</div><div class="lbl">Steps</div></div><div class="venture-stat"><div class="val">38m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">12K</div><div class="lbl">Lines</div></div></div>
+</div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">⚖️ LegalDoc AI</div><span class="venture-stage" style="background:rgba(0,212,255,.12);color:var(--p1)">BUILDING</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">AI-powered legal document generator for Nigerian SMEs</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step active"></div><div class="venture-step pending"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">6/8</div><div class="lbl">Steps</div></div><div class="venture-stat"><div class="val">31m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">24K</div><div class="lbl">Lines</div></div></div>
+</div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">☀️ SolarFund</div><span class="venture-stage" style="background:rgba(255,171,0,.12);color:var(--p4)">CODE GEN</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">Peer-to-peer solar panel financing for rural Nigeria</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step active"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">3/8</div><div class="lbl">Steps</div></div><div class="venture-stat"><div class="val">18m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">8K</div><div class="lbl">Lines</div></div></div>
+</div>
+</div>
+</div>
+
+<!-- PIPELINE -->
+<div id="page-pipeline" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>⚙️ Venture Pipeline</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="section-head"><span class="section-title">Current: LegalDoc AI</span><span class="pill blue">Step 7/8</span></div>
+<div class="pipeline-step"><div class="ps-num ps-done">1</div><div class="ps-info"><div class="ps-title">📝 Idea Analysis</div><div class="ps-desc">Market: ₦4.2B Nigerian legal tech · Competition: Medium · Feasibility: 87% · Score: A-</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">2</div><div class="ps-info"><div class="ps-title">📋 Business Plan</div><div class="ps-desc">12-page plan · Revenue: SaaS ₦5K/mo · 3-year projection: ₦42M ARR · CAC: ₦1,200</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">3</div><div class="ps-info"><div class="ps-title">🎨 Brand & Identity</div><div class="ps-desc">Name: LegalDoc AI · Colors: Navy #0a1929, Gold #ffd700 · Domain: legaldoc.ng (available) · Logo: Scale + document</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">4</div><div class="ps-info"><div class="ps-title">💻 Code Generation</div><div class="ps-desc">Landing page (HTML/CSS/JS) · Web app (React-style SPA) · API (Node/Deno) · DB schema (8 entities) · PWA manifest</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">5</div><div class="ps-info"><div class="ps-title">📊 Data & Analytics</div><div class="ps-desc">8 entities: User, Document, Template, Subscription, Payment, Usage, Feedback, Audit · KPI dashboard</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">6</div><div class="ps-info"><div class="ps-title">📣 Marketing Campaign</div><div class="ps-desc">30-day content calendar · 24 social posts · 5 ad creatives · 12 email sequences · SEO: 42 keywords mapped</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-active">7</div><div class="ps-info"><div class="ps-title">🚀 Deployment</div><div class="ps-desc">GitHub repo created · Pushing code... · Vercel deploy queued · Render backend pending · DNS: legaldoc.ng</div></div><div class="ps-status" style="background:rgba(0,212,255,.12);color:var(--p1)">▶</div></div>
+<div class="pipeline-step"><div class="ps-num ps-pending">8</div><div class="ps-info"><div class="ps-title">📈 Launch & Scale</div><div class="ps-desc">Waiting for deployment · Go-live checklist · Monitor metrics · Iterate</div></div><div class="ps-status" style="background:rgba(119,119,119,.1);color:var(--muted)">○</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Build Log</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">Idea analyzed — Feasibility 87%</div><div class="card-desc">Market ₦4.2B · Competition medium · Score A-</div></div><div class="card-meta" style="color:var(--p3)">31m</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">Business plan generated — 12 pages</div><div class="card-desc">Executive summary · Market · Financials · Revenue model</div></div><div class="card-meta" style="color:var(--p3)">29m</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">Brand created — LegalDoc AI</div><div class="card-desc">Logo · Colors · Tagline · Domain checked</div></div><div class="card-meta" style="color:var(--p3)">26m</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">✅</div><div class="card-info"><div class="card-title">Code generated — 24,000 lines</div><div class="card-desc">Landing · App · API · DB schema · PWA</div></div><div class="card-meta" style="color:var(--p3)">18m</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">▶️</div><div class="card-info"><div class="card-title">Deploying to GitHub + Vercel...</div><div class="card-desc">Repo: legaldoc-ai · Vercel project created · Waiting for build</div></div><div class="card-meta" style="color:var(--p1)">now</div></div></div>
+</div>
+</div>
+
+<!-- VENTURES -->
+<div id="page-ventures" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🚀 All Ventures</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">🌾 FarmDirect NG</div><span class="venture-stage" style="background:rgba(0,230,118,.12);color:var(--p3)">LIVE</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">Farmers ↔ buyers marketplace</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">38m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">12K</div><div class="lbl">Code Lines</div></div><div class="venture-stat"><div class="val">farmdirect.ng</div><div class="lbl">Domain</div></div></div>
+</div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">⚖️ LegalDoc AI</div><span class="venture-stage" style="background:rgba(0,212,255,.12);color:var(--p1)">BUILDING</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">AI legal document generator for SMEs</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step active"></div><div class="venture-step pending"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">31m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">24K</div><div class="lbl">Code Lines</div></div><div class="venture-stat"><div class="val">legaldoc.ng</div><div class="lbl">Domain</div></div></div>
+</div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">☀️ SolarFund</div><span class="venture-stage" style="background:rgba(255,171,0,.12);color:var(--p4)">CODE GEN</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">P2P solar panel financing platform</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step active"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">18m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">8K</div><div class="lbl">Code Lines</div></div><div class="venture-stat"><div class="val">solarfund.ng</div><div class="lbl">Domain</div></div></div>
+</div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">🔧 FixConnect</div><span class="venture-stage" style="background:rgba(124,77,255,.12);color:var(--p2)">BRANDING</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">Verified local artisans marketplace</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step active"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">12m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">2K</div><div class="lbl">Code Lines</div></div><div class="venture-stat"><div class="val">fixconnect.ng</div><div class="lbl">Domain</div></div></div>
+</div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">📦 NaijaBox</div><span class="venture-stage" style="background:rgba(119,119,119,.1);color:var(--muted)">IDEATION</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">Nigerian snack subscription for diaspora</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step active"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">6m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">0</div><div class="lbl">Code Lines</div></div><div class="venture-stat"><div class="val">naijabox.com</div><div class="lbl">Domain</div></div></div>
+</div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">💊 MedTrack</div><span class="venture-stage" style="background:rgba(0,230,118,.12);color:var(--p3)">LIVE</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">Medication tracking + reminders</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">42m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">18K</div><div class="lbl">Code Lines</div></div><div class="venture-stat"><div class="val">medtrack.ng</div><div class="lbl">Domain</div></div></div>
+</div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">🎓 TutorMatch</div><span class="venture-stage" style="background:rgba(0,230,118,.12);color:var(--p3)">LIVE</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">Student-tutor matching platform</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div><div class="venture-step done"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">35m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">14K</div><div class="lbl">Code Lines</div></div><div class="venture-stat"><div class="val">tutormatch.ng</div><div class="lbl">Domain</div></div></div>
+</div>
+<div class="venture-card">
+<div class="venture-header"><div class="venture-name">🚚 HaulHub</div><span class="venture-stage" style="background:rgba(119,119,119,.1);color:var(--muted)">IDEATION</span></div>
+<div class="card-desc" style="font-size:.6rem;color:var(--muted);margin-bottom:6px">Logistics matching for trucks</div>
+<div class="venture-pipeline"><div class="venture-step done"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div><div class="venture-step pending"></div></div>
+<div class="venture-meta"><div class="venture-stat"><div class="val">4m</div><div class="lbl">Build Time</div></div><div class="venture-stat"><div class="val">0</div><div class="lbl">Code Lines</div></div><div class="venture-stat"><div class="val">haulhub.ng</div><div class="lbl">Domain</div></div></div>
+</div>
+</div>
+</div>
+
+<!-- BUSINESS PLAN -->
+<div id="page-businessplan" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📋 Business Plan Builder</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card purple"><div class="kpi-label">Plans Generated</div><div class="kpi-value">8</div><div class="kpi-sub">Avg 12 pages each</div></div>
+<div class="kpi-card green"><div class="kpi-label">Avg Feasibility</div><div class="kpi-value">84%</div><div class="kpi-sub">Across all ventures</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Market Analysis</div><div class="kpi-value">8</div><div class="kpi-sub">Nigeria + Africa focus</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Financial Models</div><div class="kpi-value">8</div><div class="kpi-sub">3-year projections</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Plan Structure (Auto-Generated)</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">1</div><div class="card-info"><div class="card-title">Executive Summary</div><div class="card-desc">Vision · Mission · Value proposition · Target market · Revenue model</div></div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.1)">2</div><div class="card-info"><div class="card-title">Market Analysis</div><div class="card-desc">TAM/SAM/SOM · Competitor analysis · Customer segments · Trends</div></div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">3</div><div class="card-info"><div class="card-title">Product Strategy</div><div class="card-desc">Features roadmap · MVP scope · Tech stack · Scalability plan</div></div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">4</div><div class="card-info"><div class="card-title">Financial Projections</div><div class="card-desc">3-year P&L · CAC · LTV · Break-even · Funding needs · Revenue streams</div></div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,82,.1)">5</div><div class="card-info"><div class="card-title">Go-to-Market</div><div class="card-desc">Channels · Pricing · Launch plan · Growth strategy · Partnerships</div></div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">6</div><div class="card-info"><div class="card-title">Team & Operations</div><div class="card-desc">Org structure · Key roles · Milestones · Risk analysis · Legal</div></div></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Sample: FarmDirect NG Financials</span></div>
+<table class="tbl"><thead><tr><th>Metric</th><th>Year 1</th><th>Year 2</th><th>Year 3</th></tr></thead><tbody>
+<tr><td>Users</td><td>2,000</td><td>12,000</td><td>45,000</td></tr>
+<tr><td>Revenue</td><td>₦4.8M</td><td>₦28M</td><td>₦108M</td></tr>
+<tr><td>Costs</td><td>₦3.2M</td><td>₦14M</td><td>₦42M</td></tr>
+<tr><td>Gross Profit</td><td>₦1.6M</td><td>₦14M</td><td>₦66M</td></tr>
+<tr><td>CAC</td><td>₦800</td><td>₦600</td><td>₦400</td></tr>
+<tr><td>LTV</td><td>₦4,200</td><td>₦6,800</td><td>₦9,200</td></tr>
+<tr><td>Break-even</td><td colspan="3" style="text-align:center">Month 14</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- CODE GEN -->
+<div id="page-codegen" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>💻 Code Generation</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card orange"><div class="kpi-label">Total Lines</div><div class="kpi-value">184K</div><div class="kpi-sub">Across 8 ventures</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Components</div><div class="kpi-value">342</div><div class="kpi-sub">Reusable · PWA-ready</div></div>
+<div class="kpi-card green"><div class="kpi-label">APIs Generated</div><div class="kpi-value">24</div><div class="kpi-sub">Backend functions</div></div>
+<div class="kpi-card purple"><div class="kpi-label">DB Schemas</div><div class="kpi-value">64</div><div class="kpi-sub">Entity definitions</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">What Gets Generated</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(0,212,255,.12)">🌐</div><div class="artifact-info"><div class="artifact-name">Landing Page</div><div class="artifact-desc">HTML/CSS/JS · SEO-optimized · PWA · Mobile-first · ~3,000 lines</div></div><span class="pill green">✓ 8/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(0,230,118,.12)">📱</div><div class="artifact-info"><div class="artifact-name">Web App (SPA)</div><div class="artifact-desc">Dashboard · CRUD · Auth · Real-time · ~8,000 lines</div></div><span class="pill green">✓ 6/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(124,77,255,.12)">⚡</div><div class="artifact-info"><div class="artifact-name">API Backend</div><div class="artifact-desc">Deno/Node · REST endpoints · Auth · Rate limiting · ~2,000 lines</div></div><span class="pill green">✓ 6/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(255,171,0,.12)">🗄️</div><div class="artifact-info"><div class="artifact-name">Database Schema</div><div class="artifact-desc">8 entities per venture · JSON schema · Relations · RLS</div></div><span class="pill green">✓ 8/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(255,82,82,.12)">📦</div><div class="artifact-info"><div class="artifact-name">PWA Manifest</div><div class="artifact-desc">Service worker · Offline support · Installable · Icons</div></div><span class="pill green">✓ 6/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(0,212,255,.12)">🔧</div><div class="artifact-info"><div class="artifact-name">Config Files</div><div class="artifact-desc">Package.json · tsconfig · .gitignore · README · CI/CD</div></div><span class="pill green">✓ 6/8</span></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Tech Stack (Auto-Selected)</span></div>
+<table class="tbl"><thead><tr><th>Layer</th><th>Technology</th><th>Why</th></tr></thead><tbody>
+<tr><td>Frontend</td><td>Vanilla HTML/CSS/JS</td><td>Zero build · Fast load · Mobile-first</td></tr>
+<tr><td>Backend</td><td>Deno + Base44 SDK</td><td>Serverless · Auto-scale · Built-in DB</td></tr>
+<tr><td>Database</td><td>Base44 Entities</td><td>JSON schema · RLS · Auto CRUD</td></tr>
+<tr><td>Hosting</td><td>GitHub Pages + Vercel</td><td>Free · CDN · Auto-deploy</td></tr>
+<tr><td>Backend Host</td><td>Base44 / Render</td><td>Functions · API · Persistent</td></tr>
+<tr><td>Payments</td><td>Paystack + Stripe</td><td>Nigeria + International</td></tr>
+<tr><td>Analytics</td><td>Custom dashboard</td><td>Real-time · Entity-based</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- MARKETING -->
+<div id="page-marketing" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📣 Marketing Campaign Generator</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card red"><div class="kpi-label">Campaigns</div><div class="kpi-value">8</div><div class="kpi-sub">One per venture</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Content Pieces</div><div class="kpi-value">240</div><div class="kpi-sub">Posts · Emails · Ads</div></div>
+<div class="kpi-card green"><div class="kpi-label">SEO Keywords</div><div class="kpi-value">336</div><div class="kpi-sub">42 per venture</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Ad Creatives</div><div class="kpi-value">40</div><div class="kpi-sub">5 per venture</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">What Gets Generated</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(255,82,82,.12)">📅</div><div class="artifact-info"><div class="artifact-name">30-Day Content Calendar</div><div class="artifact-desc">Daily posts · Platform-specific · Hashtags · Best times</div></div><span class="pill green">✓ 8/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(0,212,255,.12)">📝</div><div class="artifact-info"><div class="artifact-name">Social Media Posts</div><div class="artifact-desc">24 posts · Twitter/X · Instagram · Facebook · LinkedIn</div></div><span class="pill green">✓ 8/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(0,230,118,.12)">📧</div><div class="artifact-info"><div class="artifact-name">Email Sequences</div><div class="artifact-desc">12 emails · Welcome · Onboarding · Nurture · Conversion</div></div><span class="pill green">✓ 8/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(124,77,255,.12)">🎨</div><div class="artifact-info"><div class="artifact-name">Ad Creatives</div><div class="artifact-desc">5 ad variations · Copy + visual direction · A/B test ready</div></div><span class="pill green">✓ 8/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(255,171,0,.12)">🔍</div><div class="artifact-info"><div class="artifact-name">SEO Strategy</div><div class="artifact-desc">42 keywords · Meta tags · Schema markup · Sitemap</div></div><span class="pill green">✓ 8/8</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(255,82,52,.12)">🎯</div><div class="artifact-info"><div class="artifact-name">Landing Page Copy</div><div class="artifact-desc">Hero · Features · Testimonials · CTA · FAQ</div></div><span class="pill green">✓ 8/8</span></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Sample: FarmDirect NG Campaign</span></div>
+<table class="tbl"><thead><tr><th>Day</th><th>Platform</th><th>Content Type</th><th>Goal</th></tr></thead><tbody>
+<tr><td>1</td><td>Twitter/X</td><td>Launch announcement</td><td>Awareness</td></tr>
+<tr><td>2</td><td>Instagram</td><td>Farmer story video</td><td>Engagement</td></tr>
+<tr><td>3</td><td>Facebook</td><td>Carousel ad — benefits</td><td>Conversion</td></tr>
+<tr><td>4</td><td>LinkedIn</td><td>Market analysis post</td><td>B2B reach</td></tr>
+<tr><td>5</td><td>Email</td><td>Welcome sequence</td><td>Onboarding</td></tr>
+<tr><td>6</td><td>WhatsApp</td><td>Status + broadcast</td><td>Direct sales</td></tr>
+<tr><td>7</td><td>TikTok</td><td>Behind-the-scenes</td><td>Virality</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- DEPLOY -->
+<div id="page-deploy" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🚀 Deployment Pipeline</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Deployed</div><div class="kpi-value">3</div><div class="kpi-sub">Live on GitHub Pages</div></div>
+<div class="kpi-card blue"><div class="kpi-label">GitHub Repos</div><div class="kpi-value">8</div><div class="kpi-sub">One per venture</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Vercel Sites</div><div class="kpi-value">3</div><div class="kpi-sub">Auto-deployed</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Avg Deploy Time</div><div class="kpi-value">4 min</div><div class="kpi-sub">Push → live</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Deploy Steps (Automated)</span></div>
+<div class="pipeline-step"><div class="ps-num ps-done">1</div><div class="ps-info"><div class="ps-title">📦 Create GitHub Repo</div><div class="ps-desc">Auto-create repo · Initialize · Push all generated code</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">2</div><div class="ps-info"><div class="ps-title">🌐 Enable GitHub Pages</div><div class="ps-desc">Static site hosting · Free CDN · Auto-SSL · Custom domain ready</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">3</div><div class="ps-info"><div class="ps-title">⚡ Deploy to Vercel</div><div class="ps-desc">Import repo · Auto-build · Edge network · Preview + production</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">4</div><div class="ps-info"><div class="ps-title">🔧 Deploy Backend</div><div class="ps-desc">Base44 functions · or Render service · API endpoints live</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">5</div><div class="ps-info"><div class="ps-title">🗄️ Create Entities</div><div class="ps-desc">Auto-create DB schema · Seed initial data · Enable RLS</div></div><div class="ps-status" style="background:rgba(0,230,118,.12);color:var(--p3)">✓</div></div>
+<div class="pipeline-step"><div class="ps-num ps-done">6</div><div class="ps-info"><div class="ps-title">🔗 Configure DNS</div><div class="ps-desc">Point custom domain · CNAME to GitHub Pages · SSL auto</div></div><div class="ps-status" style="background:rgba(0,212,255,.12);color:var(--p1)">▶</div></div>
+<div class="pipeline-step"><div class="ps-num ps-pending">7</div><div class="ps-info"><div class="ps-title">✅ Verify & Go Live</div><div class="ps-desc">Health check · Performance test · SEO audit · Launch</div></div><div class="ps-status" style="background:rgba(119,119,119,.1);color:var(--muted)">○</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Deployed Ventures</span></div>
+<table class="tbl"><thead><tr><th>Venture</th><th>GitHub</th><th>Live URL</th><th>Status</th></tr></thead><tbody>
+<tr><td>FarmDirect NG</td><td>✅</td><td>farmdirect.harz.eco</td><td><span class="pill green">Live</span></td></tr>
+<tr><td>MedTrack</td><td>✅</td><td>medtrack.harz.eco</td><td><span class="pill green">Live</span></td></tr>
+<tr><td>TutorMatch</td><td>✅</td><td>tutormatch.harz.eco</td><td><span class="pill green">Live</span></td></tr>
+<tr><td>LegalDoc AI</td><td>✅</td><td>Deploying...</td><td><span class="pill blue">Deploying</span></td></tr>
+<tr><td>SolarFund</td><td>✅</td><td>—</td><td><span class="pill orange">Code Only</span></td></tr>
+<tr><td>FixConnect</td><td>—</td><td>—</td><td><span class="pill purple">Branding</span></td></tr>
+<tr><td>NaijaBox</td><td>—</td><td>—</td><td><span class="pill" style="background:rgba(119,119,119,.1);color:var(--muted)">Ideation</span></td></tr>
+<tr><td>HaulHub</td><td>—</td><td>—</td><td><span class="pill" style="background:rgba(119,119,119,.1);color:var(--muted)">Ideation</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- TEMPLATES -->
+<div id="page-templates" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🎨 Venture Templates</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="section-head"><span class="section-title">Pre-Built Venture Kits</span></div>
+<div class="card" onclick="switchPage('home')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.12)">🛒</div><div class="card-info"><div class="card-title">E-Commerce / Marketplace</div><div class="card-desc">Product catalog · Cart · Checkout · Vendor portal · Reviews</div></div><span class="pill green">Ready</span></div></div>
+<div class="card" onclick="switchPage('home')"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.12)">📱</div><div class="card-info"><div class="card-title">SaaS Platform</div><div class="card-desc">Auth · Subscriptions · Dashboard · API · Multi-tenant</div></div><span class="pill green">Ready</span></div></div>
+<div class="card" onclick="switchPage('home')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.12)">🤖</div><div class="card-info"><div class="card-title">AI-Powered App</div><div class="card-desc">Chat interface · Model integration · Usage billing · API keys</div></div><span class="pill green">Ready</span></div></div>
+<div class="card" onclick="switchPage('home')"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.12)">📅</div><div class="card-info"><div class="card-title">Booking / Service</div><div class="card-desc">Calendar · Appointments · Payments · Reminders · Reviews</div></div><span class="pill green">Ready</span></div></div>
+<div class="card" onclick="switchPage('home')"><div class="card-row"><div class="card-icon" style="background:rgba(255,82,52,.12)">🎓</div><div class="card-info"><div class="card-title">EdTech / Learning</div><div class="card-desc">Courses · Lessons · Quizzes · Certificates · Progress tracking</div></div><span class="pill green">Ready</span></div></div>
+<div class="card" onclick="switchPage('home')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.12)">💰</div><div class="card-info"><div class="card-title">FinTech / Payments</div><div class="card-desc">Wallets · Transfers · Bills · KYC · Transaction history</div></div><span class="pill green">Ready</span></div></div>
+<div class="card" onclick="switchPage('home')"><div class="card-row"><div class="card-icon" style="background:rgba(0,212,255,.12)">🏥</div><div class="card-info"><div class="card-title">Health / Wellness</div><div class="card-desc">Profiles · Vitals · Appointments · Medication · Telehealth</div></div><span class="pill green">Ready</span></div></div>
+<div class="card" onclick="switchPage('home')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.12)">📢</div><div class="card-info"><div class="card-title">Content / Media</div><div class="card-desc">Posts · Articles · Videos · Monetization · Subscriptions</div></div><span class="pill green">Ready</span></div></div>
+</div>
+</div>
+
+<!-- ANALYTICS -->
+<div id="page-analytics" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📊 Venture Analytics</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Live Ventures</div><div class="kpi-value">3</div><div class="kpi-sub">Generating traffic</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Total Visitors</div><div class="kpi-value">842</div><div class="kpi-sub">Across all ventures</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Signups</div><div class="kpi-value">47</div><div class="kpi-sub">All ventures combined</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Revenue</div><div class="kpi-value">₦0</div><div class="kpi-sub">Pre-revenue stage</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Venture Performance</span></div>
+<table class="tbl"><thead><tr><th>Venture</th><th>Stage</th><th>Visitors</th><th>Signups</th><th>Revenue</th></tr></thead><tbody>
+<tr><td>FarmDirect NG</td><td><span class="pill green">Live</span></td><td>420</td><td>28</td><td>₦0</td></tr>
+<tr><td>MedTrack</td><td><span class="pill green">Live</span></td><td>280</td><td>14</td><td>₦0</td></tr>
+<tr><td>TutorMatch</td><td><span class="pill green">Live</span></td><td>142</td><td>5</td><td>₦0</td></tr>
+<tr><td>LegalDoc AI</td><td><span class="pill blue">Building</span></td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>SolarFund</td><td><span class="pill orange">Code</span></td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- LIBRARY -->
+<div id="page-library" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📚 Artifact Library</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card purple"><div class="kpi-label">Business Plans</div><div class="kpi-value">8</div><div class="kpi-sub">Downloadable PDFs</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Code Repos</div><div class="kpi-value">8</div><div class="kpi-sub">GitHub repos</div></div>
+<div class="kpi-card red"><div class="kpi-label">Marketing Kits</div><div class="kpi-value">8</div><div class="kpi-sub">Campaigns + content</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Total Artifacts</div><div class="kpi-value">94</div><div class="kpi-sub">All ventures</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Generated Artifacts</span></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(124,77,255,.12)">📋</div><div class="artifact-info"><div class="artifact-name">Business Plans (PDF)</div><div class="artifact-desc">8 plans · Avg 12 pages · Executive summary to financials</div></div><div class="artifact-action">Download →</div></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(255,171,0,.12)">💻</div><div class="artifact-info"><div class="artifact-name">Source Code (GitHub)</div><div class="artifact-desc">8 repos · 184K lines · HTML/CSS/JS + Deno backend</div></div><div class="artifact-action">View →</div></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(255,82,82,.12)">📣</div><div class="artifact-info"><div class="artifact-name">Marketing Campaigns</div><div class="artifact-desc">8 campaigns · 240 content pieces · 336 SEO keywords</div></div><div class="artifact-action">Open →</div></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(0,212,255,.12)">🎨</div><div class="artifact-info"><div class="artifact-name">Brand Assets</div><div class="artifact-desc">8 brand kits · Logos · Colors · Fonts · Taglines</div></div><div class="artifact-action">View →</div></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(0,230,118,.12)">🗄️</div><div class="artifact-info"><div class="artifact-name">Database Schemas</div><div class="artifact-desc">64 entities · JSON schema · RLS configured</div></div><div class="artifact-action">Export →</div></div>
+<div class="artifact"><div class="artifact-icon" style="background:rgba(124,77,255,.12)">📊</div><div class="artifact-info"><div class="artifact-name">Financial Models</div><div class="artifact-desc">8 models · 3-year projections · P&L · CAC/LTV</div></div><div class="artifact-action">View →</div></div>
+</div>
+</div>
+
+<div class="footer">HARZ Venture Studio v1.0 · Platform #38 in the Harz Ecosystem<br>Idea → Plan → Code → App → Marketing → Deploy · 42 min average<br>Built by Harz Digital Services · CAC RC 321424</div>
+
+<script>
+function switchPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const p=document.getElementById('page-'+n);if(p)p.classList.add('active');window.scrollTo(0,0)}
+function generateVenture(){
+const idea=document.getElementById('ideaInput').value.trim();
+if(!idea){alert('💡 Enter your business idea first!');return;}
+alert('🚀 Venture generation started!\\n\\nIdea: '+idea.substring(0,80)+'...\\n\\nStep 1: Analyzing idea...\\nStep 2: Generating business plan...\\nStep 3: Creating brand...\\nStep 4: Writing code...\\nStep 5: Building database...\\nStep 6: Marketing campaign...\\nStep 7: Deploying...\\nStep 8: Launch!\\n\\nEstimated time: ~42 minutes\\n\\nCheck the Pipeline tab to see progress.');
+switchPage('pipeline');
+}
+</script>
+</body>
+</html>
