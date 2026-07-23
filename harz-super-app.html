@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#7c4dff">
+<title>HARZ — Super App</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--p1:#7c4dff;--p2:#00bcd4;--p3:#00e676;--p4:#ffab00;--p5:#ff3d71;--bg:#0a0e1a;--card:#121830;--card2:#1a2040;--text:#e0e6ed;--muted:#6b7390;--border:#1e2a4a}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;padding-bottom:70px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--p1);border-radius:4px}
+
+/* Splash */
+#splash{position:fixed;inset:0;background:linear-gradient(135deg,#0a0e1a,#121830);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s}
+#splash.hidden{opacity:0;pointer-events:none}
+.splash-logo{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,var(--p1),var(--p2));display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:900;color:#fff;animation:pulse 2s ease infinite;box-shadow:0 0 40px rgba(124,77,255,.5)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.splash-text{margin-top:16px;font-size:1.3rem;font-weight:700;background:linear-gradient(135deg,var(--p1),var(--p2),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.splash-sub{margin-top:6px;font-size:.7rem;color:var(--muted);letter-spacing:2px}
+
+/* Header */
+.header{background:linear-gradient(135deg,rgba(124,77,255,.15),rgba(0,188,212,.08));border-bottom:1px solid var(--border);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header h1{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .right{display:flex;gap:8px;align-items:center}
+.wallet-pill{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.3);padding:4px 10px;border-radius:20px;font-size:.7rem;color:var(--p3);cursor:pointer}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p5));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff}
+
+/* Balance Hero */
+.balance-hero{background:linear-gradient(135deg,var(--p1),#5a35d5);border-radius:16px;padding:20px;margin:16px;color:#fff;position:relative;overflow:hidden}
+.balance-hero::after{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08)}
+.balance-hero::before{content:'';position:absolute;right:20px;bottom:-40px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.06)}
+.balance-label{font-size:.7rem;opacity:.7;text-transform:uppercase;letter-spacing:1px}
+.balance-amount{font-size:2rem;font-weight:800;margin:4px 0 2px}
+.balance-sub{font-size:.75rem;opacity:.8}
+.balance-actions{display:flex;gap:10px;margin-top:14px}
+.bal-btn{flex:1;background:rgba(255,255,255,.15);border:none;border-radius:10px;padding:8px;color:#fff;font-size:.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
+.bal-btn:active{background:rgba(255,255,255,.25)}
+
+/* Quick Actions */
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px;margin-bottom:16px}
+.quick-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:10px 4px;background:var(--card);border:1px solid var(--border);border-radius:12px;transition:all .2s}
+.quick-item:active{transform:scale(.95);border-color:var(--p1)}
+.quick-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.quick-label{font-size:.62rem;color:var(--muted);text-align:center;line-height:1.2}
+
+/* Sections */
+.section{padding:0 16px;margin-bottom:24px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.section-title{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text)}
+.section-link{font-size:.7rem;color:var(--p2);cursor:pointer}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;transition:all .2s;cursor:pointer}
+.card:active{transform:scale(.98);border-color:var(--p1)}
+.card-row{display:flex;align-items:center;gap:12px}
+.card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-title{font-size:.85rem;font-weight:600;margin-bottom:2px}
+.card-desc{font-size:.7rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-arrow{color:var(--muted);font-size:1rem;flex-shrink:0}
+.card-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.6rem;font-weight:600;margin-left:6px}
+.badge-live{background:rgba(0,230,118,.15);color:var(--p3)}
+.badge-beta{background:rgba(255,171,0,.15);color:var(--p4)}
+.badge-new{background:rgba(124,77,255,.15);color:var(--p1)}
+
+/* Module Pages */
+.page{display:none;animation:fadeIn .3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Bottom Nav */
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;max-width:600px;margin:0 auto}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;cursor:pointer;color:var(--muted);transition:color .2s}
+.nav-item.active{color:var(--p1)}
+.nav-item.active .nav-icon{transform:translateY(-2px)}
+.nav-icon{font-size:1.3rem;transition:transform .2s}
+.nav-label{font-size:.58rem;font-weight:600}
+
+/* Chat Preview */
+.chat-list .chat-item{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid var(--border)}
+.chat-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.chat-content{flex:1;min-width:0}
+.chat-name{font-size:.8rem;font-weight:600}
+.chat-last{font-size:.7rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-time{font-size:.6rem;color:var(--muted);flex-shrink:0}
+
+/* AI Chat */
+.ai-chat{position:fixed;inset:0;background:var(--bg);z-index:200;display:none;flex-direction:column}
+.ai-chat.show{display:flex}
+.ai-header{background:var(--card);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.ai-header .back{font-size:1.2rem;cursor:pointer;color:var(--muted)}
+.ai-header .name{font-weight:700;font-size:.9rem}
+.ai-header .status{font-size:.65rem;color:var(--p3)}
+.ai-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:.8rem;line-height:1.4}
+.ai-msg.bot{background:var(--card);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
+.ai-msg.user{background:linear-gradient(135deg,var(--p1),#5a35d5);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.ai-typing{align-self:flex-start;color:var(--muted);font-size:.7rem;padding:8px 14px}
+.ai-input{background:var(--card);border-top:1px solid var(--border);padding:10px;display:flex;gap:8px}
+.ai-input input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.8rem;outline:none}
+.ai-input button{background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:10px;padding:0 16px;color:#fff;font-size:1rem;cursor:pointer}
+
+/* Store */
+.product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .2s}
+.product-card:active{transform:scale(.97)}
+.product-img{width:100%;aspect-ratio:1.2;background:linear-gradient(135deg,var(--card2),var(--bg));display:flex;align-items:center;justify-content:center;font-size:2rem}
+.product-info{padding:8px}
+.product-name{font-size:.72rem;font-weight:600;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.product-price{font-size:.75rem;font-weight:700;color:var(--p3)}
+
+/* Learn */
+.course-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:10px}
+.course-banner{height:80px;display:flex;align-items:center;justify-content:center;font-size:2rem}
+.course-body{padding:12px}
+.course-title{font-size:.85rem;font-weight:600;margin-bottom:4px}
+.course-meta{display:flex;gap:8px;align-items:center;font-size:.68rem;color:var(--muted)}
+.course-progress{height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+.course-progress-bar{height:100%;background:linear-gradient(90deg,var(--p1),var(--p2));border-radius:2px}
+
+/* Business */
+.biz-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.biz-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s}
+.biz-card:active{transform:scale(.98)}
+.biz-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.biz-info{flex:1}
+.biz-title{font-size:.85rem;font-weight:600}
+.biz-desc{font-size:.7rem;color:var(--muted)}
+.biz-stat{text-align:right}
+.biz-num{font-size:1rem;font-weight:700;color:var(--p3)}
+.biz-lbl{font-size:.6rem;color:var(--muted)}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal.show{display:flex;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-content{background:var(--card);width:100%;max-width:600px;border-radius:20px 20px 0 0;padding:20px;max-height:80vh;overflow-y:auto}
+.modal-close{float:right;font-size:1.5rem;cursor:pointer;color:var(--muted)}
+.modal-title{font-size:1rem;font-weight:700;margin-bottom:16px}
+
+/* Pay */
+.pay-method{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.pay-method:active{border-color:var(--p1)}
+.pay-method.selected{border-color:var(--p1);background:rgba(124,77,255,.08)}
+.pay-icon{font-size:1.5rem}
+.pay-info{flex:1}
+.pay-name{font-size:.85rem;font-weight:600}
+.pay-desc{font-size:.68rem;color:var(--muted)}
+
+/* Toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--p1);border-radius:10px;padding:10px 20px;font-size:.75rem;z-index:500;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+@media(max-width:600px){.quick-grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:601px){body{max-width:600px;margin:0 auto;border-left:1px solid var(--border);border-right:1px solid var(--border)}}.muted{color:var(--muted)}.green{color:var(--p3)}.yellow{color:var(--p4)}.purple{color:var(--p1)}.cyan{color:var(--p2)}
+</style>
+</head>
+<body>
+
+<!-- Splash -->
+<div id="splash">
+<div class="splash-logo">H</div>
+<div class="splash-text">HARZ</div>
+<div class="splash-sub">SUPER APP</div>
+</div>
+
+<!-- Header -->
+<div class="header">
+<h1>HARZ</h1>
+<div class="right">
+<div class="wallet-pill" onclick="showToast('GDEG Wallet: 0x0B63...3be3')">⚡ 12,450 GDEG</div>
+<div class="avatar" onclick="switchPage('profile')">RH</div>
+</div>
+</div>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+<div class="balance-hero">
+<div class="balance-label">Total Balance</div>
+<div class="balance-amount">₦847,200</div>
+<div class="balance-sub">~ $564.80 · 84,720 GDEG</div>
+<div class="balance-actions">
+<button class="bal-btn" onclick="switchPage('pay')">💸 Send</button>
+<button class="bal-btn" onclick="switchPage('pay')">📥 Request</button>
+<button class="bal-btn" onclick="switchPage('pay')">⚡ Top Up</button>
+<button class="bal-btn" onclick="openAI()">🤖 Ask AI</button>
+</div>
+</div>
+
+<div class="quick-grid">
+<div class="quick-item" onclick="switchPage('pay')"><div class="quick-icon" style="background:rgba(0,230,118,.12)">💸</div><span class="quick-label">Pay</span></div>
+<div class="quick-item" onclick="switchPage('chat')"><div class="quick-icon" style="background:rgba(37,211,102,.12)">💬</div><span class="quick-label">Messages</span></div>
+<div class="quick-item" onclick="openAI()"><div class="quick-icon" style="background:rgba(124,77,255,.12)">🤖</div><span class="quick-label">AI Assistant</span></div>
+<div class="quick-item" onclick="switchPage('store')"><div class="quick-icon" style="background:rgba(255,171,0,.12)">🛍️</div><span class="quick-label">Store</span></div>
+<div class="quick-item" onclick="switchPage('learn')"><div class="quick-icon" style="background:rgba(0,188,212,.12)">📚</div><span class="quick-label">Learn</span></div>
+<div class="quick-item" onclick="switchPage('files')"><div class="quick-icon" style="background:rgba(255,61,113,.12)">📁</div><span class="quick-label">Files</span></div>
+<div class="quick-item" onclick="switchPage('business')"><div class="quick-icon" style="background:rgba(124,77,255,.12)">📊</div><span class="quick-label">Business</span></div>
+<div class="quick-item" onclick="switchPage('more')"><div class="quick-icon" style="background:rgba(90,115,144,.12)">⚙️</div><span class="quick-label">More</span></div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Activity</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">💵</div><div class="card-info"><div class="card-title">HarzPay received</div><div class="card-desc">₦15,000 from customer order</div></div><div style="font-size:.7rem;color:var(--p3)">+₦15,000</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,61,113,.1)">🛒</div><div class="card-info"><div class="card-title">Marketplace sale</div><div class="card-desc">Notion Productivity OS</div></div><div style="font-size:.7rem;color:var(--p3)">+$12.99</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🤖</div><div class="card-info"><div class="card-title">AI Cloud subscription</div><div class="card-desc">Pro plan · monthly</div></div><div style="font-size:.7rem;color:var(--p4)">-$99.00</div></div></div>
+</div>
+
+<div class="section">
+<div class="section-head"><span class="section-title">Quick Platforms</span><span class="section-link" onclick="switchPage('more')">View all 26 →</span></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">☁️</div><div class="card-info"><div class="card-title">Harz AI Cloud <span class="card-badge badge-live">LIVE</span></div><div class="card-desc">20 AI agents · subscriptions · API</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-store.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🛍️</div><div class="card-info"><div class="card-title">HarzDM Store <span class="card-badge badge-live">LIVE</span></div><div class="card-desc">259 products · Getly synced</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📢</div><div class="card-info"><div class="card-title">Nexal Ads <span class="card-badge badge-live">LIVE</span></div><div class="card-desc">Multi-platform advertising</div></div><div class="card-arrow">›</div></div></div>
+</div>
+</div>
+
+<!-- PAY PAGE -->
+<div id="page-pay" class="page">
+<div class="section" style="padding-top:16px">
+<div class="balance-hero" style="background:linear-gradient(135deg,#00e676,#00b24d)">
+<div class="balance-label">HarzPay Wallet</div>
+<div class="balance-amount">₦847,200</div>
+<div class="balance-sub">GDEG: 12,450 · USDT: $234 · Bank: UBA</div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Payment Methods</span></div>
+<div class="pay-method selected" onclick="selectPay(this)"><div class="pay-icon">⚡</div><div class="pay-info"><div class="pay-name">GDEG Token</div><div class="pay-desc">Polygon · 10% discount</div></div><div style="font-size:.7rem;color:var(--p3)">12,450 GDEG</div></div>
+<div class="pay-method" onclick="selectPay(this)"><div class="pay-icon">🏦</div><div class="pay-info"><div class="pay-name">Bank Transfer (UBA)</div><div class="pay-desc">2034326424 · Rabiu Hamza</div></div></div>
+<div class="pay-method" onclick="selectPay(this)"><div class="pay-icon">₮</div><div class="pay-info"><div class="pay-name">USDT TRC20</div><div class="pay-desc">TVE2ia3...X5Cr</div></div></div>
+<div class="pay-method" onclick="selectPay(this)"><div class="pay-icon">💳</div><div class="pay-info"><div class="pay-name">Paystack</div><div class="pay-desc">Starter Business · NGN</div></div></div>
+<div class="pay-method" onclick="selectPay(this)"><div class="pay-icon">🌐</div><div class="pay-info"><div class="pay-name">Stripe</div><div class="pay-desc">USD · International</div></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Send Money</span></div>
+<input style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:1.2rem;outline:none;margin-bottom:10px" placeholder="₦0.00" type="number">
+<input style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Recipient phone or account number">
+<input style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Note (optional)">
+<button style="width:100%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:12px;padding:14px;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer" onclick="showToast('Payment sent! 🚀')">Send Payment</button>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">GDEG Token Info</span></div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-size:.75rem;color:var(--muted)">Token</span><span style="font-size:.75rem;font-weight:600">GDEG (Polygon)</span></div>
+<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-size:.75rem;color:var(--muted)">Rate</span><span style="font-size:.75rem;font-weight:600">1 GDEG = $0.01 (₦15)</span></div>
+<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-size:.75rem;color:var(--muted)">Discount</span><span style="font-size:.75rem;font-weight:600;color:var(--p3)">10% off all services</span></div>
+<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-size:.75rem;color:var(--muted)">Wallet</span><span style="font-size:.7rem;font-weight:600;font-family:monospace">0x0B63...3be3</span></div>
+<div style="display:flex;justify-content:space-between;padding:4px 0"><span style="font-size:.75rem;color:var(--muted)">Network</span><span style="font-size:.75rem;font-weight:600">Polygon (MATIC)</span></div>
+</div>
+</div>
+</div>
+
+<!-- CHAT PAGE -->
+<div id="page-chat" class="page">
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Messages</span><span style="font-size:.7rem;background:rgba(0,230,118,.1);color:var(--p3);padding:2px 8px;border-radius:10px">3 new</span></div>
+</div>
+<div class="chat-list" style="padding:0 16px">
+<div class="chat-item" onclick="openAI()"><div class="chat-avatar" style="background:linear-gradient(135deg,var(--p1),var(--p2))">🤖</div><div class="chat-content"><div class="chat-name">Magani AI</div><div class="chat-last">Your daily briefing is ready</div></div><div class="chat-time">now</div></div>
+<div class="chat-item" onclick="showToast('Opening WhatsApp CRM...')"><div class="chat-avatar" style="background:#25D366">💬</div><div class="chat-content"><div class="chat-name">WhatsApp CRM</div><div class="chat-last">Customer inquiry about GDEG tokens</div></div><div class="chat-time">5m</div></div>
+<div class="chat-item" onclick="showToast('Opening Telegram...')"><div class="chat-avatar" style="background:#0088cc">✈️</div><div class="chat-content"><div class="chat-name">OMEGA Commander</div><div class="chat-last">Deployment v3.0.1 confirmed</div></div><div class="chat-time">12m</div></div>
+<div class="chat-item" onclick="showToast('Opening WhatsApp group...')"><div class="chat-avatar" style="background:linear-gradient(135deg,#25D366,#128C7E)">👥</div><div class="chat-content"><div class="chat-name">Harz Business Group</div><div class="chat-last">New member joined</div></div><div class="chat-time">1h</div></div>
+<div class="chat-item" onclick="showToast('Opening email...')"><div class="chat-avatar" style="background:#ea4335">📧</div><div class="chat-content"><div class="chat-name">Email Monitor</div><div class="chat-last">2 new emails · 1 from Paystack</div></div><div class="chat-time">2h</div></div>
+</div>
+</div>
+
+<!-- AI PAGE (opens as overlay) -->
+<div id="ai-chat" class="ai-chat">
+<div class="ai-header">
+<span class="back" onclick="closeAI()">‹</span>
+<div><div class="name">Magani AI</div><div class="status">● Online · llama-3.3-70b</div></div>
+</div>
+<div class="ai-msgs" id="aiMsgs">
+<div class="ai-msg bot">Hey Rabiu 👋 I'm Magani, your AI assistant. I can help with payments, check your CRM, manage your store, schedule posts, or anything else across the Harz ecosystem. What do you need?</div>
+</div>
+<div class="ai-input">
+<input id="aiInput" placeholder="Ask Magani anything..." onkeydown="if(event.key==='Enter')sendAI()">
+<button onclick="sendAI()">➤</button>
+</div>
+</div>
+
+<!-- STORE PAGE -->
+<div id="page-store" class="page">
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Harz Marketplace</span><span style="font-size:.7rem;color:var(--muted)">259 products</span></div>
+</div>
+<div style="padding:0 16px;margin-bottom:16px;display:flex;gap:8px;overflow-x:auto">
+<span style="padding:6px 14px;background:var(--p1);color:#fff;border-radius:20px;font-size:.7rem;white-space:nowrap;cursor:pointer">All</span>
+<span style="padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:.7rem;white-space:nowrap;cursor:pointer">Digital</span>
+<span style="padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:.7rem;white-space:nowrap;cursor:pointer">Music</span>
+<span style="padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:.7rem;white-space:nowrap;cursor:pointer">Film</span>
+<span style="padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:.7rem;white-space:nowrap;cursor:pointer">Engineering</span>
+<span style="padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:.7rem;white-space:nowrap;cursor:pointer">Courses</span>
+</div>
+<div class="product-grid" style="padding:0 16px">
+<div class="product-card" onclick="showToast('Opening product...')"><div class="product-img">📝</div><div class="product-info"><div class="product-name">Notion Productivity OS</div><div class="product-price">$12.99</div></div></div>
+<div class="product-card" onclick="showToast('Opening product...')"><div class="product-img">🎨</div><div class="product-info"><div class="product-name">Canva Business Bundle</div><div class="product-price">$19.99</div></div></div>
+<div class="product-card" onclick="showToast('Opening product...')"><div class="product-img">📊</div><div class="product-info"><div class="product-name">Digital Marketing Masterclass</div><div class="product-price">$29.99</div></div></div>
+<div class="product-card" onclick="showToast('Opening product...')"><div class="product-img">🤖</div><div class="product-info"><div class="product-name">AI Image Generation Mastery</div><div class="product-price">$14.99</div></div></div>
+<div class="product-card" onclick="showToast('Opening product...')"><div class="product-img">🔧</div><div class="product-info"><div class="product-name">Engineering Collection 8-in-1</div><div class="product-price">$89.99</div></div></div>
+<div class="product-card" onclick="showToast('Opening product...')"><div class="product-img">💼</div><div class="product-info"><div class="product-name">Freelancer Starter Kit</div><div class="product-price">$9.99</div></div></div>
+</div>
+<div style="padding:16px;text-align:center">
+<button onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-store.html','_blank')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 30px;color:var(--p2);font-size:.8rem;font-weight:600;cursor:pointer">View Full Store →</button>
+</div>
+</div>
+
+<!-- LEARN PAGE -->
+<div id="page-learn" class="page">
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">EduWealth AI</span><span style="font-size:.7rem;color:var(--muted)">18 agents</span></div>
+</div>
+<div style="padding:0 16px">
+<div class="course-card" onclick="showToast('Opening course...')"><div class="course-banner" style="background:linear-gradient(135deg,rgba(124,77,255,.2),rgba(0,188,212,.2))">💻</div><div class="course-body"><div class="course-title">Web Development Bootcamp</div><div class="course-meta">12 hours · 24 lessons · Cert included</div><div class="course-progress"><div class="course-progress-bar" style="width:65%"></div></div><div style="font-size:.65rem;color:var(--p3);margin-top:4px">65% complete</div></div></div>
+<div class="course-card" onclick="showToast('Opening course...')"><div class="course-banner" style="background:linear-gradient(135deg,rgba(0,230,118,.2),rgba(0,188,212,.2))">📈</div><div class="course-body"><div class="course-title">Digital Marketing Mastery</div><div class="course-meta">8 hours · 18 lessons · Cert included</div><div class="course-progress"><div class="course-progress-bar" style="width:30%"></div></div><div style="font-size:.65rem;color:var(--p4);margin-top:4px">30% complete</div></div></div>
+<div class="course-card" onclick="showToast('Opening course...')"><div class="course-banner" style="background:linear-gradient(135deg,rgba(255,171,0,.2),rgba(255,61,113,.2))">🤖</div><div class="course-body"><div class="course-title">AI & Machine Learning Basics</div><div class="course-meta">15 hours · 30 lessons · Cert included</div><div class="course-progress"><div class="course-progress-bar" style="width:0%"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px">Not started</div></div></div>
+<div class="course-card" onclick="showToast('Opening course...')"><div class="course-banner" style="background:linear-gradient(135deg,rgba(255,61,113,.2),rgba(124,77,255,.2))">📚</div><div class="course-body"><div class="course-title">The Complete Genius 365</div><div class="course-meta">365 chapters · Daily · Book</div><div style="font-size:.65rem;color:var(--p3);margin-top:4px">Chapter 23 sent today ✅</div></div></div>
+</div>
+<div style="padding:16px;text-align:center">
+<button onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html','_blank')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 30px;color:var(--p2);font-size:.8rem;font-weight:600;cursor:pointer">Browse All Courses →</button>
+</div>
+</div>
+
+<!-- FILES PAGE -->
+<div id="page-files" class="page">
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Cloud Storage</span><span style="font-size:.7rem;color:var(--muted)">6.2 GB / 10 GB</span></div>
+</div>
+<div style="padding:0 16px">
+<div style="height:6px;background:var(--border);border-radius:3px;margin-bottom:16px;overflow:hidden"><div style="height:100%;width:62%;background:linear-gradient(90deg,var(--p1),var(--p2));border-radius:3px"></div></div>
+<div class="card" onclick="showToast('Opening folder...')"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">📁</div><div class="card-info"><div class="card-title">Products</div><div class="card-desc">259 items · 1.2 GB</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="showToast('Opening folder...')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">📁</div><div class="card-info"><div class="card-title">Engineering Books</div><div class="card-desc">9 items · 850 MB</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="showToast('Opening folder...')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">🎵</div><div class="card-info"><div class="card-title">Music Library</div><div class="card-desc">27 tracks · 320 MB</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="showToast('Opening folder...')"><div class="card-row"><div class="card-icon" style="background:rgba(255,61,113,.1)">🎬</div><div class="card-info"><div class="card-title">Films</div><div class="card-desc">8 films · 3.8 GB</div></div><div class="card-arrow">›</div></div></div>
+</div>
+<div style="padding:16px;text-align:center">
+<button onclick="showToast('Upload coming soon!')" style="background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:12px;padding:12px 30px;color:#fff;font-size:.8rem;font-weight:600;cursor:pointer">📤 Upload File</button>
+</div>
+</div>
+
+<!-- BUSINESS PAGE -->
+<div id="page-business" class="page">
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Business Hub</span></div>
+</div>
+<div style="padding:0 16px">
+<div class="biz-card" onclick="showToast('Loading CRM...')"><div class="biz-icon" style="background:rgba(37,211,102,.12)">📋</div><div class="biz-info"><div class="biz-title">WhatsApp CRM</div><div class="biz-desc">Customer inquiries & leads</div></div><div class="biz-stat"><div class="biz-num">24</div><div class="biz-lbl">leads</div></div></div>
+<div class="biz-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html','_blank')"><div class="biz-icon" style="background:rgba(0,188,212,.12)">📢</div><div class="biz-info"><div class="biz-title">Nexal Ads</div><div class="biz-desc">Ad campaigns & marketing</div></div><div class="biz-stat"><div class="biz-num">5</div><div class="biz-lbl">active</div></div></div>
+<div class="biz-card" onclick="showToast('Loading BuildBot...')"><div class="biz-icon" style="background:rgba(124,77,255,.12)">🏗️</div><div class="biz-info"><div class="biz-title">BuildBot AI</div><div class="biz-desc">Construction planning & quotes</div></div><div class="biz-stat"><div class="biz-num">12</div><div class="biz-lbl">projects</div></div></div>
+<div class="biz-card" onclick="showToast('Loading ContentPilot...')"><div class="biz-icon" style="background:rgba(255,171,0,.12)">🎬</div><div class="biz-info"><div class="biz-title">ContentPilot AI</div><div class="biz-desc">Content scheduling & analytics</div></div><div class="biz-stat"><div class="biz-num">25</div><div class="biz-lbl">agents</div></div></div>
+<div class="biz-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html','_blank')"><div class="biz-icon" style="background:rgba(0,230,118,.12)">☁️</div><div class="biz-info"><div class="biz-title">Harz AI Cloud</div><div class="biz-desc">20 AI agents & API</div></div><div class="biz-stat"><div class="biz-num">20</div><div class="biz-lbl">agents</div></div></div>
+<div class="biz-card" onclick="showToast('Loading Estate...')"><div class="biz-icon" style="background:rgba(255,61,113,.12)">🏠</div><div class="biz-info"><div class="biz-title">Abuja Estate City</div><div class="biz-desc">Property listings & inquiries</div></div><div class="biz-stat"><div class="biz-num">5</div><div class="biz-lbl">listings</div></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Financial Tools</span></div>
+</div>
+<div style="padding:0 16px">
+<div class="biz-card" onclick="showToast('Loading Apex Bank...')"><div class="biz-icon" style="background:rgba(0,188,212,.12)">🏦</div><div class="biz-info"><div class="biz-title">Apex Bank</div><div class="biz-desc">Digital banking & cards</div></div><div class="card-arrow">›</div></div>
+<div class="biz-card" onclick="showToast('Loading HarzAjo...')"><div class="biz-icon" style="background:rgba(255,171,0,.12)">💰</div><div class="biz-info"><div class="biz-title">HarzAjo</div><div class="biz-desc">Group savings (ESUSU)</div></div><div class="card-arrow">›</div></div>
+<div class="biz-card" onclick="showToast('Loading HarzLend...')"><div class="biz-icon" style="background:rgba(0,230,118,.12)">💵</div><div class="biz-info"><div class="biz-title">HarzLend</div><div class="biz-desc">Microloans</div></div><div class="card-arrow">›</div></div>
+<div class="biz-card" onclick="showToast('Loading HarzFX...')"><div class="biz-icon" style="background:rgba(124,77,255,.12)">💱</div><div class="biz-info"><div class="biz-title">HarzFX</div><div class="biz-desc">Currency exchange</div></div><div class="card-arrow">›</div></div>
+</div>
+</div>
+
+<!-- MORE PAGE -->
+<div id="page-more" class="page">
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">All Platforms (26)</span></div>
+</div>
+<div style="padding:0 16px" id="allPlatforms">
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-store.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🛍️</div><div class="card-info"><div class="card-title">HarzDM Marketplace</div><div class="card-desc">259 products</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">☁️</div><div class="card-info"><div class="card-title">Harz AI Cloud</div><div class="card-desc">20 AI agents</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📢</div><div class="card-info"><div class="card-title">Nexal Ads</div><div class="card-desc">Advertising platform</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-consult.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">💼</div><div class="card-info"><div class="card-title">Harz Consult</div><div class="card-desc">Consultation bookings</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-freelance.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(255,61,113,.1)">🤝</div><div class="card-info"><div class="card-title">Harz Freelance</div><div class="card-desc">Freelance marketplace</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(229,9,20,.1)">🎬</div><div class="card-info"><div class="card-title">HarzFilm</div><div class="card-desc">8 films · 162K views</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-v2.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📰</div><div class="card-info"><div class="card-title">Harz Newsletter</div><div class="card-desc">Subscriber content</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-onboarding.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🚀</div><div class="card-info"><div class="card-title">Harz Onboarding</div><div class="card-desc">New user setup</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="showToast('OMEGA Infinity - use OMEGA Commander on Telegram')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">♾️</div><div class="card-info"><div class="card-title">OMEGA Infinity 1000</div><div class="card-desc">Enterprise orchestrator</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="showToast('TradeOS - use Telegram bot')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📊</div><div class="card-info"><div class="card-title">TradeOS</div><div class="card-desc">Trading platform</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="showToast('Maganu on Telegram @b44_e609780e17959020_bot')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">🤖</div><div class="card-info"><div class="card-title">Maganu Agent</div><div class="card-desc">AI assistant v7.9.3</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="showToast('OMEGA Commander @Omegacommanderaibot')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">⚡</div><div class="card-info"><div class="card-title">OMEGA Commander</div><div class="card-desc">AI executor v3.0.1</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+</div>
+<div style="padding:16px">
+<div style="text-align:center;color:var(--muted);font-size:.7rem;padding:20px">Harz Super App v1.0 · 26 Platforms · 80+ AI Agents<br>Built by Rabiu Hamza · Harz Digital Services</div>
+</div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="nav">
+<div class="nav-item active" onclick="switchPage('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+<div class="nav-item" onclick="switchPage('pay')"><div class="nav-icon">💸</div><div class="nav-label">Pay</div></div>
+<div class="nav-item" onclick="switchPage('chat')"><div class="nav-icon">💬</div><div class="nav-label">Chat</div></div>
+<div class="nav-item" onclick="switchPage('store')"><div class="nav-icon">🛍️</div><div class="nav-label">Store</div></div>
+<div class="nav-item" onclick="switchPage('learn')"><div class="nav-icon">📚</div><div class="nav-label">Learn</div></div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+// Splash
+setTimeout(()=>document.getElementById('splash').classList.add('hidden'),1200);
+
+// Page navigation
+function switchPage(name){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+const page=document.getElementById('page-'+name);
+if(page)page.classList.add('active');
+document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+const navItems=document.querySelectorAll('.nav-item');
+const navMap={home:0,pay:1,chat:2,store:3,learn:4};
+if(navMap[name]!==undefined)navItems[navMap[name]]?.classList.add('active');
+window.scrollTo(0,0);
+}
+
+// Toast
+function showToast(msg){
+const t=document.getElementById('toast');
+t.textContent=msg;
+t.classList.add('show');
+setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// Pay method selection
+function selectPay(el){
+document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('selected'));
+el.classList.add('selected');
+}
+
+// AI Chat
+function openAI(){
+document.getElementById('ai-chat').classList.add('show');
+}
+function closeAI(){
+document.getElementById('ai-chat').classList.remove('show');
+}
+function sendAI(){
+const input=document.getElementById('aiInput');
+const msg=input.value.trim();
+if(!msg)return;
+const msgs=document.getElementById('aiMsgs');
+const userDiv=document.createElement('div');
+userDiv.className='ai-msg user';
+userDiv.textContent=msg;
+msgs.appendChild(userDiv);
+input.value='';
+msgs.scrollTop=msgs.scrollHeight;
+// Typing indicator
+const typing=document.createElement('div');
+typing.className='ai-typing';
+typing.textContent='Magani is typing...';
+typing.id='typing';
+msgs.appendChild(typing);
+msgs.scrollTop=msgs.scrollHeight;
+// Send to harzCloud backend
+fetch('https://superagent-2286fb2f.base44.app/functions/harzCloud',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({action:'chat',message:msg,agent_id:'general'})
+}).then(r=>r.json()).then(data=>{
+document.getElementById('typing')?.remove();
+const botDiv=document.createElement('div');
+botDiv.className='ai-msg bot';
+botDiv.textContent=data.response||data.reply||data.message||'I received your message. Let me help with that.';
+msgs.appendChild(botDiv);
+msgs.scrollTop=msgs.scrollHeight;
+}).catch(()=>{
+document.getElementById('typing')?.remove();
+const botDiv=document.createElement('div');
+botDiv.className='ai-msg bot';
+botDiv.textContent='I'm here to help! You can ask me about payments, your store, CRM, or any Harz platform.';
+msgs.appendChild(botDiv);
+msgs.scrollTop=msgs.scrollHeight;
+});
+}
+
+// PWA
+if('serviceWorker'in navigator){
+navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
