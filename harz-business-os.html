@@ -537,6 +537,45 @@ const page=document.getElementById('page-'+name);
 if(page)page.classList.add('active');
 window.scrollTo(0,0);
 }
+
+// Live data loader for HARZ Business OS
+const API_URL='https://superagent-2286fb2f.base44.app/functions/harzBusinessOS?action=dashboard';
+function formatNaira(n){return '₦'+(n||0).toLocaleString('en-NG',{maximumFractionDigits:0});}
+async function loadLiveData(){
+try{
+const resp=await fetch(API_URL);
+const data=await resp.json();
+if(data.status!=='ok'||!data.modules){return;}
+const m=data.modules;
+// Update CRM leads table
+const crmTable=document.querySelector('#page-crm table tbody');
+if(crmTable&&m.crm.recent_leads&&m.crm.recent_leads.length>0){
+crmTable.innerHTML=m.crm.recent_leads.slice(0,5).map(l=>'<tr><td>'+l.name+'</td><td>'+l.phone+'</td><td>'+l.inquiry+'</td><td><span class="pill '+pillColor(l.status)+'">'+l.status+'</span></td></tr>').join('');
+}
+// Update Accounting invoices
+const accTable=document.querySelector('#page-accounting .tbl tbody');
+if(accTable&&m.accounting.recent_invoices&&m.accounting.recent_invoices.length>0){
+accTable.innerHTML=m.accounting.recent_invoices.map(i=>'<tr><td>'+i.number+'</td><td>'+i.customer+'</td><td>'+i.amount+'</td><td><span class="pill '+pillColor(i.status)+'">'+i.status+'</span></td></tr>').join('');
+}
+// Update AI agents
+const aiCards=document.querySelectorAll('#page-ai .card');
+if(aiCards&&m.ai_automation.agents){
+m.ai_automation.agents.slice(0,aiCards.length).forEach((a,i)=>{
+const t=aiCards[i].querySelector('.card-title');
+const d=aiCards[i].querySelector('.card-desc');
+if(t)t.textContent=a.name;
+if(d)d.textContent=a.role+' \u00b7 '+a.status;
+});
+}
+// Update KPI values
+const allKpis=document.querySelectorAll('.kpi-value');
+if(m.crm&&allKpis[0])allKpis[0].textContent=m.crm.total_leads;
+console.log('HARZ Business OS: Live data loaded');
+}catch(e){console.log('Business OS: demo data mode');}
+}
+function pillColor(s){s=(s||'').toLowerCase();if(['paid','active','completed'].includes(s))return'green';if(['pending','new','scheduled'].includes(s))return'blue';if(['overdue','low','paused'].includes(s))return'orange';if(['out','delayed','critical'].includes(s))return'red';return'purple';}
+document.addEventListener('DOMContentLoaded',function(){setTimeout(loadLiveData,500);});
+
 </script>
 </body>
 </html>
