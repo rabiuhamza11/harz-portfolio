@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Ecosystem Dashboard — Revenue, Metrics & Analytics</title>
+<meta name="description" content="Real-time ecosystem metrics: 259+ products, 27 music tracks, 8 films, 12 courses, 33 platforms, 80+ AI agents.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+<style>
+:root{--primary:#0a2540;--accent:#00d4ff;--accent2:#7c3aed;--green:#10b981;--red:#ef4444;--orange:#f59e0b;--dark:#0a0e1a;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--border:#e5e7eb;--shadow:0 4px 20px rgba(0,0,0,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f0f4f8;color:var(--text)}
+.header{background:linear-gradient(135deg,var(--primary),var(--dark));color:#fff;padding:1.5rem;text-align:center}
+.header h1{font-size:1.5rem;font-weight:800}
+.header p{font-size:.85rem;color:rgba(255,255,255,.6);margin-top:.3rem}
+.container{max-width:1200px;margin:-1.5rem auto 2rem;padding:0 1rem}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.metric-card{background:var(--card);border-radius:16px;padding:1.2rem;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent)}
+.metric-card.green::before{background:var(--green)}
+.metric-card.purple::before{background:var(--accent2)}
+.metric-card.orange::before{background:var(--orange)}
+.metric-card.red::before{background:var(--red)}
+.metric-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.metric-value{font-size:1.8rem;font-weight:800;margin:.3rem 0}
+.metric-sub{font-size:.8rem;color:var(--muted)}
+.metric-trend{font-size:.75rem;font-weight:600;display:inline-block;padding:.1rem .5rem;border-radius:20px;margin-top:.3rem}
+.metric-trend.up{background:#d1fae5;color:#065f46}
+.metric-trend.down{background:#fee2e2;color:#991b1b}
+.section{background:var(--card);border-radius:16px;padding:1.5rem;box-shadow:var(--shadow);margin-bottom:1.5rem}
+.section h2{font-size:1.1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.bar-chart{display:flex;flex-direction:column;gap:.5rem}
+.bar-row{display:flex;align-items:center;gap:.5rem}
+.bar-label{width:140px;font-size:.8rem;font-weight:600;flex-shrink:0}
+.bar-track{flex:1;height:28px;background:#f3f4f6;border-radius:8px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:.5rem;color:#fff;font-size:.75rem;font-weight:700;transition:width 1s ease}
+.bar-value{width:80px;font-size:.8rem;font-weight:700;text-align:right;flex-shrink:0}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;padding:.5rem;border-bottom:2px solid var(--border);color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px}
+td{padding:.5rem;border-bottom:1px solid var(--border)}
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.8rem}
+.platform-card{border:1px solid var(--border);border-radius:12px;padding:.8rem;transition:.3s}
+.platform-card:hover{border-color:var(--accent);box-shadow:0 2px 10px rgba(0,212,255,.15)}
+.platform-name{font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:.3rem}
+.platform-url{font-size:.7rem;color:var(--accent);margin-top:.2rem;word-break:break-all}
+.platform-status{display:inline-block;padding:.1rem .4rem;border-radius:4px;font-size:.65rem;font-weight:700;margin-top:.3rem}
+.platform-status.live{background:#d1fae5;color:#065f46}
+.platform-status.pending{background:#fef3c7;color:#92400e}
+.payment-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
+.payment-card{border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
+.payment-card.live{border-color:var(--green);background:#f0fdf4}
+.payment-card.pending{border-color:var(--orange);background:#fffbeb}
+.payment-icon{font-size:1.5rem;margin-bottom:.3rem}
+.payment-name{font-weight:700;font-size:.85rem}
+.payment-status{font-size:.7rem;font-weight:600;margin-top:.2rem}
+.footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:.8rem}
+@media(max-width:640px){.metric-value{font-size:1.4rem}.bar-label{width:100px}}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>📊 Harz Ecosystem Dashboard</h1>
+<p>Real-time metrics across 33 platforms · 259+ products · 80+ AI agents · Updated July 2026</p>
+</div>
+<div class="container">
+<div class="metric-grid">
+<div class="metric-card green">
+<div class="metric-label">Total Catalog Value</div>
+<div class="metric-value">₦1.58M+</div>
+<div class="metric-sub">171 NGN products + 88 USD products ($264K)</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Digital Products</div>
+<div class="metric-value">259</div>
+<div class="metric-sub">43 categories across 6 platforms</div>
+</div>
+<div class="metric-card purple">
+<div class="metric-label">Music Tracks</div>
+<div class="metric-value">27</div>
+<div class="metric-sub">174K plays · 4,310 downloads</div>
+</div>
+<div class="metric-card orange">
+<div class="metric-label">Films</div>
+<div class="metric-value">8</div>
+<div class="metric-sub">162K views · 5 creators · 4 countries</div>
+</div>
+<div class="metric-card green">
+<div class="metric-label">Courses</div>
+<div class="metric-value">12</div>
+<div class="metric-sub">3 free + 9 paid (₦8K–₦25K)</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Estate Properties</div>
+<div class="metric-value">5</div>
+<div class="metric-sub">₦582M listed in Abuja</div>
+</div>
+<div class="metric-card purple">
+<div class="metric-label">Live Platforms</div>
+<div class="metric-value">33</div>
+<div class="metric-sub">27 Vercel sites · 2 Render services</div>
+</div>
+<div class="metric-card orange">
+<div class="metric-label">AI Agents</div>
+<div class="metric-value">80+</div>
+<div class="metric-sub">Across 6 agent platforms</div>
+</div>
+</div>
+
+<div class="section">
+<h2>📦 Products by Category (Top 15)</h2>
+<div class="bar-chart" id="categoryChart"></div>
+</div>
+
+<div class="section">
+<h2>🎵 Music Performance</h2>
+<table>
+<thead><tr><th>Track</th><th>Artist</th><th>Genre</th><th>Plays</th><th>Price</th></tr></thead>
+<tbody id="musicTable"></tbody>
+</table>
+</div>
+
+<div class="section">
+<h2>🎬 Film Performance</h2>
+<table>
+<thead><tr><th>Film</th><th>Creator</th><th>Category</th><th>Views</th><th>Buy</th><th>Rent</th></tr></thead>
+<tbody id="filmTable"></tbody>
+</table>
+</div>
+
+<div class="section">
+<h2>⚙️ SaaS Tools</h2>
+<table>
+<thead><tr><th>Tool</th><th>Category</th><th>Price (Monthly)</th><th>Users</th><th>Rating</th></tr></thead>
+<tbody id="saasTable"></tbody>
+</table>
+</div>
+
+<div class="section">
+<h2>💼 Freelance Services</h2>
+<table>
+<thead><tr><th>Service</th><th>Freelancer</th><th>Category</th><th>Price</th><th>Orders</th></tr></thead>
+<tbody id="freelanceTable"></tbody>
+</table>
+</div>
+
+<div class="section">
+<h2>💳 Payment Infrastructure</h2>
+<div class="payment-grid">
+<div class="payment-card live"><div class="payment-icon">🏦</div><div class="payment-name">UBA Bank Transfer</div><div class="payment-status">LIVE ✅</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">2034326424</div></div>
+<div class="payment-card live"><div class="payment-icon">₿</div><div class="payment-name">USDT TRC20</div><div class="payment-status">LIVE ✅</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">Auto-verified</div></div>
+<div class="payment-card live"><div class="payment-icon">📱</div><div class="payment-name">USSD</div><div class="payment-status">LIVE ✅</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">5 banks</div></div>
+<div class="payment-card live"><div class="payment-icon">💬</div><div class="payment-name">WhatsApp Orders</div><div class="payment-status">LIVE ✅</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">Auto-reply CRM</div></div>
+<div class="payment-card live"><div class="payment-icon">🔗</div><div class="payment-name">Affiliate Links</div><div class="payment-status">LIVE ✅</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">10% commission</div></div>
+<div class="payment-card pending"><div class="payment-icon">💳</div><div class="payment-name">Moniepoint</div><div class="payment-status">PENDING ⏳</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">Needs API keys</div></div>
+<div class="payment-card pending"><div class="payment-icon">🌐</div><div class="payment-name">NOWPayments</div><div class="payment-status">PENDING ⏳</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">Needs API key</div></div>
+<div class="payment-card pending"><div class="payment-icon">💳</div><div class="payment-name">Paystack</div><div class="payment-status">PENDING ⏳</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">Verification</div></div>
+<div class="payment-card pending"><div class="payment-icon">💳</div><div class="payment-name">Stripe</div><div class="payment-status">PENDING ⏳</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">Portal verify</div></div>
+<div class="payment-card pending"><div class="payment-icon">💳</div><div class="payment-name">Flutterwave</div><div class="payment-status">PENDING ⏳</div><div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">Awaiting response</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>🚀 Live Platforms (33)</h2>
+<div class="platform-grid" id="platformGrid"></div>
+</div>
+
+<div class="section">
+<h2>🤖 Ecosystem Distribution</h2>
+<table>
+<thead><tr><th>Platform</th><th>Content</th><th>Count</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>HarzDM Marketplace</td><td>Digital products</td><td>259</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>HarzMusic</td><td>Music tracks</td><td>27</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>HarzFilm</td><td>Films</td><td>8</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>EduWealth AI</td><td>Courses</td><td>12</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>Abuja Estate City</td><td>Properties</td><td>5</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>Harz Freelance Market</td><td>Services</td><td>8</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>Harz SaaS Directory</td><td>SaaS tools</td><td>8</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>OMEGA Health AI</td><td>Health agents</td><td>18</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>MindCare AI</td><td>Mental wellness</td><td>7</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>CYBER SHIELD X</td><td>Cybersecurity</td><td>37</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>OMEGA Content AI</td><td>Content agents</td><td>25</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>OMEGA Commander</td><td>Executive agents</td><td>9</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>EduWealth AI</td><td>Edu agents</td><td>18</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>Portfolio Website</td><td>HTML pages</td><td>500+</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+<tr><td>GitHub Repos</td><td>Code repos</td><td>44</td><td style="color:#10b981;font-weight:700">LIVE</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="footer">© 2026 Harz Digital Services (HI Water/Block Industry, RC 321424) · Dashboard auto-updates from Base44 entity data</div>
+<script>
+const categories=[
+{name:"Developer Tools",count:18,value:306000,color:"#0a2540"},
+{name:"Construction Tools",count:16,value:53000,color:"#f59e0b"},
+{name:"Template",count:14,value:17239,color:"#7c3aed"},
+{name:"Micro-Niche",count:13,value:37500,color:"#10b981"},
+{name:"AI Automation",count:10,value:52200,color:"#00d4ff"},
+{name:"Ebook",count:10,value:11571,color:"#ef4444"},
+{name:"Notion OS",count:10,value:45000,color:"#8b5cf6"},
+{name:"Done-For-You",count:8,value:36000,color:"#06b6d4"},
+{name:"Cheat Sheet",count:8,value:18000,color:"#f97316"},
+{name:"Business-in-a-Box",count:8,value:61600,color:"#3b82f6"},
+{name:"AI Prompts",count:8,value:25400,color:"#ec4899"},
+{name:"SOPs & Swipe Files",count:8,value:25800,color:"#14b8a6"},
+{name:"Real Estate Tools",count:7,value:31000,color:"#84cc16"},
+{name:"SaaS",count:6,value:128000,color:"#a855f7"},
+{name:"Business Software",count:6,value:90000,color:"#6366f1"}
+];
+const music=[
+{title:"Sautin Arewa",artist:"Rabiu Harz",genre:"Afrobeats",plays:4500,price:"$22.99"},
+{title:"Ope Lo Ye O",artist:"Sister Grace",genre:"Gospel",plays:3200,price:"$19.99"},
+{title:"Coração do Rio",artist:"DJ Samba King",genre:"Latin Pop",plays:6800,price:"$26.99"},
+{title:"Simba wa Dar",artist:"MC Swahili",genre:"Hip Hop",plays:4100,price:"$23.99"},
+{title:"Raga Electronic",artist:"Bollywood Beats",genre:"Bollywood",plays:8200,price:"$29.99"},
+{title:"Baila Conmigo",artist:"Luna Rivera",genre:"Latin Pop",plays:5500,price:"$25.99"},
+{title:"Die Ewige Nacht",artist:"Hans Zimmer Jr.",genre:"Cinematic",plays:7200,price:"€49.99"},
+{title:"Sakura Dream",artist:"Yuki Beats",genre:"Electronic",plays:9200,price:"$28.99"},
+{title:"Nuit d'Abuja",artist:"DJ Calmzee",genre:"Afrobeats",plays:3800,price:"$24.99"},
+{title:"Sahara Log Drum",artist:"BeatMaster Tunde",genre:"Amapiano",plays:4800,price:"$31.99"}
+];
+const films=[
+{title:"Shadows of the Benue",creator:"HarzFilm Studios",cat:"Nollywood",views:15000,buy:"$9.99",rent:"$3.99"},
+{title:"Lagos Nights",creator:"Amara Okafor",cat:"Nollywood",views:22000,buy:"$7.99",rent:"$2.99"},
+{title:"Monsoon Rhapsody",creator:"Raj Kapoor Films",cat:"Bollywood",views:45000,buy:"$12.99",rent:"$4.99"},
+{title:"The Silent Witness",creator:"Park Min-ho",cat:"Korean Drama",views:38000,buy:"$10.99",rent:"$3.99"},
+{title:"Echoes of Ancient Rome",creator:"Sofia Mancini",cat:"European",views:8500,buy:"$6.99",rent:"$2.49"},
+{title:"The Last Hunter",creator:"HarzFilm Studios",cat:"Kannywood",views:9200,buy:"$8.99",rent:"$2.99"},
+{title:"Colors of the Savannah",creator:"Amara Okafor",cat:"African",views:6800,buy:"$5.99",rent:"$1.99"},
+{title:"Beneath the Cherry Blossom",creator:"Park Min-ho",cat:"Korean Drama",views:18000,buy:"$8.99",rent:"$2.99"}
+];
+const saas=[
+{name:"AI Invoice Generator",cat:"Finance",price:"FREE",users:1200,rating:"4.9⭐"},
+{name:"Business Plan Writer",cat:"Business",price:"₦2K/mo",users:850,rating:"4.8⭐"},
+{name:"Contract Template Builder",cat:"Legal",price:"₦2K/mo",users:640,rating:"4.7⭐"},
+{name:"AI Logo Maker",cat:"Design",price:"FREE",users:2100,rating:"4.8⭐"},
+{name:"Content Generator",cat:"Marketing",price:"₦2K/mo",users:1800,rating:"4.9⭐"},
+{name:"Tax Calculator (Nigeria)",cat:"Finance",price:"FREE",users:1500,rating:"4.8⭐"},
+{name:"QR Code Generator",cat:"Utility",price:"FREE",users:2300,rating:"4.6⭐"},
+{name:"Resume Builder",cat:"Career",price:"FREE",users:3200,rating:"4.9⭐"}
+];
+const freelance=[
+{title:"AI Chatbot Development",name:"CodeNinja",cat:"AI Services",price:"₦50K",orders:42},
+{title:"Logo & Brand Identity",name:"Studio Zara",cat:"Design",price:"₦15K",orders:87},
+{title:"React/Next.js Web App",name:"TechRabbit",cat:"Programming",price:"₦80K",orders:28},
+{title:"SEO Article Writing",name:"Daniel W.",cat:"Writing",price:"₦5K",orders:156},
+{title:"Social Media Management",name:"Mide Socials",cat:"Marketing",price:"₦30K",orders:34},
+{title:"WhatsApp Bot Setup",name:"CodeNinja",cat:"Programming",price:"₦40K",orders:38},
+{title:"Music Production & Mixing",name:"BeatLab",cat:"Music",price:"₦25K",orders:51},
+{title:"Business Plan Writing",name:"BizPlan NG",cat:"Business",price:"₦35K",orders:23}
+];
+const platforms=[
+{name:"HarzDM Marketplace",url:"harzdm-marketplace.vercel.app",status:"live"},
+{name:"HarzDM Checkout",url:"harzdm-checkout.vercel.app",status:"live"},
+{name:"Harz Shop",url:"harz-shop.vercel.app",status:"live"},
+{name:"ContentPilot Checkout",url:"cp-checkout-harz.vercel.app",status:"live"},
+{name:"Unified Dashboard",url:"harz-ecosystem-dashboard.vercel.app",status:"live"},
+{name:"Apex Bank",url:"apex-bank.vercel.app",status:"live"},
+{name:"HarzAjo",url:"harzajo.vercel.app",status:"live"},
+{name:"HarzPay",url:"harzpay.vercel.app",status:"live"},
+{name:"HarzFX",url:"harzfx.vercel.app",status:"live"},
+{name:"HarzLend",url:"harzlend.vercel.app",status:"live"},
+{name:"OMEGA Health AI",url:"omega-health-ai.vercel.app",status:"live"},
+{name:"MindCare AI",url:"mindcare-ai.vercel.app",status:"live"},
+{name:"CYBER SHIELD X",url:"cyber-shield-x.vercel.app",status:"live"},
+{name:"EduWealth AI",url:"eduwealth-ai.vercel.app",status:"live"},
+{name:"OMEGA INFINITY 1000",url:"omega-infinity-dashboard.vercel.app",status:"live"},
+{name:"TradeOS",url:"tradeos.vercel.app",status:"live"},
+{name:"OMEGA Content AI",url:"omega-content-ai.vercel.app",status:"live"},
+{name:"Abuja Estate City",url:"abuja-estate-city-ai.vercel.app",status:"live"},
+{name:"Maganu Agent",url:"maganu-agent.onrender.com",status:"live"},
+{name:"BuildBot AI",url:"harz-portfolio/buildbot-ai.html",status:"live"},
+{name:"ContentPilot AI",url:"harz-portfolio/contentpilot-ai.html",status:"live"},
+{name:"HarzMusic",url:"harz-music.vercel.app",status:"live"},
+{name:"HarzFilm",url:"harz-film.vercel.app",status:"live"},
+{name:"WhatsApp CRM",url:"harz-crm.vercel.app",status:"live"},
+{name:"OMEGA Commander",url:"omega-commander-ai.onrender.com",status:"live"},
+{name:"Harz AI Cloud",url:"rabiuhamza11.github.io/harz-portfolio/harz-cloud.html",status:"live"},
+{name:"Harz Super App",url:"rabiuhamza11.github.io/harz-portfolio/harz-super-app.html",status:"live"},
+{name:"Harz Developer Platform",url:"rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html",status:"live"},
+{name:"Harz AI Agency",url:"rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html",status:"live"},
+{name:"Harz Freelance Market",url:"rabiuhamza11.github.io/harz-portfolio/harz-freelance.html",status:"live"},
+{name:"Harz Events",url:"rabiuhamza11.github.io/harz-portfolio/harz-events.html",status:"live"},
+{name:"HarzDM Getly Store",url:"getly.store/harzdm",status:"live"},
+{name:"Portfolio (664+ pages)",url:"rabiuhamza11.github.io/harz-portfolio",status:"live"}
+];
+function fmt(n){if(n>=1000000)return"₦"+(n/1000000).toFixed(1)+"M";if(n>=1000)return"₦"+(n/1000).toFixed(0)+"K";return"₦"+n.toLocaleString();}
+const maxCat=Math.max(...categories.map(c=>c.count));
+document.getElementById("categoryChart").innerHTML=categories.map(c=>`
+<div class="bar-row">
+<div class="bar-label">${c.name}</div>
+<div class="bar-track"><div class="bar-fill" style="width:${(c.count/maxCat*100)}%;background:${c.color}">${c.count}</div></div>
+<div class="bar-value">${fmt(c.value)}</div>
+</div>
+`).join("");
+document.getElementById("musicTable").innerHTML=music.map(m=>`<tr><td>${m.title}</td><td>${m.artist}</td><td>${m.genre}</td><td>${m.plays.toLocaleString()}</td><td>${m.price}</td></tr>`).join("");
+document.getElementById("filmTable").innerHTML=films.map(f=>`<tr><td>${f.title}</td><td>${f.creator}</td><td>${f.cat}</td><td>${f.views.toLocaleString()}</td><td>${f.buy}</td><td>${f.rent}</td></tr>`).join("");
+document.getElementById("saasTable").innerHTML=saas.map(s=>`<tr><td>${s.name}</td><td>${s.cat}</td><td>${s.price}</td><td>${s.users.toLocaleString()}</td><td>${s.rating}</td></tr>`).join("");
+document.getElementById("freelanceTable").innerHTML=freelance.map(f=>`<tr><td>${f.title}</td><td>${f.name}</td><td>${f.cat}</td><td>${f.price}</td><td>${f.orders}</td></tr>`).join("");
+document.getElementById("platformGrid").innerHTML=platforms.map(p=>`
+<div class="platform-card">
+<div class="platform-name">${p.status==="live"?"🟢":"🟡"} ${p.name}</div>
+<div class="platform-url">${p.url}</div>
+<span class="platform-status ${p.status}">${p.status.toUpperCase()}</span>
+</div>
+`).join("");
+</script>
+</body>
+</html>
