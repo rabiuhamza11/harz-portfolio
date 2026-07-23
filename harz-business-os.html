@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>HARZ Business OS — Enterprise Operating System</title>
+<meta name="description" content="All-in-one business operating system: CRM, ERP, HR, Accounting, Inventory, Payroll, Marketing, Analytics & AI Automation.">
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--p1:#3b82f6;--p2:#8b5cf6;--p3:#10b981;--p4:#f59e0b;--p5:#ef4444;--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--border:#334155;--accent:#06b6d4}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--p1);border-radius:5px}
+
+/* Header */
+.header{background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(139,92,246,.08));border-bottom:1px solid var(--border);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header h1{font-size:1.05rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.65rem;color:var(--muted);margin-top:2px}
+.badge-live{background:rgba(16,185,129,.15);color:var(--p3);padding:2px 8px;border-radius:10px;font-size:.6rem;font-weight:700}
+.badge-v{background:rgba(139,92,246,.15);color:var(--p2);padding:2px 8px;border-radius:10px;font-size:.6rem;font-weight:700}
+
+/* KPI Row */
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:16px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-card.blue::before{background:var(--p1)}
+.kpi-card.green::before{background:var(--p3)}
+.kpi-card.purple::before{background:var(--p2)}
+.kpi-card.orange::before{background:var(--p4)}
+.kpi-card.red::before{background:var(--p5)}
+.kpi-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.kpi-value{font-size:1.4rem;font-weight:800;margin:4px 0}
+.kpi-sub{font-size:.68rem;color:var(--muted)}
+.kpi-trend{font-size:.62rem;font-weight:600;display:inline-block;padding:1px 6px;border-radius:8px;margin-top:4px}
+.kpi-trend.up{background:rgba(16,185,129,.15);color:var(--p3)}
+.kpi-trend.down{background:rgba(239,68,68,.15);color:var(--p5)}
+
+/* Module Grid */
+.module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px;margin-bottom:16px}
+.module-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .25s;position:relative}
+.module-card:active{transform:scale(.95)}
+.module-card:hover{border-color:var(--p1);box-shadow:0 2px 12px rgba(59,130,246,.15)}
+.module-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 8px}
+.module-name{font-size:.68rem;font-weight:700;margin-bottom:2px}
+.module-desc{font-size:.55rem;color:var(--muted);line-height:1.3}
+.module-badge{position:absolute;top:6px;right:6px;background:rgba(139,92,246,.2);color:var(--p2);font-size:.5rem;font-weight:700;padding:1px 5px;border-radius:6px}
+
+/* Section */
+.section{padding:0 16px;margin-bottom:20px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.section-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.section-link{font-size:.68rem;color:var(--accent);cursor:pointer}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.card:active{transform:scale(.98)}
+.card-row{display:flex;align-items:center;gap:10px}
+.card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-title{font-size:.78rem;font-weight:600}
+.card-desc{font-size:.65rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-meta{font-size:.7rem;font-weight:600;text-align:right;flex-shrink:0}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:.72rem}
+.tbl th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--border)}
+.tbl tr:active{background:var(--card2)}
+.pill{display:inline-block;padding:1px 6px;border-radius:6px;font-size:.58rem;font-weight:600}
+.pill.green{background:rgba(16,185,129,.15);color:var(--p3)}
+.pill.blue{background:rgba(59,130,246,.15);color:var(--p1)}
+.pill.orange{background:rgba(245,158,11,.15);color:var(--p4)}
+.pill.red{background:rgba(239,68,68,.15);color:var(--p5)}
+.pill.purple{background:rgba(139,92,246,.15);color:var(--p2)}
+
+/* Pages */
+.page{display:none;animation:fadeIn .3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Page Header */
+.page-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.page-head .back{font-size:1.2rem;cursor:pointer;color:var(--muted)}
+.page-head h2{font-size:.9rem;font-weight:700}
+
+/* Progress */
+.progress-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:3px}
+
+/* AI Banner */
+.ai-banner{background:linear-gradient(135deg,var(--p1),var(--p2));border-radius:14px;padding:16px;margin:0 16px 16px;color:#fff;position:relative;overflow:hidden}
+.ai-banner::after{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.1)}
+.ai-banner h3{font-size:.85rem;font-weight:700;margin-bottom:4px}
+.ai-banner p{font-size:.68rem;opacity:.85;line-height:1.4}
+.ai-btn{background:rgba(255,255,255,.2);border:none;border-radius:8px;padding:6px 14px;color:#fff;font-size:.7rem;font-weight:600;cursor:pointer;margin-top:10px}
+
+/* Bar chart */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bar-label{width:80px;font-size:.68rem;font-weight:600;flex-shrink:0}
+.bar-track{flex:1;height:22px;background:var(--bg);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:#fff;font-size:.58rem;font-weight:700;transition:width 1s}
+.bar-val{width:60px;font-size:.68rem;font-weight:700;text-align:right;flex-shrink:0}
+
+/* Donut */
+.donut-wrap{display:flex;justify-content:center;align-items:center;gap:20px;flex-wrap:wrap}
+.donut{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--p1) 0% 35%,var(--p3) 35% 60%,var(--p4) 60% 80%,var(--p2) 80% 100%);display:flex;align-items:center;justify-content:center;position:relative}
+.donut::after{content:'';width:70px;height:70px;border-radius:50%;background:var(--card);position:absolute}
+.donut-center{position:relative;z-index:1;text-align:center}
+.donut-center .num{font-size:1rem;font-weight:800}
+.donut-center .lbl{font-size:.55rem;color:var(--muted)}
+.legend{display:flex;flex-direction:column;gap:6px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:.65rem}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+
+/* Footer */
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:.68rem}
+.footer a{color:var(--accent)}
+
+/* Bottom Nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;max-width:600px;margin:0 auto}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;cursor:pointer;color:var(--muted);transition:color .2s}
+.nav-item.active{color:var(--p1)}
+.nav-icon{font-size:1.2rem}
+.nav-label{font-size:.55rem;font-weight:600}
+
+@media(max-width:640px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.module-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:641px){.kpi-grid{grid-template-columns:repeat(4,1fr)}.module-grid{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+<div>
+<h1>HARZ Business OS</h1>
+<div class="sub">Enterprise Operating System</div>
+</div>
+<div style="display:flex;gap:6px;align-items:center">
+<span class="badge-v">v1.0</span>
+<span class="badge-live">● LIVE</span>
+</div>
+</div>
+
+<!-- ===== HOME PAGE ===== -->
+<div id="page-home" class="page active">
+
+<!-- AI Banner -->
+<div class="ai-banner">
+<h3>🤖 AI Automation Engine</h3>
+<p>8 AI agents managing your business 24/7 — lead scoring, invoice generation, payroll processing, inventory alerts, and smart forecasting.</p>
+<button class="ai-btn" onclick="switchPage('ai')">View AI Agents →</button>
+</div>
+
+<!-- KPI Grid -->
+<div class="kpi-grid">
+<div class="kpi-card green">
+<div class="kpi-label">Revenue (MTD)</div>
+<div class="kpi-value">₦4.82M</div>
+<div class="kpi-sub">Target: ₦6M · 80%</div>
+<span class="kpi-trend up">▲ 12.3%</span>
+</div>
+<div class="kpi-card blue">
+<div class="kpi-label">Active Customers</div>
+<div class="kpi-value">1,247</div>
+<div class="kpi-sub">89 new this month</div>
+<span class="kpi-trend up">▲ 7.7%</span>
+</div>
+<div class="kpi-card purple">
+<div class="kpi-label">Employees</div>
+<div class="kpi-value">34</div>
+<div class="kpi-sub">28 active · 6 on leave</div>
+<span class="kpi-trend up">▲ 2</span>
+</div>
+<div class="kpi-card orange">
+<div class="kpi-label">Inventory Value</div>
+<div class="kpi-value">₦12.4M</div>
+<div class="kpi-sub">847 SKUs · 23 low stock</div>
+<span class="kpi-trend down">▼ 3.2%</span>
+</div>
+<div class="kpi-card green">
+<div class="kpi-label">Payroll (MTD)</div>
+<div class="kpi-value">₦2.1M</div>
+<div class="kpi-sub">Next: Jul 31</div>
+<span class="kpi-trend up">▲ 1.5%</span>
+</div>
+<div class="kpi-card red">
+<div class="kpi-label">Outstanding Invoices</div>
+<div class="kpi-value">₦890K</div>
+<div class="kpi-sub">14 overdue · 8 pending</div>
+<span class="kpi-trend down">▼ 8.1%</span>
+</div>
+<div class="kpi-card blue">
+<div class="kpi-label">Marketing ROI</div>
+<div class="kpi-value">3.8x</div>
+<div class="kpi-sub">₦450K spend → ₦1.71M</div>
+<span class="kpi-trend up">▲ 0.4x</span>
+</div>
+<div class="kpi-card purple">
+<div class="kpi-label">AI Tasks (Today)</div>
+<div class="kpi-value">156</div>
+<div class="kpi-sub">142 completed · 14 queued</div>
+<span class="kpi-trend up">▲ 23</span>
+</div>
+</div>
+
+<!-- Module Grid -->
+<div class="section">
+<div class="section-head"><span class="section-title">Business Modules</span></div>
+<div class="module-grid">
+<div class="module-card" onclick="switchPage('crm')"><div class="module-icon" style="background:rgba(59,130,246,.15)">👥</div><div class="module-name">CRM</div><div class="module-desc">Leads · Deals · Pipeline</div></div>
+<div class="module-card" onclick="switchPage('erp')"><div class="module-icon" style="background:rgba(139,92,246,.15)">🏢</div><div class="module-name">ERP</div><div class="module-desc">Resources · Procurement</div></div>
+<div class="module-card" onclick="switchPage('hr')"><div class="module-icon" style="background:rgba(16,185,129,.15)">👤</div><div class="module-name">HR</div><div class="module-desc">Staff · Leave · Attendance</div></div>
+<div class="module-card" onclick="switchPage('accounting')"><div class="module-icon" style="background:rgba(245,158,11,.15)">💰</div><div class="module-name">Accounting</div><div class="module-desc">Ledger · Invoices · Tax</div></div>
+<div class="module-card" onclick="switchPage('inventory')"><div class="module-icon" style="background:rgba(239,68,68,.15)">📦</div><div class="module-name">Inventory</div><div class="module-desc">Stock · Warehouse · SKU</div></div>
+<div class="module-card" onclick="switchPage('payroll')"><div class="module-icon" style="background:rgba(16,185,129,.15)">💳</div><div class="module-name">Payroll</div><div class="module-desc">Salary · Deductions · Payslips</div></div>
+<div class="module-card" onclick="switchPage('marketing')"><div class="module-icon" style="background:rgba(6,182,212,.15)">📢</div><div class="module-name">Marketing</div><div class="module-desc">Campaigns · Email · Ads</div></div>
+<div class="module-card" onclick="switchPage('analytics')"><div class="module-icon" style="background:rgba(139,92,246,.15)">📊</div><div class="module-name">Analytics</div><div class="module-desc">Revenue · Growth · KPIs</div></div>
+<div class="module-card" onclick="switchPage('ai')"><div class="module-icon" style="background:rgba(59,130,246,.15)">🤖</div><div class="module-name">AI Auto</div><div class="module-desc">8 Agents · Workflows</div><div class="module-badge">AI</div></div>
+</div>
+</div>
+
+<!-- Recent Activity -->
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Activity</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(16,185,129,.12)">✅</div><div class="card-info"><div class="card-title">Invoice #INV-0847 paid</div><div class="card-desc">Abubakar Trading Co. · Bank transfer</div></div><div class="card-meta" style="color:var(--p3)">+₦145K</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.12)">👤</div><div class="card-info"><div class="card-title">New lead: Fatima Ibrahim</div><div class="card-desc">Source: Website · Score: 87/100</div></div><div class="card-meta" style="color:var(--p1)">HOT</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(245,158,11,.12)">⚠️</div><div class="card-info"><div class="card-title">Low stock alert: Cement (50kg)</div><div class="card-desc">23 bags left · Reorder threshold: 50</div></div><div class="card-meta" style="color:var(--p4)">REORDER</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(139,92,246,.12)">🤖</div><div class="card-info"><div class="card-title">AI Agent: Payroll Processor</div><div class="card-desc">Generated July payslips for 34 employees</div></div><div class="card-meta" style="color:var(--p2)">DONE</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(6,182,212,.12)">📢</div><div class="card-info"><div class="card-title">Campaign: Summer Promo</div><div class="card-desc">Sent to 1,247 contacts · 23% open rate</div></div><div class="card-meta" style="color:var(--accent)">LIVE</div></div></div>
+</div>
+</div>
+
+<!-- ===== CRM PAGE ===== -->
+<div id="page-crm" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>👥 CRM — Customer Management</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Total Leads</div><div class="kpi-value">342</div><div class="kpi-sub">89 new this month</div></div>
+<div class="kpi-card green"><div class="kpi-label">Active Deals</div><div class="kpi-value">47</div><div class="kpi-sub">Worth ₦8.2M</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Conversion</div><div class="kpi-value">24.6%</div><div class="kpi-sub">↑ 3.1% vs last month</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Pipeline Value</div><div class="kpi-value">₦12.4M</div><div class="kpi-sub">5 stages</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Pipeline Stages</span></div>
+<div class="bar-row"><div class="bar-label">New</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p1)">142</div></div><div class="bar-val">₦4.2M</div></div>
+<div class="bar-row"><div class="bar-label">Contacted</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--accent)">89</div></div><div class="bar-val">₦3.1M</div></div>
+<div class="bar-row"><div class="bar-label">Qualified</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--p4)">56</div></div><div class="bar-val">₦2.8M</div></div>
+<div class="bar-row"><div class="bar-label">Proposal</div><div class="bar-track"><div class="bar-fill" style="width:22%;background:var(--p2)">34</div></div><div class="bar-val">₦1.6M</div></div>
+<div class="bar-row"><div class="bar-label">Closed Won</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--p3)">21</div></div><div class="bar-val">₦890K</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Top Leads</span></div>
+<table class="tbl"><thead><tr><th>Name</th><th>Source</th><th>Score</th><th>Stage</th></tr></thead><tbody>
+<tr><td>Fatima Ibrahim</td><td>Website</td><td>87</td><td><span class="pill orange">Proposal</span></td></tr>
+<tr><td>Abubakar Co.</td><td>Referral</td><td>82</td><td><span class="pill blue">Qualified</span></td></tr>
+<tr><td>Jalingo Mart</td><td>WhatsApp</td><td>76</td><td><span class="pill blue">Contacted</span></td></tr>
+<tr><td>Taraba Logistics</td><td>Email</td><td>71</td><td><span class="pill blue">Qualified</span></td></tr>
+<tr><td>Bauchi Foods</td><td>Referral</td><td>68</td><td><span class="pill purple">New</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ===== ERP PAGE ===== -->
+<div id="page-erp" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🏢 ERP — Resource Planning</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Departments</div><div class="kpi-value">6</div><div class="kpi-sub">Sales, Ops, HR, Finance, IT, Marketing</div></div>
+<div class="kpi-card green"><div class="kpi-label">Projects</div><div class="kpi-value">18</div><div class="kpi-sub">12 active · 6 completed</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Suppliers</div><div class="kpi-value">47</div><div class="kpi-sub">12 active POs</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Open POs</div><div class="kpi-value">12</div><div class="kpi-sub">₦3.2M pending delivery</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Active Projects</span></div>
+<table class="tbl"><thead><tr><th>Project</th><th>Dept</th><th>Progress</th><th>Status</th></tr></thead><tbody>
+<tr><td>HarzDM Q3 Expansion</td><td>Sales</td><td><div class="progress-bar"><div class="progress-fill" style="width:72%;background:var(--p1)"></div></div></td><td><span class="pill green">On Track</span></td></tr>
+<tr><td>Warehouse Automation</td><td>Ops</td><td><div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--p4)"></div></div></td><td><span class="pill orange">At Risk</span></td></tr>
+<tr><td>Payroll System Upgrade</td><td>Finance</td><td><div class="progress-bar"><div class="progress-fill" style="width:90%;background:var(--p3)"></div></div></td><td><span class="pill green">On Track</span></td></tr>
+<tr><td>CRM Migration</td><td>IT</td><td><div class="progress-bar"><div class="progress-fill" style="width:30%;background:var(--p5)"></div></div></td><td><span class="pill red">Delayed</span></td></tr>
+<tr><td>Summer Campaign</td><td>Marketing</td><td><div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--p1)"></div></div></td><td><span class="pill green">On Track</span></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Purchase Orders</span></div>
+<table class="tbl"><thead><tr><th>PO #</th><th>Supplier</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+<tr><td>PO-0341</td><td>Dangote Cement</td><td>₦1.2M</td><td><span class="pill orange">Delivering</span></td></tr>
+<tr><td>PO-0342</td><td>Jalingo Steel</td><td>₦850K</td><td><span class="pill blue">Pending</span></td></tr>
+<tr><td>PO-0343</td><td>Bauchi Timber</td><td>₦420K</td><td><span class="pill green">Delivered</span></td></tr>
+<tr><td>PO-0344</td><td>Harz Logistics</td><td>₦340K</td><td><span class="pill blue">Pending</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ===== HR PAGE ===== -->
+<div id="page-hr" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>👤 HR — Human Resources</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card blue"><div class="kpi-label">Total Staff</div><div class="kpi-value">34</div><div class="kpi-sub">28 active · 6 on leave</div></div>
+<div class="kpi-card green"><div class="kpi-label">Attendance</div><div class="kpi-value">94.2%</div><div class="kpi-sub">Today's rate</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Open Positions</div><div class="kpi-value">5</div><div class="kpi-sub">3 interviewing · 2 posted</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Training</div><div class="kpi-value">8</div><div class="kpi-sub">Active courses</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Department Headcount</span></div>
+<div class="bar-row"><div class="bar-label">Sales</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p1)">12</div></div><div class="bar-val">12</div></div>
+<div class="bar-row"><div class="bar-label">Operations</div><div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--p3)">9</div></div><div class="bar-val">9</div></div>
+<div class="bar-row"><div class="bar-label">Finance</div><div class="bar-track"><div class="bar-fill" style="width:42%;background:var(--p4)">5</div></div><div class="bar-val">5</div></div>
+<div class="bar-row"><div class="bar-label">IT</div><div class="bar-track"><div class="bar-fill" style="width:33%;background:var(--p2)">4</div></div><div class="bar-val">4</div></div>
+<div class="bar-row"><div class="bar-label">Marketing</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--accent)">3</div></div><div class="bar-val">3</div></div>
+<div class="bar-row"><div class="bar-label">HR</div><div class="bar-track"><div class="bar-fill" style="width:8%;background:var(--p5)">1</div></div><div class="bar-val">1</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Recent HR Actions</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(16,185,129,.12)">✅</div><div class="card-info"><div class="card-title">Onboarded: Aisha Mohammed</div><div class="card-desc">Sales Executive · Jalingo branch</div></div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(245,158,11,.12)">📅</div><div class="card-info"><div class="card-title">Leave approved: Yusuf Ali</div><div class="card-desc">Jul 25-30 · Annual leave</div></div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.12)">🎯</div><div class="card-info"><div class="card-title">Training completed: 6 staff</div><div class="card-desc">Customer Service Excellence</div></div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(139,92,246,.12)">📋</div><div class="card-info"><div class="card-title">Performance review scheduled</div><div class="card-desc">12 staff · Due by Jul 31</div></div></div></div>
+</div>
+</div>
+
+<!-- ===== ACCOUNTING PAGE ===== -->
+<div id="page-accounting" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>💰 Accounting & Finance</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Revenue (YTD)</div><div class="kpi-value">₦28.4M</div><div class="kpi-sub">↑ 18.2% vs last year</div></div>
+<div class="kpi-card red"><div class="kpi-label">Expenses (YTD)</div><div class="kpi-value">₦19.1M</div><div class="kpi-sub">68% of revenue</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Net Profit</div><div class="kpi-value">₦9.3M</div><div class="kpi-sub">32.7% margin</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Tax Liability</div><div class="kpi-value">₦1.4M</div><div class="kpi-sub">VAT + Withholding</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Revenue vs Expenses</span></div>
+<div class="bar-row"><div class="bar-label">Jan</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--p3)">₦2.1M</div></div><div class="bar-val">₦2.1M</div></div>
+<div class="bar-row"><div class="bar-label">Feb</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--p3)">₦2.4M</div></div><div class="bar-val">₦2.4M</div></div>
+<div class="bar-row"><div class="bar-label">Mar</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--p3)">₦2.8M</div></div><div class="bar-val">₦2.8M</div></div>
+<div class="bar-row"><div class="bar-label">Apr</div><div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--p3)">₦2.6M</div></div><div class="bar-val">₦2.6M</div></div>
+<div class="bar-row"><div class="bar-label">May</div><div class="bar-track"><div class="bar-fill" style="width:88%;background:var(--p3)">₦3.1M</div></div><div class="bar-val">₦3.1M</div></div>
+<div class="bar-row"><div class="bar-label">Jun</div><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--p3)">₦3.4M</div></div><div class="bar-val">₦3.4M</div></div>
+<div class="bar-row"><div class="bar-label">Jul</div><div class="bar-track"><div class="bar-fill" style="width:82%;background:var(--p3)">₦4.8M</div></div><div class="bar-val">₦4.8M</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Recent Invoices</span></div>
+<table class="tbl"><thead><tr><th>Invoice #</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+<tr><td>INV-0847</td><td>Abubakar Trading</td><td>₦145K</td><td><span class="pill green">Paid</span></td></tr>
+<tr><td>INV-0846</td><td>Jalingo Mart</td><td>₦320K</td><td><span class="pill orange">Overdue</span></td></tr>
+<tr><td>INV-0845</td><td>Taraba Logistics</td><td>₦89K</td><td><span class="pill green">Paid</span></td></tr>
+<tr><td>INV-0844</td><td>Bauchi Foods</td><td>₦210K</td><td><span class="pill blue">Pending</span></td></tr>
+<tr><td>INV-0843</td><td>HarzDM Co.</td><td>₦440K</td><td><span class="pill green">Paid</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ===== INVENTORY PAGE ===== -->
+<div id="page-inventory" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📦 Inventory Management</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Total SKUs</div><div class="kpi-value">847</div><div class="kpi-sub">Across 3 warehouses</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Stock Value</div><div class="kpi-value">₦12.4M</div><div class="kpi-sub">Avg. turnover: 4.2x</div></div>
+<div class="kpi-card red"><div class="kpi-label">Low Stock</div><div class="kpi-value">23</div><div class="kpi-sub">Below reorder threshold</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Out of Stock</div><div class="kpi-value">8</div><div class="kpi-sub">POs created: 5</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Warehouses</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(16,185,129,.12)">🏭</div><div class="card-info"><div class="card-title">Jalingo Main</div><div class="card-desc">412 SKUs · 85% capacity</div></div><div class="card-meta" style="color:var(--p3)">₦6.2M</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.12)">🏭</div><div class="card-info"><div class="card-title">Bauchi Branch</div><div class="card-desc">289 SKUs · 62% capacity</div></div><div class="card-meta" style="color:var(--p1)">₦4.1M</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(245,158,11,.12)">🏭</div><div class="card-info"><div class="card-title">Gombe Hub</div><div class="card-desc">146 SKUs · 38% capacity</div></div><div class="card-meta" style="color:var(--p4)">₦2.1M</div></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Low Stock Alerts</span></div>
+<table class="tbl"><thead><tr><th>Item</th><th>Warehouse</th><th>Qty</th><th>Reorder</th><th>Status</th></tr></thead><tbody>
+<tr><td>Cement 50kg</td><td>Jalingo</td><td>23</td><td>50</td><td><span class="pill orange">Low</span></td></tr>
+<tr><td>Steel Rod 12mm</td><td>Bauchi</td><td>8</td><td>30</td><td><span class="pill red">Critical</span></td></tr>
+<tr><td>Paint 20L White</td><td>Jalingo</td><td>15</td><td>40</td><td><span class="pill orange">Low</span></td></tr>
+<tr><td>PVC Pipe 4"</td><td>Gombe</td><td>0</td><td>25</td><td><span class="pill red">Out</span></td></tr>
+<tr><td>Blocks 9"</td><td>Jalingo</td><td>340</td><td>500</td><td><span class="pill orange">Low</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ===== PAYROLL PAGE ===== -->
+<div id="page-payroll" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>💳 Payroll Management</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Monthly Payroll</div><div class="kpi-value">₦2.1M</div><div class="kpi-sub">34 employees</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Avg. Salary</div><div class="kpi-value">₦61.8K</div><div class="kpi-sub">Per month</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Tax Deducted</div><div class="kpi-value">₦312K</div><div class="kpi-sub">PAYE + Pension</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Next Run</div><div class="kpi-value">Jul 31</div><div class="kpi-sub">8 days remaining</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Salary Distribution</span></div>
+<div class="donut-wrap">
+<div class="donut"><div class="donut-center"><div class="num">₦2.1M</div><div class="lbl">Total</div></div></div>
+<div class="legend">
+<div class="legend-item"><div class="legend-dot" style="background:var(--p1)"></div> Sales (35%) ₦735K</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--p3)"></div> Ops (25%) ₦525K</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--p4)"></div> Finance (20%) ₦420K</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--p2)"></div> IT+Mktg (15%) ₦315K</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--p5)"></div> HR (5%) ₦105K</div>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Top Earners</span></div>
+<table class="tbl"><thead><tr><th>Name</th><th>Role</th><th>Gross</th><th>Net</th></tr></thead><tbody>
+<tr><td>Mohammed Bello</td><td>Sales Director</td><td>₦280K</td><td>₦231K</td></tr>
+<tr><td>Aisha Yusuf</td><td>Finance Manager</td><td>₦220K</td><td>₦184K</td></tr>
+<tr><td>Ibrahim Sule</td><td>Ops Manager</td><td>₦195K</td><td>₦164K</td></tr>
+<tr><td>Halima Adamu</td><td>IT Lead</td><td>₦180K</td><td>₦152K</td></tr>
+<tr><td>Sani Garba</td><td>Senior Sales</td><td>₦145K</td><td>₦124K</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ===== MARKETING PAGE ===== -->
+<div id="page-marketing" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📢 Marketing & Campaigns</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Campaigns Active</div><div class="kpi-value">6</div><div class="kpi-sub">4 email · 2 social</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Total Reach</div><div class="kpi-value">47.2K</div><div class="kpi-sub">Across all channels</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Conversion</div><div class="kpi-value">4.8%</div><div class="kpi-sub">2,267 conversions</div></div>
+<div class="kpi-card orange"><div class="kpi-label">ROI</div><div class="kpi-value">3.8x</div><div class="kpi-sub">₦450K → ₦1.71M</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Active Campaigns</span></div>
+<table class="tbl"><thead><tr><th>Campaign</th><th>Channel</th><th>Spend</th><th>Status</th></tr></thead><tbody>
+<tr><td>Summer Promo 2026</td><td>Email + WhatsApp</td><td>₦120K</td><td><span class="pill green">Live</span></td></tr>
+<tr><td>Q3 Product Launch</td><td>Instagram + Facebook</td><td>₦95K</td><td><span class="pill green">Live</span></td></tr>
+<tr><td>Engineering Bundle</td><td>Email Newsletter</td><td>₦45K</td><td><span class="pill green">Live</span></td></tr>
+<tr><td>HarzDM Awareness</td><td>Google Ads</td><td>₦80K</td><td><span class="pill blue">Scheduled</span></td></tr>
+<tr><td>Customer Retention</td><td>WhatsApp CRM</td><td>₦35K</td><td><span class="pill green">Live</span></td></tr>
+<tr><td>Brand Awareness Q3</td><td>Twitter + LinkedIn</td><td>₦75K</td><td><span class="pill orange">Paused</span></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Channel Performance</span></div>
+<div class="bar-row"><div class="bar-label">WhatsApp</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--p3)">18.4K</div></div><div class="bar-val">18.4K</div></div>
+<div class="bar-row"><div class="bar-label">Email</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--p1)">13.2K</div></div><div class="bar-val">13.2K</div></div>
+<div class="bar-row"><div class="bar-label">Instagram</div><div class="bar-track"><div class="bar-fill" style="width:58%;background:var(--p4)">10.7K</div></div><div class="bar-val">10.7K</div></div>
+<div class="bar-row"><div class="bar-label">Facebook</div><div class="bar-track"><div class="bar-fill" style="width:22%;background:var(--p2)">4.1K</div></div><div class="bar-val">4.1K</div></div>
+<div class="bar-row"><div class="bar-label">Google</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--p5)">0.8K</div></div><div class="bar-val">800</div></div>
+</div>
+</div>
+
+<!-- ===== ANALYTICS PAGE ===== -->
+<div id="page-analytics" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>📊 Business Analytics</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Annual Revenue</div><div class="kpi-value">₦28.4M</div><div class="kpi-sub">↑ 18.2% YoY</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Growth Rate</div><div class="kpi-value">18.2%</div><div class="kpi-sub">vs ₦24M last year</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Customer LTV</div><div class="kpi-value">₦142K</div><div class="kpi-sub">Avg. lifetime value</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Churn Rate</div><div class="kpi-value">3.4%</div><div class="kpi-sub">↓ 0.8% improvement</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Revenue Breakdown</span></div>
+<div class="donut-wrap">
+<div class="donut" style="background:conic-gradient(var(--p1) 0% 45%,var(--p3) 45% 70%,var(--p4) 70% 88%,var(--p2) 88% 100%)"><div class="donut-center"><div class="num">₦28.4M</div><div class="lbl">YTD</div></div></div>
+<div class="legend">
+<div class="legend-item"><div class="legend-dot" style="background:var(--p1)"></div> Products (45%) ₦12.8M</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--p3)"></div> Services (25%) ₦7.1M</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--p4)"></div> Contracts (18%) ₦5.1M</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--p2)"></div> Subscriptions (12%) ₦3.4M</div>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Key Metrics</span></div>
+<table class="tbl"><thead><tr><th>Metric</th><th>Current</th><th>Target</th><th>Status</th></tr></thead><tbody>
+<tr><td>Monthly Revenue</td><td>₦4.82M</td><td>₦6M</td><td><span class="pill orange">80%</span></td></tr>
+<tr><td>Customer Acquisition</td><td>89</td><td>120</td><td><span class="pill orange">74%</span></td></tr>
+<tr><td>Gross Margin</td><td>32.7%</td><td>35%</td><td><span class="pill orange">93%</span></td></tr>
+<tr><td>Employee Productivity</td><td>94.2%</td><td>90%</td><td><span class="pill green">105%</span></td></tr>
+<tr><td>Inventory Turnover</td><td>4.2x</td><td>5x</td><td><span class="pill orange">84%</span></td></tr>
+<tr><td>Marketing ROI</td><td>3.8x</td><td>3x</td><td><span class="pill green">127%</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ===== AI AUTOMATION PAGE ===== -->
+<div id="page-ai" class="page">
+<div class="page-head"><span class="back" onclick="switchPage('home')">←</span><h2>🤖 AI Automation Engine</h2></div>
+<div class="section" style="padding-top:14px">
+<div class="kpi-grid" style="padding:0">
+<div class="kpi-card green"><div class="kpi-label">Tasks Today</div><div class="kpi-value">156</div><div class="kpi-sub">142 completed · 14 queued</div></div>
+<div class="kpi-card blue"><div class="kpi-label">Success Rate</div><div class="kpi-value">97.4%</div><div class="kpi-sub">4 failed today</div></div>
+<div class="kpi-card purple"><div class="kpi-label">Active Agents</div><div class="kpi-value">8</div><div class="kpi-sub">All operational</div></div>
+<div class="kpi-card orange"><div class="kpi-label">Time Saved</div><div class="kpi-value">42h</div><div class="kpi-sub">Today · vs manual</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">AI Agents</span></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.12)">🎯</div><div class="card-info"><div class="card-title">Lead Scorer AI</div><div class="card-desc">Scores leads 0-100 based on behavior · 89 scored today</div></div><div class="pill green">Active</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(16,185,129,.12)">📄</div><div class="card-info"><div class="card-title">Invoice Generator</div><div class="card-desc">Auto-creates invoices from approved POs · 12 today</div></div><div class="pill green">Active</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(245,158,11,.12)">💳</div><div class="card-info"><div class="card-title">Payroll Processor</div><div class="card-desc">Calculates salary, tax, deductions · 34 payslips generated</div></div><div class="pill green">Active</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(239,68,68,.12)">📦</div><div class="card-info"><div class="card-title">Inventory Sentinel</div><div class="card-desc">Monitors stock levels · auto-creates POs at threshold · 23 alerts</div></div><div class="pill green">Active</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(139,92,246,.12)">📈</div><div class="card-info"><div class="card-title">Revenue Forecaster</div><div class="card-desc">Predicts monthly revenue using ML · Q3 forecast: ₦15.2M</div></div><div class="pill green">Active</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(6,182,212,.12)">💬</div><div class="card-info"><div class="card-title">Customer Responder</div><div class="card-desc">Auto-replies to WhatsApp inquiries · 47 handled today</div></div><div class="pill green">Active</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.12)">📊</div><div class="card-info"><div class="card-title">Report Compiler</div><div class="card-desc">Generates daily business reports · sent at 8AM daily</div></div><div class="pill green">Active</div></div></div>
+<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(16,185,129,.12)">🔔</div><div class="card-info"><div class="card-title">Compliance Monitor</div><div class="card-desc">Tracks tax deadlines, regulatory requirements · 0 violations</div></div><div class="pill green">Active</div></div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Automation Workflows</span></div>
+<table class="tbl"><thead><tr><th>Workflow</th><th>Trigger</th><th>Actions</th><th>Status</th></tr></thead><tbody>
+<tr><td>New Lead → Score → Assign</td><td>Lead created</td><td>3</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>PO Approved → Invoice → Send</td><td>PO approved</td><td>4</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Low Stock → Alert → Create PO</td><td>Stock < threshold</td><td>3</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Month-End → Payroll → Payslips</td><td>Schedule (25th)</td><td>6</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Customer Churn → Alert → Retention</td><td>Inactivity 30d</td><td>4</td><td><span class="pill green">Active</span></td></tr>
+<tr><td>Daily Revenue → Forecast → Report</td><td>Schedule (8AM)</td><td>5</td><td><span class="pill green">Active</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+HARZ Business OS v1.0 · Platform #34 in the Harz Ecosystem<br>
+9 Modules · 8 AI Agents · Built by Harz Digital Services
+</div>
+
+<script>
+function switchPage(name){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+const page=document.getElementById('page-'+name);
+if(page)page.classList.add('active');
+window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
