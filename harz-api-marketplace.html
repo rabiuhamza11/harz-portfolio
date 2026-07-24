@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ API Marketplace — Buy & Sell AI Agents</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#6c5ce7,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(108,92,231,.1);color:#6c5ce7;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:14px;text-align:center}
+.stat-num{font-size:1.3rem;color:#6c5ce7;font-weight:700}
+.stat-label{font-size:.65rem;color:#8892a6;margin-top:4px}
+.tabs{display:flex;gap:8px;margin:16px 0;justify-content:center}
+.tab{padding:8px 16px;border-radius:10px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.75rem;transition:.2s}
+.tab.active{background:#6c5ce7;color:#fff;border:0;font-weight:600}
+.panel{display:none}
+.panel.active{display:block}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:16px 0}
+.agent-card{background:#131722;border:1px solid #1e2530;border-radius:12px;padding:16px;transition:.2s}
+.agent-card:hover{border-color:#6c5ce7;transform:translateY(-2px)}
+.agent-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:8px}
+.agent-name{font-size:.82rem;color:#fff;font-weight:600}
+.agent-desc{font-size:.68rem;color:#8892a6;margin-top:4px;min-height:30px}
+.agent-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:.62rem;color:#8892a6}
+.agent-price{font-size:.85rem;color:#6c5ce7;font-weight:700;margin-top:6px}
+.agent-price small{font-size:.62rem;color:#8892a6;font-weight:400}
+.subscribe-btn{width:100%;padding:8px;background:linear-gradient(135deg,#6c5ce7,#00d4ff);border:none;border-radius:8px;color:#fff;font-size:.72rem;font-weight:600;cursor:pointer;margin-top:8px}
+.form-box{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#6c5ce7}
+textarea{resize:vertical;min-height:60px}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#6c5ce7,#00d4ff);border:none;border-radius:10px;color:#fff;font-size:.85rem;font-weight:700;cursor:pointer}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+.revenue-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.72rem;border-bottom:1px solid #1e2530}
+.revenue-row:last-child{border:0}
+.fee-row{display:flex;justify-content:space-between;font-size:.72rem;padding:8px 0}
+.fee-label{color:#8892a6}
+.fee-val{color:#00ff88;font-weight:600}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ API Marketplace</h1>
+<p>Buy and sell AI agents — powered by Harz Cloud</p>
+<div class="badge">20+ Agents Available • 80/20 Revenue Split</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num">20+</div><div class="stat-label">AI Agents</div></div>
+<div class="stat-card"><div class="stat-num">80%</div><div class="stat-label">Developer Share</div></div>
+<div class="stat-card"><div class="stat-num">∞</div><div class="stat-label">Unlimited Listings</div></div>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('browse',this)">Browse Agents</div>
+<div class="tab" onclick="switchTab('publish',this)">Publish Your Agent</div>
+<div class="tab" onclick="switchTab('earnings',this)">Earnings</div>
+</div>
+
+<div id="panel-browse" class="panel active">
+<div class="agent-grid">
+<div class="agent-card"><div class="agent-icon" style="background:linear-gradient(135deg,#00d4ff,#0099cc)">🧠</div><div class="agent-name">Llama 3.3 70B</div><div class="agent-desc">General-purpose AI assistant. Best for chat, Q&A, content creation.</div><div class="agent-meta"><span>⭐ 4.8</span><span>12K calls</span></div><div class="agent-price">₦2/1K tokens<small></small></div><button class="subscribe-btn" onclick="subscribeAgent('Llama 3.3 70B')">Subscribe</button></div>
+<div class="agent-card"><div class="agent-icon" style="background:linear-gradient(135deg,#ff00ff,#cc00cc)">🎨</div><div class="agent-name">Image Generator</div><div class="agent-desc">Text-to-image with 12 styles. Photorealistic, anime, cyberpunk and more.</div><div class="agent-meta"><span>⭐ 4.6</span><span>5K calls</span></div><div class="agent-price">₦50/image<small></small></div><button class="subscribe-btn" onclick="subscribeAgent('Image Generator')">Subscribe</button></div>
+<div class="agent-card"><div class="agent-icon" style="background:linear-gradient(135deg,#00ff88,#00cc66)">🔒</div><div class="agent-name">Cyber Shield AI</div><div class="agent-desc">Threat detection, vulnerability scanning, security analysis.</div><div class="agent-meta"><span>⭐ 4.9</span><span>3K calls</span></div><div class="agent-price">₦10K/month<small></small></div><button class="subscribe-btn" onclick="subscribeAgent('Cyber Shield AI')">Subscribe</button></div>
+<div class="agent-card"><div class="agent-icon" style="background:linear-gradient(135deg,#f0b90b,#ffaa00)">🏥</div><div class="agent-name">Health Diagnostic</div><div class="agent-desc">Symptom analysis, medication check, health risk assessment.</div><div class="agent-meta"><span>⭐ 4.7</span><span>8K calls</span></div><div class="agent-price">₦5/call<small></small></div><button class="subscribe-btn" onclick="subscribeAgent('Health Diagnostic')">Subscribe</button></div>
+<div class="agent-card"><div class="agent-icon" style="background:linear-gradient(135deg,#6c5ce7,#5544aa)">📚</div><div class="agent-name">EduWealth Tutor</div><div class="agent-desc">Personalized learning, exam prep, course generation.</div><div class="agent-meta"><span>⭐ 4.5</span><span>6K calls</span></div><div class="agent-price">₦3/call<small></small></div><button class="subscribe-btn" onclick="subscribeAgent('EduWealth Tutor')">Subscribe</button></div>
+<div class="agent-card"><div class="agent-icon" style="background:linear-gradient(135deg,#ff6b6b,#cc4444)">📊</div><div class="agent-name">Business Analyst</div><div class="agent-desc">Financial modeling, market analysis, business plan generation.</div><div class="agent-meta"><span>⭐ 4.8</span><span>4K calls</span></div><div class="agent-price">₦5/call<small></small></div><button class="subscribe-btn" onclick="subscribeAgent('Business Analyst')">Subscribe</button></div>
+<div class="agent-card"><div class="agent-icon" style="background:linear-gradient(135deg,#25D366,#128C7E)">💬</div><div class="agent-name">CRM Assistant</div><div class="agent-desc">Customer management, auto-reply, lead scoring, WhatsApp integration.</div><div class="agent-meta"><span>⭐ 4.6</span><span>2K calls</span></div><div class="agent-price">₦15K/month<small></small></div><button class="subscribe-btn" onclick="subscribeAgent('CRM Assistant')">Subscribe</button></div>
+<div class="agent-card"><div class="agent-icon" style="background:linear-gradient(135deg,#00d4ff,#6c5ce7)">🏗️</div><div class="agent-name">BuildBot AI</div><div class="agent-desc">Construction estimation, material planning, project management.</div><div class="agent-meta"><span>⭐ 4.7</span><span>1.5K calls</span></div><div class="agent-price">₦5K/project<small></small></div><button class="subscribe-btn" onclick="subscribeAgent('BuildBot AI')">Subscribe</button></div>
+</div>
+</div>
+
+<div id="panel-publish" class="panel">
+<div class="form-box">
+<h3 style="font-size:.85rem;color:#fff;margin-bottom:14px">Publish Your AI Agent</h3>
+<label>Agent Name</label><input id="agentName" placeholder="My Awesome AI Agent">
+<label>Description (what does it do?)</label><textarea id="agentDesc" placeholder="Describe what your agent does, its capabilities, and use cases"></textarea>
+<label>Category</label><select id="agentCat"><option>AI Assistant</option><option>Image Generation</option><option>Security</option><option>Healthcare</option><option>Education</option><option>Finance</option><option>Marketing</option><option>Developer Tools</option><option>Other</option></select>
+<label>System Prompt (instructions for your agent)</label><textarea id="agentPrompt" placeholder="You are a helpful assistant that..." style="min-height:80px"></textarea>
+<label>Pricing Model</label><select id="agentPricing"><option value="per_call">Per Call (₦/request)</option><option value="per_token">Per 1K Tokens (₦)</option><option value="monthly">Monthly Subscription (₦/month)</option><option value="free">Free</option></select>
+<label>Price (₦)</label><input id="agentPrice" type="number" placeholder="5">
+<label>Your Email (for API key + earnings reports)</label><input id="agentEmail" type="email" placeholder="youremail@gmail.com">
+<button class="btn" onclick="publishAgent()">Publish Agent</button>
+</div>
+</div>
+
+<div id="panel-earnings" class="panel">
+<div class="section">
+<h3>Revenue Split</h3>
+<div class="revenue-row"><span style="color:#8892a6">Developer Earnings</span><span style="color:#00ff88;font-weight:700">80%</span></div>
+<div class="revenue-row"><span style="color:#8892a6">Harz Platform Fee</span><span style="color:#ff6b6b;font-weight:700">20%</span></div>
+<div class="revenue-row"><span style="color:#8892a6">Payment Processing</span><span style="color:#8892a6">Included in 20%</span></div>
+<div class="revenue-row"><span style="color:#8892a6">Payout Method</span><span style="color:#f0b90b">UBA Bank Transfer</span></div>
+<div class="revenue-row"><span style="color:#8892a6">Payout Schedule</span><span style="color:#fff">Monthly (min ₦5,000)</span></div>
+</div>
+<div class="section">
+<h3>Example Earnings</h3>
+<div class="fee-row"><span class="fee-label">Agent priced at ₦5/call, 1,000 calls/month</span><span class="fee-val">₦4,000/mo</span></div>
+<div class="fee-row"><span class="fee-label">Agent priced at ₦50/image, 500 images/month</span><span class="fee-val">₦20,000/mo</span></div>
+<div class="fee-row"><span class="fee-label">Agent priced at ₦15K/month, 10 subscribers</span><span class="fee-val">₦120,000/mo</span></div>
+<div class="fee-row"><span class="fee-label">Agent priced at ₦5K/project, 20 projects/month</span><span class="fee-val">₦80,000/mo</span></div>
+</div>
+<div class="section">
+<h3>Why Sell on Harz API Marketplace?</h3>
+<ol style="font-size:.72rem;color:#8892a6;line-height:1.8;padding-left:16px">
+<li>Reach 42+ platforms and thousands of potential users</li>
+<li>80% revenue share — highest in the industry</li>
+<li>No setup fees, no monthly fees, no hidden costs</li>
+<li>Automatic usage tracking and billing</li>
+<li>Monthly payouts directly to your UBA account</li>
+<li>Your agent gets an API key instantly on publish</li>
+<li>Full analytics dashboard — calls, revenue, ratings</li>
+</ol>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #50 • CAC RC: 321424</div>
+</div>
+<script>
+function switchTab(tab,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('panel-'+tab).classList.add('active');}
+function subscribeAgent(name){alert('Subscribe to "'+name+'"\n\nYou will receive an API key and documentation via email.\n\nPayment via UBA, Paystack, GDEG (10% off), or USDT.');}
+function publishAgent(){
+const name=document.getElementById('agentName').value.trim();
+const email=document.getElementById('agentEmail').value.trim();
+const price=document.getElementById('agentPrice').value;
+if(!name||!email){alert('Please enter agent name and your email');return;}
+const apiKey='hzck_agent_'+Date.now().toString(36);
+alert('Agent "'+name+'" published!\n\nYour API key: '+apiKey+'\nPrice: ₦'+(price||'5')+'\nRevenue share: 80% to you\n\nYour earnings dashboard and API documentation will be sent to '+email+'.\n\nFirst 100 calls are free to help you get started!');
+}
+</script>
+</body>
+</html>
