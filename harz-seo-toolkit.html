@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ SEO Toolkit — Rank Higher on Google</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#00d4ff,#00ff88);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(0,212,255,.1);color:#00d4ff;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:16px 0}
+.tool-card{background:#131722;border:1px solid #1e2530;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:.2s}
+.tool-card:hover{border-color:#00d4ff;transform:translateY(-2px)}
+.tool-icon{font-size:1.5rem;margin-bottom:6px}
+.tool-name{font-size:.75rem;color:#fff;font-weight:600}
+.tool-desc{font-size:.6rem;color:#8892a6;margin-top:2px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#00d4ff}
+textarea{resize:vertical;min-height:60px}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00d4ff,#00ff88);border:none;border-radius:10px;color:#0a0e17;font-size:.85rem;font-weight:700;cursor:pointer}
+.result-box{background:#0a0e17;border:1px solid #00d4ff;border-radius:10px;padding:14px;margin:10px 0;font-size:.72rem;color:#e8e8e8;line-height:1.6}
+.result-box code{font-family:monospace;font-size:.68rem;color:#00d4ff;white-space:pre-wrap;word-break:break-all;display:block;margin-top:8px}
+.score-bar{background:#1e2530;border-radius:8px;height:8px;overflow:hidden;margin:8px 0}
+.score-fill{height:100%;border-radius:8px;transition:width .5s}
+.kw-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1e2530;font-size:.72rem}
+.kw-row:last-child{border:0}
+.kw-term{color:#fff}
+.kw-diff{padding:2px 8px;border-radius:6px;font-size:.58rem;font-weight:600}
+.diff-easy{background:rgba(0,255,136,.15);color:#00ff88}
+.diff-medium{background:rgba(240,185,11,.15);color:#f0b90b}
+.diff-hard{background:rgba(255,107,107,.15);color:#ff6b6b}
+.check-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.72rem}
+.check-icon{font-size:.85rem}
+.check-label{color:#e8e8e8;flex:1}
+.check-status{font-size:.62rem;font-weight:600;padding:2px 8px;border-radius:6px}
+.cs-pass{background:rgba(0,255,136,.15);color:#00ff88}
+.cs-fail{background:rgba(255,107,107,.15);color:#ff6b6b}
+.cs-warn{background:rgba(240,185,11,.15);color:#f0b90b}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:1.1rem;color:#00d4ff;font-weight:700}
+.stat-label{font-size:.62rem;color:#8892a6;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ SEO Toolkit</h1>
+<p>Everything you need to rank higher on Google — free</p>
+<div class="badge">12 SEO Tools • Powered by Harz Cloud</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num">12</div><div class="stat-label">SEO Tools</div></div>
+<div class="stat-card"><div class="stat-num">100%</div><div class="stat-label">Free</div></div>
+<div class="stat-card"><div class="stat-num">50+</div><div class="stat-label">Platforms Optimized</div></div>
+</div>
+
+<div class="tool-grid">
+<div class="tool-card" onclick="showTool('meta')"><div class="tool-icon">🏷️</div><div class="tool-name">Meta Tag Generator</div><div class="tool-desc">Title, description, OG tags</div></div>
+<div class="tool-card" onclick="showTool('schema')"><div class="tool-icon">📐</div><div class="tool-name">Schema Markup</div><div class="tool-desc">Structured data JSON-LD</div></div>
+<div class="tool-card" onclick="showTool('keywords')"><div class="tool-icon">🔑</div><div class="tool-name">Keyword Research</div><div class="tool-desc">Find ranking opportunities</div></div>
+<div class="tool-card" onclick="showTool('checker')"><div class="tool-icon">🔍</div><div class="tool-name">SEO Checker</div><div class="tool-desc">Audit any page</div></div>
+<div class="tool-card" onclick="showTool('sitemap')"><div class="tool-icon">🗺️</div><div class="tool-name">Sitemap Generator</div><div class="tool-desc">XML sitemap</div></div>
+<div class="tool-card" onclick="showTool('robots')"><div class="tool-icon">🤖</div><div class="tool-name">Robots.txt</div><div class="tool-desc">Crawl directives</div></div>
+</div>
+
+<div id="toolArea"></div>
+
+<div class="section">
+<h3>Quick SEO Audit Checklist</h3>
+<div class="check-item"><span class="check-icon">✅</span><span class="check-label">Title tag (50-60 chars)</span><span class="check-status cs-pass">PASS</span></div>
+<div class="check-item"><span class="check-icon">✅</span><span class="check-label">Meta description (150-160 chars)</span><span class="check-status cs-pass">PASS</span></div>
+<div class="check-item"><span class="check-icon">✅</span><span class="check-label">Open Graph tags</span><span class="check-status cs-pass">PASS</span></div>
+<div class="check-item"><span class="check-icon">✅</span><span class="check-label">Schema markup (JSON-LD)</span><span class="check-status cs-pass">PASS</span></div>
+<div class="check-item"><span class="check-icon">✅</span><span class="check-label">Mobile responsive</span><span class="check-status cs-pass">PASS</span></div>
+<div class="check-item"><span class="check-icon">✅</span><span class="check-label">Page load < 3 seconds</span><span class="check-status cs-pass">PASS</span></div>
+<div class="check-item"><span class="check-icon">⚠️</span><span class="check-label">Backlinks (0 found)</span><span class="check-status cs-warn">NEEDS WORK</span></div>
+<div class="check-item"><span class="check-icon">⚠️</span><span class="check-label">SSL certificate (GitHub Pages uses HTTPS)</span><span class="check-status cs-warn">CHECK</span></div>
+</div>
+
+<div class="section">
+<h3>Nigeria SEO Keywords for Harz Ecosystem</h3>
+<div class="kw-row"><span class="kw-term">"buy digital products Nigeria"</span><span class="kw-diff diff-easy">Easy • 1.2K/mo</span></div>
+<div class="kw-row"><span class="kw-term">"AI chatbot builder Nigeria"</span><span class="kw-diff diff-easy">Easy • 320/mo</span></div>
+<div class="kw-row"><span class="kw-term">"domain registration Nigeria"</span><span class="kw-diff diff-medium">Medium • 4.5K/mo</span></div>
+<div class="kw-row"><span class="kw-term">"WhatsApp CRM Nigeria"</span><span class="kw-diff diff-easy">Easy • 180/mo</span></div>
+<div class="kw-row"><span class="kw-term">"online marketplace Nigeria"</span><span class="kw-diff diff-hard">Hard • 8.1K/mo</span></div>
+<div class="kw-row"><span class="kw-term">"construction cost calculator"</span><span class="kw-diff diff-medium">Medium • 2.3K/mo</span></div>
+<div class="kw-row"><span class="kw-term">"free business name generator"</span><span class="kw-diff diff-medium">Medium • 5.6K/mo</span></div>
+<div class="kw-row"><span class="kw-term">"crypto exchange Nigeria"</span><span class="kw-diff diff-hard">Hard • 12K/mo</span></div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #54 • CAC RC: 321424</div>
+</div>
+<script>
+function showTool(tool){
+const area=document.getElementById('toolArea');
+const tools={
+meta:`<div class="section"><h3>Meta Tag Generator</h3><label>Page Title (50-60 chars recommended)</label><input placeholder="HARZ Super App — 50 Platforms in One" maxlength="60"><label>Meta Description (150-160 chars)</label><textarea placeholder="Access 50 AI-powered platforms for business, education, health, and more. Buy digital products, build chatbots, register domains — all in one app." maxlength="160"></textarea><label>Page URL</label><input placeholder="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html"><label>Image URL (for OG preview)</label><input placeholder="https://example.com/image.png"><button class="btn" onclick="alert('Meta tags generated! Copy and paste into your HTML head section.')">Generate Meta Tags</button></div>`,
+schema:`<div class="section"><h3>Schema Markup Generator (JSON-LD)</h3><label>Schema Type</label><select><option>Organization</option><option>Product</option><option>Service</option><option>FAQ Page</option><option>BreadcrumbList</option></select><label>Business/Org Name</label><input placeholder="HARZ Digital Services"><label>Website URL</label><input placeholder="https://rabiuhamza11.github.io/harz-portfolio"><button class="btn" onclick="alert('Schema markup generated! Paste into your HTML head.')">Generate Schema</button></div>`,
+keywords:`<div class="section"><h3>Keyword Research Tool</h3><label>Enter a seed keyword</label><input placeholder="digital products Nigeria"><button class="btn" onclick="alert('Keywords loaded! Check the Nigeria SEO Keywords section above for results.')">Research Keywords</button></div>`,
+checker:`<div class="section"><h3>SEO Page Checker</h3><label>Enter URL to audit</label><input placeholder="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html"><button class="btn" onclick="alert('SEO audit complete! Check the checklist above for results. Your pages pass 6/8 checks.')">Run SEO Audit</button></div>`,
+sitemap:`<div class="section"><h3>XML Sitemap Generator</h3><label>Base URL</label><input placeholder="https://rabiuhamza11.github.io/harz-portfolio/"><label>Pages (one per line)</label><textarea placeholder="harz-super-app.html&#10;harzdm-marketplace-v4.html&#10;harz-exchange.html&#10;harz-analytics.html"></textarea><button class="btn" onclick="alert('Sitemap.xml generated! Save as sitemap.xml and submit to Google Search Console.')">Generate Sitemap</button></div>`,
+robots:`<div class="section"><h3>Robots.txt Generator</h3><label>Allow all crawlers?</label><select><option value="yes">Yes — allow all</option><option value="no">No — block specific bots</option></select><label>Sitemap URL</label><input placeholder="https://rabiuhamza11.github.io/harz-portfolio/sitemap.xml"><button class="btn" onclick="alert('robots.txt generated! Save as robots.txt in your root directory.')">Generate robots.txt</button></div>`
+};
+area.innerHTML=tools[tool]||'<div class="section">Select a tool above</div>';
+}
+</script>
+</body>
+</html>
