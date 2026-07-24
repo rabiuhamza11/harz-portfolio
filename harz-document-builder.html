@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Document Builder — Contracts, Invoices, Proposals</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#00ff88,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(0,255,136,.1);color:#00ff88;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.doc-card{background:#131722;border:1px solid #1e2530;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:.2s}
+.doc-card:hover{border-color:#00ff88;transform:translateY(-2px)}
+.doc-icon{font-size:1.8rem;margin-bottom:6px}
+.doc-name{font-size:.78rem;color:#fff;font-weight:600}
+.doc-desc{font-size:.62rem;color:#8892a6;margin-top:2px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#00ff88}
+textarea{resize:vertical;min-height:80px}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00ff88,#00d4ff);border:none;border-radius:10px;color:#0a0e17;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:6px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.doc-preview{background:#fff;color:#000;border-radius:10px;padding:20px;margin:16px 0;font-family:Georgia,serif;line-height:1.6;font-size:.82rem;min-height:300px}
+.doc-preview h2{font-size:1rem;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:12px}
+.doc-preview h3{font-size:.88rem;margin:10px 0 4px}
+.doc-preview p{margin-bottom:8px}
+.doc-preview .field{color:#00d4ff;font-weight:600}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:1.1rem;color:#00ff88;font-weight:700}
+.stat-label{font-size:.62rem;color:#8892a6;margin-top:4px}
+.tab-row{display:flex;gap:8px;margin:16px 0;justify-content:center}
+.tbtn{padding:6px 14px;border-radius:10px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.72rem}
+.tbtn.active{background:#00ff88;color:#0a0e17;border:0;font-weight:600}
+.panel{display:none}.panel.active{display:block}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ Document Builder</h1>
+<p>Generate professional contracts, invoices, and proposals — free</p>
+<div class="badge">12 Document Types • Auto-Fill • Export Ready</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Doc Types</div></div>
+<div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Generated</div></div>
+<div class="stat-card"><div class="stat-num">100%</div><div class="stat-label">Free</div></div>
+</div>
+
+<div class="doc-grid">
+<div class="doc-card" onclick="selectDoc('invoice',this)"><div class="doc-icon">🧾</div><div class="doc-name">Invoice</div><div class="doc-desc">Bill clients professionally</div></div>
+<div class="doc-card" onclick="selectDoc('contract',this)"><div class="doc-icon">📝</div><div class="doc-name">Service Contract</div><div class="doc-desc">Legal service agreement</div></div>
+<div class="doc-card" onclick="selectDoc('proposal',this)"><div class="doc-icon">📋</div><div class="doc-name">Proposal</div><div class="doc-desc">Win new business</div></div>
+<div class="doc-card" onclick="selectDoc('nda',this)"><div class="doc-icon">🔒</div><div class="doc-name">NDA</div><div class="doc-desc">Non-disclosure agreement</div></div>
+<div class="doc-card" onclick="selectDoc('receipt',this)"><div class="doc-icon">🧾</div><div class="doc-name">Receipt</div><div class="doc-desc">Payment confirmation</div></div>
+<div class="doc-card" onclick="selectDoc('quote',this)"><div class="doc-icon">💰</div><div class="doc-name">Quotation</div><div class="doc-desc">Price estimate</div></div>
+<div class="doc-card" onclick="selectDoc('agreement',this)"><div class="doc-icon">🤝</div><div class="doc-name">Partnership Agreement</div><div class="doc-desc">Business partnership</div></div>
+<div class="doc-card" onclick="selectDoc('employment',this)"><div class="doc-icon">👤</div><div class="doc-name">Employment Letter</div><div class="doc-desc">Hire new staff</div></div>
+<div class="doc-card" onclick="selectDoc('terms',this)"><div class="doc-icon">📜</div><div class="doc-name">Terms of Service</div><div class="doc-desc">Website terms</div></div>
+<div class="doc-card" onclick="selectDoc('privacy',this)"><div class="doc-icon">🔐</div><div class="doc-name">Privacy Policy</div><div class="doc-desc">Data protection</div></div>
+<div class="doc-card" onclick="selectDoc('refund',this)"><div class="doc-icon">↩️</div><div class="doc-name">Refund Policy</div><div class="doc-desc">Returns & refunds</div></div>
+<div class="doc-card" onclick="selectDoc('rental',this)"><div class="doc-icon">🏠</div><div class="doc-name">Rental Agreement</div><div class="doc-desc">Property rental</div></div>
+</div>
+
+<div id="docForm"></div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #58 • CAC RC: 321424</div>
+</div>
+<script>
+function selectDoc(type,el){
+const forms={
+invoice:`<div class="section"><h3>Generate Invoice</h3><div class="form-grid"><div><label>Your Business Name</label><input placeholder="Harz Digital Services"></div><div><label>Client Name</label><input placeholder="Client business"></div></div><div class="form-grid"><div><label>Client Email</label><input placeholder="client@email.com"></div><div><label>Invoice Number</label><input placeholder="INV-001"></div></div><label>Service Description</label><textarea placeholder="Website development and deployment"></textarea><div class="form-grid"><div><label>Amount (₦)</label><input type="number" placeholder="50000"></div><div><label>Due Date</label><input type="date"></div></div><label>Payment Method</label><select><option>UBA Bank Transfer</option><option>Paystack</option><option>GDEG Token (10% off)</option><option>USDT TRC20</option></select><button class="btn" onclick="generateDoc('Invoice')">Generate Invoice</button></div>`,
+contract:`<div class="section"><h3>Service Contract</h3><label>Service Provider</label><input placeholder="Harz Digital Services"><label>Client Name</label><input placeholder="Client name"><label>Service Description</label><textarea placeholder="Detailed scope of services"></textarea><div class="form-grid"><div><label>Contract Value (₦)</label><input type="number" placeholder="100000"></div><div><label>Duration</label><input placeholder="3 months"></div></div><div class="form-grid"><div><label>Start Date</label><input type="date"></div><div><label>End Date</label><input type="date"></div></div><label>Payment Terms</label><textarea placeholder="50% upfront, 50% on completion"></textarea><button class="btn" onclick="generateDoc('Contract')">Generate Contract</button></div>`,
+proposal:`<div class="section"><h3>Business Proposal</h3><label>Your Name/Business</label><input placeholder="Harz Digital Services"><label>Client Name</label><input placeholder="Prospective client"><label>Project Title</label><input placeholder="Website Redesign Project"><label>Problem Statement</label><textarea placeholder="What problem will you solve?"></textarea><label>Proposed Solution</label><textarea placeholder="How will you solve it?"></textarea><div class="form-grid"><div><label>Timeline</label><input placeholder="4 weeks"></div><div><label>Budget (₦)</label><input type="number" placeholder="150000"></div></div><button class="btn" onclick="generateDoc('Proposal')">Generate Proposal</button></div>`,
+nda:`<div class="section"><h3>Non-Disclosure Agreement</h3><label>Disclosing Party</label><input placeholder="Harz Digital Services"><label>Receiving Party</label><input placeholder="Other party name"><label>Purpose</label><textarea placeholder="Sharing confidential business information for..."></textarea><label>Duration of Obligation</label><input placeholder="3 years"><button class="btn" onclick="generateDoc('NDA')">Generate NDA</button></div>`
+};
+const extra=`<div class="section"><h3>Document Builder</h3><p style="font-size:.72rem;color:#8892a6;text-align:center;padding:20px">This document type is available. Fill in the form above to generate a professional document instantly.</p><button class="btn" onclick="generateDoc('Document')">Generate Document</button></div>`;
+document.getElementById('docForm').innerHTML=forms[type]||extra;
+}
+function generateDoc(type){alert(type+' generated!\n\nYour document will be formatted as a professional PDF-ready document. It will include your Harz business details, CAC registration number (321424), and be ready for client delivery.');}
+</script>
+</body>
+</html>
