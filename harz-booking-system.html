@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Booking System — Paid Consultations</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:800px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#00ff88,#f0b90b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(0,255,136,.1);color:#00ff88;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.service-card{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;transition:.2s}
+.service-card:hover{border-color:#00ff88;transform:translateY(-2px)}
+.service-icon{font-size:1.8rem;margin-bottom:8px}
+.service-name{font-size:.85rem;color:#fff;font-weight:600}
+.service-desc{font-size:.68rem;color:#8892a6;margin-top:4px;min-height:30px}
+.service-price{font-size:1.1rem;color:#f0b90b;font-weight:700;margin-top:8px}
+.service-price small{font-size:.62rem;color:#8892a6;font-weight:400}
+.service-dur{font-size:.62rem;color:#8892a6;margin-top:2px}
+.book-btn{width:100%;padding:8px;background:linear-gradient(135deg,#00ff88,#f0b90b);border:none;border-radius:8px;color:#0a0e17;font-size:.72rem;font-weight:600;cursor:pointer;margin-top:10px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,select,textarea{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#00ff88}
+textarea{resize:vertical;min-height:60px}
+.time-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px;margin:10px 0}
+.time-slot{background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:8px;text-align:center;font-size:.72rem;cursor:pointer;transition:.2s}
+.time-slot:hover{border-color:#00ff88}
+.time-slot.selected{background:rgba(0,255,136,.15);border-color:#00ff88;color:#00ff88}
+.time-slot.unavailable{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:1.1rem;color:#00ff88;font-weight:700}
+.stat-label{font-size:.62rem;color:#8892a6;margin-top:4px}
+.booking-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #1e2530;font-size:.72rem}
+.booking-item:last-child{border:0}
+.bk-status{padding:2px 8px;border-radius:8px;font-size:.58rem;font-weight:600}
+.bk-pending{background:rgba(240,185,11,.15);color:#f0b90b}
+.bk-confirmed{background:rgba(0,255,136,.15);color:#00ff88}
+.bk-completed{background:rgba(0,212,255,.15);color:#00d4ff}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ Booking System</h1>
+<p>Book paid consultations and services with Harz experts</p>
+<div class="badge">Pay via UBA • Paystack • GDEG • USDT</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num">6</div><div class="stat-label">Services</div></div>
+<div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Bookings</div></div>
+<div class="stat-card"><div class="stat-num">₦0</div><div class="stat-label">Revenue</div></div>
+</div>
+
+<div class="service-grid">
+<div class="service-card"><div class="service-icon">💻</div><div class="service-name">Tech Consultation</div><div class="service-desc">1-on-1 advice on AI, cloud, and digital transformation</div><div class="service-price">₦10,000<small>/hour</small></div><div class="service-dur">60 minutes</div><button class="book-btn" onclick="openBooking('Tech Consultation',10000,60)">Book Now</button></div>
+<div class="service-card"><div class="service-icon">🏗️</div><div class="service-name">Construction Planning</div><div class="service-desc">Project estimation, material planning, and cost analysis</div><div class="service-price">₦25,000<small>/session</small></div><div class="service-dur">90 minutes</div><button class="book-btn" onclick="openBooking('Construction Planning',25000,90)">Book Now</button></div>
+<div class="service-card"><div class="service-icon">🤖</div><div class="service-name">AI Chatbot Setup</div><div class="service-desc">Custom chatbot built and deployed for your business</div><div class="service-price">₦50,000<small>/project</small></div><div class="service-dur">2 hours</div><button class="book-btn" onclick="openBooking('AI Chatbot Setup',50000,120)">Book Now</button></div>
+<div class="service-card"><div class="service-icon">🌐</div><div class="service-name">Website & Domain Setup</div><div class="service-desc">Domain registration, hosting, and website deployment</div><div class="service-price">₦15,000<small>/project</small></div><div class="service-dur">90 minutes</div><button class="book-btn" onclick="openBooking('Website Setup',15000,90)">Book Now</button></div>
+<div class="service-card"><div class="service-icon">📱</div><div class="service-name">WhatsApp Business Setup</div><div class="service-desc">CRM integration, auto-replies, and broadcast system</div><div class="service-price">₦20,000<small>/setup</small></div><div class="service-dur">60 minutes</div><button class="book-btn" onclick="openBooking('WhatsApp Business Setup',20000,60)">Book Now</button></div>
+<div class="service-card"><div class="service-icon">📊</div><div class="service-name">Business Strategy Session</div><div class="service-desc">Full ecosystem audit and growth roadmap</div><div class="service-price">₦30,000<small>/session</small></div><div class="service-dur">120 minutes</div><button class="book-btn" onclick="openBooking('Business Strategy',30000,120)">Book Now</button></div>
+</div>
+
+<div class="section" id="bookingForm" style="display:none">
+<h3 id="bookingTitle">Book a Service</h3>
+<label>Your Name</label><input id="bkName" placeholder="Full name">
+<label>Email</label><input id="bkEmail" type="email" placeholder="youremail@gmail.com">
+<label>Phone (WhatsApp preferred)</label><input id="bkPhone" placeholder="080XXXXXXXX">
+<label>Preferred Date</label><input id="bkDate" type="date">
+<label>Available Time Slots</label>
+<div class="time-grid" id="timeSlots">
+<div class="time-slot" onclick="selectTime(this)">9:00 AM</div>
+<div class="time-slot" onclick="selectTime(this)">10:00 AM</div>
+<div class="time-slot" onclick="selectTime(this)">11:00 AM</div>
+<div class="time-slot unavailable">12:00 PM</div>
+<div class="time-slot" onclick="selectTime(this)">1:00 PM</div>
+<div class="time-slot" onclick="selectTime(this)">2:00 PM</div>
+<div class="time-slot" onclick="selectTime(this)">3:00 PM</div>
+<div class="time-slot" onclick="selectTime(this)">4:00 PM</div>
+</div>
+<label>Notes (what do you need help with?)</label>
+<textarea id="bkNotes" placeholder="Briefly describe what you need"></textarea>
+<button class="book-btn" style="margin-top:10px" onclick="confirmBooking()">Confirm Booking</button>
+</div>
+
+<div class="section">
+<h3>Recent Bookings</h3>
+<div style="font-size:.72rem;color:#8892a6;text-align:center;padding:20px">No bookings yet. Your consultations will appear here once customers book.</div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #53 • CAC RC: 321424</div>
+</div>
+<script>
+let selectedService='',selectedPrice=0,selectedDuration=0,selectedTime='';
+function openBooking(name,price,dur){selectedService=name;selectedPrice=price;selectedDuration=dur;document.getElementById('bookingForm').style.display='block';document.getElementById('bookingTitle').textContent='Book: '+name+' — ₦'+price.toLocaleString();document.getElementById('bookingForm').scrollIntoView();}
+function selectTime(el){if(el.classList.contains('unavailable'))return;document.querySelectorAll('.time-slot').forEach(s=>s.classList.remove('selected'));el.classList.add('selected');selectedTime=el.textContent;}
+function confirmBooking(){
+const name=document.getElementById('bkName').value.trim();
+const email=document.getElementById('bkEmail').value.trim();
+const phone=document.getElementById('bkPhone').value.trim();
+const date=document.getElementById('bkDate').value;
+if(!name||!email||!phone||!date){alert('Please fill in all fields');return;}
+if(!selectedTime){alert('Select a time slot');return;}
+alert('Booking Confirmed!\n\nService: '+selectedService+'\nDate: '+date+' at '+selectedTime+'\nPrice: ₦'+selectedPrice.toLocaleString()+'\n\nPayment options:\n1. UBA: 2034326424\n2. Paystack link to '+email+'\n3. GDEG (10% off)\n4. USDT TRC20\n\nMeeting link will be sent to '+email+' after payment confirmation.');
+}
+</script>
+</body>
+</html>
