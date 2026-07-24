@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d1120">
+<title>Harz Hosting Master — Domains, Hosting & Infrastructure</title>
+<meta name="description" content="Harz Hosting Master — Domain registration, web hosting, VPS, dedicated servers, DNS management, and 24/7 support. Powered by Harz Digital Services.">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--bg:#0a0c14;--card:#0d1120;--card2:#141929;--border:#1a2040;--text:#e0e6ed;--muted:#5a6378;--p1:#7c4dff;--p2:#00bcd4;--p3:#00e676;--p4:#ffab00;--p5:#ff3d71}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding-bottom:60px}
+input,select,textarea{font-family:inherit}
+.mono{font-family:monospace}
+.hidden{display:none}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.6rem;font-weight:600}
+.green{background:rgba(0,230,118,.12);color:#00e676}
+.yellow{background:rgba(255,171,0,.12);color:#ffab00}
+.red{background:rgba(255,61,113,.12);color:#ff3d71}
+.blue{background:rgba(0,188,212,.12);color:#00bcd4}
+.purple{background:rgba(124,77,255,.12);color:#7c4dff}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(10,12,20,.95);backdrop-filter:blur(10px);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.logo{font-size:.85rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;background:rgba(13,17,32,.98);border-top:1px solid var(--border);display:flex;padding:6px 0;z-index:50}
+.tab{flex:1;text-align:center;padding:4px;cursor:pointer;color:var(--muted);transition:.2s}
+.tab.active{color:var(--p2)}
+.tab svg{width:22px;height:22px;margin:0 auto 2px;display:block}
+.tab span{font-size:.55rem;font-weight:600}
+.page{padding:10px 14px;display:none}
+.page.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+.card2{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px}
+.stat-val{font-size:1.4rem;font-weight:800;color:var(--text)}
+.stat-label{font-size:.55rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:10px;font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s}
+.btn-p{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.btn-p:active{transform:scale(.98)}
+.btn-s{background:rgba(0,230,118,.1);color:#00e676;border:1px solid rgba(0,230,118,.2)}
+.btn-o{background:rgba(255,171,0,.1);color:#ffab00;border:1px solid rgba(255,171,0,.2)}
+input,select,textarea{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:.72rem;outline:none}
+input:focus,select:focus{border-color:var(--p1)}
+label{font-size:.6rem;color:var(--muted);margin-bottom:4px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;transition:.2s}
+.plan-card.featured{border-color:var(--p4);box-shadow:0 0 20px rgba(255,171,0,.1)}
+.plan-card:active{transform:scale(.99)}
+.plan-name{font-size:.85rem;font-weight:700}
+.plan-price{font-size:1.2rem;font-weight:800;color:var(--p3)}
+.plan-period{font-size:.6rem;color:var(--muted)}
+.feature{font-size:.6rem;color:var(--muted);padding:2px 0;display:flex;align-items:center;gap:4px}
+.feature:before{content:'\2713';color:var(--p3);font-weight:700}
+.skeleton{background:linear-gradient(90deg,var(--card),var(--card2),var(--card));background-size:200% 100%;animation:sk 1.5s infinite;border-radius:8px}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--p1);border-radius:8px;padding:10px 20px;font-size:.7rem;z-index:100;opacity:0;transition:.3s}
+.toast.show{opacity:1}
+.section-title{font-size:.7rem;font-weight:700;margin:14px 0 8px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:8px;background:rgba(37,211,102,.1);color:#25d366;font-size:.65rem;font-weight:600;text-decoration:none;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="logo">Harz Hosting Master</div><div style="font-size:.6rem;color:var(--p3);font-weight:600">LIVE</div></div>
+
+<div id="page-home" class="page active">
+<div class="stat-grid" id="homeStats">
+<div class="stat-card"><div class="stat-val skeleton" style="height:1.4rem;width:60%">&nbsp;</div><div class="stat-label">Domains</div></div>
+<div class="stat-card"><div class="stat-val skeleton" style="height:1.4rem;width:40%">&nbsp;</div><div class="stat-label">Active Hosting</div></div>
+<div class="stat-card"><div class="stat-val skeleton" style="height:1.4rem;width:50%">&nbsp;</div><div class="stat-label">Revenue</div></div>
+<div class="stat-card"><div class="stat-val skeleton" style="height:1.4rem;width:30%">&nbsp;</div><div class="stat-label">Open Tickets</div></div>
+</div>
+<div class="section-title">Search Domain</div>
+<div class="card">
+<div style="display:flex;gap:6px">
+<input id="domainSearch" placeholder="yourdomain" style="flex:1">
+<select id="domainTld" style="width:110px">
+<option value=".com">.com 5500</option><option value=".ng">.ng 4500</option>
+<option value=".com.ng">.com.ng 4000</option><option value=".net">.net 6500</option>
+<option value=".org">.org 6000</option><option value=".io">.io 18000</option>
+<option value=".ai">.ai 28000</option><option value=".tech">.tech 12000</option>
+<option value=".store">.store 8000</option><option value=".app">.app 7000</option>
+<option value=".xyz">.xyz 3500</option><option value=".online">.online 4000</option>
+</select>
+</div>
+<button class="btn btn-p" style="margin-top:8px" onclick="checkDomain()">Check Availability</button>
+<div id="domainResult" style="margin-top:10px"></div>
+</div>
+<div class="section-title">Quick Actions</div>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px">
+<div class="card2" style="text-align:center;cursor:pointer" onclick="switchTab('hosting','event')"><div style="font-size:1.5rem">🖥️</div><div style="font-size:.65rem;font-weight:600;margin-top:4px">Hosting Plans</div></div>
+<div class="card2" style="text-align:center;cursor:pointer" onclick="switchTab('tickets','event')"><div style="font-size:1.5rem">🎫</div><div style="font-size:.65rem;font-weight:600;margin-top:4px">Support Ticket</div></div>
+<div class="card2" style="text-align:center;cursor:pointer" onclick="switchTab('billing','event')"><div style="font-size:1.5rem">💳</div><div style="font-size:.65rem;font-weight:600;margin-top:4px">Pay Invoice</div></div>
+<div class="card2" style="text-align:center;cursor:pointer" onclick="switchTab('domains','event')"><div style="font-size:1.5rem">🌐</div><div style="font-size:.65rem;font-weight:600;margin-top:4px">My Domains</div></div>
+</div>
+<div class="section-title">Recent Activity</div>
+<div id="recentActivity"></div>
+<a href="https://wa.me/2348028687857?text=Hi%20I%20need%20help%20with%20Harz%20Hosting" target="_blank" class="wa-btn">Chat Support on WhatsApp</a>
+</div>
+
+<div id="page-hosting" class="page">
+<div class="section-title">Hosting Plans</div>
+<div style="font-size:.6rem;color:var(--muted);margin-bottom:10px">Choose a plan. Pay via bank transfer, Paystack, or GDEG. Setup within 24 hours.</div>
+<div id="hostingPlans"></div>
+</div>
+
+<div id="page-domains" class="page">
+<div class="section-title">Domain Management</div>
+<div id="domainList"></div>
+</div>
+
+<div id="page-tickets" class="page">
+<div class="section-title">Support Tickets</div>
+<div class="card">
+<label>Subject</label><input id="ticketSubject" placeholder="Brief description of issue">
+<label style="margin-top:8px">Category</label>
+<select id="ticketCategory"><option value="general">General</option><option value="domain">Domain Issue</option><option value="hosting">Hosting Issue</option><option value="billing">Billing Question</option><option value="dns">DNS/Nameservers</option><option value="ssl">SSL Certificate</option><option value="email">Email Setup</option></select>
+<label style="margin-top:8px">Priority</label>
+<select id="ticketPriority"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="urgent">Urgent</option></select>
+<label style="margin-top:8px">Your Name</label><input id="ticketName" placeholder="Your name">
+<label style="margin-top:8px">Your Email</label><input id="ticketEmail" placeholder="your@email.com">
+<label style="margin-top:8px">Message</label>
+<textarea id="ticketMessage" placeholder="Describe your issue" rows="3"></textarea>
+<button class="btn btn-p" style="margin-top:10px" onclick="createTicket()">Submit Ticket</button>
+</div>
+<div class="section-title">Active Tickets</div>
+<div id="ticketList"></div>
+</div>
+
+<div id="page-billing" class="page">
+<div class="section-title">Invoices & Billing</div>
+<div id="invoiceList"></div>
+<div class="card" style="margin-top:14px">
+<div style="font-size:.7rem;font-weight:700;margin-bottom:8px">Payment Methods</div>
+<div style="font-size:.6rem;color:var(--muted);line-height:1.8">1. Bank Transfer — UBA, Rabiu Hamza Mohammed, 2034326424<br>2. Paystack — Card payment<br>3. GDEG Token — Polygon (10% discount)</div>
+</div>
+</div>
+
+<div class="tab-bar">
+<div class="tab active" onclick="switchTab('home',event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg><span>Home</span></div>
+<div class="tab" onclick="switchTab('hosting',event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="6" rx="2"/><rect x="2" y="11" width="20" height="6" rx="2"/></svg><span>Hosting</span></div>
+<div class="tab" onclick="switchTab('domains',event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg><span>Domains</span></div>
+<div class="tab" onclick="switchTab('tickets',event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Support</span></div>
+<div class="tab" onclick="switchTab('billing',event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span>Billing</span></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API='https://superagent-2286fb2f.base44.app/functions/harzHostingMaster';
+let DASH=null;
+
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
+function switchTab(tab,ev){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById('page-'+tab).classList.add('active');
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+if(ev&&ev.currentTarget)ev.currentTarget.classList.add('active');
+else{const tabs=document.querySelectorAll('.tab');tabs.forEach(t=>{if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+tab+"'"))t.classList.add('active')})}
+}
+function fmtN(n){return '\u20a6'+Number(n||0).toLocaleString('en-NG')}
+function fmtD(d){return d?new Date(d).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric'}):'\u2014'}
+
+async function loadDashboard(){
+try{
+const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'dashboard'})});
+DASH=await r.json();
+if(DASH.status==='ok')renderDashboard();
+}catch(e){console.error(e)}
+}
+
+function renderDashboard(){
+const o=DASH.overview;
+document.getElementById('homeStats').innerHTML=`
+<div class="stat-card"><div class="stat-val">${o.total_domains}</div><div class="stat-label">Domains</div></div>
+<div class="stat-card"><div class="stat-val">${o.active_hosting}</div><div class="stat-label">Active Hosting</div></div>
+<div class="stat-card"><div class="stat-val">$${o.total_revenue.toFixed(2)}</div><div class="stat-label">Revenue</div></div>
+<div class="stat-card"><div class="stat-val">${o.open_tickets}</div><div class="stat-label">Open Tickets</div></div>`;
+let h='';
+if(DASH.domains[0])h+=`<div class="card2"><div style="font-size:.65rem;font-weight:600">${DASH.domains[0].domain_name}</div><div style="font-size:.55rem;color:var(--muted)">Expires ${fmtD(DASH.domains[0].expiry_date)}</div><span class="pill green">Active</span></div>`;
+if(DASH.hosting_orders[0]){const ho=DASH.hosting_orders[0];h+=`<div class="card2"><div style="font-size:.65rem;font-weight:600">${ho.plan_name}</div><div style="font-size:.55rem;color:var(--muted)">${ho.storage_gb}GB SSD</div><span class="pill ${ho.status==='active'?'green':'yellow'}">${ho.status}</span></div>`;}
+const inv=DASH.invoices.find(i=>i.status==='pending');
+if(inv)h+=`<div class="card2"><div style="font-size:.65rem;font-weight:600">${inv.invoice_number}</div><div style="font-size:.55rem;color:var(--muted)">$${inv.amount} ${inv.item_description}</div><span class="pill yellow">Pending</span></div>`;
+document.getElementById('recentActivity').innerHTML=h||'<div style="font-size:.6rem;color:var(--muted);text-align:center;padding:20px">No recent activity</div>';
+renderHostingPlans();renderDomains();renderInvoices();
+}
+
+async function checkDomain(){
+const name=document.getElementById('domainSearch').value.trim().toLowerCase();
+const tld=document.getElementById('domainTld').value;
+if(!name){showToast('Enter a domain name');return}
+const full=name+tld;
+const res=document.getElementById('domainResult');
+res.innerHTML='<div style="font-size:.6rem;color:var(--muted)">Checking...</div>';
+try{
+const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'check_domain',domain:full})});
+const d=await r.json();
+if(d.status==='ok'){
+if(d.available){res.innerHTML=`<div style="background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:10px;padding:12px"><div style="font-size:.7rem;font-weight:700;color:#00e676">\u2713 ${full} is available!</div><div style="font-size:.65rem;margin-top:4px">Price: ${fmtN(d.price)}/year</div><button class="btn btn-s" style="margin-top:8px" onclick="showRegForm('${name}','${tld}',${d.price})">Register Now</button></div>`;}
+else{res.innerHTML=`<div style="background:rgba(255,61,113,.08);border:1px solid rgba(255,61,113,.2);border-radius:10px;padding:12px"><div style="font-size:.7rem;font-weight:700;color:#ff3d71">\u2717 ${full} is taken</div><div style="font-size:.6rem;color:var(--muted);margin-top:4px">Try another name or TLD</div></div>`;}
+}}catch(e){res.innerHTML='<div style="font-size:.6rem;color:var(--muted)">Error</div>'}
+}
+
+function showRegForm(name,tld,price){
+document.getElementById('domainResult').innerHTML=`
+<div style="background:var(--card2);border:1px solid var(--p1);border-radius:10px;padding:12px">
+<div style="font-size:.7rem;font-weight:700;margin-bottom:8px">Register ${name}${tld}</div>
+<label>Your Name</label><input id="regName" placeholder="Full name">
+<label style="margin-top:6px">Email</label><input id="regEmail" placeholder="your@email.com">
+<label style="margin-top:6px">Phone</label><input id="regPhone" placeholder="080...">
+<label style="margin-top:6px">Years</label>
+<select id="regYears"><option value="1">1 year ${fmtN(price)}</option><option value="2">2 years ${fmtN(price*2)}</option><option value="3">3 years ${fmtN(price*3)}</option><option value="5">5 years ${fmtN(price*5)} (save 10%)</option></select>
+<button class="btn btn-p" style="margin-top:10px" onclick="registerDomain('${name}','${tld}')">Register & Pay</button></div>`;
+}
+
+async function registerDomain(name,tld){
+const bn=document.getElementById('regName').value.trim();
+const be=document.getElementById('regEmail').value.trim();
+const bp=document.getElementById('regPhone').value.trim();
+const yr=parseInt(document.getElementById('regYears').value);
+if(!bn||!be){showToast('Name and email required');return}
+showToast('Creating order...');
+try{
+const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'register_domain',domain_name:name,tld,years:yr,buyer_name:bn,buyer_email:be,buyer_phone:bp})});
+const d=await r.json();
+if(d.status==='ok'){const pi=d.payment_instructions;document.getElementById('domainResult').innerHTML=`<div style="background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:10px;padding:12px"><div style="font-size:.7rem;font-weight:700;color:#00e676">Order Created!</div><div style="font-size:.6rem;color:var(--muted);margin:6px 0">Pay ${pi.amount} to:</div><div style="background:var(--card);border-radius:8px;padding:8px"><div style="font-size:.7rem;font-weight:700">${pi.bank} ${pi.account_number}</div><div style="font-size:.6rem;color:var(--muted)">${pi.account_name}</div></div><div style="font-size:.55rem;color:var(--muted);margin-top:6px">${pi.note}</div><a href="https://wa.me/2348028687857?text=I%20registered%20${name}${tld}%20on%20Harz%20Hosting" target="_blank" class="wa-btn">Send Payment Proof on WhatsApp</a></div>`;showToast('Order created!');}
+}catch(e){showToast('Error')}
+}
+
+function renderHostingPlans(){
+if(!DASH)return;
+document.getElementById('hostingPlans').innerHTML=DASH.hosting_plans.map((p,i)=>`<div class="plan-card ${i===1?'featured':''}" onclick="orderHosting('${p.name}')">${i===1?'<div style="font-size:.55rem;color:var(--p4);font-weight:700;margin-bottom:4px">MOST POPULAR</div>':''}<div style="display:flex;justify-content:space-between;align-items:start"><div><div class="plan-name">${p.name}</div><div style="font-size:.55rem;color:var(--muted)">${p.type.toUpperCase()} ${p.storage}GB ${p.bandwidth}GB BW</div></div><div style="text-align:right"><div class="plan-price">${fmtN(p.price)}</div><div class="plan-period">/month</div></div></div><div style="margin-top:8px">${p.features.map(f=>'<div class="feature">'+f+'</div>').join('')}</div><div style="margin-top:8px"><span class="pill ${p.type==='shared'?'blue':p.type==='vps'?'purple':'yellow'}">${p.type}</span></div></div>`).join('');
+}
+
+function orderHosting(planName){
+const p=DASH.hosting_plans.find(x=>x.name===planName);
+const el=document.getElementById('page-hosting');
+const m=document.createElement('div');
+m.id='orderModal';m.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px';
+m.innerHTML=`<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto"><div style="font-size:.8rem;font-weight:700;margin-bottom:10px">Order ${p.name}</div><label>Your Name</label><input id="hostName" placeholder="Full name"><label style="margin-top:8px">Email</label><input id="hostEmail" placeholder="your@email.com"><label style="margin-top:8px">Billing Cycle</label><select id="hostCycle"><option value="monthly">Monthly ${fmtN(p.price)}</option><option value="yearly">Yearly ${fmtN(p.price*10)} (2 months FREE)</option></select><label style="margin-top:8px">Payment Method</label><select id="hostPay"><option value="Bank Transfer">Bank Transfer (UBA)</option><option value="Paystack">Paystack (Card)</option><option value="GDEG">GDEG Token (10% off)</option></select><button class="btn btn-p" style="margin-top:12px" onclick="submitHostingOrder('${p.name}')">Place Order</button><button class="btn" style="margin-top:6px;background:var(--card2);color:var(--muted)" onclick="document.getElementById('orderModal').remove()">Cancel</button></div>`;
+document.body.appendChild(m);
+}
+
+async function submitHostingOrder(planName){
+const on=document.getElementById('hostName').value.trim();
+const oe=document.getElementById('hostEmail').value.trim();
+const bc=document.getElementById('hostCycle').value;
+const pm=document.getElementById('hostPay').value;
+if(!on||!oe){showToast('Name and email required');return}
+showToast('Creating order...');
+try{
+const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'order_hosting',plan_name:planName,owner_name:on,owner_email:oe,billing_cycle:bc,payment_method:pm})});
+const d=await r.json();
+if(d.status==='ok'){document.getElementById('orderModal')?.remove();const pi=d.payment_instructions;showToast('Order created!');alert('Order Created!\n\nPlan: '+planName+' ('+bc+')\nAmount: '+pi.amount+'\n\nPay to:\n'+pi.bank+' '+pi.account_number+'\n'+pi.account_name+'\n\nSend proof to 08028687857 on WhatsApp');}
+}catch(e){showToast('Error')}
+}
+
+function renderDomains(){
+if(!DASH)return;
+const el=document.getElementById('domainList');
+el.innerHTML=DASH.domains.length?DASH.domains.map(d=>`<div class="card2"><div style="display:flex;justify-content:space-between;align-items:start"><div><div style="font-size:.7rem;font-weight:700">${d.domain_name}</div><div style="font-size:.55rem;color:var(--muted)">${d.registrar} Expires ${fmtD(d.expiry_date)}</div></div><span class="pill ${d.status==='active'?'green':'yellow'}">${d.status}</span></div><div style="font-size:.55rem;color:var(--muted);margin-top:6px">Owner: ${d.owner_name} ${d.auto_renew?'Auto-renew ON':''} ${d.privacy_protection?'Privacy ON':''}</div><div style="font-size:.55rem;color:var(--muted);margin-top:2px" class="mono">NS: ${d.nameservers||'\u2014'}</div></div>`).join(''):'<div style="font-size:.6rem;color:var(--muted);text-align:center;padding:20px">No domains registered yet</div>';
+}
+
+function renderInvoices(){
+if(!DASH)return;
+const el=document.getElementById('invoiceList');
+el.innerHTML=DASH.invoices.length?DASH.invoices.map(i=>`<div class="card2"><div style="display:flex;justify-content:space-between;align-items:start"><div><div style="font-size:.65rem;font-weight:700">${i.invoice_number}</div><div style="font-size:.55rem;color:var(--muted)">${i.item_description}</div></div><div style="text-align:right"><div style="font-size:.7rem;font-weight:700">${i.currency==='USD'?'$':'\u20a6'}${i.amount}</div><span class="pill ${i.status==='paid'?'green':'yellow'}">${i.status}</span></div></div>${i.status==='pending'?'<button class="btn btn-s" style="margin-top:8px;padding:8px;font-size:.65rem" onclick="payInvoice(\''+i.invoice_number+'\')">Pay Now UBA 2034326424</button>':''}</div>`).join(''):'<div style="font-size:.6rem;color:var(--muted);text-align:center;padding:20px">No invoices</div>';
+}
+
+async function payInvoice(inv){showToast('Marking as paid...');try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'pay_invoice',invoice_number:inv,payment_method:'Bank Transfer'})});const d=await r.json();if(d.status==='ok'){showToast('Invoice paid!');loadDashboard()}}catch(e){showToast('Error')}}
+
+async function createTicket(){
+const s=document.getElementById('ticketSubject').value.trim();
+const c=document.getElementById('ticketCategory').value;
+const pr=document.getElementById('ticketPriority').value;
+const on=document.getElementById('ticketName').value.trim();
+const oe=document.getElementById('ticketEmail').value.trim();
+const m=document.getElementById('ticketMessage').value.trim();
+if(!s||!m||!oe){showToast('Subject, message and email required');return}
+showToast('Creating ticket...');
+try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'create_ticket',subject:s,message:m,owner_email:oe,owner_name:on,priority:pr,category:c})});const d=await r.json();if(d.status==='ok'){showToast('Ticket created!');['ticketSubject','ticketMessage','ticketName','ticketEmail'].forEach(id=>document.getElementById(id).value='');loadDashboard()}}catch(e){showToast('Error')}
+}
+
+loadDashboard();
+</script>
+</body>
+</html>
