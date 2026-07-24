@@ -171,6 +171,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .biz-ctrl-action{padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;font-size:.85rem;color:var(--p2);cursor:pointer}
 .biz-ctrl-action:active{background:var(--border)}
 
+
+.more-list{display:flex;flex-direction:column;gap:0;margin-bottom:16px}
+.more-item{padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;font-size:.85rem;color:var(--p2);cursor:pointer;display:flex;align-items:center;gap:8px}
+.more-item:active{background:var(--border);transform:scale(.98)}
+
 </style>
 </head>
 <body>
@@ -206,28 +211,26 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 
 <div class="quick-grid">
-<div class="quick-item" onclick="switchPage('pay')"><div class="quick-icon" style="background:rgba(0,230,118,.12)">💸</div><span class="quick-label">Pay</span></div>
-<div class="quick-item" onclick="switchPage('chat')"><div class="quick-icon" style="background:rgba(37,211,102,.12)">💬</div><span class="quick-label">Messages</span></div>
-<div class="quick-item" onclick="openAI()"><div class="quick-icon" style="background:rgba(124,77,255,.12)">📊</div><span class="quick-label">Business</span></div>
-<div class="quick-item" onclick="switchPage('store')"><div class="quick-icon" style="background:rgba(255,171,0,.12)">🛍️</div><span class="quick-label">Store</span></div>
-<div class="quick-item" onclick="switchPage('learn')"><div class="quick-icon" style="background:rgba(0,188,212,.12)">📚</div><span class="quick-label">Learn</span></div>
-<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><div class="quick-icon" style="background:rgba(0,188,212,.12)">🔧</div><span class="quick-label">Dev Platform</span></div>
-<div class="quick-item" onclick="switchPage('business')"><div class="quick-icon" style="background:rgba(124,77,255,.12)">📊</div><span class="quick-label">Business</span></div>
-<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">🏭</div><span class="quick-label">IoT & Robotics</span></div>
-<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html')"><div class="quick-icon" style="background:rgba(255,215,0,.12)">🪪</div><span class="quick-label">Global ID</span></div>
-<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">💾</div><span class="quick-label">Data Cloud</span></div>
-<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">💡</div><span class="quick-label">Venture Studio</span></div>
-<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">🌐</div><span class="quick-label">Browser</span></div>
-<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html')"><div class="quick-icon" style="background:rgba(240,185,11,.12)">🔄</div><span class="quick-label">Exchange</span></div>
-<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html')"><div class="quick-icon" style="background:rgba(124,77,255,.12)">🏢</div><span class="quick-label">Hosting</span></div>
-<div class="quick-item" onclick="switchPage('more')"><div class="quick-icon" style="background:rgba(90,115,144,.12)">⚙️</div><span class="quick-label">More</span></div>
-</div>
-
-<div class="section">
-<div class="section-head"><span class="section-title">Recent Activity</span></div>
-<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">💵</div><div class="card-info"><div class="card-title">HarzPay received</div><div class="card-desc">₦15,000 from customer order</div></div><div style="font-size:.7rem;color:var(--p3)">+₦15,000</div></div></div>
-<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(255,61,113,.1)">🛒</div><div class="card-info"><div class="card-title">Marketplace sale</div><div class="card-desc">Notion Productivity OS</div></div><div style="font-size:.7rem;color:var(--p3)">+$12.99</div></div></div>
-<div class="card"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🤖</div><div class="card-info"><div class="card-title">AI Cloud subscription</div><div class="card-desc">Pro plan · monthly</div></div><div style="font-size:.7rem;color:var(--p4)">-$99.00</div></div></div>
+<div class="quick" onclick="switchPage('pay')"><span class="quick-icon">💳</span><span class="quick-label">Pay</span></div>
+<div class="quick" onclick="switchPage('chat')"><span class="quick-icon">💬</span><span class="quick-label">Messages</span></div>
+<div class="quick" onclick="switchPage('business')"><span class="quick-icon">📊</span><span class="quick-label">Business</span></div>
+<div class="quick" onclick="switchPage('store')"><span class="quick-icon">🛍️</span><span class="quick-label">Store</span></div>
+<div class="quick" onclick="switchPage('learn')"><span class="quick-icon">📚</span><span class="quick-label">Learn</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><span class="quick-icon">🛠️</span><span class="quick-label">Dev Platform</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html')"><span class="quick-icon">🤖</span><span class="quick-label">AI Agency</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html')"><span class="quick-icon">🏭</span><span class="quick-label">IoT & Robotics</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html')"><span class="quick-icon">🪪</span><span class="quick-label">Global ID</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html')"><span class="quick-icon">☁️</span><span class="quick-label">Data Cloud</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html')"><span class="quick-icon">💡</span><span class="quick-label">Ventures</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html')"><span class="quick-icon">🌐</span><span class="quick-label">Browser</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html')"><span class="quick-icon">📈</span><span class="quick-label">Exchange</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html')"><span class="quick-icon">🏢</span><span class="quick-label">Hosting</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-music-platform.html')"><span class="quick-icon">🎵</span><span class="quick-label">Music</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html')"><span class="quick-icon">🎬</span><span class="quick-label">Films</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')"><span class="quick-icon">🌩️</span><span class="quick-label">AI Cloud</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html')"><span class="quick-icon">⚙️</span><span class="quick-label">Biz OS</span></div>
+<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-wholesale-master.html')"><span class="quick-icon">📦</span><span class="quick-label">Wholesale</span></div>
+<div class="quick" onclick="switchPage('more')"><span class="quick-icon">⚙️</span><span class="quick-label">More</span></div>
 </div>
 
 <div class="section">
@@ -426,29 +429,83 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <!-- MORE PAGE -->
 <div id="page-more" class="page">
 <div class="section" style="padding-top:16px">
-<div class="section-head"><span class="section-title">All Platforms (39)</span></div>
+<div class="section-head"><span class="section-title">All Platforms (42)</span></div>
 </div>
-<div style="padding:0 16px" id="allPlatforms">
-<div class="card" onclick="openLink('https://harzdm.vercel.app')"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🛍️</div><div class="card-info"><div class="card-title">HarzDM Marketplace</div><div class="card-desc">259 products</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">☁️</div><div class="card-info"><div class="card-title">Harz AI Cloud</div><div class="card-desc">20 AI agents</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📢</div><div class="card-info"><div class="card-title">Nexal Ads</div><div class="card-desc">Advertising platform</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-consult.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">💼</div><div class="card-info"><div class="card-title">Harz Consult</div><div class="card-desc">Consultation bookings</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-freelance.html')"><div class="card-row"><div class="card-icon" style="background:rgba(255,61,113,.1)">🤝</div><div class="card-info"><div class="card-title">Harz Freelance</div><div class="card-desc">Freelance marketplace</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html')"><div class="card-row"><div class="card-icon" style="background:rgba(229,9,20,.1)">🎬</div><div class="card-info"><div class="card-title">HarzFilm</div><div class="card-desc">8 films · 162K views</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-v2.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📰</div><div class="card-info"><div class="card-title">Harz Newsletter</div><div class="card-desc">Subscriber content</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-onboarding.html')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🚀</div><div class="card-info"><div class="card-title">Harz Onboarding</div><div class="card-desc">New user setup</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="showToast('OMEGA Infinity - use OMEGA Commander on Telegram')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">♾️</div><div class="card-info"><div class="card-title">OMEGA Infinity 1000</div><div class="card-desc">Enterprise orchestrator</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="showToast('TradeOS - use Telegram bot')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📊</div><div class="card-info"><div class="card-title">TradeOS</div><div class="card-desc">Trading platform</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="showToast('Maganu on Telegram @b44_e609780e17959020_bot')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">🤖</div><div class="card-info"><div class="card-title">Maganu Agent</div><div class="card-desc">AI assistant v7.9.3</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="showToast('OMEGA Commander @Omegacommanderaibot')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">⚡</div><div class="card-info"><div class="card-title">OMEGA Commander</div><div class="card-desc">AI executor v3.0.1</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html')"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.1)">🏢</div><div class="card-info"><div class="card-title">HARZ Business OS <span class="card-badge badge-new">NEW</span></div><div class="card-desc">9 modules · AI automation</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">🔧</div><div class="card-info"><div class="card-title">Harz Developer Platform <span class="card-badge badge-new">NEW</span></div><div class="card-desc">API docs · SDK · Code Gen</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📊</div><div class="card-info"><div class="card-title">Ecosystem Dashboard</div><div class="card-desc">34 platforms · live metrics</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html')"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.1)">🏢</div><div class="card-info"><div class="card-title">HARZ Business OS <span class="card-badge badge-new">NEW</span></div><div class="card-desc">CRM · ERP · HR · Payroll · 9 modules</div></div><div class="card-arrow">›</div></div></div>
+<div style="padding:0 16px">
+
+<div class="section-head" style="margin-top:12px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">FINANCE & PAYMENTS</span></div>
+<div class="more-list">
+<div class="more-item" onclick="switchPage('pay')">💸 Apex Bank — Digital Banking</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html')">💳 HarzPay — Payment Gateway</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html')">📈 Harz Exchange — Crypto & P2P</div>
+<div class="more-item" onclick="showToast('HarzAjo — use Apex Bank app')">🏦 HarzAjo — Group Savings</div>
+<div class="more-item" onclick="showToast('HarzLend — use Apex Bank app')">💰 HarzLend — Micro Loans</div>
+<div class="more-item" onclick="showToast('HarzFX — use Apex Bank app')">💱 HarzFX — Currency Exchange</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html')">🏢 Hosting Master — Domains & Hosting</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-wholesale-master.html')">📦 Wholesale Master — B2B Reseller</div>
 </div>
-<div style="padding:16px">
-<div style="text-align:center;color:var(--muted);font-size:.7rem;padding:20px">Harz Super App v1.0 · 39 Platforms · 80+ AI Agents<br>Built by Rabiu Hamza · Harz Digital Services</div>
+
+<div class="section-head" style="margin-top:16px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">MARKETPLACE & COMMERCE</span></div>
+<div class="more-list">
+<div class="more-item" onclick="openLink('https://harzdm.vercel.app')">🛒 HarzDM Marketplace</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-store.html')">🏪 Harz Shop</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-music-platform.html')">🎵 HarzMusic — 27 Tracks</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html')">🎬 HarzFilm — 8 Films</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-freelance.html')">🤝 Harz Freelance Market</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-events.html')">🎫 Harz Events</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-consult.html')">📞 Harz Consulting</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html')">📢 Nexal Ads</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-v2.html')">📰 Harz Newsletter</div>
+<div class="more-item" onclick="openLink('https://buildbot-ai-three.vercel.app')">🏗️ BuildBot AI — Construction</div>
 </div>
+
+<div class="section-head" style="margin-top:16px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">AI & INTELLIGENCE</span></div>
+<div class="more-list">
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html')">🤖 Harz AI Agency</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')">🌩️ Harz AI Cloud — 20 Agents</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-health-ai-dashboard.html')">🏥 OMEGA Health AI</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/mindcare-dashboard.html')">🧠 MindCare AI</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/cyber-shield-x-dashboard.html')">🛡️ Cyber Shield X</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html')">🏭 Robotics & IoT</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html')">🌐 Harz Browser + AI</div>
+</div>
+
+<div class="section-head" style="margin-top:16px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">EDUCATION & CONTENT</span></div>
+<div class="more-list">
+<div class="more-item" onclick="switchPage('learn')">📚 EduWealth AI — Courses</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-digital-marketing.html')">📱 ContentPilot AI</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-content.html')">✍️ OMEGA Content AI</div>
+</div>
+
+<div class="section-head" style="margin-top:16px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">INFRASTRUCTURE & IDENTITY</span></div>
+<div class="more-list">
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')">🛠️ Dev Platform — APIs</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html')">⚙️ Business OS</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html')">🪪 Global Identity</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html')">☁️ Data Cloud</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html')">💡 Venture Studio</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-onboarding.html')">🚀 Onboarding</div>
+</div>
+
+<div class="section-head" style="margin-top:16px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">ECOSYSTEM TOOLS</span></div>
+<div class="more-list">
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-crm-dashboard.html')">📋 WhatsApp CRM Dashboard</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html')">📊 Ecosystem Dashboard</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-launch.html')">🚀 Launch Announcement</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-partner-program.html')">🤝 Partner Program</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-referral-program.html')">🎁 Referral Program</div>
+</div>
+
+<div class="section-head" style="margin-top:16px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">TELEGRAM BOTS</span></div>
+<div class="more-list">
+<div class="more-item" onclick="showToast('OMEGA Infinity — use OMEGA Commander on Telegram')">🌀 OMEGA Infinity 1000</div>
+<div class="more-item" onclick="showToast('TradeOS — use Telegram bot')">📊 TradeOS</div>
+<div class="more-item" onclick="showToast('Harz on Telegram @b44_e609780e17959020_bot')">💬 Harz Assistant</div>
+<div class="more-item" onclick="showToast('OMEGA Commander @Omegacommanderaibot')">⚡ OMEGA Commander</div>
+</div>
+
+</div>
+</div></div>
 </div>
 
 <!-- Bottom Nav -->
