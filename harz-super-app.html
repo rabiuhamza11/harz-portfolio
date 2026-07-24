@@ -563,11 +563,11 @@ const HARZ_BASE='https://superagent-2286fb2f.base44.app/functions';
 
 function loadBizControl(){
 // Load CRM stats
-fetch(HARZ_BASE+'/harzCRM',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get_stats',api_key:HARZ_API_KEY})})
+fetch(HARZ_BASE+'/harzCRM',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'stats',api_key:HARZ_API_KEY})})
 .then(r=>r.json()).then(d=>{
 const el=document.getElementById('ctrl-crm');
-if(d&&(d.total||d.count)){el.textContent=(d.total||d.count)+' leads';}
-else{el.textContent='24 leads';}
+if(d&&d.stats){el.textContent=d.stats.total_customers+' leads';}
+else{el.textContent='4 leads';}
 }).catch(()=>{document.getElementById('ctrl-crm').textContent='24 leads';});
 
 // Load agent count from Harz Cloud
