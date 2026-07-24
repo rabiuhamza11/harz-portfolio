@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ SaaS Billing — Subscription Management</title>
+<meta name="description" content="Automated subscription billing for Harz AI Cloud">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0 30px}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#f0b90b,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(240,185,11,.1);color:#f0b90b;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:24px 0}
+.plan-card{background:#131722;border:1px solid #1e2530;border-radius:16px;padding:20px;position:relative;transition:.3s}
+.plan-card:hover{border-color:#f0b90b;transform:translateY(-2px)}
+.plan-card.popular{border-color:#f0b90b;box-shadow:0 0 20px rgba(240,185,11,.15)}
+.popular-tag{position:absolute;top:-10px;right:16px;background:#f0b90b;color:#0a0e17;font-size:.6rem;padding:3px 10px;border-radius:10px;font-weight:700}
+.plan-name{font-size:1rem;font-weight:700;color:#fff}
+.plan-price{font-size:1.8rem;font-weight:700;margin:10px 0 4px;color:#f0b90b}
+.plan-price small{font-size:.7rem;color:#8892a6;font-weight:400}
+.plan-desc{font-size:.72rem;color:#8892a6;margin-bottom:12px;min-height:32px}
+.plan-features{list-style:none;font-size:.72rem;color:#a8b0c0}
+.plan-features li{padding:4px 0;padding-left:18px;position:relative}
+.plan-features li:before{content:'✓';color:#00d4ff;position:absolute;left:0}
+.btn{display:block;width:100%;padding:10px;border:none;border-radius:10px;font-size:.78rem;font-weight:600;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-free{background:#1e2530;color:#e8e8e8}
+.btn-paid{background:linear-gradient(135deg,#f0b90b,#ffaa00);color:#0a0e17}
+.btn:hover{opacity:.85;transform:translateY(-1px)}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.88rem;color:#fff;margin-bottom:10px}
+.section p{font-size:.75rem;color:#8892a6;line-height:1.6}
+.stat-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.75rem;border-bottom:1px solid #1e2530}
+.stat-row:last-child{border:0}
+.stat-label{color:#8892a6}
+.stat-val{color:#f0b90b;font-weight:600}
+.pricing-note{text-align:center;font-size:.68rem;color:#8892a6;margin:16px 0}
+.gateway-logos{display:flex;justify-content:center;gap:16px;margin:12px 0}
+.gateway{background:#1a1f2e;padding:8px 16px;border-radius:8px;font-size:.7rem;color:#a8b0c0;border:1px solid #1e2530}
+.faq{margin:20px 0}
+.faq-item{background:#131722;border:1px solid #1e2530;border-radius:10px;padding:14px;margin-bottom:10px}
+.faq-q{font-size:.78rem;color:#fff;font-weight:600;margin-bottom:6px}
+.faq-a{font-size:.72rem;color:#8892a6;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ SaaS Billing</h1>
+<p>Automated subscription management for Harz AI Cloud</p>
+<div class="badge">Paystack • GDEG • Bank Transfer • USDT</div>
+</div>
+
+<div class="plans-grid">
+<div class="plan-card">
+<div class="plan-name">Free</div>
+<div class="plan-price">₦0<small>/month</small></div>
+<div class="plan-desc">Perfect for trying out Harz AI Cloud</div>
+<ul class="plan-features">
+<li>100 API requests/month</li>
+<li>1 AI agent</li>
+<li>Community support</li>
+<li>Basic models</li>
+</ul>
+<button class="btn btn-free" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html','_blank')">Get Started</button>
+</div>
+<div class="plan-card popular">
+<div class="popular-tag">POPULAR</div>
+<div class="plan-name">Starter</div>
+<div class="plan-price">₦15K<small>/month</small></div>
+<div class="plan-desc">For small projects and developers</div>
+<ul class="plan-features">
+<li>1,000 API requests/month</li>
+<li>3 AI agents</li>
+<li>Email support</li>
+<li>All models + dashboard</li>
+</ul>
+<button class="btn btn-paid" onclick="subscribe('starter')">Subscribe</button>
+</div>
+<div class="plan-card">
+<div class="plan-name">Pro</div>
+<div class="plan-price">₦50K<small>/month</small></div>
+<div class="plan-desc">For growing businesses and teams</div>
+<ul class="plan-features">
+<li>10,000 API requests/month</li>
+<li>10 AI agents</li>
+<li>Priority support</li>
+<li>Custom prompts + analytics</li>
+</ul>
+<button class="btn btn-paid" onclick="subscribe('pro')">Subscribe</button>
+</div>
+<div class="plan-card">
+<div class="plan-name">Enterprise</div>
+<div class="plan-price">₦150K<small>/month</small></div>
+<div class="plan-desc">For enterprises and high-volume</div>
+<ul class="plan-features">
+<li>Unlimited API requests</li>
+<li>All AI agents</li>
+<li>Dedicated support + SLA</li>
+<li>White-label + custom models</li>
+</ul>
+<button class="btn btn-paid" onclick="subscribe('enterprise')">Contact Sales</button>
+</div>
+</div>
+
+<div class="pricing-note">All plans billed in NGN. Cancel anytime. 10% discount with GDEG token.</div>
+
+<div class="gateway-logos">
+<div class="gateway">UBA Bank Transfer</div>
+<div class="gateway">Paystack</div>
+<div class="gateway">GDEG Token</div>
+<div class="gateway">USDT TRC20</div>
+</div>
+
+<div class="section">
+<h3>Current Ecosystem Stats</h3>
+<div class="stat-row"><span class="stat-label">Total Platforms</span><span class="stat-val" id="statPlatforms">42</span></div>
+<div class="stat-row"><span class="stat-label">API Users</span><span class="stat-val" id="statUsers">—</span></div>
+<div class="stat-row"><span class="stat-label">API Calls (Month)</span><span class="stat-val" id="statCalls">—</span></div>
+<div class="stat-row"><span class="stat-label">Active Subscriptions</span><span class="stat-val" id="statSubs">—</span></div>
+<div class="stat-row"><span class="stat-label">Monthly Recurring Revenue</span><span class="stat-val" id="statMRR">₦0</span></div>
+</div>
+
+<div class="section">
+<h3>How Billing Works</h3>
+<p>1. Choose a plan above and subscribe via Paystack or bank transfer</p>
+<p>2. Your API key is automatically upgraded to the new tier</p>
+<p>3. Monthly requests limit increases instantly</p>
+<p>4. Auto-renews each month — cancel anytime, no penalty</p>
+<p>5. GDEG token payments get 10% discount on all plans</p>
+</div>
+
+<div class="faq">
+<h3 style="font-size:.88rem;color:#fff;margin-bottom:14px;text-align:center">Frequently Asked Questions</h3>
+<div class="faq-item">
+<div class="faq-q">What happens when I hit my limit?</div>
+<div class="faq-a">API calls return a 429 status. Upgrade your plan or wait for next month's reset. You'll get email alerts at 80% and 100% usage.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q">Can I switch plans mid-month?</div>
+<div class="faq-a">Yes. Upgrades take effect immediately with prorated billing. Downgrades take effect at the next billing cycle.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q">Do you offer annual billing?</div>
+<div class="faq-a">Yes — annual plans get 2 months free (pay 10 months, get 12). Select yearly when checking out.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q">What payment methods are accepted?</div>
+<div class="faq-a">UBA bank transfer, Paystack (cards), GDEG token (10% discount), and USDT TRC20. All processed through HarzPay.</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">
+HARZ Digital Services • CAC RC: 321424 • Platform #43
+</div>
+</div>
+
+<script>
+const HARZ_BASE='https://superagent-2286fb2f.base44.app/functions';
+function subscribe(plan){
+if(plan==='enterprise'){alert('Contact us at harzco.business@gmail.com or call 08028687857 for enterprise pricing and custom setup.');return;}
+if(plan==='free'){window.location.href='https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html';return;}
+const prices={starter:15000,pro:50000};
+const names={starter:'Starter Plan',pro:'Pro Plan'};
+alert('Subscribe to '+names[plan]+' — ₦'+prices[plan].toLocaleString()+'/month\n\nPayment options:\n1. UBA Transfer: 2034326424 (Rabiu Hamza Mohammed)\n2. GDEG Token: 10% discount\n3. USDT TRC20\n\nAfter payment, send proof to harzco.business@gmail.com and your API key will be upgraded.');
+}
+// Load stats
+fetch(HARZ_BASE+'/harzCloud',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'billing_stats'})}).then(r=>r.json()).then(d=>{
+if(d.ok){
+document.getElementById('statUsers').textContent=d.total_users||1;
+document.getElementById('statCalls').textContent=d.total_calls||1;
+document.getElementById('statSubs').textContent(d.active_subscriptions||0);
+document.getElementById('statMRR').textContent='₦'+(d.mrr||0).toLocaleString();
+}
+}).catch(()=>{});
+</script>
+</body>
+</html>
