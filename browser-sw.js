@@ -1,8 +1,11 @@
-// HARZ Browser Service Worker
-const CACHE_NAME = 'harz-browser-v1';
+// HARZ Browser Service Worker v2
+const CACHE_NAME = 'harz-browser-v2';
 const CACHE_URLS = [
-  'https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html',
-  'https://rabiuhamza11.github.io/harz-portfolio/browser-manifest.json'
+  './harz-browser.html',
+  './browser-manifest.json',
+  './browser-icon-192.png',
+  './browser-icon-512.png',
+  './browser-favicon.png'
 ];
 
 self.addEventListener('install', (e) => {
@@ -20,18 +23,27 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-  // Network first for API calls, cache first for pages
-  if (e.request.url.includes('/functions/')) {
+  const url = new URL(e.request.url);
+  
+  // Network first for API calls
+  if (url.hostname.includes('base44.app') || url.pathname.includes('/functions/')) {
     e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-  } else {
+    return;
+  }
+  
+  // Cache first for static assets, network fallback
+  if (e.request.method === 'GET') {
     e.respondWith(
       caches.match(e.request).then((cached) => {
-        return cached || fetch(e.request).then((response) => {
-          return caches.open(CACHE_NAME).then((cache) => {
-            if (e.request.url.includes('github.io')) cache.put(e.request, response.clone());
-            return response;
-          });
+        const fetchPromise = fetch(e.request).then((response) => {
+          // Cache same-origin responses
+          if (response && response.status === 200 && url.origin === location.origin) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
+          }
+          return response;
         }).catch(() => cached);
+        return cached || fetchPromise;
       })
     );
   }
