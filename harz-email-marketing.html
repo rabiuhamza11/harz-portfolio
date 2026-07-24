@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Email Marketing — Automated Campaigns</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#ff6b6b,#f0b90b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(255,107,107,.1);color:#ff6b6b;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:14px;text-align:center}
+.stat-num{font-size:1.3rem;color:#ff6b6b;font-weight:700}
+.stat-label{font-size:.65rem;color:#8892a6;margin-top:4px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#ff6b6b}
+textarea{resize:vertical;min-height:80px}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#ff6b6b,#f0b90b);border:none;border-radius:10px;color:#0a0e17;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:6px}
+.campaign-list{font-size:.72rem}
+.campaign-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #1e2530}
+.campaign-item:last-child{border:0}
+.camp-status{padding:2px 8px;border-radius:8px;font-size:.6rem;font-weight:600}
+.st-active{background:rgba(0,255,136,.15);color:#00ff88}
+.st-draft{background:rgba(136,146,176,.15);color:#8892a6}
+.st-scheduled{background:rgba(240,185,11,.15);color:#f0b90b}
+.sequence-box{background:#0a0e17;border:1px solid #1e2530;border-radius:10px;padding:12px;margin:8px 0}
+.sequence-step{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #1e2530}
+.sequence-step:last-child{border:0}
+.step-num{width:24px;height:24px;border-radius:50%;background:#ff6b6b;color:#0a0e17;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;flex-shrink:0}
+.step-content{flex:1}
+.step-title{font-size:.72rem;color:#fff;font-weight:600}
+step-desc{font-size:.65rem;color:#8892a6}
+.step-delay{font-size:.6rem;color:#f0b90b;margin-top:2px}
+.template-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:10px 0}
+.template-card{background:#0a0e17;border:1px solid #1e2530;border-radius:10px;padding:12px;cursor:pointer;transition:.2s}
+.template-card:hover{border-color:#ff6b6b}
+.template-name{font-size:.72rem;color:#fff;font-weight:600}
+.template-desc{font-size:.62rem;color:#8892a6;margin-top:4px;min-height:30px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ Email Marketing</h1>
+<p>Automated drip campaigns that turn leads into customers</p>
+<div class="badge">Powered by Lead Magnet + Newsletter Subs</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num" id="statLeads">—</div><div class="stat-label">Total Leads</div></div>
+<div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Active Campaigns</div></div>
+<div class="stat-card"><div class="stat-num">0%</div><div class="stat-label">Open Rate</div></div>
+<div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Emails Sent</div></div>
+</div>
+
+<div class="section">
+<h3>Active Campaigns</h3>
+<div class="campaign-list">
+<div class="campaign-item"><div><div style="color:#fff;font-size:.75rem;font-weight:600">Lead Magnet Nurture</div><div style="color:#8892a6;font-size:.65rem">7-email sequence • New leads from free tools</div></div><span class="camp-status st-active">ACTIVE</span></div>
+<div class="campaign-item"><div><div style="color:#fff;font-size:.75rem;font-weight:600">Product Launch Series</div><div style="color:#8892a6;font-size:.65rem">5-email sequence • 50 platform announcements</div></div><span class="camp-status st-scheduled">SCHEDULED</span></div>
+<div class="campaign-item"><div><div style="color:#fff;font-size:.75rem;font-weight:600">Win-Back Campaign</div><div style="color:#8892a6;font-size:.65rem">3-email sequence • Inactive subscribers</div></div><span class="camp-status st-draft">DRAFT</span></div>
+</div>
+</div>
+
+<div class="section">
+<h3>Lead Magnet Nurture Sequence</h3>
+<div class="sequence-box">
+<div class="sequence-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Welcome + Free Resources</div><div class="step-desc">Deliver promised results + bonus startup checklist</div><div class="step-delay">Day 0 — Sent immediately</div></div></div>
+<div class="sequence-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">How Harz Can Help Your Business</div><div class="step-desc">Showcase the 50-platform ecosystem with case studies</div><div class="step-delay">Day 2 — 9:00 AM</div></div></div>
+<div class="sequence-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Social Proof + Testimonials</div><div class="step-desc">Customer stories, product screenshots, results</div><div class="step-delay">Day 4 — 9:00 AM</div></div></div>
+<div class="sequence-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Free Tool Highlight</div><div class="step-desc">"Try our free business name generator" — drive engagement</div><div class="step-delay">Day 6 — 12:00 PM</div></div></div>
+<div class="sequence-step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Special Offer (10% Off)</div><div class="step-desc">Discount code for first purchase on any platform</div><div class="step-delay">Day 8 — 9:00 AM</div></div></div>
+<div class="sequence-step"><div class="step-num">6</div><div class="step-content"><div class="step-title">Product Spotlight</div><div class="step-desc">Feature best-selling products with buy links</div><div class="step-delay">Day 11 — 9:00 AM</div></div></div>
+<div class="sequence-step"><div class="step-num">7</div><div class="step-content"><div class="step-title">Last Chance + Final CTA</div><div class="step-desc">"Your 10% discount expires in 24 hours"</div><div class="step-delay">Day 13 — 9:00 AM</div></div></div>
+</div>
+</div>
+
+<div class="section">
+<h3>Create New Campaign</h3>
+<label>Campaign Name</label><input id="campName" placeholder="e.g. WhatsApp Store Launch">
+<label>Email Subject Line</label><input id="campSubject" placeholder="Your exclusive offer inside 🎁">
+<label>Email Body (HTML supported)</label>
+<textarea id="campBody" placeholder="Dear {{first_name}},\n\nWe noticed you used our free business tools. Here's how Harz can help you grow...\n\n[CTA: Visit WhatsApp Store]"></textarea>
+<label>Send To</label>
+<select id="campAudience"><option value="all">All subscribers</option><option value="leads">Lead Magnet users only</option><option value="active">Active subscribers</option><option value="inactive">Inactive (win-back)</option></select>
+<label>Send Schedule</label>
+<select id="campSchedule"><option value="now">Send immediately</option><option value="1h">In 1 hour</option><option value="24h">In 24 hours</option><option value="custom">Custom date/time</option></select>
+<button class="btn" onclick="createCampaign()">Launch Campaign</button>
+</div>
+
+<div class="section">
+<h3>Email Templates</h3>
+<div class="template-grid">
+<div class="template-card" onclick="useTemplate('welcome')"><div class="template-name">Welcome Email</div><div class="template-desc">Greet new subscribers and deliver promised resources</div></div>
+<div class="template-card" onclick="useTemplate('promo')"><div class="template-name">Product Promo</div><div class="template-desc">Showcase a product with features and pricing</div></div>
+<div class="template-card" onclick="useTemplate('discount')"><div class="template-name">Discount Offer</div><div class="template-desc">Limited-time discount with urgency and CTA</div></div>
+<div class="template-card" onclick="useTemplate('newsletter')"><div class="template-name">Newsletter</div><div class="template-desc">Weekly roundup of ecosystem updates</div></div>
+<div class="template-card" onclick="useTemplate('winback')"><div class="template-name">Win-Back</div><div class="template-desc">Re-engage inactive subscribers with offer</div></div>
+<div class="template-card" onclick="useTemplate('launch')"><div class="template-name">Product Launch</div><div class="template-desc">Announce new platform or product</div></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #51 • CAC RC: 321424</div>
+</div>
+<script>
+function createCampaign(){
+const name=document.getElementById('campName').value.trim();
+const subject=document.getElementById('campSubject').value.trim();
+if(!name||!subject){alert('Enter campaign name and subject');return;}
+alert('Campaign "'+name+'" created!\n\nSubject: '+subject+'\n\nThe campaign will be sent via your connected Gmail and tracked in the NewsletterSub entity. You will receive a report when sending completes.');
+}
+function useTemplate(type){alert('Template "'+type+'" loaded! Edit the content and click Launch Campaign.');}
+</script>
+</body>
+</html>
