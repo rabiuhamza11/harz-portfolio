@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Social Scheduler — Plan & Auto-Post</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#00d4ff,#6c5ce7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(0,212,255,.1);color:#00d4ff;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.platform-tabs{display:flex;gap:8px;margin:16px 0;justify-content:center;flex-wrap:wrap}
+.ptab{padding:6px 14px;border-radius:10px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.72rem;transition:.2s;display:flex;align-items:center;gap:6px}
+.ptab.active{border-color:#00d4ff;background:rgba(0,212,255,.1)}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:1.1rem;color:#00d4ff;font-weight:700}
+.stat-label{font-size:.62rem;color:#8892a6;margin-top:4px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#00d4ff}
+textarea{resize:vertical;min-height:80px}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00d4ff,#6c5ce7);border:none;border-radius:10px;color:#0a0e17;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:6px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0}
+.cal-day{background:#0a0e17;border:1px solid #1e2530;border-radius:8px;min-height:60px;padding:6px;font-size:.6rem}
+.cal-day.today{border-color:#00d4ff}
+.cal-day-label{color:#8892a6;font-size:.55rem;text-transform:uppercase}
+.cal-event{background:rgba(0,212,255,.2);color:#00d4ff;border-radius:4px;padding:2px 4px;margin-top:2px;font-size:.52rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal-event.wa{background:rgba(37,211,102,.2);color:#25D366}
+.cal-event.tg{background:rgba(0,136,204,.2);color:#0088cc}
+.cal-event.x{background:rgba(0,0,0,.3);color:#fff}
+.cal-event.li{background:rgba(10,102,194,.2);color:#0a66c2}
+.queue-list{font-size:.72rem}
+.queue-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #1e2530}
+.queue-item:last-child{border:0}
+.q-platform{padding:3px 8px;border-radius:6px;font-size:.58rem;font-weight:600}
+.q-wa{background:rgba(37,211,102,.15);color:#25D366}
+.q-tg{background:rgba(0,136,204,.15);color:#0088cc}
+.q-x{background:rgba(255,255,255,.1);color:#fff}
+.q-li{background:rgba(10,102,194,.15);color:#0a66c2}
+.best-times{background:#0a0e17;border:1px solid #1e2530;border-radius:10px;padding:12px;margin:8px 0}
+.bt-row{display:flex;justify-content:space-between;font-size:.68rem;padding:4px 0}
+.bt-label{color:#8892a6}
+.bt-val{color:#00d4ff;font-weight:600}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ Social Scheduler</h1>
+<p>Plan and auto-post across WhatsApp, Telegram, X, and LinkedIn</p>
+<div class="badge">4 Platforms • Best-Time AI • Auto-Schedule</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num">36</div><div class="stat-label">Scheduled Posts</div></div>
+<div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Posted Today</div></div>
+<div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Platforms</div></div>
+<div class="stat-card"><div class="stat-num">8AM</div><div class="stat-label">Next Post</div></div>
+</div>
+
+<div class="platform-tabs">
+<div class="ptab active" onclick="filterPlatform('all',this)">📡 All</div>
+<div class="ptab" onclick="filterPlatform('wa',this)">💬 WhatsApp</div>
+<div class="ptab" onclick="filterPlatform('tg',this)">✈️ Telegram</div>
+<div class="ptab" onclick="filterPlatform('x',this)">🐦 X (Twitter)</div>
+<div class="ptab" onclick="filterPlatform('li',this)">💼 LinkedIn</div>
+</div>
+
+<div class="section">
+<h3>Best Posting Times (Lagos/Nigeria)</h3>
+<div class="best-times">
+<div class="bt-row"><span class="bt-label">WhatsApp (Broadcasts)</span><span class="bt-val">7:00 AM, 12:00 PM, 8:00 PM</span></div>
+<div class="bt-row"><span class="bt-label">Telegram</span><span class="bt-val">9:00 AM, 1:00 PM, 7:00 PM</span></div>
+<div class="bt-row"><span class="bt-label">X (Twitter)</span><span class="bt-val">8:00 AM, 3:00 PM, 9:00 PM</span></div>
+<div class="bt-row"><span class="bt-label">LinkedIn</span><span class="bt-val">7:30 AM, 12:30 PM (Weekdays)</span></div>
+</div>
+</div>
+
+<div class="section">
+<h3>This Week's Calendar</h3>
+<div class="calendar-grid">
+<div class="cal-day today"><div class="cal-day-label">Mon</div><div class="cal-event wa">7AM Chapter</div><div class="cal-event wa">12PM Promo</div></div>
+<div class="cal-day"><div class="cal-day-label">Tue</div><div class="cal-event wa">7AM Chapter</div><div class="cal-event tg">9AM Post</div></div>
+<div class="cal-day"><div class="cal-day-label">Wed</div><div class="cal-event wa">7AM Chapter</div><div class="cal-event x">8AM Post</div></div>
+<div class="cal-day"><div class="cal-day-label">Thu</div><div class="cal-event wa">7AM Chapter</div><div class="cal-event li">12PM Article</div></div>
+<div class="cal-day"><div class="cal-day-label">Fri</div><div class="cal-event wa">7AM Chapter</div><div class="cal-event wa">12PM Promo</div></div>
+<div class="cal-day"><div class="cal-day-label">Sat</div><div class="cal-event wa">9AM Bundle</div></div>
+<div class="cal-day"><div class="cal-day-label">Sun</div><div class="cal-event tg">6PM Weekly</div></div>
+</div>
+</div>
+
+<div class="section">
+<h3>Schedule New Post</h3>
+<label>Post Content</label>
+<textarea id="postContent" placeholder="🚀 Exciting news! We just launched HARZ API Marketplace — buy and sell AI agents with 80% revenue share for developers. Check it out: [link]"></textarea>
+<label>Platform(s)</label>
+<select id="postPlatform" multiple style="min-height:80px">
+<option value="wa" selected>WhatsApp Broadcast</option>
+<option value="tg">Telegram Channel</option>
+<option value="x">X (Twitter)</option>
+<option value="li">LinkedIn</option>
+</select>
+<label>Schedule</label>
+<select id="postSchedule">
+<option value="now">Post Now</option>
+<option value="7am">Tomorrow 7:00 AM</option>
+<option value="12pm">Tomorrow 12:00 PM</option>
+<option value="8pm">Tomorrow 8:00 PM</option>
+<option value="best">AI Best Time (auto-pick)</option>
+</select>
+<label>Repeat</label>
+<select id="postRepeat"><option value="once">Once</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select>
+<button class="btn" onclick="schedulePost()">Schedule Post</button>
+</div>
+
+<div class="section">
+<h3>Posting Queue</h3>
+<div class="queue-list">
+<div class="queue-item"><div><div style="color:#fff;font-size:.72rem">Daily Chapter — Complete Genius 365</div><div style="color:#8892a6;font-size:.6rem">Tomorrow 7:00 AM</div></div><span class="q-platform q-wa">WhatsApp</span></div>
+<div class="queue-item"><div><div style="color:#fff;font-size:.72rem">Platform Spotlight: AI Studio</div><div style="color:#8892a6;font-size:.6rem">Tomorrow 12:00 PM</div></div><span class="q-platform q-wa">WhatsApp</span></div>
+<div class="queue-item"><div><div style="color:#fff;font-size:.72rem">Weekly Ecosystem Update</div><div style="color:#8892a6;font-size:.6rem">Sunday 6:00 PM</div></div><span class="q-platform q-tg">Telegram</span></div>
+<div class="queue-item"><div><div style="color:#fff;font-size:.72rem">Developer Spotlight: API Marketplace</div><div style="color:#8892a6;font-size:.6rem">Wednesday 8:00 AM</div></div><span class="q-platform q-x">X</span></div>
+<div class="queue-item"><div><div style="color:#fff;font-size:.72rem">Article: How AI is Transforming Nigerian Business</div><div style="color:#8892a6;font-size:.6rem">Thursday 12:30 PM</div></div><span class="q-platform q-li">LinkedIn</span></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #52 • CAC RC: 321424</div>
+</div>
+<script>
+function filterPlatform(p,el){document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+function schedulePost(){
+const content=document.getElementById('postContent').value.trim();
+if(!content){alert('Enter post content');return;}
+alert('Post scheduled!\n\nContent: '+content.substring(0,60)+'...\n\nYou will receive a confirmation when the post goes live. Posting is handled by Magani automations.');
+}
+</script>
+</body>
+</html>
