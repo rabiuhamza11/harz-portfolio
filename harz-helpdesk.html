@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Helpdesk — Ticket System & Knowledge Base</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#00d4ff,#00ff88);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(0,212,255,.1);color:#00d4ff;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:1.1rem;font-weight:700}
+.stat-label{font-size:.62rem;color:#8892a6;margin-top:4px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#00d4ff}
+textarea{resize:vertical;min-height:80px}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00d4ff,#00ff88);border:none;border-radius:10px;color:#0a0e17;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:6px}
+.ticket-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #1e2530;font-size:.72rem}
+.ticket-row:last-child{border:0}
+.ticket-subject{color:#fff;font-weight:600;flex:1}
+.ticket-id{color:#8892a6;font-size:.62rem;font-family:monospace}
+.priority-badge{padding:2px 8px;border-radius:6px;font-size:.58rem;font-weight:600;margin-left:8px}
+.p-low{background:rgba(0,255,136,.15);color:#00ff88}
+.p-med{background:rgba(240,185,11,.15);color:#f0b90b}
+.p-high{background:rgba(255,107,107,.15);color:#ff6b6b}
+.p-urgent{background:rgba(255,0,0,.2);color:#ff6b6b;animation:pulse 1.5s infinite}
+.status-badge{padding:2px 8px;border-radius:6px;font-size:.58rem;font-weight:600;margin-left:4px}
+.s-open{background:rgba(0,212,255,.15);color:#00d4ff}
+.s-pending{background:rgba(240,185,11,.15);color:#f0b90b}
+.s-resolved{background:rgba(0,255,136,.15);color:#00ff88}
+.kb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0}
+.kb-card{background:#0a0e17;border:1px solid #1e2530;border-radius:10px;padding:14px;cursor:pointer;transition:.2s}
+.kb-card:hover{border-color:#00d4ff}
+.kb-cat{font-size:.6rem;color:#00d4ff;text-transform:uppercase;letter-spacing:.5px}
+.kb-title{font-size:.78rem;color:#fff;font-weight:600;margin-top:4px}
+.kb-count{font-size:.62rem;color:#8892a6;margin-top:4px}
+.tab-row{display:flex;gap:8px;margin:16px 0;justify-content:center}
+.tbtn{padding:6px 14px;border-radius:10px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.72rem}
+.tbtn.active{background:#00d4ff;color:#0a0e17;border:0;font-weight:600}
+.panel{display:none}.panel.active{display:block}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ Helpdesk</h1>
+<p>Ticket system + knowledge base for customer support</p>
+<div class="badge">Powered by HMTicket Entity • 24/7 AI First Response</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num" style="color:#00d4ff">0</div><div class="stat-label">Open Tickets</div></div>
+<div class="stat-card"><div class="stat-num" style="color:#f0b90b">0</div><div class="stat-label">Pending</div></div>
+<div class="stat-card"><div class="stat-num" style="color:#00ff88">0</div><div class="stat-label">Resolved Today</div></div>
+<div class="stat-card"><div class="stat-num" style="color:#ff6b6b">0</div><div class="stat-label">Avg Response</div></div>
+</div>
+
+<div class="tab-row">
+<div class="tbtn active" onclick="switchTab('tickets',this)">🎫 Tickets</div>
+<div class="tbtn" onclick="switchTab('new',this)">➕ New Ticket</div>
+<div class="tbtn" onclick="switchTab('kb',this)">📚 Knowledge Base</div>
+</div>
+
+<div id="panel-tickets" class="panel active">
+<div class="section">
+<h3>Support Tickets</h3>
+<div style="font-size:.72rem;color:#8892a6;text-align:center;padding:20px">No tickets yet. When customers submit support requests, they appear here with priority levels and status tracking.</div>
+</div>
+</div>
+
+<div id="panel-new" class="panel">
+<div class="section">
+<h3>Submit a Support Ticket</h3>
+<label>Your Name</label><input id="tkName" placeholder="Full name">
+<label>Email Address</label><input id="tkEmail" type="email" placeholder="youremail@gmail.com">
+<label>Phone (WhatsApp)</label><input id="tkPhone" placeholder="080XXXXXXXX">
+<label>Category</label>
+<select id="tkCategory"><option>Technical Support</option><option>Billing & Payments</option><option>Domain & Hosting</option><option>Product Inquiry</option><option>Account Access</option><option>Bug Report</option><option>Feature Request</option><option>Other</option></select>
+<label>Priority</label>
+<select id="tkPriority"><option value="low">Low</option><option value="med" selected>Medium</option><option value="high">High</option><option value="urgent">Urgent</option></select>
+<label>Subject</label><input id="tkSubject" placeholder="Brief description of the issue">
+<label>Describe the Issue</label>
+<textarea id="tkMessage" placeholder="Provide as much detail as possible"></textarea>
+<button class="btn" onclick="submitTicket()">Submit Ticket</button>
+</div>
+</div>
+
+<div id="panel-kb" class="panel">
+<div class="section">
+<h3>Knowledge Base</h3>
+<div class="kb-grid">
+<div class="kb-card"><div class="kb-cat">Getting Started</div><div class="kb-title">How to Use the Super App</div><div class="kb-count">5 articles</div></div>
+<div class="kb-card"><div class="kb-cat">Payments</div><div class="kb-title">Payment Methods & Options</div><div class="kb-count">8 articles</div></div>
+<div class="kb-card"><div class="kb-cat">Domains</div><div class="kb-title">Domain Registration Guide</div><div class="kb-count">6 articles</div></div>
+<div class="kb-card"><div class="kb-cat">AI Tools</div><div class="kb-title">Using AI Studio & Chatbots</div><div class="kb-count">4 articles</div></div>
+<div class="kb-card"><div class="kb-cat">Marketplace</div><div class="kb-title">Selling Digital Products</div><div class="kb-count">7 articles</div></div>
+<div class="kb-card"><div class="kb-cat">API</div><div class="kb-title">Developer API Documentation</div><div class="kb-count">3 articles</div></div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #56 • CAC RC: 321424</div>
+</div>
+<script>
+function switchTab(tab,el){document.querySelectorAll('.tbtn').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('panel-'+tab).classList.add('active');}
+function submitTicket(){
+const name=document.getElementById('tkName').value.trim();
+const email=document.getElementById('tkEmail').value.trim();
+const subject=document.getElementById('tkSubject').value.trim();
+const msg=document.getElementById('tkMessage').value.trim();
+if(!name||!email||!subject||!msg){alert('Please fill in all required fields');return;}
+const id='TKT-'+Date.now().toString(36).toUpperCase().substring(0,6);
+alert('Ticket submitted!\n\nTicket ID: '+id+'\nSubject: '+subject+'\n\nYou will receive a confirmation email at '+email+'. Our AI will respond instantly, and a human agent will follow up within 24 hours.');
+}
+</script>
+</body>
+</html>
