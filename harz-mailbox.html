@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Mailbox — Gmail Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+.header h1{font-size:1.4rem;background:linear-gradient(135deg,#ff6b6b,#f0b90b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header .badge{display:flex;gap:8px;align-items:center}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#00ff88;animation:pulse 1.5s infinite}
+.live-text{font-size:.68rem;color:#00ff88;font-weight:600}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:14px;text-align:center}
+.stat-num{font-size:1.4rem;font-weight:700}
+.stat-label{font-size:.62rem;color:#8892a6;margin-top:4px}
+.filter-row{display:flex;gap:8px;margin:16px 0}
+.filter-btn{padding:6px 14px;border-radius:10px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.72rem;transition:.2s}
+.filter-btn.active{background:linear-gradient(135deg,#ff6b6b,#f0b90b);color:#0a0e17;border:0;font-weight:600}
+.loading{text-align:center;padding:40px;color:#8892a6;font-size:.82rem}
+.loading .spin{display:inline-block;width:24px;height:24px;border:3px solid #1e2530;border-top-color:#ff6b6b;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:8px}
+.email-list{margin:16px 0}
+.email-card{background:#131722;border:1px solid #1e2530;border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;transition:.2s;position:relative}
+.email-card:hover{border-color:#ff6b6b;transform:translateX(2px)}
+.email-card.unread{border-left:3px solid #ff6b6b}
+.email-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.email-from{font-size:.82rem;font-weight:600}
+.email-from.unread-text{color:#ff6b6b}
+.email-date{font-size:.62rem;color:#8892a6;white-space:nowrap;margin-left:8px}
+.email-subject{font-size:.78rem;margin-bottom:6px}
+.email-subject.unread-text{font-weight:600;color:#fff}
+.email-snippet{font-size:.68rem;color:#8892a6;line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.email-tags{display:flex;gap:6px;margin-top:8px}
+.email-tag{font-size:.55rem;padding:2px 8px;border-radius:6px;font-weight:600}
+.tag-unread{background:rgba(255,107,107,.15);color:#ff6b6b}
+.tag-important{background:rgba(240,185,11,.15);color:#f0b90b}
+.tag-personal{background:rgba(0,212,255,.15);color:#00d4ff}
+.tag-updates{background:rgba(108,92,231,.15);color:#6c5ce7}
+.tag-promotions{background:rgba(255,0,255,.1);color:#ff00ff}
+.tag-social{background:rgba(0,255,136,.15);color:#00ff88}
+.email-body-expanded{margin-top:12px;padding:12px;background:#0a0e17;border-radius:8px;font-size:.72rem;line-height:1.5;color:#e8e8e8;display:none}
+.email-body-expanded.show{display:block;white-space:pre-wrap;word-break:break-word}
+.mark-read-btn{margin-top:10px;padding:6px 14px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);border-radius:8px;color:#00ff88;font-size:.62rem;cursor:pointer;display:none}
+.mark-read-btn.show{display:inline-block}
+.refresh-btn{padding:8px 14px;background:#131722;border:1px solid #1e2530;border-radius:10px;color:#e8e8e8;font-size:.72rem;cursor:pointer;transition:.2s}
+.refresh-btn:hover{border-color:#ff6b6b}
+.empty{text-align:center;padding:40px;color:#8892a6;font-size:.82rem}
+.composer{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0;display:none}
+.composer.show{display:block}
+.composer h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+.composer input,.composer textarea{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+.composer textarea{resize:vertical;min-height:100px}
+.composer-btn{padding:10px 20px;background:linear-gradient(135deg,#ff6b6b,#f0b90b);border:none;border-radius:10px;color:#0a0e17;font-size:.78rem;font-weight:700;cursor:pointer}
+.footer{text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.new-banner{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);border-radius:10px;padding:10px;margin-bottom:12px;text-align:center;font-size:.72rem;color:#ff6b6b;display:none}
+.new-banner.show{display:block}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div>
+<h1>HARZ Mailbox</h1>
+<div style="font-size:.62rem;color:#8892a6;margin-top:2px">hamzarabiu390@gmail.com</div>
+</div>
+<div class="badge">
+<div class="live-dot"></div>
+<div class="live-text">LIVE</div>
+<button class="refresh-btn" onclick="loadEmails()">↻ Refresh</button>
+</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num" id="statUnread" style="color:#ff6b6b">—</div><div class="stat-label">Unread</div></div>
+<div class="stat-card"><div class="stat-num" id="statTotal" style="color:#00d4ff">—</div><div class="stat-label">Total Loaded</div></div>
+<div class="stat-card"><div class="stat-num" style="color:#00ff88" id="statImportant">—</div><div class="stat-label">Important</div></div>
+</div>
+
+<div class="filter-row">
+<div class="filter-btn active" onclick="filterEmails('all',this)">📥 All</div>
+<div class="filter-btn" onclick="filterEmails('unread',this)">🔴 Unread</div>
+<div class="filter-btn" onclick="filterEmails('important',this)">⭐ Important</div>
+<div class="filter-btn" onclick="filterEmails('personal',this)">👤 Personal</div>
+</div>
+
+<div class="new-banner" id="newBanner">✨ New messages detected! Refreshing...</div>
+
+<div class="email-list" id="emailList">
+<div class="loading"><div class="spin"></div><div>Loading your emails...</div></div>
+</div>
+
+<div class="footer">HARZ Digital Services • Gmail Dashboard • CAC RC: 321424</div>
+</div>
+
+<script>
+const API_URL = 'https://superagent-2286fb2f.base44.app/functions/harzMailbox';
+let allEmails = [];
+let currentFilter = 'all';
+
+async function loadEmails() {
+const list = document.getElementById('emailList');
+list.innerHTML = '<div class="loading"><div class="spin"></div><div>Loading your emails...</div></div>';
+
+try {
+const res = await fetch(`${API_URL}?action=inbox&max=20`);
+const data = await res.json();
+
+if (!data.messages || data.messages.length === 0) {
+list.innerHTML = '<div class="empty">📭 No emails found</div>';
+return;
+}
+
+allEmails = data.messages;
+updateStats(data);
+renderEmails();
+} catch (err) {
+list.innerHTML = `<div class="empty">⚠️ Error loading emails: ${err.message}</div>`;
+}
+}
+
+function updateStats(data) {
+document.getElementById('statUnread').textContent = data.unreadCount || 0;
+document.getElementById('statTotal').textContent = data.count || 0;
+const important = (data.messages || []).filter(m => m.labels && m.labels.includes('IMPORTANT')).length;
+document.getElementById('statImportant').textContent = important;
+}
+
+function renderEmails() {
+const list = document.getElementById('emailList');
+let emails = allEmails;
+
+if (currentFilter === 'unread') {
+emails = emails.filter(e => e.unread);
+} else if (currentFilter === 'important') {
+emails = emails.filter(e => e.labels && e.labels.includes('IMPORTANT'));
+} else if (currentFilter === 'personal') {
+emails = emails.filter(e => e.labels && (e.labels.includes('CATEGORY_PERSONAL') || e.labels.includes('IMPORTANT')));
+}
+
+if (emails.length === 0) {
+list.innerHTML = '<div class="empty">📭 No emails match this filter</div>';
+return;
+}
+
+list.innerHTML = emails.map(email => {
+const fromName = email.from.replace(/<[^>]+>/g, '').trim() || email.from;
+const fromEmail = (email.from.match(/<([^>]+)>/) || ['',''])[1] || email.from;
+const tags = (email.labels || []).map(l => {
+if (l === 'UNREAD') return '<span class="email-tag tag-unread">UNREAD</span>';
+if (l === 'IMPORTANT') return '<span class="email-tag tag-important">⭐ IMPORTANT</span>';
+if (l === 'CATEGORY_PERSONAL') return '<span class="email-tag tag-personal">PERSONAL</span>';
+if (l === 'CATEGORY_UPDATES') return '<span class="email-tag tag-updates">UPDATES</span>';
+if (l === 'CATEGORY_PROMOTIONS') return '<span class="email-tag tag-promotions">PROMO</span>';
+if (l === 'CATEGORY_SOCIAL') return '<span class="email-tag tag-social">SOCIAL</span>';
+return '';
+}).join('');
+
+const bodyHtml = email.body ? `<div class="email-body-expanded" id="body-${email.id}">${escapeHtml(email.body)}</div>` : '';
+const readBtn = email.unread ? `<button class="mark-read-btn show" onclick="markRead('${email.id}', event)">✓ Mark as Read</button>` : '';
+
+return `<div class="email-card ${email.unread ? 'unread' : ''}" onclick="toggleBody('${email.id}')">
+<div class="email-header">
+<div class="email-from ${email.unread ? 'unread-text' : ''}">${escapeHtml(fromName)}<div style="font-size:.58rem;color:#8892a6;font-weight:400">${escapeHtml(fromEmail)}</div></div>
+<div class="email-date">${formatDate(email.date)}</div>
+</div>
+<div class="email-subject ${email.unread ? 'unread-text' : ''}">${escapeHtml(email.subject)}</div>
+<div class="email-snippet">${escapeHtml(email.snippet)}</div>
+${tags ? `<div class="email-tags">${tags}</div>` : ''}
+${bodyHtml}
+${readBtn}
+</div>`;
+}).join('');
+}
+
+function toggleBody(id) {
+const body = document.getElementById('body-' + id);
+if (body) body.classList.toggle('show');
+}
+
+async function markRead(id, event) {
+event.stopPropagation();
+try {
+await fetch(`${API_URL}?action=read&id=${id}`);
+const email = allEmails.find(e => e.id === id);
+if (email) {
+email.unread = false;
+email.labels = (email.labels || []).filter(l => l !== 'UNREAD');
+renderEmails();
+const data = { messages: allEmails, count: allEmails.length, unreadCount: allEmails.filter(e => e.unread).length };
+updateStats(data);
+}
+} catch (err) {
+alert('Failed to mark as read');
+}
+}
+
+function filterEmails(filter, el) {
+document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+el.classList.add('active');
+currentFilter = filter;
+renderEmails();
+}
+
+function formatDate(dateStr) {
+if (!dateStr) return '';
+const d = new Date(dateStr);
+const now = new Date();
+const diff = now - d;
+if (diff < 60000) return 'Just now';
+if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
+return d.toLocaleDateString('en-US', {month:'short',day:'numeric'});
+}
+
+function escapeHtml(text) {
+const div = document.createElement('div');
+div.textContent = text || '';
+return div.innerHTML;
+}
+
+// Auto-refresh every 60 seconds
+setInterval(async () => {
+try {
+const res = await fetch(`${API_URL}?action=inbox&max=20`);
+const data = await res.json();
+if (data.messages) {
+const newUnread = data.messages.filter(m => m.unread && !allEmails.find(e => e.id === m.id));
+if (newUnread.length > 0) {
+document.getElementById('newBanner').classList.add('show');
+setTimeout(() => {
+document.getElementById('newBanner').classList.remove('show');
+}, 3000);
+allEmails = data.messages;
+updateStats(data);
+renderEmails();
+}
+}
+} catch(e) {}
+}, 60000);
+
+// Initial load
+loadEmails();
+</script>
+</body>
+</html>
