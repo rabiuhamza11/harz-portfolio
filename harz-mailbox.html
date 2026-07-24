@@ -2,11 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <title>HARZ Mailbox — Gmail Dashboard</title>
+<!-- PWA -->
+<meta name="theme-color" content="#0a0e17">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mailbox">
+<link rel="manifest" href="https://rabiuhamza11.github.io/harz-portfolio/mailbox-manifest.json">
+<link rel="apple-touch-icon" href="https://rabiuhamza11.github.io/harz-portfolio/mailbox-icon-192.png">
+<link rel="icon" type="image/png" href="https://rabiuhamza11.github.io/harz-portfolio/mailbox-icon-192.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh}
+body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;-webkit-tap-highlight-color:transparent;user-select:none}
 .container{max-width:900px;margin:0 auto;padding:16px}
 .header{display:flex;justify-content:space-between;align-items:center;padding:16px 0 12px;border-bottom:1px solid #1e2530}
 .header h1{font-size:1.3rem;background:linear-gradient(135deg,#ff6b6b,#f0b90b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
@@ -14,20 +23,21 @@ body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-h
 .live-dot{width:8px;height:8px;border-radius:50%;background:#00ff88;animation:pulse 1.5s infinite}
 .live-text{font-size:.65rem;color:#00ff88;font-weight:600}
 .acct{font-size:.6rem;color:#8892a6;margin-top:2px}
-.refresh-btn{padding:6px 12px;background:#131722;border:1px solid #1e2530;border-radius:8px;color:#e8e8e8;font-size:.68rem;cursor:pointer;transition:.2s}
-.refresh-btn:hover{border-color:#ff6b6b}
+.refresh-btn{padding:6px 12px;background:#131722;border:1px solid #1e2530;border-radius:8px;color:#e8e8e8;font-size:.68rem;cursor:pointer;transition:.2s;-webkit-tap-highlight-color:transparent}
+.refresh-btn:active{border-color:#ff6b6b;transform:scale(.95)}
 .stats-row{display:flex;gap:8px;margin:14px 0}
 .stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:10px;text-align:center}
 .stat-num{font-size:1.2rem;font-weight:700}
 .stat-label{font-size:.58rem;color:#8892a6;margin-top:2px}
-.filter-row{display:flex;gap:6px;margin:14px 0}
-.filter-btn{padding:5px 12px;border-radius:8px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.68rem;color:#e8e8e8;transition:.2s}
+.filter-row{display:flex;gap:6px;margin:14px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.filter-btn{padding:5px 12px;border-radius:8px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.68rem;color:#e8e8e8;transition:.2s;white-space:nowrap;-webkit-tap-highlight-color:transparent}
 .filter-btn.active{background:linear-gradient(135deg,#ff6b6b,#f0b90b);color:#0a0e17;border:0;font-weight:600}
+.filter-btn:active{transform:scale(.95)}
 .loading{text-align:center;padding:40px;color:#8892a6;font-size:.78rem}
 .loading .spin{display:inline-block;width:22px;height:22px;border:3px solid #1e2530;border-top-color:#ff6b6b;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:8px}
 .email-list{margin:14px 0}
 .email-card{background:#131722;border:1px solid #1e2530;border-radius:10px;padding:14px;margin-bottom:8px;cursor:pointer;transition:.15s;position:relative}
-.email-card:hover{border-color:#ff6b6b}
+.email-card:active{border-color:#ff6b6b;transform:scale(.98)}
 .email-card.unread{border-left:3px solid #ff6b6b;background:#161b28}
 .email-row{display:flex;justify-content:space-between;align-items:flex-start}
 .email-from{font-size:.78rem;font-weight:600}
@@ -44,16 +54,15 @@ body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-h
 .tag-updates{background:rgba(108,92,231,.15);color:#6c5ce7}
 .tag-promotions{background:rgba(255,0,255,.1);color:#ff00ff}
 .empty{text-align:center;padding:40px;color:#8892a6;font-size:.78rem}
-
 /* Full email view */
-.email-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0e17;z-index:100;overflow-y:auto}
+.email-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0e17;z-index:100;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .email-view.show{display:block}
 .ev-header{position:sticky;top:0;background:#131722;border-bottom:1px solid #1e2530;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;z-index:10}
-.ev-back{background:none;border:none;color:#e8e8e8;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:6px}
-.ev-back:hover{color:#ff6b6b}
+.ev-back{background:none;border:none;color:#e8e8e8;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:6px;-webkit-tap-highlight-color:transparent}
+.ev-back:active{color:#ff6b6b}
 .ev-actions{display:flex;gap:8px}
-.ev-btn{padding:6px 12px;border-radius:8px;border:1px solid #1e2530;background:#0a0e17;color:#e8e8e8;font-size:.65rem;cursor:pointer;transition:.2s}
-.ev-btn:hover{border-color:#ff6b6b}
+.ev-btn{padding:6px 12px;border-radius:8px;border:1px solid #1e2530;background:#0a0e17;color:#e8e8e8;font-size:.65rem;cursor:pointer;transition:.2s;-webkit-tap-highlight-color:transparent}
+.ev-btn:active{border-color:#ff6b6b;transform:scale(.95)}
 .ev-btn.mark-read{border-color:rgba(0,255,136,.3);color:#00ff88;background:rgba(0,255,136,.05)}
 .ev-content{padding:16px;max-width:800px;margin:0 auto}
 .ev-subject{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:14px;line-height:1.3}
@@ -61,10 +70,9 @@ body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-h
 .ev-meta-row{display:flex;font-size:.72rem;margin-bottom:6px}
 .ev-meta-label{color:#8892a6;min-width:60px;font-weight:600}
 .ev-meta-value{color:#e8e8e8;flex:1;word-break:break-word}
-.ev-meta-value a{color:#00d4ff}
-.ev-avatar{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#ff6b6b,#f0b90b);color:#0a0e17;font-weight:700;font-size:.85rem;margin-right:10px;vertical-align:middle}
+.ev-avatar{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#ff6b6b,#f0b90b);color:#0a0e17;font-weight:700;font-size:.85rem;margin-right:10px;flex-shrink:0}
 .ev-from-display{display:flex;align-items:center;margin-bottom:10px}
-.ev-from-info{flex:1}
+.ev-from-info{flex:1;min-width:0}
 .ev-from-name{font-size:.85rem;font-weight:600;color:#fff}
 .ev-from-email{font-size:.65rem;color:#8892a6}
 .ev-body{background:#fff;color:#1a1a1a;border-radius:12px;padding:20px;font-size:.82rem;line-height:1.6;min-height:200px;overflow:hidden}
@@ -73,11 +81,12 @@ body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-h
 .ev-body a{color:#0066cc}
 .ev-body img{max-width:100%;height:auto;border-radius:8px}
 .ev-body table{max-width:100%}
-.ev-attachments{margin-top:14px;padding:12px;background:#131722;border:1px solid #1e2530;border-radius:8px}
-.ev-att-title{font-size:.65rem;color:#8892a6;margin-bottom:8px;font-weight:600}
-.ev-att-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#0a0e17;border-radius:6px;margin-bottom:4px;font-size:.68rem}
 .new-banner{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:8px;margin-bottom:10px;text-align:center;font-size:.68rem;color:#ff6b6b;display:none}
 .new-banner.show{display:block}
+.install-banner{position:fixed;bottom:0;left:0;width:100%;background:#131722;border-top:1px solid #ff6b6b;padding:14px 16px;display:none;z-index:50}
+.install-banner.show{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.install-text{font-size:.72rem;color:#e8e8e8}
+.install-btn{padding:8px 16px;background:linear-gradient(135deg,#ff6b6b,#f0b90b);border:none;border-radius:8px;color:#0a0e17;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap}
 .footer{text-align:center;padding:20px 0;font-size:.6rem;color:#8892a6}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
@@ -93,246 +102,218 @@ body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-h
 <div class="badge">
 <div class="live-dot"></div>
 <div class="live-text">LIVE</div>
-<button class="refresh-btn" onclick="loadEmails()">↻ Refresh</button>
+<button class="refresh-btn" onclick="loadEmails()">↻</button>
 </div>
 </div>
-
 <div class="stats-row">
 <div class="stat-card"><div class="stat-num" id="statUnread" style="color:#ff6b6b">—</div><div class="stat-label">Unread</div></div>
 <div class="stat-card"><div class="stat-num" id="statTotal" style="color:#00d4ff">—</div><div class="stat-label">Total</div></div>
 <div class="stat-card"><div class="stat-num" id="statImportant" style="color:#f0b90b">—</div><div class="stat-label">Important</div></div>
 </div>
-
 <div class="filter-row">
 <div class="filter-btn active" onclick="filterEmails('all',this)">📥 All</div>
 <div class="filter-btn" onclick="filterEmails('unread',this)">🔴 Unread</div>
 <div class="filter-btn" onclick="filterEmails('important',this)">⭐ Important</div>
 <div class="filter-btn" onclick="filterEmails('personal',this)">👤 Personal</div>
 </div>
-
 <div class="new-banner" id="newBanner">✨ New messages detected!</div>
-
 <div class="email-list" id="emailList">
 <div class="loading"><div class="spin"></div><div>Loading your inbox...</div></div>
 </div>
-
-<div class="footer">HARZ Digital Services • Gmail Dashboard • CAC RC: 321424</div>
+<div class="footer">HARZ Digital Services • Gmail Dashboard</div>
 </div>
-
 <!-- Full Email View -->
 <div class="email-view" id="emailView">
 <div class="ev-header">
-<button class="ev-back" onclick="closeEmail()">← Back to Inbox</button>
+<button class="ev-back" onclick="closeEmail()">← Back</button>
 <div class="ev-actions">
-<button class="ev-btn mark-read" id="evMarkRead" onclick="markReadCurrent()">✓ Mark Read</button>
-<button class="ev-btn" onclick="window.open('https://mail.google.com')">Open in Gmail →</button>
+<button class="ev-btn mark-read" id="evMarkRead" onclick="markReadCurrent()">✓ Read</button>
+<button class="ev-btn" onclick="window.open('https://mail.google.com')">Gmail →</button>
 </div>
 </div>
 <div class="ev-content" id="evContent"></div>
 </div>
-
+<!-- Install banner -->
+<div class="install-banner" id="installBanner">
+<div class="install-text">📲 Install HARZ Mailbox on your phone</div>
+<button class="install-btn" id="installBtn">Install</button>
+</div>
 <script>
 const API_URL = 'https://superagent-2286fb2f.base44.app/functions/harzMailbox';
 let allEmails = [];
 let currentFilter = 'all';
 let currentEmailId = null;
+let deferredPrompt = null;
+
+// PWA install
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBanner').classList.add('show');
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('installBanner').classList.remove('show');
+  }
+});
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('https://rabiuhamza11.github.io/harz-portfolio/mailbox-sw.js').catch(() => {});
+}
 
 async function loadEmails() {
-const list = document.getElementById('emailList');
-list.innerHTML = '<div class="loading"><div class="spin"></div><div>Loading your inbox...</div></div>';
-try {
-const res = await fetch(`${API_URL}?action=inbox&max=20`);
-const data = await res.json();
-if (!data.messages || data.messages.length === 0) {
-list.innerHTML = '<div class="empty">📭 No emails found</div>';
-return;
-}
-allEmails = data.messages;
-updateStats(data);
-renderEmails();
-} catch (err) {
-list.innerHTML = '<div class="empty">⚠️ Error: ' + err.message + '</div>';
-}
+  const list = document.getElementById('emailList');
+  list.innerHTML = '<div class="loading"><div class="spin"></div><div>Loading your inbox...</div></div>';
+  try {
+    const res = await fetch(`${API_URL}?action=inbox&max=20`);
+    const data = await res.json();
+    if (!data.messages || data.messages.length === 0) {
+      list.innerHTML = '<div class="empty">📭 No emails found</div>';
+      return;
+    }
+    allEmails = data.messages;
+    updateStats(data);
+    renderEmails();
+  } catch (err) {
+    list.innerHTML = '<div class="empty">⚠️ Error: ' + err.message + '</div>';
+  }
 }
 
 function updateStats(data) {
-document.getElementById('statUnread').textContent = data.unreadCount || 0;
-document.getElementById('statTotal').textContent = data.count || 0;
-const imp = (data.messages || []).filter(m => m.important).length;
-document.getElementById('statImportant').textContent = imp;
+  document.getElementById('statUnread').textContent = data.unreadCount || 0;
+  document.getElementById('statTotal').textContent = data.count || 0;
+  const imp = (data.messages || []).filter(m => m.important).length;
+  document.getElementById('statImportant').textContent = imp;
 }
 
 function renderEmails() {
-const list = document.getElementById('emailList');
-let emails = allEmails;
-if (currentFilter === 'unread') emails = emails.filter(e => e.unread);
-else if (currentFilter === 'important') emails = emails.filter(e => e.important);
-else if (currentFilter === 'personal') emails = emails.filter(e => e.labels && (e.labels.includes('CATEGORY_PERSONAL') || e.labels.includes('IMPORTANT')));
-
-if (emails.length === 0) {
-list.innerHTML = '<div class="empty">📭 No emails match this filter</div>';
-return;
-}
-
-list.innerHTML = emails.map(email => {
-const tags = (email.labels || []).map(l => {
-if (l === 'UNREAD') return '<span class="email-tag tag-unread">UNREAD</span>';
-if (l === 'IMPORTANT') return '<span class="email-tag tag-important">⭐ IMPORTANT</span>';
-if (l === 'CATEGORY_PERSONAL') return '<span class="email-tag tag-personal">PERSONAL</span>';
-if (l === 'CATEGORY_UPDATES') return '<span class="email-tag tag-updates">UPDATES</span>';
-if (l === 'CATEGORY_PROMOTIONS') return '<span class="email-tag tag-promotions">PROMO</span>';
-return '';
-}).join('');
-
-return '<div class="email-card ' + (email.unread ? 'unread' : '') + '" onclick="openEmail(\'' + email.id + '\')">' +
-'<div class="email-row">' +
-'<div class="email-from ' + (email.unread ? 'unread-text' : '') + '">' + esc(email.fromName) + '</div>' +
-'<div class="email-date">' + formatDate(email.date) + '</div>' +
-'</div>' +
-'<div class="email-subject ' + (email.unread ? 'unread-text' : '') + '">' + esc(email.subject) + '</div>' +
-'<div class="email-snippet">' + esc(email.snippet) + '</div>' +
-(tags ? '<div class="email-tags">' + tags + '</div>' : '') +
-'</div>';
-}).join('');
+  const list = document.getElementById('emailList');
+  let emails = allEmails;
+  if (currentFilter === 'unread') emails = emails.filter(e => e.unread);
+  else if (currentFilter === 'important') emails = emails.filter(e => e.important);
+  else if (currentFilter === 'personal') emails = emails.filter(e => e.labels && (e.labels.includes('CATEGORY_PERSONAL') || e.labels.includes('IMPORTANT')));
+  if (emails.length === 0) { list.innerHTML = '<div class="empty">📭 No emails match this filter</div>'; return; }
+  list.innerHTML = emails.map(email => {
+    const tags = (email.labels || []).map(l => {
+      if (l === 'UNREAD') return '<span class="email-tag tag-unread">UNREAD</span>';
+      if (l === 'IMPORTANT') return '<span class="email-tag tag-important">⭐</span>';
+      if (l === 'CATEGORY_PERSONAL') return '<span class="email-tag tag-personal">PERSONAL</span>';
+      if (l === 'CATEGORY_UPDATES') return '<span class="email-tag tag-updates">UPDATES</span>';
+      if (l === 'CATEGORY_PROMOTIONS') return '<span class="email-tag tag-promotions">PROMO</span>';
+      return '';
+    }).join('');
+    return '<div class="email-card ' + (email.unread ? 'unread' : '') + '" onclick="openEmail(\'' + email.id + '\')">' +
+      '<div class="email-row"><div class="email-from ' + (email.unread ? 'unread-text' : '') + '">' + esc(email.fromName) + '</div><div class="email-date">' + formatDate(email.date) + '</div></div>' +
+      '<div class="email-subject ' + (email.unread ? 'unread-text' : '') + '">' + esc(email.subject) + '</div>' +
+      '<div class="email-snippet">' + esc(email.snippet) + '</div>' +
+      (tags ? '<div class="email-tags">' + tags + '</div>' : '') +
+      '</div>';
+  }).join('');
 }
 
 function openEmail(id) {
-const email = allEmails.find(e => e.id === id);
-if (!email) return;
-currentEmailId = id;
-
-const view = document.getElementById('emailView');
-const content = document.getElementById('evContent');
-
-// Build the full email display
-let bodyDisplay = '';
-if (email.hasHtml && email.bodyHtml) {
-// Render HTML email safely in an iframe
-bodyDisplay = '<div class="ev-body html-mode" id="evBody"></div>';
-} else {
-// Plain text
-const bodyText = email.body || email.snippet || '(No content)';
-bodyDisplay = '<div class="ev-body"><pre>' + esc(bodyText) + '</pre></div>';
+  const email = allEmails.find(e => e.id === id);
+  if (!email) return;
+  currentEmailId = id;
+  let bodyDisplay = '';
+  if (email.hasHtml && email.bodyHtml) {
+    bodyDisplay = '<div class="ev-body html-mode" id="evBody"></div>';
+  } else {
+    const bodyText = email.body || email.snippet || '(No content)';
+    bodyDisplay = '<div class="ev-body"><pre>' + esc(bodyText) + '</pre></div>';
+  }
+  document.getElementById('evContent').innerHTML =
+    '<div class="ev-subject">' + esc(email.subject) + '</div>' +
+    '<div class="ev-meta">' +
+    '<div class="ev-from-display"><div class="ev-avatar">' + getInitials(email.fromName) + '</div><div class="ev-from-info"><div class="ev-from-name">' + esc(email.fromName) + '</div><div class="ev-from-email">' + esc(email.fromEmail) + '</div></div></div>' +
+    '<div class="ev-meta-row"><div class="ev-meta-label">Date</div><div class="ev-meta-value">' + esc(email.date) + '</div></div>' +
+    '<div class="ev-meta-row"><div class="ev-meta-label">To</div><div class="ev-meta-value">' + esc(email.to) + '</div></div>' +
+    (email.cc ? '<div class="ev-meta-row"><div class="ev-meta-label">Cc</div><div class="ev-meta-value">' + esc(email.cc) + '</div></div>' : '') +
+    '</div>' + bodyDisplay;
+  if (email.hasHtml && email.bodyHtml) {
+    const bodyDiv = document.getElementById('evBody');
+    const iframe = document.createElement('iframe');
+    iframe.style.width = '100%'; iframe.style.border = 'none'; iframe.style.minHeight = '400px';
+    iframe.onload = function() {
+      try {
+        iframe.contentDocument.write(email.bodyHtml);
+        iframe.contentDocument.body.style.fontFamily = 'Georgia, serif';
+        iframe.contentDocument.body.style.fontSize = '14px';
+        iframe.contentDocument.body.style.lineHeight = '1.6';
+        iframe.contentDocument.body.style.color = '#1a1a1a';
+        iframe.contentDocument.body.style.margin = '0';
+        iframe.style.height = iframe.contentDocument.body.scrollHeight + 50 + 'px';
+      } catch(e) { bodyDiv.innerHTML = '<pre>' + esc(email.bodyHtml) + '</pre>'; }
+    };
+    bodyDiv.appendChild(iframe);
+  }
+  document.getElementById('evMarkRead').style.display = email.unread ? 'inline-block' : 'none';
+  document.getElementById('emailView').classList.add('show');
+  window.scrollTo(0, 0);
 }
 
-content.innerHTML =
-'<div class="ev-subject">' + esc(email.subject) + '</div>' +
-'<div class="ev-meta">' +
-'<div class="ev-from-display">' +
-'<div class="ev-avatar">' + getInitials(email.fromName) + '</div>' +
-'<div class="ev-from-info">' +
-'<div class="ev-from-name">' + esc(email.fromName) + '</div>' +
-'<div class="ev-from-email">' + esc(email.fromEmail) + '</div>' +
-'</div>' +
-'</div>' +
-'<div class="ev-meta-row"><div class="ev-meta-label">Date</div><div class="ev-meta-value">' + esc(email.date) + '</div></div>' +
-'<div class="ev-meta-row"><div class="ev-meta-label">To</div><div class="ev-meta-value">' + esc(email.to) + '</div></div>' +
-(email.cc ? '<div class="ev-meta-row"><div class="ev-meta-label">Cc</div><div class="ev-meta-value">' + esc(email.cc) + '</div></div>' : '') +
-'</div>' +
-bodyDisplay;
-
-// If HTML email, inject into iframe for safe rendering
-if (email.hasHtml && email.bodyHtml) {
-const bodyDiv = document.getElementById('evBody');
-const iframe = document.createElement('iframe');
-iframe.style.width = '100%';
-iframe.style.border = 'none';
-iframe.style.minHeight = '400px';
-iframe.onload = function() {
-try {
-iframe.contentDocument.write(email.bodyHtml);
-iframe.contentDocument.body.style.fontFamily = 'Georgia, serif';
-iframe.contentDocument.body.style.fontSize = '14px';
-iframe.contentDocument.body.style.lineHeight = '1.6';
-iframe.contentDocument.body.style.color = '#1a1a1a';
-iframe.contentDocument.body.style.margin = '0';
-// Auto-resize
-iframe.style.height = iframe.contentDocument.body.scrollHeight + 50 + 'px';
-} catch(e) {
-bodyDiv.innerHTML = '<pre>' + esc(email.bodyHtml) + '</pre>';
-}
-};
-bodyDiv.appendChild(iframe);
-}
-
-// Show/hide mark read button
-document.getElementById('evMarkRead').style.display = email.unread ? 'inline-block' : 'none';
-
-// Show the full view
-view.classList.add('show');
-window.scrollTo(0, 0);
-}
-
-function closeEmail() {
-document.getElementById('emailView').classList.remove('show');
-currentEmailId = null;
-}
+function closeEmail() { document.getElementById('emailView').classList.remove('show'); currentEmailId = null; }
 
 async function markReadCurrent() {
-if (!currentEmailId) return;
-try {
-await fetch(`${API_URL}?action=read&id=${currentEmailId}`);
-const email = allEmails.find(e => e.id === currentEmailId);
-if (email) {
-email.unread = false;
-email.labels = (email.labels || []).filter(l => l !== 'UNREAD');
-}
-document.getElementById('evMarkRead').style.display = 'none';
-renderEmails();
-updateStats({ messages: allEmails, count: allEmails.length, unreadCount: allEmails.filter(e => e.unread).length });
-} catch (err) {
-alert('Failed to mark as read');
-}
+  if (!currentEmailId) return;
+  try {
+    await fetch(`${API_URL}?action=read&id=${currentEmailId}`);
+    const email = allEmails.find(e => e.id === currentEmailId);
+    if (email) { email.unread = false; email.labels = (email.labels || []).filter(l => l !== 'UNREAD'); }
+    document.getElementById('evMarkRead').style.display = 'none';
+    renderEmails();
+    updateStats({ messages: allEmails, count: allEmails.length, unreadCount: allEmails.filter(e => e.unread).length });
+  } catch (err) { alert('Failed to mark as read'); }
 }
 
 function filterEmails(filter, el) {
-document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-el.classList.add('active');
-currentFilter = filter;
-renderEmails();
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter = filter;
+  renderEmails();
 }
 
 function formatDate(dateStr) {
-if (!dateStr) return '';
-const d = new Date(dateStr);
-const now = new Date();
-const diff = now - d;
-if (diff < 60000) return 'Just now';
-if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
-if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
-return d.toLocaleDateString('en-US', {month:'short',day:'numeric'});
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60000) return 'now';
+  if (diff < 3600000) return Math.floor(diff/60000) + 'm';
+  if (diff < 86400000) return Math.floor(diff/3600000) + 'h';
+  return d.toLocaleDateString('en-US', {month:'short',day:'numeric'});
 }
 
 function getInitials(name) {
-if (!name) return '?';
-const parts = name.trim().split(/\s+/);
-if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
-return name[0].toUpperCase();
+  if (!name) return '?';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name[0].toUpperCase();
 }
 
-function esc(text) {
-const div = document.createElement('div');
-div.textContent = text || '';
-return div.innerHTML;
-}
+function esc(text) { const div = document.createElement('div'); div.textContent = text || ''; return div.innerHTML; }
 
 // Auto-refresh every 60 seconds
 setInterval(async () => {
-try {
-const res = await fetch(`${API_URL}?action=inbox&max=20`);
-const data = await res.json();
-if (data.messages) {
-const newUnread = data.messages.filter(m => m.unread && !allEmails.find(e => e.id === m.id));
-if (newUnread.length > 0) {
-const banner = document.getElementById('newBanner');
-banner.classList.add('show');
-setTimeout(() => banner.classList.remove('show'), 3000);
-allEmails = data.messages;
-updateStats(data);
-renderEmails();
-}
-}
-} catch(e) {}
+  try {
+    const res = await fetch(`${API_URL}?action=inbox&max=20`);
+    const data = await res.json();
+    if (data.messages) {
+      const newUnread = data.messages.filter(m => m.unread && !allEmails.find(e => e.id === m.id));
+      if (newUnread.length > 0) {
+        const banner = document.getElementById('newBanner');
+        banner.classList.add('show');
+        setTimeout(() => banner.classList.remove('show'), 3000);
+        allEmails = data.messages;
+        updateStats(data);
+        renderEmails();
+      }
+    }
+  } catch(e) {}
 }, 60000);
 
 // Initial load
