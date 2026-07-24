@@ -228,6 +228,11 @@ body{font-family:'SF Pro Display',system-ui,-apple-system,sans-serif;background:
 
 <!-- P2P PAGE -->
 <div id="page-p2p" class="page">
+<div style="margin:12px 14px;background:linear-gradient(135deg,rgba(240,185,11,.08),rgba(14,203,129,.04));border:1px solid rgba(240,185,11,.2);border-radius:12px;padding:12px;text-align:center">
+<div style="font-size:.72rem;font-weight:700;color:var(--p1)">🚀 Start Trading Now</div>
+<div style="font-size:.58rem;color:var(--muted);margin:4px 0 8px">Buy BTC, ETH, USDT, GDEG with Naira. Pay via bank transfer, Paystack, or GDEG. Escrow protected.</div>
+<a href="https://wa.me/2348028687857?text=I%20want%20to%20start%20trading%20on%20Harz%20Exchange" target="_blank" style="display:inline-block;padding:6px 16px;border-radius:8px;background:#25d366;color:#fff;font-size:.62rem;font-weight:600;text-decoration:none">💬 Chat on WhatsApp to begin</a>
+</div>
 <div class="filter-bar">
 <div class="filter-chip active" onclick="filterP2P(this,'all')">All</div>
 <div class="filter-chip" onclick="filterP2P(this,'buy')">Buy Crypto</div>
@@ -559,6 +564,7 @@ ${selectedAd.payment_methods.split(',').map(m=>`<option>${m.trim()}</option>`).j
 </div>
 <button class="btn-trade btn-buy" onclick="startP2PTrade()">Start Trade</button>
 <div style="font-size:.54rem;color:var(--muted);margin-top:8px;text-align:center">🔒 Escrow protected · Crypto held until payment confirmed</div>
+<a href="https://wa.me/2348028687857?text=Hi%20I%20want%20to%20trade%20on%20Harz%20Exchange" target="_blank" style="display:block;text-align:center;margin-top:8px;padding:6px;border-radius:8px;background:rgba(37,211,102,.1);color:#25d366;font-size:.58rem;font-weight:600;text-decoration:none">💬 Contact Harz on WhatsApp</a>
 </div>`;
 document.getElementById('p2pDetailContent').innerHTML=content;
 }
@@ -579,23 +585,45 @@ try{
 const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'start_p2p_trade',ad_id:selectedAd.ad_id,crypto_amount:crypto,fiat_amount:fiat,payment_method:pm,buyer_email:'harzco.business@gmail.com',buyer_name:'Harz Digital Services',buyer_phone:'08028687857'})});
 const d=await r.json();
 if(d.status==='ok'){
-alert('Trade created: '+d.trade.trade_id+'\n\nNext: Pay '+fmtN(fiat)+' via '+pm+'\n\nSeller: '+selectedAd.user_name+'\nPhone: '+selectedAd.user_phone);
-showTradeProgress(d.trade);
+showTradeProgress(d.trade, d.payment_instructions);
 }else{alert('Error: '+d.message)}
 }catch(e){alert('Network error')}
 }
 
-function showTradeProgress(trade){
+let currentTradeData=null;
+function showTradeProgress(trade, paymentInfo){
+currentTradeData={trade,paymentInfo};
+let payDetails='';
+if(trade.payment_method==='Bank Transfer'){
+payDetails=`<div style="background:var(--card2);border-radius:8px;padding:10px;margin:8px 0">
+<div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Pay to UBA Bank:</div>
+<div style="font-size:.75rem;font-weight:700">Rabiu Hamza Mohammed</div>
+<div style="font-size:.8rem;font-weight:700;color:var(--p1)">2034326424</div>
+<div style="font-size:.55rem;color:var(--muted)">UBA Bank · Nigeria</div>
+</div>`;
+}else if(trade.payment_method==='GDEG'){
+payDetails=`<div style="background:var(--card2);border-radius:8px;padding:10px;margin:8px 0">
+<div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Send GDEG to (Polygon):</div>
+<div style="font-size:.62rem;font-weight:600;font-family:monospace;word-break:break-all">0xdE2c45A0c25dC290aF51347f95D82EBbe51fe3C1</div>
+<div style="font-size:.55rem;color:var(--muted);margin-top:4px">Network: Polygon · 10% fee discount</div>
+</div>`;
+}else{
+payDetails=`<div style="background:var(--card2);border-radius:8px;padding:10px;margin:8px 0">
+<div style="font-size:.6rem;color:var(--muted)">Payment via ${trade.payment_method}</div>
+<div style="font-size:.6rem;color:var(--muted);margin-top:4px">Contact seller for details: 08028687857</div>
+</div>`;
+}
 const content=`
 <div class="p2p-card">
-<div style="font-size:.7rem;font-weight:600;margin-bottom:8px">Trade ${trade.trade_id}</div>
+<div style="font-size:.7rem;font-weight:600;margin-bottom:4px">Trade ${trade.trade_id}</div>
 <div style="font-size:.62rem;color:var(--muted);margin-bottom:8px">Status: <span class="pill yellow">Payment Pending</span></div>
-<div style="font-size:.68rem;font-weight:600;margin:10px 0 4px">Send Payment</div>
-<div style="font-size:.6rem;color:var(--muted);line-height:1.6">
-Method: ${trade.payment_method}<br>
-Amount: ${fmtN(trade.fiat_amount)}<br>
-Crypto: ${trade.crypto_amount} ${trade.crypto_symbol}<br>
-Rate: ${fmtN(trade.price_per_unit)} NGN/${trade.crypto_symbol}
+<div style="font-size:.68rem;font-weight:600;margin:8px 0 4px">Pay ${fmtN(trade.fiat_amount)}</div>
+${payDetails}
+<div style="font-size:.56rem;color:var(--muted);line-height:1.6;margin-top:8px">
+You are ${trade.trade_type==='sell'?'buying':'selling'}: ${trade.crypto_amount} ${trade.crypto_symbol}<br>
+Rate: ${fmtN(trade.price_per_unit)} NGN/${trade.crypto_symbol}<br>
+Seller: Harz Digital Services · KYC L3<br>
+⏰ Complete payment within 30 minutes
 </div>
 </div>
 <div class="escrow-flow">
@@ -608,8 +636,9 @@ Rate: ${fmtN(trade.price_per_unit)} NGN/${trade.crypto_symbol}
 <div class="escrow-step"><div class="escrow-dot pending">4</div>Release</div>
 </div>
 <div class="trade-box">
-<div style="font-size:.62rem;color:var(--muted);margin-bottom:10px">After sending payment, click "I've Paid" to notify the seller.</div>
-<button class="btn-trade btn-buy" onclick="confirmPayment('${trade.trade_id}')">I've Paid — Notify Seller</button>
+<div style="font-size:.58rem;color:var(--muted);margin-bottom:6px">After sending payment, click below. Crypto is locked in escrow until seller confirms.</div>
+<button class="btn-trade btn-buy" onclick="confirmPayment('${trade.trade_id}')">✓ I've Paid — Notify Seller</button>
+<a href="https://wa.me/2348028687857?text=Hi%20I%20just%20started%20trade%20${trade.trade_id}%20on%20Harz%20Exchange" target="_blank" style="display:block;text-align:center;margin-top:8px;padding:8px;border-radius:8px;background:rgba(37,211,102,.1);color:#25d366;font-size:.65rem;font-weight:600;text-decoration:none">💬 Chat seller on WhatsApp</a>
 </div>`;
 document.getElementById('p2pDetailContent').innerHTML=content;
 }
