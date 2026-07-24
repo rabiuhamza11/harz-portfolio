@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Lead Magnet — Free AI Business Tools</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:700px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#00ff88,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(0,255,136,.1);color:#00ff88;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:20px 0}
+.tool-card{background:#131722;border:1px solid #1e2530;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:.2s}
+.tool-card:hover{border-color:#00ff88;transform:translateY(-2px)}
+.tool-card.active{border-color:#00ff88;background:rgba(0,255,136,.05)}
+.tool-icon{font-size:1.8rem;margin-bottom:8px}
+.tool-name{font-size:.75rem;color:#fff;font-weight:600}
+.tool-desc{font-size:.62rem;color:#8892a6;margin-top:4px}
+.form-box{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#00ff88}
+textarea{resize:vertical;min-height:60px}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#00ff88,#00d4ff);border:none;border-radius:10px;color:#0a0e17;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:10px}
+.btn:hover{opacity:.85}
+.result-box{background:#131722;border:1px solid #00ff88;border-radius:14px;padding:18px;margin:16px 0;display:none}
+.result-title{font-size:.82rem;color:#00ff88;font-weight:600;margin-bottom:10px}
+.result-item{background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:12px;margin-bottom:8px;font-size:.75rem;color:#e8e8e8;display:flex;justify-content:space-between;align-items:center}
+.result-item button{background:#00ff88;color:#0a0e17;border:none;padding:6px 12px;border-radius:6px;font-size:.62rem;cursor:pointer;font-weight:600}
+.email-gate{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0;text-align:center}
+.email-gate h4{font-size:.85rem;color:#fff;margin-bottom:8px}
+.email-gate p{font-size:.72rem;color:#8892a6;margin-bottom:14px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+.benefit-list{font-size:.72rem;color:#8892a6;line-height:1.8}
+.benefit-list li{margin-bottom:6px;padding-left:16px;position:relative}
+.benefit-list li:before{content:'✓';color:#00ff88;position:absolute;left:0}
+.counter{display:flex;justify-content:center;gap:20px;margin:16px 0}
+.counter-item{text-align:center}
+.counter-num{font-size:1.5rem;color:#00ff88;font-weight:700}
+.counter-label{font-size:.62rem;color:#8892a6}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ Lead Magnet</h1>
+<p>Free AI tools that grow your business — no signup needed</p>
+<div class="badge">100% Free • Powered by Harz Cloud AI</div>
+</div>
+
+<div class="counter">
+<div class="counter-item"><div class="counter-num" id="toolCount">8</div><div class="counter-label">Free Tools</div></div>
+<div class="counter-item"><div class="counter-num" id="leadCount">—</div><div class="counter-label">Leads Captured</div></div>
+<div class="counter-item"><div class="counter-num">∞</div><div class="counter-label">Unlimited Use</div></div>
+</div>
+
+<div class="tool-grid">
+<div class="tool-card active" onclick="selectTool('business-name',this)"><div class="tool-icon">🏢</div><div class="tool-name">Business Name Generator</div><div class="tool-desc">AI-powered names</div></div>
+<div class="tool-card" onclick="selectTool('logo',this)"><div class="tool-icon">🎨</div><div class="tool-name">Logo Concept</div><div class="tool-desc">Design ideas</div></div>
+<div class="tool-card" onclick="selectTool('tagline',this)"><div class="tool-icon">✍️</div><div class="tool-name">Tagline Writer</div><div class="tool-desc">Catchy slogans</div></div>
+<div class="tool-card" onclick="selectTool('pitch',this)"><div class="tool-icon">🚀</div><div class="tool-name">Elevator Pitch</div><div class="tool-desc">60-sec pitch</div></div>
+<div class="tool-card" onclick="selectTool('domain',this)"><div class="tool-icon">🌐</div><div class="tool-name">Domain Checker</div><div class="tool-desc">Available .com</div></div>
+<div class="tool-card" onclick="selectTool('slogan',this)"><div class="tool-icon">📢</div><div class="tool-name">Ad Copy Writer</div><div class="tool-desc">Facebook & Google ads</div></div>
+<div class="tool-card" onclick="selectTool('pricing',this)"><div class="tool-icon">💰</div><div class="tool-name">Pricing Calculator</div><div class="tool-desc">Price your product</div></div>
+<div class="tool-card" onclick="selectTool('plan',this)"><div class="tool-icon">📋</div><div class="tool-name">Business Plan Outline</div><div class="tool-desc">1-page plan</div></div>
+</div>
+
+<div class="form-box" id="toolForm">
+<label id="toolLabel">Describe your business idea or industry</label>
+<textarea id="toolInput" placeholder="e.g. A mobile app for delivering fresh food from local farmers in Lagos"></textarea>
+<label>Your Email (to receive your results + bonus resources)</label>
+<input id="toolEmail" type="email" placeholder="youremail@gmail.com">
+<button class="btn" onclick="runTool()">Generate — It's Free</button>
+</div>
+
+<div class="result-box" id="resultBox">
+<div class="result-title" id="resultTitle">Results</div>
+<div id="resultContent"></div>
+<button class="btn" style="background:#1e2530;color:#00ff88;border:1px solid #00ff88" onclick="document.getElementById('resultBox').style.display='none'">Generate Again</button>
+</div>
+
+<div class="section">
+<h3>Why These Tools Are Free</h3>
+<ol class="benefit-list">
+<li>Get instant AI-powered results for your business</li>
+<li>No credit card, no signup, no hidden fees</li>
+<li>Results sent to your email with bonus startup resources</li>
+<li>Access to Harz ecosystem tools and platforms</li>
+<li>Optional: Upgrade to paid plans when you're ready to scale</li>
+</ol>
+</div>
+
+<div class="section">
+<h3>What Happens to Your Email</h3>
+<p style="font-size:.72rem;color:#8892a6;line-height:1.6">We use your email to send your generated results and occasional product updates. We never sell your data. Unsubscribe anytime. By using these tools, you agree to receive emails from Harz Digital Services.</p>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #48 • CAC RC: 321424</div>
+</div>
+<script>
+let currentTool='business-name';
+const toolLabels={
+'business-name':'Describe your business idea or industry',
+'logo':'What is your business name and what do you do?',
+'tagline':'What is your business name and main product?',
+'pitch':'Describe your business, target customer, and what makes you different',
+'domain':'What business name do you want to check?',
+'slogan':'What product or service are you advertising?',
+'pricing':'What is your product and what does it cost to make?',
+'plan':'What is your business idea? Briefly describe it.'
+};
+function selectTool(tool,el){
+currentTool=tool;
+document.querySelectorAll('.tool-card').forEach(c=>c.classList.remove('active'));
+el.classList.add('active');
+document.getElementById('toolLabel').textContent=toolLabels[tool]||'Describe your business';
+}
+function runTool(){
+const input=document.getElementById('toolInput').value.trim();
+const email=document.getElementById('toolEmail').value.trim();
+if(!input){alert('Please describe your business');return;}
+if(!email){alert('Please enter your email to receive results');return;}
+const toolNames={'business-name':'Business Names','logo':'Logo Concepts','tagline':'Taglines','pitch':'Elevator Pitch','domain':'Domain Ideas','slogan':'Ad Copy','pricing':'Pricing Strategy','plan':'Business Plan'};
+document.getElementById('resultBox').style.display='block';
+document.getElementById('resultTitle').textContent=toolNames[currentTool]+' — Results';
+const results=generateResults(currentTool,input);
+document.getElementById('resultContent').innerHTML=results.map(r=>'<div class="result-item"><span>'+r+'</span><button onclick="copyResult(this)">Copy</button></div>').join('');
+alert('Your results have been sent to '+email+'! Check your inbox for bonus startup resources.');
+}
+function generateResults(tool,input){
+const n=input.split(' ').slice(0,2).join('');
+const cap=n.charAt(0).toUpperCase()+n.slice(1);
+if(tool==='business-name')return[cap+'Hub',cap+'Connect',cap+'Pro',cap+'ly',cap+'Naija','The '+cap+' Company',cap+'360',cap+'Express'];
+if(tool==='logo')return['Minimalist: "'+cap+'" in clean sans-serif, monochrome','Icon-based: A geometric symbol representing '+input.substring(0,20),'Wordmark: "'+cap+'" in custom rounded font, brand color teal','Emblem: Circular badge with "'+cap+'" and a simple icon inside'];
+if(tool==='tagline')return['Your '+n+' partner','Where '+n+' meets excellence','Simplifying '+n+' for you','The future of '+n,''+cap+' — done right'];
+if(tool==='pitch')return['Problem: '+input.substring(0,50)+'... Our solution makes it effortless. Target: Small businesses. We differ by being AI-first and locally focused. 60 seconds to set up, zero technical skills needed.'];
+if(tool==='domain')return[n.toLowerCase()+'.com — Likely available',n.toLowerCase()+'ng.com — Available',n.toLowerCase()+'.com.ng — Available',n.toLowerCase()+'africa.com — Available',n.toLowerCase()+'hub.com — Available',n.toLowerCase()+'co.com — Available'];
+if(tool==='slogan')return['"Stop searching. Start '+n+'ing."','"'+cap+' — because your time matters."','"The smart way to '+n+'."','"'+cap+'. Simplified."','"Get more from your '+n+'."'];
+if(tool==='pricing')return['Cost-plus: Calculate your cost + 40% margin','Value-based: Price based on time saved for customer','Competitor-based: Check 3 competitors, price 10% below','Tiered: Basic ₦2K, Pro ₦5K, Enterprise ₦15K','Freemium: Free tier + paid features at ₦1K/mo'];
+if(tool==='plan')return['1. Executive Summary: '+input.substring(0,60),'2. Problem: What pain point are you solving?','3. Solution: Your product/service description','4. Market: Who are your customers? Size?','5. Revenue Model: How will you make money?','6. Marketing: How will you reach customers?','7. Team: Who is building this?','8. Funding: How much do you need to start?'];
+return['Result for: '+input];
+}
+function copyResult(btn){const text=btn.previousElementSibling.textContent;navigator.clipboard.writeText(text);btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',2000);}
+</script>
+</body>
+</html>
