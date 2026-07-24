@@ -497,7 +497,7 @@ showFallback(url);
 function showFallback(url){
 document.getElementById('browserFrame').style.display='none';
 document.getElementById('browserFallback').classList.add('show');
-document.getElementById('fallbackUrl').textContent='The site '+url+' doesn\\'t allow embedding for security. Open it in a new tab instead.';
+document.getElementById('fallbackUrl').textContent='The site '+url+' doesn\'t allow embedding for security. Open it in a new tab instead.';
 document.getElementById('fallbackLink').href=url;
 }
 
@@ -575,7 +575,7 @@ if(!found){
 if(lowerQ.includes('search')){
 response='I can search the web for you! Go to the Search tab, type your query, and select your preferred search engine (Google, Bing, DuckDuckGo, YouTube, or Wikipedia). Results open right here in the browser.';
 }else if(lowerQ.includes('hello')||lowerQ.includes('hi')||lowerQ.includes('salam')){
-response='Salam! 👋 I\\'m Magani, your AI assistant. I can help you explore the Harz ecosystem, search the web, answer questions about our 39 platforms, or just chat. What would you like to know?';
+response='Salam! 👋 I\'m Magani, your AI assistant. I can help you explore the Harz ecosystem, search the web, answer questions about our 39 platforms, or just chat. What would you like to know?';
 }else if(lowerQ.includes('buy')||lowerQ.includes('purchase')||lowerQ.includes('shop')){
 response='You can buy Harz products through multiple channels: 1) HarzDM Marketplace 2) Gumroad (international) 3) Getly Store (Nigerian) 4) Selar (direct Nigerian sales) 5) WhatsApp direct (08028687857). We accept UBA bank transfer, USDT, GDEG token, and Paystack.';
 }else{
