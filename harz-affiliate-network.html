@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Affiliate Network — Earn While You Share</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#f0b90b,#00ff88);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(240,185,11,.1);color:#f0b90b;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:14px;text-align:center}
+.stat-num{font-size:1.3rem;color:#f0b90b;font-weight:700}
+.stat-label{font-size:.65rem;color:#8892a6;margin-top:4px}
+.form-box{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.form-row{margin-bottom:12px}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78px}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#f0b90b,#00ff88);border:none;border-radius:10px;color:#0a0e17;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:8px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+.link-box{background:#0a0e17;border:1px dashed #f0b90b;border-radius:10px;padding:14px;margin:10px 0;font-family:monospace;font-size:.72rem;color:#f0b90b;word-break:break-all}
+.commission-table{width:100%;font-size:.72rem;border-collapse:collapse;margin-top:10px}
+.commission-table th{text-align:left;padding:8px;color:#8892a6;border-bottom:1px solid #1e2530;font-size:.65rem;text-transform:uppercase}
+.commission-table td{padding:8px;border-bottom:1px solid #1e2530;color:#e8e8e8}
+.tier-badge{padding:2px 8px;border-radius:8px;font-size:.6rem;font-weight:600}
+.tier-bronze{background:rgba(205,127,50,.2);color:#cd7f32}
+.tier-silver{background:rgba(192,192,192,.2);color:#c0c0c0}
+.tier-gold{background:rgba(255,215,0,.2);color:#ffd700}
+.tier-plat{background:rgba(229,228,226,.2);color:#e5e4e2}
+.howto{font-size:.72rem;color:#8892a6;line-height:1.8;padding-left:16px}
+.howto li{margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ Affiliate Network</h1>
+<p>Earn 10% commission on every sale you refer</p>
+<div class="badge">Powered by HarzPay • Instant Payouts to UBA</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num">10%</div><div class="stat-label">Commission Rate</div></div>
+<div class="stat-card"><div class="stat-num">259</div><div class="stat-label">Products to Promote</div></div>
+<div class="stat-card"><div class="stat-num">46</div><div class="stat-label">Platforms Covered</div></div>
+</div>
+
+<div class="form-box">
+<h3 style="font-size:.85rem;color:#fff;margin-bottom:14px">Become an Affiliate</h3>
+<div class="form-row"><label>Full Name</label><input id="affName" placeholder="Your name"></div>
+<div class="form-row"><label>Email Address</label><input id="affEmail" placeholder="youremail@gmail.com"></div>
+<div class="form-row"><label>Phone Number</label><input id="affPhone" placeholder="080XXXXXXXX"></div>
+<div class="form-row"><label>UBA Account Number (for payouts)</label><input id="affBank" placeholder="203XXXXXXX"></div>
+<button class="btn" onclick="registerAffiliate()">Get My Affiliate Link</button>
+</div>
+
+<div id="linkResult" style="display:none">
+<div class="section">
+<h3>Your Affiliate Link</h3>
+<div class="link-box" id="affLink">Loading...</div>
+<button onclick="copyLink()" style="background:#1e2530;border:1px solid #f0b90b;color:#f0b90b;padding:8px 16px;border-radius:8px;font-size:.72rem;cursor:pointer;margin-top:6px">Copy Link</button>
+<p style="font-size:.68rem;color:#8892a6;margin-top:8px">Share this link on WhatsApp, Facebook, Twitter, or your blog. You earn 10% on every purchase made through it.</p>
+</div>
+</div>
+
+<div class="section">
+<h3>Commission Tiers</h3>
+<table class="commission-table">
+<tr><th>Tier</th><th>Monthly Sales</th><th>Commission</th><th>Bonus</th></tr>
+<tr><td><span class="tier-badge tier-bronze">Bronze</span></td><td>₦0 – ₦50K</td><td>10%</td><td>—</td></tr>
+<tr><td><span class="tier-badge tier-silver">Silver</span></td><td>₦50K – ₦200K</td><td>12%</td><td>₦2K bonus</td></tr>
+<tr><td><span class="tier-badge tier-gold">Gold</span></td><td>₦200K – ₦500K</td><td>15%</td><td>₦10K bonus</td></tr>
+<tr><td><span class="tier-badge tier-plat">Platinum</span></td><td>₦500K+</td><td>20%</td><td>₦25K bonus</td></tr>
+</table>
+</div>
+
+<div class="section">
+<h3>How It Works</h3>
+<ol class="howto">
+<li>Register above and get your unique affiliate link</li>
+<li>Share it on WhatsApp, social media, your blog, or email</li>
+<li>When someone buys through your link, you earn 10% commission</li>
+<li>Track clicks, orders, and earnings in your dashboard</li>
+<li>Withdraw to your UBA account anytime (min ₦5,000)</li>
+<li>Tier upgrades happen automatically as your sales grow</li>
+</ol>
+</div>
+
+<div class="section">
+<h3>What You Can Promote</h3>
+<table class="commission-table">
+<tr><th>Category</th><th>Products</th><th>Avg Commission</th></tr>
+<tr><td>Digital Downloads</td><td>259 products</td><td>₦100 – ₦2,000/sale</td></tr>
+<tr><td>AI Cloud Subscriptions</td><td>4 plans</td><td>₦1,500 – ₦15K/sale</td></tr>
+<tr><td>Chatbot Builder</td><td>3 tiers</td><td>₦1,500 – ₦5K/sale</td></tr>
+<tr><td>Domain & Hosting</td><td>14 TLDs</td><td>₦550 – ₦5K/sale</td></tr>
+<tr><td>Music & Film</td><td>35 titles</td><td>₦50 – ₦500/sale</td></tr>
+</table>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #47 • CAC RC: 321424</div>
+</div>
+<script>
+function registerAffiliate(){
+const name=document.getElementById('affName').value.trim();
+const email=document.getElementById('affEmail').value.trim();
+const phone=document.getElementById('affPhone').value.trim();
+const bank=document.getElementById('affBank').value.trim();
+if(!name||!email){alert('Please enter your name and email');return;}
+const code='HARZ'+Date.now().toString(36).toUpperCase().substring(0,6);
+const link='https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html?ref='+code;
+document.getElementById('linkResult').style.display='block';
+document.getElementById('affLink').textContent=link;
+alert('Welcome to HARZ Affiliate Network, '+name+'!\n\nYour affiliate code: '+code+'\n\nShare your link and start earning 10% on every sale.\n\nYour dashboard will be sent to '+email);
+}
+function copyLink(){const t=document.getElementById('affLink').textContent;navigator.clipboard.writeText(t);alert('Link copied!');}
+</script>
+</body>
+</html>
