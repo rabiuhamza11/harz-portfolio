@@ -1,0 +1,28 @@
+{
+  "name": "HARZ Browser",
+  "short_name": "HarzBrowser",
+  "description": "Smart web browser with search, AI assistant, news, and ads from Harz Digital Services",
+  "start_url": "https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230a0a0f'/%3E%3Ccircle cx='96' cy='96' r='50' fill='none' stroke='%2300d4ff' stroke-width='8'/%3E%3Ccircle cx='96' cy='96' r='20' fill='none' stroke='%237c4dff' stroke-width='6'/%3E%3Ctext x='96' y='72' font-size='28' fill='%2300d4ff' text-anchor='middle' font-family='Arial' font-weight='bold'%3EH%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230a0a0f'/%3E%3Ccircle cx='256' cy='256' r='130' fill='none' stroke='%2300d4ff' stroke-width='20'/%3E%3Ccircle cx='256' cy='256' r='55' fill='none' stroke='%237c4dff' stroke-width='15'/%3E%3Ctext x='256' y='195' font-size='72' fill='%2300d4ff' text-anchor='middle' font-family='Arial' font-weight='bold'%3EH%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities", "search"],
+  "lang": "en",
+  "dir": "ltr"
+}
