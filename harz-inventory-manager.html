@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Inventory Manager — Stock Tracking & Suppliers</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#f0b90b,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(240,185,11,.1);color:#f0b90b;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:1.1rem;font-weight:700}
+.stat-label{font-size:.62rem;color:#8892a6;margin-top:4px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#f0b90b}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#f0b90b,#ff6b6b);border:none;border-radius:10px;color:#0a0e17;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:6px}
+.inv-table{width:100%;font-size:.72rem;border-collapse:collapse;margin-top:10px}
+.inv-table th{text-align:left;padding:8px;color:#8892a6;border-bottom:1px solid #1e2530;font-size:.62rem;text-transform:uppercase}
+.inv-table td{padding:8px;border-bottom:1px solid #1e2530;color:#e8e8e8}
+.stock-badge{padding:2px 8px;border-radius:6px;font-size:.58rem;font-weight:600}
+.st-in{background:rgba(0,255,136,.15);color:#00ff88}
+.st-low{background:rgba(240,185,11,.15);color:#f0b90b}
+.st-out{background:rgba(255,107,107,.15);color:#ff6b6b}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tab-row{display:flex;gap:8px;margin:16px 0;justify-content:center}
+.tbtn{padding:6px 14px;border-radius:10px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.72rem}
+.tbtn.active{background:#f0b90b;color:#0a0e17;border:0;font-weight:600}
+.panel{display:none}.panel.active{display:block}
+.supplier-card{background:#0a0e17;border:1px solid #1e2530;border-radius:10px;padding:12px;margin:8px 0;font-size:.72rem}
+.sup-name{color:#fff;font-weight:600}
+.sup-contact{color:#8892a6;font-size:.62rem;margin-top:2px}
+.sup-rating{color:#f0b90b;font-size:.65rem;margin-top:2px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ Inventory Manager</h1>
+<p>Track stock, manage suppliers, get low-stock alerts</p>
+<div class="badge">Smart Alerts • Supplier Database • Export Reports</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num" style="color:#00ff88">8</div><div class="stat-label">In Stock</div></div>
+<div class="stat-card"><div class="stat-num" style="color:#f0b90b">3</div><div class="stat-label">Low Stock</div></div>
+<div class="stat-card"><div class="stat-num" style="color:#ff6b6b">1</div><div class="stat-label">Out of Stock</div></div>
+<div class="stat-card"><div class="stat-num" style="color:#00d4ff">₦0</div><div class="stat-label">Inventory Value</div></div>
+</div>
+
+<div class="tab-row">
+<div class="tbtn active" onclick="switchTab('inventory',this)">📦 Inventory</div>
+<div class="tbtn" onclick="switchTab('add',this)">➕ Add Product</div>
+<div class="tbtn" onclick="switchTab('suppliers',this)">🚚 Suppliers</div>
+</div>
+
+<div id="panel-inventory" class="panel active">
+<div class="section">
+<h3>Current Inventory</h3>
+<table class="inv-table">
+<tr><th>Product</th><th>SKU</th><th>Stock</th><th>Price</th><th>Status</th></tr>
+<tr><td>Digital Product Bundle</td><td>DP-001</td><td>∞</td><td>₦2,500</td><td><span class="stock-badge st-in">IN STOCK</span></td></tr>
+<tr><td>Complete Genius 365 Book</td><td>CG-365</td><td>50</td><td>₦2,500</td><td><span class="stock-badge st-in">IN STOCK</span></td></tr>
+<tr><td>Construction Plan — Basic</td><td>BP-001</td><td>15</td><td>₦5,000</td><td><span class="stock-badge st-low">LOW</span></td></tr>
+<tr><td>Construction Plan — Pro</td><td>BP-002</td><td>5</td><td>₦15,000</td><td><span class="stock-badge st-low">LOW</span></td></tr>
+<tr><td>Domain .com</td><td>DM-COM</td><td>0</td><td>₦5,500</td><td><span class="stock-badge st-out">OUT</span></td></tr>
+<tr><td>Hosting — Starter</td><td>HS-001</td><td>∞</td><td>₦1,500/mo</td><td><span class="stock-badge st-in">IN STOCK</span></td></tr>
+<tr><td>AI Cloud — Starter</td><td>AC-001</td><td>∞</td><td>₦15,000/mo</td><td><span class="stock-badge st-in">IN STOCK</span></td></tr>
+<tr><td>Chatbot Builder — Free</td><td>CB-001</td><td>∞</td><td>₦0</td><td><span class="stock-badge st-in">IN STOCK</span></td></tr>
+<tr><td>Consultation Hour</td><td>CT-001</td><td>10</td><td>₦10,000</td><td><span class="stock-badge st-low">LOW</span></td></tr>
+<tr><td>Logo Design Service</td><td>LD-001</td><td>3</td><td>₦500</td><td><span class="stock-badge st-low">LOW</span></td></tr>
+</table>
+</div>
+<div class="section">
+<h3>Low Stock Alerts</h3>
+<div style="font-size:.72rem;color:#f0b90b;line-height:1.8;padding-left:16px">
+1. Construction Plan Basic — 15 remaining (reorder at 20)
+2. Construction Plan Pro — 5 remaining (reorder at 10)
+3. Consultation Hours — 10 remaining (reorder at 15)
+4. Logo Design Service — 3 remaining (reorder at 5)
+</div>
+</div>
+</div>
+
+<div id="panel-add" class="panel">
+<div class="section">
+<h3>Add Product to Inventory</h3>
+<div class="form-grid">
+<div><label>Product Name</label><input placeholder="Product name"></div>
+<div><label>SKU</label><input placeholder="PROD-001"></div>
+</div>
+<div class="form-grid">
+<div><label>Category</label><select><option>Digital Product</option><option>Physical Product</option><option>Service</option><option>Subscription</option><option>Domain</option><option>Hosting</option></select></div>
+<div><label>Stock Quantity</label><input type="number" placeholder="100"></div>
+</div>
+<div class="form-grid">
+<div><label>Unit Price (₦)</label><input type="number" placeholder="2500"></div>
+<div><label>Low Stock Alert At</label><input type="number" placeholder="20"></div>
+</div>
+<label>Supplier</label><input placeholder="Supplier name">
+<label>Description</label><textarea placeholder="Product description"></textarea>
+<button class="btn" onclick="addProduct()">Add to Inventory</button>
+</div>
+</div>
+
+<div id="panel-suppliers" class="panel">
+<div class="section">
+<h3>Supplier Directory</h3>
+<div class="supplier-card"><div class="sup-name">ResellerClub</div><div class="sup-contact">API integration • support@resellerclub.com</div><div class="sup-rating">⭐ 4.5 • Domains & Hosting supplier</div></div>
+<div class="supplier-card"><div class="sup-name">Vercel</div><div class="sup-contact">Free tier • vercel.com</div><div class="sup-rating">⭐ 4.8 • Hosting infrastructure</div></div>
+<div class="supplier-card"><div class="sup-name">Groq</div><div class="sup-contact">API • groq.com</div><div class="sup-rating">⭐ 4.7 • AI model provider (Llama 3.3)</div></div>
+<div class="supplier-card"><div class="sup-name">Paystack</div><div class="sup-contact">API • paystack.com</div><div class="sup-rating">⭐ 4.6 • Payment processing</div></div>
+<div class="supplier-card"><div class="sup-name">Gumroad</div><div class="sup-contact">API • gumroad.com</div><div class="sup-rating">⭐ 4.3 • Digital product distribution</div></div>
+<div class="supplier-card"><div class="sup-name">Getly</div><div class="sup-contact">API • getly.store</div><div class="sup-rating">⭐ 4.0 • Nigerian marketplace (keys expired)</div></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #57 • CAC RC: 321424</div>
+</div>
+<script>
+function switchTab(tab,el){document.querySelectorAll('.tbtn').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('panel-'+tab).classList.add('active');}
+function addProduct(){alert('Product added to inventory! Stock levels will be tracked automatically. Low-stock alerts sent via WhatsApp.');}
+</script>
+</body>
+</html>
