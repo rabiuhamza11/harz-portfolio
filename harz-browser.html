@@ -9,9 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="HarzBrowser">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="browser-manifest.json">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%230a0a0f'/%3E%3Ccircle cx='90' cy='90' r='45' fill='none' stroke='%2300d4ff' stroke-width='7'/%3E%3Ctext x='90' y='68' font-size='24' fill='%2300d4ff' text-anchor='middle' font-family='Arial' font-weight='bold'%3EH%3C/text%3E%3C/svg%3E">
 <title>HARZ Browser — Search · AI · News · More</title>
-<meta name="description" content="Harz Browser — A smart web browser dashboard with multi-engine search, Harz AI assistant, news feeds, and advertising.">
 <style>
 :root{--p1:#00d4ff;--p2:#7c4dff;--p3:#00e676;--p4:#ffab00;--p5:#ff5252;--bg:#0a0a0f;--card:#14141c;--card2:#1a1a26;--text:#e4e4e7;--muted:#71717a;--border:#27272f;--gold:#ffd700}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -19,119 +17,178 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--p1);border-radius:5px}
 
 /* HEADER */
-.header{background:linear-gradient(135deg,rgba(0,212,255,.04),rgba(124,77,255,.03));border-bottom:1px solid var(--border);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
-.header h1{font-size:.88rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header .sub{font-size:.55rem;color:var(--muted)}
-.header-right{display:flex;gap:6px;align-items:center}
-.badge{padding:2px 8px;border-radius:10px;font-size:.55rem;font-weight:700}
+.header{background:linear-gradient(135deg,rgba(0,212,255,.04),rgba(124,77,255,.03));border-bottom:1px solid var(--border);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:200;backdrop-filter:blur(10px)}
+.header h1{font-size:.82rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.52rem;color:var(--muted)}
+.header-right{display:flex;gap:5px;align-items:center}
+.badge{padding:2px 7px;border-radius:10px;font-size:.52rem;font-weight:700}
 .badge-live{background:rgba(0,230,118,.12);color:var(--p3)}
 .badge-v{background:rgba(0,212,255,.12);color:var(--p1)}
 
 /* TABS */
-.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--card);overflow-x:auto}
-.tab{padding:12px 18px;font-size:.72rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--card);overflow-x:auto;position:sticky;top:38px;z-index:150}
+.tab{padding:10px 16px;font-size:.7rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
 .tab.active{color:var(--p1);border-bottom-color:var(--p1)}
 .tab:hover{color:var(--text)}
 
-/* SEARCH BAR */
-.search-section{padding:30px 16px 20px;text-align:center}
-.search-logo{font-size:1.8rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--p1),var(--p3),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.search-wrap{max-width:600px;margin:0 auto;position:relative}
-.search-input{width:100%;background:var(--card);border:2px solid var(--border);border-radius:24px;padding:14px 50px 14px 20px;font-size:.88rem;color:var(--text);font-family:inherit;transition:all .2s}
+/* BROWSER CHROME — URL BAR */
+.browser-chrome{display:none;align-items:center;gap:6px;padding:8px 12px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:72px;z-index:140}
+.browser-chrome.show{display:flex}
+.nav-btn{background:var(--card2);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:var(--text);transition:all .2s;flex-shrink:0}
+.nav-btn:hover{border-color:var(--p1);color:var(--p1)}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.url-bar{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:7px 14px;font-size:.7rem;color:var(--text);font-family:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.url-bar:focus{outline:none;border-color:var(--p1)}
+.url-bar::placeholder{color:var(--muted)}
+
+/* BROWSER VIEWPORT — IFRAME */
+.browser-viewport{display:none;position:fixed;top:105px;left:0;right:0;bottom:0;z-index:130;background:#fff}
+.browser-viewport.show{display:block}
+.browser-iframe{width:100%;height:100%;border:none;background:#fff}
+.browser-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;background:var(--bg);padding:30px;text-align:center}
+.browser-fallback.show{display:flex}
+.browser-fallback .fb-icon{font-size:3rem;margin-bottom:16px}
+.browser-fallback h3{font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--text)}
+.browser-fallback p{font-size:.72rem;color:var(--muted);max-width:350px;line-height:1.5;margin-bottom:20px}
+.browser-fallback .fb-btn{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;padding:10px 24px;border-radius:10px;font-size:.75rem;font-weight:700;cursor:pointer;border:none;text-decoration:none;display:inline-block}
+
+/* SEARCH PAGE */
+.search-section{padding:24px 16px 16px;text-align:center}
+.search-logo{font-size:1.6rem;font-weight:900;margin-bottom:14px;background:linear-gradient(135deg,var(--p1),var(--p3),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.search-wrap{max-width:580px;margin:0 auto;position:relative}
+.search-input{width:100%;background:var(--card);border:2px solid var(--border);border-radius:24px;padding:13px 48px 13px 18px;font-size:.85rem;color:var(--text);font-family:inherit;transition:all .2s}
 .search-input:focus{outline:none;border-color:var(--p1);box-shadow:0 0 20px rgba(0,212,255,.15)}
-.search-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
-.engine-row{display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}
-.engine-chip{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px 14px;font-size:.68rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px}
+.search-btn{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:#fff}
+.engine-row{display:flex;justify-content:center;gap:7px;margin-top:11px;flex-wrap:wrap}
+.engine-chip{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:5px 12px;font-size:.65rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px}
 .engine-chip.active{border-color:var(--p1);background:rgba(0,212,255,.08);color:var(--p1)}
-.engine-chip:hover{border-color:var(--p1)}
+
+/* SEARCH RESULTS — IN BROWSER */
+.search-results{display:none;max-width:680px;margin:0 auto;padding:16px}
+.search-results.show{display:block}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+.result-card:hover{border-color:var(--p1)}
+.result-card .r-url{font-size:.58rem;color:var(--p3);margin-bottom:2px}
+.result-card .r-title{font-size:.82rem;font-weight:700;color:var(--p1);margin-bottom:3px;line-height:1.3}
+.result-card .r-desc{font-size:.68rem;color:var(--muted);line-height:1.4}
 
 /* QUICK LINKS */
-.quick-links{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:600px;margin:20px auto;padding:0 16px}
-.quick-link{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;color:var(--text)}
+.quick-links{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;max-width:580px;margin:18px auto;padding:0 16px}
+.quick-link{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .2s}
 .quick-link:hover{border-color:var(--p1);transform:translateY(-2px)}
-.quick-link .ico{font-size:1.6rem;margin-bottom:4px}
-.quick-link .lbl{font-size:.58rem;font-weight:600;color:var(--muted)}
+.quick-link .ico{font-size:1.4rem;margin-bottom:3px}
+.quick-link .lbl{font-size:.55rem;font-weight:600;color:var(--muted)}
+
+/* TRENDING */
+.trending-box{max-width:580px;margin:16px auto;padding:0 16px}
+.trending-box .t-title{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.trend-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:5px;cursor:pointer;font-size:.7rem;transition:all .15s}
+.trend-item:hover{border-color:var(--p1)}
 
 /* AI TAB */
-.ai-section{padding:20px 16px;max-width:700px;margin:0 auto}
-.ai-header{text-align:center;margin-bottom:20px}
-.ai-header h2{font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--p2),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.ai-header p{font-size:.68rem;color:var(--muted);margin-top:4px}
-.ai-chat{background:var(--card);border:1px solid var(--border);border-radius:16px;height:400px;display:flex;flex-direction:column;overflow:hidden}
-.ai-messages{flex:1;overflow-y:auto;padding:16px}
-.ai-msg{margin-bottom:12px;max-width:85%}
+.ai-section{padding:16px 14px;max-width:680px;margin:0 auto}
+.ai-header{text-align:center;margin-bottom:16px}
+.ai-header h2{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--p2),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ai-header p{font-size:.62rem;color:var(--muted);margin-top:3px}
+.ai-chat{background:var(--card);border:1px solid var(--border);border-radius:16px;height:380px;display:flex;flex-direction:column;overflow:hidden}
+.ai-messages{flex:1;overflow-y:auto;padding:14px}
+.ai-msg{margin-bottom:10px;max-width:85%}
 .ai-msg.user{margin-left:auto;text-align:right}
-.ai-msg .bubble{display:inline-block;padding:10px 14px;border-radius:14px;font-size:.75rem;line-height:1.5}
+.ai-msg .bubble{display:inline-block;padding:9px 13px;border-radius:13px;font-size:.73rem;line-height:1.5}
 .ai-msg.user .bubble{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border-bottom-right-radius:4px}
 .ai-msg.ai .bubble{background:var(--card2);border:1px solid var(--border);border-bottom-left-radius:4px}
-.ai-msg .who{font-size:.58rem;color:var(--muted);margin-bottom:2px;padding:0 4px}
-.ai-input-row{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}
-.ai-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:.75rem;color:var(--text);font-family:inherit}
+.ai-msg .who{font-size:.55rem;color:var(--muted);margin-bottom:2px;padding:0 4px}
+.ai-input-row{display:flex;gap:7px;padding:10px;border-top:1px solid var(--border)}
+.ai-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:9px;font-size:.73rem;color:var(--text);font-family:inherit}
 .ai-input:focus{outline:none;border-color:var(--p1)}
-.ai-send{background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:10px;padding:10px 16px;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer}
-.ai-suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.ai-sug{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:.62rem;cursor:pointer}
+.ai-send{background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:10px;padding:9px 15px;color:#fff;font-size:.7rem;font-weight:700;cursor:pointer}
+.ai-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.ai-sug{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:5px 11px;font-size:.6rem;cursor:pointer}
 .ai-sug:hover{border-color:var(--p1)}
 
 /* NEWS TAB */
-.news-section{padding:20px 16px;max-width:700px;margin:0 auto}
-.news-cat-row{display:flex;gap:6px;overflow-x:auto;margin-bottom:16px;padding-bottom:4px}
-.news-cat{padding:6px 14px;border-radius:10px;font-size:.68rem;font-weight:600;cursor:pointer;white-space:nowrap;background:var(--card);border:1px solid var(--border);transition:all .2s}
+.news-section{padding:16px 14px;max-width:680px;margin:0 auto}
+.news-cat-row{display:flex;gap:5px;overflow-x:auto;margin-bottom:14px;padding-bottom:3px}
+.news-cat{padding:5px 12px;border-radius:10px;font-size:.65rem;font-weight:600;cursor:pointer;white-space:nowrap;background:var(--card);border:1px solid var(--border);transition:all .2s}
 .news-cat.active{background:rgba(0,212,255,.1);border-color:var(--p1);color:var(--p1)}
-.news-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.news-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:9px;cursor:pointer;transition:all .2s}
 .news-card:hover{border-color:var(--p1)}
-.news-card .source{font-size:.58rem;color:var(--p1);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.news-card h3{font-size:.82rem;font-weight:700;margin:6px 0 4px;line-height:1.3}
-.news-card p{font-size:.68rem;color:var(--muted);line-height:1.5}
-.news-card .meta{display:flex;justify-content:space-between;margin-top:8px;font-size:.58rem;color:var(--muted)}
-.news-card .thumb{width:100%;height:140px;border-radius:10px;margin-bottom:10px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:2rem}
+.news-card .source{font-size:.55rem;color:var(--p1);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.news-card h3{font-size:.78rem;font-weight:700;margin:5px 0 3px;line-height:1.3}
+.news-card p{font-size:.65rem;color:var(--muted);line-height:1.5}
+.news-card .meta{display:flex;justify-content:space-between;margin-top:6px;font-size:.55rem;color:var(--muted)}
 
 /* ADS TAB */
-.ads-section{padding:20px 16px;max-width:700px;margin:0 auto}
-.ad-banner{background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(0,212,255,.06));border:1px solid rgba(255,215,0,.2);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px}
-.ad-banner h3{font-size:.88rem;font-weight:800;color:var(--gold);margin-bottom:6px}
-.ad-banner p{font-size:.72rem;color:var(--muted);margin-bottom:12px}
-.ad-banner .ad-btn{display:inline-block;background:linear-gradient(135deg,var(--gold),#ff9800);color:#0a0a0f;padding:10px 24px;border-radius:10px;font-size:.72rem;font-weight:700;text-decoration:none}
-.ad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.ads-section{padding:16px 14px;max-width:680px;margin:0 auto}
+.ad-banner{background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(0,212,255,.06));border:1px solid rgba(255,215,0,.2);border-radius:16px;padding:18px;text-align:center;margin-bottom:14px}
+.ad-banner h3{font-size:.85rem;font-weight:800;color:var(--gold);margin-bottom:5px}
+.ad-banner p{font-size:.68rem;color:var(--muted);margin-bottom:11px}
+.ad-banner .ad-btn{display:inline-block;background:linear-gradient(135deg,var(--gold),#ff9800);color:#0a0a0f;padding:9px 22px;border-radius:10px;font-size:.7rem;font-weight:700;cursor:pointer;border:none}
+.ad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:11px}
 .ad-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s}
 .ad-card:hover{border-color:var(--p1);transform:translateY(-2px)}
-.ad-card .ad-img{width:100%;height:120px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:2rem}
-.ad-card .ad-body{padding:12px}
-.ad-card .ad-tag{font-size:.55rem;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px}
-.ad-card h4{font-size:.75rem;font-weight:700;margin-bottom:4px}
-.ad-card p{font-size:.62rem;color:var(--muted);line-height:1.4}
-.ad-card .ad-price{font-size:.78rem;font-weight:800;color:var(--gold);margin-top:6px}
-.ad-card .ad-cta{font-size:.62rem;font-weight:700;color:var(--p1);margin-top:8px}
+.ad-card .ad-img{width:100%;height:110px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.ad-card .ad-body{padding:11px}
+.ad-card .ad-tag{font-size:.52rem;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:3px}
+.ad-card h4{font-size:.73rem;font-weight:700;margin-bottom:3px}
+.ad-card p{font-size:.6rem;color:var(--muted);line-height:1.4}
+.ad-card .ad-price{font-size:.75rem;font-weight:800;color:var(--gold);margin-top:5px}
+.ad-card .ad-cta{font-size:.6rem;font-weight:700;color:var(--p1);margin-top:6px}
+
+/* SITES TAB */
+.site-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:9px;max-width:680px;margin:0 auto;padding:16px 14px}
+.site-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .2s}
+.site-card:hover{border-color:var(--p1);transform:translateY(-2px)}
+.site-card .ico{font-size:1.3rem;margin-bottom:3px}
+.site-card .name{font-size:.6rem;font-weight:600}
+.site-card .url{font-size:.48rem;color:var(--muted)}
 
 /* PAGE SYSTEM */
 .page{display:none}.page.active{display:block;animation:fadeIn .3s}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* HISTORY/BOOKMARKS */
-.site-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;max-width:700px;margin:0 auto;padding:20px 16px}
-.site-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;color:var(--text)}
-.site-card:hover{border-color:var(--p1);transform:translateY(-2px)}
-.site-card .ico{font-size:1.4rem;margin-bottom:4px}
-.site-card .name{font-size:.62rem;font-weight:600}
-.site-card .url{font-size:.5rem;color:var(--muted)}
+.footer{text-align:center;padding:18px;color:var(--muted);font-size:.55rem}
 
-.footer{text-align:center;padding:20px;color:var(--muted);font-size:.58rem}
-@media(max-width:640px){.quick-links{grid-template-columns:repeat(4,1fr)}.ad-grid{grid-template-columns:1fr}.search-logo{font-size:1.4rem}}
+/* INSTALL BANNER */
+#installBanner{display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#0a0a0f,#14141c);border-top:2px solid #00d4ff;padding:12px 14px;z-index:999;align-items:center;gap:10px;justify-content:space-between}
+#installBanner.show-banner{display:flex}
+
+@media(max-width:640px){.quick-links{grid-template-columns:repeat(4,1fr)}.ad-grid{grid-template-columns:1fr}.search-logo{font-size:1.3rem}}
 </style>
 </head>
 <body>
 
 <div class="header">
-<div><h1>HARZ Browser</h1><div class="sub">Search · AI · News · Ads · Bookmarks</div></div>
-<div class="header-right"><span class="badge badge-v">v1.0</span><span class="badge badge-live">● LIVE</span></div>
+<div><h1>HARZ Browser</h1><div class="sub">Search · AI · News · Ads · Sites</div></div>
+<div class="header-right"><span class="badge badge-v">v1.1</span><span class="badge badge-live">● LIVE</span></div>
 </div>
 
 <div class="tabs">
-<div class="tab active" onclick="switchTab('search',this)">🔍 Search</div>
+<div class="tab active" onclick="goHome()">🔍 Search</div>
 <div class="tab" onclick="switchTab('ai',this)">🤖 Harz AI</div>
 <div class="tab" onclick="switchTab('news',this)">📰 News</div>
 <div class="tab" onclick="switchTab('ads',this)">📢 Advertise</div>
 <div class="tab" onclick="switchTab('sites',this)">📌 Sites</div>
+</div>
+
+<!-- BROWSER CHROME (URL BAR) -->
+<div class="browser-chrome" id="browserChrome">
+<button class="nav-btn" id="backBtn" onclick="goBack()" disabled>←</button>
+<button class="nav-btn" id="fwdBtn" onclick="goForward()" disabled>→</button>
+<button class="nav-btn" onclick="reloadFrame()">↻</button>
+<input type="text" class="url-bar" id="urlBar" placeholder="Enter URL or search..." onkeypress="if(event.key==='Enter')navigateToUrl(this.value)">
+<button class="nav-btn" onclick="goHome()" style="font-size:.7rem;width:auto;padding:0 10px">Home</button>
+</div>
+
+<!-- BROWSER VIEWPORT -->
+<div class="browser-viewport" id="browserViewport">
+<iframe class="browser-iframe" id="browserFrame" src="" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+<div class="browser-fallback" id="browserFallback">
+<div class="fb-icon">🔒</div>
+<h3>This site blocks in-browser viewing</h3>
+<p id="fallbackUrl">The site doesn't allow embedding. You can open it in a new tab.</p>
+<a class="fb-btn" id="fallbackLink" href="#" target="_blank">Open in New Tab →</a>
+</div>
 </div>
 
 <!-- SEARCH PAGE -->
@@ -143,35 +200,40 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <button class="search-btn" onclick="doSearch()">🔍</button>
 </div>
 <div class="engine-row">
-<div class="engine-chip active" onclick="selectEngine(this,'google')" data-engine="google">🔵 Google</div>
-<div class="engine-chip" onclick="selectEngine(this,'bing')" data-engine="bing">🟢 Bing</div>
-<div class="engine-chip" onclick="selectEngine(this,'duckduckgo')" data-engine="duckduckgo">🦆 DuckDuckGo</div>
-<div class="engine-chip" onclick="selectEngine(this,'harzai')" data-engine="harzai">🤖 Harz AI</div>
-<div class="engine-chip" onclick="selectEngine(this,'youtube')" data-engine="youtube">▶️ YouTube</div>
-<div class="engine-chip" onclick="selectEngine(this,'wikipedia')" data-engine="wikipedia">📚 Wikipedia</div>
+<div class="engine-chip active" onclick="selectEngine(this,'google')">🔵 Google</div>
+<div class="engine-chip" onclick="selectEngine(this,'bing')">🟢 Bing</div>
+<div class="engine-chip" onclick="selectEngine(this,'duckduckgo')">🦆 DuckDuckGo</div>
+<div class="engine-chip" onclick="selectEngine(this,'harzai')">🤖 Harz AI</div>
+<div class="engine-chip" onclick="selectEngine(this,'youtube')">▶️ YouTube</div>
+<div class="engine-chip" onclick="selectEngine(this,'wikipedia')">📚 Wikipedia</div>
 </div>
 </div>
 
-<div class="quick-links">
-<a class="quick-link" href="https://www.google.com" target="_blank"><div class="ico">🔵</div><div class="lbl">Google</div></a>
-<a class="quick-link" href="https://www.youtube.com" target="_blank"><div class="ico">▶️</div><div class="lbl">YouTube</div></a>
-<a class="quick-link" href="https://chatgpt.com" target="_blank"><div class="ico">💬</div><div class="lbl">ChatGPT</div></a>
-<a class="quick-link" href="https://github.com" target="_blank"><div class="ico">🐙</div><div class="lbl">GitHub</div></a>
-<a class="quick-link" href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" target="_blank"><div class="ico">📱</div><div class="lbl">Harz App</div></a>
-<a class="quick-link" href="https://www.whatsapp.com" target="_blank"><div class="ico">💬</div><div class="lbl">WhatsApp</div></a>
-<a class="quick-link" href="https://www.gmail.com" target="_blank"><div class="ico">📧</div><div class="lbl">Gmail</div></a>
-<a class="quick-link" href="https://www.linkedin.com" target="_blank"><div class="ico">💼</div><div class="lbl">LinkedIn</div></a>
-<a class="quick-link" href="https://www.twitter.com" target="_blank"><div class="ico">🐦</div><div class="lbl">X</div></a>
-<a class="quick-link" href="https://www.reddit.com" target="_blank"><div class="ico">👽</div><div class="lbl">Reddit</div></a>
+<!-- SEARCH RESULTS (in-browser) -->
+<div class="search-results" id="searchResults"></div>
+
+<!-- QUICK LINKS -->
+<div class="quick-links" id="quickLinks">
+<div class="quick-link" onclick="openInBrowser('https://www.google.com')"><div class="ico">🔵</div><div class="lbl">Google</div></div>
+<div class="quick-link" onclick="openInBrowser('https://www.youtube.com')"><div class="ico">▶️</div><div class="lbl">YouTube</div></div>
+<div class="quick-link" onclick="openInBrowser('https://chatgpt.com')"><div class="ico">💬</div><div class="lbl">ChatGPT</div></div>
+<div class="quick-link" onclick="openInBrowser('https://github.com')"><div class="ico">🐙</div><div class="lbl">GitHub</div></div>
+<div class="quick-link" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html')"><div class="ico">📱</div><div class="lbl">Harz App</div></div>
+<div class="quick-link" onclick="openInBrowser('https://web.whatsapp.com')"><div class="ico">💬</div><div class="lbl">WhatsApp</div></div>
+<div class="quick-link" onclick="openInBrowser('https://mail.google.com')"><div class="ico">📧</div><div class="lbl">Gmail</div></div>
+<div class="quick-link" onclick="openInBrowser('https://www.linkedin.com')"><div class="ico">💼</div><div class="lbl">LinkedIn</div></div>
+<div class="quick-link" onclick="openInBrowser('https://x.com')"><div class="ico">🐦</div><div class="lbl">X</div></div>
+<div class="quick-link" onclick="openInBrowser('https://www.reddit.com')"><div class="ico">👽</div><div class="lbl">Reddit</div></div>
 </div>
 
-<div style="max-width:600px;margin:20px auto;padding:0 16px">
-<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">🔥 Trending in Nigeria</div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:6px;cursor:pointer" onclick="document.getElementById('searchInput').value='Nigeria tech startups 2026';doSearch()"><span style="font-size:.72rem">1. Nigeria tech startups 2026</span></div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:6px;cursor:pointer" onclick="document.getElementById('searchInput').value='AI in Africa';doSearch()"><span style="font-size:.72rem">2. AI in Africa</span></div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:6px;cursor:pointer" onclick="document.getElementById('searchInput').value='Naira to Dollar exchange rate';doSearch()"><span style="font-size:.72rem">3. Naira to Dollar exchange rate</span></div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:6px;cursor:pointer" onclick="document.getElementById('searchInput').value='Harz Digital Services';doSearch()"><span style="font-size:.72rem">4. Harz Digital Services</span></div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;cursor:pointer" onclick="document.getElementById('searchInput').value='GDEG token Polygon';doSearch()"><span style="font-size:.72rem">5. GDEG token Polygon</span></div>
+<!-- TRENDING -->
+<div class="trending-box">
+<div class="t-title">🔥 Trending in Nigeria</div>
+<div class="trend-item" onclick="document.getElementById('searchInput').value='Nigeria tech startups 2026';doSearch()">1. Nigeria tech startups 2026</div>
+<div class="trend-item" onclick="document.getElementById('searchInput').value='AI in Africa';doSearch()">2. AI in Africa</div>
+<div class="trend-item" onclick="document.getElementById('searchInput').value='Naira to Dollar exchange rate';doSearch()">3. Naira to Dollar exchange rate</div>
+<div class="trend-item" onclick="document.getElementById('searchInput').value='Harz Digital Services';doSearch()">4. Harz Digital Services</div>
+<div class="trend-item" onclick="document.getElementById('searchInput').value='GDEG token Polygon';doSearch()">5. GDEG token Polygon</div>
 </div>
 </div>
 
@@ -214,11 +276,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="news-cat" onclick="selectNews(this,'sports')">⚽ Sports</div>
 </div>
 <div id="newsFeed">
-<div class="news-card" onclick="window.open('https://www.google.com/search?q=Nigeria+tech+startups+2026','_blank')"><div class="thumb">📱</div><div class="source">TechCabal</div><h3>Nigeria's tech ecosystem raised $1.2B in 2026, led by fintech and AI startups</h3><p>Funding flows continue to grow as international investors bet on African innovation despite global economic headwinds.</p><div class="meta"><span>2 hours ago</span><span>5 min read</span></div></div>
-<div class="news-card" onclick="window.open('https://www.google.com/search?q=AI+Africa+2026','_blank')"><div class="thumb">🤖</div><div class="source">Rest of World</div><h3>How African developers are building AI tools for local problems</h3><p>From healthcare to agriculture, local AI solutions are outperforming imported models for African use cases.</p><div class="meta"><span>4 hours ago</span><span>8 min read</span></div></div>
-<div class="news-card" onclick="window.open('https://www.google.com/search?q=GDEG+token+Polygon','_blank')"><div class="thumb">₿</div><div class="source">Crypto News</div><h3>Polygon-based tokens gain traction in African payment ecosystems</h3><p>Low-fee blockchain payments are enabling new business models across Nigeria and beyond.</p><div class="meta"><span>6 hours ago</span><span>3 min read</span></div></div>
-<div class="news-card" onclick="window.open('https://www.google.com/search?q=Naira+exchange+rate+today','_blank')"><div class="thumb">📊</div><div class="source">Business Day</div><h3>Naira stabilizes as CBN introduces new forex measures</h3><p>The Central Bank's latest policy changes aim to boost liquidity in the foreign exchange market.</p><div class="meta"><span>8 hours ago</span><span>4 min read</span></div></div>
-<div class="news-card" onclick="window.open('https://www.google.com/search?q=Nigeria+cybersecurity+2026','_blank')"><div class="thumb">🛡️</div><div class="source">Guardian Nigeria</div><h3>Cybersecurity threats rise 40% as Nigerian businesses go digital</h3><p>Experts call for increased investment in AI-powered security solutions to combat growing threat landscape.</p><div class="meta"><span>12 hours ago</span><span>6 min read</span></div></div>
+<div class="news-card" onclick="searchAndOpen('Nigeria tech ecosystem 2026 funding')"><div class="source">TechCabal</div><h3>Nigeria's tech ecosystem raised $1.2B in 2026, led by fintech and AI startups</h3><p>Funding flows continue to grow as international investors bet on African innovation despite global economic headwinds.</p><div class="meta"><span>2 hours ago</span><span>5 min read</span></div></div>
+<div class="news-card" onclick="searchAndOpen('African developers AI tools local problems')"><div class="source">Rest of World</div><h3>How African developers are building AI tools for local problems</h3><p>From healthcare to agriculture, local AI solutions are outperforming imported models for African use cases.</p><div class="meta"><span>4 hours ago</span><span>8 min read</span></div></div>
+<div class="news-card" onclick="searchAndOpen('Polygon blockchain tokens Africa payments')"><div class="source">Crypto News</div><h3>Polygon-based tokens gain traction in African payment ecosystems</h3><p>Low-fee blockchain payments are enabling new business models across Nigeria and beyond.</p><div class="meta"><span>6 hours ago</span><span>3 min read</span></div></div>
+<div class="news-card" onclick="searchAndOpen('Naira exchange rate CBN forex 2026')"><div class="source">Business Day</div><h3>Naira stabilizes as CBN introduces new forex measures</h3><p>The Central Bank's latest policy changes aim to boost liquidity in the foreign exchange market.</p><div class="meta"><span>8 hours ago</span><span>4 min read</span></div></div>
+<div class="news-card" onclick="searchAndOpen('Nigeria cybersecurity threats 2026')"><div class="source">Guardian Nigeria</div><h3>Cybersecurity threats rise 40% as Nigerian businesses go digital</h3><p>Experts call for increased investment in AI-powered security solutions to combat growing threat landscape.</p><div class="meta"><span>12 hours ago</span><span>6 min read</span></div></div>
 </div>
 </div>
 </div>
@@ -228,107 +290,248 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="ads-section">
 <div class="ad-banner">
 <h3>📢 Advertise on Harz Browser</h3>
-<p>Reach 10,000+ users across 38 Harz platforms. From ₦5,000/month.</p>
-<a class="ad-btn" href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" target="_blank">Start Advertising →</a>
+<p>Reach 10,000+ users across 39 Harz platforms. From ₦5,000/month.</p>
+<button class="ad-btn" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html')">Start Advertising →</button>
 </div>
-
-<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Sponsored — Harz Marketplace</div>
+<div style="font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:11px">Sponsored — Harz Marketplace</div>
 <div class="ad-grid">
-<div class="ad-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harzdm-checkout.html','_blank')"><div class="ad-img">📚</div><div class="ad-body"><span class="ad-tag" style="background:rgba(255,215,0,.12);color:var(--gold)">BESTSELLER</span><h4>Engineering Collection 8-in-1</h4><p>154 pages · 8 engineering fields · PDF download</p><div class="ad-price">$89.99</div><div class="ad-cta">Buy Now →</div></div></div>
-<div class="ad-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harzmusic-checkout.html','_blank')"><div class="ad-img">🎵</div><div class="ad-body"><span class="ad-tag" style="background:rgba(0,212,255,.12);color:var(--p1)">NEW</span><h4>HarzMusic — 27 Afrobeats Tracks</h4><p>Original beats · Afrobeats · Hip-hop · Instant download</p><div class="ad-price">From $2.99</div><div class="ad-cta">Listen & Buy →</div></div></div>
-<div class="ad-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html','_blank')"><div class="ad-img">🤖</div><div class="ad-body"><span class="ad-tag" style="background:rgba(124,77,255,.12);color:var(--p2)">AI CLOUD</span><h4>Harz AI Cloud — 20 AI Agents</h4><p>API access · Custom agents · From ₦5K/month</p><div class="ad-price">₦5,000/mo</div><div class="ad-cta">Subscribe →</div></div></div>
-<div class="ad-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html','_blank')"><div class="ad-img">💡</div><div class="ad-body"><span class="ad-tag" style="background:rgba(0,230,118,.12);color:var(--p3)">VENTURE</span><h4>Turn Your Idea Into a Business</h4><p>Business plan · Code · Marketing · Deploy in 42 min</p><div class="ad-price">Free to start</div><div class="ad-cta">Try Now →</div></div></div>
-<div class="ad-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html','_blank')"><div class="ad-img">📊</div><div class="ad-body"><span class="ad-tag" style="background:rgba(255,171,0,.12);color:var(--p4)">B2B</span><h4>Harz Business OS</h4><p>CRM · ERP · HR · Accounting · 9 modules in one</p><div class="ad-price">₦12,000/mo</div><div class="ad-cta">Get Started →</div></div></div>
-<div class="ad-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html','_blank')"><div class="ad-img">🪪</div><div class="ad-body"><span class="ad-tag" style="background:rgba(255,82,82,.12);color:var(--p5)">IDENTITY</span><h4>Harz Global Identity</h4><p>Digital ID · KYC · Blockchain credentials · SSO</p><div class="ad-price">Free</div><div class="ad-cta">Verify Now →</div></div></div>
+<div class="ad-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harzdm-checkout.html')"><div class="ad-img">📚</div><div class="ad-body"><span class="ad-tag" style="background:rgba(255,215,0,.12);color:var(--gold)">BESTSELLER</span><h4>Engineering Collection 8-in-1</h4><p>154 pages · 8 engineering fields · PDF download</p><div class="ad-price">$89.99</div><div class="ad-cta">Buy Now →</div></div></div>
+<div class="ad-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harzmusic-checkout.html')"><div class="ad-img">🎵</div><div class="ad-body"><span class="ad-tag" style="background:rgba(0,212,255,.12);color:var(--p1)">NEW</span><h4>HarzMusic — 27 Afrobeats Tracks</h4><p>Original beats · Afrobeats · Hip-hop · Instant download</p><div class="ad-price">From $2.99</div><div class="ad-cta">Listen & Buy →</div></div></div>
+<div class="ad-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')"><div class="ad-img">🤖</div><div class="ad-body"><span class="ad-tag" style="background:rgba(124,77,255,.12);color:var(--p2)">AI CLOUD</span><h4>Harz AI Cloud — 20 AI Agents</h4><p>API access · Custom agents · From ₦5K/month</p><div class="ad-price">₦5,000/mo</div><div class="ad-cta">Subscribe →</div></div></div>
+<div class="ad-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html')"><div class="ad-img">💡</div><div class="ad-body"><span class="ad-tag" style="background:rgba(0,230,118,.12);color:var(--p3)">VENTURE</span><h4>Turn Your Idea Into a Business</h4><p>Business plan · Code · Marketing · Deploy in 42 min</p><div class="ad-price">Free to start</div><div class="ad-cta">Try Now →</div></div></div>
+<div class="ad-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html')"><div class="ad-img">📊</div><div class="ad-body"><span class="ad-tag" style="background:rgba(255,171,0,.12);color:var(--p4)">B2B</span><h4>Harz Business OS</h4><p>CRM · ERP · HR · Accounting · 9 modules in one</p><div class="ad-price">₦12,000/mo</div><div class="ad-cta">Get Started →</div></div></div>
+<div class="ad-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html')"><div class="ad-img">🪪</div><div class="ad-body"><span class="ad-tag" style="background:rgba(255,82,82,.12);color:var(--p5)">IDENTITY</span><h4>Harz Global Identity</h4><p>Digital ID · KYC · Blockchain credentials · SSO</p><div class="ad-price">Free</div><div class="ad-cta">Verify Now →</div></div></div>
 </div>
-
-<div style="margin-top:20px">
-<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Ad Packages</div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:.78rem;font-weight:700">Starter — Banner Ad</div><div style="font-size:.62rem;color:var(--muted)">Home page banner · 1 month</div></div><div style="font-size:.88rem;font-weight:800;color:var(--gold)">₦5,000</div></div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:.78rem;font-weight:700">Business — Featured Card</div><div style="font-size:.62rem;color:var(--muted)">Ads page + search results · 1 month</div></div><div style="font-size:.88rem;font-weight:800;color:var(--gold)">₦15,000</div></div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:.78rem;font-weight:700">Premium — Ecosystem Wide</div><div style="font-size:.62rem;color:var(--muted)">All 38 platforms · 3 months</div></div><div style="font-size:.88rem;font-weight:800;color:var(--gold)">₦50,000</div></div>
+<div style="margin-top:18px">
+<div style="font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Ad Packages</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:.75rem;font-weight:700">Starter — Banner Ad</div><div style="font-size:.6rem;color:var(--muted)">Home page banner · 1 month</div></div><div style="font-size:.82rem;font-weight:800;color:var(--gold)">₦5,000</div></div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:.75rem;font-weight:700">Business — Featured Card</div><div style="font-size:.6rem;color:var(--muted)">Ads page + search results · 1 month</div></div><div style="font-size:.82rem;font-weight:800;color:var(--gold)">₦15,000</div></div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:.75rem;font-weight:700">Premium — Ecosystem Wide</div><div style="font-size:.6rem;color:var(--muted)">All 39 platforms · 3 months</div></div><div style="font-size:.82rem;font-weight:800;color:var(--gold)">₦50,000</div></div>
 </div>
 </div>
 </div>
 
 <!-- SITES PAGE -->
 <div id="page-sites" class="page">
-<div style="padding:20px 16px;max-width:700px;margin:0 auto">
-<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">📌 Popular Sites</div>
+<div style="padding:16px 14px;max-width:680px;margin:0 auto">
+<div style="font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">📌 Popular Sites — Tap to open in browser</div>
 </div>
 <div class="site-grid">
-<a class="site-card" href="https://www.google.com" target="_blank"><div class="ico">🔵</div><div class="name">Google</div><div class="url">google.com</div></a>
-<a class="site-card" href="https://www.youtube.com" target="_blank"><div class="ico">▶️</div><div class="name">YouTube</div><div class="url">youtube.com</div></a>
-<a class="site-card" href="https://chatgpt.com" target="_blank"><div class="ico">💬</div><div class="name">ChatGPT</div><div class="url">chatgpt.com</div></a>
-<a class="site-card" href="https://github.com" target="_blank"><div class="ico">🐙</div><div class="name">GitHub</div><div class="url">github.com</div></a>
-<a class="site-card" href="https://www.whatsapp.com" target="_blank"><div class="ico">💬</div><div class="name">WhatsApp</div><div class="url">whatsapp.com</div></a>
-<a class="site-card" href="https://www.gmail.com" target="_blank"><div class="ico">📧</div><div class="name">Gmail</div><div class="url">gmail.com</div></a>
-<a class="site-card" href="https://www.linkedin.com" target="_blank"><div class="ico">💼</div><div class="name">LinkedIn</div><div class="url">linkedin.com</div></a>
-<a class="site-card" href="https://www.twitter.com" target="_blank"><div class="ico">🐦</div><div class="name">X (Twitter)</div><div class="url">x.com</div></a>
-<a class="site-card" href="https://www.reddit.com" target="_blank"><div class="ico">👽</div><div class="name">Reddit</div><div class="url">reddit.com</div></a>
-<a class="site-card" href="https://www.wikipedia.org" target="_blank"><div class="ico">📚</div><div class="name">Wikipedia</div><div class="url">wikipedia.org</div></a>
-<a class="site-card" href="https://www.amazon.com" target="_blank"><div class="ico">📦</div><div class="name">Amazon</div><div class="url">amazon.com</div></a>
-<a class="site-card" href="https://www.paystack.com" target="_blank"><div class="ico">💳</div><div class="name">Paystack</div><div class="url">paystack.com</div></a>
+<div class="site-card" onclick="openInBrowser('https://www.google.com')"><div class="ico">🔵</div><div class="name">Google</div><div class="url">google.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://www.youtube.com')"><div class="ico">▶️</div><div class="name">YouTube</div><div class="url">youtube.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://chatgpt.com')"><div class="ico">💬</div><div class="name">ChatGPT</div><div class="url">chatgpt.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://github.com')"><div class="ico">🐙</div><div class="name">GitHub</div><div class="url">github.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://web.whatsapp.com')"><div class="ico">💬</div><div class="name">WhatsApp</div><div class="url">whatsapp.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://mail.google.com')"><div class="ico">📧</div><div class="name">Gmail</div><div class="url">gmail.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://www.linkedin.com')"><div class="ico">💼</div><div class="name">LinkedIn</div><div class="url">linkedin.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://x.com')"><div class="ico">🐦</div><div class="name">X (Twitter)</div><div class="url">x.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://www.reddit.com')"><div class="ico">👽</div><div class="name">Reddit</div><div class="url">reddit.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://www.wikipedia.org')"><div class="ico">📚</div><div class="name">Wikipedia</div><div class="url">wikipedia.org</div></div>
+<div class="site-card" onclick="openInBrowser('https://www.amazon.com')"><div class="ico">📦</div><div class="name">Amazon</div><div class="url">amazon.com</div></div>
+<div class="site-card" onclick="openInBrowser('https://www.paystack.com')"><div class="ico">💳</div><div class="name">Paystack</div><div class="url">paystack.com</div></div>
 </div>
-<div style="padding:0 16px;max-width:700px;margin:20px auto">
-<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">🌟 Harz Ecosystem (38 Platforms)</div>
+<div style="padding:0 14px;max-width:680px;margin:16px auto">
+<div style="font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">🌟 Harz Ecosystem (39 Platforms)</div>
 </div>
 <div class="site-grid">
-<a class="site-card" href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" target="_blank"><div class="ico">📱</div><div class="name">Super App</div><div class="url">All-in-one</div></a>
-<a class="site-card" href="https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html" target="_blank"><div class="ico">🤖</div><div class="name">AI Cloud</div><div class="url">20 agents</div></a>
-<a class="site-card" href="https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html" target="_blank"><div class="ico">📊</div><div class="name">Business OS</div><div class="url">CRM + ERP</div></a>
-<a class="site-card" href="https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html" target="_blank"><div class="ico">💾</div><div class="name">Data Cloud</div><div class="url">Storage</div></a>
-<a class="site-card" href="https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html" target="_blank"><div class="ico">💡</div><div class="name">Venture Studio</div><div class="url">Idea→Business</div></a>
-<a class="site-card" href="https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html" target="_blank"><div class="ico">🪪</div><div class="name">Identity</div><div class="url">SSO + KYC</div></a>
-<a class="site-card" href="https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html" target="_blank"><div class="ico">🌐</div><div class="name">Dashboard</div><div class="url">38 platforms</div></a>
-<a class="site-card" href="https://rabiuhamza11.github.io/harz-portfolio/harz-launch.html" target="_blank"><div class="ico">🚀</div><div class="name">Launch</div><div class="url">Announcement</div></a>
+<div class="site-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html')"><div class="ico">📱</div><div class="name">Super App</div><div class="url">All-in-one</div></div>
+<div class="site-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')"><div class="ico">🤖</div><div class="name">AI Cloud</div><div class="url">20 agents</div></div>
+<div class="site-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html')"><div class="ico">📊</div><div class="name">Business OS</div><div class="url">CRM + ERP</div></div>
+<div class="site-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html')"><div class="ico">💾</div><div class="name">Data Cloud</div><div class="url">Storage</div></div>
+<div class="site-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html')"><div class="ico">💡</div><div class="name">Venture Studio</div><div class="url">Idea→Business</div></div>
+<div class="site-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html')"><div class="ico">🪪</div><div class="name">Identity</div><div class="url">SSO + KYC</div></div>
+<div class="site-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html')"><div class="ico">🌐</div><div class="name">Dashboard</div><div class="url">39 platforms</div></div>
+<div class="site-card" onclick="openInBrowser('https://rabiuhamza11.github.io/harz-portfolio/harz-launch.html')"><div class="ico">🚀</div><div class="name">Launch</div><div class="url">Announcement</div></div>
 </div>
 </div>
 
-<div class="footer">HARZ Browser v1.0 · Platform #39 · Harz Digital Services<br>Search · AI · News · Ads · Bookmarks · CAC RC 321424</div>
+<div class="footer">HARZ Browser v1.1 · Platform #39 · Harz Digital Services<br>Search · AI · News · Ads · Sites · CAC RC 321424</div>
+
+<div id="installBanner">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#00d4ff,#7c4dff);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff">H</div>
+<div><div style="font-size:.75rem;font-weight:700">Install HARZ Browser</div><div style="font-size:.58rem;color:#71717a">Search · AI · News · Offline mode</div></div>
+</div>
+<button onclick="installPWA()" style="background:linear-gradient(135deg,#00d4ff,#7c4dff);border:none;border-radius:10px;padding:7px 15px;color:#fff;font-size:.7rem;font-weight:700;cursor:pointer">Install</button>
+<button onclick="document.getElementById('installBanner').classList.remove('show-banner')" style="background:none;border:none;color:#71717a;font-size:1.1rem;cursor:pointer;padding:4px">×</button>
+</div>
 
 <script>
+// === BROWSER ENGINE ===
 let currentEngine='google';
+let historyStack=[];
+let forwardStack=[];
+let currentUrl='';
+
+// Tabs
 function switchTab(name,el){
 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById('page-'+name).classList.add('active');
+const pg=document.getElementById('page-'+name);
+if(pg)pg.classList.add('active');
 document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-el.classList.add('active');
+if(el)el.classList.add('active');
+closeBrowser();
 }
+
+function goHome(){
+switchTab('search',document.querySelectorAll('.tab')[0]);
+closeBrowser();
+}
+
+// In-browser navigation
+function openInBrowser(url){
+historyStack.push(currentUrl);
+forwardStack=[];
+currentUrl=url;
+document.getElementById('urlBar').value=url;
+document.getElementById('browserChrome').classList.add('show');
+document.getElementById('browserViewport').classList.add('show');
+document.getElementById('browserFallback').classList.remove('show');
+const frame=document.getElementById('browserFrame');
+frame.src=url;
+frame.style.display='block';
+updateNavButtons();
+// Hide all pages
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+}
+
+function closeBrowser(){
+document.getElementById('browserChrome').classList.remove('show');
+document.getElementById('browserViewport').classList.remove('show');
+document.getElementById('browserFrame').src='';
+document.getElementById('browserFrame').style.display='block';
+document.getElementById('browserFallback').classList.remove('show');
+}
+
+function goBack(){
+if(historyStack.length===0)return;
+forwardStack.push(currentUrl);
+currentUrl=historyStack.pop();
+document.getElementById('urlBar').value=currentUrl;
+document.getElementById('browserFrame').src=currentUrl;
+document.getElementById('browserFallback').classList.remove('show');
+document.getElementById('browserFrame').style.display='block';
+updateNavButtons();
+}
+
+function goForward(){
+if(forwardStack.length===0)return;
+historyStack.push(currentUrl);
+currentUrl=forwardStack.pop();
+document.getElementById('urlBar').value=currentUrl;
+document.getElementById('browserFrame').src=currentUrl;
+updateNavButtons();
+}
+
+function reloadFrame(){
+if(currentUrl)document.getElementById('browserFrame').src=currentUrl;
+}
+
+function navigateToUrl(val){
+if(!val)return;
+// Add https if missing
+if(!val.startsWith('http')&&!val.startsWith('HTTP')){
+if(val.includes('.')&&!val.includes(' ')){
+val='https://'+val;
+}else{
+// Treat as search
+doSearchWith(val,'google');
+return;
+}
+}
+openInBrowser(val);
+}
+
+function updateNavButtons(){
+document.getElementById('backBtn').disabled=historyStack.length===0;
+document.getElementById('fwdBtn').disabled=forwardStack.length===0;
+}
+
+// Detect iframe load failure (X-Frame-Options)
+document.getElementById('browserFrame').addEventListener('load',function(){
+// If we can't access the frame, it might be blocked
+try{
+const f=document.getElementById('browserFrame');
+if(f.contentDocument&&f.contentDocument.body&&f.contentDocument.body.innerHTML===''){
+showFallback(currentUrl);
+}
+}catch(e){
+// Cross-origin — page loaded fine, just can't read it
+}
+});
+
+// Timeout to detect blocked iframes
+let iframeTimeout;
+function checkIframeLoaded(url){
+clearTimeout(iframeTimeout);
+iframeTimeout=setTimeout(()=>{
+const frame=document.getElementById('browserFrame');
+try{
+// If frame is blank after 5 sec, show fallback
+if(frame.contentWindow&&frame.contentWindow.length===0){
+showFallback(url);
+}
+}catch(e){
+showFallback(url);
+}
+},5000);
+}
+
+function showFallback(url){
+document.getElementById('browserFrame').style.display='none';
+document.getElementById('browserFallback').classList.add('show');
+document.getElementById('fallbackUrl').textContent='The site '+url+' doesn\\'t allow embedding for security. Open it in a new tab instead.';
+document.getElementById('fallbackLink').href=url;
+}
+
+// === SEARCH ===
 function selectEngine(el,engine){
 document.querySelectorAll('.engine-chip').forEach(c=>c.classList.remove('active'));
 el.classList.add('active');
 currentEngine=engine;
 }
+
 function doSearch(){
 const q=document.getElementById('searchInput').value.trim();
 if(!q)return;
-if(currentEngine==='harzai'){
+doSearchWith(q,currentEngine);
+}
+
+function doSearchWith(q,engine){
+if(engine==='harzai'){
 switchTab('ai',document.querySelectorAll('.tab')[1]);
 document.getElementById('aiInput').value=q;
 sendAIMsg();
 return;
 }
 const urls={
-google:'https://www.google.com/search?q='+encodeURIComponent(q),
-bing:'https://www.bing.com/search?q='+encodeURIComponent(q),
-duckduckgo:'https://duckduckgo.com/?q='+encodeURIComponent(q),
-youtube:'https://www.youtube.com/results?search_query='+encodeURIComponent(q),
-wikipedia:'https://en.wikipedia.org/wiki/Special:Search?search='+encodeURIComponent(q)
+google:'https://www.google.com/search?q=',
+bing:'https://www.bing.com/search?q=',
+duckduckgo:'https://duckduckgo.com/?q=',
+youtube:'https://www.youtube.com/results?search_query=',
+wikipedia:'https://en.wikipedia.org/wiki/Special:Search?search='
 };
-window.open(urls[currentEngine]||urls.google,'_blank');
+const searchUrl=urls[engine]+encodeURIComponent(q);
+openInBrowser(searchUrl);
+checkIframeLoaded(searchUrl);
 }
+
+function searchAndOpen(q){
+document.getElementById('searchInput').value=q;
+doSearchWith(q,'google');
+}
+
 function selectNews(el,cat){
 document.querySelectorAll('.news-cat').forEach(c=>c.classList.remove('active'));
 el.classList.add('active');
-// In production, this would fetch real news via API
 }
-// AI Chat
+
+// === AI CHAT ===
 const aiResponses={
-'what is the harz ecosystem':'Harz Digital Services is an ecosystem of 38 live AI-powered platforms built from Bauchi State, Nigeria. It spans fintech (HarzPay, Apex Bank), healthcare (18 AI agents), cybersecurity (37 agents), education (18 agents), media (HarzMusic, HarzFilm), business tools (Business OS), IoT, and more. Everything is connected via a unified Super App with single sign-on.',
-'gdeg':'GDEG is Harz ecosystem\'s native payment token on the Polygon network. Mainnet: 0xdE2c45A0c25dC290aF51347f95D82EBbe51fe3C1. Rate: 1 GDEG = $0.01 (₦15). Users get a 10% discount when paying with GDEG across all Harz platforms.',
-'platforms are live':'38 platforms are live right now: HarzDM Marketplace, HarzPay, Apex Bank, HarzAjo, HarzFX, HarzLend, OMEGA Health AI, MindCare AI, Cyber Shield X, EduWealth AI, OMEGA Infinity, TradeOS, OMEGA Content AI, Abuja Estate City, Maganu Agent, BuildBot AI, ContentPilot, HarzMusic, HarzFilm, WhatsApp CRM, Harz AI Agency, Freelance Market, Harz Events, OMEGA Commander, Getly Store, Developer Platform, AI Cloud, Super App, Business OS, IoT & Robotics, Global Identity, Data Cloud, Venture Studio, and more.',
-'engineering books':'The Harz Engineering Collection is an 8-in-1 bundle covering Building, Civil, Software, Architectural, Electrical, Mechanical, Chemical, and Electronic engineering. 154 pages, $89.99 for the bundle or $14.99-$19.99 per book. Available on Gumroad, Getly, and Selar. Buy here: https://rabiuhamza11.github.io/harz-portfolio/harzdm-checkout.html',
+'what is the harz ecosystem':'Harz Digital Services operates 39 live AI-powered platforms built from Bauchi State, Nigeria. The ecosystem spans fintech (HarzPay, Apex Bank, HarzFX, HarzLend, HarzAjo), AI (20-agent Cloud, OMEGA Commander, Maganu), healthcare (18 AI agents + mental wellness), cybersecurity (37 agents), education (18 tutors + career guidance), media (27 music tracks, 8 films), business tools (Business OS), IoT (20 devices), Global Identity (SSO, KYC), Data Cloud, Venture Studio, and more. All connected via unified Super App.',
+'gdeg':'GDEG is Harz ecosystem\'s native payment token on Polygon network. Mainnet: 0xdE2c45A0c25dC290aF51347f95D82EBbe51fe3C1. Rate: 1 GDEG = $0.01 (₦15). Users get 10% discount paying with GDEG across all Harz platforms.',
+'platforms are live':'39 platforms are live right now: HarzDM Marketplace, HarzPay, Apex Bank, HarzAjo, HarzFX, HarzLend, OMEGA Health AI, MindCare AI, Cyber Shield X, EduWealth AI, OMEGA Infinity, TradeOS, OMEGA Content AI, Abuja Estate City, Maganu Agent, BuildBot AI, ContentPilot, HarzMusic, HarzFilm, WhatsApp CRM, Harz AI Agency, Freelance Market, Harz Events, OMEGA Commander, Getly Store, Developer Platform, AI Cloud, Super App, Business OS, IoT & Robotics, Global Identity, Data Cloud, Venture Studio, HARZ Browser, and more.',
+'engineering books':'The Harz Engineering Collection is an 8-in-1 bundle covering Building, Civil, Software, Architectural, Electrical, Mechanical, Chemical, and Electronic engineering. 154 pages, $89.99 for the bundle or $14.99-$19.99 per book. Available on Gumroad, Getly, and Selar.',
 'nigeria tech news':'Here are the latest Nigeria tech stories: 1) Nigeria\'s tech ecosystem raised $1.2B in 2026. 2) African developers building AI tools for local problems. 3) CBN introduces new forex measures. 4) Cybersecurity threats rise 40%. Check the News tab for full articles.',
 };
 function sendAIMsg(){
@@ -337,32 +540,29 @@ const q=input.value.trim();
 if(!q)return;
 input.value='';
 const msgs=document.getElementById('aiMessages');
-// User msg
 const userDiv=document.createElement('div');
 userDiv.className='ai-msg user';
 userDiv.innerHTML='<div class="who">You</div><div class="bubble">'+q+'</div>';
 msgs.appendChild(userDiv);
 msgs.scrollTop=msgs.scrollHeight;
-// AI response
 setTimeout(()=>{
 const aiDiv=document.createElement('div');
 aiDiv.className='ai-msg ai';
 const lowerQ=q.toLowerCase();
-let response='I understand you\'re asking about: "'+q+'". ';
-// Check for known responses
+let response='';
 let found=false;
 for(const[key,val]of Object.entries(aiResponses)){
 if(lowerQ.includes(key)){response=val;found=true;break;}
 }
 if(!found){
 if(lowerQ.includes('search')){
-response='I can search the web for you! Go to the Search tab, type your query, and select your preferred search engine (Google, Bing, DuckDuckGo, YouTube, or Wikipedia). You can also ask me questions directly here.';
+response='I can search the web for you! Go to the Search tab, type your query, and select your preferred search engine (Google, Bing, DuckDuckGo, YouTube, or Wikipedia). Results open right here in the browser.';
 }else if(lowerQ.includes('hello')||lowerQ.includes('hi')||lowerQ.includes('salam')){
-response='Salam! 👋 I\'m Magani, your AI assistant. I can help you explore the Harz ecosystem, search the web, answer questions about our 38 platforms, or just chat. What would you like to know?';
+response='Salam! 👋 I\\'m Magani, your AI assistant. I can help you explore the Harz ecosystem, search the web, answer questions about our 39 platforms, or just chat. What would you like to know?';
 }else if(lowerQ.includes('buy')||lowerQ.includes('purchase')||lowerQ.includes('shop')){
-response='You can buy Harz products through multiple channels: 1) HarzDM Marketplace (digital products) 2) Gumroad (international) 3) Getly Store (Nigerian marketplace) 4) Selar (direct Nigerian sales) 5) WhatsApp direct (08028687857). We accept UBA bank transfer, USDT, GDEG token, and Paystack.';
+response='You can buy Harz products through multiple channels: 1) HarzDM Marketplace 2) Gumroad (international) 3) Getly Store (Nigerian) 4) Selar (direct Nigerian sales) 5) WhatsApp direct (08028687857). We accept UBA bank transfer, USDT, GDEG token, and Paystack.';
 }else{
-response='Great question! The Harz ecosystem has 38 live platforms spanning fintech, AI, healthcare, cybersecurity, education, media, business tools, IoT, and more. I can help you explore any of them. Try asking about a specific platform, or check the Sites tab to browse everything. You can also search the web using the Search tab.';
+response='Great question! The Harz ecosystem has 39 live platforms spanning fintech, AI, healthcare, cybersecurity, education, media, business tools, IoT, and more. Try asking about a specific platform, or check the Sites tab to browse everything. You can also search the web using the Search tab.';
 }
 }
 aiDiv.innerHTML='<div class="who">Magani</div><div class="bubble">'+response+'</div>';
@@ -371,66 +571,37 @@ msgs.scrollTop=msgs.scrollHeight;
 },600);
 }
 
-// Live HARZ Browser data loader
-const BR_API='https://superagent-2286fb2f.base44.app/functions/harzBrowser?action=dashboard';
-let browserKB={};
-async function loadBrowserData(){
-try{
-const r=await fetch(BR_API);
-const d=await r.json();
-if(d.status!=='ok')return;
-// Update trending
-const trending=document.querySelectorAll('#page-search .news-card, #page-search div[style*="cursor:pointer"]');
-// Update AI knowledge base
-if(d.ai_knowledge_base)browserKB=d.ai_knowledge_base;
-// Update overview counts in AI welcome
-const o=d.overview;
-console.log('HARZ Browser: Live data loaded \u2014 '+o.platforms+' platforms, '+o.products+' products, '+o.ai_agents+' AI agents');
-}catch(e){console.log('Browser: demo mode ('+e.message+')');}
-}
-document.addEventListener('DOMContentLoaded',function(){setTimeout(loadBrowserData,500);});
-
-</script>
-<div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#0a0a0f,#14141c);border-top:2px solid #00d4ff;padding:14px 16px;z-index:999;display:flex;align-items:center;gap:12px;justify-content:space-between">
-<div style="display:flex;align-items:center;gap:10px">
-<div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#00d4ff,#7c4dff);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:#fff">H</div>
-<div>
-<div style="font-size:.78rem;font-weight:700">Install HARZ Browser</div>
-<div style="font-size:.6rem;color:#71717a">Search · AI · News · Offline mode</div>
-</div>
-</div>
-<button onclick="installPWA()" style="background:linear-gradient(135deg,#00d4ff,#7c4dff);border:none;border-radius:10px;padding:8px 16px;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer">Install</button>
-<button onclick="document.getElementById('installBanner').style.display='none'" style="background:none;border:none;color:#71717a;font-size:1.2rem;cursor:pointer;padding:4px">×</button>
-</div>
-
-<script>
+// === PWA ===
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',(e)=>{
 e.preventDefault();
 deferredPrompt=e;
-document.getElementById('installBanner').style.display='flex';
+document.getElementById('installBanner').classList.add('show-banner');
 });
 function installPWA(){
 if(deferredPrompt){
 deferredPrompt.prompt();
 deferredPrompt.userChoice.then((result)=>{
-if(result.outcome==='accepted'){
-document.getElementById('installBanner').style.display='none';
-console.log('HARZ Browser installed');
-}
+if(result.outcome==='accepted')document.getElementById('installBanner').classList.remove('show-banner');
 deferredPrompt=null;
 });
 }
 }
-window.addEventListener('appinstalled',()=>{
-document.getElementById('installBanner').style.display='none';
-console.log('HARZ Browser installed successfully');
-});
+window.addEventListener('appinstalled',()=>document.getElementById('installBanner').classList.remove('show-banner'));
 if('serviceWorker' in navigator){
-navigator.serviceWorker.register('browser-sw.js').then(()=>{
-console.log('HARZ Browser SW registered - offline mode active');
-}).catch((e)=>console.log('SW registration failed:',e));
+navigator.serviceWorker.register('browser-sw.js').then(()=>console.log('HARZ Browser SW registered')).catch((e)=>console.log('SW failed:',e));
 }
+
+// === LIVE DATA ===
+const BR_API='https://superagent-2286fb2f.base44.app/functions/harzBrowser?action=dashboard';
+async function loadBrowserData(){
+try{
+const r=await fetch(BR_API);
+const d=await r.json();
+if(d.status==='ok')console.log('HARZ Browser: Live data loaded — '+d.overview.platforms+' platforms, '+d.overview.products+' products');
+}catch(e){console.log('Browser: offline mode');}
+}
+document.addEventListener('DOMContentLoaded',function(){setTimeout(loadBrowserData,500);});
 </script>
 </body>
 </html>
