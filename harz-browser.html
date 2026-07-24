@@ -364,6 +364,26 @@ msgs.appendChild(aiDiv);
 msgs.scrollTop=msgs.scrollHeight;
 },600);
 }
+
+// Live HARZ Browser data loader
+const BR_API='https://superagent-2286fb2f.base44.app/functions/harzBrowser?action=dashboard';
+let browserKB={};
+async function loadBrowserData(){
+try{
+const r=await fetch(BR_API);
+const d=await r.json();
+if(d.status!=='ok')return;
+// Update trending
+const trending=document.querySelectorAll('#page-search .news-card, #page-search div[style*="cursor:pointer"]');
+// Update AI knowledge base
+if(d.ai_knowledge_base)browserKB=d.ai_knowledge_base;
+// Update overview counts in AI welcome
+const o=d.overview;
+console.log('HARZ Browser: Live data loaded \u2014 '+o.platforms+' platforms, '+o.products+' products, '+o.ai_agents+' AI agents');
+}catch(e){console.log('Browser: demo mode ('+e.message+')');}
+}
+document.addEventListener('DOMContentLoaded',function(){setTimeout(loadBrowserData,500);});
+
 </script>
 </body>
 </html>
