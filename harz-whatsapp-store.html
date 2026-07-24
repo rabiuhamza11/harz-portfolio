@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ WhatsApp Store — Shop via WhatsApp</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:800px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#25D366,#128C7E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(37,211,102,.1);color:#25D366;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin:16px 0}
+.product-card{background:#131722;border:1px solid #1e2530;border-radius:12px;overflow:hidden;transition:.2s}
+.product-card:hover{border-color:#25D366;transform:translateY(-2px)}
+.product-img{width:100%;height:100px;background:#1a1f2e;display:flex;align-items:center;justify-content:center;font-size:2rem}
+.product-info{padding:10px}
+.product-name{font-size:.72rem;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-price{font-size:.68rem;color:#25D366;margin-top:4px}
+.product-cat{font-size:.6rem;color:#8892a6;margin-top:2px}
+.buy-btn{width:100%;padding:6px;background:#25D366;border:none;border-radius:6px;color:#0a0e17;font-size:.62rem;font-weight:600;cursor:pointer;margin-top:6px}
+.cart-bar{position:sticky;bottom:0;left:0;right:0;background:#131722;border-top:2px solid #25D366;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin:16px -16px 0}
+.cart-info{font-size:.75rem;color:#fff}
+.cart-count{background:#25D366;color:#0a0e17;padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:700;margin-left:4px}
+.checkout-btn{background:#25D366;color:#0a0e17;border:none;padding:10px 20px;border-radius:10px;font-size:.78rem;font-weight:700;cursor:pointer}
+.search-box{display:flex;gap:8px;margin:16px 0}
+.search-box input{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:10px 14px;color:#e8e8e8;font-size:.78px}
+.search-box select{background:#131722;border:1px solid #1e2530;border-radius:10px;padding:10px 14px;color:#e8e8e8;font-size:.72rem}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+.howto{font-size:.72rem;color:#8892a6;line-height:1.8}
+.howto li{margin-bottom:6px}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.feature-item{background:#131722;border:1px solid #1e2530;border-radius:10px;padding:14px;text-align:center}
+.feature-icon{font-size:1.5rem;margin-bottom:6px}
+.feature-text{font-size:.68rem;color:#8892a6}
+.feature-text strong{color:#fff}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ WhatsApp Store</h1>
+<p>Browse 259 products — order and pay without leaving WhatsApp</p>
+<div class="badge">Powered by HarzPay + WhatsApp CRM</div>
+</div>
+
+<div class="feature-grid">
+<div class="feature-item"><div class="feature-icon">🛒</div><div class="feature-text"><strong>Browse</strong><br>259 digital products</div></div>
+<div class="feature-item"><div class="feature-icon">💬</div><div class="feature-text"><strong>Order</strong><br>Send a WhatsApp message</div></div>
+<div class="feature-item"><div class="feature-icon">💳</div><div class="feature-text"><strong>Pay</strong><br>UBA, Paystack, GDEG, USDT</div></div>
+<div class="feature-item"><div class="feature-icon">⚡</div><div class="feature-text"><strong>Instant</strong><br>Auto-delivery via WhatsApp</div></div>
+</div>
+
+<div class="search-box">
+<input id="searchInput" placeholder="Search products..." oninput="filterProducts()">
+<select id="catFilter" onchange="filterProducts()">
+<option value="">All Categories</option>
+<option>Engineering</option><option>Business</option><option>Technology</option><option>Health</option><option>Education</option><option>Music</option><option>Film</option><option>Finance</option><option>Programming</option><option>Self-Help</option>
+</select>
+</div>
+
+<div class="product-grid" id="productGrid">
+<div class="product-card"><div class="product-img">📘</div><div class="product-info"><div class="product-name">Complete Genius 365</div><div class="product-price">₦2,500</div><div class="product-cat">Self-Help</div><button class="buy-btn" onclick="addToCart('Complete Genius 365',2500)">Add to Cart</button></div></div>
+<div class="product-card"><div class="product-img">🏗️</div><div class="product-info"><div class="product-name">BuildBot AI Plan</div><div class="product-price">₦5,000</div><div class="product-cat">Construction</div><button class="buy-btn" onclick="addToCart('BuildBot AI Plan',5000)">Add to Cart</button></div></div>
+<div class="product-card"><div class="product-img">🎵</div><div class="product-info"><div class="product-name">HarzMusic Track</div><div class="product-price">₦500</div><div class="product-cat">Music</div><button class="buy-btn" onclick="addToCart('HarzMusic Track',500)">Add to Cart</button></div></div>
+<div class="product-card"><div class="product-img">🎬</div><div class="product-info"><div class="product-name">HarzFilm Access</div><div class="product-price">₦1,000</div><div class="product-cat">Film</div><button class="buy-btn" onclick="addToCart('HarzFilm Access',1000)">Add to Cart</button></div></div>
+<div class="product-card"><div class="product-img">🤖</div><div class="product-info"><div class="product-name">AI Cloud — Starter</div><div class="product-price">₦15,000/mo</div><div class="product-cat">Technology</div><button class="buy-btn" onclick="addToCart('AI Cloud Starter',15000)">Add to Cart</button></div></div>
+<div class="product-card"><div class="product-img">💻</div><div class="product-info"><div class="product-name">Chatbot Builder Pro</div><div class="product-price">₦50,000/mo</div><div class="product-cat">Business</div><button class="buy-btn" onclick="addToCart('Chatbot Builder Pro',50000)">Add to Cart</button></div></div>
+<div class="product-card"><div class="product-img">🌐</div><div class="product-info"><div class="product-name">Domain Registration</div><div class="product-price">₦5,500</div><div class="product-cat">Technology</div><button class="buy-btn" onclick="addToCart('Domain .com',5500)">Add to Cart</button></div></div>
+<div class="product-card"><div class="product-img">🔐</div><div class="product-info"><div class="product-name">Cyber Shield X</div><div class="product-price">₦10,000/mo</div><div class="product-cat">Security</div><button class="buy-btn" onclick="addToCart('Cyber Shield X',10000)">Add to Cart</button></div></div>
+</div>
+
+<div class="section">
+<h3>How WhatsApp Shopping Works</h3>
+<ol class="howto">
+<li>Browse products above and add to cart</li>
+<li>Click "Checkout via WhatsApp" — opens WhatsApp with your order</li>
+<li>Our AI assistant confirms your order and sends payment details</li>
+<li>Pay via UBA transfer, Paystack, GDEG token, or USDT</li>
+<li>Send payment proof on WhatsApp</li>
+<li>Product delivered instantly via WhatsApp link</li>
+<li>You get a receipt and download link — all in one chat</li>
+</ol>
+</div>
+
+<div class="section">
+<h3>Or Shop Directly on WhatsApp</h3>
+<p style="font-size:.75rem;color:#8892a6;margin-bottom:10px">Send any of these commands to our WhatsApp number:</p>
+<div style="background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:12px;font-family:monospace;font-size:.72rem;color:#25D366;line-height:1.8">
+"PRODUCTS" — See all 259 products<br>
+"SEARCH engineering" — Search by keyword<br>
+"PRICE Complete Genius 365" — Get product price<br>
+"ORDER [product name]" — Place an order<br>
+"CATEGORIES" — List all categories<br>
+"PAYMENT" — See payment options<br>
+"HELP" — Talk to a human agent
+</div>
+</div>
+
+<div class="cart-bar">
+<div class="cart-info">🛒 Cart<span class="cart-count" id="cartCount">0</span> <span id="cartTotal" style="color:#25D366;margin-left:8px">₦0</span></div>
+<button class="checkout-btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #49 • CAC RC: 321424</div>
+</div>
+<script>
+let cart=[];
+function addToCart(name,price){cart.push({name,price});updateCart();}
+function updateCart(){
+document.getElementById('cartCount').textContent=cart.length;
+const total=cart.reduce((s,i)=>s+i.price,0);
+document.getElementById('cartTotal').textContent='₦'+total.toLocaleString();
+}
+function checkoutWhatsApp(){
+if(cart.length===0){alert('Your cart is empty. Add some products first!');return;}
+const total=cart.reduce((s,i)=>s+i.price,0);
+let msg='Hello Harz! I would like to order:%0A%0A';
+cart.forEach((item,i)=>{msg+=(i+1)+'. '+item.name+' — ₦'+item.price.toLocaleString()+'%0A';});
+msg+='%0ATotal: ₦'+total.toLocaleString()+'%0A%0AMy payment method: ___%0APlease confirm my order.';
+window.open('https://wa.me/2348028687857?text='+msg,'_blank');
+}
+function filterProducts(){
+const q=document.getElementById('searchInput').value.toLowerCase();
+const c=document.getElementById('catFilter').value;
+document.querySelectorAll('.product-card').forEach(card=>{
+const name=card.querySelector('.product-name').textContent.toLowerCase();
+const cat=card.querySelector('.product-cat').textContent;
+const mq=!q||name.includes(q);
+const mc=!c||cat.includes(c);
+card.style.display=(mq&&mc)?'block':'none';
+});
+}
+</script>
+</body>
+</html>
