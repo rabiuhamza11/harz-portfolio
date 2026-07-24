@@ -99,7 +99,7 @@ label{font-size:.6rem;color:var(--muted);margin-bottom:4px;display:block;font-we
 
 <div id="page-hosting" class="page">
 <div class="section-title">Hosting Plans</div>
-<div style="font-size:.6rem;color:var(--muted);margin-bottom:10px">Choose a plan. Pay via bank transfer, Paystack, or GDEG. Setup within 24 hours.</div>
+<div style="font-size:.6rem;color:var(--muted);margin-bottom:10px">Choose a plan. Pay via HarzPay — Bank, Paystack, GDEG, USDT. Setup within 24 hours.</div>
 <div id="hostingPlans"></div>
 </div>
 
@@ -130,8 +130,8 @@ label{font-size:.6rem;color:var(--muted);margin-bottom:4px;display:block;font-we
 <div class="section-title">Invoices & Billing</div>
 <div id="invoiceList"></div>
 <div class="card" style="margin-top:14px">
-<div style="font-size:.7rem;font-weight:700;margin-bottom:8px">Payment Methods</div>
-<div style="font-size:.6rem;color:var(--muted);line-height:1.8">1. Bank Transfer — UBA, Rabiu Hamza Mohammed, 2034326424<br>2. Paystack — Card payment<br>3. GDEG Token — Polygon (10% discount)</div>
+<div style="font-size:.7rem;font-weight:700;margin-bottom:8px">⚡ Powered by HarzPay</div>
+<div style="font-size:.6rem;color:var(--muted);line-height:1.8">1. 🏦 Bank Transfer — UBA, Rabiu Hamza Mohammed, 2034326424<br>2. 💳 Paystack — Card, Bank, USSD<br>3. 🪙 GDEG Token — Polygon (10% OFF)<br>4. 💲 USDT — TRC20 Network<br>5. 📱 USSD — *737*033*2034326424*AMOUNT#</div>
 </div>
 </div>
 
@@ -236,7 +236,7 @@ const p=DASH.hosting_plans.find(x=>x.name===planName);
 const el=document.getElementById('page-hosting');
 const m=document.createElement('div');
 m.id='orderModal';m.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px';
-m.innerHTML=`<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto"><div style="font-size:.8rem;font-weight:700;margin-bottom:10px">Order ${p.name}</div><label>Your Name</label><input id="hostName" placeholder="Full name"><label style="margin-top:8px">Email</label><input id="hostEmail" placeholder="your@email.com"><label style="margin-top:8px">Billing Cycle</label><select id="hostCycle"><option value="monthly">Monthly ${fmtN(p.price)}</option><option value="yearly">Yearly ${fmtN(p.price*10)} (2 months FREE)</option></select><label style="margin-top:8px">Payment Method</label><select id="hostPay"><option value="Bank Transfer">Bank Transfer (UBA)</option><option value="Paystack">Paystack (Card)</option><option value="GDEG">GDEG Token (10% off)</option></select><button class="btn btn-p" style="margin-top:12px" onclick="submitHostingOrder('${p.name}')">Place Order</button><button class="btn" style="margin-top:6px;background:var(--card2);color:var(--muted)" onclick="document.getElementById('orderModal').remove()">Cancel</button></div>`;
+m.innerHTML=`<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto"><div style="font-size:.8rem;font-weight:700;margin-bottom:10px">Order ${p.name}</div><label>Your Name</label><input id="hostName" placeholder="Full name"><label style="margin-top:8px">Email</label><input id="hostEmail" placeholder="your@email.com"><label style="margin-top:8px">Billing Cycle</label><select id="hostCycle"><option value="monthly">Monthly ${fmtN(p.price)}</option><option value="yearly">Yearly ${fmtN(p.price*10)} (2 months FREE)</option></select><label style="margin-top:8px">Payment Method</label><select id="hostPay"><option value="HarzPay Bank">⚡ HarzPay — Bank Transfer (UBA)</option><option value="HarzPay Paystack">💳 HarzPay — Paystack (Card/USSD)</option><option value="HarzPay GDEG">🪙 HarzPay — GDEG Token (10% OFF)</option><option value="HarzPay USDT">💲 HarzPay — USDT (TRC20)</option></select><button class="btn btn-p" style="margin-top:12px" onclick="submitHostingOrder('${p.name}')">Place Order</button><button class="btn" style="margin-top:6px;background:var(--card2);color:var(--muted)" onclick="document.getElementById('orderModal').remove()">Cancel</button></div>`;
 document.body.appendChild(m);
 }
 
@@ -263,10 +263,10 @@ el.innerHTML=DASH.domains.length?DASH.domains.map(d=>`<div class="card2"><div st
 function renderInvoices(){
 if(!DASH)return;
 const el=document.getElementById('invoiceList');
-el.innerHTML=DASH.invoices.length?DASH.invoices.map(i=>`<div class="card2"><div style="display:flex;justify-content:space-between;align-items:start"><div><div style="font-size:.65rem;font-weight:700">${i.invoice_number}</div><div style="font-size:.55rem;color:var(--muted)">${i.item_description}</div></div><div style="text-align:right"><div style="font-size:.7rem;font-weight:700">${i.currency==='USD'?'$':'\u20a6'}${i.amount}</div><span class="pill ${i.status==='paid'?'green':'yellow'}">${i.status}</span></div></div>${i.status==='pending'?'<button class="btn btn-s" style="margin-top:8px;padding:8px;font-size:.65rem" onclick="payInvoice(\''+i.invoice_number+'\')">Pay Now UBA 2034326424</button>':''}</div>`).join(''):'<div style="font-size:.6rem;color:var(--muted);text-align:center;padding:20px">No invoices</div>';
+el.innerHTML=DASH.invoices.length?DASH.invoices.map(i=>`<div class="card2"><div style="display:flex;justify-content:space-between;align-items:start"><div><div style="font-size:.65rem;font-weight:700">${i.invoice_number}</div><div style="font-size:.55rem;color:var(--muted)">${i.item_description}</div></div><div style="text-align:right"><div style="font-size:.7rem;font-weight:700">${i.currency==='USD'?'$':'\u20a6'}${i.amount}</div><span class="pill ${i.status==='paid'?'green':'yellow'}">${i.status}</span></div></div>${i.status==='pending'?'<button class="btn btn-s" style="margin-top:8px;padding:8px;font-size:.65rem" onclick="payInvoice(\''+i.invoice_number+'\')">⚡ Pay via HarzPay</button>':''}</div>`).join(''):'<div style="font-size:.6rem;color:var(--muted);text-align:center;padding:20px">No invoices</div>';
 }
 
-async function payInvoice(inv){showToast('Marking as paid...');try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'pay_invoice',invoice_number:inv,payment_method:'Bank Transfer'})});const d=await r.json();if(d.status==='ok'){showToast('Invoice paid!');loadDashboard()}}catch(e){showToast('Error')}}
+async function payInvoice(inv){showToast('Marking as paid...');try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'pay_invoice',invoice_number:inv,payment_method:'HarzPay Bank Transfer'})});const d=await r.json();if(d.status==='ok'){showToast('Invoice paid!');loadDashboard()}}catch(e){showToast('Error')}}
 
 async function createTicket(){
 const s=document.getElementById('ticketSubject').value.trim();
