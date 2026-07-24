@@ -2,8 +2,8 @@
   "name": "HARZ Browser — Search & AI",
   "short_name": "HarzBrowser",
   "description": "Smart web browser with search engines, AI assistant, news, and ads from Harz Digital Services",
-  "start_url": "https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html",
-  "scope": "/harz-portfolio/",
+  "start_url": "./harz-browser.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a0a0f",
@@ -13,25 +13,25 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "https://rabiuhamza11.github.io/harz-portfolio/browser-icon-192.png",
+      "src": "./browser-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://rabiuhamza11.github.io/harz-portfolio/browser-icon-192.png",
+      "src": "./browser-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://rabiuhamza11.github.io/harz-portfolio/browser-icon-512.png",
+      "src": "./browser-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://rabiuhamza11.github.io/harz-portfolio/browser-icon-512.png",
+      "src": "./browser-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
