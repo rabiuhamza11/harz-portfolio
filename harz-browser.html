@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#0a0a0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HarzBrowser">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="browser-manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%230a0a0f'/%3E%3Ccircle cx='90' cy='90' r='45' fill='none' stroke='%2300d4ff' stroke-width='7'/%3E%3Ctext x='90' y='68' font-size='24' fill='%2300d4ff' text-anchor='middle' font-family='Arial' font-weight='bold'%3EH%3C/text%3E%3C/svg%3E">
 <title>HARZ Browser — Search · AI · News · More</title>
 <meta name="description" content="Harz Browser — A smart web browser dashboard with multi-engine search, Harz AI assistant, news feeds, and advertising.">
 <style>
@@ -384,6 +390,47 @@ console.log('HARZ Browser: Live data loaded \u2014 '+o.platforms+' platforms, '+
 }
 document.addEventListener('DOMContentLoaded',function(){setTimeout(loadBrowserData,500);});
 
+</script>
+<div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#0a0a0f,#14141c);border-top:2px solid #00d4ff;padding:14px 16px;z-index:999;display:flex;align-items:center;gap:12px;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#00d4ff,#7c4dff);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:#fff">H</div>
+<div>
+<div style="font-size:.78rem;font-weight:700">Install HARZ Browser</div>
+<div style="font-size:.6rem;color:#71717a">Search · AI · News · Offline mode</div>
+</div>
+</div>
+<button onclick="installPWA()" style="background:linear-gradient(135deg,#00d4ff,#7c4dff);border:none;border-radius:10px;padding:8px 16px;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer">Install</button>
+<button onclick="document.getElementById('installBanner').style.display='none'" style="background:none;border:none;color:#71717a;font-size:1.2rem;cursor:pointer;padding:4px">×</button>
+</div>
+
+<script>
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+e.preventDefault();
+deferredPrompt=e;
+document.getElementById('installBanner').style.display='flex';
+});
+function installPWA(){
+if(deferredPrompt){
+deferredPrompt.prompt();
+deferredPrompt.userChoice.then((result)=>{
+if(result.outcome==='accepted'){
+document.getElementById('installBanner').style.display='none';
+console.log('HARZ Browser installed');
+}
+deferredPrompt=null;
+});
+}
+}
+window.addEventListener('appinstalled',()=>{
+document.getElementById('installBanner').style.display='none';
+console.log('HARZ Browser installed successfully');
+});
+if('serviceWorker' in navigator){
+navigator.serviceWorker.register('browser-sw.js').then(()=>{
+console.log('HARZ Browser SW registered - offline mode active');
+}).catch((e)=>console.log('SW registration failed:',e));
+}
 </script>
 </body>
 </html>
