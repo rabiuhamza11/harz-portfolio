@@ -4,8 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#7c4dff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HARZ">
+<link rel="apple-touch-icon" href="super-app-icon-192.png">
 <title>HARZ — Super App</title>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="super-app-manifest.json">
 <style>
 :root{--p1:#7c4dff;--p2:#00bcd4;--p3:#00e676;--p4:#ffab00;--p5:#ff3d71;--bg:#0a0e1a;--card:#121830;--card2:#1a2040;--text:#e0e6ed;--muted:#6b7390;--border:#1e2a4a}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -195,15 +199,15 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="quick-item" onclick="openAI()"><div class="quick-icon" style="background:rgba(124,77,255,.12)">🤖</div><span class="quick-label">AI Assistant</span></div>
 <div class="quick-item" onclick="switchPage('store')"><div class="quick-icon" style="background:rgba(255,171,0,.12)">🛍️</div><span class="quick-label">Store</span></div>
 <div class="quick-item" onclick="switchPage('learn')"><div class="quick-icon" style="background:rgba(0,188,212,.12)">📚</div><span class="quick-label">Learn</span></div>
-<div class="quick-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html','_blank')"><div class="quick-icon" style="background:rgba(0,188,212,.12)">🔧</div><span class="quick-label">Dev Platform</span></div>
+<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><div class="quick-icon" style="background:rgba(0,188,212,.12)">🔧</div><span class="quick-label">Dev Platform</span></div>
 <div class="quick-item" onclick="switchPage('business')"><div class="quick-icon" style="background:rgba(124,77,255,.12)">📊</div><span class="quick-label">Business</span></div>
-<div class="quick-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html','_blank')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">🏭</div><span class="quick-label">IoT & Robotics</span></div>
-<div class="quick-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html','_blank')"><div class="quick-icon" style="background:rgba(255,215,0,.12)">🪪</div><span class="quick-label">Global ID</span></div>
-<div class="quick-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html','_blank')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">💾</div><span class="quick-label">Data Cloud</span></div>
-<div class="quick-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html','_blank')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">💡</div><span class="quick-label">Venture Studio</span></div>
-<div class="quick-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html','_blank')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">🌐</div><span class="quick-label">Browser</span></div>
-<div class="quick-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html','_blank')"><div class="quick-icon" style="background:rgba(240,185,11,.12)">🔄</div><span class="quick-label">Exchange</span></div>
-<div class="quick-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html','_blank')"><div class="quick-icon" style="background:rgba(124,77,255,.12)">🏢</div><span class="quick-label">Hosting</span></div>
+<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">🏭</div><span class="quick-label">IoT & Robotics</span></div>
+<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html')"><div class="quick-icon" style="background:rgba(255,215,0,.12)">🪪</div><span class="quick-label">Global ID</span></div>
+<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">💾</div><span class="quick-label">Data Cloud</span></div>
+<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">💡</div><span class="quick-label">Venture Studio</span></div>
+<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html')"><div class="quick-icon" style="background:rgba(0,212,255,.12)">🌐</div><span class="quick-label">Browser</span></div>
+<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html')"><div class="quick-icon" style="background:rgba(240,185,11,.12)">🔄</div><span class="quick-label">Exchange</span></div>
+<div class="quick-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html')"><div class="quick-icon" style="background:rgba(124,77,255,.12)">🏢</div><span class="quick-label">Hosting</span></div>
 <div class="quick-item" onclick="switchPage('more')"><div class="quick-icon" style="background:rgba(90,115,144,.12)">⚙️</div><span class="quick-label">More</span></div>
 </div>
 
@@ -216,10 +220,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 <div class="section">
 <div class="section-head"><span class="section-title">Quick Platforms</span><span class="section-link" onclick="switchPage('more')">View all 39 →</span></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">☁️</div><div class="card-info"><div class="card-title">Harz AI Cloud <span class="card-badge badge-live">LIVE</span></div><div class="card-desc">20 AI agents · subscriptions · API</div></div><div class="card-arrow">›</div></div></div>
-<div class="card" onclick="window.open('https://harzdm.vercel.app','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🛍️</div><div class="card-info"><div class="card-title">HarzDM Store <span class="card-badge badge-live">LIVE</span></div><div class="card-desc">259 products · Getly synced</div></div><div class="card-arrow">›</div></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📢</div><div class="card-info"><div class="card-title">Nexal Ads <span class="card-badge badge-live">LIVE</span></div><div class="card-desc">Multi-platform advertising</div></div><div class="card-arrow">›</div></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">🔧</div><div class="card-info"><div class="card-title">Harz Dev Platform <span class="card-badge badge-new">NEW</span></div><div class="card-desc">API docs · SDK · Code Gen</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">☁️</div><div class="card-info"><div class="card-title">Harz AI Cloud <span class="card-badge badge-live">LIVE</span></div><div class="card-desc">20 AI agents · subscriptions · API</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="openLink('https://harzdm.vercel.app')"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🛍️</div><div class="card-info"><div class="card-title">HarzDM Store <span class="card-badge badge-live">LIVE</span></div><div class="card-desc">259 products · Getly synced</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📢</div><div class="card-info"><div class="card-title">Nexal Ads <span class="card-badge badge-live">LIVE</span></div><div class="card-desc">Multi-platform advertising</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">🔧</div><div class="card-info"><div class="card-title">Harz Dev Platform <span class="card-badge badge-new">NEW</span></div><div class="card-desc">API docs · SDK · Code Gen</div></div><div class="card-arrow">›</div></div></div>
 </div>
 </div>
 
@@ -310,7 +314,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="product-card" onclick="showToast('Opening product...')"><div class="product-img">💼</div><div class="product-info"><div class="product-name">Freelancer Starter Kit</div><div class="product-price">$9.99</div></div></div>
 </div>
 <div style="padding:16px;text-align:center">
-<button onclick="window.open('https://harzdm.vercel.app','_blank')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 30px;color:var(--p2);font-size:.8rem;font-weight:600;cursor:pointer">View Full Store →</button>
+<button onclick="openLink('https://harzdm.vercel.app')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 30px;color:var(--p2);font-size:.8rem;font-weight:600;cursor:pointer">View Full Store →</button>
 </div>
 </div>
 
@@ -326,7 +330,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="course-card" onclick="showToast('Opening course...')"><div class="course-banner" style="background:linear-gradient(135deg,rgba(255,61,113,.2),rgba(124,77,255,.2))">📚</div><div class="course-body"><div class="course-title">The Complete Genius 365</div><div class="course-meta">365 chapters · Daily · Book</div><div style="font-size:.65rem;color:var(--p3);margin-top:4px">Chapter 23 sent today ✅</div></div></div>
 </div>
 <div style="padding:16px;text-align:center">
-<button onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html','_blank')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 30px;color:var(--p2);font-size:.8rem;font-weight:600;cursor:pointer">Browse All Courses →</button>
+<button onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 30px;color:var(--p2);font-size:.8rem;font-weight:600;cursor:pointer">Browse All Courses →</button>
 </div>
 </div>
 
@@ -354,10 +358,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 <div style="padding:0 16px">
 <div class="biz-card" onclick="showToast('Loading CRM...')"><div class="biz-icon" style="background:rgba(37,211,102,.12)">📋</div><div class="biz-info"><div class="biz-title">WhatsApp CRM</div><div class="biz-desc">Customer inquiries & leads</div></div><div class="biz-stat"><div class="biz-num">24</div><div class="biz-lbl">leads</div></div></div>
-<div class="biz-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html','_blank')"><div class="biz-icon" style="background:rgba(0,188,212,.12)">📢</div><div class="biz-info"><div class="biz-title">Nexal Ads</div><div class="biz-desc">Ad campaigns & marketing</div></div><div class="biz-stat"><div class="biz-num">5</div><div class="biz-lbl">active</div></div></div>
-<div class="biz-card" onclick="window.open('https://buildbot-ai-three.vercel.app','_blank')"><div class="biz-icon" style="background:rgba(124,77,255,.12)">🏗️</div><div class="biz-info"><div class="biz-title">BuildBot AI</div><div class="biz-desc">Construction planning & quotes</div></div><div class="biz-stat"><div class="biz-num">12</div><div class="biz-lbl">projects</div></div></div>
+<div class="biz-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html')"><div class="biz-icon" style="background:rgba(0,188,212,.12)">📢</div><div class="biz-info"><div class="biz-title">Nexal Ads</div><div class="biz-desc">Ad campaigns & marketing</div></div><div class="biz-stat"><div class="biz-num">5</div><div class="biz-lbl">active</div></div></div>
+<div class="biz-card" onclick="openLink('https://buildbot-ai-three.vercel.app')"><div class="biz-icon" style="background:rgba(124,77,255,.12)">🏗️</div><div class="biz-info"><div class="biz-title">BuildBot AI</div><div class="biz-desc">Construction planning & quotes</div></div><div class="biz-stat"><div class="biz-num">12</div><div class="biz-lbl">projects</div></div></div>
 <div class="biz-card" onclick="showToast('Loading ContentPilot...')"><div class="biz-icon" style="background:rgba(255,171,0,.12)">🎬</div><div class="biz-info"><div class="biz-title">ContentPilot AI</div><div class="biz-desc">Content scheduling & analytics</div></div><div class="biz-stat"><div class="biz-num">25</div><div class="biz-lbl">agents</div></div></div>
-<div class="biz-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html','_blank')"><div class="biz-icon" style="background:rgba(0,230,118,.12)">☁️</div><div class="biz-info"><div class="biz-title">Harz AI Cloud</div><div class="biz-desc">20 AI agents & API</div></div><div class="biz-stat"><div class="biz-num">20</div><div class="biz-lbl">agents</div></div></div>
+<div class="biz-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')"><div class="biz-icon" style="background:rgba(0,230,118,.12)">☁️</div><div class="biz-info"><div class="biz-title">Harz AI Cloud</div><div class="biz-desc">20 AI agents & API</div></div><div class="biz-stat"><div class="biz-num">20</div><div class="biz-lbl">agents</div></div></div>
 <div class="biz-card" onclick="showToast('Loading Estate...')"><div class="biz-icon" style="background:rgba(255,61,113,.12)">🏠</div><div class="biz-info"><div class="biz-title">Abuja Estate City</div><div class="biz-desc">Property listings & inquiries</div></div><div class="biz-stat"><div class="biz-num">5</div><div class="biz-lbl">listings</div></div></div>
 </div>
 <div class="section">
@@ -377,22 +381,22 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="section-head"><span class="section-title">All Platforms (39)</span></div>
 </div>
 <div style="padding:0 16px" id="allPlatforms">
-<div class="card" onclick="window.open('https://harzdm.vercel.app','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🛍️</div><div class="card-info"><div class="card-title">HarzDM Marketplace</div><div class="card-desc">259 products</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">☁️</div><div class="card-info"><div class="card-title">Harz AI Cloud</div><div class="card-desc">20 AI agents</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📢</div><div class="card-info"><div class="card-title">Nexal Ads</div><div class="card-desc">Advertising platform</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-consult.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">💼</div><div class="card-info"><div class="card-title">Harz Consult</div><div class="card-desc">Consultation bookings</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-freelance.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(255,61,113,.1)">🤝</div><div class="card-info"><div class="card-title">Harz Freelance</div><div class="card-desc">Freelance marketplace</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(229,9,20,.1)">🎬</div><div class="card-info"><div class="card-title">HarzFilm</div><div class="card-desc">8 films · 162K views</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-v2.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📰</div><div class="card-info"><div class="card-title">Harz Newsletter</div><div class="card-desc">Subscriber content</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-onboarding.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🚀</div><div class="card-info"><div class="card-title">Harz Onboarding</div><div class="card-desc">New user setup</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://harzdm.vercel.app')"><div class="card-row"><div class="card-icon" style="background:rgba(255,171,0,.1)">🛍️</div><div class="card-info"><div class="card-title">HarzDM Marketplace</div><div class="card-desc">259 products</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">☁️</div><div class="card-info"><div class="card-title">Harz AI Cloud</div><div class="card-desc">20 AI agents</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📢</div><div class="card-info"><div class="card-title">Nexal Ads</div><div class="card-desc">Advertising platform</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-consult.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">💼</div><div class="card-info"><div class="card-title">Harz Consult</div><div class="card-desc">Consultation bookings</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-freelance.html')"><div class="card-row"><div class="card-icon" style="background:rgba(255,61,113,.1)">🤝</div><div class="card-info"><div class="card-title">Harz Freelance</div><div class="card-desc">Freelance marketplace</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html')"><div class="card-row"><div class="card-icon" style="background:rgba(229,9,20,.1)">🎬</div><div class="card-info"><div class="card-title">HarzFilm</div><div class="card-desc">8 films · 162K views</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-v2.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">📰</div><div class="card-info"><div class="card-title">Harz Newsletter</div><div class="card-desc">Subscriber content</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-onboarding.html')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">🚀</div><div class="card-info"><div class="card-title">Harz Onboarding</div><div class="card-desc">New user setup</div></div><span class="card-badge badge-live">LIVE</span></div></div>
 <div class="card" onclick="showToast('OMEGA Infinity - use OMEGA Commander on Telegram')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">♾️</div><div class="card-info"><div class="card-title">OMEGA Infinity 1000</div><div class="card-desc">Enterprise orchestrator</div></div><span class="card-badge badge-live">LIVE</span></div></div>
 <div class="card" onclick="showToast('TradeOS - use Telegram bot')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📊</div><div class="card-info"><div class="card-title">TradeOS</div><div class="card-desc">Trading platform</div></div><span class="card-badge badge-live">LIVE</span></div></div>
 <div class="card" onclick="showToast('Maganu on Telegram @b44_e609780e17959020_bot')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">🤖</div><div class="card-info"><div class="card-title">Maganu Agent</div><div class="card-desc">AI assistant v7.9.3</div></div><span class="card-badge badge-live">LIVE</span></div></div>
 <div class="card" onclick="showToast('OMEGA Commander @Omegacommanderaibot')"><div class="card-row"><div class="card-icon" style="background:rgba(124,77,255,.1)">⚡</div><div class="card-info"><div class="card-title">OMEGA Commander</div><div class="card-desc">AI executor v3.0.1</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.1)">🏢</div><div class="card-info"><div class="card-title">HARZ Business OS <span class="card-badge badge-new">NEW</span></div><div class="card-desc">9 modules · AI automation</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">🔧</div><div class="card-info"><div class="card-title">Harz Developer Platform <span class="card-badge badge-new">NEW</span></div><div class="card-desc">API docs · SDK · Code Gen</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📊</div><div class="card-info"><div class="card-title">Ecosystem Dashboard</div><div class="card-desc">34 platforms · live metrics</div></div><span class="card-badge badge-live">LIVE</span></div></div>
-<div class="card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html','_blank')"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.1)">🏢</div><div class="card-info"><div class="card-title">HARZ Business OS <span class="card-badge badge-new">NEW</span></div><div class="card-desc">CRM · ERP · HR · Payroll · 9 modules</div></div><div class="card-arrow">›</div></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html')"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.1)">🏢</div><div class="card-info"><div class="card-title">HARZ Business OS <span class="card-badge badge-new">NEW</span></div><div class="card-desc">9 modules · AI automation</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,188,212,.1)">🔧</div><div class="card-info"><div class="card-title">Harz Developer Platform <span class="card-badge badge-new">NEW</span></div><div class="card-desc">API docs · SDK · Code Gen</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html')"><div class="card-row"><div class="card-icon" style="background:rgba(0,230,118,.1)">📊</div><div class="card-info"><div class="card-title">Ecosystem Dashboard</div><div class="card-desc">34 platforms · live metrics</div></div><span class="card-badge badge-live">LIVE</span></div></div>
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html')"><div class="card-row"><div class="card-icon" style="background:rgba(59,130,246,.1)">🏢</div><div class="card-info"><div class="card-title">HARZ Business OS <span class="card-badge badge-new">NEW</span></div><div class="card-desc">CRM · ERP · HR · Payroll · 9 modules</div></div><div class="card-arrow">›</div></div></div>
 </div>
 <div style="padding:16px">
 <div style="text-align:center;color:var(--muted);font-size:.7rem;padding:20px">Harz Super App v1.0 · 39 Platforms · 80+ AI Agents<br>Built by Rabiu Hamza · Harz Digital Services</div>
@@ -412,6 +416,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div id="toast" class="toast"></div>
 
 <script>
+function openLink(u){try{window.open(u,'_blank','noopener')}catch(e){location.href=u}}
 // Splash
 setTimeout(()=>document.getElementById('splash').classList.add('hidden'),1200);
 
@@ -490,7 +495,7 @@ msgs.scrollTop=msgs.scrollHeight;
 
 // PWA
 if('serviceWorker'in navigator){
-navigator.serviceWorker.register('sw.js').catch(()=>{});
+navigator.serviceWorker.register('super-app-sw.js').catch(()=>{});
 }
 </script>
 </body>
