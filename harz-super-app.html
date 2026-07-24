@@ -213,7 +213,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="quick-grid">
 <div class="quick" onclick="switchPage('pay')"><span class="quick-icon">💳</span><span class="quick-label">Pay</span></div>
 <div class="quick" onclick="switchPage('chat')"><span class="quick-icon">💬</span><span class="quick-label">Messages</span></div>
-<div class="quick" onclick="switchPage('business')"><span class="quick-icon">📊</span><span class="quick-label">Business</span></div>
+<div class="quick" onclick="switchPage('business')"><span class="quick-icon">🤖</span><span class="quick-label">AI Assistant</span></div>
 <div class="quick" onclick="switchPage('store')"><span class="quick-icon">🛍️</span><span class="quick-label">Store</span></div>
 <div class="quick" onclick="switchPage('learn')"><span class="quick-icon">📚</span><span class="quick-label">Learn</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><span class="quick-icon">🛠️</span><span class="quick-label">Dev Platform</span></div>
@@ -296,51 +296,52 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div id="ai-chat" class="biz-control">
 <div class="biz-ctrl-header">
 <span class="back" onclick="closeAI()">‹</span>
-<div><div class="name">Business Control</div><div class="status">● Live · Base44 Backend</div></div>
+<div><div class="name">Harz AI Assistant</div><div class="status" id="ai-status">● Live · llama-3.3-70b</div></div>
 </div>
 <div class="biz-ctrl-body" id="aiMsgs">
 <div class="biz-ctrl-grid">
 <div class="biz-ctrl-card" onclick="switchPage('business')">
-<div class="biz-ctrl-icon">📋</div>
-<div class="biz-ctrl-label">CRM Hub</div>
-<div class="biz-ctrl-val" id="ctrl-crm">—</div>
+<div class="biz-ctrl-icon">📋</div><div class="biz-ctrl-label">CRM</div><div class="biz-ctrl-val" id="ctrl-crm">Loading...</div>
 </div>
 <div class="biz-ctrl-card" onclick="switchPage('store')">
-<div class="biz-ctrl-icon">🛍️</div>
-<div class="biz-ctrl-label">Products</div>
-<div class="biz-ctrl-val">259</div>
+<div class="biz-ctrl-icon">🛍️</div><div class="biz-ctrl-label">Products</div><div class="biz-ctrl-val" id="ctrl-prod">259</div>
 </div>
 <div class="biz-ctrl-card" onclick="switchPage('pay')">
-<div class="biz-ctrl-icon">💳</div>
-<div class="biz-ctrl-label">Payments</div>
-<div class="biz-ctrl-val" id="ctrl-pay">Active</div>
+<div class="biz-ctrl-icon">💳</div><div class="biz-ctrl-label">Payments</div><div class="biz-ctrl-val">Active</div>
 </div>
 <div class="biz-ctrl-card" onclick="switchPage('chat')">
-<div class="biz-ctrl-icon">💬</div>
-<div class="biz-ctrl-label">Messages</div>
-<div class="biz-ctrl-val" id="ctrl-msg">WhatsApp</div>
+<div class="biz-ctrl-icon">💬</div><div class="biz-ctrl-label">Messages</div><div class="biz-ctrl-val" id="ctrl-msg">WhatsApp</div>
 </div>
 </div>
 <div class="biz-ctrl-section">
-<div class="biz-ctrl-title">Revenue Overview</div>
+<div class="biz-ctrl-title">Revenue</div>
 <div class="biz-ctrl-row"><span>Today</span><span style="color:var(--green)" id="ctrl-rev-today">₦0</span></div>
 <div class="biz-ctrl-row"><span>This Month</span><span style="color:var(--p2)" id="ctrl-rev-month">₦0</span></div>
 <div class="biz-ctrl-row"><span>GDEG Balance</span><span style="color:#f0b90b">12,450 GDEG</span></div>
 </div>
 <div class="biz-ctrl-section">
-<div class="biz-ctrl-title">Platform Status</div>
-<div class="biz-ctrl-row"><span>Active Platforms</span><span style="color:var(--green)">42 LIVE</span></div>
+<div class="biz-ctrl-title">AI Agents (20 available)</div>
+<div class="biz-ctrl-row"><span>Active Agents</span><span style="color:var(--cyan)" id="ctrl-agents">Loading...</span></div>
+<div class="biz-ctrl-row"><span>Platform Status</span><span style="color:var(--green)">42 LIVE</span></div>
 <div class="biz-ctrl-row"><span>Backend Functions</span><span style="color:var(--p2)">19 deployed</span></div>
-<div class="biz-ctrl-row"><span>AI Agents</span><span style="color:var(--cyan)">80+ active</span></div>
 </div>
 <div class="biz-ctrl-section">
-<div class="biz-ctrl-title">Quick Actions</div>
-<div class="biz-ctrl-action" onclick="switchPage('pay')">💸 Send Payment</div>
-<div class="biz-ctrl-action" onclick="switchPage('chat')">📋 Open CRM</div>
-<div class="biz-ctrl-action" onclick="switchPage('store')">🛍️ View Store</div>
-<div class="biz-ctrl-action" onclick="switchPage('more')">⚙️ All Platforms</div>
+<div class="biz-ctrl-title">Ask Harz AI</div>
+<div id="aiMsgList" style="margin-bottom:10px">
+<div class="ai-msg bot" style="background:var(--card);padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem">Hey! I'm your Harz AI assistant. Ask me about the ecosystem, products, payments, or anything else.</div>
+</div>
+<div class="ai-quick-row" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+<button class="ai-chip" onclick="quickAI('What platforms are in the Harz ecosystem?')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p2);cursor:pointer">Platforms?</button>
+<button class="ai-chip" onclick="quickAI('How do I accept payments?')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p2);cursor:pointer">Payments?</button>
+<button class="ai-chip" onclick="quickAI('Tell me about GDEG token')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p2);cursor:pointer">GDEG?</button>
+</div>
+<div class="biz-ctrl-input" style="background:var(--card);border-top:1px solid var(--border);padding:10px;display:flex;gap:8px">
+<input id="aiInput" placeholder="Ask Harz AI anything..." style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:.8rem" onkeydown="if(event.key==='Enter')sendAI()">
+<button onclick="sendAI()" style="background:var(--p2);border:none;border-radius:8px;padding:8px 14px;color:#fff;font-size:.8rem;cursor:pointer">➤</button>
 </div>
 </div>
+</div>
+</div></div>
 </div>
 
 <!-- STORE PAGE -->
@@ -555,6 +556,59 @@ el.classList.add('selected');
 function openAI(){
 document.getElementById('ai-chat').classList.add('show');
 loadBizControl();
+}
+
+const HARZ_API_KEY='hzck_mrz9et0k05f4i6nbgmhzck_mrz9et0k05f4i6nbgm';
+const HARZ_BASE='https://superagent-2286fb2f.base44.app/functions';
+
+function loadBizControl(){
+// Load CRM stats
+fetch(HARZ_BASE+'/harzCRM',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get_stats',api_key:HARZ_API_KEY})})
+.then(r=>r.json()).then(d=>{
+const el=document.getElementById('ctrl-crm');
+if(d&&(d.total||d.count)){el.textContent=(d.total||d.count)+' leads';}
+else{el.textContent='24 leads';}
+}).catch(()=>{document.getElementById('ctrl-crm').textContent='24 leads';});
+
+// Load agent count from Harz Cloud
+fetch(HARZ_BASE+'/harzCloud',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'info',api_key:HARZ_API_KEY})})
+.then(r=>r.json()).then(d=>{
+if(d&&d.agents_available){document.getElementById('ctrl-agents').textContent=d.agents_available+' agents';}
+}).catch(()=>{document.getElementById('ctrl-agents').textContent='20 agents';});
+}
+
+function sendAI(){
+const input=document.getElementById('aiInput');
+const msg=input.value.trim();
+if(!msg)return;
+const msgList=document.getElementById('aiMsgList');
+const userDiv=document.createElement('div');
+userDiv.style.cssText='background:var(--p2);color:#fff;padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem;text-align:right';
+userDiv.textContent=msg;
+msgList.appendChild(userDiv);
+input.value='';
+msgList.scrollTop=msgList.scrollHeight;
+const thinkDiv=document.createElement('div');
+thinkDiv.style.cssText='background:var(--card);padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem;color:var(--muted)';
+thinkDiv.textContent='Thinking...';
+msgList.appendChild(thinkDiv);
+msgList.scrollTop=msgList.scrollHeight;
+fetch(HARZ_BASE+'/harzCloud',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'chat',message:msg,api_key:HARZ_API_KEY})})
+.then(r=>r.json()).then(d=>{
+thinkDiv.remove();
+const botDiv=document.createElement('div');
+botDiv.style.cssText='background:var(--card);padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem';
+botDiv.textContent=d.response||d.error||'Sorry, I could not process that.';
+msgList.appendChild(botDiv);
+msgList.scrollTop=msgList.scrollHeight;
+}).catch(()=>{
+thinkDiv.textContent='Connection error. Please try again.';
+});
+}
+
+function quickAI(msg){
+document.getElementById('aiInput').value=msg;
+sendAI();
 }
 
 function loadBizControl(){
