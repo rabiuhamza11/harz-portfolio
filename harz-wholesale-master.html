@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Wholesale Master — Domain & Hosting Wholesaler</title>
+<meta name="description" content="Buy domains and hosting at wholesale prices. Reseller API, bulk registration, white-label options. Powered by HarzPay.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+body{background:#0a0a14;color:#e0e0e8;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2a2a4a;position:sticky;top:0;z-index:100}
+.header h1{font-size:1.3rem;background:linear-gradient(90deg,#00d4aa,#7c4dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .badge{background:rgba(0,212,170,.15);color:#00d4aa;padding:4px 10px;border-radius:12px;font-size:.7rem;font-weight:600}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.tabs{display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px}
+.tab{padding:10px 18px;border-radius:10px;cursor:pointer;white-space:nowrap;font-size:.85rem;font-weight:600;transition:all .2s;background:#1a1a2e;color:#888;border:1px solid #2a2a4a}
+.tab.active{background:linear-gradient(135deg,#7c4dff,#00d4aa);color:#fff;border-color:transparent}
+.tab:hover:not(.active){background:#252545;color:#aaa}
+.card{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:16px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#fff}
+.card h3{font-size:.95rem;margin-bottom:12px;color:#00d4aa}
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.stat-card{background:linear-gradient(135deg,#1a1a2e,#252545);border-radius:14px;padding:20px;border:1px solid #2a2a4a}
+.stat-card .label{font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.stat-card .value{font-size:1.8rem;font-weight:700;color:#fff}
+.stat-card .sub{font-size:.75rem;color:#00d4aa;margin-top:4px}
+.tier-card{background:linear-gradient(135deg,#1a1a2e,#1a1a3e);border-radius:14px;padding:20px;border:2px solid #2a2a4a;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.tier-card:hover{border-color:#7c4dff;transform:translateY(-2px)}
+.tier-card.selected{border-color:#00d4aa;background:linear-gradient(135deg,#1a1a2e,#0d2a25)}
+.tier-card .tier-name{font-size:1.1rem;font-weight:700;margin-bottom:4px}
+.tier-card .tier-deposit{font-size:.8rem;color:#888;margin-bottom:10px}
+.tier-card .tier-discount{font-size:1.5rem;font-weight:700;color:#00d4aa}
+.tier-card ul{list-style:none;margin-top:10px}
+.tier-card li{font-size:.75rem;color:#aaa;padding:3px 0}
+.tier-card li::before{content:"✓ ";color:#00d4aa}
+.price-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.price-table th{text-align:left;padding:10px;color:#00d4aa;border-bottom:1px solid #2a2a4a;font-size:.75rem;text-transform:uppercase}
+.price-table td{padding:10px;border-bottom:1px solid #1a1a2e}
+.price-table .wholesale{color:#00d4aa;font-weight:700}
+.price-table .retail{color:#888}
+.price-table .profit{color:#FFD700;font-weight:600}
+.price-table .margin{color:#7c4dff}
+.input-group{margin-bottom:16px}
+.input-group label{display:block;font-size:.8rem;color:#888;margin-bottom:6px}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:12px;background:#0a0a14;border:1px solid #2a2a4a;border-radius:10px;color:#fff;font-size:.9rem}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{outline:none;border-color:#00d4aa}
+.btn{padding:12px 24px;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:.9rem;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,#7c4dff,#00d4aa);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(124,77,255,.3)}
+.btn-secondary{background:#252545;color:#fff}
+.btn-secondary:hover{background:#2a2a55}
+.btn-warn{background:rgba(255,215,0,.15);color:#FFD700;border:1px solid #FFD700}
+.btn-warn:hover{background:rgba(255,215,0,.25)}
+.payment-box{background:#0a0a14;border:1px solid #2a2a4a;border-radius:12px;padding:16px;margin-top:12px}
+.payment-box .bank{font-size:1.1rem;color:#00d4aa;font-weight:700}
+.payment-box .acct{font-size:1.3rem;color:#fff;font-weight:700;letter-spacing:1px}
+.payment-box .ref{font-size:.8rem;color:#FFD700;margin-top:8px}
+.badge-active{background:rgba(0,212,170,.15);color:#00d4aa;padding:3px 10px;border-radius:10px;font-size:.7rem;font-weight:600}
+.badge-pending{background:rgba(255,215,0,.15);color:#FFD700;padding:3px 10px;border-radius:10px;font-size:.7rem;font-weight:600}
+.badge-suspended{background:rgba(255,0,122,.15);color:#FF007A;padding:3px 10px;border-radius:10px;font-size:.7rem;font-weight:600}
+.reseller-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #1a1a2e}
+.reseller-info .name{font-weight:600;color:#fff;font-size:.9rem}
+.reseller-info .email{font-size:.75rem;color:#888}
+.reseller-stats{display:flex;gap:12px;font-size:.75rem;color:#aaa}
+.reseller-stats span{white-space:nowrap}
+.order-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1a1a2e}
+.order-row .ref{font-weight:600;color:#fff;font-size:.85rem}
+.order-row .type{font-size:.75rem;color:#888}
+.hidden{display:none}
+.whatsapp-btn{display:inline-block;padding:10px 20px;background:#25D366;color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:.85rem;margin-top:10px}
+.api-key-box{background:#0a0a14;border:1px dashed #00d4aa;border-radius:10px;padding:14px;margin:10px 0}
+.api-key-box .key{font-family:monospace;color:#00d4aa;font-size:.85rem;word-break:break-all}
+.notice{background:rgba(124,77,255,.1);border:1px solid #7c4dff;border-radius:10px;padding:14px;margin-bottom:16px;font-size:.85rem;color:#aaa}
+.notice strong{color:#fff}
+.hero{text-align:center;padding:30px 20px;margin-bottom:20px}
+.hero h2{font-size:1.5rem;color:#fff;margin-bottom:8px}
+.hero p{font-size:.9rem;color:#888;max-width:600px;margin:0 auto}
+.profit-highlight{font-size:2.5rem;font-weight:800;background:linear-gradient(90deg,#FFD700,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+@media(max-width:768px){.grid-2,.grid-3{grid-template-columns:1fr}.price-table{font-size:.75rem}}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🏭 HARZ Wholesale Master</h1>
+<span class="badge">WHOLESALER PLATFORM</span>
+</div>
+<div class="container">
+<div class="hero">
+<h2>Sell Domains & Hosting at Wholesale</h2>
+<p>Register as a reseller, fund your wallet, and buy domains in bulk at 30-45% below retail. White-label your brand. API access included.</p>
+</div>
+<div class="tabs">
+<div class="tab active" onclick="showTab('overview')">Overview</div>
+<div class="tab" onclick="showTab('pricing')">Wholesale Prices</div>
+<div class="tab" onclick="showTab('register')">Become a Reseller</div>
+<div class="tab" onclick="showTab('wallet')">Fund Wallet</div>
+<div class="tab" onclick="showTab('bulk')">Bulk Domains</div>
+<div class="tab" onclick="showTab('hosting')">Wholesale Hosting</div>
+<div class="tab" onclick="showTab('resellers')">Resellers</div>
+<div class="tab" onclick="showTab('orders')">Orders</div>
+</div>
+
+<div id="tab-overview">
+<div class="grid grid-3" id="statsGrid">
+<div class="stat-card"><div class="label">Total Resellers</div><div class="value" id="statResellers">0</div><div class="sub" id="statActive">0 active</div></div>
+<div class="stat-card"><div class="label">Credit Outstanding</div><div class="value" id="statCredit">₦0</div><div class="sub">in reseller wallets</div></div>
+<div class="stat-card"><div class="label">Total Revenue</div><div class="value" id="statRevenue">₦0</div><div class="sub" id="statOrders">0 orders</div></div>
+<div class="stat-card"><div class="label">Domains Registered</div><div class="value" id="statDomains">0</div><div class="sub">via wholesale</div></div>
+<div class="stat-card"><div class="label">Pending Approvals</div><div class="value" id="statPending">0</div><div class="sub">new resellers</div></div>
+<div class="stat-card"><div class="label">Avg Reseller Margin</div><div class="value" style="color:#FFD700">42%</div><div class="sub">profit per domain</div></div>
+</div>
+<div class="card" style="margin-top:20px">
+<h2>Reseller Tiers</h2>
+<div class="grid grid-3" id="tiersGrid"></div>
+</div>
+<div class="card">
+<h2>How It Works</h2>
+<div style="display:grid;gap:12px;font-size:.85rem;color:#aaa">
+<div><strong style="color:#00d4aa">1.</strong> Register as a reseller (free, pick your tier)</div>
+<div><strong style="color:#00d4aa">2.</strong> Fund your wallet via HarzPay (UBA, GDEG, or USDT)</div>
+<div><strong style="color:#00d4aa">3.</strong> Buy domains & hosting in bulk at wholesale prices</div>
+<div><strong style="color:#00d4aa">4.</strong> Sell to YOUR customers at retail — keep 30-45% profit</div>
+<div><strong style="color:#00d4aa">5.</strong> Use API for automated registration or white-label your brand</div>
+</div>
+</div>
+</div>
+
+<div id="tab-pricing" class="hidden">
+<div class="card">
+<h2>Wholesale Domain Prices</h2>
+<div class="input-group" style="max-width:300px">
+<label>Select Your Tier</label>
+<select id="priceTier" onchange="loadPrices()">
+<option value="bronze">Bronze (Base)</option>
+<option value="silver">Silver (5% off)</option>
+<option value="gold">Gold (10% off)</option>
+<option value="platinum">Platinum (15% off)</option>
+<option value="diamond">Diamond (20% off)</option>
+</select>
+</div>
+<table class="price-table">
+<thead><tr><th>TLD</th><th>Wholesale</th><th>Retail</th><th>Your Profit</th><th>Margin</th></tr></thead>
+<tbody id="domainPriceTable"></tbody>
+</table>
+</div>
+<div class="card">
+<h2>Wholesale Hosting Prices</h2>
+<table class="price-table">
+<thead><tr><th>Plan</th><th>Specs</th><th>Wholesale/mo</th><th>Retail/mo</th><th>Profit/mo</th></tr></thead>
+<tbody id="hostingPriceTable"></tbody>
+</table>
+</div>
+</div>
+
+<div id="tab-register" class="hidden">
+<div class="card">
+<h2>Register as a Reseller</h2>
+<div class="notice"><strong>How it works:</strong> Pick your tier, fill in your details, and deposit the minimum amount to activate. Higher tiers get bigger discounts.</div>
+<div class="input-group"><label>Business / Account Name</label><input id="regName" placeholder="e.g. TechHaus Nigeria"></div>
+<div class="input-group"><label>Email</label><input id="regEmail" type="email" placeholder="you@business.com"></div>
+<div class="input-group"><label>Phone</label><input id="regPhone" placeholder="080..."></div>
+<div class="input-group"><label>Choose Your Tier</label>
+<select id="regTier">
+<option value="bronze">Bronze — ₦10,000 deposit (base wholesale)</option>
+<option value="silver">Silver — ₦50,000 deposit (5% off)</option>
+<option value="gold">Gold — ₦200,000 deposit (10% off + white-label)</option>
+<option value="platinum">Platinum — ₦500,000 deposit (15% off + white-label)</option>
+<option value="diamond">Diamond — ₦1,000,000 deposit (20% off + everything)</option>
+</select></div>
+<div class="input-group"><label>White-label Name (Gold+)</label><input id="regWhiteLabel" placeholder="Your brand name"></div>
+<div class="input-group"><label>White-label Domain (Gold+)</label><input id="regWhiteDomain" placeholder="yourbrand.com"></div>
+<button class="btn btn-primary" onclick="registerReseller()">Register as Reseller</button>
+<div id="regResult"></div>
+</div>
+</div>
+
+<div id="tab-wallet" class="hidden">
+<div class="card">
+<h2>Fund Your Wallet</h2>
+<div class="input-group"><label>Account ID</label><input id="fundAccountId" placeholder="Your reseller account ID"></div>
+<div class="input-group"><label>Amount (₦)</label><input id="fundAmount" type="number" placeholder="e.g. 50000"></div>
+<button class="btn btn-primary" onclick="fundWallet()">Generate Payment Instructions</button>
+<div id="fundResult"></div>
+</div>
+<div class="card">
+<h2>Confirm Payment (Admin)</h2>
+<div class="input-group"><label>Order ID</label><input id="confirmOrderId" placeholder="Order ID from funding"></div>
+<button class="btn btn-warn" onclick="confirmPayment()">Confirm & Credit Wallet</button>
+<div id="confirmResult"></div>
+</div>
+</div>
+
+<div id="tab-bulk" class="hidden">
+<div class="card">
+<h2>Bulk Domain Registration</h2>
+<div class="notice">Enter domains one per line (e.g. mysite.com, another.net). Cost is deducted from your wallet credit.</div>
+<div class="input-group"><label>Account ID</label><input id="bulkAccountId" placeholder="Your reseller account ID"></div>
+<div class="input-group"><label>Domains (one per line)</label><textarea id="bulkDomains" rows="6" placeholder="mysite.com&#10;another.net&#10;third.org"></textarea></div>
+<div class="input-group"><label>Years</label><input id="bulkYears" type="number" value="1" min="1" max="10"></div>
+<button class="btn btn-primary" onclick="bulkOrder()">Register Domains</button>
+<div id="bulkResult"></div>
+</div>
+</div>
+
+<div id="tab-hosting" class="hidden">
+<div class="card">
+<h2>Wholesale Hosting Order</h2>
+<div class="input-group"><label>Account ID</label><input id="hostAccountId" placeholder="Your reseller account ID"></div>
+<div class="input-group"><label>Plan</label>
+<select id="hostPlan">
+<option value="shared_starter">Shared Starter (10GB, 1 domain)</option>
+<option value="shared_business">Shared Business (100GB, 5 domains)</option>
+<option value="vps_1">VPS 1 (40GB NVMe, 2GB RAM)</option>
+<option value="vps_2">VPS 2 (80GB NVMe, 4GB RAM)</option>
+<option value="vps_4">VPS 4 (160GB NVMe, 8GB RAM)</option>
+<option value="dedicated">Dedicated (1TB, 32GB RAM)</option>
+</select></div>
+<div class="input-group"><label>Billing Cycle</label>
+<select id="hostCycle"><option value="monthly">Monthly</option><option value="yearly">Yearly (2 months free)</option></select></div>
+<div class="input-group"><label>Quantity</label><input id="hostQty" type="number" value="1" min="1"></div>
+<button class="btn btn-primary" onclick="orderHosting()">Order Hosting</button>
+<div id="hostResult"></div>
+</div>
+</div>
+
+<div id="tab-resellers" class="hidden">
+<div class="card">
+<h2>All Resellers</h2>
+<button class="btn btn-secondary" onclick="loadResellers()" style="margin-bottom:16px">Refresh List</button>
+<div id="resellersList"></div>
+</div>
+<div class="card">
+<h2>Update Reseller (Admin)</h2>
+<div class="input-group"><label>Account ID</label><input id="updAccountId" placeholder="Reseller account ID"></div>
+<div class="input-group"><label>Status</label>
+<select id="updStatus"><option value="">No change</option><option value="active">Active</option><option value="pending">Pending</option><option value="suspended">Suspended</option><option value="terminated">Terminated</option></select></div>
+<div class="input-group"><label>Tier</label>
+<select id="updTier"><option value="">No change</option><option value="bronze">Bronze</option><option value="silver">Silver</option><option value="gold">Gold</option><option value="platinum">Platinum</option><option value="diamond">Diamond</option></select></div>
+<button class="btn btn-secondary" onclick="updateReseller()">Update</button>
+<div id="updResult"></div>
+</div>
+</div>
+
+<div id="tab-orders" class="hidden">
+<div class="card">
+<h2>Reseller Dashboard</h2>
+<div class="input-group"><label>Account ID</label><input id="dashAccountId" placeholder="Your reseller account ID"></div>
+<button class="btn btn-primary" onclick="loadResellerDashboard()">Load Dashboard</button>
+<div id="dashResult"></div>
+</div>
+<div class="card">
+<h2>Platform Overview</h2>
+<button class="btn btn-secondary" onclick="loadDashboard()" style="margin-bottom:16px">Refresh Overview</button>
+<div id="overviewResult"></div>
+</div>
+</div>
+</div>
+
+<script>
+const API='https://superagent-2286fb2f.base44.app/functions/harzWholesaleMaster';
+
+function showTab(name){
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('[id^="tab-"]').forEach(t=>t.classList.add('hidden'));
+event.target.classList.add('active');
+document.getElementById('tab-'+name).classList.remove('hidden');
+}
+
+async function api(action,data={}){
+const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...data})});
+return await r.json();
+}
+
+function fmt(n){return '₦'+Number(n||0).toLocaleString();}
+
+// Overview
+async function loadDashboard(){
+const d=await api('dashboard');
+if(d.status!=='ok')return;
+document.getElementById('statResellers').textContent=d.stats.total_resellers;
+document.getElementById('statActive').textContent=d.stats.active_resellers+' active';
+document.getElementById('statCredit').textContent=fmt(d.stats.total_credit_outstanding);
+document.getElementById('statRevenue').textContent=fmt(d.stats.total_revenue);
+document.getElementById('statDomains').textContent=d.stats.total_domains_registered;
+document.getElementById('statOrders').textContent=d.stats.total_orders+' orders';
+document.getElementById('statPending').textContent=d.stats.pending_resellers;
+
+// Tiers
+const tiers=d.recent_resellers;
+// Load tier info
+const td=await api('tiers');
+let tierHTML='';
+for(const[key,info]of Object.entries(td.tiers)){
+tierHTML+=`<div class="tier-card" onclick="showTab('register')">
+<div class="tier-name" style="color:${info.color}">${info.name}</div>
+<div class="tier-deposit">Min deposit: ${fmt(info.min_deposit)}</div>
+<div class="tier-discount">${info.discount}% OFF</div>
+<ul>${info.benefits.map(b=>`<li>${b}</li>`).join('')}</ul>
+</div>`;
+}
+document.getElementById('tiersGrid').innerHTML=tierHTML;
+}
+
+// Prices
+async function loadPrices(){
+const tier=document.getElementById('priceTier').value;
+const d=await api('price_list',{tier});
+if(d.status!=='ok')return;
+let html='';
+for(const[tld,p]of Object.entries(d.domain_prices)){
+html+=`<tr><td><strong>${tld}</strong></td><td class="wholesale">${fmt(p.wholesale)}</td><td class="retail">${fmt(p.retail)}</td><td class="profit">${fmt(p.reseller_margin)}</td><td class="margin">${p.margin_percent}%</td></tr>`;
+}
+document.getElementById('domainPriceTable').innerHTML=html;
+let hhtml='';
+for(const[plan,p]of Object.entries(d.hosting_prices)){
+hhtml+=`<tr><td><strong>${plan.replace(/_/g,' ').toUpperCase()}</strong></td><td>${p.specs}</td><td class="wholesale">${fmt(p.wholesale)}</td><td class="retail">${fmt(p.retail)}</td><td class="profit">${fmt(p.reseller_margin)}</td></tr>`;
+}
+document.getElementById('hostingPriceTable').innerHTML=hhtml;
+}
+
+// Register
+async function registerReseller(){
+const d=await api('register_reseller',{
+account_name:document.getElementById('regName').value,
+email:document.getElementById('regEmail').value,
+phone:document.getElementById('regPhone').value,
+pricing_tier:document.getElementById('regTier').value,
+whitelabel_name:document.getElementById('regWhiteLabel').value,
+whitelabel_domain:document.getElementById('regWhiteDomain').value,
+});
+if(d.status==='ok'){
+document.getElementById('regResult').innerHTML=`<div class="card" style="border-color:#00d4aa">
+<h3>✅ Registration Successful!</h3>
+<p style="margin:10px 0">Account: <strong>${d.account_name}</strong></p>
+<p>Tier: <strong style="color:#00d4aa">${d.tier}</strong> | Status: <span class="badge-pending">PENDING</span></p>
+<div class="api-key-box"><div class="key">API Key: ${d.api_key}</div><div class="key" style="margin-top:6px">API Secret: ${d.api_secret}</div></div>
+<p style="margin:10px 0">Deposit required: <strong style="color:#FFD700">${d.deposit_display}</strong></p>
+<div class="payment-box">
+<div class="bank">${d.payment_instructions.bank}</div>
+<div style="font-size:.8rem;color:#888">${d.payment_instructions.account_name}</div>
+<div class="acct">${d.payment_instructions.account_number}</div>
+<div class="ref">Ref: ${d.payment_instructions.reference}</div>
+<a class="whatsapp-btn" href="${d.payment_instructions.whatsapp}" target="_blank">Send Proof on WhatsApp</a>
+</div>
+<p style="font-size:.8rem;color:#888;margin-top:10px">${d.message}</p>
+</div>`;
+}else{
+document.getElementById('regResult').innerHTML=`<div class="card" style="border-color:#FF007A"><p style="color:#FF007A">${d.error}</p></div>`;
+}
+}
+
+// Fund Wallet
+async function fundWallet(){
+const d=await api('fund_wallet',{
+account_id:document.getElementById('fundAccountId').value,
+amount:parseInt(document.getElementById('fundAmount').value),
+});
+if(d.status==='ok'){
+document.getElementById('fundResult').innerHTML=`<div class="card" style="border-color:#00d4aa">
+<h3>Payment Instructions</h3>
+<p>Amount: <strong>${d.amount_display}</strong></p>
+${d.tier_upgrade?`<p style="color:#FFD700">🎯 Tier upgrade: ${d.current_tier} → ${d.new_tier}!</p>`:''}
+<div class="payment-box">
+<div class="bank">${d.payment_instructions.bank}</div>
+<div class="acct">${d.payment_instructions.account_number}</div>
+<div class="ref">Ref: ${d.payment_instructions.reference}</div>
+<a class="whatsapp-btn" href="${d.payment_instructions.whatsapp_proof}" target="_blank">Send Proof</a>
+</div>
+<p style="font-size:.75rem;color:#888">Order ID: ${d.order_id}</p>
+</div>`;
+}else{
+document.getElementById('fundResult').innerHTML=`<p style="color:#FF007A">${d.error}</p>`;
+}
+}
+
+async function confirmPayment(){
+const d=await api('confirm_payment',{order_id:document.getElementById('confirmOrderId').value});
+if(d.status==='ok'){
+document.getElementById('confirmResult').innerHTML=`<div style="color:#00d4aa;padding:10px">
+✅ ${d.message}<br>Credited: ${fmt(d.credited)}<br>New Balance: ${fmt(d.new_balance)}
+${d.tier_upgraded?`<br><span style="color:#FFD700">🎉 Tier upgraded: ${d.old_tier} → ${d.new_tier}!</span>`:''}
+</div>`;
+}else{
+document.getElementById('confirmResult').innerHTML=`<p style="color:#FF007A">${d.error}</p>`;
+}
+}
+
+// Bulk Order
+async function bulkOrder(){
+const domains=document.getElementById('bulkDomains').value.split('\n').map(d=>d.trim()).filter(d=>d);
+const d=await api('bulk_domain_order',{
+account_id:document.getElementById('bulkAccountId').value,
+domains,
+years:parseInt(document.getElementById('bulkYears').value)||1,
+});
+if(d.status==='ok'){
+let html=`<div class="card" style="border-color:#00d4aa"><h3>✅ Bulk Registration Complete</h3>`;
+html+=`<p>Total cost: <strong>${d.total_display}</strong> (deducted from wallet)</p>`;
+html+=`<p>Remaining balance: <strong>${d.balance_display}</strong></p>`;
+html+=`<p style="color:#FFD700">Reseller profit potential: ${fmt(d.total_reseller_profit)}</p>`;
+html+=`<table class="price-table" style="margin-top:10px"><thead><tr><th>Domain</th><th>Wholesale</th><th>Retail</th><th>Profit</th></tr></thead><tbody>`;
+d.domains.filter(dm=>!dm.error).forEach(dm=>{
+html+=`<tr><td>${dm.domain}</td><td class="wholesale">${fmt(dm.wholesale_price)}</td><td class="retail">${fmt(dm.retail_price)}</td><td class="profit">${fmt(dm.reseller_profit)}</td></tr>`;
+});
+html+=`</tbody></table></div>`;
+document.getElementById('bulkResult').innerHTML=html;
+}else{
+document.getElementById('bulkResult').innerHTML=`<div class="card" style="border-color:#FF007A"><p style="color:#FF007A">${d.error}</p><p style="font-size:.8rem;color:#888">${d.message||''}</p></div>`;
+}
+}
+
+// Hosting Order
+async function orderHosting(){
+const d=await api('order_hosting',{
+account_id:document.getElementById('hostAccountId').value,
+plan_name:document.getElementById('hostPlan').value,
+billing_cycle:document.getElementById('hostCycle').value,
+quantity:parseInt(document.getElementById('hostQty').value)||1,
+});
+if(d.status==='ok'){
+document.getElementById('hostResult').innerHTML=`<div class="card" style="border-color:#00d4aa">
+<h3>✅ Hosting Order Complete</h3>
+<p>Plan: <strong>${d.plan}</strong> (${d.specs})</p>
+<p>Quantity: ${d.quantity} | Cycle: ${d.billing_cycle}</p>
+<p>Total cost: <strong>${fmt(d.total_cost)}</strong></p>
+<p>Remaining balance: <strong>${d.balance_display}</strong></p>
+<p style="color:#FFD700">Profit per unit: ${fmt(d.reseller_profit_per_unit)}</p>
+<p style="font-size:.8rem;color:#888">Ref: ${d.ref}</p>
+</div>`;
+}else{
+document.getElementById('hostResult').innerHTML=`<p style="color:#FF007A">${d.error}</p>`;
+}
+}
+
+// Resellers List
+async function loadResellers(){
+const d=await api('list_resellers');
+if(d.status!=='ok')return;
+let html='';
+if(d.resellers.length===0){html='<p style="color:#888">No resellers yet</p>';}
+d.resellers.forEach(r=>{
+const badge=r.status==='active'?'badge-active':r.status==='pending'?'badge-pending':'badge-suspended';
+html+=`<div class="reseller-row">
+<div class="reseller-info">
+<div class="name">${r.name} <span class="${badge}">${r.status}</span></div>
+<div class="email">${r.email} | ${r.phone||''}</div>
+<div class="reseller-stats">
+<span>Tier: ${r.tier}</span>
+<span>Credit: ${fmt(r.credit)}</span>
+<span>Domains: ${r.domains}</span>
+<span>Hosting: ${r.hosting}</span>
+${r.whitelabel?'<span style="color:#7c4dff">★ White-label</span>':''}
+</div>
+</div>
+<div style="font-size:.75rem;color:#888">${r.created}</div>
+</div>`;
+});
+document.getElementById('resellersList').innerHTML=html;
+}
+
+async function updateReseller(){
+const data={account_id:document.getElementById('updAccountId').value};
+const s=document.getElementById('updStatus').value;if(s)data.status=s;
+const t=document.getElementById('updTier').value;if(t)data.tier=t;
+const d=await api('update_reseller',data);
+document.getElementById('updResult').innerHTML=d.status==='ok'?'<p style="color:#00d4aa">✅ Updated</p>':'<p style="color:#FF007A">'+d.error+'</p>';
+}
+
+// Reseller Dashboard
+async function loadResellerDashboard(){
+const d=await api('reseller_dashboard',{account_id:document.getElementById('dashAccountId').value});
+if(d.status!=='ok'){document.getElementById('dashResult').innerHTML='<p style="color:#FF007A">'+d.error+'</p>';return;}
+const a=d.account;
+let html=`<div class="grid grid-2" style="margin-bottom:16px">
+<div class="stat-card"><div class="label">Credit Balance</div><div class="value">${a.credit_display}</div></div>
+<div class="stat-card"><div class="label">Domains Registered</div><div class="value">${a.domains_registered}</div></div>
+<div class="stat-card"><div class="label">Hosting Accounts</div><div class="value">${a.hosting_accounts}</div></div>
+<div class="stat-card"><div class="label">Total Invested</div><div class="value">${fmt(a.total_invested)}</div></div>
+</div>`;
+html+=`<p>Tier: <strong style="color:#00d4aa">${a.tier}</strong> | Status: ${a.status==='active'?'<span class="badge-active">Active</span>':'<span class="badge-pending">Pending</span>'}</p>`;
+if(a.whitelabel_enabled)html+=`<p style="color:#7c4dff">★ White-label: ${a.whitelabel_name}</p>`;
+html+=`<div class="api-key-box"><div class="key">API Key: ${a.api_key}</div></div>`;
+html+=`<h3 style="margin-top:16px">Recent Orders</h3>`;
+if(d.orders.length===0)html+='<p style="color:#888">No orders yet</p>';
+d.orders.forEach(o=>{
+html+=`<div class="order-row"><div><div class="ref">${o.ref}</div><div class="type">${o.type} | Qty: ${o.qty} | ${o.date}</div></div><div><strong>${fmt(o.total)}</strong> <span class="${o.status==='paid'?'badge-active':'badge-pending'}">${o.status}</span></div></div>`;
+});
+document.getElementById('dashResult').innerHTML=html;
+}
+
+// Auto-load
+loadDashboard();
+loadPrices();
+</script>
+</body>
+</html>
