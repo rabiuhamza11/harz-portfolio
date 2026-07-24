@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="HarzBrowser">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="browser-manifest.json">
+<link rel="icon" type="image/png" href="browser-favicon.png">
+<link rel="apple-touch-icon" href="browser-icon-180.png">
 <title>HARZ Browser — Search · AI · News · More</title>
 <style>
 :root{--p1:#00d4ff;--p2:#7c4dff;--p3:#00e676;--p4:#ffab00;--p5:#ff5252;--bg:#0a0a0f;--card:#14141c;--card2:#1a1a26;--text:#e4e4e7;--muted:#71717a;--border:#27272f;--gold:#ffd700}
@@ -589,7 +591,7 @@ deferredPrompt=null;
 }
 window.addEventListener('appinstalled',()=>document.getElementById('installBanner').classList.remove('show-banner'));
 if('serviceWorker' in navigator){
-navigator.serviceWorker.register('browser-sw.js').then(()=>console.log('HARZ Browser SW registered')).catch((e)=>console.log('SW failed:',e));
+navigator.serviceWorker.register('browser-sw.js', {scope: './'}).then(()=>console.log('HARZ Browser SW registered')).catch((e)=>console.log('SW failed:',e));
 }
 
 // === LIVE DATA ===
