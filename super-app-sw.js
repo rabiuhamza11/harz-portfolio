@@ -1,5 +1,5 @@
 // HARZ Super App Service Worker
-const CACHE = 'harz-super-app-v3';
+const CACHE = 'harz-super-app-v4';
 const ASSETS = [
   './harz-super-app.html',
   './super-app-manifest.json',
