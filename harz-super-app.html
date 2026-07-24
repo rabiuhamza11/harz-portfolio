@@ -364,6 +364,40 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="biz-ctrl-row"><span>Pro — 10,000 requests</span><span style="color:var(--p2)">₦50,000</span></div>
 <div class="biz-ctrl-row"><span>Enterprise — Unlimited</span><span style="color:#f0b90b">₦150,000</span></div>
 </div>
+<div class="biz-ctrl-section">
+<div class="biz-ctrl-title">Usage Dashboard</div>
+<div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">Enter your API key to check remaining requests</div>
+<div style="display:flex;gap:8px;margin-bottom:10px">
+<input id="usageKeyInput" placeholder="hzck_..." style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:.78rem;font-family:monospace">
+<button onclick="checkUsage()" style="background:var(--cyan);border:none;border-radius:8px;padding:8px 14px;color:#fff;font-size:.78rem;cursor:pointer">Check</button>
+</div>
+<div id="usageResult" style="display:none;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:10px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+<div>
+<div id="usageName" style="font-size:.85rem;color:var(--text);font-weight:600"></div>
+<div id="usageEmail" style="font-size:.7rem;color:var(--muted)"></div>
+</div>
+<div id="usagePlan" style="background:var(--p2);color:#fff;padding:3px 10px;border-radius:12px;font-size:.68rem;text-transform:uppercase"></div>
+</div>
+<div style="margin-bottom:8px">
+<div style="display:flex;justify-content:space-between;font-size:.72rem;margin-bottom:4px">
+<span style="color:var(--muted)">Requests Used</span>
+<span id="usageUsed" style="color:var(--p2);font-weight:600"></span>
+</div>
+<div style="background:var(--card);border-radius:6px;height:8px;overflow:hidden">
+<div id="usageBar" style="background:linear-gradient(90deg,var(--green),var(--cyan));height:100%;border-radius:6px;transition:width .3s"></div>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:.72rem">
+<span style="color:var(--muted)">Remaining</span>
+<span id="usageRemaining" style="color:var(--green);font-weight:600"></span>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:.72rem;margin-top:4px">
+<span style="color:var(--muted)">Status</span>
+<span id="usageStatus" style="color:var(--green);font-weight:600"></span>
+</div>
+</div>
+</div>
 </div>
 </div></div>
 </div>
@@ -665,6 +699,37 @@ const key=document.getElementById('keyValue').textContent;
 if(navigator.clipboard){navigator.clipboard.writeText(key);}
 else{const ta=document.createElement('textarea');ta.value=key;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
 alert('API key copied to clipboard!');
+}
+
+function checkUsage(){
+const key=document.getElementById('usageKeyInput').value.trim();
+if(!key){alert('Please enter your API key');return;}
+const btn=event.target;
+btn.textContent='Checking...';
+btn.disabled=true;
+fetch(HARZ_BASE+'/harzCloud',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'usage',api_key:key})})
+.then(r=>r.json()).then(d=>{
+btn.textContent='Check';
+btn.disabled=false;
+if(d.ok&&d.usage){
+const u=d.usage;
+document.getElementById('usageResult').style.display='block';
+document.getElementById('usageName').textContent=u.name||'User';
+document.getElementById('usageEmail').textContent=u.email||'';
+document.getElementById('usagePlan').textContent=u.plan||'free';
+document.getElementById('usageUsed').textContent=u.requests_used+' / '+u.requests_limit+(u.requests_limit===-1?' (unlimited)':'');
+const pct=u.requests_limit===-1?0:u.usage_percent;
+document.getElementById('usageBar').style.width=Math.min(pct,100)+'%';
+document.getElementById('usageRemaining').textContent=u.requests_remaining===-1?'Unlimited':u.requests_remaining+' requests';
+document.getElementById('usageStatus').textContent=u.status||'active';
+}else{
+alert(d.error||'Could not retrieve usage data.');
+}
+}).catch(()=>{
+btn.textContent='Check';
+btn.disabled=false;
+alert('Connection error. Please try again.');
+});
 }
 
 function loadBizControl(){
