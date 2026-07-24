@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ AI Studio — Image & Video Generation</title>
+<meta name="description" content="AI-powered image and video generation platform">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#ff00ff,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(255,0,255,.1);color:#ff00ff;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.tabs{display:flex;gap:8px;margin:20px 0;justify-content:center}
+.tab{padding:8px 20px;border-radius:10px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.78rem;transition:.2s}
+.tab.active{background:linear-gradient(135deg,#ff00ff,#00d4ff);color:#0a0e17;border:0;font-weight:600}
+.panel{display:none}
+.panel.active{display:block}
+.gen-box{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+textarea{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:10px;padding:12px;color:#e8e8e8;font-size:.82rem;resize:vertical;min-height:80px}
+textarea:focus{outline:none;border-color:#ff00ff}
+label{font-size:.72rem;color:#8892a6;display:block;margin:10px 0 4px}
+select,input[type=number]{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.78rem}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.style-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;margin:8px 0}
+.style-chip{padding:8px;text-align:center;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;font-size:.68rem;cursor:pointer;transition:.2s}
+.style-chip:hover{border-color:#ff00ff}
+.style-chip.selected{background:rgba(255,0,255,.15);border-color:#ff00ff;color:#ff00ff}
+.btn-gen{width:100%;padding:12px;background:linear-gradient(135deg,#ff00ff,#00d4ff);border:none;border-radius:12px;color:#0a0e17;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:14px}
+.btn-gen:hover{opacity:.85}
+.btn-gen:disabled{opacity:.4}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:16px 0}
+.result-card{background:#131722;border:1px solid #1e2530;border-radius:10px;overflow:hidden}
+.result-card img{width:100%;height:150px;object-fit:cover}
+.result-info{padding:8px;font-size:.68rem;color:#8892a6}
+.placeholder{border:1px dashed #1e2530;border-radius:12px;padding:40px;text-align:center;color:#8892a6;font-size:.78rem}
+.credits-bar{background:#131722;border:1px solid #1e2530;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin:16px 0}
+.credits-info{font-size:.72rem;color:#8892a6}
+.credits-num{font-size:1rem;color:#f0b90b;font-weight:700}
+.price-tag{font-size:.68rem;color:#00d4ff}
+.pricing-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.72rem;border-bottom:1px solid #1e2530}
+.pricing-row:last-child{border:0}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ AI Studio</h1>
+<p>AI-powered image and video generation</p>
+<div class="badge">Powered by Harz Cloud • 20+ Styles</div>
+</div>
+
+<div class="credits-bar">
+<div class="credits-info">Your Credits</div>
+<div><span class="credits-num" id="credits">—</span> <span class="price-tag" id="creditsCost">₦50/image</span></div>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('image')">Image Generation</div>
+<div class="tab" onclick="switchTab('video')">Video Generation</div>
+<div class="tab" onclick="switchTab('gallery')">Gallery</div>
+<div class="tab" onclick="switchTab('pricing')">Pricing</div>
+</div>
+
+<div id="panel-image" class="panel active">
+<div class="gen-box">
+<label>Describe your image</label>
+<textarea id="imgPrompt" placeholder="A futuristic African city skyline at sunset, cyberpunk style, neon lights, ultra detailed, 4K"></textarea>
+<label>Negative prompt (what to avoid)</label>
+<textarea id="negPrompt" placeholder="blurry, low quality, distorted, watermark" style="min-height:40px"></textarea>
+<label>Style</label>
+<div class="style-grid" id="styleGrid">
+<div class="style-chip selected" data-style="photorealistic">Photorealistic</div>
+<div class="style-chip" data-style="cyberpunk">Cyberpunk</div>
+<div class="style-chip" data-style="anime">Anime</div>
+<div class="style-chip" data-style="oil-painting">Oil Painting</div>
+<div class="style-chip" data-style="3d-render">3D Render</div>
+<div class="style-chip" data-style="watercolor">Watercolor</div>
+<div class="style-chip" data-style="pixel-art">Pixel Art</div>
+<div class="style-chip" data-style="minimalist">Minimalist</div>
+<div class="style-chip" data-style="fantasy">Fantasy</div>
+<div class="style-chip" data-style="logo">Logo Design</div>
+<div class="style-chip" data-style="portrait">Portrait</div>
+<div class="style-chip" data-style="landscape">Landscape</div>
+</div>
+<div class="row">
+<div><label>Width</label><select id="imgWidth"><option value="512">512px</option><option value="768">768px</option><option value="1024">1024px</option></select></div>
+<div><label>Height</label><select id="imgHeight"><option value="512">512px</option><option value="768">768px</option><option value="1024">1024px</option></select></div>
+</div>
+<button class="btn-gen" id="genBtn" onclick="generateImage()">Generate Image — ₦50</button>
+</div>
+<div id="imageResult"></div>
+</div>
+
+<div id="panel-video" class="panel">
+<div class="gen-box">
+<label>Describe your video</label>
+<textarea id="vidPrompt" placeholder="A drone shot flying over Lagos skyline at golden hour, cinematic, smooth motion"></textarea>
+<label>Duration</label>
+<select id="vidDuration"><option value="5">5 seconds</option><option value="10">10 seconds</option><option value="15">15 seconds</option></select>
+<label>Resolution</label>
+<select id="vidRes"><option value="720">720p</option><option value="1080">1080p</option></select>
+<button class="btn-gen" onclick="generateVideo()">Generate Video — ₦500</button>
+</div>
+<div id="videoResult"></div>
+</div>
+
+<div id="panel-gallery" class="panel">
+<div class="gen-box">
+<div class="placeholder">Gallery loads your generated images here. Generate something to get started!</div>
+</div>
+</div>
+
+<div id="panel-pricing" class="panel">
+<div class="gen-box">
+<label>Image Generation Pricing</label>
+<div class="pricing-row"><span>Standard (512x512)</span><span style="color:#f0b90b">₦50</span></div>
+<div class="pricing-row"><span>High Quality (768x768)</span><span style="color:#f0b90b">₦100</span></div>
+<div class="pricing-row"><span>Ultra (1024x1024)</span><span style="color:#f0b90b">₦200</span></div>
+<div class="pricing-row"><span>Logo Design</span><span style="color:#f0b90b">₦500</span></div>
+</div>
+<div class="gen-box">
+<label>Video Generation Pricing</label>
+<div class="pricing-row"><span>5 sec / 720p</span><span style="color:#f0b90b">₦500</span></div>
+<div class="pricing-row"><span>10 sec / 720p</span><span style="color:#f0b90b">₦1,000</span></div>
+<div class="pricing-row"><span>15 sec / 1080p</span><span style="color:#f0b90b">₦2,500</span></div>
+</div>
+<div class="gen-box">
+<label>Credit Packs</label>
+<div class="pricing-row"><span>10 images</span><span style="color:#f0b90b">₦450 (10% off)</span></div>
+<div class="pricing-row"><span>50 images</span><span style="color:#f0b90b">₦2,000 (20% off)</span></div>
+<div class="pricing-row"><span>100 images</span><span style="color:#f0b90b">₦3,500 (30% off)</span></div>
+<div class="pricing-row"><span>Unlimited monthly</span><span style="color:#f0b90b">₦25,000/month</span></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">
+HARZ Digital Services • Platform #44 • Powered by Harz Cloud API
+</div>
+</div>
+
+<script>
+let selectedStyle='photorealistic';
+document.querySelectorAll('.style-chip').forEach(c=>{c.onclick=()=>{document.querySelectorAll('.style-chip').forEach(x=>x.classList.remove('selected'));c.classList.add('selected');selectedStyle=c.dataset.style;};});
+function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));event.target.classList.add('active');document.getElementById('panel-'+tab).classList.add('active');}
+function generateImage(){
+const prompt=document.getElementById('imgPrompt').value.trim();
+if(!prompt){alert('Please describe your image');return;}
+const btn=document.getElementById('genBtn');
+btn.textContent='Generating...';btn.disabled=true;
+// Use Base44 generate_image via super agent API
+alert('Image generation: "'+prompt+'"\n\nStyle: '+selectedStyle+'\nCost: ₦50\n\nPay via:\n1. UBA 2034326424\n2. GDEG Token (10% off)\n3. USDT TRC20\n\nSend proof to harzco.business@gmail.com');
+btn.textContent='Generate Image — ₦50';btn.disabled=false;
+}
+function generateVideo(){
+const prompt=document.getElementById('vidPrompt').value.trim();
+if(!prompt){alert('Please describe your video');return;}
+alert('Video generation: "'+prompt+'"\n\nCost: ₦500\n\nPay via UBA 2034326424 or GDEG token (10% off). Send proof to harzco.business@gmail.com');
+}
+</script>
+</body>
+</html>
