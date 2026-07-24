@@ -416,7 +416,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div id="toast" class="toast"></div>
 
 <script>
-function openLink(u){location.href=u}
+function openLink(u){const w=window.open(u,'_blank','noopener,noreferrer');if(!w){location.href=u}}
 // Splash
 setTimeout(()=>document.getElementById('splash').classList.add('hidden'),1200);
 
@@ -495,7 +495,25 @@ msgs.scrollTop=msgs.scrollHeight;
 
 // PWA
 if('serviceWorker'in navigator){
-navigator.serviceWorker.register('super-app-sw.js?v3').catch(()=>{});
+// Aggressive SW cleanup — force unregister ALL old service workers
+    if('serviceWorker'in navigator){
+      navigator.serviceWorker.getRegistrations().then(function(regs){
+        regs.forEach(function(reg){
+          reg.unregister().then(function(){
+            console.log('Unregistered old SW:', reg.scope);
+          });
+        });
+        // Clear ALL caches
+        if('caches' in window){
+          caches.keys().then(function(names){
+            names.forEach(function(name){caches.delete(name);});
+          });
+        }
+      }).then(function(){
+        // Register fresh SW v3 (only caches Super App assets)
+        navigator.serviceWorker.register('super-app-sw.js?v4').catch(()=>{});
+      });
+    };
 }
 </script>
 </body>
