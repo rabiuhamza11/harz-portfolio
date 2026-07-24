@@ -247,11 +247,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="ai-section">
 <div class="ai-header">
 <h2>🤖 Harz AI Assistant</h2>
-<p>Powered by Magani · LLaMA 3.3 70B + GPT-4o · 80+ ecosystem agents</p>
+<p>Powered by Harz · LLaMA 3.3 70B + GPT-4o · 80+ ecosystem agents</p>
 </div>
 <div class="ai-chat">
 <div class="ai-messages" id="aiMessages">
-<div class="ai-msg ai"><div class="who">Magani</div><div class="bubble">Salam! I'm Magani, your AI assistant. I can help with anything — search the web, explore Harz platforms, answer questions, write code, or just chat. What's on your mind?</div></div>
+<div class="ai-msg ai"><div class="who">Harz</div><div class="bubble">Salam! I'm your Harz business assistant. I can help with anything — search the web, explore Harz platforms, answer questions, write code, or just chat. What's on your mind?</div></div>
 </div>
 <div class="ai-input-row">
 <input type="text" class="ai-input" id="aiInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter')sendAIMsg()">
@@ -575,14 +575,14 @@ if(!found){
 if(lowerQ.includes('search')){
 response='I can search the web for you! Go to the Search tab, type your query, and select your preferred search engine (Google, Bing, DuckDuckGo, YouTube, or Wikipedia). Results open right here in the browser.';
 }else if(lowerQ.includes('hello')||lowerQ.includes('hi')||lowerQ.includes('salam')){
-response='Salam! 👋 I\'m Magani, your AI assistant. I can help you explore the Harz ecosystem, search the web, answer questions about our 39 platforms, or just chat. What would you like to know?';
+response='Salam! 👋 I\'m Harz, your AI assistant. I can help you explore the Harz ecosystem, search the web, answer questions about our 39 platforms, or just chat. What would you like to know?';
 }else if(lowerQ.includes('buy')||lowerQ.includes('purchase')||lowerQ.includes('shop')){
 response='You can buy Harz products through multiple channels: 1) HarzDM Marketplace 2) Gumroad (international) 3) Getly Store (Nigerian) 4) Selar (direct Nigerian sales) 5) WhatsApp direct (08028687857). We accept UBA bank transfer, USDT, GDEG token, and Paystack.';
 }else{
 response='Great question! The Harz ecosystem has 39 live platforms spanning fintech, AI, healthcare, cybersecurity, education, media, business tools, IoT, and more. Try asking about a specific platform, or check the Sites tab to browse everything. You can also search the web using the Search tab.';
 }
 }
-aiDiv.innerHTML='<div class="who">Magani</div><div class="bubble">'+response+'</div>';
+aiDiv.innerHTML='<div class="who">Harz</div><div class="bubble">'+response+'</div>';
 msgs.appendChild(aiDiv);
 msgs.scrollTop=msgs.scrollHeight;
 },600);
