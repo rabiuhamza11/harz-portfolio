@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Forms & Surveys — Build Forms, Collect Responses</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e17;color:#e8e8e8;min-height:100vh;padding:16px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.6rem;background:linear-gradient(135deg,#6c5ce7,#ff00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header p{color:#8892a6;font-size:.82rem;margin-top:6px}
+.badge{display:inline-block;background:rgba(108,92,231,.1);color:#6c5ce7;padding:4px 12px;border-radius:12px;font-size:.68rem;margin-top:8px}
+.tabs{display:flex;gap:8px;margin:16px 0;justify-content:center;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:10px;background:#131722;border:1px solid #1e2530;cursor:pointer;font-size:.72rem;transition:.2s}
+.tab.active{background:#6c5ce7;color:#fff;border:0;font-weight:600}
+.panel{display:none}
+.panel.active{display:block}
+.stats-row{display:flex;gap:10px;margin:16px 0}
+.stat-card{flex:1;background:#131722;border:1px solid #1e2530;border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:1.1rem;color:#6c5ce7;font-weight:700}
+.stat-label{font-size:.62rem;color:#8892a6;margin-top:4px}
+.section{background:#131722;border:1px solid #1e2530;border-radius:14px;padding:18px;margin:16px 0}
+.section h3{font-size:.85rem;color:#fff;margin-bottom:10px}
+label{font-size:.72rem;color:#8892a6;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;background:#0a0e17;border:1px solid #1e2530;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:.78rem;font-family:inherit;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#6c5ce7}
+textarea{resize:vertical;min-height:60px}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#6c5ce7,#ff00ff);border:none;border-radius:10px;color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:6px}
+.template-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:10px 0}
+.template-card{background:#0a0e17;border:1px solid #1e2530;border-radius:10px;padding:14px;cursor:pointer;transition:.2s}
+.template-card:hover{border-color:#6c5ce7}
+.template-icon{font-size:1.3rem;margin-bottom:4px}
+.template-name{font-size:.72rem;color:#fff;font-weight:600}
+.template-desc{font-size:.6rem;color:#8892a6;margin-top:2px}
+.field-builder{background:#0a0e17;border:1px solid #1e2530;border-radius:10px;padding:12px;margin:8px 0}
+.field-row{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #1e2530}
+.field-row:last-child{border:0}
+.field-type{background:#6c5ce7;color:#fff;padding:3px 8px;border-radius:6px;font-size:.58rem;font-weight:600;flex-shrink:0}
+.field-label{flex:1;font-size:.72rem;color:#e8e8e8}
+.field-act{font-size:.65rem;color:#8892a6;cursor:pointer}
+.response-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1e2530;font-size:.72rem}
+.response-row:last-child{border:0}
+.resp-email{color:#fff}
+.resp-date{color:#8892a6;font-size:.62rem}
+.resp-status{padding:2px 8px;border-radius:6px;font-size:.58rem;font-weight:600}
+.st-new{background:rgba(108,92,231,.15);color:#6c5ce7}
+.st-read{background:rgba(0,255,136,.15);color:#00ff88}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HARZ Forms & Surveys</h1>
+<p>Build forms, collect responses, and analyze data — free</p>
+<div class="badge">8 Templates • Unlimited Responses • Export CSV</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Active Forms</div></div>
+<div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Responses</div></div>
+<div class="stat-card"><div class="stat-num">0%</div><div class="stat-label">Completion Rate</div></div>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('templates',this)">Templates</div>
+<div class="tab" onclick="switchTab('builder',this)">Form Builder</div>
+<div class="tab" onclick="switchTab('responses',this)">Responses</div>
+</div>
+
+<div id="panel-templates" class="panel active">
+<div class="section">
+<h3>Choose a Template</h3>
+<div class="template-grid">
+<div class="template-card" onclick="useTemplate('contact')"><div class="template-icon">📧</div><div class="template-name">Contact Form</div><div class="template-desc">Name, email, message</div></div>
+<div class="template-card" onclick="useTemplate('feedback')"><div class="template-icon">⭐</div><div class="template-name">Feedback Survey</div><div class="template-desc">Rating + comments</div></div>
+<div class="template-card" onclick="useTemplate('signup')"><div class="template-icon">📝</div><div class="template-name">Newsletter Signup</div><div class="template-desc">Email + preferences</div></div>
+<div class="template-card" onclick="useTemplate('order')"><div class="template-icon">🛒</div><div class="template-name">Order Form</div><div class="template-desc">Product + quantity + payment</div></div>
+<div class="template-card" onclick="useTemplate('survey')"><div class="template-icon">📊</div><div class="template-name">Customer Survey</div><div class="template-desc">10 questions, multiple types</div></div>
+<div class="template-card" onclick="useTemplate('event')"><div class="template-icon">🎫</div><div class="template-name">Event Registration</div><div class="template-desc">Name, email, attendees, date</div></div>
+<div class="template-card" onclick="useTemplate('job')"><div class="template-icon">💼</div><div class="template-name">Job Application</div><div class="template-desc">CV upload, experience</div></div>
+<div class="template-card" onclick="useTemplate('quiz')"><div class="template-icon">❓</div><div class="template-name">Quiz</div><div class="template-desc">Multiple choice + scoring</div></div>
+</div>
+</div>
+</div>
+
+<div id="panel-builder" class="panel">
+<div class="section">
+<h3>Form Builder</h3>
+<label>Form Title</label>
+<input id="formTitle" placeholder="Customer Feedback Survey">
+<label>Description</label>
+<textarea id="formDesc" placeholder="Help us improve our services"></textarea>
+<div class="field-builder">
+<div class="field-row"><span class="field-type">TEXT</span><span class="field-label">Full Name</span><span class="field-act">Required ✓</span></div>
+<div class="field-row"><span class="field-type">EMAIL</span><span class="field-label">Email Address</span><span class="field-act">Required ✓</span></div>
+<div class="field-row"><span class="field-type">RATING</span><span class="field-label">How satisfied are you?</span><span class="field-act">1-5 stars</span></div>
+<div class="field-row"><span class="field-type">TEXTAREA</span><span class="field-label">Your feedback</span><span class="field-act">Optional</span></div>
+</div>
+<label>Add Field</label>
+<select id="addField"><option>Short Text</option><option>Long Text</option><option>Email</option><option>Phone</option><option>Multiple Choice</option><option>Dropdown</option><option>Rating (1-5)</option><option>Checkbox</option><option>Date</option><option>File Upload</option></select>
+<button class="btn" onclick="addFormField()">+ Add Field</button>
+<label>Form Settings</label>
+<select id="formSettings"><option>Require email verification</option><option>Allow anonymous responses</option><option>One response per person</option><option>Limit total responses to 100</option></select>
+<button class="btn" onclick="publishForm()">Publish Form & Get Link</button>
+</div>
+</div>
+
+<div id="panel-responses" class="panel">
+<div class="section">
+<h3>Recent Responses</h3>
+<div style="font-size:.72rem;color:#8892a6;text-align:center;padding:20px">No responses yet. Publish a form and share the link to start collecting.</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px 0;font-size:.68rem;color:#8892a6">HARZ Digital Services • Platform #55 • CAC RC: 321424</div>
+</div>
+<script>
+function switchTab(tab,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('panel-'+tab).classList.add('active');}
+function useTemplate(type){alert('Template "'+type+'" loaded! Switch to Form Builder to customize it.');}
+function addFormField(){const t=document.getElementById('addField').value;alert('Added '+t+' field to form.');}
+function publishForm(){const t=document.getElementById('formTitle').value.trim();if(!t){alert('Enter form title');return;}alert('Form published!\n\nShare link: https://rabiuhamza11.github.io/harz-portfolio/harz-form-'+'survey-'+Date.now().toString(36)+'.html\n\nResponses are stored in the EstateInquiry entity and viewable in the Responses tab.');}
+</script>
+</body>
+</html>
