@@ -340,6 +340,30 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <button onclick="sendAI()" style="background:var(--p2);border:none;border-radius:8px;padding:8px 14px;color:#fff;font-size:.8rem;cursor:pointer">➤</button>
 </div>
 </div>
+<div class="biz-ctrl-section">
+<div class="biz-ctrl-title">Get Your API Key</div>
+<div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">Generate a free key to access 20 AI agents via API. 100 free requests included.</div>
+<div id="keygen-form" style="display:flex;flex-direction:column;gap:8px">
+<input id="keyName" placeholder="Your name" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:.78rem">
+<input id="keyEmail" placeholder="Your email" type="email" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:.78rem">
+<button onclick="generateAPIKey()" style="background:linear-gradient(135deg,var(--p2),var(--cyan));border:none;border-radius:8px;padding:10px;color:#fff;font-size:.8rem;font-weight:600;cursor:pointer">Generate Free API Key</button>
+</div>
+<div id="keyResult" style="display:none;margin-top:10px;padding:12px;background:var(--bg);border:1px solid var(--green);border-radius:10px">
+<div style="font-size:.72rem;color:var(--muted);margin-bottom:4px">Your API Key (save this!):</div>
+<div id="keyValue" style="font-family:monospace;font-size:.82rem;color:var(--green);word-break:break-all;padding:8px;background:var(--card);border-radius:6px;margin-bottom:8px"></div>
+<div style="display:flex;gap:8px">
+<button onclick="copyAPIKey()" style="flex:1;background:var(--p2);border:none;border-radius:6px;padding:6px;color:#fff;font-size:.72rem;cursor:pointer">Copy Key</button>
+<button onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')" style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px;color:var(--p2);font-size:.72rem;cursor:pointer">View Docs</button>
+</div>
+</div>
+</div>
+<div class="biz-ctrl-section">
+<div class="biz-ctrl-title">Pricing Plans</div>
+<div class="biz-ctrl-row"><span>Free — 100 requests</span><span style="color:var(--green)">₦0</span></div>
+<div class="biz-ctrl-row"><span>Starter — 1,000 requests</span><span style="color:var(--p2)">₦15,000</span></div>
+<div class="biz-ctrl-row"><span>Pro — 10,000 requests</span><span style="color:var(--p2)">₦50,000</span></div>
+<div class="biz-ctrl-row"><span>Enterprise — Unlimited</span><span style="color:#f0b90b">₦150,000</span></div>
+</div>
 </div>
 </div></div>
 </div>
@@ -609,6 +633,38 @@ thinkDiv.textContent='Connection error. Please try again.';
 function quickAI(msg){
 document.getElementById('aiInput').value=msg;
 sendAI();
+}
+
+function generateAPIKey(){
+const name=document.getElementById('keyName').value.trim();
+const email=document.getElementById('keyEmail').value.trim();
+if(!name||!email){alert('Please enter your name and email');return;}
+const btn=event.target;
+btn.textContent='Generating...';
+btn.disabled=true;
+fetch(HARZ_BASE+'/harzCloud',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'key',name:name,email:email,api_key:HARZ_API_KEY})})
+.then(r=>r.json()).then(d=>{
+btn.textContent='Generate Free API Key';
+btn.disabled=false;
+if(d.ok&&d.api_key){
+document.getElementById('keyResult').style.display='block';
+document.getElementById('keyValue').textContent=d.api_key;
+document.getElementById('keygen-form').style.display='none';
+}else{
+alert(d.error||'Failed to generate key. Please try again.');
+}
+}).catch(()=>{
+btn.textContent='Generate Free API Key';
+btn.disabled=false;
+alert('Connection error. Please try again.');
+});
+}
+
+function copyAPIKey(){
+const key=document.getElementById('keyValue').textContent;
+if(navigator.clipboard){navigator.clipboard.writeText(key);}
+else{const ta=document.createElement('textarea');ta.value=key;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+alert('API key copied to clipboard!');
 }
 
 function loadBizControl(){
