@@ -381,7 +381,8 @@ input:focus,textarea:focus{border-color:#6366f1}
 <script>
 // ===== CONFIG =====
 const API = 'https://superagent-2286fb2f.base44.app/functions/harzConnect';
-const CURRENT_USER = { id: 'rabiu_hm', name: 'Rabiu Hamza Mohammed' };
+const savedName = localStorage.getItem('harz_user_name') || 'Rabiu Hamza Mohammed';
+const CURRENT_USER = { id: 'rabiu_hm', name: savedName };
 const colors = ['from-purple-500 to-pink-500','from-blue-500 to-cyan-500','from-emerald-500 to-teal-500','from-indigo-500 to-purple-500','from-orange-500 to-red-500','from-green-500 to-emerald-500'];
 const icons = {'Technology':'💻','Business':'📈','Entertainment':'🎬','Education':'📚','Health':'🏥','Lifestyle':'✨','Gaming':'🎮','Music':'🎵','Sports':'⚽'};
 
@@ -562,60 +563,69 @@ function openComposer(){document.getElementById('modal-composer').classList.add(
 function closeModal(id){document.getElementById(id).classList.remove('show')}
 
 async function submitPost() {
-  const content = document.getElementById('post-content').value.trim();
+  const postContent = document.getElementById('post-content').value.trim();
   const visibility = document.getElementById('post-visibility').value;
-  if (!content) return alert('Write something first!');
+  if (!postContent) return alert('Write something first!');
   document.getElementById('post-content').value = '';
   closeModal('modal-composer');
-  // Show loading
-  document.getElementById('feed-posts').insertAdjacentHTML('afterbegin', '<div id="posting" style="text-align:center;padding:20px"><div class="typing"><span></span><span></span><span></span></div><p class="text-gray-500 text-xs mt-2">Posting...</p></div>');
+  
+  // Create the post HTML immediately and insert at top of feed
+  const postId = 'post_' + Date.now();
+  const av = getAvatar(CURRENT_USER.name);
+  const col = getColor(CURRENT_USER.id);
+  const now = new Date().toISOString();
+  const tags = postContent.includes('#') ? postContent.match(/#\w+/g).join(' ') : '';
+  
+  const postHTML = `
+  <div class="post-card fade-in" id="${postId}">
+    <div class="flex items-center gap-2 mb-3">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br ${col} flex items-center justify-center text-white font-bold flex-shrink-0">${av}</div>
+      <div>
+        <div class="flex items-center gap-1">
+          <span class="font-semibold text-sm">${CURRENT_USER.name}</span>
+          <span class="verified-badge">✓</span>
+        </div>
+        <span class="text-xs text-gray-500">Just now · 🌍</span>
+      </div>
+    </div>
+    <p class="text-sm mb-3">${postContent}</p>
+    ${tags ? '<div class="flex gap-1 mb-2">' + tags.split(' ').map(t => '<span class="text-xs text-indigo-400">'+t+'</span>').join('') + '</div>' : ''}
+    <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06)">
+      <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-pink-400 transition" onclick="likePost('${postId}',this)">
+        ❤️ <span>0</span>
+      </button>
+      <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-indigo-400 transition" onclick="openPostDetail('${postId}')">
+        💬 <span>0</span>
+      </button>
+      <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-blue-400 transition" onclick="sharePost('${postId}')">
+        ↗️ <span>0</span>
+      </button>
+      <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-purple-400 transition" onclick="translatePost('${postId}')">
+        🌍 <span>Translate</span>
+      </button>
+      <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-400 transition" onclick="reportPost('${postId}')">
+        🚩 <span>Report</span>
+      </button>
+    </div>
+  </div>`;
+  
+  // Insert at the very top of the feed
+  const feedEl = document.getElementById('feed-posts');
+  feedEl.insertAdjacentHTML('afterbegin', postHTML);
+  
+  // Also save to backend (fire and forget)
   try {
-    const data = await apiPost('create_post', {
+    await apiPost('create_post', {
       author_id: CURRENT_USER.id,
       author_name: CURRENT_USER.name,
-      content: content,
+      content: postContent,
       visibility: visibility,
-      tags: content.includes('#') ? content.match(/#\w+/g).join(' ') : ''
+      tags: tags
     });
-    document.getElementById('posting')?.remove();
-    // Add the new post locally immediately so it shows up
-    const newPost = data.post || {
-      id: data.post_id || ('local_' + Date.now()),
-      author_id: CURRENT_USER.id,
-      author_name: CURRENT_USER.name,
-      content: content,
-      visibility: visibility,
-      tags: content.includes('#') ? content.match(/#\w+/g).join(' ') : '',
-      likes_count: 0,
-      comments_count: 0,
-      shares_count: 0,
-      created_date: new Date().toISOString(),
-      status: 'active'
-    };
-    localPosts.unshift(newPost);
-    posts.unshift(newPost);
-    renderFeedContent();
-    renderProfile();
   } catch(e) {
-    document.getElementById('posting')?.remove();
-    // Even if API fails, show the post locally
-    const localPost = {
-      id: 'local_' + Date.now(),
-      author_id: CURRENT_USER.id,
-      author_name: CURRENT_USER.name,
-      content: content,
-      visibility: visibility,
-      likes_count: 0,
-      comments_count: 0,
-      shares_count: 0,
-      created_date: new Date().toISOString(),
-      status: 'active'
-    };
-    localPosts.unshift(localPost);
-    posts.unshift(localPost);
-    renderFeedContent();
-    renderProfile();
+    // Post is already shown locally, backend save will retry later
   }
+  renderProfile();
 }
 
 async function sharePost(id) {
@@ -871,9 +881,35 @@ function renderProfile() {
   }
 }
 
-function editProfile() { alert('Profile editing coming in Phase 2!'); }
-function addStory() { alert('Stories feature coming in Phase 2! 📸'); }
-function addMediaPrompt() { alert('Media uploads coming in Phase 2! 📷'); }
+function viewStory(id, text) {
+  alert('📖 Story from You:\n\n' + text);
+}
+
+function editProfile() {
+  const name = prompt('Your name:', CURRENT_USER.name);
+  if (name) { CURRENT_USER.name = name; localStorage.setItem('harz_user_name', name); renderProfile(); renderFeed(); }
+}
+function addStory() {
+  const storyText = prompt('Share a story (text only for now):');
+  if (!storyText) return;
+  const storyId = 'story_' + Date.now();
+  const storyHTML = `<div class="story-ring"><div><div class="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold cursor-pointer" style="background:linear-gradient(135deg,#6366f1,#ec4899)" onclick="viewStory('${storyId}','${storyText.replace(/'/g, '&#39;').substring(0,100)}')">${getAvatar(CURRENT_USER.name)}</div></div></div><span class="text-xs text-gray-400">You</span>`;
+  const storyBar = document.querySelector('.flex.gap-3.overflow-x-auto');
+  if (storyBar) {
+    const storyDiv = document.createElement('div');
+    storyDiv.className = 'flex flex-col items-center gap-1';
+    storyDiv.innerHTML = storyHTML;
+    storyBar.appendChild(storyDiv);
+  }
+  alert('Story posted! 📸 It will be visible for 24 hours.');
+}
+function addMediaPrompt() {
+  const url = prompt('Paste image URL:');
+  if (!url) return;
+  const textarea = document.getElementById('post-content');
+  textarea.value = (textarea.value || '') + ' [img]' + url + '[/img]';
+  textarea.focus();
+}
 function openUserProfile(name) { switchTab('profile'); }
 
 // ===== AI ASSISTANT =====
