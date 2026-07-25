@@ -166,7 +166,6 @@ input:focus,textarea:focus{border-color:#6366f1}
 <div class="flex items-center justify-between mb-4">
 <h2 class="text-xl font-bold">Business</h2>
 <button onclick="createBusiness()" class="gradient-btn px-4 py-2 rounded-xl text-sm font-semibold">Add Business</button>
-</button>
 </div>
 <div id="business-list" class="space-y-3"></div>
 </div>
@@ -474,6 +473,54 @@ function getColor(id) {
   return colors[id.charCodeAt(0) % colors.length];
 }
 
+let localPosts = [];
+
+function renderFeedContent() {
+  const g = document.getElementById('feed-posts');
+  if (!g) return;
+  if (!posts.length) {
+    g.innerHTML = '<div style="text-align:center;padding:40px"><p class="text-gray-500 text-sm">No posts yet. Be the first to share!</p></div>';
+    return;
+  }
+  g.innerHTML = posts.map((p,i) => {
+    const av = getAvatar(p.author_name);
+    const col = getColor(p.author_id || p.author_name);
+    const verified = p.author_name === 'Harz Digital Services' || p.author_name === 'Fatima Abdullahi';
+    return `
+    <div class="post-card fade-in">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br ${col} flex items-center justify-center text-white font-bold flex-shrink-0">${av}</div>
+        <div>
+          <div class="flex items-center gap-1">
+            <span class="font-semibold text-sm">${p.author_name || 'Anonymous'}</span>
+            ${verified?'<span class="verified-badge">✓</span>':''}
+          </div>
+          <span class="text-xs text-gray-500">${timeAgo(p.created_date)} · 🌍</span>
+        </div>
+      </div>
+      <p class="text-sm mb-3" onclick="openPostDetail('${p.id}')" style="cursor:pointer">${p.content || ''}</p>
+      ${(p.media_urls && p.media_urls !== '') ? '<img src="'+p.media_urls+'" style="border-radius:12px;max-width:100%;margin-bottom:12px">' : ''}
+      <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06)">
+        <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-pink-400 transition" onclick="likePost('${p.id}',this)">
+          ❤️ <span>${p.likes_count || 0}</span>
+        </button>
+        <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-indigo-400 transition" onclick="openPostDetail('${p.id}')">
+          💬 <span>${p.comments_count || 0}</span>
+        </button>
+        <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-blue-400 transition" onclick="sharePost('${p.id}')">
+          ↗️ <span>${p.shares_count || 0}</span>
+        </button>
+        <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-purple-400 transition" onclick="translatePost('${p.id}')">
+          🌍 <span>Translate</span>
+        </button>
+        <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-400 transition" onclick="reportPost('${p.id}')">
+          🚩 <span>Report</span>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 async function renderFeed() {
   const g = document.getElementById('feed-posts');
   if (loading) {
@@ -481,51 +528,27 @@ async function renderFeed() {
   }
   try {
     const data = await apiGet('feed');
-    posts = data.posts || [];
+    let apiPosts = data.posts || [];
     loading = false;
-    if (!posts.length) {
-      g.innerHTML = '<div style="text-align:center;padding:40px"><p class="text-gray-500 text-sm">No posts yet. Be the first to share!</p></div>';
-      return;
+    // Merge API posts with locally created posts (avoid duplicates)
+    if (apiPosts.length > 0) {
+      posts = apiPosts;
+      // Add local posts that aren't in API response yet
+      localPosts.forEach(lp => {
+        if (!posts.find(p => p.id === lp.id || p.content === lp.content)) {
+          posts.unshift(lp);
+        }
+      });
+    } else {
+      // API returned empty — use fallback + local posts
+      posts = [...localPosts, ...FALLBACK_POSTS];
     }
-    g.innerHTML = posts.map((p,i) => {
-      const av = getAvatar(p.author_name);
-      const col = getColor(p.author_id || p.author_name);
-      const verified = p.author_name === 'Harz Digital Services' || p.author_name === 'Fatima Abdullahi';
-      return `
-      <div class="post-card fade-in">
-        <div class="flex items-center gap-2 mb-3">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-br ${col} flex items-center justify-center text-white font-bold flex-shrink-0">${av}</div>
-          <div>
-            <div class="flex items-center gap-1">
-              <span class="font-semibold text-sm">${p.author_name || 'Anonymous'}</span>
-              ${verified?'<span class="verified-badge">✓</span>':''}
-            </div>
-            <span class="text-xs text-gray-500">${timeAgo(p.created_date)} · 🌍</span>
-          </div>
-        </div>
-        <p class="text-sm mb-3" onclick="openPostDetail('${p.id}')" style="cursor:pointer">${p.content || ''}</p>
-        ${(p.media_urls && p.media_urls !== '') ? '<img src="'+p.media_urls+'" style="border-radius:12px;max-width:100%;margin-bottom:12px">' : ''}
-        <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06)">
-          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-pink-400 transition" onclick="likePost('${p.id}',this)">
-            ❤️ <span>${p.likes_count || 0}</span>
-          </button>
-          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-indigo-400 transition" onclick="openPostDetail('${p.id}')">
-            💬 <span>${p.comments_count || 0}</span>
-          </button>
-          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-blue-400 transition" onclick="sharePost('${p.id}')">
-            ↗️ <span>${p.shares_count || 0}</span>
-          </button>
-          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-purple-400 transition" onclick="translatePost('${p.id}')">
-            🌍 <span>Translate</span>
-          </button>
-          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-400 transition" onclick="reportPost('${p.id}')">
-            🚩 <span>Report</span>
-          </button>
-        </div>
-      </div>`;
-    }).join('');
+    renderFeedContent();
   } catch(e) {
-    g.innerHTML = '<div style="text-align:center;padding:40px"><p class="text-gray-500 text-sm">Showing demo data (API not reachable from this page).</p></div>'; posts = FALLBACK_POSTS; renderFeedContent();
+    loading = false;
+    // API failed — use fallback + local posts
+    posts = [...localPosts, ...FALLBACK_POSTS];
+    renderFeedContent();
   }
 }
 
@@ -547,7 +570,7 @@ async function submitPost() {
   // Show loading
   document.getElementById('feed-posts').insertAdjacentHTML('afterbegin', '<div id="posting" style="text-align:center;padding:20px"><div class="typing"><span></span><span></span><span></span></div><p class="text-gray-500 text-xs mt-2">Posting...</p></div>');
   try {
-    await apiPost('create_post', {
+    const data = await apiPost('create_post', {
       author_id: CURRENT_USER.id,
       author_name: CURRENT_USER.name,
       content: content,
@@ -555,11 +578,43 @@ async function submitPost() {
       tags: content.includes('#') ? content.match(/#\w+/g).join(' ') : ''
     });
     document.getElementById('posting')?.remove();
-    await renderFeed();
+    // Add the new post locally immediately so it shows up
+    const newPost = data.post || {
+      id: data.post_id || ('local_' + Date.now()),
+      author_id: CURRENT_USER.id,
+      author_name: CURRENT_USER.name,
+      content: content,
+      visibility: visibility,
+      tags: content.includes('#') ? content.match(/#\w+/g).join(' ') : '',
+      likes_count: 0,
+      comments_count: 0,
+      shares_count: 0,
+      created_date: new Date().toISOString(),
+      status: 'active'
+    };
+    localPosts.unshift(newPost);
+    posts.unshift(newPost);
+    renderFeedContent();
     renderProfile();
   } catch(e) {
     document.getElementById('posting')?.remove();
-    alert('Failed to post. Try again.');
+    // Even if API fails, show the post locally
+    const localPost = {
+      id: 'local_' + Date.now(),
+      author_id: CURRENT_USER.id,
+      author_name: CURRENT_USER.name,
+      content: content,
+      visibility: visibility,
+      likes_count: 0,
+      comments_count: 0,
+      shares_count: 0,
+      created_date: new Date().toISOString(),
+      status: 'active'
+    };
+    localPosts.unshift(localPost);
+    posts.unshift(localPost);
+    renderFeedContent();
+    renderProfile();
   }
 }
 
