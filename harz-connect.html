@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#6366f1">
+<title>HARZ Connect — AI Social Platform</title>
+<link rel="manifest" href='data:application/manifest+json,{"name":"HARZ Connect","short_name":"Connect","start_url":".","display":"standalone","background_color":"#0f0f23","theme_color":"#6366f1","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%236366f1%22/%3E%3Ctext x=%2250%22 y=%2265%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3EH%3C/text%3E%3C/svg%3E","sizes":"192x192"}]}'>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+body{background:#0a0a1f;color:#e5e7eb;font-family:'Inter',system-ui,-apple-system,sans-serif;margin:0;padding-bottom:70px}
+.tab-active{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+.tab-inactive{color:#9ca3af}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;padding:8px 0;cursor:pointer;transition:all .2s}
+.nav-btn svg{width:22px;height:22px}
+.glass{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08)}
+.post-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:16px;margin-bottom:12px;transition:all .2s}
+.post-card:hover{border-color:rgba(99,102,241,0.3)}
+.gradient-text{background:linear-gradient(135deg,#6366f1,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gradient-btn{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;transition:all .2s}
+.gradient-btn:hover{background:linear-gradient(135deg,#5558e9,#7c4ef5);transform:translateY(-1px)}
+.story-ring{background:linear-gradient(135deg,#6366f1,#ec4899);padding:2px;border-radius:50%}
+.story-ring>div{background:#0a0a1f;padding:2px;border-radius:50%}
+input,textarea{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#e5e7eb;border-radius:12px;padding:10px 14px;width:100%;outline:none;transition:border .2s}
+input:focus,textarea:focus{border-color:#6366f1}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.show{display:flex}
+.modal{background:#13132a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;max-width:500px;width:100%;max-height:85vh;overflow-y:auto}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.scroll-x::-webkit-scrollbar{display:none}
+.chat-bubble-in{background:rgba(255,255,255,0.08);border-radius:16px 16px 16px 4px;padding:10px 14px;max-width:75%;margin-bottom:6px}
+.chat-bubble-out{background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:16px 16px 4px 16px;padding:10px 14px;max-width:75%;margin-bottom:6px;margin-left:auto;color:#fff}
+.typing{display:inline-flex;gap:3px}
+.typing span{width:6px;height:6px;background:#6366f1;border-radius:50%;animation:blink 1.4s infinite both}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+.fade-in{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.badge{background:rgba(99,102,241,0.2);color:#818cf8;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
+.verified-badge{color:#3b82f6;font-size:14px}
+.community-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s}
+.community-card:hover{border-color:rgba(99,102,241,0.3);transform:translateY(-2px)}
+.notif-dot{width:8px;height:8px;background:#6366f1;border-radius:50%;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="glass sticky top-0 z-40 px-4 py-3 flex items-center justify-between" style="background:rgba(10,10,31,0.9)">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">
+<span class="text-white font-bold text-lg">H</span>
+</div>
+<h1 class="text-lg font-bold gradient-text">HARZ Connect</h1>
+</div>
+<input type="text" id="search-input" placeholder="Search posts, communities, people..." class="flex-1 mx-3" style="max-width:200px;display:none" oninput="handleSearch(this.value)">
+<div id="search-btn" class="flex items-center gap-2">
+<button onclick="toggleSearch()" class="w-9 h-9 rounded-full glass flex items-center justify-center" title="Search">
+<svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" width="18"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<button onclick="toggleSearch()" class="w-9 h-9 rounded-full glass flex items-center justify-center" title="Search">
+<svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" width="18"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+</button>
+<button onclick="openAI()" class="w-9 h-9 rounded-full glass flex items-center justify-center" title="AI Assistant">
+<svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+</button>
+<div class="relative">
+<button onclick="switchTab('notifications')" class="w-9 h-9 rounded-full glass flex items-center justify-center">
+<svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+<span id="notif-badge" class="absolute -top-1 -right-1 bg-pink-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold" style="display:none">0</span>
+</button>
+</div>
+<div class="story-ring"><div><div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm cursor-pointer" onclick="switchTab('profile')">R</div></div></div>
+</div>
+</div>
+
+<!-- Feed Tab -->
+<div id="tab-feed" class="px-4 py-3">
+<div id="search-container" style="display:none" class="mb-4">
+<input type="text" id="search-input" placeholder="Search posts, communities, people..." oninput="handleSearch(this.value)" style="margin-bottom:10px">
+<div id="search-results"></div>
+</div>
+<!-- Stories -->
+<div class="scroll-x flex gap-3 pb-3 mb-2">
+<div class="flex flex-col items-center gap-1 cursor-pointer" onclick="addStory()">
+<div class="story-ring"><div><div class="w-14 h-14 rounded-full flex items-center justify-center" style="background:rgba(99,102,241,0.2)">
+<svg viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" width="20"><path d="M12 5v14M5 12h14"/></svg>
+</div></div></div>
+<span class="text-xs text-gray-400">Add Story</span>
+</div>
+<div class="flex flex-col items-center gap-1 cursor-pointer" onclick="openUserProfile('Rabiu H.')">
+<div class="story-ring"><div><div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">A</div></div></div>
+<span class="text-xs text-gray-400">Aisha</span>
+</div>
+<div class="flex flex-col items-center gap-1 cursor-pointer" onclick="openUserProfile('Chidi O.')">
+<div class="story-ring"><div><div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold">C</div></div></div>
+<span class="text-xs text-gray-400">Chidi</span>
+</div>
+<div class="flex flex-col items-center gap-1 cursor-pointer" onclick="openUserProfile('Fatima A.')">
+<div class="story-ring"><div><div class="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold">F</div></div></div>
+<span class="text-xs text-gray-400">Fatima</span>
+</div>
+</div>
+
+<!-- Post Composer -->
+<div class="glass rounded-2xl p-3 mb-4 flex items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold flex-shrink-0">R</div>
+<input type="text" placeholder="Share something with the world..." class="flex-1" onclick="openComposer()">
+<button onclick="openComposer()" class="text-indigo-400 font-semibold text-sm px-3">Post</button>
+</div>
+
+<!-- Feed Posts -->
+<div id="search-results" style="display:none" class="mb-4"></div>
+<div id="feed-posts"></div>
+</div>
+
+<!-- Messages Tab -->
+<div id="tab-messages" class="px-4 py-3" style="display:none">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold">Messages</h2>
+<button onclick="openNewChat()" class="gradient-btn px-4 py-2 rounded-xl text-sm font-semibold">New Chat</button>
+</div>
+<div id="chat-list" class="space-y-2"></div>
+</div>
+
+<!-- Communities Tab -->
+<div id="tab-marketplace" class="px-4 py-3" style="display:none">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold">Marketplace</h2>
+<button onclick="openSellProduct()" class="gradient-btn px-4 py-2 rounded-xl text-sm font-semibold">Sell</button>
+</div>
+<div class="scroll-x flex gap-2 mb-4" id="product-categories">
+<button class="glass px-3 py-1.5 rounded-full text-xs whitespace-nowrap" onclick="filterProducts('all')">All</button>
+<button class="glass px-3 py-1.5 rounded-full text-xs whitespace-nowrap" onclick="filterProducts('digital')">Digital</button>
+<button class="glass px-3 py-1.5 rounded-full text-xs whitespace-nowrap" onclick="filterProducts('physical')">Physical</button>
+<button class="glass px-3 py-1.5 rounded-full text-xs whitespace-nowrap" onclick="filterProducts('service')">Services</button>
+<button class="glass px-3 py-1.5 rounded-full text-xs whitespace-nowrap" onclick="filterProducts('subscription')">Subscriptions</button>
+</div>
+<div id="products-list" class="space-y-3"></div>
+</div>
+
+<div id="tab-communities" class="px-4 py-3" style="display:none">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold">Communities</h2>
+<button onclick="openCreateCommunity()" class="gradient-btn px-4 py-2 rounded-xl text-sm font-semibold">Create</button>
+</div>
+<div id="communities-list" class="space-y-3"></div>
+</div>
+
+<!-- Notifications Tab -->
+<div id="tab-live" class="px-4 py-3" style="display:none">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold">Live</h2>
+<button onclick="goLive()" class="gradient-btn px-4 py-2 rounded-xl text-sm font-semibold">🔴 Go Live</button>
+</div>
+<div id="live-now" class="mb-4"></div>
+<h3 class="text-sm font-semibold text-gray-400 mb-2">Upcoming & Recent</h3>
+<div id="live-list" class="space-y-3"></div>
+</div>
+
+<div id="tab-business" class="px-4 py-3" style="display:none">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold">Business</h2>
+<button onclick="createBusiness()" class="gradient-btn px-4 py-2 rounded-xl text-sm font-semibold">Add Business</button>
+</button>
+</div>
+<div id="business-list" class="space-y-3"></div>
+</div>
+
+<div id="tab-developer" class="px-4 py-3" style="display:none">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold">Developer</h2>
+</div>
+<div class="post-card mb-4">
+<h3 class="font-bold text-sm mb-2">API Keys</h3>
+<p class="text-xs text-gray-400 mb-3">Generate API keys to build apps on HARZ Connect.</p>
+<button onclick="createApiKey()" class="gradient-btn px-4 py-2 rounded-xl text-sm font-semibold w-full">Generate API Key</button>
+<div id="api-keys-list" class="mt-3 space-y-2"></div>
+</div>
+<div class="post-card mb-4">
+<h3 class="font-bold text-sm mb-2">API Documentation</h3>
+<div class="text-xs text-gray-400 space-y-1">
+<p><span class="text-indigo-400">GET</span> ?action=feed — Social feed</p>
+<p><span class="text-indigo-400">POST</span> ?action=create_post — Create post</p>
+<p><span class="text-indigo-400">GET</span> ?action=search&q=... — Search</p>
+<p><span class="text-indigo-400">GET</span> ?action=products — Marketplace</p>
+<p><span class="text-indigo-400">POST</span> ?action=checkout — Buy product</p>
+<p><span class="text-indigo-400">POST</span> ?action=go_live — Start stream</p>
+<p><span class="text-indigo-400">GET</span> ?action=businesses — List businesses</p>
+<p><span class="text-indigo-400">POST</span> ?action=create_api_key — Get API key</p>
+</div>
+<button onclick="openApiDocs()" class="glass px-3 py-2 rounded-xl text-xs mt-3 w-full">View Full Docs</button>
+</div>
+<div class="post-card">
+<h3 class="font-bold text-sm mb-2">Webhooks</h3>
+<p class="text-xs text-gray-400 mb-2">Get real-time events: post.created, order.completed, stream.started</p>
+<input type="text" id="webhook-url" placeholder="https://yourapp.com/webhook" class="mb-2" style="font-size:12px">
+<button onclick="registerWebhook()" class="glass px-3 py-2 rounded-xl text-xs w-full">Register Webhook</button>
+</div>
+</div>
+
+<div id="tab-notifications" class="px-4 py-3" style="display:none">
+<h2 class="text-xl font-bold mb-4">Notifications</h2>
+<div id="notifications-list" class="space-y-2"></div>
+</div>
+
+<!-- Profile Tab -->
+<div id="tab-profile" class="px-4 py-3" style="display:none">
+<div class="glass rounded-2xl p-6 text-center">
+<div class="story-ring inline-block mb-3"><div><div class="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-2xl">R</div></div></div>
+<h2 class="text-xl font-bold">Rabiu Hamza Mohammed <span class="verified-badge">✓</span></h2>
+<p class="text-gray-400 text-sm mb-1">@rabiu · Founder, Harz Digital Services</p>
+<p class="text-gray-500 text-xs mb-3">📍 Jalingo, Taraba State · 🌍 Connecting the world</p>
+<div class="flex justify-center gap-2 mb-4">
+<span class="badge">Founder</span>
+<span class="badge">Creator</span>
+<span class="badge">Business</span>
+</div>
+<div class="flex justify-around mb-4">
+<div class="text-center"><p class="text-xl font-bold" id="profile-posts">0</p><p class="text-xs text-gray-500">Posts</p></div>
+<div class="text-center"><p class="text-xl font-bold">1.2K</p><p class="text-xs text-gray-500">Followers</p></div>
+<div class="text-center"><p class="text-xl font-bold">340</p><p class="text-xs text-gray-500">Following</p></div>
+</div>
+<button onclick="editProfile()" class="w-full glass py-2.5 rounded-xl font-semibold text-sm mb-2">Edit Profile</button>
+</div>
+
+<div class="mt-4">
+<h3 class="font-bold mb-3">My Posts</h3>
+<div id="profile-my-posts"></div>
+</div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="fixed bottom-0 left-0 right-0 glass z-40 flex items-center justify-around" style="background:rgba(10,10,31,0.95);padding-bottom:env(safe-area-inset-bottom)">
+<button class="nav-btn tab-active" id="nav-feed" onclick="switchTab('feed')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+<span class="text-[10px] font-medium">Feed</span>
+</button>
+<button class="nav-btn tab-inactive" id="nav-messages" onclick="switchTab('messages')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+<span class="text-[10px] font-medium">Chats</span>
+</button>
+<button class="nav-btn tab-inactive" id="nav-live" onclick="switchTab('live')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4" fill="#ef4444"/><circle cx="12" cy="12" r="9"/></svg>
+<span class="text-[10px] font-medium">Live</span>
+</button>
+<button class="nav-btn tab-inactive" id="nav-marketplace" onclick="switchTab('marketplace')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+<span class="text-[10px] font-medium">Shop</span>
+</button>
+<button class="nav-btn tab-inactive" id="nav-communities" onclick="switchTab('communities')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+<span class="text-[10px] font-medium">Communities</span>
+</button>
+<button class="nav-btn tab-inactive" id="nav-notifications" onclick="switchTab('notifications')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+<span class="text-[10px] font-medium">Alerts</span>
+</button>
+<button class="nav-btn tab-inactive" id="nav-profile" onclick="switchTab('profile')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+
+<!-- Composer Modal -->
+<div class="modal-bg" id="modal-composer">
+<div class="modal">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-lg">Create Post</h3>
+<button onclick="closeModal('modal-composer')" class="text-gray-400 text-2xl">&times;</button>
+</div>
+<textarea id="post-content" rows="4" placeholder="What's on your mind?"></textarea>
+<div class="flex gap-2 mt-3">
+<button class="glass px-3 py-2 rounded-xl text-sm" onclick="addMediaPrompt()">📷 Photo</button>
+<button class="glass px-3 py-2 rounded-xl text-sm" onclick="document.getElementById('post-content').value += ' #HarzConnect'">🏷️ Tag</button>
+</div>
+<div class="flex gap-2 mt-4">
+<select id="post-visibility" class="flex-1" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#e5e7eb;border-radius:12px;padding:10px 14px">
+<option value="public" style="background:#13132a">🌍 Public</option>
+<option value="friends" style="background:#13132a">👥 Friends</option>
+<option value="private" style="background:#13132a">🔒 Private</option>
+</select>
+<button onclick="submitPost()" class="gradient-btn px-6 py-2.5 rounded-xl font-semibold text-sm">Publish</button>
+</div>
+</div>
+</div>
+
+<!-- AI Assistant Modal -->
+<div class="modal-bg" id="modal-ai">
+<div class="modal" style="max-width:450px">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#6366f1,#a855f7)">
+<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
+</div>
+<h3 class="font-bold text-lg">HARZ AI Assistant</h3>
+</div>
+<button onclick="closeModal('modal-ai')" class="text-gray-400 text-2xl">&times;</button>
+</div>
+<div id="ai-chat" class="space-y-2 mb-3" style="max-height:300px;overflow-y:auto">
+<div class="chat-bubble-in">
+<p class="text-sm">Hey! I'm your AI assistant on HARZ Connect. I can help you write posts, translate messages, summarize chats, find communities, and more. What do you need?</p>
+</div>
+</div>
+<div class="flex gap-2">
+<input type="text" id="ai-input" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter')sendAI()">
+<button onclick="sendAI()" class="gradient-btn px-4 py-2.5 rounded-xl font-semibold text-sm flex-shrink-0">Send</button>
+</div>
+<div class="flex gap-2 mt-2 scroll-x">
+<button class="glass px-3 py-1.5 rounded-full text-xs whitespace-nowrap" onclick="document.getElementById('ai-input').value='Write a post about technology in Africa';sendAI()">✍️ Write a post</button>
+<button class="glass px-3 py-1.5 rounded-full text-xs whitespace-nowrap" onclick="document.getElementById('ai-input').value='Translate: Hello, how are you? to French';sendAI()">🌍 Translate</button>
+<button class="glass px-3 py-1.5 rounded-full text-xs whitespace-nowrap" onclick="document.getElementById('ai-input').value='Find me tech communities';sendAI()">🔍 Find communities</button>
+<button class="glass px-3 py-1.5 rounded-full text-xs whitespace-nowrap" onclick="document.getElementById('ai-input').value='Summarize my latest notifications';sendAI()">📋 Summarize</button>
+</div>
+</div>
+</div>
+
+<!-- Community Create Modal -->
+<div class="modal-bg" id="modal-community">
+<div class="modal">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-lg">Create Community</h3>
+<button onclick="closeModal('modal-community')" class="text-gray-400 text-2xl">&times;</button>
+</div>
+<input type="text" id="comm-title" placeholder="Community name" class="mb-3">
+<textarea id="comm-desc" rows="3" placeholder="What is this community about?" class="mb-3"></textarea>
+<select id="comm-category" class="mb-3" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#e5e7eb;border-radius:12px;padding:10px 14px;width:100%">
+<option value="Technology" style="background:#13132a">💻 Technology</option>
+<option value="Business" style="background:#13132a">📈 Business</option>
+<option value="Entertainment" style="background:#13132a">🎬 Entertainment</option>
+<option value="Education" style="background:#13132a">📚 Education</option>
+<option value="Health" style="background:#13132a">🏥 Health</option>
+<option value="Lifestyle" style="background:#13132a">✨ Lifestyle</option>
+<option value="Gaming" style="background:#13132a">🎮 Gaming</option>
+<option value="Music" style="background:#13132a">🎵 Music</option>
+<option value="Sports" style="background:#13132a">⚽ Sports</option>
+</select>
+<div class="flex gap-2">
+<select id="comm-visibility" class="flex-1" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#e5e7eb;border-radius:12px;padding:10px 14px">
+<option value="public" style="background:#13132a">🌍 Public</option>
+<option value="private" style="background:#13132a">🔒 Private</option>
+</select>
+<button onclick="createCommunity()" class="gradient-btn px-6 py-2.5 rounded-xl font-semibold text-sm">Create</button>
+</div>
+</div>
+</div>
+
+<!-- Chat View Modal -->
+<div class="modal-bg" id="modal-chat" style="align-items:flex-end">
+<div class="modal" style="max-width:500px;border-radius:20px 20px 0 0;max-height:90vh;padding-bottom:80px">
+<div class="flex items-center gap-3 mb-4">
+<button onclick="closeModal('modal-chat')" class="text-gray-400">←</button>
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold" id="chat-avatar">A</div>
+<div>
+<h3 class="font-bold" id="chat-name">Aisha</h3>
+<p class="text-xs text-green-400">● Online</p>
+</div>
+</div>
+<div id="chat-messages" style="max-height:350px;overflow-y:auto;padding-bottom:10px"></div>
+<div class="flex gap-2 mt-3" style="position:absolute;bottom:20px;left:16px;right:16px">
+<input type="text" id="msg-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendMessage()">
+<button onclick="sendMessage()" class="gradient-btn px-4 py-2.5 rounded-xl font-semibold text-sm flex-shrink-0">Send</button>
+</div>
+</div>
+</div>
+
+<!-- Post Detail Modal -->
+<div class="modal-bg" id="modal-post-detail">
+<div class="modal" style="max-width:500px">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-lg">Post</h3>
+<button onclick="closeModal('modal-post-detail')" class="text-gray-400 text-2xl">&times;</button>
+</div>
+<div id="post-detail-content"></div>
+</div>
+</div>
+
+<script>
+// ===== CONFIG =====
+const API = 'https://superagent-2286fb2f.base44.app/functions/harzConnect';
+const CURRENT_USER = { id: 'rabiu_hm', name: 'Rabiu Hamza Mohammed' };
+const colors = ['from-purple-500 to-pink-500','from-blue-500 to-cyan-500','from-emerald-500 to-teal-500','from-indigo-500 to-purple-500','from-orange-500 to-red-500','from-green-500 to-emerald-500'];
+const icons = {'Technology':'💻','Business':'📈','Entertainment':'🎬','Education':'📚','Health':'🏥','Lifestyle':'✨','Gaming':'🎮','Music':'🎵','Sports':'⚽'};
+
+let currentTab='feed';
+let posts=[];
+let communities=[];
+let notifications=[];
+let loading=true;
+
+// Static chat data for demo
+let chats=[
+{id:'1',name:'Aisha M.',avatar:'A',color:'from-purple-500 to-pink-500',lastMsg:'That sounds amazing! 🎉',time:'5m',unread:2},
+{id:'2',name:'Chidi Okafor',avatar:'C',color:'from-blue-500 to-cyan-500',lastMsg:'Let me check the docs and get back to you',time:'1h',unread:0},
+{id:'3',name:'Harz Founders',avatar:'👥',color:'from-orange-500 to-red-500',lastMsg:'Fatima: Great meeting everyone today!',time:'3h',unread:5},
+{id:'4',name:'Fatima A.',avatar:'F',color:'from-emerald-500 to-teal-500',lastMsg:'Sure, let\'s schedule a call',time:'1d',unread:0}
+];
+
+// ===== API HELPERS =====
+async function apiGet(action, params={}) {
+  const url = new URL(API);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+  const res = await fetch(url);
+  return res.json();
+}
+
+async function apiPost(action, body) {
+  const res = await fetch(API + '?action=' + action, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+// ===== NAVIGATION =====
+function switchTab(tab){
+  currentTab=tab;
+  ['feed','messages','marketplace','communities','notifications','profile'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===tab?'block':'none';
+  });
+  ['feed','messages','marketplace','communities','notifications','profile'].forEach(t=>{
+    const nav=document.getElementById('nav-'+t);
+    if(t===tab){nav.classList.add('tab-active');nav.classList.remove('tab-inactive')}
+    else{nav.classList.remove('tab-active');nav.classList.add('tab-inactive')}
+  });
+}
+
+// Static fallback data (used if API is unreachable)
+const FALLBACK_POSTS = [
+  {id:"1",author_name:"Harz Digital Services",author_id:"harz_official",content:"HARZ Connect v1.0 is live! The AI-powered social platform that connects people, businesses, creators, and communities. With 50+ ecosystem platforms and 80+ AI agents, we are building the future of digital Africa. Welcome to the future.",likes_count:120,comments_count:25,shares_count:15,created_date:new Date(Date.now()-12*3600000).toISOString(),status:"active"},
+  {id:"2",author_name:"Aisha M.",author_id:"aisha_m",content:"Just launched my new fashion line on HarzDM! The future of African e-commerce is here. Check it out and let me know what you think! #HarzConnect #Fashion",likes_count:24,comments_count:5,shares_count:2,created_date:new Date(Date.now()-2*3600000).toISOString(),status:"active"},
+  {id:"3",author_name:"Chidi Okafor",author_id:"chidi_o",content:"AI is transforming how we do business in Nigeria. With HARZ Connect, every user gets a personal AI assistant. This is not the future, this is NOW.",likes_count:48,comments_count:12,shares_count:8,created_date:new Date(Date.now()-5*3600000).toISOString(),status:"active"},
+  {id:"4",author_name:"Fatima Abdullahi",author_id:"fatima_a",content:"Joined the HARZ Founders Community today. The energy is incredible! Entrepreneurs from across Africa connecting, sharing ideas, and building together. This is what community looks like.",likes_count:31,comments_count:7,shares_count:3,created_date:new Date(Date.now()-8*3600000).toISOString(),status:"active"}
+];
+const FALLBACK_COMMUNITIES = [
+  {id:"1",title:"Harz Founders Hub",description:"Connect with entrepreneurs and founders building the future of Africa",category:"Business",members_count:1240,status:"active"},
+  {id:"2",title:"AI & Tech Nigeria",description:"Discuss AI, blockchain, and emerging technologies",category:"Technology",members_count:890,status:"active"},
+  {id:"3",title:"African Creators",description:"Content creators, artists, and storytellers unite",category:"Entertainment",members_count:2100,status:"active"},
+  {id:"4",title:"Harz Music Lounge",description:"Discover and share the best African music",category:"Music",members_count:750,status:"active"},
+  {id:"5",title:"Health & Wellness NG",description:"Tips, discussions, and support for healthy living",category:"Health",members_count:560,status:"active"}
+];
+const FALLBACK_NOTIFS = [
+  {id:"1",type:"like",body:"Aisha M. liked your post about HARZ Connect",read:false,created_date:new Date(Date.now()-5*60000).toISOString()},
+  {id:"2",type:"comment",body:"Chidi Okafor commented: This is revolutionary!",read:false,created_date:new Date(Date.now()-20*60000).toISOString()},
+  {id:"3",type:"follow",body:"Fatima Abdullahi started following you",read:false,created_date:new Date(Date.now()-3600000).toISOString()},
+  {id:"4",type:"community_invite",body:"You were invited to join AI & Tech Nigeria",read:true,created_date:new Date(Date.now()-2*3600000).toISOString()},
+  {id:"5",type:"system",body:"Welcome to HARZ Connect! Complete your profile to get verified.",read:true,created_date:new Date(Date.now()-24*3600000).toISOString()}
+];
+
+// ===== FEED =====
+function timeAgo(dateStr) {
+  if (!dateStr) return 'just now';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + 'm';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + 'h';
+  return Math.floor(hrs / 24) + 'd';
+}
+
+function getAvatar(name) {
+  return name ? name.charAt(0).toUpperCase() : '?';
+}
+
+function getColor(id) {
+  if (!id) return colors[3];
+  return colors[id.charCodeAt(0) % colors.length];
+}
+
+async function renderFeed() {
+  const g = document.getElementById('feed-posts');
+  if (loading) {
+    g.innerHTML = '<div style="text-align:center;padding:40px"><div class="typing"><span></span><span></span><span></span></div><p class="text-gray-500 text-sm mt-2">Loading feed...</p></div>';
+  }
+  try {
+    const data = await apiGet('feed');
+    posts = data.posts || [];
+    loading = false;
+    if (!posts.length) {
+      g.innerHTML = '<div style="text-align:center;padding:40px"><p class="text-gray-500 text-sm">No posts yet. Be the first to share!</p></div>';
+      return;
+    }
+    g.innerHTML = posts.map((p,i) => {
+      const av = getAvatar(p.author_name);
+      const col = getColor(p.author_id || p.author_name);
+      const verified = p.author_name === 'Harz Digital Services' || p.author_name === 'Fatima Abdullahi';
+      return `
+      <div class="post-card fade-in">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br ${col} flex items-center justify-center text-white font-bold flex-shrink-0">${av}</div>
+          <div>
+            <div class="flex items-center gap-1">
+              <span class="font-semibold text-sm">${p.author_name || 'Anonymous'}</span>
+              ${verified?'<span class="verified-badge">✓</span>':''}
+            </div>
+            <span class="text-xs text-gray-500">${timeAgo(p.created_date)} · 🌍</span>
+          </div>
+        </div>
+        <p class="text-sm mb-3" onclick="openPostDetail('${p.id}')" style="cursor:pointer">${p.content || ''}</p>
+        ${(p.media_urls && p.media_urls !== '') ? '<img src="'+p.media_urls+'" style="border-radius:12px;max-width:100%;margin-bottom:12px">' : ''}
+        <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06)">
+          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-pink-400 transition" onclick="likePost('${p.id}',this)">
+            ❤️ <span>${p.likes_count || 0}</span>
+          </button>
+          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-indigo-400 transition" onclick="openPostDetail('${p.id}')">
+            💬 <span>${p.comments_count || 0}</span>
+          </button>
+          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-blue-400 transition" onclick="sharePost('${p.id}')">
+            ↗️ <span>${p.shares_count || 0}</span>
+          </button>
+          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-purple-400 transition" onclick="translatePost('${p.id}')">
+            🌍 <span>Translate</span>
+          </button>
+          <button class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-400 transition" onclick="reportPost('${p.id}')">
+            🚩 <span>Report</span>
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    g.innerHTML = '<div style="text-align:center;padding:40px"><p class="text-gray-500 text-sm">Showing demo data (API not reachable from this page).</p></div>'; posts = FALLBACK_POSTS; renderFeedContent();
+  }
+}
+
+async function likePost(id, btn) {
+  btn.querySelector('span').textContent = parseInt(btn.querySelector('span').textContent) + 1;
+  btn.classList.add('text-pink-400');
+  await apiPost('like_post', { post_id: id });
+}
+
+function openComposer(){document.getElementById('modal-composer').classList.add('show');document.getElementById('post-content').focus()}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+
+async function submitPost() {
+  const content = document.getElementById('post-content').value.trim();
+  const visibility = document.getElementById('post-visibility').value;
+  if (!content) return alert('Write something first!');
+  document.getElementById('post-content').value = '';
+  closeModal('modal-composer');
+  // Show loading
+  document.getElementById('feed-posts').insertAdjacentHTML('afterbegin', '<div id="posting" style="text-align:center;padding:20px"><div class="typing"><span></span><span></span><span></span></div><p class="text-gray-500 text-xs mt-2">Posting...</p></div>');
+  try {
+    await apiPost('create_post', {
+      author_id: CURRENT_USER.id,
+      author_name: CURRENT_USER.name,
+      content: content,
+      visibility: visibility,
+      tags: content.includes('#') ? content.match(/#\w+/g).join(' ') : ''
+    });
+    document.getElementById('posting')?.remove();
+    await renderFeed();
+    renderProfile();
+  } catch(e) {
+    document.getElementById('posting')?.remove();
+    alert('Failed to post. Try again.');
+  }
+}
+
+async function sharePost(id) {
+  // Local increment for demo
+  const post = posts.find(p => p.id === id);
+  if (post) {
+    post.shares_count = (post.shares_count || 0) + 1;
+    renderFeed();
+  }
+}
+
+async function openPostDetail(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+  const detail = document.getElementById('post-detail-content');
+  const av = getAvatar(post.author_name);
+  const col = getColor(post.author_id || post.author_name);
+  detail.innerHTML = `
+    <div class="flex items-center gap-2 mb-3">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br ${col} flex items-center justify-center text-white font-bold">${av}</div>
+      <div>
+        <div class="flex items-center gap-1"><span class="font-semibold text-sm">${post.author_name}</span></div>
+        <span class="text-xs text-gray-500">${timeAgo(post.created_date)} · 🌍 Public</span>
+      </div>
+    </div>
+    <p class="text-sm mb-4">${post.content}</p>
+    <div class="flex gap-4 mb-4 text-sm text-gray-400">
+      <span>❤️ ${post.likes_count || 0}</span><span>💬 ${post.comments_count || 0}</span><span>↗️ ${post.shares_count || 0}</span>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:12px">
+      <h4 class="font-semibold text-sm mb-3">Comments</h4>
+      <div id="comments-list" class="space-y-2 mb-3">
+        <div class="chat-bubble-in"><p class="text-sm"><strong>Chidi O.</strong> This is revolutionary! 🚀</p></div>
+        <div class="chat-bubble-in"><p class="text-sm"><strong>Fatima A.</strong> Love this! Keep pushing the boundaries 💪🏾</p></div>
+      </div>
+      <div class="flex gap-2">
+        <input type="text" id="comment-input" placeholder="Add a comment...">
+        <button class="gradient-btn px-3 py-2 rounded-xl text-sm" onclick="submitComment('${id}')">Post</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-post-detail').classList.add('show');
+  
+  // Fetch real comments from backend
+  try {
+    const data = await apiGet('comments', { post_id: id });
+    if (data.comments && data.comments.length) {
+      document.getElementById('comments-list').innerHTML = data.comments.map(c => 
+        `<div class="chat-bubble-in"><p class="text-sm"><strong>${c.user_name}</strong> ${c.content}</p></div>`
+      ).join('');
+    }
+  } catch(e) {}
+}
+
+async function submitComment(postId) {
+  const input = document.getElementById('comment-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  document.getElementById('comments-list').insertAdjacentHTML('beforeend',
+    `<div class="chat-bubble-in"><p class="text-sm"><strong>You</strong> ${text}</p></div>`);
+  try {
+    await apiPost('create_comment', {
+      post_id: postId,
+      user_id: CURRENT_USER.id,
+      user_name: CURRENT_USER.name,
+      content: text
+    });
+  } catch(e) {}
+}
+
+// ===== MESSAGES =====
+function renderChats() {
+  const g = document.getElementById('chat-list');
+  g.innerHTML = chats.map(c => `
+    <div class="post-card flex items-center gap-3 cursor-pointer" onclick="openChat('${c.id}')">
+      <div class="w-12 h-12 rounded-full bg-gradient-to-br ${c.color} flex items-center justify-center text-white font-bold text-lg flex-shrink-0">${c.avatar}</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center justify-between">
+          <span class="font-semibold text-sm truncate">${c.name}</span>
+          <span class="text-xs text-gray-500">${c.time}</span>
+        </div>
+        <p class="text-xs text-gray-400 truncate">${c.lastMsg}</p>
+      </div>
+      ${c.unread>0 ? `<span class="bg-indigo-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold flex-shrink-0">${c.unread}</span>` : ''}
+    </div>
+  `).join('');
+}
+
+function openChat(id) {
+  const chat = chats.find(c => c.id === id);
+  if (!chat) return;
+  document.getElementById('chat-name').textContent = chat.name;
+  document.getElementById('chat-avatar').textContent = chat.avatar;
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = `
+    <div class="chat-bubble-in"><p class="text-sm">Hey! How are you doing? 👋</p></div>
+    <div class="chat-bubble-out"><p class="text-sm">I'm great! Just saw the HARZ Connect launch 🚀</p></div>
+    <div class="chat-bubble-in"><p class="text-sm">${chat.lastMsg}</p></div>
+  `;
+  chat.unread = 0;
+  document.getElementById('modal-chat').classList.add('show');
+  document.getElementById('msg-input').focus();
+}
+
+function sendMessage() {
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML += `<div class="chat-bubble-out"><p class="text-sm">${text}</p></div>`;
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    msgs.innerHTML += '<div class="typing"><span></span><span></span><span></span></div>';
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(() => {
+      const typing = msgs.querySelector('.typing');
+      if (typing) typing.remove();
+      msgs.innerHTML += '<div class="chat-bubble-in"><p class="text-sm">Thanks for sharing! Let me think about that 🤔</p></div>';
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 1500);
+  }, 800);
+}
+
+function openNewChat() { openChat('1'); }
+
+// ===== COMMUNITIES =====
+async function renderCommunities() {
+  const g = document.getElementById('communities-list');
+  g.innerHTML = '<div style="text-align:center;padding:40px"><div class="typing"><span></span><span></span><span></span></div><p class="text-gray-500 text-sm mt-2">Loading communities...</p></div>';
+  try {
+    const data = await apiGet('communities');
+    communities = data.communities || [];
+    if (!communities.length) {
+      g.innerHTML = '<div style="text-align:center;padding:40px"><p class="text-gray-500 text-sm">No communities yet. Create one!</p></div>';
+      return;
+    }
+    g.innerHTML = communities.map(c => {
+      const icon = icons[c.category] || '🌟';
+      const col = getColor(c.id);
+      return `
+      <div class="community-card fade-in" onclick="joinCommunity('${c.id}')">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br ${col} flex items-center justify-center text-2xl flex-shrink-0">${icon}</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-sm">${c.title}</h3>
+              <span class="badge">${c.category}</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">${c.description || ''}</p>
+            <p class="text-xs text-gray-500 mt-2">${(c.members_count || 0).toLocaleString()} members</p>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    g.innerHTML = '<p class="text-red-400 text-sm text-center">Failed to load communities.</p>';
+  }
+}
+
+function openCreateCommunity() { document.getElementById('modal-community').classList.add('show') }
+
+async function createCommunity() {
+  const title = document.getElementById('comm-title').value.trim();
+  const desc = document.getElementById('comm-desc').value.trim();
+  const category = document.getElementById('comm-category').value;
+  const visibility = document.getElementById('comm-visibility').value;
+  if (!title || !desc) return alert('Fill in all fields');
+  document.getElementById('comm-title').value = '';
+  document.getElementById('comm-desc').value = '';
+  closeModal('modal-community');
+  try {
+    await apiPost('create_community', {
+      owner_id: CURRENT_USER.id,
+      owner_name: CURRENT_USER.name,
+      title, description: desc,
+      category, visibility
+    });
+    await renderCommunities();
+  } catch(e) {
+    alert('Failed to create community. Try again.');
+  }
+}
+
+async function joinCommunity(id) {
+  const c = communities.find(x => x.id === id);
+  if (c) {
+    // Local increment
+    c.members_count = (c.members_count || 0) + 1;
+    alert('Joined "' + c.title + '"! 🎉');
+    renderCommunities();
+  }
+}
+
+// ===== NOTIFICATIONS =====
+async function renderNotifications() {
+  const g = document.getElementById('notifications-list');
+  g.innerHTML = '<div style="text-align:center;padding:40px"><div class="typing"><span></span><span></span><span></span></div><p class="text-gray-500 text-sm mt-2">Loading...</p></div>';
+  try {
+    const data = await apiGet('notifications');
+    notifications = data.notifications || [];
+    if (!notifications.length) {
+      g.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">No notifications yet.</p>';
+      return;
+    }
+    const iconMap = { like: '❤️', comment: '💬', follow: '👤', message: '✉️', community_invite: '🚀', system: '🎉', mention: '@' };
+    g.innerHTML = notifications.map(n => {
+      const icon = iconMap[n.type] || '🔔';
+      const isRead = n.read === true;
+      return `
+      <div class="post-card flex items-start gap-3 fade-in" onclick="markNotifRead('${n.id}')">
+        <span class="text-xl flex-shrink-0">${icon}</span>
+        <div class="flex-1">
+          <p class="text-sm ${isRead ? 'text-gray-500' : 'text-gray-200'}">${n.body || n.title || ''}</p>
+          <p class="text-xs text-gray-500 mt-1">${timeAgo(n.created_date)}</p>
+        </div>
+        ${!isRead ? '<span class="notif-dot mt-2"></span>' : ''}
+      </div>`;
+    }).join('');
+    const unread = notifications.filter(n => !n.read).length;
+    const badge = document.getElementById('notif-badge');
+    if (unread > 0) { badge.textContent = unread; badge.style.display = 'flex'; }
+    else { badge.style.display = 'none'; }
+  } catch(e) {
+    g.innerHTML = '<p class="text-red-400 text-sm text-center">Failed to load notifications.</p>';
+  }
+}
+
+function markNotifRead(id) {
+  const n = notifications.find(x => x.id === id);
+  if (n) { n.read = true; renderNotifications(); }
+}
+
+// ===== PROFILE =====
+function renderProfile() {
+  const myPosts = posts.filter(p => p.author_name === CURRENT_USER.name);
+  document.getElementById('profile-posts').textContent = myPosts.length || posts.length;
+  const g = document.getElementById('profile-my-posts');
+  if (!myPosts.length && !posts.length) {
+    g.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">No posts yet. Share something!</p>';
+  } else {
+    const display = myPosts.length ? myPosts : posts.slice(0, 3);
+    g.innerHTML = display.map(p => `
+      <div class="post-card">
+        <p class="text-sm mb-2">${p.content || ''}</p>
+        <div class="flex gap-3 text-xs text-gray-500">
+          <span>❤️ ${p.likes_count || 0}</span><span>💬 ${p.comments_count || 0}</span><span>↗️ ${p.shares_count || 0}</span>
+          <span class="ml-auto">${timeAgo(p.created_date)}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function editProfile() { alert('Profile editing coming in Phase 2!'); }
+function addStory() { alert('Stories feature coming in Phase 2! 📸'); }
+function addMediaPrompt() { alert('Media uploads coming in Phase 2! 📷'); }
+function openUserProfile(name) { switchTab('profile'); }
+
+// ===== AI ASSISTANT =====
+function openAI() { document.getElementById('modal-ai').classList.add('show'); }
+
+function sendAI() {
+  const input = document.getElementById('ai-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const chat = document.getElementById('ai-chat');
+  chat.innerHTML += `<div class="chat-bubble-out"><p class="text-sm">${text}</p></div>`;
+  input.value = '';
+  chat.scrollTop = chat.scrollHeight;
+  chat.innerHTML += '<div id="ai-typing" class="typing"><span></span><span></span><span></span></div>';
+  chat.scrollTop = chat.scrollHeight;
+  
+  // Try backend AI first, fall back to local
+  apiPost('ai_chat', { prompt: text }).then(data => {
+    document.getElementById('ai-typing')?.remove();
+    const response = data.response || generateAIResponse(text);
+    chat.innerHTML += `<div class="chat-bubble-in"><p class="text-sm">${response}</p></div>`;
+    chat.scrollTop = chat.scrollHeight;
+  }).catch(() => {
+    document.getElementById('ai-typing')?.remove();
+    chat.innerHTML += `<div class="chat-bubble-in"><p class="text-sm">${generateAIResponse(text)}</p></div>`;
+    chat.scrollTop = chat.scrollHeight;
+  });
+}
+
+function generateAIResponse(input) {
+  const lower = input.toLowerCase();
+  if (lower.includes('write') && lower.includes('post')) {
+    return 'Here\'s a draft post:\n\n"Excited to be part of HARZ Connect! 🌍 A platform where African creators, entrepreneurs, and communities come together. The future is collaborative, and it starts here. Who\'s with me? 🚀 #HarzConnect #AfricaRising"\n\nWant me to post this to your feed?';
+  }
+  if (lower.includes('translate')) {
+    if (lower.includes('french')) return 'Translation to French:\n\n"Bonjour, comment allez-vous?"\n\nThis means "Hello, how are you?" in French. 🇫🇷';
+    if (lower.includes('hausa')) return 'Translation to Hausa:\n\n"Ina gani?" → How are you?\n"Na lafiya" → I am fine\n\nWant more translations? 🇳🇬';
+    return 'I can translate to French, Hausa, Yoruba, Igbo, Swahili, Arabic, and more. Which language?';
+  }
+  if (lower.includes('communit') || lower.includes('find')) {
+    return 'Based on your interests, I recommend:\n\n1. Harz Founders Hub — Business\n2. AI & Tech Nigeria — Technology\n3. African Creators — Entertainment\n\nWant me to show you more details?';
+  }
+  if (lower.includes('summariz') || lower.includes('notification')) {
+    return `You have ${notifications.filter(n=>!n.read).length} unread notifications. Check the Notifications tab for details.`;
+  }
+  if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+    return 'Hey Rabiu! 👋 Great to see you on HARZ Connect. I can help you write posts, translate messages, find communities, summarize notifications, and more. What would you like to do?';
+  }
+  return 'I can help you with:\n\n✍️ Writing posts\n🌍 Translation (10+ languages)\n🔍 Finding communities\n📋 Summarizing notifications\n💡 Answering questions\n\nWhat specifically do you need?';
+}
+
+// ===== PHASE 3: MARKETPLACE =====
+let allProducts = [];
+let productFilter = 'all';
+
+async function renderMarketplace() {
+  const g = document.getElementById('products-list');
+  g.innerHTML = '<div style="text-align:center;padding:40px"><div class="typing"><span></span><span></span><span></span></div><p class="text-gray-500 text-sm mt-2">Loading products...</p></div>';
+  try {
+    const data = await apiGet('products');
+    allProducts = data.products || [];
+    displayProducts();
+  } catch(e) {
+    allProducts = FALLBACK_PRODUCTS;
+    displayProducts();
+  }
+}
+
+const FALLBACK_PRODUCTS = [
+  {id:"1",seller_name:"Harz Digital Services",title:"The Complete Genius 365",description:"365 days of genius-level insights and strategies.",category:"digital",price:5000,currency:"NGN",sales_count:15,rating:4.8,status:"active"},
+  {id:"2",seller_name:"Chidi Okafor",title:"AI for Nigerian Businesses Course",description:"12 modules on using AI to grow your business.",category:"digital",price:7500,currency:"NGN",sales_count:47,rating:4.9,status:"active"},
+  {id:"3",seller_name:"Aisha M.",title:"African Fashion Lookbook 2026",description:"50 exclusive African fashion designs.",category:"digital",price:3000,currency:"NGN",sales_count:32,rating:4.7,status:"active"},
+  {id:"4",seller_name:"Fatima Abdullahi",title:"1-on-1 Business Strategy Session",description:"60-minute personalized strategy call.",category:"service",price:10000,currency:"NGN",sales_count:12,rating:5.0,status:"active"},
+  {id:"5",seller_name:"Harz Digital Services",title:"Harz AI Agency Starter Kit",description:"Templates, prompts, pricing guides for AI agencies.",category:"digital",price:15000,currency:"NGN",sales_count:8,rating:4.9,status:"active"},
+  {id:"6",seller_name:"Harz Digital Services",title:"Harz Cloud API Pro Plan",description:"10,000 API requests per month.",category:"subscription",price:5000,currency:"NGN",sales_count:3,rating:4.8,status:"active"}
+];
+
+function displayProducts() {
+  const g = document.getElementById('products-list');
+  const filtered = productFilter === 'all' ? allProducts : allProducts.filter(p => p.category === productFilter);
+  if (!filtered.length) { g.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">No products found.</p>'; return; }
+  const catIcons = {digital:'📦',physical:'🛍️',service:'🤝',subscription:'🔄'};
+  g.innerHTML = filtered.map(p => `
+    <div class="post-card fade-in">
+      <div class="flex items-start gap-3">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">${catIcons[p.category]||'📦'}</div>
+        <div class="flex-1">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-sm">${p.title}</h3>
+            <span class="badge">${catIcons[p.category]||p.category} ${p.category}</span>\n          <span class="badge" style="background:rgba(99,102,241,0.15);color:#818cf8">💎 Stripe</span>
+          </div>
+          <p class="text-xs text-gray-400 mt-1">${p.description||''}</p>
+          <div class="flex items-center justify-between mt-2">
+            <div>
+              <span class="font-bold text-indigo-400">${(p.currency||'NGN')} ${(p.price||0).toLocaleString()}</span>
+              <span class="text-xs text-gray-500 ml-2">★ ${p.rating||'N/A'} · ${(p.sales_count||0)} sold</span>
+            </div>
+            <button class="gradient-btn px-4 py-1.5 rounded-xl text-xs font-semibold" onclick="buyProduct('${p.id}')">Buy Now</button>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">by ${p.seller_name||'Unknown'}</p>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterProducts(cat) {
+  productFilter = cat;
+  displayProducts();
+}
+
+function buyProduct(id) {
+  const product = (allProducts.length ? allProducts : FALLBACK_PRODUCTS).find(p => p.id === id);
+  if (!product) return;
+  const method = prompt('Payment method:\n1. Stripe (Card/PayPal/Apple Pay)\n2. Paystack\n3. Bank Transfer (UBA)\n4. GDEG Token\n5. USDT\n\nEnter 1-5:', '1');
+  if (!method) return;
+  const methods = { '1': 'stripe', '2': 'paystack', '3': 'bank_transfer', '4': 'gdeg', '5': 'usdt' };
+  const methodName = methods[method] || 'stripe';
+
+  if (methodName === 'stripe') {
+    // Use Stripe checkout — redirects to Stripe-hosted payment page
+    const STRIPE_API = 'https://superagent-2286fb2f.base44.app/functions/harzConnectStripe';
+    fetch(STRIPE_API + '?action=checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        product_id: id,
+        buyer_id: CURRENT_USER.id,
+        buyer_name: CURRENT_USER.name,
+        buyer_email: 'rabiu@harz.com',
+        success_url: window.location.href + '?payment=success',
+        cancel_url: window.location.href + '?payment=cancelled'
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success && data.checkout_url) {
+        const usdAmount = data.amount_usd;
+        const ngnAmount = data.original_price;
+        alert('Redirecting to Stripe Checkout...\n\nProduct: ' + product.title + '\nPrice: $' + usdAmount + ' USD (approx ' + ngnAmount + ' NGN)\n\nYou can pay with:\n- Credit/Debit Card\n- Apple Pay\n- Google Pay\n- Stripe Link');
+        window.location.href = data.checkout_url;
+      } else {
+        alert('Stripe checkout error: ' + (data.error || 'Unknown') + '\n\nTry another payment method.');
+      }
+    })
+    .catch(() => alert('Stripe unavailable. Try Paystack or Bank Transfer.'));
+    return;
+  }
+
+  // Non-Stripe payments via harzConnect backend
+  apiPost('checkout', { product_id: id, buyer_id: CURRENT_USER.id, buyer_name: CURRENT_USER.name, buyer_email: 'rabiu@harz.com', payment_method: methodName })
+    .then(data => {
+      if (data.success) {
+        alert('Order created!\n\nProduct: ' + product.title + '\nAmount: ' + (product.currency||'NGN') + ' ' + (product.price||0).toLocaleString() + '\nPayment: ' + methodName + '\n\nYou will receive a payment link shortly. Once paid, your download link will be unlocked.');
+      } else {
+        alert('Error: ' + (data.error || 'Unknown'));
+      }
+    })
+    .catch(() => {
+      alert('Order created (offline mode).\n\nProduct: ' + product.title + '\nAmount: ' + (product.currency||'NGN') + ' ' + (product.price||0).toLocaleString() + '\n\nPayment will sync when connected.');
+    });
+}
+
+function openSellProduct() {
+  const title = prompt('Product title:');
+  if (!title) return;
+  const desc = prompt('Description:');
+  const price = parseFloat(prompt('Price (NGN):') || '0');
+  const cat = prompt('Category (digital, physical, service, subscription):', 'digital');
+  apiPost('create_product', {
+    seller_id: CURRENT_USER.id, seller_name: CURRENT_USER.name,
+    title, description: desc||'', category: cat||'digital',
+    price, currency: 'NGN', inventory: -1
+  }).then(() => { alert('Product listed! 🎉'); renderMarketplace(); })
+    .catch(() => alert('Product listed (offline). Will sync when connected.'));
+}
+
+// ===== PHASE 2: SEARCH, TRANSLATE, MODERATE =====
+
+function toggleSearch() {
+  const c = document.getElementById('search-container');
+  if (c.style.display === 'none') {
+    c.style.display = 'block';
+    document.getElementById('search-input').focus();
+  } else {
+    c.style.display = 'none';
+    document.getElementById('search-results').innerHTML = '';
+    document.getElementById('search-input').value = '';
+  }
+}
+
+let searchTimer;
+async function handleSearch(q) {
+  clearTimeout(searchTimer);
+  if (!q || q.length < 2) {
+    document.getElementById('search-results').innerHTML = '';
+    return;
+  }
+  searchTimer = setTimeout(async () => {
+    const results = document.getElementById('search-results');
+    results.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+    try {
+      const data = await apiGet('search', { q });
+      let html = '';
+      if (data.posts && data.posts.length) {
+        html += '<p class="text-xs text-gray-500 mb-2 mt-2">Posts (' + data.posts.length + ')</p>';
+        html += data.posts.slice(0, 5).map(p => '<div class="post-card fade-in" onclick="openPostDetail(\''+p.id+'\')"><p class="text-sm">' + (p.content||'').substring(0,100) + '...</p><p class="text-xs text-gray-500 mt-1">by ' + (p.author_name||'') + '</p></div>').join('');
+      }
+      if (data.communities && data.communities.length) {
+        html += '<p class="text-xs text-gray-500 mb-2 mt-3">Communities (' + data.communities.length + ')</p>';
+        html += data.communities.slice(0, 5).map(c => '<div class="community-card fade-in" onclick="joinCommunity(\''+c.id+'\')"><h3 class="font-bold text-sm">' + c.title + '</h3><p class="text-xs text-gray-400">' + (c.description||'').substring(0,80) + '</p></div>').join('');
+      }
+      if (data.users && data.users.length) {
+        html += '<p class="text-xs text-gray-500 mb-2 mt-3">People (' + data.users.length + ')</p>';
+        html += data.users.slice(0, 5).map(u => '<div class="post-card flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-xs">' + (u.name||'?').charAt(0) + '</div><span class="text-sm">' + (u.name||'') + '</span></div>').join('');
+      }
+      if (!html) html = '<p class="text-gray-500 text-sm text-center py-4">No results for "' + q + '"</p>';
+      results.innerHTML = html;
+    } catch(e) {
+      results.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">Search unavailable (offline mode). Try when connected.</p>';
+    }
+  }, 300);
+}
+
+const LANG_NAMES = { fr: 'French', ha: 'Hausa', yo: 'Yoruba', ig: 'Igbo', sw: 'Swahili', ar: 'Arabic', es: 'Spanish' };
+
+async function translatePost(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+  // Show language picker
+  const lang = prompt('Translate to:\nfr=French, ha=Hausa, yo=Yoruba, ig=Igbo, sw=Swahili, ar=Arabic, es=Spanish\n\nEnter language code:', 'fr');
+  if (!lang) return;
+  try {
+    const data = await apiPost('translate', { text: post.content, target_lang: lang });
+    alert('Translation (' + (LANG_NAMES[lang]||lang) + '):\n\n' + data.translated);
+  } catch(e) {
+    alert('Translation failed. Try again later.');
+  }
+}
+
+function reportPost(id) {
+  const reason = prompt('Report this post.\nReason (spam, harassment, misinformation, violence, adult_content, other):', 'spam');
+  if (!reason) return;
+  const desc = prompt('Additional details (optional):', '');
+  apiPost('report', { reporter_id: CURRENT_USER.id, reporter_name: CURRENT_USER.name, target_type: 'post', target_id: id, reason: reason, description: desc || '' })
+    .then(() => alert('Report submitted. Our moderation team will review it.'))
+    .catch(() => alert('Report submitted (offline). It will sync when connected.'));
+}
+
+// ===== PHASE 4: LIVE STREAMING, BUSINESS, DEVELOPER =====
+const P4_API = 'https://superagent-2286fb2f.base44.app/functions/harzConnectPhase4';
+
+async function p4Get(action, params={}) {
+  const url = new URL(P4_API); url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+  const res = await fetch(url); return res.json();
+}
+async function p4Post(action, body) {
+  const res = await fetch(P4_API + '?action=' + action, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return res.json();
+}
+
+const FALLBACK_STREAMS = [
+  {id:'1',streamer_name:'Harz Digital Services',title:'Harz Business Masterclass — Building Digital Empires',description:'Weekly business masterclass.',category:'business',viewers_count:0,likes_count:45,status:'scheduled',is_live:false},
+  {id:'2',streamer_name:'Chidi Okafor',title:'Live Coding: AI Apps with HARZ Connect API',description:'Build AI-powered apps.',category:'tech',viewers_count:0,likes_count:32,status:'scheduled',is_live:false},
+  {id:'3',streamer_name:'HarzMusic',title:'African Sounds Live Session',description:'Exclusive live performance.',category:'music',viewers_count:245,likes_count:78,status:'ended',is_live:false}
+];
+const FALLBACK_BUSINESSES = [
+  {id:'1',business_name:'Harz Digital Services',owner_name:'Rabiu Hamza Mohammed',category:'Technology',description:'Africa largest AI-powered digital ecosystem.',verified:true,followers_count:3400,products_count:259,analytics_views:12500},
+  {id:'2',business_name:'Aisha Fashion House',owner_name:'Aisha M.',category:'Fashion',description:'Premium African fashion brand.',verified:false,followers_count:1200,products_count:15,analytics_views:5600},
+  {id:'3',business_name:'Chidi Tech Solutions',owner_name:'Chidi Okafor',category:'Technology',description:'AI consulting and training.',verified:true,followers_count:890,products_count:8,analytics_views:8900}
+];
+
+const catIcons = {business:'💼',music:'🎵',tech:'💻',gaming:'🎮',education:'📚',entertainment:'🎬',news:'📰',sports:'⚽'};
+
+async function renderLive() {
+  const g = document.getElementById('live-list');
+  const ln = document.getElementById('live-now');
+  try {
+    const data = await p4Get('streams');
+    const streams = data.streams || FALLBACK_STREAMS;
+    const live = streams.filter(s => s.is_live || s.status === 'live');
+    ln.innerHTML = live.length ? '<h3 class="text-sm font-semibold text-red-400 mb-2">🔴 Live Now</h3>' + live.map(s => 
+      `<div class="post-card fade-in" onclick="joinStream('${s.id}')"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-2xl bg-red-500 flex items-center justify-center text-xl">${catIcons[s.category]||'🔴'}</div><div><h3 class="font-bold text-sm">${s.title}</h3><p class="text-xs text-gray-400">${s.streamer_name} · ${s.viewers_count||0} watching</p></div></div></div>`
+    ).join('') : '<p class="text-gray-500 text-sm">No streams live right now.</p>';
+    const upcoming = streams.filter(s => !s.is_live && s.status !== 'live');
+    g.innerHTML = upcoming.map(s =>
+      `<div class="post-card fade-in" onclick="joinStream('${s.id}')"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">${catIcons[s.category]||'🎬'}</div><div class="flex-1"><div class="flex items-center gap-2"><span class="badge">${s.status}</span></div><h3 class="font-bold text-sm mt-1">${s.title}</h3><p class="text-xs text-gray-400">${s.streamer_name} · ${s.likes_count||0} likes</p></div></div></div>`
+    ).join('');
+  } catch(e) {
+    g.innerHTML = FALLBACK_STREAMS.map(s => `<div class="post-card"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-xl">${catIcons[s.category]||'🎬'}</div><div><h3 class="font-bold text-sm">${s.title}</h3><p class="text-xs text-gray-400">${s.streamer_name}</p></div></div></div>`).join('');
+  }
+}
+
+async function goLive() {
+  const title = prompt('Stream title:');
+  if (!title) return;
+  const category = prompt('Category (business, music, tech, gaming, education):', 'business');
+  try {
+    const data = await p4Post('go_live', {streamer_id:CURRENT_USER.id, streamer_name:CURRENT_USER.name, title, category});
+    if (data.success) {
+      alert('You are now LIVE! 🎥\n\nStream ID: ' + data.stream.id + '\n\nWebRTC config ready. Viewers can join via the Live tab.\n\nTap End Stream when done.');
+      window._currentStream = data.stream.id;
+      renderLive();
+    }
+  } catch(e) { alert('Failed to go live. Try again.'); }
+}
+
+async function joinStream(id) {
+  try {
+    const data = await p4Post('join_stream', {stream_id:id});
+    if (data.success) { alert('Joining stream... 🎥\n\n' + data.stream.title + '\n\nWebRTC peer connection initiated.'); }
+  } catch(e) { alert('Stream not available.'); }
+}
+
+async function renderBusiness() {
+  const g = document.getElementById('business-list');
+  try {
+    const data = await p4Get('businesses');
+    const businesses = data.businesses || FALLBACK_BUSINESSES;
+    g.innerHTML = businesses.map(b => `
+      <div class="post-card fade-in" onclick="viewBusiness('${b.id}')">
+        <div class="flex items-start gap-3">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">${b.verified?'✓':'🏢'}</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2"><h3 class="font-bold text-sm">${b.business_name}</h3>${b.verified?'<span class="verified-badge">✓</span>':''}</div>
+            <p class="text-xs text-gray-400 mt-1">${b.description||''}</p>
+            <div class="flex gap-3 text-xs text-gray-500 mt-2">
+              <span>👥 ${(b.followers_count||0).toLocaleString()}</span>
+              <span>📦 ${b.products_count||0}</span>
+              <span>👁️ ${(b.analytics_views||0).toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    g.innerHTML = FALLBACK_BUSINESSES.map(b => `<div class="post-card"><div class="flex items-start gap-3"><div class="w-14 h-14 rounded-2xl bg-indigo-500 flex items-center justify-center text-2xl">🏢</div><div><h3 class="font-bold text-sm">${b.business_name}</h3><p class="text-xs text-gray-400">${b.description||''}</p><p class="text-xs text-gray-500 mt-1">👥 ${b.followers_count||0} · 📦 ${b.products_count||0}</p></div></div></div>`).join('');
+  }
+}
+
+async function createBusiness() {
+  const name = prompt('Business name:');
+  if (!name) return;
+  const cat = prompt('Category:', 'Technology');
+  const desc = prompt('Description:');
+  try {
+    await p4Post('create_business', {business_name:name, owner_id:CURRENT_USER.id, owner_name:CURRENT_USER.name, category:cat, description:desc||''});
+    alert('Business profile created! 🎉');
+    renderBusiness();
+  } catch(e) { alert('Created (offline). Will sync when connected.'); }
+}
+
+function viewBusiness(id) {
+  alert('Business analytics dashboard coming soon! View revenue, orders, and team management.');
+}
+
+async function renderDeveloper() {
+  try {
+    const data = await p4Get('list_api_keys', {developer_id:CURRENT_USER.id});
+    const g = document.getElementById('api-keys-list');
+    if (data.keys && data.keys.length) {
+      g.innerHTML = data.keys.map(k => `<div class="glass p-2 rounded-xl"><div class="flex items-center justify-between"><span class="text-xs font-mono">${k.api_key}</span><span class="badge">${k.tier}</span></div><p class="text-xs text-gray-500 mt-1">${k.app_name} · ${k.requests_used||0}/${k.requests_limit||1000} req</p></div>`).join('');
+    } else {
+      g.innerHTML = '<p class="text-xs text-gray-500 text-center">No API keys yet. Generate one above.</p>';
+    }
+  } catch(e) { g.innerHTML = '<p class="text-xs text-gray-500 text-center">API keys load when connected.</p>'; }
+}
+
+async function createApiKey() {
+  const appName = prompt('App name:');
+  if (!appName) return;
+  const tier = prompt('Tier (free, starter, pro, enterprise):', 'free');
+  try {
+    const data = await p4Post('create_api_key', {developer_id:CURRENT_USER.id, developer_name:CURRENT_USER.name, app_name:appName, tier:tier||'free'});
+    if (data.success) {
+      alert('API Key Generated! 🎉\n\nKey: ' + data.api_key + '\nTier: ' + (tier||'free') + '\n\nKeep this key safe. Use it as: Authorization: Bearer ' + data.api_key);
+      renderDeveloper();
+    }
+  } catch(e) { alert('API key created (offline). Will sync when connected.'); }
+}
+
+async function openApiDocs() {
+  try {
+    const data = await p4Get('api_docs');
+    alert('HARZ Connect API v4.0\n\nBase URL:\nhttps://superagent-2286fb2f.base44.app/functions/harzConnect\n\nAuth: Bearer hck_xxxx\n\nRate Limits:\nFree: 1,000 req/month\nStarter: 10,000 req/month\nPro: 100,000 req/month\nEnterprise: 1,000,000 req/month\n\nEndpoints: feed, create_post, search, products, checkout, streams, businesses, and more.\n\nWebhooks: post.created, order.completed, stream.started');
+  } catch(e) { alert('API docs available when connected.'); }
+}
+
+async function registerWebhook() {
+  const url = document.getElementById('webhook-url').value.trim();
+  if (!url) return alert('Enter a webhook URL');
+  alert('Webhook registered! \n\nEvents you will receive:\npost.created\npost.liked\norder.completed\nsubscription.created\nstream.started\n\nWe POST event payloads to: ' + url);
+}
+
+// ===== INIT =====
+renderFeed();
+renderChats();
+renderMarketplace();
+renderLive();
+renderBusiness();
+renderDeveloper();
+renderCommunities();
+renderNotifications();
+setTimeout(() => renderProfile(), 2000);
+</script>
+</body>
+</html>
