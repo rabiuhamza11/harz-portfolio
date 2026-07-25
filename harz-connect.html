@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#6366f1">
-<title>HARZ Connect — AI Social Platform</title>
+<title>HARZ Connect <span style="font-size:9px;color:#6366f1">v5.1</span> — AI Social Platform</title>
 <link rel="manifest" href='data:application/manifest+json,{"name":"HARZ Connect","short_name":"Connect","start_url":".","display":"standalone","background_color":"#0f0f23","theme_color":"#6366f1","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%236366f1%22/%3E%3Ctext x=%2250%22 y=%2265%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3EH%3C/text%3E%3C/svg%3E","sizes":"192x192"}]}'>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
@@ -49,7 +52,7 @@ input:focus,textarea:focus{border-color:#6366f1}
 
 <!-- Top Bar -->
 <div class="glass sticky top-0 z-40 px-4 py-3 flex items-center justify-between" style="background:rgba(10,10,31,0.9)">
-<div class="flex items-center gap-2">
+<div class="flex items-center gap-2" data-version="v5.1">
 <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">
 <span class="text-white font-bold text-lg">H</span>
 </div>
@@ -421,13 +424,17 @@ async function apiPost(action, body) {
 // ===== NAVIGATION =====
 function switchTab(tab){
   currentTab=tab;
-  ['feed','messages','marketplace','communities','notifications','profile'].forEach(t=>{
-    document.getElementById('tab-'+t).style.display=t===tab?'block':'none';
+  const allTabs = ['feed','messages','live','marketplace','business','developer','communities','notifications','profile'];
+  allTabs.forEach(t=>{
+    const el = document.getElementById('tab-'+t);
+    if(el) el.style.display = t===tab ? 'block' : 'none';
   });
-  ['feed','messages','marketplace','communities','notifications','profile'].forEach(t=>{
+  allTabs.forEach(t=>{
     const nav=document.getElementById('nav-'+t);
-    if(t===tab){nav.classList.add('tab-active');nav.classList.remove('tab-inactive')}
-    else{nav.classList.remove('tab-active');nav.classList.add('tab-inactive')}
+    if(nav){
+      if(t===tab){nav.classList.add('tab-active');nav.classList.remove('tab-inactive')}
+      else{nav.classList.remove('tab-active');nav.classList.add('tab-inactive')}
+    }
   });
 }
 
