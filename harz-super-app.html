@@ -16,6 +16,15 @@
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;padding-bottom:70px}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--p1);border-radius:4px}
 
+/* Search */
+.search-result{display:flex;align-items:center;gap:10px;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .15s}
+.search-result:active{background:var(--bg)}
+.search-result .sr-icon{font-size:1.2rem;width:32px;text-align:center}
+.search-result .sr-info{flex:1}
+.search-result .sr-title{font-size:.82rem;font-weight:600;color:var(--text)}
+.search-result .sr-desc{font-size:.68rem;color:var(--muted)}
+.search-result .sr-cat{font-size:.6rem;color:var(--p2);background:rgba(0,188,212,.1);padding:2px 8px;border-radius:8px}
+
 /* Splash */
 #splash{position:fixed;inset:0;background:linear-gradient(135deg,#0a0e1a,#121830);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s}
 #splash.hidden{opacity:0;pointer-events:none}
@@ -209,6 +218,16 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <button class="bal-btn" onclick="switchPage('pay')">⚡ Top Up</button>
 <button class="bal-btn" onclick="openAI()">🤖 Business</button>
 </div>
+</div>
+
+<!-- SEARCH BAR -->
+<div style="padding:12px 16px 0">
+<div style="display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px">
+<span style="font-size:1rem">🔍</span>
+<input id="appSearch" type="text" placeholder="Search 60+ apps & tools..." style="flex:1;background:none;border:none;outline:none;color:var(--text);font-size:.82rem" oninput="searchApps(this.value)">
+<span onclick="clearSearch()" id="searchClear" style="display:none;font-size:.85rem;color:var(--muted);cursor:pointer">✕</span>
+</div>
+<div id="searchResults" style="display:none;margin-top:8px"></div>
 </div>
 
 <div class="quick-grid">
@@ -657,6 +676,90 @@ try{document.getElementById('app-frame').contentWindow.history.forward();}catch(
 function iframeReload(){
 try{document.getElementById('app-frame').contentWindow.location.reload();}catch(e){const f=document.getElementById('app-frame');const s=f.src;f.src=s;}
 }
+// App search database
+const APP_DB=[
+{name:'HarzPay',icon:'💳',cat:'Finance',desc:'Payment gateway & wallet',url:'https://rabiuhamza11.github.io/harz-portfolio/harzpay.html'},
+{name:'Harz Exchange',icon:'📈',cat:'Finance',desc:'Crypto trading & P2P',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html'},
+{name:'Harz SaaS Billing',icon:'📊',cat:'Finance',desc:'Subscription billing',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-saas-billing.html'},
+{name:'Hosting Master',icon:'🏢',cat:'Finance',desc:'Domains & hosting',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html'},
+{name:'Wholesale Master',icon:'📦',cat:'Finance',desc:'B2B reseller platform',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-wholesale-master.html'},
+{name:'HarzDM Marketplace',icon:'🛒',cat:'Marketplace',desc:'Digital products store',url:'https://harzdm.vercel.app'},
+{name:'HarzDM Getly Store',icon:'🏪',cat:'Marketplace',desc:'87 products on Telegram',url:'https://www.getly.store/store/harzdm-com-mr951f69'},
+{name:'Harz Shop',icon:'🛍️',cat:'Marketplace',desc:'Gumroad products',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-store.html'},
+{name:'HarzMusic',icon:'🎵',cat:'Marketplace',desc:'27 music tracks',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-music-platform.html'},
+{name:'HarzFilm',icon:'🎬',cat:'Marketplace',desc:'8 films & videos',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html'},
+{name:'Harz Freelance',icon:'🤝',cat:'Marketplace',desc:'Freelance services',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-freelance.html'},
+{name:'Harz Events',icon:'🎫',cat:'Marketplace',desc:'Event tickets',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-events.html'},
+{name:'Harz Consulting',icon:'📞',cat:'Marketplace',desc:'Book consultations',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-consult.html'},
+{name:'Nexal Ads',icon:'📢',cat:'Marketplace',desc:'Multi-platform advertising',url:'https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html'},
+{name:'Harz Newsletter',icon:'📰',cat:'Marketplace',desc:'Newsletter subscriptions',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-v2.html'},
+{name:'Harz WhatsApp Store',icon:'💬',cat:'Marketplace',desc:'WhatsApp commerce',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-whatsapp-store.html'},
+{name:'BuildBot AI',icon:'🏗️',cat:'Marketplace',desc:'Construction planning',url:'https://buildbot-ai-three.vercel.app'},
+{name:'HARZ Connect',icon:'🌐',cat:'Social',desc:'Social platform · 9 tabs',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-connect.html'},
+{name:'WhatsApp CRM',icon:'📋',cat:'Social',desc:'Customer management',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-crm-dashboard.html'},
+{name:'Harz Mailbox',icon:'📬',cat:'Social',desc:'Email management',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-mailbox.html'},
+{name:'Harz AI Agency',icon:'🤖',cat:'AI',desc:'AI services agency',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html'},
+{name:'Harz AI Cloud',icon:'🌩️',cat:'AI',desc:'20 AI agents & API',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html'},
+{name:'Harz AI Studio',icon:'🎨',cat:'AI',desc:'Image generation',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-ai-studio.html'},
+{name:'Harz Chatbot Builder',icon:'💬',cat:'AI',desc:'Build custom chatbots',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-chatbot-builder.html'},
+{name:'OMEGA Health AI',icon:'🏥',cat:'AI',desc:'Health monitoring',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-health-ai-dashboard.html'},
+{name:'MindCare AI',icon:'🧠',cat:'AI',desc:'Mental wellness',url:'https://rabiuhamza11.github.io/harz-portfolio/mindcare-dashboard.html'},
+{name:'Cyber Shield X',icon:'🛡️',cat:'AI',desc:'Cybersecurity',url:'https://rabiuhamza11.github.io/harz-portfolio/cyber-shield-x-dashboard.html'},
+{name:'Robotics & IoT',icon:'🏭',cat:'AI',desc:'IoT device management',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html'},
+{name:'Harz Browser',icon:'🌐',cat:'AI',desc:'AI browser',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html'},
+{name:'EduWealth AI',icon:'📚',cat:'Education',desc:'Online courses',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html'},
+{name:'ContentPilot AI',icon:'📱',cat:'Education',desc:'Content scheduling',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-digital-marketing.html'},
+{name:'OMEGA Content AI',icon:'✍️',cat:'Education',desc:'Content generation',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-content.html'},
+{name:'Abuja Estate City',icon:'🏠',cat:'Real Estate',desc:'20-tab real estate',url:'https://abuja-estate-city-ai.vercel.app'},
+{name:'Harz Analytics',icon:'📊',cat:'SaaS',desc:'Data analytics',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-analytics.html'},
+{name:'Harz Email Marketing',icon:'📧',cat:'SaaS',desc:'Email campaigns',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-email-marketing.html'},
+{name:'Harz Social Scheduler',icon:'📅',cat:'SaaS',desc:'Schedule posts',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-social-scheduler.html'},
+{name:'Harz Booking System',icon:'📆',cat:'SaaS',desc:'Appointment booking',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-booking-system.html'},
+{name:'Harz SEO Toolkit',icon:'🔍',cat:'SaaS',desc:'SEO optimization',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-seo-toolkit.html'},
+{name:'Harz Forms & Surveys',icon:'📝',cat:'SaaS',desc:'Create forms',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-forms-surveys.html'},
+{name:'Harz Helpdesk',icon:'🎫',cat:'SaaS',desc:'Customer support',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-helpdesk.html'},
+{name:'Harz Inventory',icon:'📦',cat:'SaaS',desc:'Stock management',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-inventory-manager.html'},
+{name:'Harz Document Builder',icon:'📄',cat:'SaaS',desc:'Generate documents',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-document-builder.html'},
+{name:'Harz API Marketplace',icon:'🔌',cat:'SaaS',desc:'Buy & sell APIs',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-api-marketplace.html'},
+{name:'Harz Lead Magnet',icon:'🧲',cat:'SaaS',desc:'Lead generation',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-lead-magnet.html'},
+{name:'Harz Affiliate Network',icon:'🔗',cat:'SaaS',desc:'Affiliate program',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-affiliate-network.html'},
+{name:'Dev Platform',icon:'🛠️',cat:'Infrastructure',desc:'API docs & SDK',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html'},
+{name:'Business OS',icon:'⚙️',cat:'Infrastructure',desc:'Business operations',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html'},
+{name:'Global Identity',icon:'🪪',cat:'Infrastructure',desc:'Digital identity',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html'},
+{name:'Data Cloud',icon:'☁️',cat:'Infrastructure',desc:'Data storage',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html'},
+{name:'Venture Studio',icon:'💡',cat:'Infrastructure',desc:'Build startups',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html'},
+{name:'Onboarding',icon:'🚀',cat:'Infrastructure',desc:'Get started',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-onboarding.html'},
+{name:'Ecosystem Dashboard',icon:'📊',cat:'Ecosystem',desc:'Platform overview',url:'https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html'},
+{name:'Launch Page',icon:'🚀',cat:'Ecosystem',desc:'Launch announcement',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-launch.html'},
+{name:'Partner Program',icon:'🤝',cat:'Ecosystem',desc:'Partnerships',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-partner-program.html'},
+{name:'Referral Program',icon:'🎁',cat:'Ecosystem',desc:'Earn commissions',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-referral-program.html'},
+{name:'Harz Assistant Bot',icon:'💬',cat:'Telegram',desc:'AI assistant on Telegram',url:'https://t.me/b44_e609780e17959020_bot'},
+{name:'OMEGA Commander',icon:'⚡',cat:'Telegram',desc:'Enterprise orchestrator',url:'https://t.me/Omegacommanderaibot'},
+{name:'OMEGA Infinity 1000',icon:'🌀',cat:'Telegram',desc:'1000 AI agents',url:'https://maganu-agent.onrender.com'},
+{name:'Notion Productivity OS',icon:'📝',cat:'Product',desc:'$17.99 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/cwpssi'},
+{name:'Canva Template Bundle',icon:'🎨',cat:'Product',desc:'$19.98 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/wkvpwb'},
+{name:'Digital Marketing Course',icon:'📊',cat:'Product',desc:'$49.99 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/mtcivf'},
+{name:'AI Art Prompts Bible',icon:'🤖',cat:'Product',desc:'$19.98 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/vpwger'},
+{name:'Freelancer Starter Kit',icon:'💼',cat:'Product',desc:'$11.99 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/gxrbri'},
+{name:'Engineering Collection',icon:'🔧',cat:'Product',desc:'$89.99 · 8-in-1',url:'https://rabiuhamza11.github.io/harz-portfolio/engineering-collection-product.html'},
+];
+function searchApps(q){
+const results=document.getElementById('searchResults');
+const clearBtn=document.getElementById('searchClear');
+if(!q||q.length<1){results.style.display='none';clearBtn.style.display='none';return;}
+clearBtn.style.display='block';
+const ql=q.toLowerCase();
+const matches=APP_DB.filter(a=>a.name.toLowerCase().includes(ql)||a.desc.toLowerCase().includes(ql)||a.cat.toLowerCase().includes(ql));
+if(matches.length===0){results.innerHTML='<div style="padding:12px;text-align:center;color:var(--muted);font-size:.8rem">No apps found for "'+q+'"</div>';results.style.display='block';return;}
+results.innerHTML=matches.slice(0,20).map(a=>'<div class="search-result" onclick="openLink(\''+a.url+'\')"><div class="sr-icon">'+a.icon+'</div><div class="sr-info"><div class="sr-title">'+a.name+'</div><div class="sr-desc">'+a.desc+'</div></div><div class="sr-cat">'+a.cat+'</div></div>').join('');
+results.style.display='block';
+}
+function clearSearch(){
+document.getElementById('appSearch').value='';
+document.getElementById('searchResults').style.display='none';
+document.getElementById('searchClear').style.display='none';
+}
+
 // Splash
 setTimeout(()=>document.getElementById('splash').classList.add('hidden'),1200);
 
