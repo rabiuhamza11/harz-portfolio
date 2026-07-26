@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HarzConsult — 1-on-1 Expert Consultations with Rabiu Hamza</title>
+<style>
+:root{--bg:#0a0e17;--card:#131927;--accent:#f59e0b;--accent2:#0ea5e9;--text:#e8eef5;--muted:#8896a8;--border:#1e293b;--gold:#f59e0b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif}
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,14,23,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-size:1.4rem;font-weight:800;color:var(--accent)}
+.btn{padding:0.6rem 1.4rem;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:0.9rem}
+.btn-primary{background:var(--accent);color:var(--bg)}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.hero{display:flex;align-items:center;gap:3rem;padding:3rem 2rem;max-width:1200px;margin:0 auto}
+.hero-left{flex:1}
+.hero h1{font-size:2.5rem;font-weight:800;margin-bottom:1rem}
+.hero h1 span{color:var(--accent)}
+.hero p{color:var(--muted);font-size:1.1rem;margin-bottom:2rem;line-height:1.6}
+.hero-right{flex:0 0 200px;text-align:center}
+.profile-img{width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:5rem;margin:0 auto 1rem;border:3px solid var(--accent)}
+.profile-name{font-size:1.3rem;font-weight:700}
+.profile-title{color:var(--muted);font-size:0.9rem}
+.profile-badge{display:inline-block;padding:0.2rem 0.8rem;background:rgba(0,212,170,0.15);color:#00d4aa;border-radius:20px;font-size:0.75rem;margin-top:0.5rem}
+.stats{display:flex;gap:2rem;margin-top:2rem}
+.stat{text-align:center}
+.stat .num{font-size:1.8rem;font-weight:800;color:var(--accent)}
+.stat .label{color:var(--muted);font-size:0.8rem}
+.section{max-width:1200px;margin:0 auto;padding:2rem}
+.section-title{font-size:1.6rem;font-weight:700;margin-bottom:0.5rem}
+.section-sub{color:var(--muted);margin-bottom:2rem}
+.consult-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+consult-card,.c-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.8rem;transition:all .2s}
+.c-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.c-icon{font-size:2.5rem;margin-bottom:1rem}
+.c-title{font-size:1.2rem;font-weight:700;margin-bottom:0.5rem}
+.c-desc{color:var(--muted);font-size:0.9rem;line-height:1.5;margin-bottom:1rem}
+.c-topics{font-size:0.8rem;color:var(--accent2);margin-bottom:1rem}
+.c-topics strong{color:var(--text)}
+.c-price{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid var(--border)}
+.c-amount{font-size:1.4rem;font-weight:800;color:var(--accent)}
+.c-amount small{font-size:0.8rem;color:var(--muted);font-weight:400}
+.c-dur{font-size:0.85rem;color:var(--muted)}
+.schedule-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;max-width:500px;margin:0 auto}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.85rem;color:var(--muted);margin-bottom:0.3rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.8rem;color:var(--text);font-size:0.9rem;outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border)}
+@media(max-width:768px){.hero{flex-direction:column}.hero-right{flex:0}.profile-img{width:140px;height:140px;font-size:3rem}.hero h1{font-size:1.8rem}}
+</style>
+</head>
+<body>
+<div class="nav">
+<div class="nav-logo">Harz<span style="color:var(--text)">Consult</span></div>
+<div style="display:flex;gap:1rem">
+<button class="btn btn-outline" onclick="alert('Login coming soon!')">Sign In</button>
+<button class="btn btn-primary" onclick="document.getElementById('book').scrollIntoView()">Book Now</button>
+</div>
+</div>
+<div class="hero">
+<div class="hero-left">
+<h1>Book a <span>1-on-1</span> Consultation</h1>
+<p>Get expert advice on AI automation, business strategy, digital marketing, and building tech products. Direct access to the founder of the Harz Ecosystem — 24 platforms, 80+ AI agents, and a growing Nigerian tech community.</p>
+<div class="stats">
+<div class="stat"><div class="num">24</div><div class="label">Platforms Built</div></div>
+<div class="stat"><div class="num">500+</div><div class="label">Commands</div></div>
+<div class="stat"><div class="num">80+</div><div class="label">AI Agents</div></div>
+<div class="stat"><div class="num">5+</div><div class="label">Years Exp</div></div>
+</div>
+</div>
+<div class="hero-right">
+<div class="profile-img">👨🏾‍💻</div>
+<div class="profile-name">Rabiu Hamza</div>
+<div class="profile-title">AI Architect & Entrepreneur</div>
+<div class="profile-badge">✓ Available</div>
+</div>
+</div>
+<div class="section">
+<div class="section-title">Consultation Packages</div>
+<div class="section-sub">Choose the session that fits your needs</div>
+<div class="consult-grid">
+<div class="c-card">
+<div class="c-icon">🤖</div>
+<div class="c-title">AI Automation Strategy</div>
+<div class="c-desc">Learn how to automate your business with AI agents, chatbots, and workflows. I'll help you build a custom automation roadmap.</div>
+<div class="c-topics"><strong>Topics:</strong> AI agents, WhatsApp bots, workflow automation, business process optimization</div>
+<div class="c-price"><div class="c-amount">₦15,000<small> /session</small></div><div class="c-dur">⏱ 60 min</div></div>
+<button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="bookConsult('AI Automation Strategy','₦15,000',60)">Book This Session</button>
+</div>
+<div class="c-card">
+<div class="c-icon">💼</div>
+<div class="c-title">Business Strategy Session</div>
+<div class="c-desc">Starting or scaling a business? Get a personalized strategy session covering market positioning, revenue models, and growth tactics.</div>
+<div class="c-topics"><strong>Topics:</strong> Business models, market research, revenue strategy, scaling</div>
+<div class="c-price"><div class="c-amount">₦20,000<small> /session</small></div><div class="c-dur">⏱ 90 min</div></div>
+<button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="bookConsult('Business Strategy Session','₦20,000',90)">Book This Session</button>
+</div>
+<div class="c-card">
+<div class="c-icon">🚀</div>
+<div class="c-title">Tech Product Building</div>
+<div class="c-desc">Want to build an app, website, or AI product? Get a technical consultation on architecture, tools, and deployment strategy.</div>
+<div class="c-topics"><strong>Topics:</strong> App architecture, tech stack selection, deployment, scaling, API integration</div>
+<div class="c-price"><div class="c-amount">₦25,000<small> /session</small></div><div class="c-dur">⏱ 90 min</div></div>
+<button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="bookConsult('Tech Product Building','₦25,000',90)">Book This Session</button>
+</div>
+<div class="c-card">
+<div class="c-icon">📱</div>
+<div class="c-title">Digital Marketing Masterclass</div>
+<div class="c-desc">Learn how to grow your online presence — social media strategy, content marketing, paid ads, and analytics.</div>
+<div class="c-topics"><strong>Topics:</strong> Social media, content strategy, Facebook/Google ads, analytics</div>
+<div class="c-price"><div class="c-amount">₦10,000<small> /session</small></div><div class="c-dur">⏱ 60 min</div></div>
+<button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="bookConsult('Digital Marketing Masterclass','₦10,000',60)">Book This Session</button>
+</div>
+<div class="c-card">
+<div class="c-icon">🎵</div>
+<div class="c-title">Music & Film Distribution</div>
+<div class="c-desc">Learn how to distribute your music or films online, build an audience, and monetize your content across platforms.</div>
+<div class="c-topics"><strong>Topics:</strong> Music distribution, film distribution, monetization, audience building</div>
+<div class="c-price"><div class="c-amount">₦12,000<small> /session</small></div><div class="c-dur">⏱ 60 min</div></div>
+<button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="bookConsult('Music & Film Distribution','₦12,000',60)">Book This Session</button>
+</div>
+<div class="c-card">
+<div class="c-icon">🔧</div>
+<div class="c-title">Monthly Retainer</div>
+<div class="c-desc">Ongoing consulting with priority access. Weekly calls, unlimited messages, and direct support for your projects.</div>
+<div class="c-topics"><strong>Includes:</strong> 4 sessions/month, priority messaging, project reviews, strategy calls</div>
+<div class="c-price"><div class="c-amount">₦75,000<small> /month</small></div><div class="c-dur">⏱ 4x 60 min</div></div>
+<button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="bookConsult('Monthly Retainer','₦75,000/month',240)">Book Retainer</button>
+</div>
+</div>
+</div>
+<div class="section" id="book">
+<div class="section-title" style="text-align:center">Book Your Session</div>
+<div class="section-sub" style="text-align:center">Fill the form below and I'll confirm via email or WhatsApp</div>
+<div class="schedule-box">
+<div class="form-group">
+<label>Full Name</label>
+<input type="text" id="book-name" placeholder="Your name">
+</div>
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="book-email" placeholder="your@email.com">
+</div>
+<div class="form-group">
+<label>Phone (WhatsApp)</label>
+<input type="tel" id="book-phone" placeholder="0801 234 5678">
+</div>
+<div class="form-group">
+<label>Consultation Type</label>
+<select id="book-type">
+<option>AI Automation Strategy — ₦15,000</option>
+<option>Business Strategy Session — ₦20,000</option>
+<option>Tech Product Building — ₦25,000</option>
+<option>Digital Marketing Masterclass — ₦10,000</option>
+<option>Music & Film Distribution — ₦12,000</option>
+<option>Monthly Retainer — ₦75,000/month</option>
+</select>
+</div>
+<div class="form-group">
+<label>Preferred Date</label>
+<input type="date" id="book-date">
+</div>
+<div class="form-group">
+<label>What do you want to discuss?</label>
+<textarea id="book-notes" rows="3" placeholder="Tell me about your project or what you need help with..."></textarea>
+</div>
+<button class="btn btn-primary" style="width:100%;padding:1rem;font-size:1rem" onclick="submitBooking()">Request Booking</button>
+</div>
+</div>
+<div class="footer">
+HarzConsult — Part of the Harz Ecosystem (24 Platforms) | harzconsult.vercel.app<br>
+© 2026 Rabiu Hamza Mohammed. All rights reserved.
+</div>
+<script>
+function bookConsult(type,price,dur){
+document.getElementById('book-type').value=type+' — '+price;
+document.getElementById('book').scrollIntoView({behavior:'smooth'});
+}
+function submitBooking(){
+const name=document.getElementById('book-name').value;
+const email=document.getElementById('book-email').value;
+const phone=document.getElementById('book-phone').value;
+const type=document.getElementById('book-type').value;
+const date=document.getElementById('book-date').value;
+const notes=document.getElementById('book-notes').value;
+if(!name||!email||!phone){alert('Please fill in your name, email, and phone.');return;}
+alert('Booking Request Received!\\n\\nName: '+name+'\\nType: '+type+'\\nDate: '+date+'\\n\\nPayment: Bank transfer to UBA 2034326424 (RABIU HAMZA MOHD)\\nor Paystack (pending activation)\\n\\nYou will receive confirmation via WhatsApp/email within 24 hours.\\n\\nQuestions? Email harzco.business@gmail.com');
+}
+</script>
+</body>
+</html>
