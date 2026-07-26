@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA HEALTH AI — Personalized Health Platform</title>
+<style>
+:root{--primary:#0066ff;--accent:#00d4a3;--danger:#ff4757;--warning:#ffa502;--bg:#0a0e27;--card:#141831;--text:#e8eaf6;--muted:#8892b0;--border:#1e2545}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,#0066ff,#00d4a3);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,102,255,0.3)}
+.header h1{font-size:1.4rem;color:#fff;display:flex;align-items:center;gap:8px}
+.header .subtitle{font-size:.8rem;opacity:.85;color:#fff}
+.header .badges{display:flex;gap:8px}
+.badge{background:rgba(255,255,255,.2);padding:4px 12px;border-radius:20px;font-size:.75rem;color:#fff}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:transform .2s}
+.card:hover{transform:translateY(-2px);border-color:var(--primary)}
+.card h3{color:var(--accent);font-size:.9rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.stat{font-size:2rem;font-weight:700;color:var(--text)}
+.stat-label{color:var(--muted);font-size:.8rem;margin-top:4px}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.agent-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.agent-card .name{font-weight:600;font-size:.85rem;color:var(--accent)}
+.agent-card .role{font-size:.75rem;color:var(--muted);margin:4px 0}
+.agent-card .status{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.7rem}
+.status-active{background:rgba(0,212,163,.15);color:var(--accent)}
+.status-standby{background:rgba(255,165,2,.15);color:var(--warning)}
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted);font-size:.85rem;transition:all .2s}
+.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.panel{display:none}.panel.active{display:block}
+input,select,textarea{width:100%;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;margin-bottom:10px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)}
+button{padding:10px 20px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:#0052cc}
+.btn-accent{background:var(--accent);color:#000}
+.btn-accent:hover{background:#00b88a}
+.btn-danger{background:var(--danger);color:#fff}
+.disclaimer{background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);border-radius:8px;padding:12px;margin:12px 0;font-size:.8rem;color:#ffa0a8}
+.disclaimer b{color:var(--danger)}
+.result{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:10px;white-space:pre-wrap;font-size:.85rem;line-height:1.6}
+.metric-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.metric-row:last-child{border:none}
+.metric-row .value{color:var(--accent);font-weight:600}
+.loading{text-align:center;padding:20px;color:var(--muted)}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.nav a{color:var(--primary);text-decoration:none;font-size:.8rem;padding:4px 8px;border-radius:6px;background:rgba(0,102,255,.1)}
+.nav a:hover{background:rgba(0,102,255,.2)}
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:20px}
+@media(max-width:640px){.header h1{font-size:1.1rem}.header .badges{display:none}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>
+<h1>🏥 OMEGA HEALTH AI</h1>
+<div class="subtitle">Personalized AI-Powered Health Platform • v1.0.0</div>
+</div>
+<div class="badges">
+<span class="badge">18 AI Agents</span>
+<span class="badge" id="agentCount">17 Active</span>
+<span class="badge">GDPR/HIPAA Ready</span>
+</div>
+</div>
+
+<div class="container">
+
+<div class="disclaimer">
+<b>⚠️ Medical Disclaimer:</b> OMEGA HEALTH AI provides educational health guidance and wellness recommendations only. It does NOT replace professional medical diagnosis, treatment, or advice from a licensed healthcare provider. Always consult a qualified medical professional for health concerns.
+</div>
+
+<div class="nav">
+<a href="#dashboard">📊 Dashboard</a>
+<a href="#symptoms">🔍 Symptom Check</a>
+<a href="#profile">👤 Profile</a>
+<a href="#nutrition">🥗 Nutrition</a>
+<a href="#fitness">💪 Fitness</a>
+<a href="#medications">💊 Medications</a>
+<a href="#mental">🧠 Mental Wellness</a>
+<a href="#records">📋 Records</a>
+<a href="#appointments">📅 Appointments</a>
+<a href="#emergency">🚨 Emergency</a>
+<a href="#wearables">⌚ Wearables</a>
+<a href="#family">👨‍👩‍👧 Family</a>
+<a href="#askai">💬 Ask AI</a>
+<a href="#agents">🤖 AI Agents</a>
+</div>
+
+<div class="grid" id="statsGrid">
+<div class="card"><h3>AI Agents</h3><div class="stat" id="statAgents">18</div><div class="stat-label">Specialized agents</div></div>
+<div class="card"><h3>Active Agents</h3><div class="stat" id="statActive">17</div><div class="stat-label">Currently online</div></div>
+<div class="card"><h3>Avg Success Rate</h3><div class="stat" id="statSuccess">95.7%</div><div class="stat-label">Across all agents</div></div>
+<div class="card"><h3>Health Metrics</h3><div class="stat" id="statMetrics">0</div><div class="stat-label">Data points logged</div></div>
+</div>
+
+<!-- SYMPTOM CHECK -->
+<div class="card" id="symptoms" style="margin-bottom:16px">
+<h3>🔍 AI Symptom Assessment</h3>
+<input type="text" id="symInput" placeholder="Describe symptoms: e.g., headache, fever, cough...">
+<div style="display:flex;gap:8px;margin-bottom:10px">
+<select id="symSeverity" style="width:auto"><option value="mild">Mild</option><option value="moderate">Moderate</option><option value="severe">Severe</option><option value="critical">Critical</option></select>
+<input type="text" id="symDuration" placeholder="Duration: e.g., 2 days" style="width:200px">
+</div>
+<button class="btn-primary" onclick="checkSymptoms()">Analyze Symptoms</button>
+<div id="symResult"></div>
+</div>
+
+<!-- HEALTH PROFILE -->
+<div class="card" id="profile" style="margin-bottom:16px">
+<h3>👤 Intelligent Health Profile</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<input type="text" id="pfName" placeholder="Full Name" value="Rabiu Hamza">
+<input type="email" id="pfEmail" placeholder="Email" value="hamzarabiu390@gmail.com">
+<input type="number" id="pfAge" placeholder="Age" value="30">
+<select id="pfSex"><option value="male">Male</option><option value="female">Female</option></select>
+<input type="number" id="pfHeight" placeholder="Height (cm)" value="175">
+<input type="number" id="pfWeight" placeholder="Weight (kg)" value="75">
+<input type="text" id="pfBlood" placeholder="Blood Type" value="O+">
+<select id="pfFitness"><option value="sedentary">Sedentary</option><option value="light" selected>Light</option><option value="moderate">Moderate</option><option value="active">Active</option><option value="very_active">Very Active</option></select>
+<input type="number" id="pfSleep" placeholder="Sleep Hours" value="7">
+<input type="number" id="pfStress" placeholder="Stress Level (1-10)" value="5">
+<input type="text" id="pfGoals" placeholder="Health Goals" value="Lose weight, improve sleep, reduce stress">
+</div>
+<button class="btn-accent" onclick="createProfile()">Create Health Profile</button>
+<button class="btn-primary" onclick="getRecommendations()">Get AI Recommendations</button>
+<div id="pfResult"></div>
+</div>
+
+<!-- NUTRITION -->
+<div class="card" id="nutrition" style="margin-bottom:16px">
+<h3>🥗 AI Nutrition Intelligence</h3>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<select id="nutDiet" style="width:auto">
+<option value="balanced">Balanced</option><option value="keto">Keto</option><option value="vegan">Vegan</option>
+<option value="vegetarian">Vegetarian</option><option value="mediterranean">Mediterranean</option>
+<option value="low_carb">Low Carb</option><option value="high_protein">High Protein</option>
+<option value="diabetic">Diabetic</option><option value="low_sodium">Low Sodium</option>
+</select>
+<input type="number" id="nutCalories" placeholder="Daily Calories" value="2200" style="width:150px">
+</div>
+<button class="btn-accent" onclick="createNutritionPlan()">Generate Plan</button>
+<div id="nutResult"></div>
+</div>
+
+<!-- FITNESS -->
+<div class="card" id="fitness" style="margin-bottom:16px">
+<h3>💪 AI Fitness Intelligence</h3>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<select id="fitType" style="width:auto">
+<option value="strength">Strength Training</option><option value="cardio">Cardio</option>
+<option value="yoga">Yoga</option><option value="home_workout">Home Workout</option>
+<option value="stretching">Stretching</option><option value="walking">Walking</option>
+<option value="running">Running</option><option value="rehabilitation">Rehabilitation</option>
+</select>
+<select id="fitDiff" style="width:auto">
+<option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option>
+</select>
+<input type="number" id="fitDays" placeholder="Days/Week" value="4" style="width:120px">
+</div>
+<button class="btn-accent" onclick="createFitnessPlan()">Generate Plan</button>
+<div id="fitResult"></div>
+</div>
+
+<!-- MEDICATIONS -->
+<div class="card" id="medications" style="margin-bottom:16px">
+<h3>💊 Medication Management</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<input type="text" id="medName" placeholder="Medication Name">
+<input type="text" id="medDose" placeholder="Dosage: e.g., 500mg">
+<input type="text" id="medFreq" placeholder="Frequency: e.g., twice daily">
+<input type="text" id="medPurpose" placeholder="Purpose">
+</div>
+<button class="btn-accent" onclick="addMedication()">Add Medication</button>
+<button class="btn-primary" onclick="getMedications()">View Active</button>
+<div id="medResult"></div>
+</div>
+
+<!-- MENTAL WELLNESS -->
+<div class="card" id="mental" style="margin-bottom:16px">
+<h3>🧠 Mental Wellness</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<select id="mwType"><option value="mood">Mood</option><option value="breathing_exercise">Breathing Exercise</option><option value="meditation">Meditation</option><option value="journaling">Journaling</option><option value="stress_assessment">Stress Assessment</option></select>
+<input type="number" id="mwMood" placeholder="Mood Score (1-10)" value="7">
+<input type="number" id="mwStress" placeholder="Stress Level (1-10)" value="5">
+<input type="number" id="mwAnxiety" placeholder="Anxiety (0-10)" value="0">
+</div>
+<textarea id="mwJournal" placeholder="Journal entry (optional)..." rows="3"></textarea>
+<button class="btn-accent" onclick="logMental()">Log Session</button>
+<button class="btn-primary" onclick="getMentalHistory()">View History</button>
+<div id="mwResult"></div>
+</div>
+
+<!-- ASK AI -->
+<div class="card" id="askai" style="margin-bottom:16px">
+<h3>💬 AI Health Assistant</h3>
+<input type="text" id="aiQuestion" placeholder="Ask about: blood pressure, diabetes, cholesterol, sleep, weight loss, stress...">
+<button class="btn-primary" onclick="askAI()">Ask</button>
+<div id="aiResult"></div>
+</div>
+
+<!-- LOG METRIC -->
+<div class="card" id="dashboard" style="margin-bottom:16px">
+<h3>📊 Log Health Metric</h3>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<select id="mtType" style="width:auto">
+<option value="heart_rate">Heart Rate</option><option value="blood_pressure">Blood Pressure</option>
+<option value="blood_sugar">Blood Sugar</option><option value="oxygen_saturation">Oxygen (SpO2)</option>
+<option value="temperature">Temperature</option><option value="weight">Weight</option>
+<option value="steps">Steps</option><option value="calories">Calories</option>
+<option value="water_intake">Water Intake</option><option value="sleep_hours">Sleep Hours</option>
+</select>
+<input type="text" id="mtValue" placeholder="Value (e.g., 72 for HR, 120/80 for BP)">
+<input type="text" id="mtUnit" placeholder="Unit (e.g., bpm, mmHg, mg/dL)" style="width:120px">
+</div>
+<button class="btn-accent" onclick="logMetric()">Log Metric</button>
+<button class="btn-primary" onclick="getDashboard()">Full Dashboard</button>
+<div id="mtResult"></div>
+</div>
+
+<!-- AI AGENTS -->
+<div class="card" id="agents" style="margin-bottom:16px">
+<h3>🤖 18 Specialized AI Health Agents</h3>
+<button class="btn-primary" onclick="getAgents()">View All Agents</button>
+<div class="agent-grid" id="agentGrid"></div>
+</div>
+
+<div class="footer">
+OMEGA HEALTH AI v1.0.0 • Built by Rabiu Hamza Mohammed • Powered by OMEGA Ecosystem<br>
+⚠️ Educational health guidance only — not a substitute for professional medical care
+</div>
+
+</div>
+
+<script>
+const API='https://superagent-2286fb2f.base44.app/functions/omegaHealthAI';
+async function api(body){try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return await r.json();}catch(e){return{error:e.message}}}
+
+async function loadStats(){
+const d=await api({action:'stats'});
+if(d.stats){
+document.getElementById('statAgents').textContent=d.stats.ai_agents;
+document.getElementById('statActive').textContent=d.stats.active_agents;
+document.getElementById('statSuccess').textContent=d.stats.avg_agent_success_rate+'%';
+document.getElementById('statMetrics').textContent=d.stats.metrics_logged;
+document.getElementById('agentCount').textContent=d.stats.active_agents+' Active';
+}
+}
+
+async function checkSymptoms(){
+const v=document.getElementById('symInput').value;if(!v)return;
+document.getElementById('symResult').innerHTML='<div class="loading">Analyzing symptoms...</div>';
+const d=await api({action:'symptom_check',symptoms:v,severity:document.getElementById('symSeverity').value,duration:document.getElementById('symDuration').value});
+if(d.assessment){let h='<div class="result"><b>Possible Conditions (ranked by likelihood):</b>\n';
+d.assessment.conditions.forEach((c,i)=>h+=(i+1)+'. '+c+'\n');
+h+='\n<b>Care Level:</b> '+d.assessment.care_level.replace(/_/g,' ').toUpperCase()+'\n\n';
+h+='<b>Recommendation:</b> '+d.assessment.recommendations+'\n\n<b>Follow-up Questions:</b>\n';
+d.assessment.follow_up_questions.forEach(q=>h+='• '+q+'\n');
+h+='\n⚠️ '+d.assessment.disclaimer+'</div>';
+document.getElementById('symResult').innerHTML=h;}
+}
+
+async function createProfile(){
+const d=await api({action:'create_profile',user_name:document.getElementById('pfName').value,email:document.getElementById('pfEmail').value,age:+document.getElementById('pfAge').value,sex:document.getElementById('pfSex').value,height_cm:+document.getElementById('pfHeight').value,weight_kg:+document.getElementById('pfWeight').value,blood_type:document.getElementById('pfBlood').value,fitness_level:document.getElementById('pfFitness').value,sleep_hours:+document.getElementById('pfSleep').value,stress_level:+document.getElementById('pfStress').value,health_goals:document.getElementById('pfGoals').value});
+if(d.profile)document.getElementById('pfResult').innerHTML='<div class="result">✅ Profile created! BMI: '+(d.profile.bmi||'N/A')+'</div>';
+}
+
+async function getRecommendations(){
+document.getElementById('pfResult').innerHTML='<div class="loading">Analyzing your profile...</div>';
+const d=await api({action:'get_recommendations'});
+if(d.recommendations){let h='<div class="result"><b>🤖 AI Health Recommendations:</b>\n\n';
+d.recommendations.forEach((r,i)=>h+=(i+1)+'. '+r+'\n\n');
+h+='</div>';document.getElementById('pfResult').innerHTML=h;}
+else document.getElementById('pfResult').innerHTML='<div class="result">⚠️ Create a profile first</div>';
+}
+
+async function createNutritionPlan(){
+const d=await api({action:'create_nutrition_plan',diet_type:document.getElementById('nutDiet').value,daily_calories:+document.getElementById('nutCalories').value});
+if(d.plan){let h='<div class="result"><b>🥗 Your '+document.getElementById('nutDiet').value+' Plan</b>\n\n';
+h+='Daily Calories: '+d.plan.daily_calories+'\n';
+h+='Protein: '+d.plan.protein_g+'g\n';
+h+='Carbs: '+d.plan.carbs_g+'g\n';
+h+='Fats: '+d.plan.fats_g+'g\n';
+h+='Water: 2500ml\n\n<b>Meal Plan:</b>\n'+d.plan.meals+'</div>';
+document.getElementById('nutResult').innerHTML=h;}
+}
+
+async function createFitnessPlan(){
+const d=await api({action:'create_fitness_plan',plan_type:document.getElementById('fitType').value,difficulty:document.getElementById('fitDiff').value,days_per_week:+document.getElementById('fitDays').value});
+if(d.plan){let h='<div class="result"><b>💪 '+d.plan.plan_type+' Plan ('+d.plan.difficulty+')</b>\n\n';
+h+='Calories/session: '+d.plan.calories_per_session+'\n\n<b>Workout:</b>\n'+d.plan.exercises+'</div>';
+document.getElementById('fitResult').innerHTML=h;}
+}
+
+async function addMedication(){
+const n=document.getElementById('medName').value;if(!n)return;
+const d=await api({action:'add_medication',medication_name:n,dosage:document.getElementById('medDose').value,frequency:document.getElementById('medFreq').value,purpose:document.getElementById('medPurpose').value});
+if(d.medication)document.getElementById('medResult').innerHTML='<div class="result">✅ Added: '+d.medication.medication_name+'</div>';
+}
+
+async function getMedications(){
+const d=await api({action:'get_medications'});
+if(d.medications){let h='<div class="result"><b>Active Medications:</b>\n\n';
+if(!d.medications.length)h+='No active medications';
+d.medications.forEach(m=>h+='💊 '+m.medication_name+' — '+m.dosage+', '+m.frequency+'\n   Purpose: '+(m.purpose||'N/A')+'\n\n');
+document.getElementById('medResult').innerHTML=h;}
+}
+
+async function logMental(){
+const d=await api({action:'log_mental_wellness',log_type:document.getElementById('mwType').value,mood_score:+document.getElementById('mwMood').value,stress_level:+document.getElementById('mwStress').value,anxiety_level:+document.getElementById('mwAnxiety').value,journal_entry:document.getElementById('mwJournal').value});
+if(d.log){let h='<div class="result">✅ Logged: '+d.log.log_type+' | Mood: '+d.log.mood_score+'/10\n';
+if(d.crisis_response){h+='<b>🚨 CRISIS RESOURCES:</b>\n';d.crisis_response.resources.forEach(r=>h+='• '+r+'\n');}
+document.getElementById('mwResult').innerHTML=h;}
+}
+
+async function getMentalHistory(){
+const d=await api({action:'get_mental_wellness'});
+if(d.logs){let h='<div class="result"><b>Mental Wellness History:</b>\n\n';
+if(!d.logs.length)h+='No entries yet';
+d.logs.slice(-5).forEach(l=>h+='• '+l.log_type+' | Mood: '+l.mood_score+'/10 | Stress: '+l.stress_level+'/10\n');
+document.getElementById('mwResult').innerHTML=h;}
+}
+
+async function askAI(){
+const q=document.getElementById('aiQuestion').value;if(!q)return;
+const d=await api({action:'ask_health_ai',question:q});
+if(d.response)document.getElementById('aiResult').innerHTML='<div class="result">💬 '+d.response+'\n\n⚠️ '+d.disclaimer+'</div>';
+}
+
+async function logMetric(){
+const v=document.getElementById('mtValue').value;if(!v)return;
+const d=await api({action:'log_metric',metric_type:document.getElementById('mtType').value,value:v,unit:document.getElementById('mtUnit').value});
+if(d.metric)document.getElementById('mtResult').innerHTML='<div class="result">✅ Logged: '+d.metric.metric_type+' = '+d.metric.value+' '+d.metric.unit+'</div>';
+}
+
+async function getDashboard(){
+document.getElementById('mtResult').innerHTML='<div class="loading">Loading dashboard...</div>';
+const d=await api({action:'dashboard'});
+if(d.dashboard){let db=d.dashboard;let h='<div class="result">';
+if(db.profile)h+='<b>Profile:</b> '+db.profile.user_name+' | BMI: '+(db.profile.bmi||'N/A')+' | Age: '+db.profile.age+'\n';
+h+='<b>Metrics:</b> '+(db.metrics||[]).length+' logged\n<b>Medications:</b> '+(db.medications||[]).length+' active\n<b>Appointments:</b> '+(db.appointments||[]).length+'\n<b>Mental logs:</b> '+(db.mental_wellness||[]).length+'\n<b>Emergency contacts:</b> '+(db.emergency_contacts||[]).length+'\n<b>Wearables:</b> '+(db.wearables||[]).length+'\n<b>Family members:</b> '+(db.family_members||[]).length+'\n<b>Medical records:</b> '+(db.medical_records||[]).length+'\n<b>AI Agents:</b> '+db.active_agents+'/'+db.total_agents+' active</div>';
+document.getElementById('mtResult').innerHTML=h;}
+}
+
+async function getAgents(){
+const d=await api({action:'agents'});
+if(d.agents){let h='';d.agents.forEach(a=>{h+='<div class="agent-card"><div class="name">'+a.agent_name+'</div><div class="role">'+a.role+'</div><span class="status-'+a.status+'">'+a.status+'</span></div>';});document.getElementById('agentGrid').innerHTML=h;}
+}
+
+loadStats();
+</script>
+</body>
+</html>
