@@ -612,14 +612,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 <!-- App Overlay (in-app iframe viewer) -->
 <div id="app-overlay" style="position:fixed;inset:0;background:var(--bg);z-index:500;display:none;flex-direction:column">
-<div style="background:var(--card);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10">
-<div onclick="closeApp()" style="display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--p2);font-size:.85rem;font-weight:600;padding:6px 12px;border-radius:8px;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.2)">
-<span style="font-size:1rem">‹</span> Back
+<div style="background:var(--card);border-bottom:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:10">
+<div onclick="iframeBack()" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;cursor:pointer;color:var(--p2);font-size:1.1rem;font-weight:700;border-radius:8px;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.2)">‹</div>
+<div onclick="iframeForward()" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;cursor:pointer;color:var(--p2);font-size:1.1rem;font-weight:700;border-radius:8px;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.2)">›</div>
+<div id="app-title" style="font-size:.82rem;font-weight:700;color:var(--text);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">App</div>
+<div onclick="iframeReload()" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;cursor:pointer;color:var(--muted);font-size:.95rem;border-radius:8px;background:var(--card);border:1px solid var(--border)">⟳</div>
+<div onclick="closeApp()" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;cursor:pointer;color:#ff5d6e;font-size:1rem;font-weight:700;border-radius:8px;background:rgba(255,93,110,.1);border:1px solid rgba(255,93,110,.2)">✕</div>
 </div>
-<div id="app-title" style="font-size:.85rem;font-weight:700;color:var(--text);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">App</div>
-<div style="width:60px"></div>
-</div>
-<iframe id="app-frame" style="flex:1;border:none;width:100%;background:#fff" allow="camera;microphone;geolocation;clipboard-read;clipboard-write" allowfullscreen></iframe>
+<iframe id="app-frame" style="flex:1;border:none;width:100%;background:#fff" allow="camera;microphone;geolocation;clipboard-read;clipboard-write;clipboard-write;allow-popups;allow-same-origin" allowfullscreen></iframe>
 </div>
 <script>document.getElementById('app-overlay').style.display='none';</script>
 <!-- Toast -->
@@ -646,8 +646,16 @@ const frame=document.getElementById('app-frame');
 frame.src='about:blank';
 overlay.classList.remove('show');
 document.body.style.overflow='';
-// Return to home page
 switchPage('home');
+}
+function iframeBack(){
+try{document.getElementById('app-frame').contentWindow.history.back();}catch(e){closeApp();}
+}
+function iframeForward(){
+try{document.getElementById('app-frame').contentWindow.history.forward();}catch(e){}
+}
+function iframeReload(){
+try{document.getElementById('app-frame').contentWindow.location.reload();}catch(e){const f=document.getElementById('app-frame');const s=f.src;f.src=s;}
 }
 // Splash
 setTimeout(()=>document.getElementById('splash').classList.add('hidden'),1200);
