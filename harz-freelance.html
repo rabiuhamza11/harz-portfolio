@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HarzFreelance — Nigeria's Premier Freelance Marketplace</title>
+<style>
+:root{--bg:#0a0e17;--card:#131927;--accent:#00d4aa;--accent2:#0ea5e9;--text:#e8eef5;--muted:#8896a8;--border:#1e293b;--gold:#f59e0b;--danger:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,14,23,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-size:1.4rem;font-weight:800;color:var(--accent)}
+.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:1.5rem;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.btn{padding:0.6rem 1.4rem;border-radius:8px;border:none;font-weight:600;cursor:pointer;transition:all .2s;font-size:0.9rem}
+.btn-primary{background:var(--accent);color:var(--bg)}
+.btn-primary:hover{background:#00b894;transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.btn-outline:hover{background:var(--accent);color:var(--bg)}
+.hero{text-align:center;padding:4rem 2rem 3rem;background:linear-gradient(135deg,#0a0e17 0%,#0d1b2a 50%,#0a0e17 100%)}
+.hero h1{font-size:2.8rem;font-weight:800;margin-bottom:1rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--muted);font-size:1.15rem;max-width:600px;margin:0 auto 2rem}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:2rem}
+.hero-stat{text-align:center}
+.hero-stat .num{font-size:2rem;font-weight:800;color:var(--accent)}
+.hero-stat .label{color:var(--muted);font-size:0.85rem}
+.search-bar{max-width:700px;margin:0 auto;display:flex;gap:0.5rem;padding:0.5rem;background:var(--card);border-radius:12px;border:1px solid var(--border)}
+.search-bar input{flex:1;background:none;border:none;color:var(--text);padding:0.8rem;font-size:1rem;outline:none}
+.search-bar select{background:var(--bg);border:none;color:var(--text);padding:0.8rem;border-radius:8px;outline:none}
+.categories{display:flex;flex-wrap:wrap;justify-content:center;gap:0.8rem;padding:2rem;max-width:1200px;margin:0 auto}
+.cat-chip{padding:0.5rem 1.2rem;background:var(--card);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:0.85rem;cursor:pointer;transition:all .2s}
+.cat-chip:hover,.cat-chip.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.section{max-width:1200px;margin:0 auto;padding:2rem}
+.section-title{font-size:1.6rem;font-weight:700;margin-bottom:0.5rem}
+.section-sub{color:var(--muted);margin-bottom:2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+.service-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .2s;cursor:pointer}
+.service-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,212,170,0.15)}
+.service-img{width:100%;height:160px;background:linear-gradient(135deg,#1e293b,#0d1b2a);display:flex;align-items:center;justify-content:center;font-size:3rem}
+.service-body{padding:1.2rem}
+.service-cat{color:var(--accent);font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.service-title{font-size:1.1rem;font-weight:600;margin:0.4rem 0 0.6rem}
+.service-desc{color:var(--muted);font-size:0.85rem;line-height:1.5;margin-bottom:1rem}
+.service-meta{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:0.8rem}
+.service-price{font-size:1.3rem;font-weight:800;color:var(--accent)}
+.service-price small{font-size:0.75rem;color:var(--muted);font-weight:400}
+.service-rating{display:flex;align-items:center;gap:0.3rem;font-size:0.85rem}
+.star{color:var(--gold)}
+.service-freelancer{display:flex;align-items:center;gap:0.5rem;margin:0.6rem 0}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff}
+.how-it-works{background:var(--card);padding:3rem 2rem;margin:2rem 0;border-radius:16px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;max-width:1000px;margin:0 auto}
+.step{text-align:center}
+.step-num{width:48px;height:48px;border-radius:50%;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;margin:0 auto 1rem}
+.step h3{margin-bottom:0.5rem}
+.step p{color:var(--muted);font-size:0.9rem}
+.cta{text-align:center;padding:3rem 2rem;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:16px;max-width:900px;margin:2rem auto}
+.cta h2{font-size:2rem;margin-bottom:1rem;color:var(--bg)}
+.cta p{color:rgba(10,14,23,0.8);margin-bottom:1.5rem;font-size:1.05rem}
+.cta .btn{background:var(--bg);color:var(--accent);font-size:1rem;padding:0.8rem 2rem}
+.footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border);margin-top:2rem}
+.badge{display:inline-block;padding:0.2rem 0.6rem;border-radius:4px;font-size:0.7rem;font-weight:600;margin-left:0.4rem}
+.badge-hot{background:rgba(239,68,68,0.2);color:var(--danger)}
+.badge-new{background:rgba(0,212,170,0.2);color:var(--accent)}
+.badge-feat{background:rgba(245,158,11,0.2);color:var(--gold)}
+@media(max-width:768px){.hero h1{font-size:2rem}.hero-stats{gap:1.5rem}.nav-links{display:none}}
+</style>
+</head>
+<body>
+<div class="nav">
+<div class="nav-logo">Harz<span>Freelance</span></div>
+<div class="nav-links">
+<a href="#browse">Browse</a>
+<a href="#how">How it Works</a>
+<a href="#join">Become a Seller</a>
+<button class="btn btn-outline" onclick="alert('Payment integration coming soon! Paystack & Stripe pending verification.')">Sign In</button>
+<button class="btn btn-primary" onclick="alert('Join HarzFreelance! Free to start — 15% platform fee on completed orders.')">Get Started</button>
+</div>
+</div>
+<div class="hero">
+<h1>Hire Nigeria's Best Freelancers</h1>
+<p>From AI development to graphic design, content writing to digital marketing — find skilled freelancers or offer your services. 15% platform fee, instant payouts.</p>
+<div class="search-bar">
+<select id="cat-search">
+<option value="">All Categories</option>
+<option>Programming</option><option>Design</option><option>Writing</option><option>Marketing</option><option>Video</option><option>Music</option><option>Business</option><option>AI Services</option>
+</select>
+<input type="text" id="search-input" placeholder="Search for services...">
+<button class="btn btn-primary" onclick="filterServices()">Search</button>
+</div>
+<div class="hero-stats">
+<div class="hero-stat"><div class="num" id="stat-services">12</div><div class="label">Active Services</div></div>
+<div class="hero-stat"><div class="num" id="stat-freelancers">8</div><div class="label">Freelancers</div></div>
+<div class="hero-stat"><div class="num">15%</div><div class="label">Platform Fee</div></div>
+<div class="hero-stat"><div class="num">0%</div><div class="label">Signup Fee</div></div>
+</div>
+</div>
+<div class="categories" id="categories">
+<div class="cat-chip active" onclick="filterByCat('')">All</div>
+<div class="cat-chip" onclick="filterByCat('Programming')">Programming</div>
+<div class="cat-chip" onclick="filterByCat('Design')">Design</div>
+<div class="cat-chip" onclick="filterByCat('Writing')">Writing</div>
+<div class="cat-chip" onclick="filterByCat('Marketing')">Marketing</div>
+<div class="cat-chip" onclick="filterByCat('Video')">Video</div>
+<div class="cat-chip" onclick="filterByCat('Music')">Music</div>
+<div class="cat-chip" onclick="filterByCat('Business')">Business</div>
+<div class="cat-chip" onclick="filterByCat('AI Services')">AI Services</div>
+</div>
+<div class="section" id="browse">
+<div class="section-title">Featured Services</div>
+<div class="section-sub">Handpicked top freelancers across Nigeria and beyond</div>
+<div class="grid" id="services-grid"></div>
+</div>
+<div class="how-it-works" id="how">
+<div class="section-title" style="text-align:center;margin-bottom:2rem">How HarzFreelance Works</div>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><h3>Post or Browse</h3><p>Search for services or post your own gig. Filter by category, price, and rating.</p></div>
+<div class="step"><div class="step-num">2</div><h3>Order & Pay</h3><p>Select a package, pay securely via Paystack or bank transfer. Funds held in escrow.</p></div>
+<div class="step"><div class="step-num">3</div><h3>Get It Done</h3><p>Communicate with your freelancer, review deliverables, and request revisions.</p></div>
+<div class="step"><div class="step-num">4</div><h3>Release & Rate</h3><p>Approve the work, funds released to freelancer. Leave a rating to build trust.</p></div>
+</div>
+</div>
+<div class="cta" id="join">
+<h2>Start Earning Today</h2>
+<p>Join 8+ freelancers already selling on HarzFreelance. Free to join, 15% commission on completed orders.</p>
+<button class="btn">Become a Seller</button>
+</div>
+<div class="footer">
+HarzFreelance — Part of the Harz Ecosystem (24 Platforms) | harzfreelance.vercel.app<br>
+© 2026 Rabiu Hamza Mohammed. All rights reserved.
+</div>
+<script>
+const services=[
+{title:"AI Chatbot Development",cat:"AI Services",icon:"🤖",desc:"Custom AI chatbots for your business using GPT, Claude, or open-source models. WhatsApp, Telegram, web integration.",price:50000,currency:"₦",freelancer:"CodeNinja",rating:5,orders:42,delivery:5,revisions:3,badge:"hot"},
+{title:"Logo & Brand Identity Design",cat:"Design",icon:"🎨",desc:"Professional logo design with full brand kit: colors, fonts, business cards, social media templates.",price:15000,currency:"₦",freelancer:"Studio Zara",rating:5,orders:87,delivery:3,revisions:5,badge:"feat"},
+{title:"SEO Article Writing (1000 words)",cat:"Writing",icon:"✍️",desc:"SEO-optimized articles for your blog or website. Keyword research included, plagiarism-free.",price:5000,currency:"₦",freelancer:"Daniel W.",rating:4.9,orders:156,delivery:2,revisions:2,badge:""},
+{title:"Social Media Management (Monthly)",cat:"Marketing",icon:"📱",desc:"Full social media management — content creation, scheduling, engagement, monthly report. Instagram, X, Facebook.",price:30000,currency:"₦",freelancer:"Mide Socials",rating:4.8,orders:34,delivery:30,revisions:0,badge:"new"},
+{title:"React/Next.js Web App",cat:"Programming",icon:"💻",desc:"Custom web application built with React, Next.js, and Tailwind. Responsive, fast, deployable to Vercel.",price:80000,currency:"₦",freelancer:"TechRabbit",rating:5,orders:28,delivery:7,revisions:3,badge:"hot"},
+{title:"Video Editing (YouTube/Reels)",cat:"Video",icon:"🎬",desc:"Professional video editing for YouTube, Instagram Reels, TikTok. Color grading, transitions, captions.",price:20000,currency:"₦",freelancer:"VisualEdge",rating:4.9,orders:65,delivery:3,revisions:2,badge:""},
+{title:"Music Production & Mixing",cat:"Music",icon:"🎵",desc:"Full music production — beat making, recording, mixing, mastering. Afrobeats, hip-hop, gospel.",price:25000,currency:"₦",freelancer:"BeatLab",rating:5,orders:51,delivery:5,revisions:3,badge:"feat"},
+{title:"Business Plan Writing",cat:"Business",icon:"📊",desc:"Comprehensive business plan with financial projections, market analysis, and investor pitch deck.",price:35000,currency:"₦",freelancer:"BizPlan NG",rating:4.8,orders:23,delivery:5,revisions:2,badge:""},
+{title:"AI Image Generation Service",cat:"AI Services",icon:"🖼️",desc:"Custom AI-generated images for your brand — product shots, social media, illustrations. Midjourney + DALL-E.",price:8000,currency:"₦",freelancer:"PixelAI",rating:4.9,orders:92,delivery:2,revisions:3,badge:"new"},
+{title:"WhatsApp Bot Setup",cat:"Programming",icon:"💬",desc:"Automated WhatsApp bot for your business — auto-replies, CRM, order processing, broadcast messages.",price:40000,currency:"₦",freelancer:"CodeNinja",rating:5,orders:38,delivery:3,revisions:2,badge:"hot"},
+{title:"Instagram Growth Strategy",cat:"Marketing",icon:"📈",desc:"Organic Instagram growth strategy — hashtag research, content calendar, engagement plan, analytics setup.",price:12000,currency:"₦",freelancer:"Mide Socials",rating:4.7,orders:45,delivery:2,revisions:1,badge:""},
+{title:"Resume & Cover Letter",cat:"Writing",icon:"📄",desc:"Professional CV/Resume and cover letter tailored to your industry. ATS-friendly format.",price:3000,currency:"₦",freelancer:"Daniel W.",rating:4.9,orders:203,delivery:1,revisions:3,badge:""}
+];
+function renderServices(filter=""){
+const grid=document.getElementById('services-grid');
+const filtered=filter?services.filter(s=>s.cat===filter):services;
+grid.innerHTML=filtered.map(s=>`<div class="service-card" onclick="orderService('${s.title}')">
+<div class="service-img">${s.icon}</div>
+<div class="service-body">
+<div class="service-cat">${s.cat}${s.badge==='hot'?'<span class="badge badge-hot">HOT</span>':s.badge==='new'?'<span class="badge badge-new">NEW</span>':s.badge==='feat'?'<span class="badge badge-feat">FEATURED</span>':''}</div>
+<div class="service-title">${s.title}</div>
+<div class="service-desc">${s.desc}</div>
+<div class="service-freelancer"><div class="avatar">${s.freelancer[0]}</div><span>${s.freelancer} • ${s.orders} orders</span></div>
+<div class="service-meta">
+<div class="service-price">${s.currency}${s.price.toLocaleString()}<small> / ${s.delivery}d delivery</small></div>
+<div class="service-rating"><span class="star">★</span>${s.rating}</div>
+</div>
+</div>
+</div>`).join('');
+document.getElementById('stat-services').textContent=services.length;
+document.getElementById('stat-freelancers').textContent=new Set(services.map(s=>s.freelancer)).size;
+}
+function filterByCat(cat){
+document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+if(cat==='')document.querySelectorAll('.cat-chip')[0].classList.add('active');
+else event.target.classList.add('active');
+renderServices(cat);
+}
+function filterServices(){
+const cat=document.getElementById('cat-search').value;
+const text=document.getElementById('search-input').value.toLowerCase();
+const grid=document.getElementById('services-grid');
+const filtered=services.filter(s=>(!cat||s.cat===cat)&&s.title.toLowerCase().includes(text));
+grid.innerHTML=filtered.map(s=>`<div class="service-card" onclick="orderService('${s.title}')"><div class="service-img">${s.icon}</div><div class="service-body"><div class="service-cat">${s.cat}</div><div class="service-title">${s.title}</div><div class="service-desc">${s.desc}</div><div class="service-meta"><div class="service-price">${s.currency}${s.price.toLocaleString()}</div><div class="service-rating"><span class="star">★</span>${s.rating}</div></div></div></div>`).join('');
+}
+function orderService(title){
+alert('Order: '+title+'\n\nPayment integration coming soon (Paystack pending verification).\nFor now, contact harzco.business@gmail.com or pay via bank transfer:\nUBA 2034326424\nRABIU HAMZA MOHD');
+}
+renderServices();
+</script>
+</body>
+</html>
