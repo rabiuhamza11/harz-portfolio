@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HarzEvents — Event Ticketing & Registration Platform</title>
+<style>
+:root{--bg:#0a0e17;--card:#131927;--accent:#ef4444;--accent2:#f59e0b;--text:#e8eef5;--muted:#8896a8;--border:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif}
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,14,23,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-size:1.4rem;font-weight:800;color:var(--accent)}
+.btn{padding:0.6rem 1.4rem;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:0.9rem}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.hero{text-align:center;padding:4rem 2rem;background:linear-gradient(135deg,#0a0e17,#1a0a0e,#0a0e17)}
+.hero h1{font-size:2.8rem;font-weight:800;margin-bottom:1rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--muted);font-size:1.1rem;max-width:600px;margin:0 auto 2rem}
+.hero-stats{display:flex;justify-content:center;gap:2rem;margin-top:2rem}
+.stat{text-align:center}
+.stat .num{font-size:1.8rem;font-weight:800;color:var(--accent)}
+.stat .label{color:var(--muted);font-size:0.8rem}
+.section{max-width:1200px;margin:0 auto;padding:2rem}
+.section-title{font-size:1.6rem;font-weight:700;margin-bottom:0.5rem}
+.section-sub{color:var(--muted);margin-bottom:2rem}
+.tabs{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+.tab{padding:0.5rem 1.2rem;border-radius:20px;font-size:0.85rem;cursor:pointer;transition:all .2s;background:var(--card);border:1px solid var(--border);color:var(--muted)}
+.tab.active,.tab:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.event-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem}
+.event-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .2s;cursor:pointer}
+.event-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.event-banner{height:140px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative}
+.event-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.7);padding:0.2rem 0.8rem;border-radius:20px;font-size:0.7rem;font-weight:600}
+.event-date{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,0.7);padding:0.3rem 0.8rem;border-radius:8px;font-size:0.8rem;font-weight:600}
+.event-body{padding:1.2rem}
+.event-type{color:var(--accent);font-size:0.75rem;font-weight:600;text-transform:uppercase}
+.event-title{font-size:1.1rem;font-weight:700;margin:0.3rem 0 0.5rem}
+.event-desc{color:var(--muted);font-size:0.85rem;line-height:1.4;margin-bottom:0.8rem}
+.event-meta{display:flex;gap:1rem;font-size:0.8rem;color:var(--muted);margin-bottom:1rem}
+.event-meta span{display:flex;align-items:center;gap:0.3rem}
+.event-footer{display:flex;justify-content:space-between;align-items:center;padding-top:0.8rem;border-top:1px solid var(--border)}
+.event-price{font-size:1.3rem;font-weight:800;color:var(--accent)}
+.event-price small{font-size:0.75rem;color:var(--muted);font-weight:400}
+.event-tickets{font-size:0.8rem;color:var(--muted)}
+.organize-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0}
+.organize-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;text-align:center}
+.org-step{padding:1rem}
+.org-icon{font-size:2.5rem;margin-bottom:0.5rem}
+.org-step h3{font-size:1rem;margin-bottom:0.3rem}
+.org-step p{color:var(--muted);font-size:0.85rem}
+.footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border)}
+@media(max-width:768px){.hero h1{font-size:2rem}.event-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="nav">
+<div class="nav-logo">Harz<span style="color:var(--text)">Events</span></div>
+<div style="display:flex;gap:1rem">
+<button class="btn btn-outline" onclick="alert('Organize an event! Contact harzco.business@gmail.com')">Organize Event</button>
+<button class="btn btn-primary" onclick="document.getElementById('events').scrollIntoView()">Browse Events</button>
+</div>
+</div>
+<div class="hero">
+<h1>Events That Move Nigeria Forward</h1>
+<p>Tech conferences, business workshops, music concerts, and more. Buy tickets or organize your own event with zero upfront cost — 5% fee per ticket sold.</p>
+<div class="hero-stats">
+<div class="stat"><div class="num">6</div><div class="label">Upcoming Events</div></div>
+<div class="stat"><div class="num">5%</div><div class="label">Platform Fee</div></div>
+<div class="stat"><div class="num">₦0</div><div class="label">Listing Fee</div></div>
+<div class="stat"><div class="num">3</div><div class="label">Cities</div></div>
+</div>
+</div>
+<div class="section" id="events">
+<div class="section-title">Upcoming Events</div>
+<div class="section-sub">Browse and book tickets for events across Nigeria</div>
+<div class="tabs">
+<div class="tab active" onclick="filterEvents('all')">All Events</div>
+<div class="tab" onclick="filterEvents('tech')">Tech</div>
+<div class="tab" onclick="filterEvents('business')">Business</div>
+<div class="tab" onclick="filterEvents('music')">Music</div>
+<div class="tab" onclick="filterEvents('workshop')">Workshop</div>
+</div>
+<div class="event-grid" id="event-grid"></div>
+</div>
+<div class="section">
+<div class="section-title" style="text-align:center">Organize Your Event</div>
+<div class="section-sub" style="text-align:center">Free to list, 5% fee per ticket sold. Zero upfront cost.</div>
+<div class="organize-box">
+<div class="organize-grid">
+<div class="org-step"><div class="org-icon">📝</div><h3>Create Event</h3><p>Set up your event page with details, ticket types, and pricing</p></div>
+<div class="org-step"><div class="org-icon">🎟️</div><h3>Sell Tickets</h3><p>Share your event link. Buyers pay via Paystack or bank transfer</p></div>
+<div class="org-step"><div class="org-icon">📊</div><h3>Track Sales</h3><p>Real-time dashboard with ticket sales, attendance, and revenue</p></div>
+<div class="org-step"><div class="org-icon">💰</div><h3>Get Paid</h3><p>Receive your earnings minus 5% fee within 48 hours</p></div>
+</div>
+<div style="text-align:center;margin-top:1.5rem">
+<button class="btn btn-primary" style="padding:1rem 2rem;font-size:1rem" onclick="alert('Create your event!\\n\\nContact harzco.business@gmail.com or call 08028687857\\nFree to list, 5% fee per ticket sold.')">Start Organizing</button>
+</div>
+</div>
+</div>
+<div class="footer">
+HarzEvents — Part of the Harz Ecosystem (24 Platforms) | harzevents.vercel.app<br>
+© 2026 Rabiu Hamza Mohammed. All rights reserved.
+</div>
+<script>
+const events=[
+{title:"AI Nigeria Summit 2026",type:"tech",icon:"🤖",desc:"Nigeria's biggest AI conference. Talks, demos, networking with AI founders and developers across Africa.",date:"Aug 15, 2026",time:"9:00 AM",city:"Lagos",venue:"Eko Convention Center",price:5000,sold:340,total:500,organizer:"Harz Ecosystem"},
+{title:"Freelance Business Masterclass",type:"business",icon:"💼",desc:"Learn how to earn $1000+ monthly as a freelancer in Nigeria. Client acquisition, pricing, and delivery.",date:"Aug 8, 2026",time:"11:00 AM",city:"Abuja",venue:"Harz Hub Abuja",price:3000,sold:87,total:100,organizer:"HarzConsult"},
+{title:"Afrobeats Live Concert",type:"music",icon:"🎵",desc:"Live performances from top Nigerian artists. Music, food, and culture under the stars.",date:"Sep 1, 2026",time:"6:00 PM",city:"Lagos",venue:"Muri Okunola Park",price:10000,sold:1200,total:2000,organizer:"HarzMusic"},
+{title:"Web3 & Crypto Workshop",type:"tech",icon:"⛓️",desc:"Hands-on workshop on blockchain, crypto trading, and Web3 development. Build your first dApp.",date:"Aug 22, 2026",time:"10:00 AM",city:"Lagos",venue:"Harz Hub Lagos",price:5000,sold:45,total:50,organizer:"TradeOS"},
+{title:"Content Creators Bootcamp",type:"workshop",icon:"📹",desc:"3-day intensive bootcamp for content creators. Video editing, monetization, audience growth.",date:"Aug 10-12, 2026",time:"9:00 AM",city:"Abuja",venue:"Harz Hub Abuja",price:15000,sold:28,total:30,organizer:"ContentPilot"},
+{title:"Jalingo Tech Meetup",type:"tech",icon:"🔥",desc:"Community tech meetup in Taraba State. Networking, knowledge sharing, and local startup showcase.",date:"Aug 5, 2026",time:"2:00 PM",city:"Jalingo",venue:"Taraba Tech Hub",price:0,sold:64,total:100,organizer:"Harz Ecosystem"}
+];
+let activeFilter='all';
+function renderEvents(){
+const filtered=activeFilter==='all'?events:events.filter(e=>e.type===activeFilter);
+document.getElementById('event-grid').innerHTML=filtered.map(e=>`<div class="event-card" onclick="buyTickets('${e.title}')">
+<div class="event-banner">
+${e.icon}
+<div class="event-badge">${e.type.toUpperCase()}</div>
+<div class="event-date">${e.date}</div>
+</div>
+<div class="event-body">
+<div class="event-type">${e.organizer}</div>
+<div class="event-title">${e.title}</div>
+<div class="event-desc">${e.desc}</div>
+<div class="event-meta">
+<span>📍 ${e.venue}, ${e.city}</span>
+<span>⏱ ${e.time}</span>
+</div>
+<div class="event-footer">
+<div class="event-price">${e.price===0?'FREE':'₦'+e.price.toLocaleString()}<small> /ticket</small></div>
+<div class="event-tickets">${e.sold}/${e.total} sold</div>
+</div>
+</div>
+</div>`).join('');
+}
+function filterEvents(type){
+activeFilter=type;
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+event.target.classList.add('active');
+renderEvents();
+}
+function buyTickets(title){
+alert('Buy Tickets: '+title+'\\n\\nPayment options:\\n1. Bank Transfer — UBA 2034326424 (RABIU HAMZA MOHD)\\n2. Paystack (pending activation)\\n\\nEmail: harzco.business@gmail.com\\nPhone: 08028687857');
+}
+renderEvents();
+</script>
+</body>
+</html>
