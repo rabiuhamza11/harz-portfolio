@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindCare AI — Personalized Mental Health Platform</title>
+<style>
+:root{--primary:#7c4dff;--accent:#00bcd4;--danger:#ff5252;--warning:#ff9800;--bg:#0d0b1a;--card:#1a1730;--text:#e8e6f0;--muted:#9e9bb0;--border:#2a2745}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,#7c4dff,#00bcd4);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(124,77,255,.3)}
+.header h1{font-size:1.4rem;color:#fff}
+.header .sub{font-size:.8rem;opacity:.85;color:#fff}
+.badge{background:rgba(255,255,255,.2);padding:4px 12px;border-radius:20px;font-size:.75rem;color:#fff}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card h3{color:var(--accent);font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.stat{font-size:1.8rem;font-weight:700}.stat-label{color:var(--muted);font-size:.8rem;margin-top:4px}
+input,select,textarea{width:100%;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;margin-bottom:10px}
+button{padding:10px 18px;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;margin-right:6px;margin-top:6px}
+.btn-p{background:var(--primary);color:#fff}.btn-a{background:var(--accent);color:#000}.btn-d{background:var(--danger);color:#fff}
+.disclaimer{background:rgba(255,82,82,.1);border:1px solid rgba(255,82,82,.3);border-radius:8px;padding:12px;margin:12px 0;font-size:.8rem;color:#ff9999}
+.result{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:10px;white-space:pre-wrap;font-size:.85rem;line-height:1.6}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.nav a{color:var(--primary);text-decoration:none;font-size:.8rem;padding:4px 8px;border-radius:6px;background:rgba(124,77,255,.1)}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.agent-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.agent-card .name{font-weight:600;font-size:.85rem;color:var(--accent)}
+.agent-card .role{font-size:.7rem;color:var(--muted);margin:4px 0}
+.crisis-box{background:rgba(255,82,82,.15);border:2px solid var(--danger);border-radius:12px;padding:16px;margin:12px 0}
+.crisis-box h4{color:var(--danger);font-size:.9rem}
+@media(max-width:640px){.header h1{font-size:1.1rem}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="header"><div><h1>🧠 MindCare AI</h1><div class="sub">Personalized Mental Health Platform v1.0.0</div></div>
+<div style="display:flex;gap:8px"><span class="badge">7 AI Agents</span><span class="badge" id="ac">7 Active</span><span class="badge">Crisis Ready</span></div></div>
+<div class="container">
+<div class="disclaimer">⚠️ MindCare AI provides educational support and wellness tools, NOT medical diagnosis or treatment. Always consult a licensed mental health professional for clinical needs. If in crisis, contact emergency services immediately.</div>
+<div class="nav"><a href="#mood">😊 Mood</a><a href="#chat">💬 AI Chat</a><a href="#journal">📔 Journal</a><a href="#assess">📋 Assessments</a><a href="#therapy">🧘 Therapy</a><a href="#meditate">🎵 Meditation</a><a href="#goals">🎯 Goals</a><a href="#crisis">🚨 Crisis</a><a href="#agents">🤖 Agents</a></div>
+<div class="grid" id="sg"></div>
+
+<div class="card" id="mood" style="margin-bottom:16px"><h3>😊 Daily Mood Tracker (8 Emotions)</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<label>Happiness <input type="range" id="h1" min="1" max="10" value="7"></label>
+<label>Anxiety <input type="range" id="h2" min="1" max="10" value="3"></label>
+<label>Stress <input type="range" id="h3" min="1" max="10" value="3"></label>
+<label>Anger <input type="range" id="h4" min="1" max="10" value="1"></label>
+<label>Energy <input type="range" id="h5" min="1" max="10" value="6"></label>
+<label>Motivation <input type="range" id="h6" min="1" max="10" value="6"></label>
+<label>Confidence <input type="range" id="h7" min="1" max="10" value="6"></label>
+<label>Focus <input type="range" id="h8" min="1" max="10" value="6"></label>
+</div>
+<input type="text" id="hn" placeholder="Notes (optional)">
+<button class="btn-a" onclick="logMood()">Log Mood</button>
+<div id="mr"></div></div>
+
+<div class="card" id="chat" style="margin-bottom:16px"><h3>💬 AI Mental Health Companion</h3>
+<input type="text" id="cm" placeholder="How are you feeling? Share what's on your mind...">
+<button class="btn-p" onclick="chat()">Send</button>
+<div id="cr"></div></div>
+
+<div class="card" id="journal" style="margin-bottom:16px"><h3>📔 AI Journal</h3>
+<input type="text" id="jt" placeholder="Title">
+<textarea id="jc" placeholder="Write your thoughts..." rows="4"></textarea>
+<button class="btn-a" onclick="createJournal()">Save & Analyze</button>
+<div id="jr"></div></div>
+
+<div class="card" id="assess" style="margin-bottom:16px"><h3>📋 Evidence-Based Assessments</h3>
+<select id="at"><option value="PHQ-9">PHQ-9 (Depression)</option><option value="GAD-7">GAD-7 (Anxiety)</option><option value="WHO-5">WHO-5 (Well-being)</option><option value="PSS">PSS-10 (Stress)</option></select>
+<button class="btn-p" onclick="getAssessment()">Start Assessment</button>
+<div id="ar"></div></div>
+
+<div class="card" id="therapy" style="margin-bottom:16px"><h3>🧘 Therapy Exercises (CBT/DBT/ACT)</h3>
+<select id="tt"><option value="CBT">CBT</option><option value="DBT">DBT</option><option value="ACT">ACT</option><option value="mindfulness">Mindfulness</option><option value="self_compassion">Self-Compassion</option></select>
+<button class="btn-a" onclick="getExercises()">Get Exercises</button>
+<div id="tr"></div></div>
+
+<div class="card" id="meditate" style="margin-bottom:16px"><h3>🎵 Meditation Center</h3>
+<button class="btn-p" onclick="getMeditations()">Browse Library</button>
+<div id="mdr"></div></div>
+
+<div class="card" id="goals" style="margin-bottom:16px"><h3>🎯 Wellness Goals</h3>
+<input type="text" id="gn" placeholder="Goal name (e.g., Daily Meditation)">
+<select id="gt" style="width:auto"><option value="meditation">Meditation</option><option value="mood">Mood</option><option value="sleep">Sleep</option><option value="exercise">Exercise</option><option value="journaling">Journaling</option></select>
+<button class="btn-a" onclick="createGoal()">Create Goal</button>
+<button class="btn-p" onclick="getGoals()">View Goals</button>
+<div id="gr"></div></div>
+
+<div class="crisis-box" id="crisis"><h4>🚨 Crisis Resources</h4>
+<button class="btn-d" onclick="getCrisis()">Get Crisis Resources</button>
+<div id="crr"></div></div>
+
+<div class="card" id="agents" style="margin-bottom:16px"><h3>🤖 AI Mental Health Council</h3>
+<button class="btn-p" onclick="getAgents()">View All Agents</button>
+<div class="agent-grid" id="ag"></div></div>
+
+<div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:20px">
+MindCare AI v1.0.0 • Built by Rabiu Hamza Mohammed • Not a substitute for professional mental health care</div>
+</div>
+<script>
+const A='https://superagent-2286fb2f.base44.app/functions/mindCareAI';
+async function api(b){const r=await fetch(A,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});return await r.json()}
+async function init(){const d=await api({action:'stats'});if(d.stats){document.getElementById('sg').innerHTML=`<div class="card"><h3>AI Agents</h3><div class="stat">${d.stats.ai_agents}</div><div class="stat-label">7 council members</div></div><div class="card"><h3>Active</h3><div class="stat">${d.stats.active_agents}</div><div class="stat-label">Online now</div></div><div class="card"><h3>Success Rate</h3><div class="stat">${d.stats.avg_agent_success}%</div><div class="stat-label">Avg across agents</div></div><div class="card"><h3>Assessments</h3><div class="stat">${d.stats.assessments_taken}</div><div class="stat-label">Screenings taken</div></div>`}}
+async function logMood(){const d=await api({action:'log_mood',happiness:+document.getElementById('h1').value,anxiety:+document.getElementById('h2').value,stress:+document.getElementById('h3').value,anger:+document.getElementById('h4').value,energy:+document.getElementById('h5').value,motivation:+document.getElementById('h6').value,confidence:+document.getElementById('h7').value,focus:+document.getElementById('h8').value,notes:document.getElementById('hn').value});if(d.success){let h=`<div class="result">✅ Mood logged! Wellness Score: ${d.wellness_score}/100\nMood: ${d.mood.mood_label}`;if(d.crisis_alert)h+=`\n\n🚨 CRISIS ALERT: Support resources have been provided.`;document.getElementById('mr').innerHTML=h+'</div>'}}
+async function chat(){const m=document.getElementById('cm').value;if(!m)return;const d=await api({action:'chat',message:m});if(d.response){let h=`<div class="result">🤖 ${d.response}\n\nEmotion: ${d.detected_emotion}\n⚠️ ${d.disclaimer}`;if(d.crisis)h+=`\n\n🚨 CRISIS RESOURCES:\n${d.crisis_resources.join('\n')}`;document.getElementById('cr').innerHTML=h+'</div>'}}
+async function createJournal(){const c=document.getElementById('jc').value;if(!c)return;const d=await api({action:'create_journal',title:document.getElementById('jt').value,content:c});if(d.journal){let h=`<div class="result">✅ Journal saved!\n\nAI Summary: ${d.journal.ai_summary}\nEmotion: ${d.journal.dominant_emotion}\nSentiment: ${d.journal.sentiment_score}\nInsights: ${d.journal.growth_insights}`;if(d.crisis_alert)h+=`\n\n🚨 Crisis support provided.`;document.getElementById('jr').innerHTML=h+'</div>'}}
+async function getAssessment(){const t=document.getElementById('at').value;const d=await api({action:'get_assessment',assessment_type:t});if(d.assessment){let h=`<div class="result"><b>${d.assessment.name}</b>\n${d.assessment.description}\n\n`;d.assessment.questions.forEach((q,i)=>{h+=`${i+1}. ${q}\n  [0] Not at all  [1] Several days  [2] More than half  [3] Nearly every day\n`});h+=`\n<button class="btn-p" onclick="submitAssessment('${t}')">Submit Answers</button>\n<input id="answers-${t}" placeholder="Enter answers as numbers: 0,1,2,3,0,1,2,3...">`;document.getElementById('ar').innerHTML=h+'</div>'}}
+async function submitAssessment(t){const ans=document.getElementById('answers-'+t).value.split(',').map(Number);const d=await api({action:'submit_assessment',assessment_type:t,answers:ans});if(d.result){document.getElementById('ar').innerHTML=`<div class="result"><b>Result: ${d.result.score}/${d.result.max_score}</b>\nSeverity: ${d.result.severity}\nInterpretation: ${d.result.interpretation}\nRecommendation: ${d.result.recommendations}\n\n⚠️ ${d.result.disclaimer}</div>`}}
+async function getExercises(){const d=await api({action:'get_therapy_exercises',therapy_type:document.getElementById('tt').value});if(d.exercises){let h='<div class="result">';d.exercises.forEach(e=>{h+=`<b>${e.name}</b> (${e.therapy_type})\n${e.description}\nSteps: ${e.steps}\nDuration: ${e.duration_minutes} min\n\n`});document.getElementById('tr').innerHTML=h+'</div>'}}
+async function getMeditations(){const d=await api({action:'get_meditations'});if(d.meditations){let h='<div class="result">';d.meditations.forEach(m=>{h+=`🎵 ${m.session_name} (${m.session_type})\n${m.description}\nDuration: ${m.duration_minutes} min | ${m.difficulty}\n\n`});document.getElementById('mdr').innerHTML=h+'</div>'}}
+async function createGoal(){const d=await api({action:'create_goal',goal_name:document.getElementById('gn').value,goal_type:document.getElementById('gt').value});if(d.goal)document.getElementById('gr').innerHTML=`<div class="result">✅ Goal created: ${d.goal.goal_name}</div>`}
+async function getGoals(){const d=await api({action:'get_goals'});if(d.goals){let h='<div class="result">';if(!d.goals.length)h+='No active goals';d.goals.forEach(g=>{h+=`🎯 ${g.goal_name} (${g.goal_type})\nStreak: ${g.streak_days} days | Level: ${g.achievement_level}\n\n`});document.getElementById('gr').innerHTML=h+'</div>'}}
+async function getCrisis(){const d=await api({action:'crisis_resources'});if(d.resources){let h='<div class="result"><b>Nigeria:</b>\n';d.resources.nigeria.forEach(r=>h+='• '+r+'\n');h+='\n<b>International:</b>\n';d.resources.international.forEach(r=>h+='• '+r+'\n');h+='\n'+d.resources.message;document.getElementById('crr').innerHTML=h+'</div>'}}
+async function getAgents(){const d=await api({action:'agents'});if(d.agents){let h='';d.agents.forEach(a=>{h+=`<div class="agent-card"><div class="name">${a.agent_name}</div><div class="role">${a.role}</div><div class="role">${a.specialization.substring(0,40)}</div><div class="role">Success: ${a.success_rate}%</div></div>`});document.getElementById('ag').innerHTML=h}}
+init();
+</script>
+</body>
+</html>
