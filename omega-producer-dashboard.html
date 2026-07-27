@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Producer AI — Production Command Center</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e17;--card:#131826;--accent:#6c5ce7;--accent2:#00cec9;--green:#00b894;--yellow:#fdcb6e;--red:#e74c3c;--text:#ecf0f1;--muted:#636e72;--border:#2d3436}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;padding:16px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.header h1{font-size:1.5rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header .stats{display:flex;gap:16px;flex-wrap:wrap}
+.stat{background:var(--card);padding:8px 16px;border-radius:10px;text-align:center;min-width:90px}
+.stat .num{font-size:1.5rem;font-weight:bold}
+.stat .label{font-size:0.7rem;color:var(--muted);text-transform:uppercase}
+.stat.active .num{color:var(--accent2)}
+.stat.done .num{color:var(--green)}
+.stat.fail .num{color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;transition:transform 0.2s,border-color 0.2s}
+.card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.card .top{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+.card .pname{font-size:1.05rem;font-weight:600}
+.card .ptype{font-size:0.7rem;background:var(--accent);color:#fff;padding:2px 8px;border-radius:6px;text-transform:uppercase}
+.card .goal{font-size:0.85rem;color:var(--muted);margin-bottom:10px;line-height:1.4}
+.badge{display:inline-block;padding:2px 10px;border-radius:6px;font-size:0.75rem;font-weight:600}
+.badge.intake{background:#636e72;color:#fff}
+.badge.researching{background:#fdcb6e;color:#000}
+.badge.planning{background:#6c5ce7;color:#fff}
+.badge.building{background:#0984e3;color:#fff}
+.badge.testing{background:#fd79a8;color:#fff}
+.badge.deploying{background:#00cec9;color:#000}
+.badge.monitoring{background:#00b894;color:#fff}
+.badge.completed{background:#00b894;color:#fff}
+.badge.failed{background:#e74c3c;color:#fff}
+.badge.paused{background:#636e72;color:#fff}
+.progress-bar{height:6px;background:var(--border);border-radius:4px;overflow:hidden;margin:8px 0}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.4s}
+.card .meta{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--muted);margin-top:8px}
+.card .agents{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.agent-chip{font-size:0.7rem;background:rgba(108,92,231,0.2);color:var(--accent);padding:2px 8px;border-radius:6px}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty .icon{font-size:3rem;margin-bottom:12px}
+.pipelines-section{margin-bottom:20px}
+.section-title{font-size:1.1rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';width:4px;height:20px;background:var(--accent);border-radius:2px}
+.pipeline-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px;overflow-x:auto;padding:8px 0}
+.flow-step{background:var(--card);border:1px solid var(--border);padding:6px 14px;border-radius:8px;font-size:0.8rem;white-space:nowrap;cursor:pointer;transition:all 0.2s}
+.flow-step.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.flow-step.done{background:var(--green);color:#fff;border-color:var(--green)}
+.flow-arrow{color:var(--muted);font-size:0.8rem}
+.create-btn{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(108,92,231,0.4);transition:transform 0.2s;z-index:100}
+.create-btn:hover{transform:scale(1.1)}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:200;justify-content:center;align-items:center;padding:16px}
+.modal.show{display:flex}
+.modal-card{background:var(--card);border-radius:16px;padding:24px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-card h2{margin-bottom:16px;font-size:1.2rem}
+.modal-card label{display:block;font-size:0.85rem;margin-bottom:4px;color:var(--muted)}
+.modal-card input,.modal-card select,.modal-card textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);margin-bottom:12px;font-size:0.9rem}
+.modal-card textarea{resize:vertical;min-height:80px}
+.modal-card button{padding:10px 24px;border-radius:8px;border:none;cursor:pointer;font-size:0.9rem;font-weight:600}
+.modal-card .submit-btn{background:var(--accent);color:#fff;width:100%}
+.modal-card .cancel-btn{background:transparent;color:var(--muted);margin-top:8px;width:100%}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-size:0.85rem;z-index:300;opacity:0;transition:opacity 0.3s}
+.toast.show{opacity:1}
+@media(max-width:600px){.header h1{font-size:1.2rem}.stat{min-width:70px;padding:6px 10px}.stat .num{font-size:1.1rem}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>🎬 OMEGA Producer AI</h1>
+<div class="stats">
+<div class="stat active"><div class="num" id="statActive">0</div><div class="label">Active</div></div>
+<div class="stat done"><div class="num" id="statDone">0</div><div class="label">Completed</div></div>
+<div class="stat fail"><div class="num" id="statFail">0</div><div class="label">Failed</div></div>
+<div class="stat"><div class="num" id="statTotal">0</div><div class="label">Total</div></div>
+</div>
+</div>
+
+<div class="pipeline-flow" id="pipelineFlow">
+<span class="flow-step" data-step="intake">1. Intake</span><span class="flow-arrow">→</span>
+<span class="flow-step" data-step="researching">2. Research</span><span class="flow-arrow">→</span>
+<span class="flow-step" data-step="planning">3. Plan</span><span class="flow-arrow">→</span>
+<span class="flow-step" data-step="building">4. Build</span><span class="flow-arrow">→</span>
+<span class="flow-step" data-step="testing">5. Test</span><span class="flow-arrow">→</span>
+<span class="flow-step" data-step="deploying">6. Deploy</span><span class="flow-arrow">→</span>
+<span class="flow-step" data-step="monitoring">7. Monitor</span><span class="flow-arrow">→</span>
+<span class="flow-step" data-step="completed">8. Complete</span>
+</div>
+
+<div class="grid" id="pipelineGrid">
+<div class="empty">
+<div class="icon">🎬</div>
+<div>No production pipelines yet</div>
+<div style="font-size:0.85rem;margin-top:8px">Tap + to create a new production goal</div>
+</div>
+</div>
+
+<button class="create-btn" onclick="document.getElementById('createModal').classList.add('show')">+</button>
+
+<div class="modal" id="createModal">
+<div class="modal-card">
+<h2>🎬 New Production Goal</h2>
+<label>Goal — what do you want to build?</label>
+<textarea id="goalInput" placeholder="e.g. Build a crypto portfolio tracker app"></textarea>
+<label>Project Name</label>
+<input id="nameInput" placeholder="e.g. CryptoTracker Pro">
+<label>Project Type</label>
+<select id="typeInput">
+<option value="software">Software Application</option>
+<option value="website">Website</option>
+<option value="saas">SaaS Platform</option>
+<option value="mobile_app">Mobile App (PWA)</option>
+<option value="ai_agent">AI Agent</option>
+<option value="api">API / Backend</option>
+<option value="database">Database System</option>
+<option value="video">Video / YouTube</option>
+<option value="music">Music / Audio</option>
+<option value="book">Book / eBook</option>
+<option value="course">Course</option>
+<option value="marketing">Marketing Campaign</option>
+<option value="digital_product">Digital Product</option>
+<option value="business_plan">Business Plan</option>
+<option value="construction">Construction Doc</option>
+<option value="branding">Logo & Branding</option>
+<option value="automation">Automation Workflow</option>
+<option value="other">Other</option>
+</select>
+<label>Priority</label>
+<select id="priorityInput">
+<option value="medium">Medium</option>
+<option value="low">Low</option>
+<option value="high">High</option>
+<option value="critical">Critical</option>
+</select>
+<button class="submit-btn" onclick="createPipeline()">🚀 Start Production</button>
+<button class="cancel-btn" onclick="document.getElementById('createModal').classList.remove('show')">Cancel</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== Sample data (will be replaced by API calls) =====
+let pipelines = [];
+
+// ===== Render =====
+function renderPipelines(){
+const grid = document.getElementById('pipelineGrid');
+if(pipelines.length === 0){
+grid.innerHTML = '<div class="empty"><div class="icon">🎬</div><div>No production pipelines yet</div><div style="font-size:0.85rem;margin-top:8px">Tap + to create a new production goal</div></div>';
+return;
+}
+grid.innerHTML = pipelines.map(p => {
+const pct = p.tasks_total > 0 ? Math.round((p.tasks_completed / p.tasks_total) * 100) : 0;
+const agents = p.assigned_agents ? JSON.parse(p.assigned_agents || '[]') : [];
+const steps = ['intake','researching','planning','building','testing','deploying','monitoring','completed'];
+const currentIdx = steps.indexOf(p.status);
+return `
+<div class="card">
+<div class="top">
+<div>
+<div class="pname">${p.project_name || 'Untitled'}</div>
+<span class="badge ${p.status}">${p.status}</span>
+</div>
+<span class="ptype">${p.project_type || 'other'}</span>
+</div>
+<div class="goal">${(p.goal || '').substring(0,120)}${(p.goal||'').length > 120 ? '...' : ''}</div>
+<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+<div class="meta">
+<span>${p.tasks_completed}/${p.tasks_total} tasks</span>
+<span>${pct}%</span>
+<span>${p.quality_score ? p.quality_score + '/100' : 'QA: pending'}</span>
+</div>
+${agents.length ? `<div class="agents">${agents.map(a => `<span class="agent-chip">${a}</span>`).join('')}</div>` : ''}
+${p.deploy_url ? `<div class="meta"><a href="${p.deploy_url}" target="_blank" style="color:var(--accent2)">🔗 ${p.deploy_url.substring(0,40)}...</a></div>` : ''}
+</div>`;
+}).join('');
+updateStats();
+}
+
+function updateStats(){
+const active = pipelines.filter(p => !['completed','failed'].includes(p.status)).length;
+const done = pipelines.filter(p => p.status === 'completed').length;
+const fail = pipelines.filter(p => p.status === 'failed').length;
+document.getElementById('statActive').textContent = active;
+document.getElementById('statDone').textContent = done;
+document.getElementById('statFail').textContent = fail;
+document.getElementById('statTotal').textContent = pipelines.length;
+}
+
+function showToast(msg){
+const t = document.getElementById('toast');
+t.textContent = msg;
+t.classList.add('show');
+setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== Create new pipeline =====
+function createPipeline(){
+const goal = document.getElementById('goalInput').value.trim();
+const name = document.getElementById('nameInput').value.trim();
+const type = document.getElementById('typeInput').value;
+const priority = document.getElementById('priorityInput').value;
+
+if(!goal){ showToast('⚠️ Please enter a goal'); return; }
+
+const newPipeline = {
+goal: goal,
+project_name: name || goal.substring(0, 40),
+project_type: type,
+status: 'intake',
+priority: priority,
+tasks_total: 0,
+tasks_completed: 0,
+current_step: 'intake',
+started_at: new Date().toISOString(),
+created_by: 'Magani',
+assigned_agents: JSON.stringify(['Magani'])
+};
+
+// Store locally for now (API integration next)
+pipelines.unshift(newPipeline);
+renderPipelines();
+showToast('✅ Pipeline created! Magani will start production.');
+
+// Reset form
+document.getElementById('goalInput').value = '';
+document.getElementById('nameInput').value = '';
+document.getElementById('createModal').classList.remove('show');
+
+// Trigger the pipeline flow
+console.log('OMEGA Producer: New pipeline created:', newPipeline);
+}
+
+// ===== Pipeline flow highlight =====
+document.querySelectorAll('.flow-step').forEach(step => {
+step.addEventListener('click', () => {
+document.querySelectorAll('.flow-step').forEach(s => s.classList.remove('active'));
+step.classList.add('active');
+});
+});
+
+// ===== Init =====
+renderPipelines();
+console.log('OMEGA Producer AI Dashboard initialized');
+console.log('17-step autonomous workflow ready');
+</script>
+
+</body>
+</html>
