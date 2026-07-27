@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Danfodio Memorial — Admission Form</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--gold:#F59E0B;--navy:#1e3a5f;--green:#00e676;--blue:#3b82f6;--red:#EF4444}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,var(--navy),#0a1628);padding:20px 16px;text-align:center;border-bottom:2px solid var(--gold)}
+.header h1{font-size:1.2rem;color:var(--cream);font-weight:800}
+.header p{font-size:.75rem;color:var(--gold);margin-top:4px}
+.container{max-width:500px;margin:0 auto;padding:16px}
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.section-title{font-size:.85rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:3px;margin-top:8px}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:.85rem;outline:none;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--gold),#d97706);color:#000;border:none;border-radius:10px;padding:14px;font-size:.95rem;font-weight:800;cursor:pointer;margin-top:8px}
+.submit-btn:active{opacity:.8}
+.back-btn{width:100%;background:var(--border);color:var(--text);border:none;border-radius:10px;padding:12px;font-size:.85rem;font-weight:600;cursor:pointer;margin-top:8px}
+.progress{height:4px;background:var(--border);border-radius:2px;margin:12px 0;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:2px;transition:width .3s}
+.steps{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-bottom:8px}
+.step.active{color:var(--gold);font-weight:700}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:10px 24px;border-radius:20px;font-size:.85rem;font-weight:600;z-index:300;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+.success-screen{text-align:center;padding:30px 16px}
+.success-icon{font-size:3rem;margin-bottom:12px}
+.doc-list{font-size:.75rem;color:var(--muted);line-height:1.8;padding:8px 0}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🏛️ Danfodio Memorial Academy</h1>
+<p>Admission Application Form · 2026/2027 Session</p>
+</div>
+
+<div class="container" id="formContainer">
+<div class="steps">
+<span class="step active" id="step1">1. Student</span>
+<span class="step" id="step2">2. Parent</span>
+<span class="step" id="step3">3. Review</span>
+</div>
+<div class="progress"><div class="progress-bar" id="progressBar" style="width:33%"></div></div>
+
+<div class="section-card" id="page1">
+<div class="section-title">👨‍🎓 Student Information</div>
+<label>Student Full Name</label>
+<input type="text" id="sName" placeholder="e.g. Nuruddeen Hamza">
+<div class="row">
+<div><label>Date of Birth</label><input type="date" id="sDob"></div>
+<div><label>Gender</label><select id="sGender"><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></div>
+</div>
+<div class="row">
+<div><label>Nationality</label><input type="text" id="sNation" value="Nigerian"></div>
+<div><label>State of Origin</label><select id="sState"><option value="">Select State</option><option>FCT</option><option>Kaduna</option><option>Kano</option><option>Sokoto</option><option>Zamfara</option><option>Kebbi</option><option>Niger</option><option>Kwara</option><option>Others</option></select></div>
+</div>
+<label>Applying for Class</label>
+<select id="sClass">
+<option value="">Select Class</option>
+<option value="nursery">Nursery (Ages 3-5)</option>
+<option value="primary1">Primary 1</option>
+<option value="primary2">Primary 2</option>
+<option value="primary3">Primary 3</option>
+<option value="primary4">Primary 4</option>
+<option value="primary5">Primary 5</option>
+<option value="primary6">Primary 6</option>
+<option value="jss1">JSS 1</option>
+<option value="jss2">JSS 2</option>
+<option value="jss3">JSS 3</option>
+<option value="sss1">SSS 1</option>
+<option value="sss2">SSS 2</option>
+<option value="sss3">SSS 3</option>
+</select>
+<label>Previous School (if any)</label>
+<input type="text" id="sPrevSchool" placeholder="Name of previous school">
+<label>Health Condition / Allergies</label>
+<textarea id="sHealth" rows="2" placeholder="Any health concerns? (write None if none)"></textarea>
+<button class="submit-btn" onclick="nextPage(1)">Next →</button>
+</div>
+
+<div class="section-card" id="page2" style="display:none">
+<div class="section-title">👨‍👩‍👦 Parent / Guardian Information</div>
+<label>Parent / Guardian Name</label>
+<input type="text" id="pName" placeholder="Full name">
+<div class="row">
+<div><label>Phone Number</label><input type="tel" id="pPhone" placeholder="+234 800 000 0000"></div>
+<div><label>Email</label><input type="email" id="pEmail" placeholder="parent@email.com"></div>
+</div>
+<label>Home Address</label>
+<textarea id="pAddress" rows="2" placeholder="Residential address"></textarea>
+<div class="row">
+<div><label>Occupation</label><input type="text" id="pOccupation" placeholder="e.g. Architect"></div>
+<div><label>Relationship to Student</label><select id="pRel"><option value="">Select</option><option>Father</option><option>Mother</option><option>Guardian</option></select></div>
+</div>
+<label>Emergency Contact (if different)</label>
+<input type="text" id="pEmergency" placeholder="Name & phone">
+<label>How did you hear about us?</label>
+<select id="pSource"><option value="">Select</option><option>Friend/Family</option><option>Social Media</option><option>Radio</option><option>Billboard</option><option>Website</option><option>Event</option></select>
+<button class="submit-btn" onclick="nextPage(2)">Next →</button>
+<button class="back-btn" onclick="prevPage(2)">← Back</button>
+</div>
+
+<div class="section-card" id="page3" style="display:none">
+<div class="section-title">📋 Review & Submit</div>
+<div id="reviewContent" style="font-size:.8rem;line-height:1.8;color:var(--text)"></div>
+<div class="section-title" style="margin-top:14px">📎 Required Documents</div>
+<div class="doc-list">
+1. Birth certificate (photocopy)
+2. Last school report card (if applicable)
+3. 2 passport photographs
+4. Immunization record (for nursery)
+</div>
+<div class="doc-list" style="color:var(--gold)">📝 Bring documents to the school office after online submission. Admission fee: ₦5,000 (non-refundable).</div>
+<button class="submit-btn" onclick="submitForm()">Submit Application</button>
+<button class="back-btn" onclick="prevPage(3)">← Back</button>
+</div>
+</div>
+
+<div class="container" id="successScreen" style="display:none">
+<div class="section-card">
+<div class="success-screen">
+<div class="success-icon">🎉</div>
+<h2 style="color:var(--green);font-size:1.1rem">Application Submitted!</h2>
+<p style="font-size:.85rem;margin:12px 0;color:var(--muted)">Your application reference:</p>
+<div style="font-family:monospace;font-size:1.2rem;font-weight:800;color:var(--gold);padding:10px;background:var(--bg);border-radius:8px" id="refNo">DMA-XXXXXX</div>
+<p style="font-size:.8rem;margin:12px 0;color:var(--muted)">We'll contact you within 48 hours to schedule an entrance assessment.</p>
+<button class="submit-btn" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/danfodio-fees-payment.html','_blank')">Pay Admission Fee ₦5,000</button>
+<button class="back-btn" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/danfodio-memorial.html','_blank')">← Back to School</button>
+</div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+function nextPage(from){
+if(from===1){
+var name=document.getElementById('sName').value.trim();
+var cls=document.getElementById('sClass').value;
+if(!name||!cls){showToast('Fill required fields');return}
+document.getElementById('page1').style.display='none';
+document.getElementById('page2').style.display='block';
+document.getElementById('progressBar').style.width='66%';
+document.getElementById('step1').classList.remove('active');
+document.getElementById('step2').classList.add('active');
+}else if(from===2){
+var pname=document.getElementById('pName').value.trim();
+var phone=document.getElementById('pPhone').value.trim();
+if(!pname||!phone){showToast('Fill required fields');return}
+document.getElementById('page2').style.display='none';
+document.getElementById('page3').style.display='block';
+document.getElementById('progressBar').style.width='100%';
+document.getElementById('step2').classList.remove('active');
+document.getElementById('step3').classList.add('active');
+buildReview();
+}
+}
+
+function prevPage(from){
+if(from===2){
+document.getElementById('page2').style.display='none';
+document.getElementById('page1').style.display='block';
+document.getElementById('progressBar').style.width='33%';
+document.getElementById('step2').classList.remove('active');
+document.getElementById('step1').classList.add('active');
+}else if(from===3){
+document.getElementById('page3').style.display='none';
+document.getElementById('page2').style.display='block';
+document.getElementById('progressBar').style.width='66%';
+document.getElementById('step3').classList.remove('active');
+document.getElementById('step2').classList.add('active');
+}
+}
+
+function buildReview(){
+var html='<div style="border-bottom:1px solid var(--border);padding:6px 0"><strong>Student:</strong> '+document.getElementById('sName').value+'</div>';
+html+='<div style="border-bottom:1px solid var(--border);padding:6px 0"><strong>DOB:</strong> '+document.getElementById('sDob').value+'</div>';
+html+='<div style="border-bottom:1px solid var(--border);padding:6px 0"><strong>Class:</strong> '+document.getElementById('sClass').value.toUpperCase()+'</div>';
+html+='<div style="border-bottom:1px solid var(--border);padding:6px 0"><strong>Parent:</strong> '+document.getElementById('pName').value+'</div>';
+html+='<div style="border-bottom:1px solid var(--border);padding:6px 0"><strong>Phone:</strong> '+document.getElementById('pPhone').value+'</div>';
+html+='<div style="border-bottom:1px solid var(--border);padding:6px 0"><strong>Email:</strong> '+document.getElementById('pEmail').value+'</div>';
+html+='<div style="padding:6px 0"><strong>Address:</strong> '+document.getElementById('pAddress').value+'</div>';
+document.getElementById('reviewContent').innerHTML=html;
+}
+
+function submitForm(){
+var ref='DMA-'+Date.now().toString().slice(-6);
+document.getElementById('refNo').textContent=ref;
+document.getElementById('formContainer').style.display='none';
+document.getElementById('successScreen').style.display='block';
+showToast('Application submitted!');
+}
+
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+</script>
+</body>
+</html>
