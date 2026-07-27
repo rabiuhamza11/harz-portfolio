@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BuildBot AI — Construction Planning & Cost Estimation</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--gold:#F59E0B;--red:#EF4444;--green:#10b981;--blue:#3b82f6;--purple:#7c4dff}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.1));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
+.logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.tagline{color:var(--muted);font-size:.8rem}
+.container{max-width:500px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.card-title{font-size:.9rem;font-weight:700;color:var(--gold);margin-bottom:12px}
+label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px;margin-top:10px}
+select,input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:.85rem;outline:none}
+select:focus,input:focus{border-color:var(--gold)}
+.btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--red));border:none;border-radius:10px;padding:12px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:16px}
+.btn:active{transform:scale(.98)}
+.result{display:none;margin-top:12px}
+.result.show{display:block}
+.cost-big{font-size:1.6rem;font-weight:800;color:var(--green);text-align:center;margin:12px 0}
+.cost-usd{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:12px}
+.breakdown{margin-top:8px}
+.breakdown-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.breakdown-row:last-child{border:none}
+.materials{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.material-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.material-val{font-size:1.1rem;font-weight:700;color:var(--blue)}
+.material-label{font-size:.7rem;color:var(--muted)}
+.timeline{text-align:center;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px}
+.timeline-val{font-size:1.2rem;font-weight:700;color:var(--purple)}
+.chat-box{margin-top:8px}
+.chat-msg{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:.8rem;margin-bottom:8px}
+.chat-input{display:flex;gap:8px}
+.chat-input input{flex:1}
+.chat-input button{background:var(--gold);border:none;border-radius:8px;padding:0 16px;color:#000;font-weight:600;cursor:pointer}
+.disclaimer{text-align:center;font-size:.65rem;color:var(--muted);margin-top:12px}
+.quick-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--gold);cursor:pointer}
+.chip:active{border-color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo">🏗️ BuildBot AI</div>
+<div class="tagline">Construction Planning & Cost Estimation for Nigeria</div>
+</div>
+<div class="container">
+<div class="card">
+<div class="card-title">📋 Project Cost Estimator</div>
+<label>Project Type</label>
+<select id="ptype">
+<option value="house">House / Residential</option>
+<option value="office">Office Building</option>
+<option value="shop">Shop / Commercial</option>
+<option value="school">School</option>
+<option value="hospital">Hospital</option>
+<option value="road">Road</option>
+</select>
+<label>Location</label>
+<select id="loc">
+<option value="Abuja">Abuja</option>
+<option value="Lagos">Lagos</option>
+<option value="Kano">Kano</option>
+<option value="Port Harcourt">Port Harcourt</option>
+<option value="Kaduna">Kaduna</option>
+</select>
+<label>Size (sqm)</label>
+<input type="number" id="size" value="150" min="10" max="10000">
+<button class="btn" onclick="estimate()">Calculate Cost Estimate</button>
+</div>
+<div class="card result" id="result">
+<div class="card-title">💰 Cost Breakdown</div>
+<div class="cost-big" id="costNgn">₦0</div>
+<div class="cost-usd" id="costUsd">$0 USD</div>
+<div class="card-title" style="margin-top:12px">Material Quantities</div>
+<div class="materials" id="materials"></div>
+<div class="card-title" style="margin-top:12px">Cost Breakdown</div>
+<div class="breakdown" id="breakdown"></div>
+<div class="timeline">
+<div style="font-size:.7rem;color:var(--muted)">Estimated Timeline</div>
+<div class="timeline-val" id="timeline">0 weeks</div>
+</div>
+<div class="disclaimer">Estimate only. Actual costs vary by design, materials & market conditions.</div>
+</div>
+<div class="card">
+<div class="card-title">🤖 Ask BuildBot AI</div>
+<div id="chatList">
+<div class="chat-msg">Hello! I'm BuildBot AI. Ask me about construction costs, materials, or timelines in Nigeria.</div>
+</div>
+<div class="quick-row">
+<span class="chip" onclick="quickAsk('How much to build a house in Abuja?')">House in Abuja?</span>
+<span class="chip" onclick="quickAsk('What materials do I need?')">Materials?</span>
+<span class="chip" onclick="quickAsk('How long does construction take?')">Timeline?</span>
+</div>
+<div class="chat-input" style="margin-top:8px">
+<input id="chatInput" placeholder="Ask about construction..." onkeydown="if(event.key==='Enter')askBot()">
+<button onclick="askBot()">➤</button>
+</div>
+</div>
+</div>
+<script>
+const baseCosts={house:85000,office:120000,shop:65000,school:95000,hospital:180000,road:35000};
+const locMult={Abuja:1.2,Lagos:1.3,Kano:0.9,'Port Harcourt':1.15,Kaduna:0.85};
+const labels={foundation:'Foundation',structure:'Structure',finishing:'Finishing',electrical:'Electrical',plumbing:'Plumbing'};
+function estimate(){
+const pt=document.getElementById('ptype').value;
+const loc=document.getElementById('loc').value;
+const sz=parseInt(document.getElementById('size').value)||150;
+const base=baseCosts[pt]||85000;
+const mult=locMult[loc]||1;
+const total=Math.round(base*sz*mult);
+document.getElementById('costNgn').textContent='\u20a6'+total.toLocaleString();
+document.getElementById('costUsd').textContent='$'+Math.round(total/1500).toLocaleString()+' USD';
+const mats={'Cement (bags)':Math.round(sz*0.8),'Blocks':Math.round(sz*10),'Rods (tons)':Math.round(sz*0.15),'Sand (tons)':Math.round(sz*0.5)};
+document.getElementById('materials').innerHTML=Object.entries(mats).map(function(e){return '<div class="material-item"><div class="material-val">'+e[1].toLocaleString()+'</div><div class="material-label">'+e[0]+'</div></div>'}).join('');
+const bd={foundation:0.25,structure:0.35,finishing:0.25,electrical:0.10,plumbing:0.05};
+document.getElementById('breakdown').innerHTML=Object.entries(bd).map(function(e){return '<div class="breakdown-row"><span>'+labels[e[0]]+'</span><span style="color:var(--gold)">\u20a6'+Math.round(total*e[1]).toLocaleString()+'</span></div>'}).join('');
+document.getElementById('timeline').textContent=Math.ceil(sz/50)+' weeks';
+document.getElementById('result').classList.add('show');
+}
+function quickAsk(msg){document.getElementById('chatInput').value=msg;askBot();}
+function askBot(){
+const msg=document.getElementById('chatInput').value.trim();
+if(!msg)return;
+addMsg(msg,'user');
+const l=msg.toLowerCase();
+var r='';
+if(l.indexOf('cost')>=0||l.indexOf('price')>=0||l.indexOf('how much')>=0){
+if(l.indexOf('house')>=0&&l.indexOf('abuja')>=0)r='A 150sqm house in Abuja costs ~\u20a6'+(85000*150*1.2).toLocaleString()+' (~$'+Math.round(85000*150*1.2/1500).toLocaleString()+'). Use the calculator above for your exact size.';
+else if(l.indexOf('house')>=0)r='House construction in Nigeria costs \u20a685,000-110,000 per sqm depending on location. Use the calculator above for a precise estimate.';
+else r='Use the calculator above to get an accurate cost estimate. Select your project type, location, and size.';
+}
+else if(l.indexOf('material')>=0)r='For a 150sqm house: ~120 cement bags, 1,500 blocks, 22 tons of rods, and 75 tons of sand. The calculator shows exact quantities for your project size.';
+else if(l.indexOf('time')>=0||l.indexOf('timeline')>=0||l.indexOf('long')>=0||l.indexOf('take')>=0)r='Construction typically takes 8-16 weeks for residential projects, depending on size and complexity. A 150sqm house takes about '+Math.ceil(150/50)+' weeks.';
+else if(l.indexOf('hello')>=0||l.indexOf('hi')>=0||l.indexOf('hey')>=0)r='Hello! I am BuildBot AI. I can help with construction cost estimates, material quantities, and timelines. Try the calculator above or ask me a question!';
+else if(l.indexOf('abuja')>=0)r='Abuja construction costs are ~20% above national average. A standard house costs \u20a6102,000/sqm. Use the calculator for your specific project.';
+else if(l.indexOf('lagos')>=0)r='Lagos is the most expensive at ~30% above average. Houses cost \u20a6110,500/sqm. Use the calculator for precise estimates.';
+else r='I can help with construction costs, material quantities, and project timelines in Nigeria. Try the calculator above or ask me about building costs in your city!';
+setTimeout(function(){addMsg(r,'bot')},300);
+document.getElementById('chatInput').value='';
+}
+function addMsg(text,who){
+var div=document.createElement('div');
+div.className='chat-msg';
+if(who==='user')div.style.borderColor='var(--gold)';
+div.textContent=text;
+document.getElementById('chatList').appendChild(div);
+document.getElementById('chatList').scrollTop=999;
+}
+</script>
+</body>
+</html>
