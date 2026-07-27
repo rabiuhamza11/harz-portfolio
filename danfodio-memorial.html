@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Danfodio Memorial Academy</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--gold:#F59E0B;--blue:#3b82f6;--green:#00e676;--red:#EF4444;--navy:#1e3a5f;--cream:#f5f0e8}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
+.header{background:linear-gradient(135deg,var(--navy),#0a1628);padding:24px 16px;text-align:center;border-bottom:2px solid var(--gold)}
+.header .crest{font-size:2.5rem;margin-bottom:4px}
+.header h1{font-size:1.3rem;font-weight:800;color:var(--cream);letter-spacing:.5px}
+.header h2{font-size:.85rem;color:var(--gold);font-weight:400;margin-top:4px}
+.header p{font-size:.7rem;color:var(--muted);margin-top:6px}
+.container{max-width:600px;margin:0 auto;padding:12px}
+.hero{background:linear-gradient(135deg,rgba(30,58,95,.3),rgba(245,158,11,.1));border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;text-align:center}
+.hero h3{font-size:1rem;color:var(--gold);margin-bottom:8px}
+.hero p{font-size:.8rem;color:var(--text);line-height:1.5}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.stat-value{font-size:1.4rem;font-weight:800;color:var(--gold)}
+.stat-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.section{margin-bottom:16px}
+.section-title{font-size:.9rem;font-weight:700;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px}
+.program-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+.program-card:active{border-color:var(--gold)}
+.program-name{font-weight:700;font-size:.85rem;margin-bottom:4px}
+.program-desc{font-size:.75rem;color:var(--muted);line-height:1.4}
+.program-meta{display:flex;gap:10px;margin-top:8px;font-size:.65rem}
+.program-meta span{background:var(--bg);padding:2px 8px;border-radius:10px;color:var(--blue)}
+.staff-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.staff-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.staff-avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--gold));margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.staff-name{font-weight:700;font-size:.8rem}
+.staff-role{font-size:.65rem;color:var(--muted);margin-top:2px}
+.event-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.event-date{text-align:center;flex-shrink:0;width:50px}
+.event-day{font-size:1.3rem;font-weight:800;color:var(--gold)}
+.event-month{font-size:.6rem;color:var(--muted);text-transform:uppercase}
+.event-text{flex:1}
+.event-title{font-size:.8rem;font-weight:600}
+.event-desc{font-size:.7rem;color:var(--muted);margin-top:2px}
+.portal-btn{background:linear-gradient(135deg,var(--navy),var(--gold));color:#fff;border:none;border-radius:10px;padding:14px;font-size:.9rem;font-weight:700;cursor:pointer;width:100%;margin-top:8px}
+.portal-btn:active{opacity:.8}
+.fee-card{display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px}
+.fee-label{font-size:.8rem;font-weight:600}
+.fee-amount{font-size:.85rem;font-weight:700;color:var(--gold)}
+.fee-period{font-size:.65rem;color:var(--muted)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;justify-content:center;align-items:center;padding:16px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;width:100%;max-width:400px}
+.modal h3{font-size:1.1rem;margin-bottom:6px;color:var(--gold)}
+.modal p{font-size:.8rem;color:var(--muted);margin-bottom:16px}
+.modal input,.modal select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:.85rem;margin-bottom:10px;outline:none}
+.modal input:focus{border-color:var(--gold)}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:8px 20px;border-radius:20px;font-size:.8rem;font-weight:600;z-index:300;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0;z-index:100}
+.nav-item{text-align:center;font-size:.65rem;color:var(--muted);cursor:pointer;padding:4px 8px}
+.nav-item.active{color:var(--gold)}
+.nav-icon{font-size:1.2rem;display:block;margin-bottom:2px}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="crest">🏛️</div>
+<h1>DANFODIO MEMORIAL ACADEMY</h1>
+<h2>Knowledge · Character · Excellence</h2>
+<p>Established by Rabiu Hamza · Abuja, Nigeria</p>
+</div>
+
+<div class="container">
+
+<div class="hero">
+<h3>Welcome to Our School</h3>
+<p>Nurturing young minds with quality education, strong values, and a commitment to excellence. From nursery to secondary, we build the leaders of tomorrow.</p>
+</div>
+
+<div class="stat-grid">
+<div class="stat"><div class="stat-value">450+</div><div class="stat-label">Students</div></div>
+<div class="stat"><div class="stat-value">35</div><div class="stat-label">Teachers</div></div>
+<div class="stat"><div class="stat-value">98%</div><div class="stat-label">Pass Rate</div></div>
+</div>
+
+<div class="section">
+<div class="section-title">📚 Academic Programs</div>
+<div class="program-card" onclick="showToast('Nursery program details')">
+<div class="program-name">🍼 Nursery (Ages 3-5)</div>
+<div class="program-desc">Play-based learning, early literacy, numeracy, and social skills development.</div>
+<div class="program-meta"><span>3 years</span><span>₦45,000/term</span></div>
+</div>
+<div class="program-card" onclick="showToast('Primary program details')">
+<div class="program-name">📖 Primary (Grades 1-6)</div>
+<div class="program-desc">Core subjects, science, computer studies, Islamic studies, and creative arts.</div>
+<div class="program-meta"><span>6 years</span><span>₦65,000/term</span></div>
+</div>
+<div class="program-card" onclick="showToast('Junior Secondary details')">
+<div class="program-name">🎓 Junior Secondary (JSS 1-3)</div>
+<div class="program-desc">BECE preparation, vocational subjects, STEM labs, and career guidance.</div>
+<div class="program-meta"><span>3 years</span><span>₦85,000/term</span></div>
+</div>
+<div class="program-card" onclick="showToast('Senior Secondary details')">
+<div class="program-name">🏛️ Senior Secondary (SSS 1-3)</div>
+<div class="program-desc">Science, Arts & Commercial tracks. WAEC/NECO preparation with labs.</div>
+<div class="program-meta"><span>3 years</span><span>₦120,000/term</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">🏫 Quick Portal Access</div>
+<button class="portal-btn" onclick="openModal('portalModal')">👨‍🎓 Student Portal Login</button>
+<button class="portal-btn" style="background:linear-gradient(135deg,var(--green),#00b24d)" onclick="openModal('parentModal')">👨‍👩‍👦 Parent Portal</button>
+<button class="portal-btn" style="background:linear-gradient(135deg,var(--blue),#2563eb)" onclick="openModal('staffModal')">👩‍🏫 Staff Portal</button>
+</div>
+
+<div class="section">
+<div class="section-title">💰 School Fees</div>
+<div class="fee-card"><div><div class="fee-label">🍼 Nursery</div><div class="fee-period">Per term</div></div><div class="fee-amount">₦45,000</div></div>
+<div class="fee-card"><div><div class="fee-label">📖 Primary</div><div class="fee-period">Per term</div></div><div class="fee-amount">₦65,000</div></div>
+<div class="fee-card"><div><div class="fee-label">🎓 Junior Secondary</div><div class="fee-period">Per term</div></div><div class="fee-amount">₦85,000</div></div>
+<div class="fee-card"><div><div class="fee-label">🏛️ Senior Secondary</div><div class="fee-period">Per term</div></div><div class="fee-amount">₦120,000</div></div>
+<div class="card" style="text-align:center;margin-top:8px">
+<div style="font-size:.75rem;color:var(--muted)">Discounts available for siblings and early payment</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">👥 Key Staff</div>
+<div class="staff-grid">
+<div class="staff-card"><div class="staff-avatar">👨‍💼</div><div class="staff-name">Rabiu Hamza</div><div class="staff-role">Proprietor</div></div>
+<div class="staff-card"><div class="staff-avatar">👩‍🏫</div><div class="staff-name">Staff</div><div class="staff-role">Head Teacher</div></div>
+<div class="staff-card"><div class="staff-avatar">👨‍🏫</div><div class="staff-name">Staff</div><div class="staff-role">Exam Master</div></div>
+<div class="staff-card"><div class="staff-avatar">👩‍💼</div><div class="staff-name">Staff</div><div class="staff-role">Admin Officer</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">📅 Upcoming Events</div>
+<div class="card">
+<div class="event-item"><div class="event-date"><div class="event-day">15</div><div class="event-month">Aug</div></div><div class="event-text"><div class="event-title">Resumption — New Term</div><div class="event-desc">All students resume for first term 2026/2027 session</div></div></div>
+<div class="event-item"><div class="event-date"><div class="event-day">22</div><div class="event-month">Aug</div></div><div class="event-text"><div class="event-title">Open Day</div><div class="event-desc">Parents visit campus, meet teachers, tour facilities</div></div></div>
+<div class="event-item"><div class="event-date"><div class="event-day">05</div><div class="event-month">Sep</div></div><div class="event-text"><div class="event-title">Inter-House Sports</div><div class="event-desc">Annual athletics competition — all houses</div></div></div>
+<div style="padding:10px 0;font-size:.8rem"><div class="event-title">Parents' Meeting</div><div class="event-desc">PTA general meeting — all parents invited</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">📞 Contact</div>
+<div class="card">
+<div style="font-size:.8rem;line-height:1.8">
+📍 Abuja, Nigeria<br>
+📞 +234 (0) 800 000 0000<br>
+✉️ info@danfodiomemorial.edu.ng<br>
+🕐 Mon-Fri: 7:30 AM - 3:30 PM<br>
+🌐 danfodiomemorial.edu.ng
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="bottom-nav">
+<div class="nav-item active"><span class="nav-icon">🏛️</span>Home</div>
+<div class="nav-item" onclick="showToast('Academics section')"><span class="nav-icon">📚</span>Academics</div>
+<div class="nav-item" onclick="showToast('Fees section')"><span class="nav-icon">💰</span>Fees</div>
+<div class="nav-item" onclick="showToast('Portal login')"><span class="nav-icon">🔐</span>Portal</div>
+<div class="nav-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html','_blank')"><span class="nav-icon">🔙</span>Super App</div>
+</div>
+
+<div class="modal-overlay" id="portalModal">
+<div class="modal">
+<h3>👨‍🎓 Student Portal</h3>
+<p>Check results, assignments, and timetable</p>
+<input type="text" placeholder="Student ID / Admission No.">
+<input type="password" placeholder="Password">
+<button class="portal-btn" onclick="showToast('Portal coming soon!');closeModal('portalModal')">Login</button>
+<button class="portal-btn" style="background:var(--border);margin-top:6px" onclick="closeModal('portalModal')">Cancel</button>
+</div>
+</div>
+
+<div class="modal-overlay" id="parentModal">
+<div class="modal">
+<h3>👨‍👩‍👦 Parent Portal</h3>
+<p>Pay fees, track progress, message teachers</p>
+<input type="text" placeholder="Phone Number">
+<input type="password" placeholder="PIN / Password">
+<button class="portal-btn" style="background:linear-gradient(135deg,var(--green),#00b24d)" onclick="showToast('Portal coming soon!');closeModal('parentModal')">Login</button>
+<button class="portal-btn" style="background:var(--border);margin-top:6px" onclick="closeModal('parentModal')">Cancel</button>
+</div>
+</div>
+
+<div class="modal-overlay" id="staffModal">
+<div class="modal">
+<h3>👩‍🏫 Staff Portal</h3>
+<p>Grade entry, attendance, lesson plans</p>
+<input type="text" placeholder="Staff ID">
+<input type="password" placeholder="Password">
+<button class="portal-btn" style="background:linear-gradient(135deg,var(--blue),#2563eb)" onclick="showToast('Portal coming soon!');closeModal('staffModal')">Login</button>
+<button class="portal-btn" style="background:var(--border);margin-top:6px" onclick="closeModal('staffModal')">Cancel</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000)}
+</script>
+</body>
+</html>
