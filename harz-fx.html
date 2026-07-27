@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzFX — Live Currency Exchange Rates</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+body { background:#0a0e1a; color:#fff; }
+.header { background:linear-gradient(135deg,#f59e0b,#d97706); padding:20px; text-align:center; position:sticky; top:0; z-index:100; }
+.header h1 { font-size:24px; }
+.header p { font-size:13px; opacity:0.8; margin-top:4px; }
+.container { max-width:600px; margin:0 auto; padding:16px; }
+.card { background:#1a1f2e; border-radius:16px; padding:20px; margin-bottom:16px; border:1px solid #2a2f3e; }
+.card h2 { font-size:18px; margin-bottom:12px; color:#fbbf24; }
+.tabs { display:flex; gap:8px; margin-bottom:16px; }
+.tab { flex:1; padding:12px; text-align:center; background:#1a1f2e; border-radius:12px; cursor:pointer; font-size:13px; border:1px solid #2a2f3e; }
+.tab.active { background:#f59e0b; border-color:#f59e0b; color:#000; }
+.rate-card { background:#1a1f2e; border-radius:12px; padding:16px; margin-bottom:10px; border:1px solid #2a2f3e; display:flex; align-items:center; justify-content:space-between; }
+.rate-card .left { display:flex; align-items:center; gap:10px; }
+.rate-card .flag { font-size:32px; }
+.rate-card .info { display:flex; flex-direction:column; }
+.rate-card .code { font-weight:bold; font-size:15px; }
+.rate-card .name { font-size:12px; color:#8892a6; }
+.rate-card .right { text-align:right; }
+.rate-card .rate { font-size:20px; font-weight:bold; }
+.rate-card .change { font-size:12px; }
+.rate-card .change.up { color:#4ade80; }
+.rate-card .change.down { color:#f87171; }
+.market-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:bold; margin-left:6px; }
+.market-badge.parallel { background:#f59e0b; color:#000; }
+.market-badge.official { background:#3b82f6; color:#fff; }
+.market-badge.black_market { background:#ef4444; color:#fff; }
+.input { width:100%; padding:12px; background:#0a0e1a; border:1px solid #2a2f3e; border-radius:10px; color:#fff; font-size:14px; margin-bottom:10px; }
+.input:focus { border-color:#f59e0b; outline:none; }
+.select { width:100%; padding:12px; background:#0a0e1a; border:1px solid #2a2f3e; border-radius:10px; color:#fff; font-size:14px; margin-bottom:10px; }
+.label { font-size:13px; color:#8892a6; margin-bottom:4px; }
+.btn { width:100%; padding:14px; background:linear-gradient(135deg,#f59e0b,#d97706); color:#000; border:none; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:12px; }
+.result-box { background:#0a0e1a; border:1px solid #f59e0b; border-radius:12px; padding:16px; text-align:center; margin-top:12px; }
+.result-box .amount { font-size:28px; font-weight:bold; color:#fbbf24; }
+</style>
+</head>
+<body>
+<div class="header">
+<h1>💱 HarzFX</h1>
+<p>Live Exchange Rates — Parallel & Official</p>
+</div>
+<div class="container">
+<div class="tabs">
+<div class="tab active" onclick="switchTab('rates',this)">Live Rates</div>
+<div class="tab" onclick="switchTab('convert',this)">Convert</div>
+<div class="tab" onclick="switchTab('p2p',this)">P2P Trade</div>
+</div>
+<div id="tab-rates">
+<div class="card">
+<h2>Today's Rates (NGN)</h2>
+<div id="rates-list"></div>
+<p style="text-align:center; font-size:12px; color:#8892a6; margin-top:12px">Rates updated daily. Parallel market = what you get on the street.</p>
+</div>
+</div>
+<div id="tab-convert" style="display:none">
+<div class="card">
+<h2>Currency Converter</h2>
+<div class="label">Amount</div>
+<input class="input" id="convAmount" type="number" placeholder="100" value="100">
+<div class="label">From</div>
+<select class="select" id="convFrom"><option value="NGN">NGN — Nigerian Naira</option><option value="USD">USD — US Dollar</option><option value="GBP">GBP — British Pound</option><option value="EUR">EUR — Euro</option><option value="GHS">GHS — Ghanaian Cedi</option><option value="KES">KES — Kenyan Shilling</option><option value="CAD">CAD — Canadian Dollar</option><option value="ZAR">ZAR — South African Rand</option></select>
+<div class="label">To</div>
+<select class="select" id="convTo"><option value="USD">USD — US Dollar</option><option value="NGN">NGN — Nigerian Naira</option><option value="GBP">GBP — British Pound</option><option value="EUR">EUR — Euro</option><option value="GHS">GHS — Ghanaian Cedi</option><option value="KES">KES — Kenyan Shilling</option><option value="CAD">CAD — Canadian Dollar</option><option value="ZAR">ZAR — South African Rand</option></select>
+<div class="label">Market</div>
+<select class="select" id="convMarket"><option value="parallel">Parallel Market (Street Rate)</option><option value="official">Official Rate (CBN)</option><option value="black_market">Black Market</option></select>
+<button class="btn" onclick="convert()">Convert</button>
+<div id="conv-result" style="display:none">
+<div class="result-box">
+<div class="amount" id="conv-result-amount"></div>
+<div style="font-size:13px; color:#8892a6; margin-top:4px" id="conv-result-rate"></div>
+</div>
+</div>
+</div>
+</div>
+<div id="tab-p2p" style="display:none">
+<div class="card">
+<h2>P2P Currency Exchange</h2>
+<p style="font-size:14px; color:#cbd5e1; margin-bottom:12px">Want to buy or sell foreign currency? Post a trade and get matched with verified sellers.</p>
+<div class="label">I want to</div>
+<select class="select" id="tradeType"><option value="buy">Buy Foreign Currency</option><option value="sell">Sell Foreign Currency</option></select>
+<div class="label">Currency</div>
+<select class="select" id="tradeCurrency"><option value="USD">USD</option><option value="GBP">GBP</option><option value="EUR">EUR</option><option value="CAD">CAD</option></select>
+<div class="label">Amount</div>
+<input class="input" id="tradeAmount" type="number" placeholder="100">
+<div class="label">Your Phone</div>
+<input class="input" id="tradePhone" placeholder="08012345678">
+<div class="label">Your Name</div>
+<input class="input" id="tradeName" placeholder="Your name">
+<button class="btn" onclick="postTrade()">Post Trade</button>
+</div>
+</div>
+</div>
+<script>
+const API='https://superagent-2286fb2f.base44.app/functions/harzFx';
+function post(data){return fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json())}
+function switchTab(t,el){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));el.classList.add('active');['rates','convert','p2p'].forEach(x=>{document.getElementById('tab-'+x).style.display=x==t?'block':'none'})}
+function fmt(n,d){return Number(n||0).toLocaleString(undefined,{maximumFractionDigits:d||2})}
+async function loadRates(){
+try{
+const d=await post({action:'rates'});
+const rates=d.rates||[];
+if(!rates.length){document.getElementById('rates-list').innerHTML='<p style="color:#8892a6; text-align:center">No rates available.</p>';return}
+document.getElementById('rates-list').innerHTML=rates.map(rt=>{
+const change=rt.daily_change||0;
+const chgClass=change>=0?'up':'down';
+const chgSign=change>=0?'+':'';
+const marketLabel=rt.market.replace('_',' ');
+return `<div class="rate-card"><div class="left"><div class="flag">${rt.flag||'💱'}</div><div class="info"><div class="code">${rt.currency_code}<span class="market-badge ${rt.market}">${marketLabel}</span></div><div class="name">${rt.currency_name||''}</div></div></div><div class="right"><div class="rate">₦${fmt(rt.rate)}</div><div class="change ${chgClass}">${chgSign}${fmt(change)} (${chgSign}${fmt(rt.daily_change_percent||0,1)}%)</div></div></div>`
+}).join('')
+}catch(e){document.getElementById('rates-list').innerHTML='<p style="color:#8892a6; text-align:center">Loading rates...</p>'}
+}
+async function convert(){
+const amt=Number(document.getElementById('convAmount').value);
+const from=document.getElementById('convFrom').value;
+const to=document.getElementById('convTo').value;
+const market=document.getElementById('convMarket').value;
+if(!amt){alert('Enter amount');return}
+try{
+const d=await post({action:'convert',amount:amt,from:from,to:to,market:market});
+if(d.result!==undefined){
+document.getElementById('conv-result').style.display='block';
+document.getElementById('conv-result-amount').textContent=fmt(d.result,2)+' '+to;
+document.getElementById('conv-result-rate').textContent=`Rate: 1 ${from} = ₦${fmt(d.rate)} (${market})`;
+}else{alert('Error: '+(d.error||'Conversion failed'))}
+}catch(e){alert('Error: '+e.message)}
+}
+async function postTrade(){
+const body={action:'create_trade',trade_type:document.getElementById('tradeType').value,currency_from:document.getElementById('tradeCurrency').value,currency_to:'NGN',amount_from:Number(document.getElementById('tradeAmount').value),user_phone:document.getElementById('tradePhone').value,user_name:document.getElementById('tradeName').value};
+const d=await post(body);
+if(d.id){alert('Trade posted! We will match you with a verified trader.')}else{alert('Error: '+(d.error||'Unknown'))}
+}
+loadRates()
+</script>
+</body>
+</html>

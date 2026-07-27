@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzLend — Instant Micro-Loans</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+body { background:#0a0e1a; color:#fff; }
+.header { background:linear-gradient(135deg,#ec4899,#db2777); padding:20px; text-align:center; position:sticky; top:0; z-index:100; }
+.header h1 { font-size:24px; }
+.header p { font-size:13px; opacity:0.8; margin-top:4px; }
+.container { max-width:600px; margin:0 auto; padding:16px; }
+.card { background:#1a1f2e; border-radius:16px; padding:20px; margin-bottom:16px; border:1px solid #2a2f3e; }
+.card h2 { font-size:18px; margin-bottom:12px; color:#f472b6; }
+.tabs { display:flex; gap:8px; margin-bottom:16px; }
+.tab { flex:1; padding:12px; text-align:center; background:#1a1f2e; border-radius:12px; cursor:pointer; font-size:13px; border:1px solid #2a2f3e; }
+.tab.active { background:#ec4899; border-color:#ec4899; color:#fff; }
+.loan-type { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
+.loan-type-item { background:#0a0e1a; border:2px solid #2a2f3e; border-radius:12px; padding:16px; text-align:center; cursor:pointer; }
+.loan-type-item.active { border-color:#ec4899; background:#312e81; }
+.loan-type-item .icon { font-size:28px; }
+.loan-type-item .name { font-size:12px; margin-top:4px; }
+.input { width:100%; padding:12px; background:#0a0e1a; border:1px solid #2a2f3e; border-radius:10px; color:#fff; font-size:14px; margin-bottom:10px; }
+.input:focus { border-color:#ec4899; outline:none; }
+.select { width:100%; padding:12px; background:#0a0e1a; border:1px solid #2a2f3e; border-radius:10px; color:#fff; font-size:14px; margin-bottom:10px; }
+.label { font-size:13px; color:#8892a6; margin-bottom:4px; }
+.btn { width:100%; padding:14px; background:linear-gradient(135deg,#ec4899,#db2777); color:#fff; border:none; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:12px; }
+.btn:active { transform:scale(0.98); }
+.calc-box { background:#0a0e1a; border:1px solid #ec4899; border-radius:12px; padding:16px; margin:12px 0; }
+.calc-row { display:flex; justify-content:space-between; padding:6px 0; font-size:14px; }
+.calc-row.total { border-top:1px solid #2a2f3e; margin-top:6px; padding-top:12px; font-weight:bold; color:#f472b6; font-size:18px; }
+.eligibility { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-top:8px; }
+.eligibility.high { background:#1a8a5e; }
+.eligibility.medium { background:#f59e0b; color:#000; }
+.eligibility.low { background:#ef4444; }
+</style>
+</head>
+<body>
+<div class="header">
+<h1>💰 HarzLend</h1>
+<p>Instant Micro-Loans — ₦5,000 to ₦50,000</p>
+</div>
+<div class="container">
+<div class="tabs">
+<div class="tab active" onclick="switchTab('apply',this)">Apply</div>
+<div class="tab" onclick="switchTab('calculator',this)">Calculator</div>
+<div class="tab" onclick="switchTab('loans',this)">My Loans</div>
+</div>
+<div id="tab-apply">
+<div class="card">
+<h2>Choose Loan Type</h2>
+<div class="loan-type" id="loan-types"></div>
+</div>
+<div id="apply-form" style="display:none">
+<div class="card">
+<h2>Loan Details</h2>
+<div class="label">Loan Amount (₦)</div>
+<input class="input" id="loanAmount" type="number" placeholder="25000" min="5000" max="50000" oninput="updatePreview()">
+<div class="label">Repayment Period (days)</div>
+<select class="select" id="loanTenure" onchange="updatePreview()">
+<option value="7">7 days</option>
+<option value="14">14 days</option>
+<option value="30" selected>30 days</option>
+<option value="60">60 days</option>
+<option value="90">90 days</option>
+</select>
+<div class="label">Monthly Income (₦)</div>
+<input class="input" id="loanIncome" type="number" placeholder="100000" oninput="updatePreview()">
+<div class="label">Purpose of Loan</div>
+<input class="input" id="loanPurpose" placeholder="What do you need the loan for?">
+<div id="calc-preview"></div>
+</div>
+<div class="card">
+<h2>Your Details</h2>
+<div class="label">Full Name</div>
+<input class="input" id="userName" placeholder="Your full name">
+<div class="label">Phone Number</div>
+<input class="input" id="userPhone" placeholder="08012345678">
+<div class="label">Email</div>
+<input class="input" id="userEmail" placeholder="you@email.com">
+<div class="label">BVN</div>
+<input class="input" id="userBvn" placeholder="12345678901" maxlength="11">
+<div class="label">Bank Account Number</div>
+<input class="input" id="userAccount" placeholder="0123456789">
+<div class="label">Bank</div>
+<select class="select" id="userBank">
+<option value="033">UBA</option>
+<option value="044">Access Bank</option>
+<option value="058">GTBank</option>
+<option value="011">First Bank</option>
+<option value="050">Ecobank</option>
+<option value="070">Fidelity Bank</option>
+<option value="232">Sterling Bank</option>
+<option value="035">Wema Bank</option>
+<option value="076">Polaris Bank</option>
+<option value="221">Stanbic IBTC</option>
+<option value="215">Unity Bank</option>
+<option value="301">Jaiz Bank</option>
+</select>
+<div class="label">Employment Status</div>
+<select class="select" id="userEmployment">
+<option value="employed">Employed</option>
+<option value="self_employed">Self Employed</option>
+<option value="business_owner">Business Owner</option>
+<option value="student">Student</option>
+</select>
+<button class="btn" onclick="applyLoan()">Submit Application</button>
+</div>
+</div>
+</div>
+<div id="tab-calculator" style="display:none">
+<div class="card">
+<h2>Loan Calculator</h2>
+<div class="label">Loan Amount (₦)</div>
+<input class="input" id="calcAmount" type="number" placeholder="25000" value="25000" oninput="calcLoan()">
+<div class="label">Repayment Period (days)</div>
+<select class="select" id="calcTenure" onchange="calcLoan()">
+<option value="7">7 days</option>
+<option value="14">14 days</option>
+<option value="30" selected>30 days</option>
+<option value="60">60 days</option>
+<option value="90">90 days</option>
+</select>
+<div class="calc-box" id="calc-result">
+<div class="calc-row"><span>Loan Amount</span><span id="calc-principal">₦25,000</span></div>
+<div class="calc-row"><span>Interest (15%)</span><span id="calc-interest">₦3,750</span></div>
+<div class="calc-row"><span>Total Repayable</span><span id="calc-total">₦28,750</span></div>
+<div class="calc-row total"><span>Weekly Payment</span><span id="calc-weekly">₦9,583</span></div>
+</div>
+<p style="font-size:13px; color:#8892a6; margin-top:8px">Interest rate: 15% flat. No hidden fees. Early repayment earns 5% discount.</p>
+</div>
+</div>
+<div id="tab-loans" style="display:none">
+<div class="card">
+<h2>Your Loan Applications</h2>
+<div id="loans-list"></div>
+</div>
+</div>
+</div>
+<script>
+const API='https://superagent-2286fb2f.base44.app/functions/harzLend';
+function post(data){return fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json())}
+const LOAN_TYPES=[{id:'quick',icon:'⚡',name:'Quick Loan',desc:'₦5k-₦50k, 7-30 days'},{id:'salary',icon:'💼',name:'Salary Loan',desc:'Up to ₦50k, 30 days'},{id:'business',icon:'📈',name:'Business Loan',desc:'₦10k-₦50k, 30-90 days'},{id:'emergency',icon:'🚨',name:'Emergency Loan',desc:'₦5k-₦25k, 7 days'},{id:'student',icon:'🎓',name:'Student Loan',desc:'₦5k-₦15k, 30 days'},{id:'salary_advance',icon:'💳',name:'Salary Advance',desc:'Up to 50% of monthly'}];
+let selectedType='';
+function init(){
+document.getElementById('loan-types').innerHTML=LOAN_TYPES.map(t=>`<div class="loan-type-item" onclick="selectType('${t.id}',this)"><div class="icon">${t.icon}</div><div class="name">${t.name}<br><span style="font-size:10px; color:#8892a6">${t.desc}</span></div></div>`).join('')
+}
+function switchTab(t,el){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));el.classList.add('active');['apply','calculator','loans'].forEach(x=>{document.getElementById('tab-'+x).style.display=x==t?'block':'none'})}
+function selectType(id,el){
+selectedType=id;
+document.querySelectorAll('.loan-type-item').forEach(e=>e.classList.remove('active'));
+el.classList.add('active');
+document.getElementById('apply-form').style.display='block';
+updatePreview()
+}
+function calcLoan(){
+const amt=Number(document.getElementById('calcAmount').value)||25000;
+const days=Number(document.getElementById('calcTenure').value);
+const interest=amt*0.15;
+const total=amt+interest;
+const weeks=Math.ceil(days/7);
+const weekly=total/weeks;
+document.getElementById('calc-principal').textContent='₦'+amt.toLocaleString();
+document.getElementById('calc-interest').textContent='₦'+interest.toLocaleString();
+document.getElementById('calc-total').textContent='₦'+total.toLocaleString();
+document.getElementById('calc-weekly').textContent='₦'+Math.round(weekly).toLocaleString()
+}
+function updatePreview(){
+const amt=Number(document.getElementById('loanAmount').value)||0;
+const days=Number(document.getElementById('loanTenure').value);
+if(amt&&days){
+const interest=amt*0.15;
+const total=amt+interest;
+const income=Number(document.getElementById('loanIncome').value)||0;
+let elig='medium',eligText='Medium Risk';
+if(income>total*3){elig='high';eligText='High Eligibility'}
+else if(income<total*2){elig='low';eligText='Low Eligibility'}
+document.getElementById('calc-preview').innerHTML=`<div class="calc-box"><div class="calc-row"><span>Loan Amount</span><span>₦${amt.toLocaleString()}</span></div><div class="calc-row"><span>Interest (15%)</span><span>₦${interest.toLocaleString()}</span></div><div class="calc-row total"><span>Total Repayable</span><span>₦${total.toLocaleString()}</span></div><div class="calc-row"><span>Repayment Period</span><span>${days} days</span></div>${income?`<div class="eligibility ${elig}">${eligText}</div>`:''}</div>`
+}
+}
+async function applyLoan(){
+const body={action:'apply',user_name:document.getElementById('userName').value,user_phone:document.getElementById('userPhone').value,user_email:document.getElementById('userEmail').value,bvn:document.getElementById('userBvn').value,bank_account:document.getElementById('userAccount').value,bank_code:document.getElementById('userBank').value,loan_type:selectedType,loan_amount:Number(document.getElementById('loanAmount').value),tenure_days:Number(document.getElementById('loanTenure').value),monthly_income:Number(document.getElementById('loanIncome').value),purpose:document.getElementById('loanPurpose').value,employment_status:document.getElementById('userEmployment').value};
+if(!body.user_name||!body.user_phone||!body.loan_amount){alert('Please fill in your name, phone, and loan amount');return}
+try{
+const d=await post(body);
+if(d.id){alert('Application submitted! Loan under review. You will be notified soon.');switchTab('loans',document.querySelectorAll('.tab')[2]);loadLoans()}else{alert('Error: '+(d.error||'Unknown'))}
+}catch(e){alert('Error: '+e.message)}
+}
+async function loadLoans(){
+try{
+const d=await post({action:'list'});
+const el=document.getElementById('loans-list');
+const loans=d.loans||[];
+if(!loans.length){el.innerHTML='<p style="color:#8892a6; text-align:center; padding:20px">No loan applications yet.</p>';return}
+el.innerHTML=loans.map(l=>`<div style="background:#0a0e1a; border-radius:10px; padding:14px; margin-bottom:10px; border:1px solid #2a2f3e"><div style="display:flex; justify-content:space-between"><span style="font-weight:bold">₦${l.loan_amount.toLocaleString()}</span><span class="eligibility ${l.status==='approved'||l.status==='disbursed'?'high':l.status==='rejected'?'low':'medium'}">${l.status.replace('_',' ').toUpperCase()}</span></div><div style="font-size:12px; color:#8892a6; margin-top:4px">${l.loan_type} • ${l.tenure_days} days • Total: ₦${l.total_repayable.toLocaleString()}</div></div>`).join('')
+}catch(e){document.getElementById('loans-list').innerHTML='<p style="color:#8892a6; text-align:center">No loans found.</p>'}
+}
+init();calcLoan()
+</script>
+</body>
+</html>
