@@ -235,10 +235,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 
 <div class="quick-grid">
-<div class="quick" onclick="switchPage('pay')"><span class="quick-icon">💳</span><span class="quick-label">Pay</span></div>
-<div class="quick" onclick="switchPage('chat')"><span class="quick-icon">💬</span><span class="quick-label">Messages</span></div>
-<div class="quick" onclick="switchPage('business')"><span class="quick-icon">🤖</span><span class="quick-label">AI Assistant</span></div>
-<div class="quick" onclick="switchPage('store')"><span class="quick-icon">🛍️</span><span class="quick-label">Store</span></div>
+<div class="quick" onclick="closeAI();switchPage('pay')"><span class="quick-icon">💳</span><span class="quick-label">Pay</span></div>
+<div class="quick" onclick="closeAI();switchPage('chat')"><span class="quick-icon">💬</span><span class="quick-label">Messages</span></div>
+<div class="quick" onclick="closeAI();switchPage('business')"><span class="quick-icon">🤖</span><span class="quick-label">AI Assistant</span></div>
+<div class="quick" onclick="closeAI();switchPage('store')"><span class="quick-icon">🛍️</span><span class="quick-label">Store</span></div>
 <div class="quick" onclick="switchPage('learn')"><span class="quick-icon">📚</span><span class="quick-label">Learn</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><span class="quick-icon">🛠️</span><span class="quick-label">Dev Platform</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html')"><span class="quick-icon">🤖</span><span class="quick-label">AI Agency</span></div>
@@ -452,16 +452,16 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 <div class="biz-ctrl-body" id="aiMsgs">
 <div class="biz-ctrl-grid">
-<div class="biz-ctrl-card" onclick="switchPage('business')">
+<div class="biz-ctrl-card" onclick="closeAI();switchPage('business')">
 <div class="biz-ctrl-icon">📋</div><div class="biz-ctrl-label">CRM</div><div class="biz-ctrl-val" id="ctrl-crm">Loading...</div>
 </div>
-<div class="biz-ctrl-card" onclick="switchPage('store')">
+<div class="biz-ctrl-card" onclick="closeAI();switchPage('store')">
 <div class="biz-ctrl-icon">🛍️</div><div class="biz-ctrl-label">Products</div><div class="biz-ctrl-val" id="ctrl-prod">259</div>
 </div>
-<div class="biz-ctrl-card" onclick="switchPage('pay')">
+<div class="biz-ctrl-card" onclick="closeAI();switchPage('pay')">
 <div class="biz-ctrl-icon">💳</div><div class="biz-ctrl-label">Payments</div><div class="biz-ctrl-val">Active</div>
 </div>
-<div class="biz-ctrl-card" onclick="switchPage('chat')">
+<div class="biz-ctrl-card" onclick="closeAI();switchPage('chat')">
 <div class="biz-ctrl-icon">💬</div><div class="biz-ctrl-label">Messages</div><div class="biz-ctrl-val" id="ctrl-msg">WhatsApp</div>
 </div>
 </div>
@@ -646,7 +646,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 <div class="section-head" style="margin-top:12px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">FINANCE & PAYMENTS</span></div>
 <div class="more-list">
-<div class="more-item" onclick="switchPage('pay')">💸 HarzPay — Wallet & Payments</div>
+<div class="more-item" onclick="closeAI();switchPage('pay')">💸 HarzPay — Wallet & Payments</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html')">💳 HarzPay — Full Gateway</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html')">📈 Harz Exchange — Crypto & P2P</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-saas-billing.html')">📊 Harz SaaS Billing</div>
@@ -750,9 +750,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <!-- Bottom Nav -->
 <div class="nav">
 <div class="nav-item active" onclick="switchPage('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
-<div class="nav-item" onclick="switchPage('pay')"><div class="nav-icon">💸</div><div class="nav-label">Pay</div></div>
-<div class="nav-item" onclick="switchPage('chat')"><div class="nav-icon">💬</div><div class="nav-label">Chat</div></div>
-<div class="nav-item" onclick="switchPage('store')"><div class="nav-icon">🛍️</div><div class="nav-label">Store</div></div>
+<div class="nav-item" onclick="closeAI();switchPage('pay')"><div class="nav-icon">💸</div><div class="nav-label">Pay</div></div>
+<div class="nav-item" onclick="closeAI();switchPage('chat')"><div class="nav-icon">💬</div><div class="nav-label">Chat</div></div>
+<div class="nav-item" onclick="closeAI();switchPage('store')"><div class="nav-icon">🛍️</div><div class="nav-label">Store</div></div>
 <div class="nav-item" onclick="switchPage('learn')"><div class="nav-icon">📚</div><div class="nav-label">Learn</div></div>
 </div>
 
