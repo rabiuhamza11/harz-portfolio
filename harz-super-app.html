@@ -186,6 +186,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .more-item{padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;font-size:.85rem;color:var(--p2);cursor:pointer;display:flex;align-items:center;gap:8px}
 .more-item:active{background:var(--border);transform:scale(.98)}
 
+.pay-tab{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--muted);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s}
+.pay-tab.active{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border-color:transparent}
+.pay-tab:active{transform:scale(.97)}
+.paytab-content{animation:fadeIn .3s ease}
 </style>
 </head>
 <body>
@@ -213,9 +217,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="balance-amount">₦847,200</div>
 <div class="balance-sub">~ $564.80 · 84,720 GDEG</div>
 <div class="balance-actions">
-<button class="bal-btn" onclick="switchPage('pay')">💸 Send</button>
-<button class="bal-btn" onclick="switchPage('pay')">📥 Request</button>
-<button class="bal-btn" onclick="switchPage('pay')">⚡ Top Up</button>
+<button class="bal-btn" onclick="switchPayTab('send')">💸 Send</button>
+<button class="bal-btn" onclick="switchPayTab('request')">📥 Request</button>
+<button class="bal-btn" onclick="switchPayTab('topup')">⚡ Top Up</button>
 <button class="bal-btn" onclick="openAI()">🤖 Business</button>
 </div>
 </div>
@@ -276,6 +280,16 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="balance-sub">GDEG: 12,450 · USDT: $234 · Bank: UBA</div>
 </div>
 </div>
+
+<!-- Pay Tabs -->
+<div style="display:flex;gap:0;padding:0 16px;margin-bottom:16px">
+<button id="ptab-send" class="pay-tab active" onclick="switchPayTab('send')">💸 Send</button>
+<button id="ptab-request" class="pay-tab" onclick="switchPayTab('request')">📥 Request</button>
+<button id="ptab-topup" class="pay-tab" onclick="switchPayTab('topup')">⚡ Top Up</button>
+</div>
+
+<!-- SEND TAB -->
+<div id="paytab-send" class="paytab-content">
 <div class="section">
 <div class="section-head"><span class="section-title">Payment Methods</span></div>
 <div class="pay-method selected" onclick="selectPay(this)"><div class="pay-icon">⚡</div><div class="pay-info"><div class="pay-name">GDEG Token</div><div class="pay-desc">Polygon · 10% discount</div></div><div style="font-size:.7rem;color:var(--p3)">12,450 GDEG</div></div>
@@ -286,11 +300,126 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 <div class="section">
 <div class="section-head"><span class="section-title">Send Money</span></div>
-<input style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:1.2rem;outline:none;margin-bottom:10px" placeholder="₦0.00" type="number">
-<input style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Recipient phone or account number">
-<input style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Note (optional)">
-<button style="width:100%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:12px;padding:14px;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html')">Open HarzPay →</button>
+<input id="sendAmount" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:1.2rem;outline:none;margin-bottom:10px" placeholder="₦0.00" type="number" oninput="updateSendSummary()">
+<input id="sendRecipient" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Recipient phone or account number">
+<input id="sendNote" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Note (optional)">
+<div id="sendSummary" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+<div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Summary</div>
+<div id="sendSummaryText" style="font-size:.8rem;color:var(--text)"></div>
 </div>
+<button style="width:100%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:12px;padding:14px;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer" onclick="processSend()">Send Money →</button>
+<div id="sendResult" style="display:none;margin-top:14px"></div>
+</div>
+</div>
+
+<!-- REQUEST TAB -->
+<div id="paytab-request" class="paytab-content" style="display:none">
+<div class="section">
+<div class="section-head"><span class="section-title">Request Money</span></div>
+<input id="reqAmount" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:1.2rem;outline:none;margin-bottom:10px" placeholder="₦0.00" type="number" oninput="updateReqSummary()">
+<input id="reqFrom" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Recipient name (optional)">
+<input id="reqDesc" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="What's it for? (optional)">
+<div id="reqSummary" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+<div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Payment Details</div>
+<div id="reqSummaryText" style="font-size:.8rem;color:var(--text);line-height:1.6"></div>
+</div>
+<button style="width:100%;background:linear-gradient(135deg,#00e676,#00b24d);border:none;border-radius:12px;padding:14px;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer" onclick="processRequest()">Generate Request →</button>
+<div id="reqResult" style="display:none;margin-top:14px"></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-title">Your Payment Info</span></div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:.75rem;color:var(--muted)">🏦 UBA Bank</span>
+<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.8rem;font-weight:600;font-family:monospace">2034326424</span><button onclick="copyText('2034326424')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:.75rem;color:var(--muted)">👤 Account Name</span>
+<span style="font-size:.8rem;font-weight:600">Rabiu Hamza</span>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+<span style="font-size:.75rem;color:var(--muted)">₮ USDT (TRC20)</span>
+<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.7rem;font-weight:600;font-family:monospace">TVE2ia3...X5Cr</span><button onclick="copyText('TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- TOP UP TAB -->
+<div id="paytab-topup" class="paytab-content" style="display:none">
+<div class="section">
+<div class="section-head"><span class="section-title">Top Up Wallet</span></div>
+<input id="topupAmount" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:1.2rem;outline:none;margin-bottom:10px" placeholder="₦0.00" type="number">
+
+<div class="card" onclick="showTopupDetails('bank')" style="margin-bottom:8px">
+<div class="card-row">
+<div class="card-icon" style="background:rgba(0,230,118,.12)">🏦</div>
+<div class="card-info"><div class="card-title">Bank Transfer (UBA)</div><div class="card-desc">Instant · No fees</div></div>
+<div class="card-arrow">›</div>
+</div>
+</div>
+<div id="topup-bank" style="display:none;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:.75rem;color:var(--muted)">Bank</span><span style="font-size:.8rem;font-weight:600">United Bank for Africa (UBA)</span>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:.75rem;color:var(--muted)">Account Number</span>
+<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.8rem;font-weight:600;font-family:monospace">2034326424</span><button onclick="copyText('2034326424')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:.75rem;color:var(--muted)">Account Name</span><span style="font-size:.8rem;font-weight:600">Rabiu Hamza</span>
+</div>
+<div style="padding:8px 0"><span style="font-size:.75rem;color:var(--muted)">After transfer, send proof to WhatsApp for instant credit.</span></div>
+</div>
+
+<div class="card" onclick="showTopupDetails('usdt')" style="margin-bottom:8px">
+<div class="card-row">
+<div class="card-icon" style="background:rgba(255,171,0,.12)">₮</div>
+<div class="card-info"><div class="card-title">USDT (TRC20)</div><div class="card-desc">Crypto · ~2 min confirmation</div></div>
+<div class="card-arrow">›</div>
+</div>
+</div>
+<div id="topup-usdt" style="display:none;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:.75rem;color:var(--muted)">Network</span><span style="font-size:.8rem;font-weight:600">TRC20 (Tron)</span>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:.75rem;color:var(--muted)">Wallet Address</span>
+<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.7rem;font-weight:600;font-family:monospace">TVE2ia3...X5Cr</span><button onclick="copyText('TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
+</div>
+<div style="padding:8px 0"><span style="font-size:.75rem;color:var(--muted)">Send USDT to this address. Wallet credits after 1 confirmation.</span></div>
+</div>
+
+<div class="card" onclick="showTopupDetails('gdeg')" style="margin-bottom:8px">
+<div class="card-row">
+<div class="card-icon" style="background:rgba(124,77,255,.12)">⚡</div>
+<div class="card-info"><div class="card-title">GDEG Token</div><div class="card-desc">Polygon · 10% bonus on top-up</div></div>
+<div class="card-arrow">›</div>
+</div>
+</div>
+<div id="topup-gdeg" style="display:none;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:.75rem;color:var(--muted)">Network</span><span style="font-size:.8rem;font-weight:600">Polygon (MATIC)</span>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:.75rem;color:var(--muted)">Wallet</span>
+<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.7rem;font-weight:600;font-family:monospace">0x0B63...3be3</span><button onclick="copyText('0x0B63dE2c45A0c25dC290aF51347f95D82EBbe51fe3C1')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+<span style="font-size:.75rem;color:var(--muted)">Rate</span><span style="font-size:.8rem;font-weight:600">1 GDEG = ₦15</span>
+</div>
+</div>
+
+<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html')" style="margin-bottom:8px">
+<div class="card-row">
+<div class="card-icon" style="background:rgba(0,188,212,.12)">💳</div>
+<div class="card-info"><div class="card-title">Pay with Card</div><div class="card-desc">Paystack · Stripe (coming soon)</div></div>
+<div class="card-arrow">›</div>
+</div>
+</div>
+</div>
+</div>
+
 <div class="section">
 <div class="section-head"><span class="section-title">GDEG Token Info</span></div>
 <div class="card">
@@ -301,8 +430,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="font-size:.75rem;color:var(--muted)">Network</span><span style="font-size:.75rem;font-weight:600">Polygon (MATIC)</span></div>
 </div>
 </div>
-</div>
-
 <!-- CHAT PAGE -->
 <div id="page-chat" class="page">
 <div class="section" style="padding-top:16px">
@@ -812,6 +939,109 @@ setTimeout(()=>t.classList.remove('show'),2500);
 function selectPay(el){
 document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('selected'));
 el.classList.add('selected');
+}
+
+// Wallet Tab Switching
+function switchPayTab(tab){
+switchPage('pay');
+document.querySelectorAll('.pay-tab').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('.paytab-content').forEach(c=>c.style.display='none');
+const tabBtn=document.getElementById('ptab-'+tab);
+const tabContent=document.getElementById('paytab-'+tab);
+if(tabBtn)tabBtn.classList.add('active');
+if(tabContent)tabContent.style.display='block';
+}
+
+// Copy to clipboard
+function copyText(text){
+if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>showToast('Copied!'));showToast('Copied!');}
+else{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Copied!');}
+}
+
+// Send Money
+function updateSendSummary(){
+const amt=document.getElementById('sendAmount').value;
+const sum=document.getElementById('sendSummary');
+const sumText=document.getElementById('sendSummaryText');
+if(amt&&parseFloat(amt)>0){
+const selected=document.querySelector('.pay-method.selected .pay-name');
+const method=selected?selected.textContent:'GDEG Token';
+const ngn=parseFloat(amt);
+const gdeg=Math.round(ngn/15);
+sum.style.display='block';
+sumText.innerHTML='Amount: ₦'+ngn.toLocaleString()+'<br>Method: '+method+(method.includes('GDEG')?'<br>Equivalent: '+gdeg+' GDEG':'');
+}else{sum.style.display='none';}
+}
+
+function processSend(){
+const amt=document.getElementById('sendAmount').value;
+const rec=document.getElementById('sendRecipient').value;
+if(!amt||parseFloat(amt)<=0){showToast('Enter amount to send');return;}
+if(!rec){showToast('Enter recipient details');return;}
+const selected=document.querySelector('.pay-method.selected .pay-name');
+const method=selected?selected.textContent:'GDEG Token';
+const result=document.getElementById('sendResult');
+const ngn=parseFloat(amt);
+if(method.includes('Bank')){
+result.style.display='block';
+result.innerHTML='<div style="background:var(--card);border:1px solid var(--p3);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;color:var(--p3);margin-bottom:8px">✓ Transfer Instructions</div><div style="font-size:.75rem;color:var(--text);line-height:1.6">Transfer ₦'+ngn.toLocaleString()+' to:<br><br>🏦 UBA — 2034326424<br>👤 Rabiu Hamza<br><br>After transfer, send proof to WhatsApp for confirmation.</div><button onclick="copyText(\'2034326424\')" style="margin-top:10px;background:var(--card2);border:none;border-radius:8px;padding:8px 14px;font-size:.7rem;color:var(--p2);cursor:pointer">Copy Account Number</button></div>';
+}else if(method.includes('USDT')){
+const usd=(ngn/1500).toFixed(2);
+result.style.display='block';
+result.innerHTML='<div style="background:var(--card);border:1px solid var(--p4);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;color:var(--p4);margin-bottom:8px">✓ USDT Payment</div><div style="font-size:.75rem;color:var(--text);line-height:1.6">Send ~$'+usd+' USDT (TRC20) to:<br><br>₮ TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr<br><br>Wallet credits after 1 confirmation.</div><button onclick="copyText(\'TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr\')" style="margin-top:10px;background:var(--card2);border:none;border-radius:8px;padding:8px 14px;font-size:.7rem;color:var(--p2);cursor:pointer">Copy Address</button></div>';
+}else if(method.includes('GDEG')){
+const gdeg=Math.round(ngn/15);
+result.style.display='block';
+result.innerHTML='<div style="background:var(--card);border:1px solid var(--p1);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;color:var(--p1);margin-bottom:8px">✓ GDEG Token Payment</div><div style="font-size:.75rem;color:var(--text);line-height:1.6">Send '+gdeg+' GDEG to:<br><br>⚡ 0x0B63dE2c45A0c25dC290aF51347f95D82EBbe51fe3C1<br><br>10% discount applied. Network: Polygon.</div><button onclick="copyText(\'0x0B63dE2c45A0c25dC290aF51347f95D82EBbe51fe3C1\')" style="margin-top:10px;background:var(--card2);border:none;border-radius:8px;padding:8px 14px;font-size:.7rem;color:var(--p2);cursor:pointer">Copy Wallet</button></div>';
+}else{
+result.style.display='block';
+result.innerHTML='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;margin-bottom:8px">Processing...</div><div style="font-size:.75rem;color:var(--muted)">'+method+' for ₦'+ngn.toLocaleString()+' — redirecting to HarzPay</div></div>';
+setTimeout(()=>openLink('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html'),1000);
+}
+showToast('Payment details ready');
+}
+
+// Request Money
+function updateReqSummary(){
+const amt=document.getElementById('reqAmount').value;
+const sum=document.getElementById('reqSummary');
+const sumText=document.getElementById('reqSummaryText');
+if(amt&&parseFloat(amt)>0){
+const ngn=parseFloat(amt);
+const gdeg=Math.round(ngn/15);
+const usd=(ngn/1500).toFixed(2);
+sum.style.display='block';
+sumText.innerHTML='💰 Amount: ₦'+ngn.toLocaleString()+' (~$'+usd+')<br>⚡ GDEG: '+gdeg+' tokens<br>🏦 UBA: 2034326424<br>👤 Rabiu Hamza<br>₮ USDT: TVE2ia3...X5Cr';
+}else{sum.style.display='none';}
+}
+
+function processRequest(){
+const amt=document.getElementById('reqAmount').value;
+if(!amt||parseFloat(amt)<=0){showToast('Enter amount to request');return;}
+const ngn=parseFloat(amt);
+const from=document.getElementById('reqFrom').value||'Recipient';
+const desc=document.getElementById('reqDesc').value||'';
+const gdeg=Math.round(ngn/15);
+const usd=(ngn/1500).toFixed(2);
+const result=document.getElementById('reqResult');
+const reqText='Payment Request from Rabiu Hamza\\n\\nAmount: ₦'+ngn.toLocaleString()+' (~$'+usd+')\\n'+(desc?'For: '+desc+'\\n':'')+'\\nPay to:\\n🏦 UBA — 2034326424 — Rabiu Hamza\\n₮ USDT (TRC20): TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr\\n⚡ GDEG (Polygon): '+gdeg+' tokens\\n\\n— Sent via HARZ Super App';
+result.style.display='block';
+result.innerHTML='<div style="background:var(--card);border:1px solid var(--p3);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;color:var(--p3);margin-bottom:8px">✓ Request Ready</div><div style="font-size:.75rem;color:var(--text);line-height:1.6;margin-bottom:12px">Payment request for ₦'+ngn.toLocaleString()+' to '+from+' is ready. Share the details below:</div><textarea id="reqText" style="width:100%;height:120px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:.7rem;resize:none" readonly>'+reqText.replace(/\\n/g,'\n')+'</textarea><div style="display:flex;gap:8px;margin-top:10px"><button onclick="copyText(document.getElementById(\'reqText\').value)" style="flex:1;background:var(--card2);border:none;border-radius:8px;padding:10px;font-size:.7rem;color:var(--p2);cursor:pointer">📋 Copy</button><button onclick="shareWhatsApp(\''+ngn+'\',\''+from+'\',\''+desc.replace(/'/g,"")+'\')" style="flex:1;background:#25D366;border:none;border-radius:8px;padding:10px;font-size:.7rem;color:#fff;cursor:pointer">💬 WhatsApp</button></div></div>';
+showToast('Request generated');
+}
+
+function shareWhatsApp(amt,from,desc){
+const text='Payment Request from Rabiu Hamza\\n\\nAmount: ₦'+parseFloat(amt).toLocaleString()+'\\n'+(desc?'For: '+desc+'\\n':'')+'\\nPay to:\\n🏦 UBA — 2034326424 — Rabiu Hamza\\n₮ USDT: TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr\\n\\n— Sent via HARZ Super App';
+window.open('https://wa.me/?text='+encodeURIComponent(text.replace(/\\n/g,'\n')),'_blank');
+}
+
+// Top Up
+function showTopupDetails(method){
+const el=document.getElementById('topup-'+method);
+if(!el)return;
+const isShown=el.style.display!=='none';
+document.querySelectorAll('[id^="topup-"]').forEach(e=>{if(e.id.startsWith('topup-')&&e.id!=='topupAmount')e.style.display='none';});
+if(isShown){el.style.display='none';}else{el.style.display='block';}
 }
 
 // AI Chat
