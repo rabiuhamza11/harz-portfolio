@@ -409,14 +409,12 @@ async function apiGet(action, params={}) {
   url.searchParams.set('action', action);
   Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000);
+  const timeout = setTimeout(() => controller.abort(), 5000);
   try {
-    const res = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeoutId);
-    return res.json();
-  } catch(e) {
-    clearTimeout(timeoutId);
-    throw e;
+    const res = await fetch(url, {signal: controller.signal});
+    return await res.json();
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -542,22 +540,21 @@ async function renderFeed() {
   if (loading) {
     g.innerHTML = '<div style="text-align:center;padding:40px"><div class="typing"><span></span><span></span><span></span></div><p class="text-gray-500 text-sm mt-2">Loading feed...</p></div>';
   }
-  // 6-second safety net: if feed still loading, force fallback
-  const safetyNet = setTimeout(() => {
-    if (loading) {
-      loading = false;
-      posts = [...localPosts, ...FALLBACK_POSTS];
-      renderFeedContent();
-    }
+  // Safety timeout: if API hangs, show fallback after 6s
+  const safetyTimer = setTimeout(() => {
+    loading = false;
+    posts = [...localPosts, ...FALLBACK_POSTS];
+    renderFeedContent();
   }, 6000);
   try {
     const data = await apiGet('feed');
-    clearTimeout(safetyNet);
+    clearTimeout(safetyTimer);
     let apiPosts = data.posts || [];
     loading = false;
     // Merge API posts with locally created posts (avoid duplicates)
     if (apiPosts.length > 0) {
       posts = apiPosts;
+      // Add local posts that aren't in API response yet
       localPosts.forEach(lp => {
         if (!posts.find(p => p.id === lp.id || p.content === lp.content)) {
           posts.unshift(lp);
@@ -569,7 +566,7 @@ async function renderFeed() {
     }
     renderFeedContent();
   } catch(e) {
-    clearTimeout(safetyNet);
+    clearTimeout(safetyTimer);
     loading = false;
     // API failed — use fallback + local posts
     posts = [...localPosts, ...FALLBACK_POSTS];
