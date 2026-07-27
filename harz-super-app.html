@@ -642,41 +642,104 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 <iframe id="app-frame" style="flex:1;border:none;width:100%;background:#fff" allow="camera;microphone;geolocation;clipboard-read;clipboard-write;clipboard-write;allow-popups;allow-same-origin" allowfullscreen></iframe>
 </div>
-<script>document.getElementById('app-overlay').style.display='none';</script>
+
 <!-- Toast -->
 <div id="toast" class="toast"></div>
 
 <script>
+// Track current page so closeApp returns to where user was
+let currentPage='home';
+const _origSwitchPage=switchPage;
+
+// Navigation history for iframe
+let iframeHistory=[];
+let iframeHistoryIndex=-1;
+
 function openLink(u){
 const overlay=document.getElementById('app-overlay');
 const frame=document.getElementById('app-frame');
 const title=document.getElementById('app-title');
+overlay.style.display='flex';
 frame.src=u;
-overlay.classList.add('show');
+// Track iframe history
+iframeHistory=[u];
+iframeHistoryIndex=0;
 // Extract app name from URL for the header
 const parts=u.split('/');
 let name=parts[parts.length-1].replace('.html','').replace(/[-_]/g,' ');
 name=name.charAt(0).toUpperCase()+name.slice(1);
 if(u.includes('vercel.app')){name=parts[2].split('.')[0];}
+if(u.includes('getly.store')){name='HarzDM Getly Store';}
+if(u.includes('gumroad.com')){name='Gumroad Store';}
 title.textContent=name;
 document.body.style.overflow='hidden';
 }
+
 function closeApp(){
 const overlay=document.getElementById('app-overlay');
 const frame=document.getElementById('app-frame');
 frame.src='about:blank';
-overlay.classList.remove('show');
+overlay.style.display='none';
 document.body.style.overflow='';
+// Return to the page the user was on, NOT always home
+const activePage=document.querySelector('.page.active');
+if(activePage){
+const pgId=activePage.id.replace('page-','');
+switchPage(pgId);
+}else{
 switchPage('home');
 }
+iframeHistory=[];
+iframeHistoryIndex=-1;
+}
+
 function iframeBack(){
-try{document.getElementById('app-frame').contentWindow.history.back();}catch(e){closeApp();}
+try{
+const frame=document.getElementById('app-frame');
+if(iframeHistoryIndex>0){
+iframeHistoryIndex--;
+frame.src=iframeHistory[iframeHistoryIndex];
+}else{
+// No more history in iframe, try native back
+try{
+const canGoBack=frame.contentWindow.history.length>1;
+if(canGoBack){
+frame.contentWindow.history.back();
+}else{
+closeApp();
 }
+}catch(e){
+closeApp();
+}
+}
+}catch(e){
+closeApp();
+}
+}
+
 function iframeForward(){
-try{document.getElementById('app-frame').contentWindow.history.forward();}catch(e){}
+try{
+const frame=document.getElementById('app-frame');
+if(iframeHistoryIndex<iframeHistory.length-1){
+iframeHistoryIndex++;
+frame.src=iframeHistory[iframeHistoryIndex];
+}else{
+frame.contentWindow.history.forward();
 }
+}catch(e){}
+}
+
 function iframeReload(){
-try{document.getElementById('app-frame').contentWindow.location.reload();}catch(e){const f=document.getElementById('app-frame');const s=f.src;f.src=s;}
+try{
+const frame=document.getElementById('app-frame');
+const currentSrc=frame.src;
+frame.src='about:blank';
+setTimeout(()=>{frame.src=currentSrc;},100);
+}catch(e){
+const f=document.getElementById('app-frame');
+const s=f.src;
+f.src=s;
+}
 }
 // App search database
 const APP_DB=[
