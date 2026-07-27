@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HARZ Farm Manager</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--red:#EF4444;--orange:#f97316}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
+.header{background:linear-gradient(135deg,rgba(0,230,118,.15),rgba(34,197,94,.1));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header h1{font-size:1.4rem;font-weight:800}
+.header h1 span{color:var(--green)}
+.header p{font-size:.75rem;color:var(--muted);margin-top:4px}
+.container{max-width:600px;margin:0 auto;padding:12px}
+.section{margin-bottom:16px}
+.section-title{font-size:.9rem;font-weight:700;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.stat-icon{font-size:1.5rem;margin-bottom:4px}
+.stat-value{font-size:1.3rem;font-weight:800}
+.stat-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.crops-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.crop-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px}
+.crop-name{font-weight:700;font-size:.85rem;margin-bottom:4px}
+.crop-status{font-size:.7rem;padding:2px 8px;border-radius:10px;display:inline-block}
+.status-growing{background:rgba(0,230,118,.15);color:var(--green)}
+.status-ready{background:rgba(245,158,11,.15);color:var(--gold)}
+.status-planted{background:rgba(59,130,246,.15);color:var(--blue)}
+.crop-progress{height:6px;background:var(--bg);border-radius:3px;margin-top:8px;overflow:hidden}
+.crop-bar{height:100%;border-radius:3px;transition:width .3s}
+.task-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px}
+.task-check{width:20px;height:20px;border:2px solid var(--border);border-radius:50%;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.task-check.done{background:var(--green);border-color:var(--green);color:#000;font-size:.7rem}
+.task-text{flex:1;font-size:.8rem}
+.task-text.done{text-decoration:line-through;color:var(--muted)}
+.task-date{font-size:.65rem;color:var(--muted)}
+.weather-card{background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(99,179,237,.1));border:1px solid rgba(59,130,246,.3);border-radius:12px;padding:14px;margin-bottom:12px}
+.weather-row{display:flex;justify-content:space-between;align-items:center}
+.weather-temp{font-size:1.8rem;font-weight:800}
+.weather-desc{font-size:.75rem;color:var(--muted)}
+.weather-icon{font-size:2rem}
+.expense-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.expense-total{font-weight:700;color:var(--gold);font-size:.9rem;margin-top:8px;text-align:right}
+.btn{background:var(--green);color:#000;border:none;border-radius:8px;padding:10px 20px;font-size:.85rem;font-weight:700;cursor:pointer;width:100%;margin-top:8px}
+.btn:active{opacity:.8}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0;z-index:100}
+.nav-item{text-align:center;font-size:.65rem;color:var(--muted);cursor:pointer;padding:4px 8px}
+.nav-item.active{color:var(--green)}
+.nav-icon{font-size:1.2rem;display:block;margin-bottom:2px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;justify-content:center;align-items:flex-end}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:500px;max-height:70vh;overflow-y:auto}
+.modal h3{font-size:1rem;margin-bottom:12px;color:var(--green)}
+.modal input,.modal select,.modal textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:.85rem;margin-bottom:10px;outline:none}
+.modal input:focus,.modal select:focus,.modal textarea:focus{border-color:var(--green)}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:8px 20px;border-radius:20px;font-size:.8rem;font-weight:600;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🌾 <span>HARZ</span> Farm Manager</h1>
+<p>Complete farm tracking & management</p>
+</div>
+<div class="container">
+
+<div class="weather-card">
+<div class="weather-row">
+<div><div class="weather-temp">32°C</div><div class="weather-desc">Sunny · Abuja, NG</div></div>
+<div class="weather-icon">☀️</div>
+</div>
+<div style="margin-top:8px;font-size:.7rem;color:var(--muted)">Rain expected Thursday — good for newly planted crops</div>
+</div>
+
+<div class="stat-grid">
+<div class="stat"><div class="stat-icon">🌱</div><div class="stat-value" id="cropCount">5</div><div class="stat-label">Active Crops</div></div>
+<div class="stat"><div class="stat-icon">🐄</div><div class="stat-value">12</div><div class="stat-label">Livestock</div></div>
+<div class="stat"><div class="stat-icon">💰</div><div class="stat-value">₦847K</div><div class="stat-label">Revenue</div></div>
+<div class="stat"><div class="stat-icon">📉</div><div class="stat-value">₦312K</div><div class="stat-label">Expenses</div></div>
+</div>
+
+<div class="section">
+<div class="section-title">🌱 Crops <span style="margin-left:auto;font-size:.75rem;color:var(--green);cursor:pointer" onclick="openModal('cropModal')">+ Add</span></div>
+<div class="crops-grid" id="cropsGrid">
+<div class="crop-card"><div class="crop-name">🌽 Maize</div><span class="crop-status status-growing">Growing</span><div class="crop-progress"><div class="crop-bar" style="width:65%;background:var(--green)"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px">2.5 acres · 65% mature</div></div>
+<div class="crop-card"><div class="crop-name">🥔 Cassava</div><span class="crop-status status-planted">Planted</span><div class="crop-progress"><div class="crop-bar" style="width:20%;background:var(--blue)"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px">1.5 acres · 20% mature</div></div>
+<div class="crop-card"><div class="crop-name">🍅 Tomatoes</div><span class="crop-status status-ready">Ready!</span><div class="crop-progress"><div class="crop-bar" style="width:95%;background:var(--gold)"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px">0.5 acres · 95% mature</div></div>
+<div class="crop-card"><div class="crop-name">🌶️ Pepper</div><span class="crop-status status-growing">Growing</span><div class="crop-progress"><div class="crop-bar" style="width:55%;background:var(--green)"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px">0.8 acres · 55% mature</div></div>
+<div class="crop-card"><div class="crop-name">🥕 Carrots</div><span class="crop-status status-planted">Planted</span><div class="crop-progress"><div class="crop-bar" style="width:15%;background:var(--blue)"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px">0.3 acres · 15% mature</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">📋 Today's Tasks <span style="margin-left:auto;font-size:.75rem;color:var(--green);cursor:pointer" onclick="openModal('taskModal')">+ Add</span></div>
+<div id="taskList">
+<div class="task-item"><div class="task-check done" onclick="toggleTask(this)">✓</div><div class="task-text done">Water tomato garden (morning)</div><div class="task-date">6:00 AM</div></div>
+<div class="task-item"><div class="task-check" onclick="toggleTask(this)"></div><div class="task-text">Apply fertilizer to maize field</div><div class="task-date">8:00 AM</div></div>
+<div class="task-item"><div class="task-check" onclick="toggleTask(this)"></div><div class="task-text">Check cassava for pests</div><div class="task-date">10:00 AM</div></div>
+<div class="task-item"><div class="task-check" onclick="toggleTask(this)"></div><div class="task-text">Harvest ripe tomatoes</div><div class="task-date">2:00 PM</div></div>
+<div class="task-item"><div class="task-check" onclick="toggleTask(this)"></div><div class="task-text">Feed livestock — cattle & goats</div><div class="task-date">4:00 PM</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">💰 Recent Expenses</div>
+<div class="card">
+<div class="expense-row"><span>Seeds — Maize & Cassava</span><span>₦45,000</span></div>
+<div class="expense-row"><span>Fertilizer (NPK 15-15-15)</span><span>₦28,000</span></div>
+<div class="expense-row"><span>Livestock feed (weekly)</span><span>₦15,000</span></div>
+<div class="expense-row"><span>Farm labor (3 workers)</span><span>₦12,000</span></div>
+<div class="expense-row"><span>Pesticide spray</span><span>₦8,500</span></div>
+<div class="expense-total">Total This Month: ₦108,500</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">📈 Harvest Schedule</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.8rem"><span>🍅 Tomatoes</span><span style="color:var(--gold)">This week</span></div>
+<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.8rem"><span>🌽 Maize</span><span style="color:var(--green)">~3 weeks</span></div>
+<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.8rem"><span>🌶️ Pepper</span><span style="color:var(--green)">~4 weeks</span></div>
+<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.8rem"><span>🥔 Cassava</span><span style="color:var(--blue)">~3 months</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">🐄 Livestock</div>
+<div class="stat-grid">
+<div class="stat"><div class="stat-icon">🐂</div><div class="stat-value">6</div><div class="stat-label">Cattle</div></div>
+<div class="stat"><div class="stat-icon">🐐</div><div class="stat-value">4</div><div class="stat-label">Goats</div></div>
+<div class="stat"><div class="stat-icon">🐔</div><div class="stat-value">2</div><div class="stat-label">Poultry</div></div>
+<div class="stat"><div class="stat-icon">🐑</div><div class="stat-value">0</div><div class="stat-label">Sheep</div></div>
+</div>
+</div>
+
+</div>
+
+<div class="bottom-nav">
+<div class="nav-item active"><span class="nav-icon">🏠</span>Home</div>
+<div class="nav-item" onclick="showToast('Crops section')"><span class="nav-icon">🌱</span>Crops</div>
+<div class="nav-item" onclick="showToast('Livestock section')"><span class="nav-icon">🐄</span>Stock</div>
+<div class="nav-item" onclick="showToast('Finance section')"><span class="nav-icon">💰</span>Finance</div>
+<div class="nav-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html')"><span class="nav-icon">🔙</span>Super App</div>
+</div>
+
+<div class="modal-overlay" id="cropModal">
+<div class="modal">
+<h3>🌱 Add New Crop</h3>
+<input type="text" id="newCropName" placeholder="Crop name (e.g. Rice)">
+<select id="newCropStatus"><option value="planted">Planted</option><option value="growing">Growing</option><option value="ready">Ready</option></select>
+<input type="text" id="newCropArea" placeholder="Area (e.g. 1.0 acres)">
+<input type="number" id="newCropProgress" placeholder="Progress % (0-100)" min="0" max="100">
+<button class="btn" onclick="addCrop()">Add Crop</button>
+<button class="btn" style="background:var(--border);color:var(--text);margin-top:6px" onclick="closeModal('cropModal')">Cancel</button>
+</div>
+</div>
+
+<div class="modal-overlay" id="taskModal">
+<div class="modal">
+<h3>📋 Add New Task</h3>
+<input type="text" id="newTaskText" placeholder="Task description">
+<input type="text" id="newTaskTime" placeholder="Time (e.g. 9:00 AM)">
+<button class="btn" onclick="addTask()">Add Task</button>
+<button class="btn" style="background:var(--border);color:var(--text);margin-top:6px" onclick="closeModal('taskModal')">Cancel</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function toggleTask(el){el.classList.toggle('done');el.textContent=el.classList.contains('done')?'✓':'';el.nextElementSibling.classList.toggle('done')}
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000)}
+function openLink(url){window.open(url,'_blank')}
+function addCrop(){
+var name=document.getElementById('newCropName').value.trim();
+var status=document.getElementById('newCropStatus').value;
+var area=document.getElementById('newCropArea').value.trim()||'0.5 acres';
+var progress=document.getElementById('newCropProgress').value||'10';
+if(!name){showToast('Enter crop name');return}
+var emoji={'rice':'🍚','beans':'🫘','yam':'🍠','onion':'🧅','lettuce':'🥬','cabbage':'🥬','watermelon':'🍉','pumpkin':'🎃','groundnut':'🥜','soybean':'🫘'}
+var em='🌱';
+for(var k in emoji){if(name.toLowerCase().includes(k)){em=emoji[k];break}}
+var statusClass={'planted':'status-planted','growing':'status-growing','ready':'status-ready'};
+var statusColor={'planted':'var(--blue)','growing':'var(--green)','ready':'var(--gold)'};
+var statusLabel={'planted':'Planted','growing':'Growing','ready':'Ready!'};
+var card=document.createElement('div');
+card.className='crop-card';
+card.innerHTML='<div class="crop-name">'+em+' '+name+'</div><span class="crop-status '+statusClass[status]+'">'+statusLabel[status]+'</span><div class="crop-progress"><div class="crop-bar" style="width:'+progress+'%;background:'+statusColor[status]+'"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px">'+area+' · '+progress+'% mature</div>';
+document.getElementById('cropsGrid').appendChild(card);
+document.getElementById('cropCount').textContent=parseInt(document.getElementById('cropCount').textContent)+1;
+closeModal('cropModal');
+document.getElementById('newCropName').value='';document.getElementById('newCropArea').value='';document.getElementById('newCropProgress').value='';
+showToast(name+' added!')
+}
+function addTask(){
+var text=document.getElementById('newTaskText').value.trim();
+var time=document.getElementById('newTaskTime').value.trim()||'Anytime';
+if(!text){showToast('Enter task');return}
+var item=document.createElement('div');
+item.className='task-item';
+item.innerHTML='<div class="task-check" onclick="toggleTask(this)"></div><div class="task-text">'+text+'</div><div class="task-date">'+time+'</div>';
+document.getElementById('taskList').appendChild(item);
+closeModal('taskModal');
+document.getElementById('newTaskText').value='';document.getElementById('newTaskTime').value='';
+showToast('Task added!')
+}
+</script>
+</body>
+</html>
