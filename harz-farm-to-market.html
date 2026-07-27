@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HARZ Farm to Market</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--red:#EF4444;--orange:#f97316}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
+.header{background:linear-gradient(135deg,rgba(0,230,118,.15),rgba(245,158,11,.1));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header h1{font-size:1.3rem;font-weight:800}
+.header h1 span{color:var(--green)}
+.header p{font-size:.75rem;color:var(--muted);margin-top:4px}
+.container{max-width:600px;margin:0 auto;padding:12px}
+.search-row{display:flex;gap:8px;margin-bottom:12px}
+.search-row input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:10px 16px;color:var(--text);font-size:.85rem;outline:none}
+.search-row input:focus{border-color:var(--green)}
+.filter-chips{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--muted);white-space:nowrap;cursor:pointer}
+.chip.active{background:var(--green);color:#000;border-color:var(--green)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.stat-value{font-size:1.1rem;font-weight:800}
+.stat-label{font-size:.6rem;color:var(--muted);text-transform:uppercase}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:all .15s}
+.product-card:active{border-color:var(--green)}
+.product-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(0,230,118,.08),rgba(245,158,11,.05))}
+.product-info{padding:12px}
+.product-name{font-weight:700;font-size:.9rem;margin-bottom:2px}
+.product-farm{font-size:.7rem;color:var(--muted);margin-bottom:6px}
+.product-price-row{display:flex;justify-content:space-between;align-items:center}
+.product-price{font-size:1.1rem;font-weight:800;color:var(--green)}
+.product-unit{font-size:.65rem;color:var(--muted)}
+.product-badge{font-size:.6rem;padding:2px 8px;border-radius:10px;background:rgba(0,230,118,.15);color:var(--green);font-weight:600}
+.product-badge.organic{background:rgba(34,197,94,.15);color:#22c55e}
+.section-title{font-size:.9rem;font-weight:700;color:var(--green);margin:16px 0 8px}
+.add-btn{background:var(--green);color:#000;border:none;border-radius:10px;padding:12px;font-size:.85rem;font-weight:700;cursor:pointer;width:100%;margin-bottom:12px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;justify-content:center;align-items:flex-end}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:500px;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:1rem;margin-bottom:12px;color:var(--green)}
+.modal input,.modal select,.modal textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:.85rem;margin-bottom:10px;outline:none;font-family:inherit}
+.modal input:focus,.modal select:focus{border-color:var(--green)}
+.modal .btn{width:100%;background:var(--green);color:#000;border:none;border-radius:8px;padding:12px;font-size:.9rem;font-weight:700;cursor:pointer}
+.modal .btn.cancel{background:var(--border);color:var(--text);margin-top:6px}
+.order-modal{background:var(--card);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:500px}
+.qty-row{display:flex;align-items:center;gap:12px;margin:12px 0}
+.qty-btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-display{font-size:1.5rem;font-weight:800;min-width:40px;text-align:center}
+.cart-summary{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;margin:12px 0}
+.cart-row{display:flex;justify-content:space-between;font-size:.8rem;padding:4px 0}
+.cart-total{font-weight:800;font-size:1rem;color:var(--green);border-top:1px solid var(--border);padding-top:8px;margin-top:4px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:10px 24px;border-radius:20px;font-size:.85rem;font-weight:600;z-index:300;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0;z-index:100}
+.nav-item{text-align:center;font-size:.65rem;color:var(--muted);cursor:pointer}
+.nav-item.active{color:var(--green)}
+.nav-icon{font-size:1.2rem;display:block;margin-bottom:2px}
+.cart-badge{background:var(--red);color:#fff;border-radius:50%;font-size:.5rem;padding:1px 5px;position:absolute}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🌾 <span>HARZ</span> Farm to Market</h1>
+<p>Sell fresh produce directly from farm to buyer</p>
+</div>
+
+<div class="container">
+<div class="search-row">
+<input type="text" id="searchInput" placeholder="Search produce..." oninput="filterProducts()">
+</div>
+
+<div class="filter-chips">
+<div class="chip active" onclick="filterCategory(this,'all')">All</div>
+<div class="chip" onclick="filterCategory(this,'vegetables')">🥬 Vegetables</div>
+<div class="chip" onclick="filterCategory(this,'grains')">🌽 Grains</div>
+<div class="chip" onclick="filterCategory(this,'tubers')">🥔 Tubers</div>
+<div class="chip" onclick="filterCategory(this,'fruits')">🍅 Fruits</div>
+<div class="chip" onclick="filterCategory(this,'livestock')">🐄 Livestock</div>
+</div>
+
+<div class="stat-grid">
+<div class="stat"><div class="stat-value">12</div><div class="stat-label">Products</div></div>
+<div class="stat"><div class="stat-value">3</div><div class="stat-label">Farms</div></div>
+<div class="stat"><div class="stat-value">₦847K</div><div class="stat-label">Sold</div></div>
+</div>
+
+<button class="add-btn" onclick="openModal('sellModal')">+ List Your Produce</button>
+
+<div class="section-title">🛒 Available Now</div>
+<div id="productsList">
+<div class="product-card" onclick="openOrder('Fresh Tomatoes','₦4,500','per crate','🍅','vegetables','organic')">
+<div class="product-img">🍅</div>
+<div class="product-info">
+<div class="product-name">Fresh Tomatoes</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦4,500</span> <span class="product-unit">per crate</span></div><span class="product-badge organic">Organic</span></div>
+</div>
+</div>
+<div class="product-card" onclick="openOrder('Sweet Maize','₦2,500','per bag','🌽','grains','')">
+<div class="product-img">🌽</div>
+<div class="product-info">
+<div class="product-name">Sweet Maize</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦2,500</span> <span class="product-unit">per bag (50kg)</span></div><span class="product-badge">Fresh</span></div>
+</div>
+</div>
+<div class="product-card" onclick="openOrder('Cassava Tubers','₦3,000','per bag','🥔','tubers','')">
+<div class="product-img">🥔</div>
+<div class="product-info">
+<div class="product-name">Cassava Tubers</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦3,000</span> <span class="product-unit">per bag</span></div><span class="product-badge">Fresh</span></div>
+</div>
+</div>
+<div class="product-card" onclick="openOrder('Hot Pepper','₦6,000','per bag','🌶️','vegetables','organic')">
+<div class="product-img">🌶️</div>
+<div class="product-info">
+<div class="product-name">Hot Pepper (Rodo)</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦6,000</span> <span class="product-unit">per bag</span></div><span class="product-badge organic">Organic</span></div>
+</div>
+</div>
+<div class="product-card" onclick="openOrder('Fresh Carrots','₦3,500','per bag','🥕','vegetables','')">
+<div class="product-img">🥕</div>
+<div class="product-info">
+<div class="product-name">Fresh Carrots</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦3,500</span> <span class="product-unit">per bag</span></div><span class="product-badge">Fresh</span></div>
+</div>
+</div>
+<div class="product-card" onclick="openOrder('Yam Tubers','₦4,000','per tuber','🍠','tubers','')">
+<div class="product-img">🍠</div>
+<div class="product-info">
+<div class="product-name">Yam Tubers (Puna)</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦4,000</span> <span class="product-unit">per tuber</span></div><span class="product-badge">Premium</span></div>
+</div>
+</div>
+<div class="product-card" onclick="openOrder('Live Chicken','₦5,500','each','🐔','livestock','')">
+<div class="product-img">🐔</div>
+<div class="product-info">
+<div class="product-name">Live Chicken (Free Range)</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦5,500</span> <span class="product-unit">each</span></div><span class="product-badge">Free Range</span></div>
+</div>
+</div>
+<div class="product-card" onclick="openOrder('Fresh Goat Meat','₦7,000','per kg','🐐','livestock','')">
+<div class="product-img">🐐</div>
+<div class="product-info">
+<div class="product-name">Fresh Goat Meat</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦7,000</span> <span class="product-unit">per kg</span></div><span class="product-badge">Halal</span></div>
+</div>
+</div>
+<div class="product-card" onclick="openOrder('Watermelon','₦2,000','each','🍉','fruits','')">
+<div class="product-img">🍉</div>
+<div class="product-info">
+<div class="product-name">Watermelon (Fresh)</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦2,000</span> <span class="product-unit">each</span></div><span class="product-badge">Sweet</span></div>
+</div>
+</div>
+<div class="product-card" onclick="openOrder('Sweet Pepper','₦5,000','per bag','🫑','vegetables','organic')">
+<div class="product-img">🫑</div>
+<div class="product-info">
+<div class="product-name">Sweet Bell Pepper</div>
+<div class="product-farm">Harz Farm · Abuja</div>
+<div class="product-price-row"><div><span class="product-price">₦5,000</span> <span class="product-unit">per bag</span></div><span class="product-badge organic">Organic</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="bottom-nav">
+<div class="nav-item active" onclick="window.scrollTo(0,0)"><span class="nav-icon">🛒</span>Market</div>
+<div class="nav-item" onclick="showToast('Orders page')"><span class="nav-icon">📦</span>Orders</div>
+<div class="nav-item" onclick="showToast('Farm dashboard')"><span class="nav-icon">🌾</span>Farm</div>
+<div class="nav-item" onclick="openModal('sellModal')"><span class="nav-icon">➕</span>Sell</div>
+<div class="nav-item" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html','_blank')"><span class="nav-icon">🔙</span>Super App</div>
+</div>
+
+<div class="modal-overlay" id="sellModal">
+<div class="modal">
+<h3>🌾 List Your Produce</h3>
+<input type="text" id="sellName" placeholder="Product name (e.g. Fresh Onions)">
+<input type="number" id="sellPrice" placeholder="Price (₦)">
+<input type="text" id="sellUnit" placeholder="Unit (e.g. per bag, per kg)">
+<select id="sellCategory"><option value="vegetables">Vegetables</option><option value="grains">Grains</option><option value="tubers">Tubers</option><option value="fruits">Fruits</option><option value="livestock">Livestock</option></select>
+<input type="text" id="sellQty" placeholder="Quantity available (e.g. 50 bags)">
+<textarea id="sellDesc" rows="2" placeholder="Description (optional)"></textarea>
+<button class="btn" onclick="addProduct()">List Product</button>
+<button class="btn cancel" onclick="closeModal('sellModal')">Cancel</button>
+</div>
+</div>
+
+<div class="modal-overlay" id="orderModal">
+<div class="order-modal">
+<h3 id="orderTitle">Order Product</h3>
+<div style="font-size:.8rem;color:var(--muted);margin-bottom:8px" id="orderFarm">Harz Farm · Abuja</div>
+<div class="qty-row">
+<div style="font-size:.85rem">Quantity:</div>
+<div class="qty-btn" onclick="changeQty(-1)">−</div>
+<div class="qty-display" id="qtyDisplay">1</div>
+<div class="qty-btn" onclick="changeQty(1)">+</div>
+</div>
+<div class="cart-summary">
+<div class="cart-row"><span>Unit Price</span><span id="orderPrice">₦0</span></div>
+<div class="cart-row"><span>Quantity</span><span id="orderQtyText">1</span></div>
+<div class="cart-row"><span>Delivery</span><span>₦1,500</span></div>
+<div class="cart-total"><span>Total</span><span id="orderTotal">₦0</span></div>
+</div>
+<label style="display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px">Delivery Address</label>
+<input type="text" id="deliveryAddr" placeholder="Your address" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:.85rem;margin-bottom:10px;outline:none">
+<label style="display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px">Phone Number</label>
+<input type="tel" id="orderPhone" placeholder="+234 800 000 0000" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:.85rem;margin-bottom:10px;outline:none">
+<button class="btn" onclick="placeOrder()" style="width:100%;background:var(--green);color:#000;border:none;border-radius:8px;padding:12px;font-size:.9rem;font-weight:700;cursor:pointer">Place Order</button>
+<button class="btn cancel" onclick="closeModal('orderModal')">Cancel</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+var currentQty=1;
+var currentPrice=0;
+var currentUnit='';
+
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+
+function filterCategory(el,cat){
+document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active')});
+el.classList.add('active');
+var cards=document.querySelectorAll('.product-card');
+cards.forEach(function(c){
+c.style.display=(cat==='all'||c.getAttribute('onclick').indexOf("'"+cat+"'")>=0)?'block':'none';
+});
+}
+
+function filterProducts(){
+var q=document.getElementById('searchInput').value.toLowerCase();
+document.querySelectorAll('.product-card').forEach(function(c){
+var name=c.querySelector('.product-name').textContent.toLowerCase();
+c.style.display=name.indexOf(q)>=0?'block':'none';
+});
+}
+
+function addProduct(){
+var name=document.getElementById('sellName').value.trim();
+var price=document.getElementById('sellPrice').value.trim();
+var unit=document.getElementById('sellUnit').value.trim();
+var cat=document.getElementById('sellCategory').value;
+var qty=document.getElementById('sellQty').value.trim();
+if(!name||!price||!unit){showToast('Fill required fields');return}
+var emojis={vegetables:'🥬',grains:'🌽',tubers:'🥔',fruits:'🍉',livestock:'🐄'};
+var card=document.createElement('div');
+card.className='product-card';
+card.setAttribute('onclick',"openOrder('"+name+"','"+price+"','"+unit+"','"+emojis[cat]+"','"+cat+"','')");
+card.innerHTML='<div class="product-img" style="height:120px;display:flex;align-items:center;justify-content:center;font-size:3rem">'+emojis[cat]+'</div><div class="product-info"><div class="product-name">'+name+'</div><div class="product-farm">Harz Farm · Abuja</div><div class="product-price-row"><div><span class="product-price">₦'+parseInt(price).toLocaleString()+'</span> <span class="product-unit">'+unit+'</span></div><span class="product-badge">New</span></div></div>';
+document.getElementById('productsList').appendChild(card);
+closeModal('sellModal');
+document.getElementById('sellName').value='';document.getElementById('sellPrice').value='';document.getElementById('sellUnit').value='';document.getElementById('sellQty').value='';
+showToast(name+' listed!');
+}
+
+function openOrder(name,price,unit,emoji,cat,badge){
+currentQty=1;
+currentPrice=parseInt(price.replace(/[₦,]/g,''));
+currentUnit=unit;
+document.getElementById('orderTitle').textContent=emoji+' '+name;
+document.getElementById('orderPrice').textContent='₦'+currentPrice.toLocaleString();
+updateOrderTotal();
+document.getElementById('orderModal').classList.add('show');
+}
+
+function changeQty(delta){
+currentQty=Math.max(1,currentQty+delta);
+document.getElementById('qtyDisplay').textContent=currentQty;
+document.getElementById('orderQtyText').textContent=currentQty+' '+currentUnit.replace('per ','');
+updateOrderTotal();
+}
+
+function updateOrderTotal(){
+var subtotal=currentPrice*currentQty;
+var delivery=1500;
+var total=subtotal+delivery;
+document.getElementById('orderTotal').textContent='₦'+total.toLocaleString();
+}
+
+function placeOrder(){
+var addr=document.getElementById('deliveryAddr').value.trim();
+var phone=document.getElementById('orderPhone').value.trim();
+if(!addr||!phone){showToast('Fill delivery details');return}
+closeModal('orderModal');
+document.getElementById('deliveryAddr').value='';document.getElementById('orderPhone').value='';
+showToast('Order placed! We will call to confirm.');
+}
+</script>
+</body>
+</html>
