@@ -655,7 +655,22 @@ const _origSwitchPage=switchPage;
 let iframeHistory=[];
 let iframeHistoryIndex=-1;
 
+// Sites that block iframe embedding — open in new tab instead
+const NEW_TAB_SITES=[
+'getly.store',
+'abuja-estate-city-ai.vercel.app',
+'buildbot-ai-three.vercel.app'
+];
+
 function openLink(u){
+// Check if this site blocks iframes — open in new tab instead
+for(let i=0;i<NEW_TAB_SITES.length;i++){
+if(u.includes(NEW_TAB_SITES[i])){
+window.open(u,'_blank');
+showToast('Opening in new tab (not embeddable)');
+return;
+}
+}
 const overlay=document.getElementById('app-overlay');
 const frame=document.getElementById('app-frame');
 const title=document.getElementById('app-title');
