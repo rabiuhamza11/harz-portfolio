@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HARZ AI Cloud — Pricing & Subscriptions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--purple:#7C4DFF;--red:#EF4444}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,rgba(124,77,255,.15),rgba(59,130,246,.1));padding:24px 16px;text-align:center;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.4rem;font-weight:800}
+.header h1 span{color:var(--purple)}
+.header p{font-size:.8rem;color:var(--muted);margin-top:6px}
+.container{max-width:600px;margin:0 auto;padding:16px}
+.billing-toggle{display:flex;justify-content:center;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:10px;overflow:hidden;max-width:280px;margin-left:auto;margin-right:auto}
+.billing-toggle button{flex:1;background:var(--card);border:none;color:var(--text);padding:10px;font-size:.8rem;cursor:pointer;transition:all .2s}
+.billing-toggle button.active{background:var(--purple);color:#fff;font-weight:700}
+.pricing-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:20px}
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;position:relative;transition:all .2s}
+.plan-card.popular{border-color:var(--purple);box-shadow:0 0 20px rgba(124,77,255,.15)}
+.popular-badge{position:absolute;top:-10px;right:16px;background:var(--purple);color:#fff;font-size:.6rem;padding:3px 10px;border-radius:10px;font-weight:700}
+.plan-name{font-size:1rem;font-weight:800;margin-bottom:4px}
+.plan-desc{font-size:.7rem;color:var(--muted);margin-bottom:12px}
+.plan-price{font-size:2rem;font-weight:800;color:var(--text)}
+.plan-price span{font-size:.8rem;font-weight:400;color:var(--muted)}
+.plan-features{margin:14px 0}
+.plan-feature{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:.8rem}
+.plan-feature .check{color:var(--green);font-weight:700}
+.plan-feature .x{color:var(--red)}
+.subscribe-btn{width:100%;border:none;border-radius:10px;padding:12px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s}
+.subscribe-btn:active{opacity:.8}
+.btn-starter{background:var(--border);color:var(--text)}
+.btn-pro{background:var(--purple);color:#fff}
+.btn-enterprise{background:linear-gradient(135deg,var(--gold),#d97706);color:#000}
+.enterprise-card{background:var(--card);border:1px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:16px;text-align:center}
+.enterprise-card h3{font-size:1rem;color:var(--gold);margin-bottom:6px}
+.enterprise-card p{font-size:.75rem;color:var(--muted);margin-bottom:10px}
+.faq-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer}
+.faq-q{font-size:.85rem;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.faq-a{display:none;font-size:.75rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.faq-card.open .faq-a{display:block}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--purple);color:#fff;padding:10px 24px;border-radius:20px;font-size:.85rem;font-weight:600;z-index:300;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+.back{display:block;text-align:center;margin-top:16px;font-size:.8rem;color:var(--purple);text-decoration:none}
+</style>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+</head>
+<body>
+<div class="header">
+<h1>🌩️ <span>HARZ</span> AI Cloud</h1>
+<p>20 AI Agents · API Access · Choose Your Plan</p>
+</div>
+<div class="container">
+
+<div class="billing-toggle">
+<button class="active" onclick="toggleBilling(this,'monthly')">Monthly</button>
+<button onclick="toggleBilling(this,'yearly')">Yearly (Save 20%)</button>
+</div>
+
+<div class="pricing-grid">
+<div class="plan-card">
+<div class="plan-name">🌱 Starter</div>
+<div class="plan-desc">For individuals & small projects</div>
+<div class="plan-price" id="starterPrice">₦5,000<span>/mo</span></div>
+<div class="plan-features">
+<div class="plan-feature"><span class="check">✓</span> 3 AI agents</div>
+<div class="plan-feature"><span class="check">✓</span> 1,000 API calls/month</div>
+<div class="plan-feature"><span class="check">✓</span> Email support</div>
+<div class="plan-feature"><span class="check">✓</span> Basic analytics</div>
+<div class="plan-feature"><span class="x">✗</span> Custom agents</div>
+<div class="plan-feature"><span class="x">✗</span> Priority support</div>
+</div>
+<button class="subscribe-btn btn-starter" onclick="subscribe('Starter','5000')">Subscribe — ₦5,000/mo</button>
+</div>
+
+<div class="plan-card popular">
+<div class="popular-badge">MOST POPULAR</div>
+<div class="plan-name">⚡ Professional</div>
+<div class="plan-desc">For businesses & growing teams</div>
+<div class="plan-price" id="proPrice">₦15,000<span>/mo</span></div>
+<div class="plan-features">
+<div class="plan-feature"><span class="check">✓</span> 10 AI agents</div>
+<div class="plan-feature"><span class="check">✓</span> 10,000 API calls/month</div>
+<div class="plan-feature"><span class="check">✓</span> Priority support</div>
+<div class="plan-feature"><span class="check">✓</span> Advanced analytics</div>
+<div class="plan-feature"><span class="check">✓</span> Custom agent training</div>
+<div class="plan-feature"><span class="check">✓</span> API webhooks</div>
+</div>
+<button class="subscribe-btn btn-pro" onclick="subscribe('Professional','15000')">Subscribe — ₦15,000/mo</button>
+</div>
+
+<div class="plan-card">
+<div class="plan-name">🏆 Enterprise</div>
+<div class="plan-desc">For large organizations</div>
+<div class="plan-price" id="enterprisePrice">₦50,000<span>/mo</span></div>
+<div class="plan-features">
+<div class="plan-feature"><span class="check">✓</span> All 20 AI agents</div>
+<div class="plan-feature"><span class="check">✓</span> Unlimited API calls</div>
+<div class="plan-feature"><span class="check">✓</span> 24/7 dedicated support</div>
+<div class="plan-feature"><span class="check">✓</span> White-label option</div>
+<div class="plan-feature"><span class="check">✓</span> Custom integrations</div>
+<div class="plan-feature"><span class="check">✓</span> SLA guarantee</div>
+</div>
+<button class="subscribe-btn btn-enterprise" onclick="subscribe('Enterprise','50000')">Subscribe — ₦50,000/mo</button>
+</div>
+</div>
+
+<div class="enterprise-card">
+<h3>🏛️ Custom Enterprise</h3>
+<p>Need something tailored? On-premise deployment, custom AI models, or enterprise SLA.</p>
+<button class="subscribe-btn btn-enterprise" onclick="showToast('Contact us: info@harz.ai')">Contact Sales</button>
+</div>
+
+<div style="margin-top:20px">
+<h3 style="font-size:.9rem;font-weight:700;color:var(--purple);margin-bottom:10px">❓ FAQ</h3>
+<div class="faq-card" onclick="this.classList.toggle('open')">
+<div class="faq-q">Can I cancel anytime? <span>+</span></div>
+<div class="faq-a">Yes! Cancel anytime from your dashboard. No cancellation fees. You keep access until the end of your billing period.</div>
+</div>
+<div class="faq-card" onclick="this.classList.toggle('open')">
+<div class="faq-q">What payment methods? <span>+</span></div>
+<div class="faq-a">Paystack (cards, bank transfer, USSD), bank transfer, and USDT crypto. All payments are secure and encrypted.</div>
+</div>
+<div class="faq-card" onclick="this.classList.toggle('open')">
+<div class="faq-q">Is there a free trial? <span>+</span></div>
+<div class="faq-a">Yes! Starter plan includes a 7-day free trial. No credit card required to start.</div>
+</div>
+<div class="faq-card" onclick="this.classList.toggle('open')">
+<div class="faq-q">Can I upgrade later? <span>+</span></div>
+<div class="faq-a">Absolutely. Upgrade or downgrade anytime — we'll prorate the difference automatically.</div>
+</div>
+</div>
+
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" class="back">← Back to Super App</a>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+var PAYSTACK_PUBLIC_KEY='pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Replace with your real key
+var billing='monthly';
+
+function toggleBilling(el,mode){
+document.querySelectorAll('.billing-toggle button').forEach(function(b){b.classList.remove('active')});
+el.classList.add('active');
+billing=mode;
+if(mode==='yearly'){
+document.getElementById('starterPrice').innerHTML='₦48,000<span>/yr</span>';
+document.getElementById('proPrice').innerHTML='₦144,000<span>/yr</span>';
+document.getElementById('enterprisePrice').innerHTML='₦480,000<span>/yr</span>';
+document.querySelector('.btn-starter').textContent='Subscribe — ₦48,000/yr';
+document.querySelector('.btn-pro').textContent='Subscribe — ₦144,000/yr';
+document.querySelector('.btn-enterprise').textContent='Subscribe — ₦480,000/yr';
+}else{
+document.getElementById('starterPrice').innerHTML='₦5,000<span>/mo</span>';
+document.getElementById('proPrice').innerHTML='₦15,000<span>/mo</span>';
+document.getElementById('enterprisePrice').innerHTML='₦50,000<span>/mo</span>';
+document.querySelector('.btn-starter').textContent='Subscribe — ₦5,000/mo';
+document.querySelector('.btn-pro').textContent='Subscribe — ₦15,000/mo';
+document.querySelector('.btn-enterprise').textContent='Subscribe — ₦50,000/mo';
+}
+}
+
+function subscribe(plan,amount){
+if(billing==='yearly'){amount=amount*12*0.8}
+var handler=PaystackPop.setup({
+key: PAYSTACK_PUBLIC_KEY,
+email: 'customer@harz.ai',
+amount: parseInt(amount)*100,
+currency:'NGN',
+ref:'HARZ-'+plan.substring(0,3).toUpperCase()+'-'+Date.now().toString().slice(-8),
+metadata:{custom_fields:[{display_name:'Plan',variable_name:'plan',value:plan},{display_name:'Billing',variable_name:'billing',value:billing}]},
+callback:function(response){
+showToast('Payment successful! Ref: '+response.reference);
+setTimeout(function(){window.location.href='https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html'},3000);
+},
+onClose:function(){
+showToast('Payment cancelled');
+}
+});
+handler.openIframe();
+}
+
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},3000)}
+</script>
+</body>
+</html>
