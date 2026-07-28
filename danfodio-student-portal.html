@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Danfodio Memorial — Student Portal</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--purple:#7C4DFF;--red:#EF4444}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
+.header{background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(124,77,255,.08));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.2rem;font-weight:800}
+.header h1 span{color:var(--gold)}
+.header p{font-size:.72rem;color:var(--muted);margin-top:4px}
+.container{max-width:500px;margin:0 auto;padding:12px}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;text-align:center}
+.login-card h2{font-size:1rem;margin-bottom:6px}
+.login-card p{font-size:.72rem;color:var(--muted);margin-bottom:16px}
+.input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-size:.85rem;margin-bottom:10px}
+.input:focus{outline:none;border-color:var(--gold)}
+.btn{width:100%;border:none;border-radius:10px;padding:13px;font-size:.9rem;font-weight:700;cursor:pointer}
+.btn-gold{background:var(--gold);color:#000}
+.btn:active{opacity:.8}
+.student-info{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px}
+.student-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#d97706);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#000}
+.student-name{font-size:.9rem;font-weight:700}
+.student-class{font-size:.72rem;color:var(--muted)}
+.tab-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.tab-btn{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;transition:.15s}
+.tab-btn.active{border-color:var(--gold);background:rgba(245,158,11,.08)}
+.tab-icon{font-size:1.1rem;margin-bottom:2px}
+.tab-label{font-size:.62rem}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:6px}
+.result-subject{font-size:.82rem;font-weight:600}
+.result-grade{font-size:1rem;font-weight:800;padding:4px 12px;border-radius:8px}
+.grade-A{background:rgba(0,230,118,.15);color:var(--green)}
+.grade-B{background:rgba(59,130,246,.15);color:var(--blue)}
+.grade-C{background:rgba(245,158,11,.15);color:var(--gold)}
+.grade-D{background:rgba(239,68,68,.15);color:var(--red)}
+.result-score{font-size:.72rem;color:var(--muted);margin-top:2px}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.summary-title{font-size:.85rem;font-weight:700;margin-bottom:10px}
+.summary-row{display:flex;justify-content:space-between;padding:5px 0;font-size:.78rem;border-bottom:1px solid var(--border)}
+.summary-row:last-child{border-bottom:none}
+.summary-row .val{font-weight:700}
+.timetable-day{font-size:.8rem;font-weight:700;color:var(--gold);margin:12px 0 6px}
+.timetable-row{display:flex;gap:8px;align-items:center;padding:8px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:4px}
+.tt-time{font-size:.7rem;color:var(--muted);min-width:70px}
+.tt-subject{font-size:.78rem;font-weight:600}
+.assignment-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px}
+.assignment-title{font-size:.82rem;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.assignment-desc{font-size:.72rem;color:var(--muted);margin-top:4px}
+.assignment-meta{font-size:.68rem;color:var(--muted);margin-top:6px}
+.badge{font-size:.6rem;padding:2px 8px;border-radius:6px;font-weight:700}
+.badge-pending{background:rgba(245,158,11,.15);color:var(--gold)}
+.badge-done{background:rgba(0,230,118,.15);color:var(--green)}
+.badge-overdue{background:rgba(239,68,68,.15);color:var(--red)}
+.back{display:block;text-align:center;margin-top:16px;font-size:.8rem;color:var(--gold);text-decoration:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:10px 24px;border-radius:20px;font-size:.85rem;font-weight:600;z-index:300;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🎓 <span>Danfodio Memorial</span> Student Portal</h1>
+<p>Results · Timetable · Assignments · Attendance</p>
+</div>
+<div class="container">
+
+<div id="loginView">
+<div class="login-card">
+<h2>Student Login</h2>
+<p>Enter your admission number and password</p>
+<input class="input" id="admNo" placeholder="Admission Number (e.g. DMA/2026/001)">
+<input class="input" type="password" id="pin" placeholder="PIN / Password">
+<button class="btn btn-gold" onclick="login()">Login</button>
+<p style="font-size:.65rem;color:var(--muted);margin-top:10px;cursor:pointer" onclick="showToast('Contact school admin: 08028687857')">Forgot PIN? Contact school admin</p>
+</div>
+</div>
+
+<div id="portalView" style="display:none">
+<div class="student-info">
+<div class="student-avatar">A</div>
+<div>
+<div class="student-name">Ahmed Rabiu Mohammed</div>
+<div class="student-class">JSS 2 · DMA/2026/014 · 2025/2026 Session</div>
+</div>
+</div>
+
+<div class="tab-grid">
+<div class="tab-btn active" onclick="switchTab('results')"><div class="tab-icon">📊</div><div class="tab-label">Results</div></div>
+<div class="tab-btn" onclick="switchTab('timetable')"><div class="tab-icon">📅</div><div class="tab-label">Timetable</div></div>
+<div class="tab-btn" onclick="switchTab('assignments')"><div class="tab-icon">📝</div><div class="tab-label">Assignments</div></div>
+<div class="tab-btn" onclick="switchTab('attendance')"><div class="tab-icon">✓</div><div class="tab-label">Attendance</div></div>
+</div>
+
+<div class="tab-content active" id="tab-results">
+<div class="summary-card">
+<div class="summary-title">Second Term Summary — 2025/2026</div>
+<div class="summary-row"><span>Position in Class</span><span class="val" style="color:var(--green)">3rd of 42</span></div>
+<div class="summary-row"><span>Total Score</span><span class="val">612 / 800</span></div>
+<div class="summary-row"><span>Average</span><span class="val">76.5%</span></div>
+<div class="summary-row"><span>Grade</span><span class="val" style="color:var(--blue)">B (Very Good)</span></div>
+<div class="summary-row"><span>Attendance</span><span class="val">94%</span></div>
+<div class="summary-row"><span>Teacher's Remark</span><span class="val" style="font-size:.72rem">A dedicated student. Keep it up!</span></div>
+</div>
+
+<div class="summary-title" style="font-size:.85rem;font-weight:700;margin-bottom:10px">Subject Results</div>
+
+<div class="result-row"><div><div class="result-subject">Mathematics</div><div class="result-score">CA: 28/30 · Exam: 55/70</div></div><div class="result-grade grade-A">A</div></div>
+<div class="result-row"><div><div class="result-subject">English Language</div><div class="result-score">CA: 25/30 · Exam: 52/70</div></div><div class="result-grade grade-B">B</div></div>
+<div class="result-row"><div><div class="result-subject">Basic Science</div><div class="result-score">CA: 27/30 · Exam: 58/70</div></div><div class="result-grade grade-A">A</div></div>
+<div class="result-row"><div><div class="result-subject">Social Studies</div><div class="result-score">CA: 24/30 · Exam: 50/70</div></div><div class="result-grade grade-B">B</div></div>
+<div class="result-row"><div><div class="result-subject">Computer Studies</div><div class="result-score">CA: 29/30 · Exam: 60/70</div></div><div class="result-grade grade-A">A</div></div>
+<div class="result-row"><div><div class="result-subject">Islamic Studies</div><div class="result-score">CA: 26/30 · Exam: 54/70</div></div><div class="result-grade grade-B">B</div></div>
+<div class="result-row"><div><div class="result-subject">Hausa Language</div><div class="result-score">CA: 23/30 · Exam: 48/70</div></div><div class="result-grade grade-C">C</div></div>
+<div class="result-row"><div><div class="result-subject">Agricultural Science</div><div class="result-score">CA: 25/30 · Exam: 53/70</div></div><div class="result-grade grade-B">B</div></div>
+<div class="result-row"><div><div class="result-subject">Civic Education</div><div class="result-score">CA: 24/30 · Exam: 51/70</div></div><div class="result-grade grade-B">B</div></div>
+<div class="result-row"><div><div class="result-subject">PHE</div><div class="result-score">CA: 28/30 · Exam: 56/70</div></div><div class="result-grade grade-A">A</div></div>
+</div>
+
+<div class="tab-content" id="tab-timetable">
+<div class="timetable-day">Monday</div>
+<div class="timetable-row"><span class="tt-time">08:00-08:40</span><span class="tt-subject">Mathematics</span></div>
+<div class="timetable-row"><span class="tt-time">08:40-09:20</span><span class="tt-subject">English Language</span></div>
+<div class="timetable-row"><span class="tt-time">09:20-10:00</span><span class="tt-subject">Basic Science</span></div>
+<div class="timetable-row"><span class="tt-time">10:20-11:00</span><span class="tt-subject">Social Studies</span></div>
+<div class="timetable-row"><span class="tt-time">11:00-11:40</span><span class="tt-subject">Computer Studies</span></div>
+<div class="timetable-row"><span class="tt-time">11:40-12:20</span><span class="tt-subject">Break</span></div>
+<div class="timetable-row"><span class="tt-time">12:20-13:00</span><span class="tt-subject">Islamic Studies</span></div>
+<div class="timetable-day">Tuesday</div>
+<div class="timetable-row"><span class="tt-time">08:00-08:40</span><span class="tt-subject">English Language</span></div>
+<div class="timetable-row"><span class="tt-time">08:40-09:20</span><span class="tt-subject">Mathematics</span></div>
+<div class="timetable-row"><span class="tt-time">09:20-10:00</span><span class="tt-subject">Agricultural Science</span></div>
+<div class="timetable-row"><span class="tt-time">10:20-11:00</span><span class="tt-subject">Hausa Language</span></div>
+<div class="timetable-row"><span class="tt-time">11:00-11:40</span><span class="tt-subject">Civic Education</span></div>
+<div class="timetable-row"><span class="tt-time">12:20-13:00</span><span class="tt-subject">PHE</span></div>
+<div class="timetable-day">Wednesday</div>
+<div class="timetable-row"><span class="tt-time">08:00-08:40</span><span class="tt-subject">Computer Studies</span></div>
+<div class="timetable-row"><span class="tt-time">08:40-09:20</span><span class="tt-subject">Mathematics</span></div>
+<div class="timetable-row"><span class="tt-time">09:20-10:00</span><span class="tt-subject">Basic Science</span></div>
+<div class="timetable-row"><span class="tt-time">10:20-11:00</span><span class="tt-subject">English Language</span></div>
+<div class="timetable-row"><span class="tt-time">11:00-11:40</span><span class="tt-subject">Social Studies</span></div>
+<div class="timetable-row"><span class="tt-time">12:20-13:00</span><span class="tt-subject">Islamic Studies</span></div>
+</div>
+
+<div class="tab-content" id="tab-assignments">
+<div class="assignment-item">
+<div class="assignment-title">Mathematics — Algebra Worksheet <span class="badge badge-pending">Pending</span></div>
+<div class="assignment-desc">Solve equations 1-20 on page 45. Show all working.</div>
+<div class="assignment-meta">Due: Friday, Aug 1 · Mr. Abdullahi</div>
+</div>
+<div class="assignment-item">
+<div class="assignment-title">English — Essay: My Holiday <span class="badge badge-pending">Pending</span></div>
+<div class="assignment-desc">Write a 500-word essay about your holiday experience.</div>
+<div class="assignment-meta">Due: Monday, Aug 4 · Mrs. Fatima</div>
+</div>
+<div class="assignment-item">
+<div class="assignment-title">Basic Science — Plant Cells <span class="badge badge-done">Submitted</span></div>
+<div class="assignment-desc">Draw and label a plant cell. List 5 functions.</div>
+<div class="assignment-meta">Submitted: Jul 25 · Mr. Sani</div>
+</div>
+<div class="assignment-item">
+<div class="assignment-title">Computer Studies — Word Processing <span class="badge badge-overdue">Overdue</span></div>
+<div class="assignment-desc">Type a formal letter using MS Word. Submit as PDF.</div>
+<div class="assignment-meta">Was due: Jul 24 · Mr. Bello</div>
+</div>
+<div class="assignment-item">
+<div class="assignment-title">Social Studies — Nigerian Culture <span class="badge badge-pending">Pending</span></div>
+<div class="assignment-desc">Research 3 Nigerian cultures and their traditions.</div>
+<div class="assignment-meta">Due: Wednesday, Jul 30 · Mrs. Aisha</div>
+</div>
+</div>
+
+<div class="tab-content" id="tab-attendance">
+<div class="summary-card">
+<div class="summary-title">Attendance — Second Term</div>
+<div class="summary-row"><span>Total School Days</span><span class="val">68</span></div>
+<div class="summary-row"><span>Days Present</span><span class="val" style="color:var(--green)">64</span></div>
+<div class="summary-row"><span>Days Absent</span><span class="val" style="color:var(--red)">3</span></div>
+<div class="summary-row"><span>Late Arrivals</span><span class="val" style="color:var(--gold)">1</span></div>
+<div class="summary-row"><span>Attendance Rate</span><span class="val" style="color:var(--green)">94.1%</span></div>
+<div class="summary-row"><span>Status</span><span class="val" style="color:var(--green)">Excellent</span></div>
+</div>
+<div style="font-size:.82rem;font-weight:700;margin:12px 0 6px">Recent Absences</div>
+<div class="assignment-item"><div class="assignment-title">June 12, 2026 (Thursday)<span class="badge badge-pending">Excused</span></div><div class="assignment-desc">Reason: Medical appointment</div></div>
+<div class="assignment-item"><div class="assignment-title">June 5, 2026 (Thursday)<span class="badge badge-done">Excused</span></div><div class="assignment-desc">Reason: Family event</div></div>
+<div class="assignment-item"><div class="assignment-title">May 28, 2026 (Wednesday)<span class="badge badge-overdue">Unexcused</span></div><div class="assignment-desc">Reason: Not provided</div></div>
+</div>
+
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" class="back">← Back to Super App</a>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+function login(){
+var adm=document.getElementById('admNo').value.trim();
+var pin=document.getElementById('pin').value.trim();
+if(!adm||!pin){showToast('Enter admission number and PIN');return}
+document.getElementById('loginView').style.display='none';
+document.getElementById('portalView').style.display='block';
+showToast('Welcome back, Ahmed!');
+}
+function switchTab(tab){
+document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
+event.currentTarget.classList.add('active');
+document.getElementById('tab-'+tab).classList.add('active');
+}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+</script>
+</body>
+</html>
