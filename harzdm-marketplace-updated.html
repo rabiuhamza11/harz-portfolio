@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzDM Marketplace — Digital Products & Tools</title>
+<style>
+:root{--p:#7c4dff;--bg:#06080f;--card:#0d1120;--text:#e0e6ed;--muted:#5a6378;--border:#1a2040;--green:#00e676;--amber:#ffab00;--cyan:#00bcd4}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.h{background:linear-gradient(135deg,#7c4dff,#00bcd4,#00e676);background-size:200% 100%;animation:slide 8s ease infinite;padding:24px;text-align:center}
+@keyframes slide{0%{background-position:0 0}50%{background-position:100% 0}100%{background-position:0 0}}
+.h h1{color:#fff;font-size:1.5rem;letter-spacing:1px}.h p{color:rgba(255,255,255,.85);font-size:.85rem;margin-top:4px}
+.nav{display:flex;justify-content:center;gap:8px;padding:12px;flex-wrap:wrap}
+.nav a{color:var(--cyan);font-size:.75rem;text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px}
+.nav a:hover{border-color:var(--cyan)}
+.c{max-width:1200px;margin:0 auto;padding:20px}
+.pay-banner{background:linear-gradient(135deg,rgba(0,230,118,.1),rgba(0,188,212,.1));border:1px solid var(--green);border-radius:12px;padding:16px;margin-bottom:20px;text-align:center}
+.pay-banner h2{font-size:1rem;color:var(--green);margin-bottom:6px}
+.pay-banner p{font-size:.8rem;color:var(--muted)}
+.pay-methods{display:flex;justify-content:center;gap:16px;margin-top:10px;flex-wrap:wrap}
+.pay-m{font-size:.75rem;color:var(--text);background:var(--bg);padding:4px 12px;border-radius:6px;border:1px solid var(--border)}
+.pay-m strong{color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.product{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .3s}
+.product:hover{border-color:var(--p);box-shadow:0 0 20px rgba(124,77,255,.2);transform:translateY(-2px)}
+.product-img{height:140px;background:linear-gradient(135deg,#1a2040,#0d1120);display:flex;align-items:center;justify-content:center;font-size:2.5rem}
+.product-body{padding:14px}
+.product-title{font-size:.95rem;font-weight:700;margin-bottom:4px}
+.product-desc{font-size:.75rem;color:var(--muted);margin-bottom:8px;line-height:1.4}
+.product-cat{display:inline-block;font-size:.65rem;background:rgba(124,77,255,.15);color:var(--p);padding:2px 8px;border-radius:10px;margin-bottom:8px}
+.product-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.price{font-size:1.1rem;font-weight:700;color:var(--green)}
+.price .usd{color:var(--muted);font-size:.7rem;text-decoration:line-through;margin-left:4px}
+.buy-btn{padding:6px 16px;background:linear-gradient(135deg,#7c4dff,#00bcd4);color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;text-decoration:none}
+.buy-btn:hover{opacity:.85}
+.checkout-banner{text-align:center;margin:20px 0;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:12px}
+.checkout-banner h2{font-size:1.1rem;color:var(--cyan);margin-bottom:8px}
+.checkout-btn{display:inline-block;padding:10px 24px;background:linear-gradient(135deg,#00e676,#00bcd4);color:#000;border-radius:8px;font-size:.9rem;font-weight:700;text-decoration:none;margin:4px}
+.checkout-btn:hover{opacity:.9}
+.footer{text-align:center;padding:30px;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border);margin-top:30px}
+.footer a{color:var(--cyan);text-decoration:none}
+.loading{text-align:center;padding:40px;color:var(--muted)}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.pay-methods{gap:8px}}
+</style>
+</head>
+<body>
+<div class="h">
+<h1>🛒 HarzDM Marketplace</h1>
+<p>Digital Products, Tools & Services — Pay Your Way</p>
+</div>
+
+<div class="nav">
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harzdm-marketplace-updated.html">Home</a>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harzdm-checkout.html">Checkout</a>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-store.html">Harz Store</a>
+<a href="https://wa.me/2348028687857">WhatsApp Order</a>
+</div>
+
+<div class="c">
+
+<div class="pay-banner">
+<h2>💳 Multiple Payment Options Available</h2>
+<p>Bank Transfer (FREE) · USSD (FREE) · USDT TRC20 (FREE) · GDEG Token (10% OFF)</p>
+<div class="pay-methods">
+<span class="pay-m">🏦 <strong>Bank Transfer</strong> — UBA 2034326424</span>
+<span class="pay-m">📱 <strong>USSD</strong> — *737*033*2034326424*AMOUNT#</span>
+<span class="pay-m">₿ <strong>USDT</strong> — TRC20</span>
+<span class="pay-m">🪙 <strong>GDEG</strong> — Polygon (10% off)</span>
+</div>
+</div>
+
+<div class="grid" id="products"><div class="loading">Loading products...</div></div>
+
+<div class="checkout-banner">
+<h2>🛍️ Ready to Buy?</h2>
+<p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Click below to start your secure checkout with bank transfer, USSD, crypto, or GDEG tokens</p>
+<a class="checkout-btn" href="https://rabiuhamza11.github.io/harz-portfolio/harzdm-checkout.html">🛒 HarzDM Checkout</a>
+</div>
+
+<div class="footer">
+HarzDM Marketplace • Part of the Harz Ecosystem • Built by Rabiu Hamza Mohammed<br>
+Contact: hamzarabiu390@gmail.com · 08028687857 · 
+<a href="https://wa.me/2348028687857">WhatsApp</a>
+</div>
+
+</div>
+
+<script>
+const API='https://superagent-2286fb2f.base44.app/functions/harzdmCatalog';
+const USD_NGN_RATE = 1600;
+
+async function loadProducts(){
+  try {
+    const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'get_products'})});
+    const d = await r.json();
+    if (d.products && d.products.length > 0) {
+      document.getElementById('products').innerHTML = d.products.map(p => {
+        const icons = {'Real Estate':'🏠','Construction':'🏗️','Digital':'📦','Software':'💻','Finance':'💰','Health':'🏥','Template':'📋','Course':'🎓','Ebook':'📚','AIPrompt':'🤖'};
+        const icon = icons[p.category] || '📦';
+        const img = p.image_url ? `<img src="${p.image_url}" style="width:100%;height:100%;object-fit:cover">` : icon;
+        const ngnPrice = p.currency === 'USD' ? Math.round(p.price * USD_NGN_RATE) : p.price;
+        const usdDisplay = p.currency === 'USD' ? `<span class="usd">($${p.price})</span>` : '';
+        return `<div class="product">
+<div class="product-img">${img}</div>
+<div class="product-body">
+<div class="product-cat">${p.category||'Digital'}</div>
+<div class="product-title">${p.title}</div>
+<div class="product-desc">${(p.description||'').substring(0,100)}${(p.description||'').length>100?'...':''}</div>
+<div class="product-footer">
+<div class="price">₦${ngnPrice.toLocaleString()} ${usdDisplay}</div>
+<a class="buy-btn" href="https://rabiuhamza11.github.io/harz-portfolio/harzdm-checkout.html">Buy Now</a>
+</div>
+</div>
+</div>`;
+      }).join('');
+    } else {
+      document.getElementById('products').innerHTML = '<div class="loading">No products available yet.</div>';
+    }
+  } catch(e) {
+    document.getElementById('products').innerHTML = '<div class="loading">Error loading products. Try the checkout directly.</div>';
+  }
+}
+
+loadProducts();
+</script>
+</body>
+</html>
