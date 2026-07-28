@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Smart Calendar — Unified Schedule</title>
+<style>
+:root{
+--bg:#0d1117;--card:#161b22;--border:#30363d;
+--text:#e6edf3;--muted:#8b949e;
+--p1:#7c4dff;--p2:#5362f6;--p3:#00d4aa;
+--school:#3b82f6;--farm:#22c55e;--construction:#f59e0b;--business:#a855f7;
+--today:#7c4dff;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:70px}
+.header{position:sticky;top:0;background:rgba(13,17,23,.95);backdrop-filter:blur(12px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-actions{display:flex;gap:8px}
+.header-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:8px;font-size:.75rem;cursor:pointer;transition:.2s}
+.header-btn:active{transform:scale(.95)}
+.today-banner{background:linear-gradient(135deg,var(--p1),var(--p2));margin:0 16px;padding:14px 16px;border-radius:14px;margin-top:12px}
+.today-banner .tb-date{font-size:.7rem;opacity:.8;text-transform:uppercase;letter-spacing:1px}
+.today-banner .tb-day{font-size:1.4rem;font-weight:700;margin-top:2px}
+.today-banner .tb-count{font-size:.78rem;opacity:.9;margin-top:4px}
+.view-tabs{display:flex;gap:6px;padding:12px 16px 0}
+.view-tab{flex:1;text-align:center;padding:8px;border-radius:8px;font-size:.78rem;font-weight:600;background:var(--card);border:1px solid var(--border);cursor:pointer;transition:.2s}
+.view-tab.active{background:linear-gradient(135deg,var(--p1),var(--p2));border-color:transparent;color:#fff}
+.calendar-wrap{padding:12px 16px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-nav .cal-month{font-size:1rem;font-weight:700}
+.cal-nav button{background:var(--card);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.cal-nav button:active{transform:scale(.9)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-dow{text-align:center;font-size:.6rem;color:var(--muted);padding:4px 0;font-weight:600;text-transform:uppercase}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;font-size:.82rem;cursor:pointer;transition:.15s;position:relative;background:var(--card);border:1px solid transparent}
+.cal-day:active{transform:scale(.92)}
+.cal-day.other{opacity:.3}
+.cal-day.today{border-color:var(--p1);font-weight:700}
+.cal-day.selected{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;font-weight:700}
+.cal-day .dot-row{display:flex;gap:2px;position:absolute;bottom:3px}
+.cal-day .dot{width:4px;height:4px;border-radius:50%}
+.dot-school{background:var(--school)}
+.dot-farm{background:var(--farm)}
+.dot-construction{background:var(--construction)}
+.dot-business{background:var(--business)}
+.day-view{padding:0 16px}
+.day-events{display:flex;flex-direction:column;gap:8px}
+.event-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:.2s}
+.event-card:active{transform:scale(.98)}
+.event-bar{width:4px;align-self:stretch;border-radius:2px;flex-shrink:0}
+.event-bar.school{background:var(--school)}
+.event-bar.farm{background:var(--farm)}
+.event-bar.construction{background:var(--construction)}
+.event-bar.business{background:var(--business)}
+.event-bar.personal{background:var(--p3)}
+.event-content{flex:1}
+.event-title{font-size:.88rem;font-weight:600;margin-bottom:2px}
+.event-time{font-size:.72rem;color:var(--muted)}
+.event-cat{font-size:.62rem;text-transform:uppercase;letter-spacing:.5px;margin-top:3px;font-weight:600}
+.event-cat.school{color:var(--school)}
+.event-cat.farm{color:var(--farm)}
+.event-cat.construction{color:var(--construction)}
+.event-cat.business{color:var(--business)}
+.event-cat.personal{color:var(--p3)}
+.event-del{background:rgba(255,61,113,.12);color:#ff3d71;border:none;width:28px;height:28px;border-radius:6px;font-size:1rem;cursor:pointer;flex-shrink:0}
+.event-del:active{transform:scale(.9)}
+.empty-state{text-align:center;padding:40px 16px;color:var(--muted)}
+.empty-state .emoji{font-size:2.5rem;margin-bottom:8px}
+.empty-state p{font-size:.85rem}
+.agenda-section{padding:0 16px}
+.agenda-section .ag-title{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 8px;font-weight:600}
+.cat-picker{display:flex;gap:6px;padding:0 16px;margin:8px 0}
+.cat-chip{flex:1;text-align:center;padding:6px 4px;border-radius:8px;font-size:.65rem;font-weight:600;cursor:pointer;border:2px solid transparent;transition:.2s}
+.cat-chip.school{border-color:var(--school);color:var(--school)}
+.cat-chip.farm{border-color:var(--farm);color:var(--farm)}
+.cat-chip.construction{border-color:var(--construction);color:var(--construction)}
+.cat-chip.business{border-color:var(--business);color:var(--business)}
+.cat-chip.personal{border-color:var(--p3);color:var(--p3)}
+.cat-chip.selected{background:var(--card);opacity:1}
+.cat-chip:not(.selected){opacity:.5}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px;max-height:80vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h2{font-size:1.1rem;margin-bottom:14px}
+.form-group{margin-bottom:12px}
+.form-label{font-size:.72rem;color:var(--muted);margin-bottom:4px;display:block}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-size:.85rem;font-family:inherit}
+.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--p1)}
+.form-textarea{resize:vertical;min-height:60px}
+.form-row{display:flex;gap:8px}
+.form-row>*{flex:1}
+.modal-actions{display:flex;gap:8px;margin-top:16px}
+.btn{flex:1;padding:12px;border-radius:10px;font-size:.85rem;font-weight:600;border:none;cursor:pointer;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+.btn:active{transform:scale(.97)}
+.fab{position:fixed;bottom:16px;right:16px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;color:#fff;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(124,77,255,.4);z-index:90;display:flex;align-items:center;justify-content:center}
+.fab:active{transform:scale(.9)}
+.quick-add{padding:0 16px;margin-bottom:10px}
+.quick-add input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;font-size:.85rem}
+.quick-add input:focus{outline:none;border-color:var(--p1)}
+.stat-row{display:flex;gap:8px;padding:0 16px;margin:10px 0}
+.stat-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.stat-card .stat-num{font-size:1.3rem;font-weight:700}
+.stat-card .stat-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 18px;border-radius:20px;font-size:.78rem;z-index:400;opacity:0;transition:.3s;pointer-events:none}
+.toast.show{opacity:1;bottom:90px}
+.naija-holiday{background:rgba(124,77,255,.08)!important}
+.naija-holiday::after{content:'';position:absolute;top:2px;right:2px;width:5px;height:5px;background:var(--p3);border-radius:50%}
+.section-title{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:8px 16px 4px;font-weight:600}
+@media(max-width:600px){.cal-day{font-size:.75rem}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>📅 HARZ Calendar</h1>
+<div class="header-actions">
+<button class="header-btn" onclick="goToday()">Today</button>
+<button class="header-btn" onclick="clearAll()">Clear</button>
+</div>
+</div>
+
+<div class="today-banner">
+<div class="tb-date" id="tbDate"></div>
+<div class="tb-day" id="tbDay"></div>
+<div class="tb-count" id="tbCount"></div>
+</div>
+
+<div class="stat-row">
+<div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">Total Events</div></div>
+<div class="stat-card"><div class="stat-num" id="statToday">0</div><div class="stat-lbl">Today</div></div>
+<div class="stat-card"><div class="stat-num" id="statWeek">0</div><div class="stat-lbl">This Week</div></div>
+<div class="stat-card"><div class="stat-num" id="statUpcoming">0</div><div class="stat-lbl">Upcoming</div></div>
+</div>
+
+<div class="view-tabs">
+<div class="view-tab active" onclick="switchView('month')" id="tabMonth">Month</div>
+<div class="view-tab" onclick="switchView('agenda')" id="tabAgenda">Agenda</div>
+</div>
+
+<div id="monthView" class="calendar-wrap">
+<div class="cal-nav">
+<button onclick="changeMonth(-1)">‹</button>
+<div class="cal-month" id="calMonth"></div>
+<button onclick="changeMonth(1)">›</button>
+</div>
+<div class="cal-grid" id="calGrid"></div>
+</div>
+
+<div id="agendaView" style="display:none;padding:0 16px">
+<div class="quick-add">
+<input type="text" id="quickText" placeholder="Quick add: 'School meeting tomorrow 2pm' — press Enter" onkeydown="if(event.key==='Enter')quickAdd()">
+</div>
+<div class="cat-picker" id="catPicker">
+<div class="cat-chip school selected" data-cat="school" onclick="setCat('school')">School</div>
+<div class="cat-chip farm" data-cat="farm" onclick="setCat('farm')">Farm</div>
+<div class="cat-chip construction" data-cat="construction" onclick="setCat('construction')">Build</div>
+<div class="cat-chip business" data-cat="business" onclick="setCat('business')">Biz</div>
+<div class="cat-chip personal" data-cat="personal" onclick="setCat('personal')">Personal</div>
+</div>
+<div class="day-events" id="agendaList"></div>
+</div>
+
+<div id="dayView" style="display:none">
+<div class="section-title" id="dayTitle"></div>
+<div class="day-view">
+<div class="day-events" id="dayEvents"></div>
+</div>
+</div>
+
+<button class="fab" onclick="openModal()">+</button>
+
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<h2 id="modalTitle">Add Event</h2>
+<div class="form-group">
+<label class="form-label">Event Title</label>
+<input type="text" class="form-input" id="evTitle" placeholder="e.g. PTA Meeting, Harvest Day, Site Visit">
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Date</label>
+<input type="date" class="form-input" id="evDate">
+</div>
+<div class="form-group">
+<label class="form-label">Time</label>
+<input type="time" class="form-input" id="evTime" value="09:00">
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Category</label>
+<select class="form-select" id="evCat">
+<option value="school">🏫 School</option>
+<option value="farm">🌾 Farm</option>
+<option value="construction">🏗️ Construction</option>
+<option value="business">💼 Business</option>
+<option value="personal">👤 Personal</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Notes (optional)</label>
+<textarea class="form-textarea" id="evNotes" placeholder="Add details..."></textarea>
+</div>
+<div class="form-group">
+<label class="form-label">Repeat</label>
+<select class="form-select" id="evRepeat">
+<option value="none">No repeat</option>
+<option value="daily">Daily</option>
+<option value="weekly">Weekly</option>
+<option value="monthly">Monthly</option>
+</select>
+</div>
+<div class="modal-actions">
+<button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+<button class="btn btn-primary" onclick="saveEvent()">Save</button>
+</div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// State
+let currentView='month';
+let viewDate=new Date();
+let selectedDate=new Date();
+let calMonth=new Date();
+let events=[];
+let selectedCat='school';
+let editingId=null;
+
+// Load from localStorage
+function loadEvents(){
+try{events=JSON.parse(localStorage.getItem('harz_events')||'[]')}catch(e){events=[]}
+}
+function saveEvents(){
+localStorage.setItem('harz_events',JSON.stringify(events));
+}
+
+// Nigerian holidays 2026
+const naijaHolidays={
+'2026-01-01':'New Year',
+'2026-03-21':'Public Holiday',
+'2026-04-03':'Good Friday',
+'2026-04-06':'Easter Monday',
+'2026-04-21':'Eid el-Fitr',
+'2026-05-01':'Workers Day',
+'2026-05-29':'Democracy Day',
+'2026-06-12':'Democracy Day',
+'2026-07-28':'Eid el-Adha',
+'2026-09-12':'Eid el-Kabir',
+'2026-10-01':'Independence Day',
+'2026-12-25':'Christmas Day',
+'2026-12-26':'Boxing Day',
+'2026-12-28':'Eid el-Maulud'
+};
+
+// Helpers
+function fmt(d){return d.toISOString().split('T')[0]}
+function parseDate(s){const[s2,t2]=s.split('T');return new Date(s2+'T'+(t2||'09:00'))}
+function sameDay(a,b){return fmt(a)===fmt(b)}
+function isWeekend(d){return d.getDay()===0||d.getDay()===6}
+
+// Seed sample events if empty
+function seedEvents(){
+if(events.length>0)return;
+const today=new Date();
+const samples=[
+{title:'PTA Meeting',date:fmt(today),time:'14:00',cat:'school',notes:'Term review with parents',repeat:'none'},
+{title:'Harvest Tomatoes',date:fmt(new Date(today.getTime()+86400000*2)),time:'07:00',cat:'farm',notes:'Plot A — 200 crates expected',repeat:'none'},
+{title:'Site Visit — Wuse',date:fmt(new Date(today.getTime()+86400000*1)),time:'10:00',cat:'construction',notes:'Foundation inspection',repeat:'none'},
+{title:'Marketplace Orders Review',date:fmt(new Date(today.getTime()+86400000*3)),time:'16:00',cat:'business',notes:'Check HarzDM pending orders',repeat:'none'},
+{title:'Staff Meeting',date:fmt(today),time:'08:00',cat:'school',notes:'Morning assembly prep',repeat:'weekly'},
+{title:'Feed Livestock',date:fmt(today),time:'06:30',cat:'farm',notes:'Cattle + goats',repeat:'daily'},
+{title:'Pay Contractors',date:fmt(new Date(today.getTime()+86400000*5)),time:'12:00',cat:'business',notes:'Monthly payroll',repeat:'none'},
+{title:'Student Results Review',date:fmt(new Date(today.getTime()+86400000*7)),time:'13:00',cat:'school',notes:'End of term assessment',repeat:'none'},
+];
+samples.forEach(s=>{
+s.id=Math.random().toString(36).substr(2,9);
+s.created=new Date().toISOString();
+events.push(s);
+});
+saveEvents();
+}
+
+// Render
+function render(){
+renderTodayBanner();
+renderStats();
+if(currentView==='month')renderMonth();
+else renderAgenda();
+}
+
+function renderTodayBanner(){
+const d=new Date();
+const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('tbDate').textContent=d.getFullYear();
+document.getElementById('tbDay').textContent=days[d.getDay()]+', '+d.getDate()+' '+months[d.getMonth()];
+const todayEvents=events.filter(e=>e.date===fmt(d));
+document.getElementById('tbCount').textContent=todayEvents.length+' event'+(todayEvents.length!==1?'s':'')+' today';
+}
+
+function renderStats(){
+const today=new Date();
+const weekEnd=new Date(today.getTime()+86400000*7);
+document.getElementById('statTotal').textContent=events.length;
+document.getElementById('statToday').textContent=events.filter(e=>e.date===fmt(today)).length;
+document.getElementById('statWeek').textContent=events.filter(e=>{const ed=new Date(e.date);return ed>=today&&ed<=weekEnd}).length;
+document.getElementById('statUpcoming').textContent=events.filter(e=>new Date(e.date)>=today).length;
+}
+
+function renderMonth(){
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('calMonth').textContent=months[calMonth.getMonth()]+' '+calMonth.getFullYear();
+
+const grid=document.getElementById('calGrid');
+grid.innerHTML='';
+
+// Day headers
+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{
+const el=document.createElement('div');
+el.className='cal-dow';
+el.textContent=d;
+grid.appendChild(el);
+});
+
+const year=calMonth.getFullYear();
+const month=calMonth.getMonth();
+const first=new Date(year,month,1);
+const startDay=first.getDay();
+const daysInMonth=new Date(year,month+1,0).getDate();
+const prevDays=new Date(year,month,0).getDate();
+
+// Previous month days
+for(let i=startDay-1;i>=0;i--){
+const el=document.createElement('div');
+el.className='cal-day other';
+el.textContent=prevDays-i;
+grid.appendChild(el);
+}
+
+// Current month days
+const today=new Date();
+for(let d=1;d<=daysInMonth;d++){
+const el=document.createElement('div');
+el.className='cal-day';
+const dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+if(d===today.getDate()&&month===today.getMonth()&&year===today.getFullYear())el.classList.add('today');
+if(dateStr===fmt(selectedDate))el.classList.add('selected');
+if(naijaHolidays[dateStr])el.classList.add('naija-holiday');
+el.textContent=d;
+
+// Event dots
+const dayEvents=events.filter(e=>e.date===dateStr);
+if(dayEvents.length>0){
+const dotRow=document.createElement('div');
+dotRow.className='dot-row';
+const cats=[...new Set(dayEvents.map(e=>e.cat))];
+cats.forEach(c=>{
+const dot=document.createElement('div');
+dot.className='dot dot-'+c;
+dotRow.appendChild(dot);
+});
+el.appendChild(dotRow);
+}
+
+el.onclick=()=>{
+selectedDate=new Date(year,month,d);
+showDayView(selectedDate);
+};
+grid.appendChild(el);
+}
+
+// Next month fill
+const totalCells=startDay+daysInMonth;
+const remaining=42-totalCells;
+for(let d=1;d<=remaining;d++){
+const el=document.createElement('div');
+el.className='cal-day other';
+el.textContent=d;
+grid.appendChild(el);
+}
+}
+
+function renderAgenda(){
+const today=new Date();
+today.setHours(0,0,0,0);
+const sorted=events
+.filter(e=>new Date(e.date)>=today)
+.sort((a,b)=>new Date(a.date+'T'+a.time)-new Date(b.date+'T'+b.time));
+
+const list=document.getElementById('agendaList');
+list.innerHTML='';
+
+if(sorted.length===0){
+list.innerHTML='<div class="empty-state"><div class="emoji">📅</div><p>No upcoming events. Tap + to add one.</p></div>';
+return;
+}
+
+sorted.forEach(ev=>{
+const card=createEventCard(ev);
+list.appendChild(card);
+});
+}
+
+function createEventCard(ev){
+const card=document.createElement('div');
+card.className='event-card';
+const bar=document.createElement('div');
+bar.className='event-bar '+ev.cat;
+const content=document.createElement('div');
+content.className='event-content';
+const d=new Date(ev.date+'T'+ev.time);
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+let timeStr=ev.time;
+const[h,m]=ev.time.split(':');
+const hour=parseInt(h);
+const ampm=hour>=12?'PM':'AM';
+const hour12=hour%12||12;
+timeStr=`${hour12}:${m} ${ampm}`;
+content.innerHTML=`
+<div class="event-title">${escapeHtml(ev.title)}</div>
+<div class="event-time">${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} · ${timeStr}${ev.repeat&&ev.repeat!=='none'?' · ↻ '+ev.repeat:''}</div>
+<div class="event-cat ${ev.cat}">${ev.cat}${ev.notes?' · '+escapeHtml(ev.notes):''}</div>
+`;
+const del=document.createElement('button');
+del.className='event-del';
+del.textContent='×';
+del.onclick=(e)=>{e.stopPropagation();deleteEvent(ev.id)};
+card.appendChild(bar);
+card.appendChild(content);
+card.appendChild(del);
+card.onclick=()=>editEvent(ev.id);
+return card;
+}
+
+function showDayView(date){
+selectedDate=date;
+calMonth=new Date(date.getFullYear(),date.getMonth(),1);
+const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('dayTitle').textContent=days[date.getDay()]+', '+date.getDate()+' '+months[date.getMonth()]+' '+date.getFullYear();
+
+const dayEvents=events.filter(e=>e.date===fmt(date)).sort((a,b)=>a.time.localeCompare(b.time));
+const container=document.getElementById('dayEvents');
+container.innerHTML='';
+
+if(dayEvents.length===0){
+container.innerHTML='<div class="empty-state"><div class="emoji">☀️</div><p>No events on this day. Tap + to add.</p></div>';
+}else{
+dayEvents.forEach(ev=>container.appendChild(createEventCard(ev)));
+}
+
+renderMonth();
+}
+
+// Navigation
+function changeMonth(dir){
+calMonth.setMonth(calMonth.getMonth()+dir);
+renderMonth();
+}
+function goToday(){
+selectedDate=new Date();
+calMonth=new Date();
+render();
+}
+function switchView(v){
+currentView=v;
+document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
+document.getElementById(v==='month'?'tabMonth':'tabAgenda').classList.add('active');
+document.getElementById('monthView').style.display=v==='month'?'block':'none';
+document.getElementById('agendaView').style.display=v==='agenda'?'block':'none';
+document.getElementById('dayView').style.display='none';
+render();
+}
+
+// Category picker
+function setCat(cat){
+selectedCat=cat;
+document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('selected'));
+document.querySelector(`.cat-chip[data-cat="${cat}"]`).classList.add('selected');
+}
+
+// Modal
+function openModal(){
+editingId=null;
+document.getElementById('modalTitle').textContent='Add Event';
+document.getElementById('evTitle').value='';
+document.getElementById('evDate').value=fmt(selectedDate);
+document.getElementById('evTime').value='09:00';
+document.getElementById('evCat').value=selectedCat;
+document.getElementById('evNotes').value='';
+document.getElementById('evRepeat').value='none';
+document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(){
+document.getElementById('modalOverlay').classList.remove('show');
+}
+
+function editEvent(id){
+const ev=events.find(e=>e.id===id);
+if(!ev)return;
+editingId=id;
+document.getElementById('modalTitle').textContent='Edit Event';
+document.getElementById('evTitle').value=ev.title;
+document.getElementById('evDate').value=ev.date;
+document.getElementById('evTime').value=ev.time;
+document.getElementById('evCat').value=ev.cat;
+document.getElementById('evNotes').value=ev.notes||'';
+document.getElementById('evRepeat').value=ev.repeat||'none';
+document.getElementById('modalOverlay').classList.add('show');
+}
+
+function saveEvent(){
+const title=document.getElementById('evTitle').value.trim();
+if(!title){showToast('Enter a title');return}
+const data={
+title,
+date:document.getElementById('evDate').value,
+time:document.getElementById('evTime').value,
+cat:document.getElementById('evCat').value,
+notes:document.getElementById('evNotes').value.trim(),
+repeat:document.getElementById('evRepeat').value
+};
+if(editingId){
+const ev=events.find(e=>e.id===editingId);
+Object.assign(ev,data);
+}else{
+data.id=Math.random().toString(36).substr(2,9);
+data.created=new Date().toISOString();
+events.push(data);
+}
+saveEvents();
+closeModal();
+render();
+showToast('Event saved ✓');
+}
+
+function deleteEvent(id){
+events=events.filter(e=>e.id!==id);
+saveEvents();
+render();
+showToast('Deleted');
+}
+
+function clearAll(){
+if(confirm('Clear all events? This cannot be undone.')){
+events=[];
+saveEvents();
+render();
+showToast('All events cleared');
+}
+}
+
+// Quick add (natural language)
+function quickAdd(){
+const text=document.getElementById('quickText').value.trim();
+if(!text)return;
+let date=new Date();
+let time='09:00';
+let title=text;
+
+// Parse "tomorrow"
+if(/tomorrow/i.test(text)){
+date=new Date(date.getTime()+86400000);
+title=title.replace(/tomorrow/i,'').trim();
+}
+// Parse "next week"
+if(/next week/i.test(text)){
+date=new Date(date.getTime()+86400000*7);
+title=title.replace(/next week/i,'').trim();
+}
+// Parse time like "2pm", "14:00", "3:30pm"
+const timeMatch=title.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i);
+if(timeMatch){
+let h=parseInt(timeMatch[1]);
+const m=timeMatch[2]?parseInt(timeMatch[2]):0;
+const ap=timeMatch[3].toLowerCase();
+if(ap==='pm'&&h<12)h+=12;
+if(ap==='am'&&h===12)h=0;
+time=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+title=title.replace(timeMatch[0],'').trim();
+}
+
+// Clean up title
+title=title.replace(/^at\s+/i,'').replace(/^on\s+/i,'').replace(/\s+/g,' ').trim()||text;
+if(!title)title='New Event';
+
+const ev={
+id:Math.random().toString(36).substr(2,9),
+title,
+date:fmt(date),
+time,
+cat:selectedCat,
+notes:'',
+repeat:'none',
+created:new Date().toISOString()
+};
+events.push(ev);
+saveEvents();
+document.getElementById('quickText').value='';
+render();
+showToast('Added ✓');
+}
+
+// Toast
+function showToast(msg){
+const t=document.getElementById('toast');
+t.textContent=msg;
+t.classList.add('show');
+setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// Escape HTML
+function escapeHtml(s){
+return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Init
+loadEvents();
+seedEvents();
+render();
+
+// Close modal on backdrop click
+document.getElementById('modalOverlay').addEventListener('click',e=>{
+if(e.target.id==='modalOverlay')closeModal();
+});
+</script>
+</body>
+</html>
