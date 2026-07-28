@@ -186,10 +186,36 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .more-item{padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;font-size:.85rem;color:var(--p2);cursor:pointer;display:flex;align-items:center;gap:8px}
 .more-item:active{background:var(--border);transform:scale(.98)}
 
-.pay-tab{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--muted);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s}
-.pay-tab.active{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border-color:transparent}
-.pay-tab:active{transform:scale(.97)}
-.paytab-content{animation:fadeIn .3s ease}
+
+/* SSO Auth Modal */
+#auth-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9998;display:none;align-items:center;justify-content:center;padding:20px}
+#auth-modal.show{display:flex}
+.auth-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:380px;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.auth-logo{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,var(--p1),var(--p2));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:#fff;margin:0 auto 16px;box-shadow:0 0 30px rgba(124,77,255,.4)}
+.auth-title{font-size:1.2rem;font-weight:800;text-align:center;margin-bottom:6px;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.auth-sub{font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:20px}
+.auth-tabs{display:flex;gap:8px;margin-bottom:20px;background:var(--bg);border-radius:10px;padding:4px}
+.auth-tab{flex:1;padding:8px;border:none;background:transparent;color:var(--muted);font-size:.8rem;font-weight:600;border-radius:8px;cursor:pointer;transition:all .2s}
+.auth-tab.active{background:var(--p1);color:#fff}
+.auth-field{margin-bottom:14px}
+.auth-field input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-size:.85rem;outline:none;transition:border .2s}
+.auth-field input:focus{border-color:var(--p1)}
+.auth-field input::placeholder{color:var(--muted)}
+.auth-btn{width:100%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:10px;padding:13px;color:#fff;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.auth-btn:active{transform:scale(.97)}
+.auth-btn:disabled{opacity:.5}
+.auth-error{color:var(--p5);font-size:.75rem;text-align:center;margin-top:10px;display:none}
+.auth-error.show{display:block}
+.auth-success{color:var(--p3);font-size:.75rem;text-align:center;margin-top:10px;display:none}
+.auth-success.show{display:block}
+.auth-info{font-size:.68rem;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5}
+
+/* User badge in header */
+.user-badge{display:flex;align-items:center;gap:6px;cursor:pointer}
+.user-badge .ub-name{font-size:.72rem;font-weight:600;color:var(--text);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.login-btn{background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:8px;padding:6px 14px;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer}
+
 </style>
 </head>
 <body>
@@ -217,9 +243,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="balance-amount">₦847,200</div>
 <div class="balance-sub">~ $564.80 · 84,720 GDEG</div>
 <div class="balance-actions">
-<button class="bal-btn" onclick="switchPayTab('send')">💸 Send</button>
-<button class="bal-btn" onclick="switchPayTab('request')">📥 Request</button>
-<button class="bal-btn" onclick="switchPayTab('topup')">⚡ Top Up</button>
+<button class="bal-btn" onclick="switchPage('pay')">💸 Send</button>
+<button class="bal-btn" onclick="switchPage('pay')">📥 Request</button>
+<button class="bal-btn" onclick="switchPage('pay')">⚡ Top Up</button>
 <button class="bal-btn" onclick="openAI()">🤖 Business</button>
 </div>
 </div>
@@ -235,10 +261,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 
 <div class="quick-grid">
-<div class="quick" onclick="closeAI();switchPage('pay')"><span class="quick-icon">💳</span><span class="quick-label">Pay</span></div>
-<div class="quick" onclick="closeAI();switchPage('chat')"><span class="quick-icon">💬</span><span class="quick-label">Messages</span></div>
-<div class="quick" onclick="closeAI();switchPage('business')"><span class="quick-icon">🤖</span><span class="quick-label">AI Assistant</span></div>
-<div class="quick" onclick="closeAI();switchPage('store')"><span class="quick-icon">🛍️</span><span class="quick-label">Store</span></div>
+<div class="quick" onclick="switchPage('pay')"><span class="quick-icon">💳</span><span class="quick-label">Pay</span></div>
+<div class="quick" onclick="switchPage('chat')"><span class="quick-icon">💬</span><span class="quick-label">Messages</span></div>
+<div class="quick" onclick="switchPage('business')"><span class="quick-icon">🤖</span><span class="quick-label">AI Assistant</span></div>
+<div class="quick" onclick="switchPage('store')"><span class="quick-icon">🛍️</span><span class="quick-label">Store</span></div>
 <div class="quick" onclick="switchPage('learn')"><span class="quick-icon">📚</span><span class="quick-label">Learn</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><span class="quick-icon">🛠️</span><span class="quick-label">Dev Platform</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html')"><span class="quick-icon">🤖</span><span class="quick-label">AI Agency</span></div>
@@ -247,8 +273,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html')"><span class="quick-icon">☁️</span><span class="quick-label">Data Cloud</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html')"><span class="quick-icon">💡</span><span class="quick-label">Ventures</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html')"><span class="quick-icon">🌐</span><span class="quick-label">Browser</span></div>
-<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-farm-manager.html')"><span class="quick-icon">🌾</span><span class="quick-label">Farm</span></div>
-<div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/danfodio-memorial.html')"><span class="quick-icon">🏛️</span><span class="quick-label">School</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html')"><span class="quick-icon">📈</span><span class="quick-label">Exchange</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html')"><span class="quick-icon">🏢</span><span class="quick-label">Hosting</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-music-platform.html')"><span class="quick-icon">🎵</span><span class="quick-label">Music</span></div>
@@ -282,16 +306,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="balance-sub">GDEG: 12,450 · USDT: $234 · Bank: UBA</div>
 </div>
 </div>
-
-<!-- Pay Tabs -->
-<div style="display:flex;gap:0;padding:0 16px;margin-bottom:16px">
-<button id="ptab-send" class="pay-tab active" onclick="switchPayTab('send')">💸 Send</button>
-<button id="ptab-request" class="pay-tab" onclick="switchPayTab('request')">📥 Request</button>
-<button id="ptab-topup" class="pay-tab" onclick="switchPayTab('topup')">⚡ Top Up</button>
-</div>
-
-<!-- SEND TAB -->
-<div id="paytab-send" class="paytab-content">
 <div class="section">
 <div class="section-head"><span class="section-title">Payment Methods</span></div>
 <div class="pay-method selected" onclick="selectPay(this)"><div class="pay-icon">⚡</div><div class="pay-info"><div class="pay-name">GDEG Token</div><div class="pay-desc">Polygon · 10% discount</div></div><div style="font-size:.7rem;color:var(--p3)">12,450 GDEG</div></div>
@@ -302,126 +316,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 <div class="section">
 <div class="section-head"><span class="section-title">Send Money</span></div>
-<input id="sendAmount" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:1.2rem;outline:none;margin-bottom:10px" placeholder="₦0.00" type="number" oninput="updateSendSummary()">
-<input id="sendRecipient" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Recipient phone or account number">
-<input id="sendNote" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Note (optional)">
-<div id="sendSummary" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
-<div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Summary</div>
-<div id="sendSummaryText" style="font-size:.8rem;color:var(--text)"></div>
+<input style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:1.2rem;outline:none;margin-bottom:10px" placeholder="₦0.00" type="number">
+<input style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Recipient phone or account number">
+<input style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Note (optional)">
+<button style="width:100%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:12px;padding:14px;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html')">Open HarzPay →</button>
 </div>
-<button style="width:100%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:12px;padding:14px;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer" onclick="processSend()">Send Money →</button>
-<div id="sendResult" style="display:none;margin-top:14px"></div>
-</div>
-</div>
-
-<!-- REQUEST TAB -->
-<div id="paytab-request" class="paytab-content" style="display:none">
-<div class="section">
-<div class="section-head"><span class="section-title">Request Money</span></div>
-<input id="reqAmount" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:1.2rem;outline:none;margin-bottom:10px" placeholder="₦0.00" type="number" oninput="updateReqSummary()">
-<input id="reqFrom" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="Recipient name (optional)">
-<input id="reqDesc" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.8rem;outline:none;margin-bottom:10px" placeholder="What's it for? (optional)">
-<div id="reqSummary" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
-<div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Payment Details</div>
-<div id="reqSummaryText" style="font-size:.8rem;color:var(--text);line-height:1.6"></div>
-</div>
-<button style="width:100%;background:linear-gradient(135deg,#00e676,#00b24d);border:none;border-radius:12px;padding:14px;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer" onclick="processRequest()">Generate Request →</button>
-<div id="reqResult" style="display:none;margin-top:14px"></div>
-</div>
-<div class="section">
-<div class="section-head"><span class="section-title">Your Payment Info</span></div>
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-<span style="font-size:.75rem;color:var(--muted)">🏦 UBA Bank</span>
-<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.8rem;font-weight:600;font-family:monospace">2034326424</span><button onclick="copyText('2034326424')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-<span style="font-size:.75rem;color:var(--muted)">👤 Account Name</span>
-<span style="font-size:.8rem;font-weight:600">Rabiu Hamza</span>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
-<span style="font-size:.75rem;color:var(--muted)">₮ USDT (TRC20)</span>
-<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.7rem;font-weight:600;font-family:monospace">TVE2ia3...X5Cr</span><button onclick="copyText('TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- TOP UP TAB -->
-<div id="paytab-topup" class="paytab-content" style="display:none">
-<div class="section">
-<div class="section-head"><span class="section-title">Top Up Wallet</span></div>
-<input id="topupAmount" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:1.2rem;outline:none;margin-bottom:10px" placeholder="₦0.00" type="number">
-
-<div class="card" onclick="showTopupDetails('bank')" style="margin-bottom:8px">
-<div class="card-row">
-<div class="card-icon" style="background:rgba(0,230,118,.12)">🏦</div>
-<div class="card-info"><div class="card-title">Bank Transfer (UBA)</div><div class="card-desc">Instant · No fees</div></div>
-<div class="card-arrow">›</div>
-</div>
-</div>
-<div id="topup-bank" style="display:none;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px">
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-<span style="font-size:.75rem;color:var(--muted)">Bank</span><span style="font-size:.8rem;font-weight:600">United Bank for Africa (UBA)</span>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-<span style="font-size:.75rem;color:var(--muted)">Account Number</span>
-<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.8rem;font-weight:600;font-family:monospace">2034326424</span><button onclick="copyText('2034326424')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-<span style="font-size:.75rem;color:var(--muted)">Account Name</span><span style="font-size:.8rem;font-weight:600">Rabiu Hamza</span>
-</div>
-<div style="padding:8px 0"><span style="font-size:.75rem;color:var(--muted)">After transfer, send proof to WhatsApp for instant credit.</span></div>
-</div>
-
-<div class="card" onclick="showTopupDetails('usdt')" style="margin-bottom:8px">
-<div class="card-row">
-<div class="card-icon" style="background:rgba(255,171,0,.12)">₮</div>
-<div class="card-info"><div class="card-title">USDT (TRC20)</div><div class="card-desc">Crypto · ~2 min confirmation</div></div>
-<div class="card-arrow">›</div>
-</div>
-</div>
-<div id="topup-usdt" style="display:none;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px">
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-<span style="font-size:.75rem;color:var(--muted)">Network</span><span style="font-size:.8rem;font-weight:600">TRC20 (Tron)</span>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-<span style="font-size:.75rem;color:var(--muted)">Wallet Address</span>
-<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.7rem;font-weight:600;font-family:monospace">TVE2ia3...X5Cr</span><button onclick="copyText('TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
-</div>
-<div style="padding:8px 0"><span style="font-size:.75rem;color:var(--muted)">Send USDT to this address. Wallet credits after 1 confirmation.</span></div>
-</div>
-
-<div class="card" onclick="showTopupDetails('gdeg')" style="margin-bottom:8px">
-<div class="card-row">
-<div class="card-icon" style="background:rgba(124,77,255,.12)">⚡</div>
-<div class="card-info"><div class="card-title">GDEG Token</div><div class="card-desc">Polygon · 10% bonus on top-up</div></div>
-<div class="card-arrow">›</div>
-</div>
-</div>
-<div id="topup-gdeg" style="display:none;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px">
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-<span style="font-size:.75rem;color:var(--muted)">Network</span><span style="font-size:.8rem;font-weight:600">Polygon (MATIC)</span>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-<span style="font-size:.75rem;color:var(--muted)">Wallet</span>
-<div style="display:flex;gap:8px;align-items:center"><span style="font-size:.7rem;font-weight:600;font-family:monospace">0x0B63...3be3</span><button onclick="copyText('0x0B63dE2c45A0c25dC290aF51347f95D82EBbe51fe3C1')" style="background:var(--card2);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--p2);cursor:pointer">Copy</button></div>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
-<span style="font-size:.75rem;color:var(--muted)">Rate</span><span style="font-size:.8rem;font-weight:600">1 GDEG = ₦15</span>
-</div>
-</div>
-
-<div class="card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html')" style="margin-bottom:8px">
-<div class="card-row">
-<div class="card-icon" style="background:rgba(0,188,212,.12)">💳</div>
-<div class="card-info"><div class="card-title">Pay with Card</div><div class="card-desc">Paystack · Stripe (coming soon)</div></div>
-<div class="card-arrow">›</div>
-</div>
-</div>
-</div>
-</div>
-
 <div class="section">
 <div class="section-head"><span class="section-title">GDEG Token Info</span></div>
 <div class="card">
@@ -432,6 +331,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="font-size:.75rem;color:var(--muted)">Network</span><span style="font-size:.75rem;font-weight:600">Polygon (MATIC)</span></div>
 </div>
 </div>
+</div>
+
 <!-- CHAT PAGE -->
 <div id="page-chat" class="page">
 <div class="section" style="padding-top:16px">
@@ -454,16 +355,16 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 <div class="biz-ctrl-body" id="aiMsgs">
 <div class="biz-ctrl-grid">
-<div class="biz-ctrl-card" onclick="closeAI();switchPage('business')">
+<div class="biz-ctrl-card" onclick="switchPage('business')">
 <div class="biz-ctrl-icon">📋</div><div class="biz-ctrl-label">CRM</div><div class="biz-ctrl-val" id="ctrl-crm">Loading...</div>
 </div>
-<div class="biz-ctrl-card" onclick="closeAI();switchPage('store')">
+<div class="biz-ctrl-card" onclick="switchPage('store')">
 <div class="biz-ctrl-icon">🛍️</div><div class="biz-ctrl-label">Products</div><div class="biz-ctrl-val" id="ctrl-prod">259</div>
 </div>
-<div class="biz-ctrl-card" onclick="closeAI();switchPage('pay')">
+<div class="biz-ctrl-card" onclick="switchPage('pay')">
 <div class="biz-ctrl-icon">💳</div><div class="biz-ctrl-label">Payments</div><div class="biz-ctrl-val">Active</div>
 </div>
-<div class="biz-ctrl-card" onclick="closeAI();switchPage('chat')">
+<div class="biz-ctrl-card" onclick="switchPage('chat')">
 <div class="biz-ctrl-icon">💬</div><div class="biz-ctrl-label">Messages</div><div class="biz-ctrl-val" id="ctrl-msg">WhatsApp</div>
 </div>
 </div>
@@ -570,12 +471,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <span style="padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:.7rem;white-space:nowrap;cursor:pointer">Courses</span>
 </div>
 <div class="product-grid" style="padding:0 16px">
-<div class="product-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-products.html')"><div class="product-img">📝</div><div class="product-info"><div class="product-name">Notion Productivity OS</div><div class="product-price">$17.99</div></div></div>
-<div class="product-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-products.html')"><div class="product-img">🎨</div><div class="product-info"><div class="product-name">Canva Template Bundle</div><div class="product-price">$19.98</div></div></div>
-<div class="product-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-products.html')"><div class="product-img">📊</div><div class="product-info"><div class="product-name">Digital Marketing Course</div><div class="product-price">$49.99</div></div></div>
-<div class="product-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-products.html')"><div class="product-img">🤖</div><div class="product-info"><div class="product-name">AI Art Prompts Bible</div><div class="product-price">$19.98</div></div></div>
+<div class="product-card" onclick="openLink('https://hamzarabiu.gumroad.com/l/cwpssi')"><div class="product-img">📝</div><div class="product-info"><div class="product-name">Notion Productivity OS</div><div class="product-price">$17.99</div></div></div>
+<div class="product-card" onclick="openLink('https://hamzarabiu.gumroad.com/l/wkvpwb')"><div class="product-img">🎨</div><div class="product-info"><div class="product-name">Canva Template Bundle</div><div class="product-price">$19.98</div></div></div>
+<div class="product-card" onclick="openLink('https://hamzarabiu.gumroad.com/l/mtcivf')"><div class="product-img">📊</div><div class="product-info"><div class="product-name">Digital Marketing Course</div><div class="product-price">$49.99</div></div></div>
+<div class="product-card" onclick="openLink('https://hamzarabiu.gumroad.com/l/vpwger')"><div class="product-img">🤖</div><div class="product-info"><div class="product-name">AI Art Prompts Bible</div><div class="product-price">$19.98</div></div></div>
 <div class="product-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/engineering-collection-product.html')"><div class="product-img">🔧</div><div class="product-info"><div class="product-name">Engineering Collection 8-in-1</div><div class="product-price">$89.99</div></div></div>
-<div class="product-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-products.html')"><div class="product-img">💼</div><div class="product-info"><div class="product-name">Freelancer Starter Kit</div><div class="product-price">$11.99</div></div></div>
+<div class="product-card" onclick="openLink('https://hamzarabiu.gumroad.com/l/gxrbri')"><div class="product-img">💼</div><div class="product-info"><div class="product-name">Freelancer Starter Kit</div><div class="product-price">$11.99</div></div></div>
 </div>
 <div style="padding:16px;text-align:center">
 <button onclick="openLink('https://harzdm.vercel.app')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 30px;color:var(--p2);font-size:.8rem;font-weight:600;cursor:pointer">View Full Store →</button>
@@ -623,7 +524,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div style="padding:0 16px">
 <div class="biz-card" onclick="showToast('Loading CRM...')"><div class="biz-icon" style="background:rgba(37,211,102,.12)">📋</div><div class="biz-info"><div class="biz-title">WhatsApp CRM</div><div class="biz-desc">Customer inquiries & leads</div></div><div class="biz-stat"><div class="biz-num">24</div><div class="biz-lbl">leads</div></div></div>
 <div class="biz-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html')"><div class="biz-icon" style="background:rgba(0,188,212,.12)">📢</div><div class="biz-info"><div class="biz-title">Nexal Ads</div><div class="biz-desc">Ad campaigns & marketing</div></div><div class="biz-stat"><div class="biz-num">5</div><div class="biz-lbl">active</div></div></div>
-<div class="biz-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/buildbot-ai.html')"><div class="biz-icon" style="background:rgba(124,77,255,.12)">🏗️</div><div class="biz-info"><div class="biz-title">BuildBot AI</div><div class="biz-desc">Construction planning & quotes</div></div><div class="biz-stat"><div class="biz-num">12</div><div class="biz-lbl">projects</div></div></div>
+<div class="biz-card" onclick="openLink('https://buildbot-ai-three.vercel.app')"><div class="biz-icon" style="background:rgba(124,77,255,.12)">🏗️</div><div class="biz-info"><div class="biz-title">BuildBot AI</div><div class="biz-desc">Construction planning & quotes</div></div><div class="biz-stat"><div class="biz-num">12</div><div class="biz-lbl">projects</div></div></div>
 <div class="biz-card" onclick="showToast('Loading ContentPilot...')"><div class="biz-icon" style="background:rgba(255,171,0,.12)">🎬</div><div class="biz-info"><div class="biz-title">ContentPilot AI</div><div class="biz-desc">Content scheduling & analytics</div></div><div class="biz-stat"><div class="biz-num">25</div><div class="biz-lbl">agents</div></div></div>
 <div class="biz-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')"><div class="biz-icon" style="background:rgba(0,230,118,.12)">☁️</div><div class="biz-info"><div class="biz-title">Harz AI Cloud</div><div class="biz-desc">20 AI agents & API</div></div><div class="biz-stat"><div class="biz-num">20</div><div class="biz-lbl">agents</div></div></div>
 <div class="biz-card" onclick="showToast('Loading Estate...')"><div class="biz-icon" style="background:rgba(255,61,113,.12)">🏠</div><div class="biz-info"><div class="biz-title">Abuja Estate City</div><div class="biz-desc">Property listings & inquiries</div></div><div class="biz-stat"><div class="biz-num">5</div><div class="biz-lbl">listings</div></div></div>
@@ -648,7 +549,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 <div class="section-head" style="margin-top:12px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">FINANCE & PAYMENTS</span></div>
 <div class="more-list">
-<div class="more-item" onclick="closeAI();switchPage('pay')">💸 HarzPay — Wallet & Payments</div>
+<div class="more-item" onclick="switchPage('pay')">💸 HarzPay — Wallet & Payments</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html')">💳 HarzPay — Full Gateway</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html')">📈 Harz Exchange — Crypto & P2P</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-saas-billing.html')">📊 Harz SaaS Billing</div>
@@ -669,7 +570,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html')">📢 Nexal Ads</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-v2.html')">📰 Harz Newsletter</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-whatsapp-store.html')">💬 Harz WhatsApp Store</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/buildbot-ai.html')">🏗️ BuildBot AI — Construction</div>
+<div class="more-item" onclick="openLink('https://buildbot-ai-three.vercel.app')">🏗️ BuildBot AI — Construction</div>
 </div>
 
 <div class="section-head" style="margin-top:16px"><span class="section-title" style="font-size:.7rem;color:var(--muted)">SOCIAL & COMMUNITY</span></div>
@@ -683,7 +584,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="more-list">
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html')">🤖 Harz AI Agency</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')">🌩️ Harz AI Cloud — 20 Agents</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-cloud-pricing.html')" style="padding-left:24px">💳 AI Cloud Pricing & Subscriptions</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-studio.html')">🎨 Harz AI Studio</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-chatbot-builder.html')">💬 Harz Chatbot Builder</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-health-ai-dashboard.html')">🏥 OMEGA Health AI</div>
@@ -728,6 +628,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html')">🪪 Global Identity</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html')">☁️ Data Cloud</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html')">💡 Venture Studio</div>
+<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-producer-dashboard.html')" style="background:rgba(124,77,255,.08);border-color:rgba(124,77,255,.3)">🎬 OMEGA Producer AI — NEW</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-onboarding.html')">🚀 Onboarding</div>
 </div>
 
@@ -744,37 +645,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="more-item" onclick="openLink('https://t.me/b44_e609780e17959020_bot')">💬 Harz Assistant Bot</div>
 <div class="more-item" onclick="openLink('https://t.me/Omegacommanderaibot')">⚡ OMEGA Commander Bot</div>
 <div class="more-item" onclick="openLink('https://maganu-agent.onrender.com')">🌀 OMEGA Infinity 1000</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-producer-dashboard.html')">🎬 OMEGA Producer AI</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-commander-ai.html')">⚡ OMEGA Commander AI</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-deploy.html')">🚀 OMEGA Deploy</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-executive.html')">👔 OMEGA Executive</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-finance.html')">💰 OMEGA Finance</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-marketing.html')">📣 OMEGA Marketing</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-products.html')">📦 OMEGA Products</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-security.html')">🔐 OMEGA Security</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/omega-comms.html')">📡 OMEGA Comms</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-comparison.html')">⚖️ HARZ Comparison</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-events-tickets.html')">🎟️ HARZ Events Tickets</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-freelance-market.html')">💼 HARZ Freelance Market</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-help-center.html')">🆘 HARZ Help Center</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-insider-platform.html')"> insider Platform</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-market-hub.html')">🏪 HARZ Market Hub</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-subscribe.html')">📧 HARZ Newsletter Subscribe</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-partner-platform.html')">🤝 HARZ Partner Platform</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-pricing-calculator.html')">🧮 HARZ Pricing Calculator</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-products.html')">📦 HARZ Products</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-saas-directory.html')">📋 HARZ SaaS Directory</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-success-stories.html')">📖 HARZ Success Stories</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-toolkit.html')">🧰 HARZ Toolkit (490+ Tools)</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-farm-manager.html')">🌾 HARZ Farm Manager</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/danfodio-memorial.html')">🏛️ Danfodio Memorial Academy</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/danfodio-fees-payment.html')" style="padding-left:24px">💳 Pay School Fees Online</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/danfodio-admission.html')" style="padding-left:24px">📝 Admission Application Form</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-farm-to-market.html')">🛒 HARZ Farm to Market</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-wallet.html')">⚡ HARZ Wallet — GDEG & Assets</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/danfodio-student-portal.html'))">🎓 Student Portal — Results & Timetable</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-farmer-registration.html')">🚜 Farmer Registration</div>
-<div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-analytics.html')">📊 HARZ Analytics Dashboard</div>
 </div>
 
 </div>
@@ -784,9 +654,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <!-- Bottom Nav -->
 <div class="nav">
 <div class="nav-item active" onclick="switchPage('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
-<div class="nav-item" onclick="closeAI();switchPage('pay')"><div class="nav-icon">💸</div><div class="nav-label">Pay</div></div>
-<div class="nav-item" onclick="closeAI();switchPage('chat')"><div class="nav-icon">💬</div><div class="nav-label">Chat</div></div>
-<div class="nav-item" onclick="closeAI();switchPage('store')"><div class="nav-icon">🛍️</div><div class="nav-label">Store</div></div>
+<div class="nav-item" onclick="switchPage('pay')"><div class="nav-icon">💸</div><div class="nav-label">Pay</div></div>
+<div class="nav-item" onclick="switchPage('chat')"><div class="nav-icon">💬</div><div class="nav-label">Chat</div></div>
+<div class="nav-item" onclick="switchPage('store')"><div class="nav-icon">🛍️</div><div class="nav-label">Store</div></div>
 <div class="nav-item" onclick="switchPage('learn')"><div class="nav-icon">📚</div><div class="nav-label">Learn</div></div>
 </div>
 
@@ -801,66 +671,110 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 <iframe id="app-frame" style="flex:1;border:none;width:100%;background:#fff" allow="camera;microphone;geolocation;clipboard-read;clipboard-write;clipboard-write;allow-popups;allow-same-origin" allowfullscreen></iframe>
 </div>
-<script>document.getElementById('app-overlay').style.display='none';</script>
+
 <!-- Toast -->
 <div id="toast" class="toast"></div>
 
 <script>
+// Navigation history for iframe
+let iframeHistory=[];
+let iframeHistoryIndex=-1;
+
+// Sites that block iframe embedding — open in new tab instead
+const NEW_TAB_SITES=[
+'getly.store',
+'abuja-estate-city-ai.vercel.app',
+'buildbot-ai-three.vercel.app'
+];
+
 function openLink(u){
-// Sites that block iframe embedding (X-Frame-Options: DENY) — open in new tab
-const noIframe=['getly.store'];
-for(let i=0;i<noIframe.length;i++){if(u.includes(noIframe[i])){window.open(u,'_blank');return;}}
+for(let i=0;i<NEW_TAB_SITES.length;i++){
+if(u.includes(NEW_TAB_SITES[i])){
+window.open(u,'_blank');
+showToast('Opening in new tab (not embeddable)');
+return;
+}
+}
 const overlay=document.getElementById('app-overlay');
 const frame=document.getElementById('app-frame');
 const title=document.getElementById('app-title');
+overlay.style.display='flex';
 frame.src=u;
-overlay.classList.add('show');
-// Extract app name from URL for the header
+iframeHistory=[u];
+iframeHistoryIndex=0;
 const parts=u.split('/');
 let name=parts[parts.length-1].replace('.html','').replace(/[-_]/g,' ');
 name=name.charAt(0).toUpperCase()+name.slice(1);
 if(u.includes('vercel.app')){name=parts[2].split('.')[0];}
+if(u.includes('getly.store')){name='HarzDM Getly Store';}
+if(u.includes('gumroad.com')){name='Gumroad Store';}
 title.textContent=name;
 document.body.style.overflow='hidden';
-// Fallback: if iframe content fails to load after 6s, show error overlay
-clearTimeout(window._iframeTimer);
-window._iframeTimer=setTimeout(function(){
-try{if(!frame.contentWindow||frame.contentWindow.length===0||frame.contentDocument.body.innerHTML.trim()===''){
-showOverlayError(name,u);}}catch(e){showOverlayError(name,u);}},6000);
 }
-function showOverlayError(name,url){
-const overlay=document.getElementById('app-overlay');
-const title=document.getElementById('app-title');
-title.textContent=name+' — Load Failed';
-const frame=document.getElementById('app-frame');
-frame.src='about:blank';
-const fallback=document.createElement('div');
-fallback.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);color:var(--text);text-align:center;padding:20px;z-index:10';
-fallback.innerHTML='<div style="font-size:2rem;margin-bottom:12px">⚠️</div><p style="font-size:1rem;font-weight:600;margin-bottom:8px">This site can\'t be embedded</p><p style="font-size:.8rem;color:var(--muted);margin-bottom:20px">'+name+' blocked loading inside the app.</p><a href="'+url+'" target="_blank" style="background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;font-size:.85rem">Open in New Tab →</a>';
-const overlayEl=overlay.querySelector('#app-frame');
-overlayEl.parentNode.insertBefore(fallback,overlayEl.nextSibling);
-}
-function clearOverlayError(){
-document.querySelectorAll('div[style*="Load Failed"]').forEach(function(e){e.remove();});
-}
+
 function closeApp(){
-clearTimeout(window._iframeTimer);
-clearOverlayError();
 const overlay=document.getElementById('app-overlay');
 const frame=document.getElementById('app-frame');
 frame.src='about:blank';
-overlay.classList.remove('show');
+overlay.style.display='none';
 document.body.style.overflow='';
+const activePage=document.querySelector('.page.active');
+if(activePage){
+const pgId=activePage.id.replace('page-','');
+switchPage(pgId);
+}else{
 switchPage('home');
 }
+iframeHistory=[];
+iframeHistoryIndex=-1;
+}
+
 function iframeBack(){
-try{document.getElementById('app-frame').contentWindow.history.back();}catch(e){closeApp();}
+try{
+const frame=document.getElementById('app-frame');
+if(iframeHistoryIndex>0){
+iframeHistoryIndex--;
+frame.src=iframeHistory[iframeHistoryIndex];
+}else{
+try{
+const canGoBack=frame.contentWindow.history.length>1;
+if(canGoBack){
+frame.contentWindow.history.back();
+}else{
+closeApp();
 }
+}catch(e){
+closeApp();
+}
+}
+}catch(e){
+closeApp();
+}
+}
+
 function iframeForward(){
-try{document.getElementById('app-frame').contentWindow.history.forward();}catch(e){}
+try{
+const frame=document.getElementById('app-frame');
+if(iframeHistoryIndex<iframeHistory.length-1){
+iframeHistoryIndex++;
+frame.src=iframeHistory[iframeHistoryIndex];
+}else{
+frame.contentWindow.history.forward();
 }
+}catch(e){}
+}
+
 function iframeReload(){
-try{document.getElementById('app-frame').contentWindow.location.reload();}catch(e){const f=document.getElementById('app-frame');const s=f.src;f.src=s;}
+try{
+const frame=document.getElementById('app-frame');
+const currentSrc=frame.src;
+frame.src='about:blank';
+setTimeout(()=>{frame.src=currentSrc;},100);
+}catch(e){
+const f=document.getElementById('app-frame');
+const s=f.src;
+f.src=s;
+}
 }
 // App search database
 const APP_DB=[
@@ -880,12 +794,11 @@ const APP_DB=[
 {name:'Nexal Ads',icon:'📢',cat:'Marketplace',desc:'Multi-platform advertising',url:'https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html'},
 {name:'Harz Newsletter',icon:'📰',cat:'Marketplace',desc:'Newsletter subscriptions',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-v2.html'},
 {name:'Harz WhatsApp Store',icon:'💬',cat:'Marketplace',desc:'WhatsApp commerce',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-whatsapp-store.html'},
-{name:'BuildBot AI',icon:'🏗️',cat:'Marketplace',desc:'Construction planning',url:'https://rabiuhamza11.github.io/harz-portfolio/buildbot-ai.html'},
+{name:'BuildBot AI',icon:'🏗️',cat:'Marketplace',desc:'Construction planning',url:'https://buildbot-ai-three.vercel.app'},
 {name:'HARZ Connect',icon:'🌐',cat:'Social',desc:'Social platform · 9 tabs',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-connect.html'},
 {name:'WhatsApp CRM',icon:'📋',cat:'Social',desc:'Customer management',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-crm-dashboard.html'},
 {name:'Harz Mailbox',icon:'📬',cat:'Social',desc:'Email management',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-mailbox.html'},
 {name:'Harz AI Agency',icon:'🤖',cat:'AI',desc:'AI services agency',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html'},
-{name:'AI Cloud Pricing',icon:'💳',cat:'AI',desc:'Subscription plans & payment',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-ai-cloud-pricing.html'},
 {name:'Harz AI Cloud',icon:'🌩️',cat:'AI',desc:'20 AI agents & API',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html'},
 {name:'Harz AI Studio',icon:'🎨',cat:'AI',desc:'Image generation',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-ai-studio.html'},
 {name:'Harz Chatbot Builder',icon:'💬',cat:'AI',desc:'Build custom chatbots',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-chatbot-builder.html'},
@@ -915,6 +828,7 @@ const APP_DB=[
 {name:'Global Identity',icon:'🪪',cat:'Infrastructure',desc:'Digital identity',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html'},
 {name:'Data Cloud',icon:'☁️',cat:'Infrastructure',desc:'Data storage',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html'},
 {name:'Venture Studio',icon:'💡',cat:'Infrastructure',desc:'Build startups',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html'},
+{name:'OMEGA Producer AI',icon:'🎬',cat:'Infrastructure',desc:'Autonomous production agent',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-producer-dashboard.html'},
 {name:'Onboarding',icon:'🚀',cat:'Infrastructure',desc:'Get started',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-onboarding.html'},
 {name:'Ecosystem Dashboard',icon:'📊',cat:'Ecosystem',desc:'Platform overview',url:'https://rabiuhamza11.github.io/harz-portfolio/ecosystem-dashboard.html'},
 {name:'Launch Page',icon:'🚀',cat:'Ecosystem',desc:'Launch announcement',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-launch.html'},
@@ -923,42 +837,11 @@ const APP_DB=[
 {name:'Harz Assistant Bot',icon:'💬',cat:'Telegram',desc:'AI assistant on Telegram',url:'https://t.me/b44_e609780e17959020_bot'},
 {name:'OMEGA Commander',icon:'⚡',cat:'Telegram',desc:'Enterprise orchestrator',url:'https://t.me/Omegacommanderaibot'},
 {name:'OMEGA Infinity 1000',icon:'🌀',cat:'Telegram',desc:'1000 AI agents',url:'https://maganu-agent.onrender.com'},
-{name:'OMEGA Producer AI',icon:'🎬',cat:'Production',desc:'Production command center',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-producer-dashboard.html'},
-{name:'OMEGA Commander AI',icon:'⚡',cat:'AI',desc:'AI command interface',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-commander-ai.html'},
-{name:'OMEGA Deploy',icon:'🚀',cat:'DevOps',desc:'Deployment management',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-deploy.html'},
-{name:'OMEGA Executive',icon:'👔',cat:'Business',desc:'Executive dashboard',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-executive.html'},
-{name:'OMEGA Finance',icon:'💰',cat:'Finance',desc:'Financial management',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-finance.html'},
-{name:'OMEGA Marketing',icon:'📣',cat:'Marketing',desc:'Marketing automation',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-marketing.html'},
-{name:'OMEGA Products',icon:'📦',cat:'Products',desc:'Product management',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-products.html'},
-{name:'OMEGA Security',icon:'🔐',cat:'Security',desc:'Security monitoring',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-security.html'},
-{name:'OMEGA Comms',icon:'📡',cat:'Comms',desc:'Communication hub',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-comms.html'},
-{name:'HARZ Comparison',icon:'⚖️',cat:'Tools',desc:'Platform comparison',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-comparison.html'},
-{name:'HARZ Events Tickets',icon:'🎟️',cat:'Events',desc:'Event ticketing',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-events-tickets.html'},
-{name:'HARZ Freelance Market',icon:'💼',cat:'Marketplace',desc:'Freelance marketplace',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-freelance-market.html'},
-{name:'HARZ Help Center',icon:'🆘',cat:'Support',desc:'Help center',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-help-center.html'},
-{name:'HARZ Insider Platform',icon:'💡',cat:'Insights',desc:'Insider insights',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-insider-platform.html'},
-{name:'HARZ Market Hub',icon:'🏪',cat:'Marketplace',desc:'Market hub',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-market-hub.html'},
-{name:'HARZ Newsletter',icon:'📧',cat:'Marketing',desc:'Newsletter signup',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-subscribe.html'},
-{name:'HARZ Partner Platform',icon:'🤝',cat:'Business',desc:'Partner platform',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-partner-platform.html'},
-{name:'HARZ Pricing Calculator',icon:'🧮',cat:'Tools',desc:'Pricing calculator',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-pricing-calculator.html'},
-{name:'HARZ Products',icon:'📦',cat:'Products',desc:'Product catalog',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-products.html'},
-{name:'HARZ SaaS Directory',icon:'📋',cat:'SaaS',desc:'SaaS directory',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-saas-directory.html'},
-{name:'HARZ Success Stories',icon:'📖',cat:'Marketing',desc:'Success stories',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-success-stories.html'},
-{name:'HARZ Toolkit',icon:'🧰',cat:'Tools',desc:'490+ tools & generators',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-toolkit.html'},
-{name:'HARZ Farm Manager',icon:'🌾',cat:'Farm',desc:'Farm tracking & management',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-farm-manager.html'},
-{name:'Danfodio Memorial',icon:'🏛️',cat:'Education',desc:'School portal & management',url:'https://rabiuhamza11.github.io/harz-portfolio/danfodio-memorial.html'},
-{name:'Danfodio Fee Payment',icon:'💳',cat:'Education',desc:'Online school fees payment',url:'https://rabiuhamza11.github.io/harz-portfolio/danfodio-fees-payment.html'},
-{name:'Danfodio Admission',icon:'📝',cat:'Education',desc:'Online admission application',url:'https://rabiuhamza11.github.io/harz-portfolio/danfodio-admission.html'},
-{name:'HARZ Farm to Market',icon:'🛒',cat:'Farm',desc:'Sell produce from farm to buyer',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-farm-to-market.html'},
-{name:'HARZ Wallet',icon:'⚡',cat:'Finance',desc:'GDEG & multi-asset wallet',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-wallet.html'},
-{name:'Student Portal',icon:'🎓',cat:'Education',desc:'Results, timetable & assignments',url:'https://rabiuhamza11.github.io/harz-portfolio/danfodio-student-portal.html'},
-{name:'Farmer Registration',icon:'🚜',cat:'Farm',desc:'Register farm & sell produce',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-farmer-registration.html'},
-{name:'HARZ Analytics',icon:'📊',cat:'Business',desc:'Revenue, orders & platform health',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-analytics.html'},
-{name:'Notion Productivity OS',icon:'📝',cat:'Product',desc:'HARZ Store · Bank/USDT/GDEG',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-products.html'},
-{name:'Canva Template Bundle',icon:'🎨',cat:'Product',desc:'HARZ Store · Bank/USDT/GDEG',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-products.html'},
-{name:'Digital Marketing Course',icon:'📊',cat:'Product',desc:'HARZ Store · Bank/USDT/GDEG',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-products.html'},
-{name:'AI Art Prompts Bible',icon:'🤖',cat:'Product',desc:'HARZ Store · Bank/USDT/GDEG',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-products.html'},
-{name:'Freelancer Starter Kit',icon:'💼',cat:'Product',desc:'HARZ Store · Bank/USDT/GDEG',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-products.html'},
+{name:'Notion Productivity OS',icon:'📝',cat:'Product',desc:'$17.99 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/cwpssi'},
+{name:'Canva Template Bundle',icon:'🎨',cat:'Product',desc:'$19.98 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/wkvpwb'},
+{name:'Digital Marketing Course',icon:'📊',cat:'Product',desc:'$49.99 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/mtcivf'},
+{name:'AI Art Prompts Bible',icon:'🤖',cat:'Product',desc:'$19.98 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/vpwger'},
+{name:'Freelancer Starter Kit',icon:'💼',cat:'Product',desc:'$11.99 · Gumroad',url:'https://hamzarabiu.gumroad.com/l/gxrbri'},
 {name:'Engineering Collection',icon:'🔧',cat:'Product',desc:'$89.99 · 8-in-1',url:'https://rabiuhamza11.github.io/harz-portfolio/engineering-collection-product.html'},
 ];
 function searchApps(q){
@@ -1005,109 +888,6 @@ setTimeout(()=>t.classList.remove('show'),2500);
 function selectPay(el){
 document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('selected'));
 el.classList.add('selected');
-}
-
-// Wallet Tab Switching
-function switchPayTab(tab){
-switchPage('pay');
-document.querySelectorAll('.pay-tab').forEach(t=>t.classList.remove('active'));
-document.querySelectorAll('.paytab-content').forEach(c=>c.style.display='none');
-const tabBtn=document.getElementById('ptab-'+tab);
-const tabContent=document.getElementById('paytab-'+tab);
-if(tabBtn)tabBtn.classList.add('active');
-if(tabContent)tabContent.style.display='block';
-}
-
-// Copy to clipboard
-function copyText(text){
-if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>showToast('Copied!'));showToast('Copied!');}
-else{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Copied!');}
-}
-
-// Send Money
-function updateSendSummary(){
-const amt=document.getElementById('sendAmount').value;
-const sum=document.getElementById('sendSummary');
-const sumText=document.getElementById('sendSummaryText');
-if(amt&&parseFloat(amt)>0){
-const selected=document.querySelector('.pay-method.selected .pay-name');
-const method=selected?selected.textContent:'GDEG Token';
-const ngn=parseFloat(amt);
-const gdeg=Math.round(ngn/15);
-sum.style.display='block';
-sumText.innerHTML='Amount: ₦'+ngn.toLocaleString()+'<br>Method: '+method+(method.includes('GDEG')?'<br>Equivalent: '+gdeg+' GDEG':'');
-}else{sum.style.display='none';}
-}
-
-function processSend(){
-const amt=document.getElementById('sendAmount').value;
-const rec=document.getElementById('sendRecipient').value;
-if(!amt||parseFloat(amt)<=0){showToast('Enter amount to send');return;}
-if(!rec){showToast('Enter recipient details');return;}
-const selected=document.querySelector('.pay-method.selected .pay-name');
-const method=selected?selected.textContent:'GDEG Token';
-const result=document.getElementById('sendResult');
-const ngn=parseFloat(amt);
-if(method.includes('Bank')){
-result.style.display='block';
-result.innerHTML='<div style="background:var(--card);border:1px solid var(--p3);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;color:var(--p3);margin-bottom:8px">✓ Transfer Instructions</div><div style="font-size:.75rem;color:var(--text);line-height:1.6">Transfer ₦'+ngn.toLocaleString()+' to:<br><br>🏦 UBA — 2034326424<br>👤 Rabiu Hamza<br><br>After transfer, send proof to WhatsApp for confirmation.</div><button onclick="copyText(\'2034326424\')" style="margin-top:10px;background:var(--card2);border:none;border-radius:8px;padding:8px 14px;font-size:.7rem;color:var(--p2);cursor:pointer">Copy Account Number</button></div>';
-}else if(method.includes('USDT')){
-const usd=(ngn/1500).toFixed(2);
-result.style.display='block';
-result.innerHTML='<div style="background:var(--card);border:1px solid var(--p4);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;color:var(--p4);margin-bottom:8px">✓ USDT Payment</div><div style="font-size:.75rem;color:var(--text);line-height:1.6">Send ~$'+usd+' USDT (TRC20) to:<br><br>₮ TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr<br><br>Wallet credits after 1 confirmation.</div><button onclick="copyText(\'TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr\')" style="margin-top:10px;background:var(--card2);border:none;border-radius:8px;padding:8px 14px;font-size:.7rem;color:var(--p2);cursor:pointer">Copy Address</button></div>';
-}else if(method.includes('GDEG')){
-const gdeg=Math.round(ngn/15);
-result.style.display='block';
-result.innerHTML='<div style="background:var(--card);border:1px solid var(--p1);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;color:var(--p1);margin-bottom:8px">✓ GDEG Token Payment</div><div style="font-size:.75rem;color:var(--text);line-height:1.6">Send '+gdeg+' GDEG to:<br><br>⚡ 0x0B63dE2c45A0c25dC290aF51347f95D82EBbe51fe3C1<br><br>10% discount applied. Network: Polygon.</div><button onclick="copyText(\'0x0B63dE2c45A0c25dC290aF51347f95D82EBbe51fe3C1\')" style="margin-top:10px;background:var(--card2);border:none;border-radius:8px;padding:8px 14px;font-size:.7rem;color:var(--p2);cursor:pointer">Copy Wallet</button></div>';
-}else{
-result.style.display='block';
-result.innerHTML='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;margin-bottom:8px">Processing...</div><div style="font-size:.75rem;color:var(--muted)">'+method+' for ₦'+ngn.toLocaleString()+' — redirecting to HarzPay</div></div>';
-setTimeout(()=>openLink('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html'),1000);
-}
-showToast('Payment details ready');
-}
-
-// Request Money
-function updateReqSummary(){
-const amt=document.getElementById('reqAmount').value;
-const sum=document.getElementById('reqSummary');
-const sumText=document.getElementById('reqSummaryText');
-if(amt&&parseFloat(amt)>0){
-const ngn=parseFloat(amt);
-const gdeg=Math.round(ngn/15);
-const usd=(ngn/1500).toFixed(2);
-sum.style.display='block';
-sumText.innerHTML='💰 Amount: ₦'+ngn.toLocaleString()+' (~$'+usd+')<br>⚡ GDEG: '+gdeg+' tokens<br>🏦 UBA: 2034326424<br>👤 Rabiu Hamza<br>₮ USDT: TVE2ia3...X5Cr';
-}else{sum.style.display='none';}
-}
-
-function processRequest(){
-const amt=document.getElementById('reqAmount').value;
-if(!amt||parseFloat(amt)<=0){showToast('Enter amount to request');return;}
-const ngn=parseFloat(amt);
-const from=document.getElementById('reqFrom').value||'Recipient';
-const desc=document.getElementById('reqDesc').value||'';
-const gdeg=Math.round(ngn/15);
-const usd=(ngn/1500).toFixed(2);
-const result=document.getElementById('reqResult');
-const reqText='Payment Request from Rabiu Hamza\\n\\nAmount: ₦'+ngn.toLocaleString()+' (~$'+usd+')\\n'+(desc?'For: '+desc+'\\n':'')+'\\nPay to:\\n🏦 UBA — 2034326424 — Rabiu Hamza\\n₮ USDT (TRC20): TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr\\n⚡ GDEG (Polygon): '+gdeg+' tokens\\n\\n— Sent via HARZ Super App';
-result.style.display='block';
-result.innerHTML='<div style="background:var(--card);border:1px solid var(--p3);border-radius:12px;padding:16px"><div style="font-size:.8rem;font-weight:700;color:var(--p3);margin-bottom:8px">✓ Request Ready</div><div style="font-size:.75rem;color:var(--text);line-height:1.6;margin-bottom:12px">Payment request for ₦'+ngn.toLocaleString()+' to '+from+' is ready. Share the details below:</div><textarea id="reqText" style="width:100%;height:120px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:.7rem;resize:none" readonly>'+reqText.replace(/\\n/g,'\n')+'</textarea><div style="display:flex;gap:8px;margin-top:10px"><button onclick="copyText(document.getElementById(\'reqText\').value)" style="flex:1;background:var(--card2);border:none;border-radius:8px;padding:10px;font-size:.7rem;color:var(--p2);cursor:pointer">📋 Copy</button><button onclick="shareWhatsApp(\''+ngn+'\',\''+from+'\',\''+desc.replace(/'/g,"")+'\')" style="flex:1;background:#25D366;border:none;border-radius:8px;padding:10px;font-size:.7rem;color:#fff;cursor:pointer">💬 WhatsApp</button></div></div>';
-showToast('Request generated');
-}
-
-function shareWhatsApp(amt,from,desc){
-const text='Payment Request from Rabiu Hamza\\n\\nAmount: ₦'+parseFloat(amt).toLocaleString()+'\\n'+(desc?'For: '+desc+'\\n':'')+'\\nPay to:\\n🏦 UBA — 2034326424 — Rabiu Hamza\\n₮ USDT: TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr\\n\\n— Sent via HARZ Super App';
-window.open('https://wa.me/?text='+encodeURIComponent(text.replace(/\\n/g,'\n')),'_blank');
-}
-
-// Top Up
-function showTopupDetails(method){
-const el=document.getElementById('topup-'+method);
-if(!el)return;
-const isShown=el.style.display!=='none';
-document.querySelectorAll('[id^="topup-"]').forEach(e=>{if(e.id.startsWith('topup-')&&e.id!=='topupAmount')e.style.display='none';});
-if(isShown){el.style.display='none';}else{el.style.display='block';}
 }
 
 // AI Chat
@@ -1267,6 +1047,226 @@ if('serviceWorker'in navigator){
       });
     };
 }
+
+// ===== HARZ SSO SYSTEM =====
+let harzUser = null;
+let authMode = 'login';
+
+function authTab(mode) {
+  authMode = mode;
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('auth-login-form').style.display = mode === 'login' ? 'block' : 'none';
+  document.getElementById('auth-signup-form').style.display = mode === 'signup' ? 'block' : 'none';
+  document.getElementById('auth-title').textContent = mode === 'login' ? 'Welcome Back' : 'Join HARZ';
+  document.getElementById('auth-sub').textContent = mode === 'login' ? 'Login to your HARZ account' : 'Create your free HARZ account';
+  document.getElementById('auth-error').classList.remove('show');
+  document.getElementById('auth-success').classList.remove('show');
+}
+
+function showAuth() {
+  document.getElementById('auth-modal').classList.add('show');
+}
+
+function hideAuth() {
+  document.getElementById('auth-modal').classList.remove('show');
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.classList.add('show');
+  document.getElementById('auth-success').classList.remove('show');
+}
+
+function showAuthSuccess(msg) {
+  const el = document.getElementById('auth-success');
+  el.textContent = msg;
+  el.classList.add('show');
+  document.getElementById('auth-error').classList.remove('show');
+}
+
+async function doSignup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim();
+  const password = document.getElementById('signup-password').value;
+  
+  if (!name || !email || !phone || !password) {
+    showAuthError('Please fill all fields');
+    return;
+  }
+  if (password.length < 6) {
+    showAuthError('Password must be at least 6 characters');
+    return;
+  }
+  
+  const btn = document.getElementById('signup-btn');
+  btn.disabled = true;
+  btn.textContent = 'Creating account...';
+  
+  try {
+    const res = await fetch(HARZ_BASE + '/harzAuth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'signup', name, email, phone, password, device_info: { name: navigator.userAgent.slice(0, 50), type: /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'mobile' : 'web' } })
+    });
+    const data = await res.json();
+    
+    if (data.success) {
+      harzUser = data.user;
+      localStorage.setItem('harz_user', JSON.stringify(data.user));
+      localStorage.setItem('harz_session', data.session.token);
+      showAuthSuccess('Account created! Welcome, ' + name.split(' ')[0]);
+      setTimeout(() => { hideAuth(); updateHeader(); }, 1500);
+    } else {
+      showAuthError(data.error || 'Signup failed');
+    }
+  } catch (e) {
+    showAuthError('Connection error. Try again.');
+  }
+  btn.disabled = false;
+  btn.textContent = 'Create HARZ Account';
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  
+  if (!email || !password) {
+    showAuthError('Enter email and password');
+    return;
+  }
+  
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  btn.textContent = 'Logging in...';
+  
+  try {
+    const res = await fetch(HARZ_BASE + '/harzAuth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'login', email, password, device_info: { name: navigator.userAgent.slice(0, 50), type: /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'mobile' : 'web' } })
+    });
+    const data = await res.json();
+    
+    if (data.success) {
+      harzUser = data.user;
+      localStorage.setItem('harz_user', JSON.stringify(data.user));
+      localStorage.setItem('harz_session', data.session.token);
+      showAuthSuccess('Welcome back, ' + data.user.name.split(' ')[0]);
+      setTimeout(() => { hideAuth(); updateHeader(); }, 1500);
+    } else {
+      showAuthError(data.error || 'Login failed');
+    }
+  } catch (e) {
+    showAuthError('Connection error. Try again.');
+  }
+  btn.disabled = false;
+  btn.textContent = 'Login to HARZ';
+}
+
+async function doLogout() {
+  if (harzUser) {
+    try {
+      await fetch(HARZ_BASE + '/harzAuth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'logout', email: harzUser.email })
+      });
+    } catch (e) {}
+  }
+  harzUser = null;
+  localStorage.removeItem('harz_user');
+  localStorage.removeItem('harz_session');
+  updateHeader();
+  showToast('Logged out');
+}
+
+async function verifySession() {
+  const savedUser = localStorage.getItem('harz_user');
+  const savedSession = localStorage.getItem('harz_session');
+  if (!savedUser || !savedSession) return;
+  
+  harzUser = JSON.parse(savedUser);
+  updateHeader();
+  
+  // Verify session with backend
+  try {
+    const res = await fetch(HARZ_BASE + '/harzAuth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'verify', email: harzUser.email })
+    });
+    const data = await res.json();
+    if (data.success) {
+      harzUser = data.user;
+      localStorage.setItem('harz_user', JSON.stringify(data.user));
+      updateHeader();
+    } else {
+      // Session expired
+      harzUser = null;
+      localStorage.removeItem('harz_user');
+      localStorage.removeItem('harz_session');
+      updateHeader();
+    }
+  } catch (e) {
+    // Keep cached user on network error
+  }
+}
+
+function updateHeader() {
+  const headerRight = document.querySelector('.header .right');
+  if (!headerRight) return;
+  
+  if (harzUser) {
+    const initials = harzUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+    const walletNaira = (harzUser.wallet_balance_ngn || 0).toLocaleString();
+    headerRight.innerHTML = '<div class="wallet-pill" onclick="switchPage('profile')">' + walletNaira + ' NGN</div><div class="user-badge" onclick="switchPage('profile')"><div class="avatar">' + initials + '</div></div>';
+  } else {
+    headerRight.innerHTML = '<button class="login-btn" onclick="showAuth()">Login</button>';
+  }
+}
+
+// Initialize SSO on page load
+window.addEventListener('load', function() {
+  verifySession();
+});
+
+// Close auth modal on background click
+document.getElementById('auth-modal').addEventListener('click', function(e) {
+  if (e.target === this) hideAuth();
+});
+
 </script>
+
+<!-- SSO Auth Modal -->
+<div id="auth-modal">
+<div class="auth-box">
+<div class="auth-logo">H</div>
+<div class="auth-title" id="auth-title">Welcome to HARZ</div>
+<div class="auth-sub" id="auth-sub">One account. All HARZ apps.</div>
+<div class="auth-tabs">
+<button class="auth-tab active" onclick="authTab('login')">Login</button>
+<button class="auth-tab" onclick="authTab('signup')">Sign Up</button>
+</div>
+<div id="auth-login-form">
+<div class="auth-field"><input type="email" id="login-email" placeholder="Email address" autocomplete="email"></div>
+<div class="auth-field"><input type="password" id="login-password" placeholder="Password" autocomplete="current-password"></div>
+<button class="auth-btn" id="login-btn" onclick="doLogin()">Login to HARZ</button>
+</div>
+<div id="auth-signup-form" style="display:none">
+<div class="auth-field"><input type="text" id="signup-name" placeholder="Full name" autocomplete="name"></div>
+<div class="auth-field"><input type="email" id="signup-email" placeholder="Email address" autocomplete="email"></div>
+<div class="auth-field"><input type="tel" id="signup-phone" placeholder="Phone number" autocomplete="tel"></div>
+<div class="auth-field"><input type="password" id="signup-password" placeholder="Password" autocomplete="new-password"></div>
+<button class="auth-btn" id="signup-btn" onclick="doSignup()">Create HARZ Account</button>
+</div>
+<div class="auth-error" id="auth-error"></div>
+<div class="auth-success" id="auth-success"></div>
+<div class="auth-info">Your HARZ account works across all 63+ platforms. One login, everywhere.</div>
+</div>
+</div>
+
 </body>
 </html>
