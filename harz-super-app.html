@@ -216,6 +216,27 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .user-badge .ub-name{font-size:.72rem;font-weight:600;color:var(--text);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .login-btn{background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:8px;padding:6px 14px;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer}
 
+
+/* Universal Search */
+.search-container{position:relative;padding:0 16px;margin-top:12px}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;transition:border .2s}
+.search-bar:focus-within{border-color:var(--p1)}
+.search-bar input{flex:1;background:transparent;border:none;color:var(--text);font-size:.85rem;outline:none}
+.search-bar input::placeholder{color:var(--muted)}
+.search-icon{font-size:1rem;color:var(--muted)}
+.search-results{position:absolute;top:100%;left:16px;right:16px;background:var(--card2);border:1px solid var(--border);border-radius:12px;max-height:400px;overflow-y:auto;z-index:200;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.search-results.show{display:block}
+.sr-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.sr-item:active{background:var(--bg)}
+.sr-item:last-child{border-bottom:none}
+.sr-icon{font-size:1.2rem;width:32px;text-align:center;flex-shrink:0}
+.sr-info{flex:1;min-width:0}
+.sr-title{font-size:.8rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-desc{font-size:.68rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-type-badge{font-size:.55rem;padding:2px 6px;border-radius:8px;background:rgba(124,77,255,.15);color:var(--p1);flex-shrink:0;text-transform:uppercase}
+.sr-loading{text-align:center;padding:16px;font-size:.75rem;color:var(--muted)}
+.sr-empty{text-align:center;padding:20px;font-size:.75rem;color:var(--muted)}
+
 </style>
 </head>
 <body>
@@ -233,6 +254,16 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="right">
 <div class="wallet-pill" onclick="showToast('GDEG Wallet: 0x0B63...3be3')">⚡ 12,450 GDEG</div>
 <div class="avatar" onclick="switchPage('profile')">RH</div>
+
+<!-- Universal Search -->
+<div class="search-container">
+<div class="search-bar">
+<span class="search-icon">🔍</span>
+<input type="text" id="universal-search" placeholder="Search products, apps, orders, customers..." autocomplete="off">
+</div>
+<div class="search-results" id="search-results"></div>
+</div>
+
 </div>
 </div>
 
@@ -1236,6 +1267,63 @@ window.addEventListener('load', function() {
 // Close auth modal on background click
 document.getElementById('auth-modal').addEventListener('click', function(e) {
   if (e.target === this) hideAuth();
+});
+
+
+// ===== UNIVERSAL SEARCH =====
+let searchTimer = null;
+
+document.getElementById('universal-search').addEventListener('input', function(e) {
+  const query = e.target.value.trim();
+  const resultsDiv = document.getElementById('search-results');
+  
+  clearTimeout(searchTimer);
+  
+  if (query.length < 2) {
+    resultsDiv.classList.remove('show');
+    return;
+  }
+  
+  resultsDiv.innerHTML = '<div class="sr-loading">Searching...</div>';
+  resultsDiv.classList.add('show');
+  
+  searchTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(HARZ_BASE + '/harzSearch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q: query })
+      });
+      const data = await res.json();
+      
+      if (data.success && data.results.length > 0) {
+        resultsDiv.innerHTML = data.results.map(r => 
+          '<div class="sr-item" onclick="openSearchResult(' + JSON.stringify(r.url || '') + ')">' +
+          '<div class="sr-icon">' + (r.icon || '📄') + '</div>' +
+          '<div class="sr-info"><div class="sr-title">' + r.title + '</div>' +
+          '<div class="sr-desc">' + r.description + '</div></div>' +
+          '<div class="sr-type-badge">' + r.type + '</div></div>'
+        ).join('');
+      } else {
+        resultsDiv.innerHTML = '<div class="sr-empty">No results for "' + query + '"</div>';
+      }
+    } catch(err) {
+      resultsDiv.innerHTML = '<div class="sr-empty">Search error. Try again.</div>';
+    }
+  }, 300);
+});
+
+function openSearchResult(url) {
+  document.getElementById('search-results').classList.remove('show');
+  document.getElementById('universal-search').value = '';
+  if (url) openLink(url);
+}
+
+// Close search results on outside click
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.search-container')) {
+    document.getElementById('search-results').classList.remove('show');
+  }
 });
 
 </script>
