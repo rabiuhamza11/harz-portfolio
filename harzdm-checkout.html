@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzDM Marketplace — Checkout</title>
+<style>
+:root{--p:#7c4dff;--bg:#06080f;--card:#0d1120;--text:#e0e6ed;--muted:#5a6378;--border:#1a2040;--green:#00e676;--amber:#ffab00;--cyan:#00bcd4}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.h{background:linear-gradient(135deg,#7c4dff,#00bcd4,#00e676);padding:24px;text-align:center}
+.h h1{color:#fff;font-size:1.4rem}.h p{color:rgba(255,255,255,.85);font-size:.8rem}
+.c{max-width:500px;margin:20px auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.card h2{font-size:1rem;margin-bottom:12px;color:var(--p)}
+.label{color:var(--muted);font-size:.75rem;margin-bottom:4px}
+input,select{width:100%;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;margin-bottom:12px}
+input:focus,select:focus{border-color:var(--p);outline:none}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#7c4dff,#00bcd4);border:none;border-radius:8px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn:hover{opacity:.9;transform:translateY(-1px)}.btn:disabled{opacity:.5}
+.result{display:none;margin-top:16px}
+.bank-box{background:var(--bg);border:2px solid var(--green);border-radius:12px;padding:16px;margin-top:12px}
+.bank-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.bank-row:last-child{border:none}
+.bank-label{color:var(--muted);font-size:.8rem}.bank-val{font-weight:600;font-size:.9rem}
+.ussd-box{background:rgba(0,230,118,.1);border:1px solid var(--green);border-radius:8px;padding:12px;margin-top:12px;text-align:center}
+.ussd-code{font-size:1.1rem;font-weight:700;color:var(--green);letter-spacing:1px;cursor:pointer}
+.ref-box{background:rgba(255,171,0,.1);border:1px solid var(--amber);border-radius:8px;padding:12px;margin-top:12px;text-align:center}
+.ref-code{font-size:1rem;font-weight:700;color:var(--amber);letter-spacing:1px}
+.copy{cursor:pointer;color:var(--p);font-size:.7rem;float:right}
+.opt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.opt-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:.2s}
+.opt-card:hover{border-color:var(--p)}.opt-card.active{border-color:var(--p);background:rgba(124,77,255,.1)}
+.opt-icon{font-size:1.5rem}.opt-name{font-size:.75rem;margin-top:4px}.opt-fee{font-size:.65rem;color:var(--muted)}
+.note{font-size:.7rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.prods{margin-bottom:12px}
+.prod{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px;cursor:pointer;transition:.2s}
+.prod:hover{border-color:var(--p)}.prod.active{border-color:var(--p);background:rgba(124,77,255,.1)}
+.prod-name{font-size:.85rem;font-weight:600}.prod-price{font-size:.8rem;color:var(--green)}
+.prod-price .usd{color:var(--muted);font-size:.7rem;text-decoration:line-through;margin-left:4px}
+.amount-box{text-align:center;padding:10px;background:rgba(0,188,212,.1);border:1px solid var(--cyan);border-radius:8px;margin:10px 0}
+.amount-box .ngn{font-size:1.4rem;font-weight:700;color:var(--cyan)}
+.amount-box .label{font-size:.7rem}
+</style>
+</head>
+<body>
+<div class="h"><h1>🛒 HarzDM Marketplace — Checkout</h1><p>Pay via Bank Transfer, USSD, Crypto, or GDEG Token</p></div>
+<div class="c">
+
+<div class="card" id="step1">
+<h2>1. Select Product</h2>
+<div class="prods" id="products"></div>
+</div>
+
+<div class="card" id="step2" style="display:none">
+<h2>2. Your Details</h2>
+<div class="label">Full Name</div>
+<input id="name" placeholder="Your name">
+<div class="label">Email Address</div>
+<input id="email" type="email" placeholder="your@email.com">
+<div class="label">Phone Number (WhatsApp)</div>
+<input id="phone" placeholder="080XXXXXXXX">
+
+<h2 style="margin-top:16px">3. Payment Method</h2>
+<div class="opt" id="opts">
+<div class="opt-card active" onclick="selOpt(this,'bank')"><div class="opt-icon">🏦</div><div class="opt-name">Bank Transfer</div><div class="opt-fee">FREE</div></div>
+<div class="opt-card" onclick="selOpt(this,'ussd')"><div class="opt-icon">📱</div><div class="opt-name">USSD</div><div class="opt-fee">FREE</div></div>
+<div class="opt-card" onclick="selOpt(this,'crypto')"><div class="opt-icon">₿</div><div class="opt-name">USDT (TRC20)</div><div class="opt-fee">FREE</div></div>
+<div class="opt-card" onclick="selOpt(this,'gdeg')"><div class="opt-icon">🪙</div><div class="opt-name">GDEG Token</div><div class="opt-fee">10% OFF</div></div>
+</div>
+
+<div class="amount-box" id="amountBox">
+<div class="label">Amount to Pay</div>
+<div class="ngn" id="payAmount">₦0</div>
+<div class="note" id="payNote2"></div>
+</div>
+
+<button class="btn" onclick="checkout()" id="btn">Proceed to Payment</button>
+</div>
+
+<div class="card result" id="result">
+<h2>✅ Order Created!</h2>
+<div class="bank-box" id="bankDetails"></div>
+<div class="ussd-box" id="ussdBox"></div>
+<div class="ref-box" id="refBox"></div>
+<div class="note" id="payNote"></div>
+<button class="btn" style="margin-top:12px;background:var(--green);color:#000" onclick="copyRef()">Copy Reference</button>
+<button class="btn" style="margin-top:8px;background:#25d366;color:#000" onclick="whatsapp()">Send Proof via WhatsApp</button>
+</div>
+
+</div>
+
+<script>
+const API='https://superagent-2286fb2f.base44.app/functions/harzPayments';
+const PRODUCTS_API='https://superagent-2286fb2f.base44.app/functions/harzdmCatalog';
+const USD_NGN_RATE = 1600; // 1 USD = ₦1,600
+const GDEG_RATE = 15; // 1 GDEG = ₦15
+
+let selProduct=null, selAmountNGN=0, selOpt_='bank';
+
+// Convert USD to NGN
+function toNGN(price, currency) {
+  if (currency === 'USD') return Math.round(price * USD_NGN_RATE);
+  return Math.round(price);
+}
+
+// Apply GDEG discount (10% off)
+function applyGdegDiscount(amount) {
+  return Math.round(amount * 0.9);
+}
+
+async function loadProducts(){
+  try {
+    const r = await fetch(PRODUCTS_API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get_products'})});
+    const d = await r.json();
+    if (d.products && d.products.length > 0) {
+      document.getElementById('products').innerHTML = d.products.map((p,i) => {
+        const ngnPrice = toNGN(p.price, p.currency);
+        const usdDisplay = p.currency === 'USD' ? `<span class="usd">($${p.price})</span>` : '';
+        return `<div class="prod ${i===0?'active':''}" onclick="selProd(${i},this)" data-id="${p.id}" data-title="${p.title.replace(/"/g,'&quot;')}" data-price="${ngnPrice}" data-currency="NGN" data-url="${p.file_url||''}">
+<div class="prod-name">${p.title}</div>
+<div class="prod-price">₦${ngnPrice.toLocaleString()} ${usdDisplay}</div>
+</div>`;
+      }).join('');
+      const first = document.querySelector('.prod');
+      if (first) selProd(0, first);
+    } else {
+      document.getElementById('products').innerHTML = '<div class="note">No products available.</div>';
+    }
+  } catch(e) {
+    document.getElementById('products').innerHTML = '<div class="note">Error loading products. Please try again.</div>';
+  }
+}
+
+function selProd(i, el) {
+  document.querySelectorAll('.prod').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  selProduct = {
+    id: el.dataset.id,
+    title: el.dataset.title,
+    price: parseInt(el.dataset.price),
+    currency: 'NGN',
+    url: el.dataset.url
+  };
+  selAmountNGN = selProduct.price;
+  document.getElementById('step2').style.display = 'block';
+  updateAmount();
+}
+
+function selOpt(el, opt) {
+  document.querySelectorAll('.opt-card').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  selOpt_ = opt;
+  updateAmount();
+}
+
+function updateAmount() {
+  let amount = selAmountNGN;
+  let noteText = '';
+  
+  if (selOpt_ === 'gdeg') {
+    amount = applyGdegDiscount(selAmountNGN);
+    const gdegTokens = Math.round(amount / GDEG_RATE);
+    noteText = `${gdegTokens} GDEG tokens (10% discount applied)`;
+  } else if (selOpt_ === 'crypto') {
+    const usdtAmount = (amount / USD_NGN_RATE).toFixed(2);
+    noteText = `≈ $${usdtAmount} USDT (TRC20)`;
+  }
+  
+  document.getElementById('payAmount').textContent = `₦${amount.toLocaleString()}`;
+  document.getElementById('payNote2').textContent = noteText;
+}
+
+async function checkout() {
+  if (!selProduct) { alert('Please select a product'); return; }
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  if (!name || !email) { alert('Please enter your name and email'); return; }
+
+  document.getElementById('btn').disabled = true;
+  document.getElementById('btn').textContent = 'Processing...';
+
+  let finalAmount = selAmountNGN;
+  let paymentMethod = 'Bank Transfer';
+  
+  if (selOpt_ === 'gdeg') {
+    finalAmount = applyGdegDiscount(selAmountNGN);
+    paymentMethod = 'GDEG Token';
+  } else if (selOpt_ === 'crypto') {
+    finalAmount = selAmountNGN;
+    paymentMethod = 'USDT TRC20';
+  } else if (selOpt_ === 'ussd') {
+    paymentMethod = 'USSD';
+  }
+
+  // Crypto payment - show wallet directly
+  if (selOpt_ === 'crypto') {
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('bankDetails').innerHTML = `
+<div class="bank-row"><span class="bank-label">Network</span><span class="bank-val">Tron (TRC20)</span></div>
+<div class="bank-row"><span class="bank-label">Wallet Address</span><span class="bank-val" style="font-size:.65rem;word-break:break-all">TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr</span></div>
+<div class="bank-row"><span class="bank-label">Amount</span><span class="bank-val">≈ $${(finalAmount / USD_NGN_RATE).toFixed(2)} USDT</span></div>
+<div class="bank-row"><span class="bank-label">NGN Equivalent</span><span class="bank-val">₦${finalAmount.toLocaleString()}</span></div>`;
+    document.getElementById('ussdBox').style.display = 'none';
+    document.getElementById('refBox').innerHTML = `<div class="label">Your Reference:</div><div class="ref-code">HARZ-CRYPTO-${Date.now().toString(36).toUpperCase()}</div>`;
+    document.getElementById('payNote').textContent = 'Send USDT (TRC20) to the wallet above. Email hamzarabiu390@gmail.com or WhatsApp 08028687857 with transaction hash after sending. Product delivered within 30 minutes.';
+    document.getElementById('btn').disabled = false;
+    document.getElementById('btn').textContent = 'Proceed to Payment';
+    return;
+  }
+
+  // GDEG token payment
+  if (selOpt_ === 'gdeg') {
+    const gdegTokens = Math.round(finalAmount / GDEG_RATE);
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('bankDetails').innerHTML = `
+<div class="bank-row"><span class="bank-label">Network</span><span class="bank-val">Polygon (MATIC)</span></div>
+<div class="bank-row"><span class="bank-label">Contract</span><span class="bank-val" style="font-size:.6rem;word-break:break-all">0xdE2c45A0c25dC290aF51347f95D82EBbe51fe3C1</span></div>
+<div class="bank-row"><span class="bank-label">Amount</span><span class="bank-val">${gdegTokens} GDEG</span></div>
+<div class="bank-row"><span class="bank-label">NGN Value</span><span class="bank-val">₦${finalAmount.toLocaleString()} (10% off)</span></div>`;
+    document.getElementById('ussdBox').style.display = 'none';
+    document.getElementById('refBox').innerHTML = `<div class="label">Your Reference:</div><div class="ref-code">HARZ-GDEG-${Date.now().toString(36).toUpperCase()}</div>`;
+    document.getElementById('payNote').textContent = `Send ${gdegTokens} GDEG tokens to the Polygon contract above. WhatsApp 08028687857 with transaction hash. Product delivered within 30 minutes.`;
+    document.getElementById('btn').disabled = false;
+    document.getElementById('btn').textContent = 'Proceed to Payment';
+    return;
+  }
+
+  // Bank Transfer or USSD - use backend function
+  try {
+    const r = await fetch(API, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        action: 'create_order',
+        product_id: selProduct.id,
+        product_title: selProduct.title,
+        buyer_email: email,
+        buyer_name: name,
+        amount: finalAmount,
+        currency: 'NGN',
+        download_url: selProduct.url
+      })
+    });
+    const d = await r.json();
+    if (d.success) {
+      const p = d.payment_instructions;
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('bankDetails').innerHTML = `
+<div class="bank-row"><span class="bank-label">Bank</span><span class="bank-val">${p.bank}</span></div>
+<div class="bank-row"><span class="bank-label">Account Name</span><span class="bank-val">${p.account_name}</span></div>
+<div class="bank-row"><span class="bank-label">Account Number</span><span class="bank-val" id="acct">${p.account_number} <span class="copy" onclick="copyText('${p.account_number}')">📋</span></span></div>
+<div class="bank-row"><span class="bank-label">Amount</span><span class="bank-val">₦${p.amount.toLocaleString()}</span></div>`;
+      
+      if (selOpt_ === 'ussd' || p.ussd) {
+        document.getElementById('ussdBox').style.display = 'block';
+        document.getElementById('ussdBox').innerHTML = `<div class="label">Dial this USSD code:</div><div class="ussd-code" onclick="copyText('${p.ussd}')">${p.ussd}</div>`;
+      } else {
+        document.getElementById('ussdBox').style.display = 'none';
+      }
+      
+      document.getElementById('refBox').innerHTML = `<div class="label">Your Reference (use as transfer description):</div><div class="ref-code" id="refcode">${p.reference}</div>`;
+      document.getElementById('payNote').textContent = p.note;
+      window._ref = p.reference;
+      window._email = email;
+      window._amount = p.amount;
+      window._product = selProduct.title;
+    } else {
+      alert('Error creating order. Please try again.');
+    }
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+  
+  document.getElementById('btn').disabled = false;
+  document.getElementById('btn').textContent = 'Proceed to Payment';
+}
+
+function copyRef() { copyText(window._ref); }
+function copyText(t) {
+  navigator.clipboard.writeText(t).then(() => {
+    // Brief visual feedback
+  }).catch(() => {});
+}
+function whatsapp() {
+  const msg = `Hello Rabiu,%0AI just paid for: ${window._product}%0AReference: ${window._ref}%0AAmount: ₦${window._amount}%0APlease confirm and send my product. Thank you!`;
+  window.open(`https://wa.me/2348028687857?text=${msg}`, '_blank');
+}
+
+loadProducts();
+</script>
+</body>
+</html>
