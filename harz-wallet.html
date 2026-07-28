@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HARZ Wallet — GDEG & Digital Assets</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--purple:#7C4DFF;--blue:#3b82f6;--red:#EF4444}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
+.header{background:linear-gradient(135deg,rgba(240,185,11,.12),rgba(124,77,255,.08));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.3rem;font-weight:800}
+.header h1 span{color:var(--gold)}
+.header p{font-size:.75rem;color:var(--muted);margin-top:4px}
+.container{max-width:500px;margin:0 auto;padding:12px}
+.balance-card{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid var(--border);border-radius:20px;padding:24px 20px;margin-bottom:16px;text-align:center}
+.balance-label{font-size:.75rem;color:var(--muted);margin-bottom:8px}
+.balance-amount{font-size:2.2rem;font-weight:800;color:var(--gold)}
+.balance-sub{font-size:.8rem;color:var(--muted);margin-top:6px}
+.asset-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.asset-left{display:flex;align-items:center;gap:12px}
+.asset-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700}
+.asset-name{font-size:.85rem;font-weight:600}
+.asset-desc{font-size:.65rem;color:var(--muted)}
+.asset-amount{font-size:.85rem;font-weight:700;text-align:right}
+.asset-usd{font-size:.65rem;color:var(--muted);text-align:right}
+.action-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.action-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;transition:.15s}
+.action-btn:active{background:var(--card2)}
+.action-icon{font-size:1.3rem;margin-bottom:4px}
+.action-label{font-size:.65rem;color:var(--text)}
+.section-head{font-size:.85rem;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.section-head span{font-size:.65rem;color:var(--muted);font-weight:400}
+.tx-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:6px}
+.tx-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.tx-info{flex:1}
+.tx-title{font-size:.78rem;font-weight:600}
+.tx-date{font-size:.65rem;color:var(--muted)}
+.tx-amount{font-size:.85rem;font-weight:700}
+.tx-amount.in{color:var(--green)}
+.tx-amount.out{color:var(--red)}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:200;justify-content:center;align-items:flex-end}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg);border:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px;max-height:80vh;overflow-y:auto}
+.modal-title{font-size:1rem;font-weight:700;margin-bottom:16px;text-align:center}
+.input-group{margin-bottom:12px}
+.input-label{font-size:.7rem;color:var(--muted);margin-bottom:4px;display:block}
+.input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-size:.85rem}
+.input:focus{outline:none;border-color:var(--gold)}
+.btn{width:100%;border:none;border-radius:12px;padding:14px;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:8px}
+.btn-primary{background:var(--gold);color:#000}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+.btn:active{opacity:.8}
+.close-modal{text-align:center;font-size:.8rem;color:var(--muted);margin-top:12px;cursor:pointer}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:10px 24px;border-radius:20px;font-size:.85rem;font-weight:600;z-index:300;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+.back{display:block;text-align:center;margin-top:16px;font-size:.8rem;color:var(--gold);text-decoration:none}
+.qr-box{text-align:center;margin:16px 0;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:12px}
+.qr-box .addr{font-size:.7rem;color:var(--gold);word-break:break-all;margin-top:8px;font-family:monospace}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>⚡ <span>HARZ</span> Wallet</h1>
+<p>GDEG · USDT · NGN · Multi-Asset Wallet</p>
+</div>
+<div class="container">
+
+<div class="balance-card">
+<div class="balance-label">Total Balance</div>
+<div class="balance-amount" id="totalBalance">₦187,500</div>
+<div class="balance-sub">~ $117.19 · 12,450 GDEG</div>
+</div>
+
+<div class="action-grid">
+<div class="action-btn" onclick="openModal('sendModal')"><div class="action-icon">📤</div><div class="action-label">Send</div></div>
+<div class="action-btn" onclick="openModal('receiveModal')"><div class="action-icon">📥</div><div class="action-label">Receive</div></div>
+<div class="action-btn" onclick="openModal('swapModal')"><div class="action-icon">🔄</div><div class="action-label">Swap</div></div>
+<div class="action-btn" onclick="openModal('historyModal')"><div class="action-icon">📊</div><div class="action-label">History</div></div>
+</div>
+
+<div class="section-head">Assets <span>Polygon Network</span></div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px">
+<div class="asset-row">
+<div class="asset-left"><div class="asset-icon" style="background:rgba(240,185,11,.15);color:var(--gold)">⚡</div><div><div class="asset-name">GDEG Token</div><div class="asset-desc">Polygon · $0.01</div></div></div>
+<div><div class="asset-amount" style="color:var(--gold)">12,450 GDEG</div><div class="asset-usd">~$124.50</div></div>
+</div>
+<div class="asset-row">
+<div class="asset-left"><div class="asset-icon" style="background:rgba(38,161,123,.15);color:#26a17b">₮</div><div><div class="asset-name">USDT</div><div class="asset-desc">TRC20 · ₦1,615</div></div></div>
+<div><div class="asset-amount">234 USDT</div><div class="asset-usd">~$144.87</div></div>
+</div>
+<div class="asset-row" style="border-bottom:none">
+<div class="asset-left"><div class="asset-icon" style="background:rgba(59,130,246,.15);color:var(--blue)">₦</div><div><div class="asset-name">Naira</div><div class="asset-desc">UBA Bank</div></div></div>
+<div><div class="asset-amount">₦45,000</div><div class="asset-usd">~$28.13</div></div>
+</div>
+</div>
+
+<div class="section-head" style="margin-top:20px">Recent Transactions <span>Last 7 days</span></div>
+<div id="txList"></div>
+
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" class="back">← Back to Super App</a>
+</div>
+
+<div class="modal-overlay" id="sendModal">
+<div class="modal">
+<div class="modal-title">📤 Send</div>
+<div class="input-group"><label class="input-label">Asset</label><select class="input" id="sendAsset"><option>GDEG</option><option>USDT</option><option>NGN</option></select></div>
+<div class="input-group"><label class="input-label">Recipient Address / Account</label><input class="input" id="sendAddr" placeholder="0x... or account number"></div>
+<div class="input-group"><label class="input-label">Amount</label><input class="input" id="sendAmt" type="number" placeholder="0.00"></div>
+<div class="input-group"><label class="input-label">Note (optional)</label><input class="input" id="sendNote" placeholder="What's this for?"></div>
+<button class="btn btn-primary" onclick="confirmSend()">Send Now</button>
+<div class="close-modal" onclick="closeModal('sendModal')">Cancel</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="receiveModal">
+<div class="modal">
+<div class="modal-title">📥 Receive</div>
+<div class="input-group"><label class="input-label">Asset</label><select class="input" id="recvAsset" onchange="updateRecv()"><option>GDEG</option><option>USDT</option></select></div>
+<div class="qr-box">
+<div style="font-size:3rem">⚡</div>
+<div style="font-size:.75rem;color:var(--muted);margin-top:8px" id="recvNetwork">Polygon Network</div>
+<div class="addr" id="recvAddr">0xdE2c45A0c25dC290aF51347f95D82EBbe51fe3C1</div>
+</div>
+<button class="btn btn-primary" onclick="copyRecv()">Copy Address</button>
+<div class="close-modal" onclick="closeModal('receiveModal')">Close</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="swapModal">
+<div class="modal">
+<div class="modal-title">🔄 Swap</div>
+<div class="input-group"><label class="input-label">From</label><select class="input" id="swapFrom"><option>GDEG</option><option>USDT</option><option>NGN</option></select></div>
+<div class="input-group"><label class="input-label">To</label><select class="input" id="swapTo"><option>NGN</option><option>GDEG</option><option>USDT</option></select></div>
+<div class="input-group"><label class="input-label">Amount</label><input class="input" id="swapAmt" type="number" placeholder="0.00" oninput="calcSwap()"></div>
+<div class="input-group"><label class="input-label">You'll receive</label><input class="input" id="swapResult" readonly value="0.00"></div>
+<div style="font-size:.7rem;color:var(--muted);margin:4px 0">Rate: 1 GDEG = ₦15 · 1 USDT = ₦1,615</div>
+<button class="btn btn-primary" onclick="confirmSwap()">Swap</button>
+<div class="close-modal" onclick="closeModal('swapModal')">Cancel</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="historyModal">
+<div class="modal">
+<div class="modal-title">📊 Full History</div>
+<div id="fullHistory"></div>
+<div class="close-modal" onclick="closeModal('historyModal')">Close</div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+var txs=[
+{type:'in',icon:'📥',title:'Received GDEG',date:'Jul 28, 09:15',amt:'+500 GDEG'},
+{type:'out',icon:'📤',title:'Sent to Exchange',date:'Jul 28, 08:30',amt:'-2,000 GDEG'},
+{type:'in',icon:'🏦',title:'Bank Deposit',date:'Jul 27, 16:45',amt:'+₦45,000'},
+{type:'out',icon:'🛒',title:'Farm Order Payment',date:'Jul 27, 14:20',amt:'-₦12,500'},
+{type:'in',icon:'⚡',title:'GDEG Top-up',date:'Jul 27, 10:00',amt:'+10,000 GDEG'},
+{type:'out',icon:'📤',title:'Sent USDT',date:'Jul 26, 19:30',amt:'-100 USDT'},
+{type:'in',icon:'💰',title:'School Fees Received',date:'Jul 26, 12:00',amt:'+₦5,000'},
+{type:'out',icon:'🔄',title:'Swap GDEG → NGN',date:'Jul 25, 15:00',amt:'-1,500 GDEG'}
+];
+function renderTx(){document.getElementById('txList').innerHTML=txs.slice(0,5).map(function(t){return '<div class="tx-item"><div class="tx-icon" style="background:'+(t.type==='in'?'rgba(0,230,118,.12)':'rgba(239,68,68,.12)')+'">'+t.icon+'</div><div class="tx-info"><div class="tx-title">'+t.title+'</div><div class="tx-date">'+t.date+'</div></div><div class="tx-amount '+(t.type==='in'?'in':'out')+'">'+t.amt+'</div></div>'}).join('')}
+function renderFullHistory(){document.getElementById('fullHistory').innerHTML=txs.map(function(t){return '<div class="tx-item"><div class="tx-icon" style="background:'+(t.type==='in'?'rgba(0,230,118,.12)':'rgba(239,68,68,.12)')+'">'+t.icon+'</div><div class="tx-info"><div class="tx-title">'+t.title+'</div><div class="tx-date">'+t.date+'</div></div><div class="tx-amount '+(t.type==='in'?'in':'out')+'">'+t.amt+'</div></div>'}).join('')}
+function openModal(id){document.getElementById(id).classList.add('show');if(id==='historyModal')renderFullHistory()}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function updateRecv(){var a=document.getElementById('recvAsset').value;document.getElementById('recvAddr').textContent=a==='GDEG'?'0xdE2c45A0c25dC290aF51347f95D82EBbe51fe3C1':'TVE2ia3UTXUsp8V7USFDG94kdEbJZ1X5Cr';document.getElementById('recvNetwork').textContent=a==='GDEG'?'Polygon Network':'TRC20 Network'}
+function copyRecv(){copyText(document.getElementById('recvAddr').textContent);showToast('Address copied!')}
+function calcSwap(){var from=document.getElementById('swapFrom').value;var to=document.getElementById('swapTo').value;var amt=parseFloat(document.getElementById('swapAmt').value)||0;var rates={'GDEG':15,'USDT':1615,'NGN':1};var ngn=amt*rates[from];var result=ngn/rates[to];document.getElementById('swapResult').value=result.toFixed(2)}
+function confirmSend(){var amt=document.getElementById('sendAmt').value;var addr=document.getElementById('sendAddr').value;if(!amt||!addr){showToast('Fill all fields');return}showToast('Sending '+amt+' '+document.getElementById('sendAsset').value+'...');setTimeout(function(){closeModal('sendModal');showToast('Sent successfully!')},1500)}
+function confirmSwap(){showToast('Swapping...');setTimeout(function(){closeModal('swapModal');showToast('Swap complete!')},1500)}
+function copyText(t){navigator.clipboard?navigator.clipboard.writeText(t):''}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+renderTx();
+</script>
+</body>
+</html>
