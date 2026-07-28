@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>HARZ Super App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e27;--card:#12152e;--border:#1e2244;--text:#e8eaf6;--muted:#6b7280;--p1:#7c4dff;--p2:#651fff}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-tap-highlight-color:transparent}
+a{text-decoration:none;color:inherit}
+.header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg);z-index:10;border-bottom:1px solid var(--border)}
+.header-logo{font-weight:800;font-size:1.1rem;background:linear-gradient(135deg,var(--p1),#00e676);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-right{display:flex;align-items:center;gap:10px}
+.header-badge{font-size:.65rem;color:#ffab00}
+.header-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+.balance{margin:12px 16px;padding:20px;background:linear-gradient(135deg,var(--p1),var(--p2));border-radius:16px}
+.balance-label{font-size:.7rem;opacity:.8}
+.balance-amount{font-size:1.8rem;font-weight:800;margin:2px 0}
+.balance-sub{font-size:.7rem;opacity:.7}
+.search{margin:0 16px 12px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;gap:8px}
+.search input{flex:1;background:none;border:none;color:var(--text);font-size:.85rem;outline:none}
+.search input::placeholder{color:var(--muted)}
+.section-title{padding:0 16px;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px}
+.app{text-align:center;padding:12px 4px;border-radius:12px;background:var(--card);border:1px solid var(--border);cursor:pointer}
+.app:active{transform:scale(.92)}
+.app-icon{font-size:1.6rem}
+.app-name{font-size:.6rem;margin-top:4px;color:var(--text)}
+.platforms{padding:0 16px;margin-top:12px}
+.platform{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;cursor:pointer}
+.platform:active{transform:scale(.98)}
+.platform-icon{font-size:1.4rem}
+.platform-info{flex:1}
+.platform-name{font-size:.8rem;font-weight:600}
+.platform-desc{font-size:.65rem;color:var(--muted)}
+.platform-badge{font-size:.5rem;padding:2px 6px;border-radius:6px;background:rgba(0,230,118,.15);color:#00e676}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:8px 0;background:var(--bg);border-top:1px solid var(--border);z-index:10}
+.nav-item{text-align:center;padding:4px 8px;cursor:pointer}
+.nav-icon{font-size:1.2rem}
+.nav-label{font-size:.55rem;color:var(--muted)}
+.nav-item.active .nav-label{color:var(--p1)}
+.bottom-spacer{height:60px}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="header-logo">HARZ</div>
+<div class="header-right">
+<span class="header-badge">⚡ 12,450 GDEG</span>
+<div class="header-avatar">RH</div>
+</div>
+</div>
+<div class="balance">
+<div class="balance-label">TOTAL BALANCE</div>
+<div class="balance-amount">₦847,200</div>
+<div class="balance-sub">~ $564.80 · 84,720 GDEG</div>
+</div>
+<div class="search">
+<span>🔍</span>
+<input id="search" placeholder="Search apps & tools..." oninput="filterApps(this.value)">
+</div>
+<div class="section-title">Quick Access</div>
+<div class="grid" id="app-grid">
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html')"><div class="app-icon">💳</div><div class="app-name">Pay</div></div>
+<div class="app" onclick="open('https://wa.me/2348028687857')"><div class="app-icon">💬</div><div class="app-name">Messages</div></div>
+<div class="app" onclick="open('https://app.base44.com/superagent/6a1e2efdc14fbb292286fb2f')"><div class="app-icon">🤖</div><div class="app-name">AI Assistant</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harzdm-marketplace-updated.html')"><div class="app-icon">🛍️</div><div class="app-name">Store</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/eduwealth-dashboard.html')"><div class="app-icon">📚</div><div class="app-name">Learn</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><div class="app-icon">🛠️</div><div class="app-name">Dev Platform</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html')"><div class="app-icon">📈</div><div class="app-name">Exchange</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/apex-bank.html')"><div class="app-icon">🏦</div><div class="app-name">Bank</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/omega-health-ai-dashboard.html')"><div class="app-icon">🏥</div><div class="app-name">Health</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/mindcare-dashboard.html')"><div class="app-icon">🧠</div><div class="app-name">MindCare</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harz-music-platform.html')"><div class="app-icon">🎵</div><div class="app-name">Music</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html')"><div class="app-icon">🎬</div><div class="app-name">Films</div></div>
+<div class="app" onclick="open('https://abuja-estate-city-ai.vercel.app')"><div class="app-icon">🏠</div><div class="app-name">Estate</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harz-ajo.html')"><div class="app-icon">💰</div><div class="app-name">Ajo</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harz-lend.html')"><div class="app-icon">💵</div><div class="app-name">Loans</div></div>
+<div class="app" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harzfx.html')"><div class="app-icon">📊</div><div class="app-name">Forex</div></div>
+</div>
+<div class="section-title" style="margin-top:16px">Platforms</div>
+<div class="platforms" id="platforms">
+<div class="platform" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html')"><div class="platform-icon">☁️</div><div class="platform-info"><div class="platform-name">Harz AI Cloud</div><div class="platform-desc">20 AI agents · API</div></div><span class="platform-badge">LIVE</span></div>
+<div class="platform" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harzdm-marketplace-updated.html')"><div class="platform-icon">🛍️</div><div class="platform-info"><div class="platform-name">HarzDM Store</div><div class="platform-desc">259 products</div></div><span class="platform-badge">LIVE</span></div>
+<div class="platform" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harz-connect.html')"><div class="platform-icon">👥</div><div class="platform-info"><div class="platform-name">HARZ Connect</div><div class="platform-desc">Social · Marketplace</div></div><span class="platform-badge">NEW</span></div>
+<div class="platform" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/contentpilot-dashboard.html')"><div class="platform-icon">🎬</div><div class="platform-info"><div class="platform-name">ContentPilot</div><div class="platform-desc">Content · Video · SEO</div></div><span class="platform-badge">LIVE</span></div>
+<div class="platform" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/cyber-shield-x-dashboard.html')"><div class="platform-icon">🛡️</div><div class="platform-info"><div class="platform-name">Cyber Shield</div><div class="platform-desc">Security · Threats</div></div><span class="platform-badge">LIVE</span></div>
+<div class="platform" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harz-crm-dashboard.html')"><div class="platform-icon">💬</div><div class="platform-info"><div class="platform-name">WhatsApp CRM</div><div class="platform-desc">Customer management</div></div><span class="platform-badge">LIVE</span></div>
+</div>
+<div class="bottom-spacer"></div>
+<div class="bottom-nav">
+<div class="nav-item active"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+<div class="nav-item" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harzpay.html')"><div class="nav-icon">💸</div><div class="nav-label">Pay</div></div>
+<div class="nav-item" onclick="open('https://wa.me/2348028687857')"><div class="nav-icon">💬</div><div class="nav-label">Chat</div></div>
+<div class="nav-item" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/harzdm-marketplace-updated.html')"><div class="nav-icon">🛍️</div><div class="nav-label">Store</div></div>
+<div class="nav-item" onclick="open('https://rabiuhamza11.github.io/harz-portfolio/eduwealth-dashboard.html')"><div class="nav-icon">📚</div><div class="nav-label">Learn</div></div>
+</div>
+<script>
+function open(url){window.open(url,'_blank')}
+function filterApps(q){
+q=q.toLowerCase();
+document.querySelectorAll('.app,.platform').forEach(function(el){
+var t=el.textContent.toLowerCase();
+el.style.display=t.includes(q)?'':'none';
+});
+}
+</script>
+</body>
+</html>
