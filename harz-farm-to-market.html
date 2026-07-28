@@ -59,6 +59,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
 .nav-icon{font-size:1.2rem;display:block;margin-bottom:2px}
 .cart-badge{background:var(--red);color:#fff;border-radius:50%;font-size:.5rem;padding:1px 5px;position:absolute}
 </style>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
 <body>
 <div class="header">
@@ -289,13 +290,33 @@ var total=subtotal+delivery;
 document.getElementById('orderTotal').textContent='₦'+total.toLocaleString();
 }
 
+var PAYSTACK_PUBLIC_KEY='pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Replace with real key
 function placeOrder(){
 var addr=document.getElementById('deliveryAddr').value.trim();
 var phone=document.getElementById('orderPhone').value.trim();
 if(!addr||!phone){showToast('Fill delivery details');return}
+var totalText=document.getElementById('orderTotal').textContent;
+var amount=parseInt(totalText.replace(/[^0-9]/g,''));
+var orderTitle=document.getElementById('orderTitle').textContent;
+var handler=PaystackPop.setup({
+key:PAYSTACK_PUBLIC_KEY,
+email:phone+'@farmorder.harz',
+amount:amount*100,
+currency:'NGN',
+ref:'FARM-'+Date.now().toString().slice(-8),
+metadata:{custom_fields:[
+{display_name:'Product',variable_name:'product',value:orderTitle},
+{display_name:'Phone',variable_name:'phone',value:phone},
+{display_name:'Address',variable_name:'address',value:addr.substring(0,80)}
+]},
+callback:function(response){
 closeModal('orderModal');
 document.getElementById('deliveryAddr').value='';document.getElementById('orderPhone').value='';
-showToast('Order placed! We will call to confirm.');
+showToast('Order placed! Ref: '+response.reference+'. We will call to confirm.');
+},
+onClose:function(){showToast('Payment cancelled')}
+});
+handler.openIframe();
 }
 </script>
 </body>
