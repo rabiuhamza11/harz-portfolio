@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ SMS Blast</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--p1:#7c4dff;--p2:#5362f6;--p3:#00d4aa;--send:#22c55e}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:20px}
+.header{position:sticky;top:0;background:rgba(13,17,23,.95);backdrop-filter:blur(12px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.group-section{padding:12px 16px}
+.section-title{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600}
+.group-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.group-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:.2s;text-align:center}
+.group-card:active{transform:scale(.95)}
+.group-card.selected{border-color:var(--p1);background:rgba(124,77,255,.08)}
+.group-card .gc-icon{font-size:1.8rem}
+.group-card .gc-name{font-size:.82rem;font-weight:600;margin-top:4px}
+.group-card .gc-count{font-size:.68rem;color:var(--muted);margin-top:2px}
+.compose-section{padding:0 16px;margin-top:10px}
+.form-group{margin-bottom:10px}
+.form-label{font-size:.72rem;color:var(--muted);margin-bottom:4px;display:block}
+.form-input,.form-textarea,.form-select{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-size:.85rem;font-family:inherit}
+.form-textarea{resize:vertical;min-height:120px;line-height:1.5}
+.form-textarea:focus,.form-input:focus{outline:none;border-color:var(--p1)}
+.char-count{font-size:.68rem;color:var(--muted);text-align:right;margin-top:2px}
+.template-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.template-chip{padding:5px 10px;border-radius:8px;background:var(--card);border:1px solid var(--border);font-size:.68rem;cursor:pointer;white-space:nowrap}
+.template-chip:active{transform:scale(.95)}
+.send-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:8px}
+.send-btn:active{transform:scale(.97)}
+.preview-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:10px}
+.preview-card .pc-title{font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.recipient-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.recipient-chip{background:rgba(124,77,255,.12);color:var(--p1);padding:3px 8px;border-radius:10px;font-size:.65rem}
+.history-section{padding:12px 16px;margin-top:10px}
+.history-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px}
+.history-item .hi-msg{font-size:.78rem;margin-bottom:4px}
+.history-item .hi-meta{font-size:.62rem;color:var(--muted)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 18px;border-radius:20px;font-size:.78rem;z-index:400;opacity:0;transition:.3s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="header"><h1>💬 HARZ SMS Blast</h1></div>
+<div class="group-section">
+<div class="section-title">Select Recipient Group</div>
+<div class="group-grid" id="groupGrid"></div>
+</div>
+<div class="compose-section">
+<div class="section-title">Quick Templates</div>
+<div class="template-chips">
+<div class="template-chip" onclick="useTemplate('school')">🏫 PTA Notice</div>
+<div class="template-chip" onclick="useTemplate('fees')">💰 Fee Reminder</div>
+<div class="template-chip" onclick="useTemplate('farm')">🌾 Farm Update</div>
+<div class="template-chip" onclick="useTemplate('market')">🛍️ New Product</div>
+<div class="template-chip" onclick="useTemplate('meeting')">📅 Meeting Call</div>
+</div>
+<div class="form-group">
+<label class="form-label">Message</label>
+<textarea class="form-textarea" id="msgText" placeholder="Type your message..." oninput="updateCount()" maxlength="918"></textarea>
+<div class="char-count" id="charCount">0 chars · 0 SMS</div>
+</div>
+<div class="preview-card">
+<div class="pc-title">Recipients Preview</div>
+<div id="recipients" style="font-size:.78rem;color:var(--muted)">Select a group above</div>
+</div>
+<button class="send-btn" onclick="sendBlast()">📤 Send SMS Blast</button>
+</div>
+<div class="history-section">
+<div class="section-title">Recent Blasts</div>
+<div id="historyList"></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+// Load contacts from localStorage (shared with HARZ Contacts)
+function getContacts(){try{return JSON.parse(localStorage.getItem('harz_contacts')||'[]')}catch(e){return[]}}
+const groups={
+parents:{icon:'🏫',name:'Parents',filter:c=>c.cat==='parent'},
+farmers:{icon:'🌾',name:'Farmers',filter:c=>c.cat==='farmer'},
+clients:{icon:'🏗️',name:'Clients',filter:c=>c.cat==='client'},
+customers:{icon:'🛍️',name:'Customers',filter:c=>c.cat==='customer'},
+staff:{icon:'👤',name:'Staff',filter:c=>c.cat==='staff'},
+all:{icon:'👥',name:'All Contacts',filter:c=>true}
+};
+let selectedGroup=null;
+function renderGroups(){
+const contacts=getContacts();
+const grid=document.getElementById('groupGrid');
+grid.innerHTML=Object.entries(groups).map(([key,g])=>{
+const count=contacts.filter(g.filter).length;
+return `<div class="group-card ${selectedGroup===key?'selected':''}" onclick="selectGroup('${key}')">
+<div class="gc-icon">${g.icon}</div>
+<div class="gc-name">${g.name}</div>
+<div class="gc-count">${count} contacts</div>
+</div>`}).join('');
+}
+function selectGroup(key){
+selectedGroup=key;
+renderGroups();
+const contacts=getContacts().filter(groups[key].filter);
+const el=document.getElementById('recipients');
+if(contacts.length===0){el.innerHTML='No contacts in this group. Add contacts in HARZ Contacts.';return}
+el.innerHTML=`<div style="margin-bottom:4px">${contacts.length} recipients</div><div class="recipient-list">${contacts.slice(0,10).map(c=>`<span class="recipient-chip">${c.name}</span>`).join('')}${contacts.length>10?`<span class="recipient-chip">+${contacts.length-10} more</span>`:''}</div>`;
+}
+function updateCount(){
+const len=document.getElementById('msgText').value.length;
+const sms=Math.ceil(len/160)||0;
+document.getElementById('charCount').textContent=`${len} chars · ${sms} SMS per recipient`;
+}
+const templates={
+school:'Dear Parent, this is to inform you that PTA meeting will hold on Saturday by 10am at the school hall. Please attend. — Danfodio Memorial Academy',
+fees:'Dear Parent, kindly note that school fees for this term is due. Please make payment to UBA: 1023456789. Reference: Student name. Thank you. — DMA',
+farm:'Hello Farmers! Farm to Market platform is now live. List your produce for free and sell directly to buyers. Visit HARZ Super App to get started.',
+market:'New products available on HarzDM Store! Check out our latest digital tools and resources. Visit harzdm.vercel.app to shop now.',
+meeting:'Reminder: Team meeting tomorrow at 9am. Please come prepared with your weekly report. Thank you. — HARZ Management'
+};
+function useTemplate(key){document.getElementById('msgText').value=templates[key];updateCount()}
+function getHistory(){try{return JSON.parse(localStorage.getItem('harz_sms_history')||'[]')}catch(e){return[]}}
+function saveHistory(h){localStorage.setItem('harz_sms_history',JSON.stringify(h))}
+function sendBlast(){
+if(!selectedGroup){showToast('Select a recipient group');return}
+const msg=document.getElementById('msgText').value.trim();
+if(!msg){showToast('Type a message');return}
+const contacts=getContacts().filter(groups[selectedGroup].filter);
+if(contacts.length===0){showToast('No contacts in this group');return}
+// Generate SMS links for each contact (opens phone SMS app)
+const phones=contacts.map(c=>'234'+c.phone.replace(/^0/,''));
+// Save to history
+const history=getHistory();
+history.unshift({group:groups[selectedGroup].name,count:contacts.length,message:msg,date:new Date().toISOString()});
+saveHistory(history.slice(0,20));
+// Open SMS app with first recipient (WhatsApp-style: open all links)
+const smsUrl=`sms:${contacts.map(c=>c.phone).join(';')}?body=${encodeURIComponent(msg)}`;
+window.open(smsUrl,'_blank');
+showToast(`Opening SMS for ${contacts.length} recipients ✓`);
+document.getElementById('msgText').value='';
+updateCount();
+renderHistory();
+}
+function renderHistory(){
+const history=getHistory();
+const el=document.getElementById('historyList');
+if(history.length===0){el.innerHTML='<div style="font-size:.75rem;color:var(--muted);padding:8px">No blasts sent yet.</div>';return}
+el.innerHTML=history.map(h=>`<div class="history-item">
+<div class="hi-msg">${esc(h.message.slice(0,80))}${h.message.length>80?'...':''}</div>
+<div class="hi-meta">${h.group} · ${h.count} recipients · ${new Date(h.date).toLocaleDateString('en-NG',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+</div>`).join('');
+}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+renderGroups();renderHistory();updateCount();
+</script>
+</body>
+</html>

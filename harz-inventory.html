@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Inventory</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--p1:#7c4dff;--p2:#5362f6;--p3:#00d4aa;--low:#ef4444;--ok:#22c55e;--warn:#f59e0b}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:70px}
+.header{position:sticky;top:0;background:rgba(13,17,23,.95);backdrop-filter:blur(12px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-row{display:flex;gap:8px;padding:12px 16px}
+.stat-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.stat-card .stat-num{font-size:1.1rem;font-weight:700}
+.stat-card .stat-lbl{font-size:.58rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.search-bar{padding:0 16px 10px}
+.search-bar input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;font-size:.85rem}
+.search-bar input:focus{outline:none;border-color:var(--p1)}
+.cat-tabs{display:flex;gap:6px;padding:0 16px 10px;overflow-x:auto}
+.cat-tab{padding:6px 14px;border-radius:20px;font-size:.72rem;font-weight:600;white-space:nowrap;background:var(--card);border:1px solid var(--border);cursor:pointer}
+.cat-tab.active{background:linear-gradient(135deg,var(--p1),var(--p2));border-color:transparent;color:#fff}
+.inv-list{padding:0 16px}
+.inv-card{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;transition:.2s}
+.inv-card:active{transform:scale(.98)}
+.inv-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;background:rgba(124,77,255,.1)}
+.inv-info{flex:1;min-width:0}
+.inv-name{font-size:.88rem;font-weight:600}
+.inv-meta{font-size:.72rem;color:var(--muted);margin-top:2px}
+.inv-qty{text-align:right;flex-shrink:0}
+.inv-qty .qty-num{font-size:1.1rem;font-weight:700}
+.inv-qty .qty-lbl{font-size:.58rem;color:var(--muted);text-transform:uppercase}
+.qty-low{color:var(--low)}
+.qty-warn{color:var(--warn)}
+.qty-ok{color:var(--ok)}
+.stock-bar{height:4px;border-radius:2px;margin-top:4px;overflow:hidden;background:var(--border)}
+.stock-fill{height:100%;border-radius:2px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h2{font-size:1.1rem;margin-bottom:14px}
+.form-group{margin-bottom:10px}
+.form-label{font-size:.72rem;color:var(--muted);margin-bottom:4px;display:block}
+.form-input,.form-select{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-size:.85rem;font-family:inherit}
+.form-input:focus{outline:none;border-color:var(--p1)}
+.form-row{display:flex;gap:8px}
+.form-row>*{flex:1}
+.qty-ctrl{display:flex;align-items:center;gap:10px;justify-content:center;margin:14px 0}
+.qty-ctrl button{width:40px;height:40px;border-radius:10px;border:none;background:var(--card);color:var(--text);font-size:1.3rem;cursor:pointer}
+.qty-ctrl span{font-size:1.5rem;font-weight:700;min-width:60px;text-align:center}
+.modal-actions{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;padding:12px;border-radius:10px;font-size:.85rem;font-weight:600;border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+.btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.fab{position:fixed;bottom:16px;right:16px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;color:#fff;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(124,77,255,.4);z-index:90;display:flex;align-items:center;justify-content:center}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 18px;border-radius:20px;font-size:.78rem;z-index:400;opacity:0;transition:.3s}
+.toast.show{opacity:1;bottom:90px}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.empty .emoji{font-size:2.5rem;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="header"><h1>📦 HARZ Inventory</h1></div>
+<div class="stat-row">
+<div class="stat-card"><div class="stat-num" id="stTotal">0</div><div class="stat-lbl">Items</div></div>
+<div class="stat-card"><div class="stat-num" id="stValue" style="color:var(--p3)">₦0</div><div class="stat-lbl">Value</div></div>
+<div class="stat-card"><div class="stat-num" id="stLow" style="color:var(--low)">0</div><div class="stat-lbl">Low Stock</div></div>
+<div class="stat-card"><div class="stat-num" id="stCats">0</div><div class="stat-lbl">Categories</div></div>
+</div>
+<div class="search-bar"><input type="text" id="searchInput" placeholder="🔍 Search items..." oninput="render()"></div>
+<div class="cat-tabs" id="catTabs"></div>
+<div class="inv-list" id="invList"></div>
+<button class="fab" onclick="openModal()">+</button>
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<h2 id="modalTitle">Add Item</h2>
+<div class="form-group"><label class="form-label">Item Name</label><input class="form-input" id="iName" placeholder="e.g. Cement, Tomato Crates, AI Kit"></div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Category</label>
+<select class="form-select" id="iCat">
+<option value="farm">🌾 Farm</option>
+<option value="construction">🏗️ Construction</option>
+<option value="product">🛍️ Products</option>
+<option value="supplies">📦 Supplies</option>
+<option value="equipment">⚙️ Equipment</option>
+</select></div>
+<div class="form-group"><label class="form-label">Unit</label>
+<select class="form-select" id="iUnit">
+<option value="bags">Bags</option>
+<option value="crates">Crates</option>
+<option value="pieces">Pieces</option>
+<option value="kg">Kg</option>
+<option value="tons">Tons</option>
+<option value="boxes">Boxes</option>
+<option value="units">Units</option>
+</select></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Quantity</label><input type="number" class="form-input" id="iQty" value="0"></div>
+<div class="form-group"><label class="form-label">Min Stock</label><input type="number" class="form-input" id="iMin" value="0" placeholder="Alert level"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Unit Cost (₦)</label><input type="number" class="form-input" id="iCost" value="0"></div>
+<div class="form-group"><label class="form-label">Unit Price (₦)</label><input type="number" class="form-input" id="iPrice" value="0"></div>
+</div>
+<div class="modal-actions">
+<button class="btn btn-danger" id="delBtn" style="display:none" onclick="delItem()">Delete</button>
+<button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+<button class="btn btn-primary" onclick="saveItem()">Save</button>
+</div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const catLabels={farm:'Farm',construction:'Build',product:'Products',supplies:'Supplies',equipment:'Equipment'};
+const catIcons={farm:'🌾',construction:'🏗️',product:'🛍️',supplies:'📦',equipment:'⚙️'};
+let items=[],activeCat='all',editingId=null;
+function load(){try{items=JSON.parse(localStorage.getItem('harz_inventory')||'[]')}catch(e){items=[]}}
+function save(){localStorage.setItem('harz_inventory',JSON.stringify(items))}
+function seed(){
+if(items.length>0)return;
+const s=[
+{name:'Cement (50kg)',cat:'construction',unit:'bags',qty:120,min:50,cost:7500,price:8200},
+{name:'Tomato Crates',cat:'farm',unit:'crates',qty:85,min:20,cost:3500,price:4500},
+{name:'Maize Bags (50kg)',cat:'farm',unit:'bags',qty:30,min:10,cost:18000,price:22000},
+{name:'AI Agency Starter Kit',cat:'product',unit:'units',qty:15,min:5,cost:0,price:25000},
+{name:'Dev Platform License (1yr)',cat:'product',unit:'units',qty:50,min:10,cost:0,price:15000},
+{name:'Cattle Feed',cat:'supplies',unit:'bags',qty:8,min:15,cost:12000,price:0},
+{name:'Pesticide Spray',cat:'supplies',unit:'bottles',qty:25,min:10,cost:2500,price:0},
+{name:'Construction Tools',cat:'equipment',unit:'pieces',qty:12,min:5,cost:0,price:0},
+{name:'Fertilizer (NPK)',cat:'farm',unit:'bags',qty:18,min:20,cost:28000,price:0},
+{name:'GDEG Token Reserve',cat:'product',unit:'units',qty:84720,min:10000,cost:15,price:15}
+];
+s.forEach(i=>{i.id=Math.random().toString(36).substr(2,9);items.push(i)});
+save();
+}
+function naira(n){return '₦'+n.toLocaleString('en-NG')}
+function render(){
+const search=document.getElementById('searchInput').value.toLowerCase();
+const filtered=items.filter(i=>{
+if(activeCat!=='all'&&i.cat!==activeCat)return false;
+if(search&&!i.name.toLowerCase().includes(search))return false;
+return true;
+});
+const totalValue=items.reduce((s,i)=>s+(i.qty*i.cost),0);
+const lowCount=items.filter(i=>i.qty<=i.min).length;
+document.getElementById('stTotal').textContent=items.length;
+document.getElementById('stValue').textContent=naira(totalValue);
+document.getElementById('stLow').textContent=lowCount;
+document.getElementById('stCats').textContent=new Set(items.map(i=>i.cat)).size;
+const cats=['all',...Object.keys(catLabels)];
+document.getElementById('catTabs').innerHTML=cats.map(t=>`<div class="cat-tab ${activeCat===t?'active':''}" onclick="setCat('${t}')">${t==='all'?'All':catLabels[t]}</div>`).join('');
+const list=document.getElementById('invList');
+if(filtered.length===0){list.innerHTML='<div class="empty"><div class="emoji">📦</div><p>No items. Tap + to add.</p></div>';return}
+list.innerHTML=filtered.map(i=>{
+const isLow=i.qty<=i.min;
+const isWarn=i.qty<=i.min*1.5;
+const qtyClass=isLow?'qty-low':isWarn?'qty-warn':'qty-ok';
+const stockPct=Math.min(100,(i.qty/(i.min*3||1))*100);
+const fillColor=isLow?'var(--low)':isWarn?'var(--warn)':'var(--ok)';
+return `<div class="inv-card" onclick="editItem('${i.id}')">
+<div class="inv-icon">${catIcons[i.cat]||'📦'}</div>
+<div class="inv-info">
+<div class="inv-name">${esc(i.name)}</div>
+<div class="inv-meta">${catLabels[i.cat]} · ${i.unit}${isLow?' · ⚠️ LOW STOCK':''}</div>
+<div class="stock-bar"><div class="stock-fill" style="width:${stockPct}%;background:${fillColor}"></div></div>
+</div>
+<div class="inv-qty">
+<div class="qty-num ${qtyClass}">${i.qty}</div>
+<div class="qty-lbl">${i.unit}</div>
+</div>
+</div>`}).join('');
+}
+function setCat(c){activeCat=c;render()}
+function openModal(){editingId=null;document.getElementById('modalTitle').textContent='Add Item';document.getElementById('iName').value='';document.getElementById('iCat').value='farm';document.getElementById('iUnit').value='bags';document.getElementById('iQty').value='0';document.getElementById('iMin').value='0';document.getElementById('iCost').value='0';document.getElementById('iPrice').value='0';document.getElementById('delBtn').style.display='none';document.getElementById('modalOverlay').classList.add('show')}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show')}
+function editItem(id){const i=items.find(x=>x.id===id);if(!i)return;editingId=id;document.getElementById('modalTitle').textContent='Edit Item';document.getElementById('iName').value=i.name;document.getElementById('iCat').value=i.cat;document.getElementById('iUnit').value=i.unit;document.getElementById('iQty').value=i.qty;document.getElementById('iMin').value=i.min;document.getElementById('iCost').value=i.cost;document.getElementById('iPrice').value=i.price;document.getElementById('delBtn').style.display='block';document.getElementById('modalOverlay').classList.add('show')}
+function saveItem(){
+const name=document.getElementById('iName').value.trim();if(!name){showToast('Enter item name');return}
+const data={name,cat:document.getElementById('iCat').value,unit:document.getElementById('iUnit').value,qty:parseInt(document.getElementById('iQty').value)||0,min:parseInt(document.getElementById('iMin').value)||0,cost:parseInt(document.getElementById('iCost').value)||0,price:parseInt(document.getElementById('iPrice').value)||0};
+if(editingId){Object.assign(items.find(i=>i.id===editingId),data)}else{data.id=Math.random().toString(36).substr(2,9);items.push(data)}
+save();closeModal();render();showToast('Item saved ✓')}
+function delItem(){if(!editingId)return;if(confirm('Delete this item?')){items=items.filter(i=>i.id!==editingId);save();closeModal();render();showToast('Deleted')}}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+load();seed();render();
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target.id==='modalOverlay')closeModal()});
+</script>
+</body>
+</html>
