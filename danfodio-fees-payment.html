@@ -37,6 +37,7 @@ input:focus,select:focus{border-color:var(--gold)}
 .success-screen{text-align:center;padding:30px 16px}
 .success-icon{font-size:3rem;margin-bottom:12px}
 </style>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
 <body>
 <div class="header">
@@ -165,18 +166,33 @@ document.getElementById('bankDetails').style.display=method==='bank'?'block':'no
 document.getElementById('usdtDetails').style.display=method==='usdt'?'block':'none';
 }
 
+var PAYSTACK_PUBLIC_KEY='pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Replace with real key
 function processPayment(){
 var name=document.getElementById('studentName').value.trim();
 var adm=document.getElementById('admissionNo').value.trim();
 var cls=document.getElementById('studentClass').value;
 if(!name||!adm||!cls){showToast('Please fill all fields');return}
-var total=document.getElementById('totalPayable').textContent;
+var totalText=document.getElementById('totalPayable').textContent;
+var amount=parseInt(totalText.replace(/[^0-9]/g,''));
 
 if(selectedMethod==='paystack'){
-showToast('Redirecting to Paystack...');
-setTimeout(function(){
-showSuccess(name,adm,total,'Paystack');
-},2000);
+var handler=PaystackPop.setup({
+key:PAYSTACK_PUBLIC_KEY,
+email:'parent@danfodiomemorial.edu.ng',
+amount:amount*100,
+currency:'NGN',
+ref:'DMA-FEE-'+Date.now().toString().slice(-8),
+metadata:{custom_fields:[
+{display_name:'Student',variable_name:'student',value:name},
+{display_name:'Admission No',variable_name:'admission_no',value:adm},
+{display_name:'Class',variable_name:'class',value:cls}
+]},
+callback:function(response){
+showSuccess(name,adm,totalText,'Paystack (Ref: '+response.reference+')');
+},
+onClose:function(){showToast('Payment window closed')}
+});
+handler.openIframe();
 }else if(selectedMethod==='bank'){
 var ref='DMA-'+Date.now().toString().slice(-6);
 document.getElementById('paymentRef').textContent=ref;
@@ -185,9 +201,7 @@ showToast('Account details ready — transfer and use reference');
 showToast('Send USDT to address above');
 }else if(selectedMethod==='harzpay'){
 showToast('Opening HarzPay...');
-setTimeout(function(){
-showSuccess(name,adm,total,'HarzPay');
-},2000);
+setTimeout(function(){showSuccess(name,adm,totalText,'HarzPay')},2000);
 }
 }
 
