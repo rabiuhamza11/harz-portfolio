@@ -1,0 +1,10 @@
+{
+  "name": "HARZ Super App",
+  "short_name": "HARZ",
+  "description": "AI Operating System for HARZ Digital Services",
+  "start_url": "./harz-super-app.html",
+  "display": "standalone",
+  "background_color": "#0a0e27",
+  "theme_color": "#0a0e27",
+  "orientation": "portrait"
+}

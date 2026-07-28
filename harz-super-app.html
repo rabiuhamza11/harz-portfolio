@@ -333,6 +333,29 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .cp-fab{position:fixed;bottom:80px;right:16px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));display:flex;align-items:center;justify-content:center;font-size:1.3rem;cursor:pointer;z-index:500;box-shadow:0 4px 20px rgba(124,77,255,.4);border:none;color:#fff}
 .cp-hint{padding:12px 16px;font-size:.65rem;color:var(--muted);border-top:1px solid var(--border);text-align:center}
 
+
+/* Theme System */
+:root.light-theme{--bg:#f5f6fa;--bg2:#ebedf5;--card:#fff;--card2:#fff;--border:#e0e3eb;--text:#1a1a2e;--muted:#6b7280;--p1:#7c4dff;--p2:#651fff;--p3:#00e676;--p4:#00b8d4;--p5:#ff3d73;--shadow:0 2px 12px rgba(0,0,0,.08)}
+.theme-toggle{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:.7rem;color:var(--text);flex-shrink:0}
+.theme-toggle-icon{font-size:.9rem}
+
+
+/* App Store Directory */
+.app-store{padding:0 16px}
+.store-cat-tabs{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:12px;-ms-overflow-style:none;scrollbar-width:none}
+.store-cat-tabs::-webkit-scrollbar{display:none}
+.store-cat-tab{padding:6px 14px;border-radius:20px;background:var(--bg);border:1px solid var(--border);font-size:.72rem;white-space:nowrap;cursor:pointer;flex-shrink:0}
+.store-cat-tab.active{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border-color:transparent}
+.store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.store-app{text-align:center;padding:14px 8px;border-radius:14px;background:var(--card);border:1px solid var(--border);cursor:pointer;transition:transform .15s}
+.store-app:active{transform:scale(.95)}
+.store-app-icon{font-size:2rem;margin-bottom:6px}
+.store-app-name{font-size:.68rem;font-weight:600;line-height:1.2}
+.store-app-cat{font-size:.55rem;color:var(--muted);margin-top:2px}
+.store-app-badge{display:inline-block;font-size:.5rem;padding:1px 5px;border-radius:6px;margin-top:3px}
+.store-badge-live{background:rgba(0,230,118,.15);color:#00e676}
+.store-badge-new{background:rgba(255,171,0,.15);color:#ffab00}
+
 </style>
 </head>
 <body>
@@ -340,6 +363,22 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <!-- Splash -->
 <div id="splash">
 <div class="splash-logo">H</div>
+
+<!-- App Store Directory -->
+<div class="app-store">
+<div class="store-cat-tabs" id="store-cats">
+<div class="store-cat-tab active" onclick="filterStore('all')">All</div>
+<div class="store-cat-tab" onclick="filterStore('finance')">Finance</div>
+<div class="store-cat-tab" onclick="filterStore('health')">Health</div>
+<div class="store-cat-tab" onclick="filterStore('education')">Education</div>
+<div class="store-cat-tab" onclick="filterStore('content')">Content</div>
+<div class="store-cat-tab" onclick="filterStore('security')">Security</div>
+<div class="store-cat-tab" onclick="filterStore('social')">Social</div>
+<div class="store-cat-tab" onclick="filterStore('tools')">Tools</div>
+</div>
+<div class="store-grid" id="store-grid"></div>
+</div>
+
 <div class="splash-text">HARZ</div>
 <div class="splash-sub">SUPER APP</div>
 </div>
@@ -348,7 +387,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="header">
 <h1>HARZ</h1>
 <div class="right">
-<div class="notif-bell" onclick="toggleNotifications()"><span>🔔</span><div class="notif-badge zero" id="notif-count">0</div></div>
+<div class="notif-bell" onclick="toggleNotifications()"><span>🔔</span><div class="notif-badge zero" id="notif-count">0</div>
+<div class="theme-toggle" onclick="toggleTheme()"><span class="theme-toggle-icon" id="theme-icon">🌙</span></div></div>
 <div class="wallet-pill" onclick="showToast('GDEG Wallet: 0x0B63...3be3')">⚡ 12,450 GDEG</div>
 <div class="avatar" onclick="switchPage('profile')">RH</div>
 
@@ -1916,6 +1956,135 @@ document.addEventListener('keydown', function(e) {
     if (first) first.click();
   }
 });
+
+
+// ===== THEME SYSTEM =====
+function getTheme() { return localStorage.getItem('harz-theme') || 'dark'; }
+function setTheme(theme) {
+  localStorage.setItem('harz-theme', theme);
+  if (theme === 'light') {
+    document.documentElement.classList.add('light-theme');
+    document.getElementById('theme-icon').textContent = '☀️';
+  } else {
+    document.documentElement.classList.remove('light-theme');
+    document.getElementById('theme-icon').textContent = '🌙';
+  }
+}
+function toggleTheme() {
+  setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+}
+// Init theme on load
+window.addEventListener('load', function() { setTheme(getTheme()); });
+
+
+// PWA
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('harz-sw.js').catch(function(){})});}
+
+// ===== REAL-TIME DATA SYNC =====
+let syncInterval = null;
+
+function startRealtimeSync() {
+  // Refresh notification count every 60s
+  setInterval(async () => {
+    try {
+      const res = await fetch(HARZ_BASE + '/harzNotifications', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'list' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const badge = document.getElementById('notif-count');
+        if (badge) {
+          badge.textContent = data.total;
+          badge.classList.toggle('zero', data.total === 0);
+        }
+      }
+    } catch(e) {}
+  }, 60000);
+  
+  // Refresh wallet balance every 120s
+  setInterval(async () => {
+    if (typeof loadWallet === 'function') {
+      try { await loadWallet(); } catch(e) {}
+    }
+  }, 120000);
+  
+  // Auto-refresh when tab becomes visible
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+      if (typeof loadWallet === 'function') loadWallet();
+    }
+  });
+}
+
+window.addEventListener('load', function() {
+  setTimeout(startRealtimeSync, 2000);
+});
+
+
+// ===== APP STORE DIRECTORY =====
+const storeApps = [
+  {name:'HarzDM',cat:'content',icon:'🛒',url:'https://rabiuhamza11.github.io/harz-portfolio/harzdm-marketplace-updated.html',badge:'live'},
+  {name:'HarzPay',cat:'finance',icon:'💳',url:'https://rabiuhamza11.github.io/harz-portfolio/harzpay.html',badge:'live'},
+  {name:'Apex Bank',cat:'finance',icon:'🏦',url:'https://rabiuhamza11.github.io/harz-portfolio/apex-bank.html',badge:'live'},
+  {name:'HarzAjo',cat:'finance',icon:'💰',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-ajo.html',badge:'live'},
+  {name:'HarzFX',cat:'finance',icon:'📈',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-fx.html',badge:'live'},
+  {name:'HarzLend',cat:'finance',icon:'💵',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-lend.html',badge:'live'},
+  {name:'HARZ Exchange',cat:'finance',icon:'💱',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html',badge:'live'},
+  {name:'OMEGA Health',cat:'health',icon:'🏥',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-health-ai-dashboard.html',badge:'live'},
+  {name:'MindCare AI',cat:'health',icon:'🧠',url:'https://rabiuhamza11.github.io/harz-portfolio/mindcare-dashboard.html',badge:'live'},
+  {name:'Cyber Shield',cat:'security',icon:'🛡️',url:'https://rabiuhamza11.github.io/harz-portfolio/cyber-shield-x-dashboard.html',badge:'live'},
+  {name:'EduWealth',cat:'education',icon:'📚',url:'https://rabiuhamza11.github.io/harz-portfolio/eduwealth-dashboard.html',badge:'live'},
+  {name:'OMEGA Infinity',cat:'tools',icon:'♾️',url:'https://rabiuhamza11.github.io/harz-portfolio/omega-infinity-dashboard.html',badge:'live'},
+  {name:'TradeOS',cat:'finance',icon:'📊',url:'https://rabiuhamza11.github.io/harz-portfolio/tradeos-dashboard.html',badge:'live'},
+  {name:'Abuja Estate',cat:'tools',icon:'🏠',url:'https://abuja-estate-city-ai.vercel.app',badge:'live'},
+  {name:'BuildBot AI',cat:'tools',icon:'🏗️',url:'https://rabiuhamza11.github.io/harz-portfolio/buildbot-dashboard.html',badge:'live'},
+  {name:'ContentPilot',cat:'content',icon:'🎬',url:'https://rabiuhamza11.github.io/harz-portfolio/contentpilot-dashboard.html',badge:'live'},
+  {name:'HarzMusic',cat:'content',icon:'🎵',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-music-platform.html',badge:'live'},
+  {name:'HarzFilm',cat:'content',icon:'🎥',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html',badge:'live'},
+  {name:'WhatsApp CRM',cat:'tools',icon:'💬',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-crm-dashboard.html',badge:'live'},
+  {name:'HARZ Connect',cat:'social',icon:'👥',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-connect.html',badge:'live'},
+  {name:'HARZ AI Cloud',cat:'tools',icon:'☁️',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html',badge:'live'},
+  {name:'HARZ AI Studio',cat:'content',icon:'🎨',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-ai-studio.html',badge:'new'},
+  {name:'Chatbot Builder',cat:'tools',icon:'🤖',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-chatbot-builder.html',badge:'live'},
+  {name:'Inventory Mgr',cat:'tools',icon:'📋',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-inventory-manager.html',badge:'live'},
+  {name:'SEO Toolkit',cat:'tools',icon:'🔍',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-seo-toolkit.html',badge:'live'},
+  {name:'Global Store',cat:'content',icon:'🌍',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-global-store.html',badge:'live'},
+  {name:'Biz OS',cat:'tools',icon:'💼',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-business-os.html',badge:'live'},
+  {name:'Dev Platform',cat:'tools',icon:'🔧',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html',badge:'live'},
+  {name:'Venture Studio',cat:'tools',icon:'💡',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html',badge:'new'},
+  {name:'IoT Robotics',cat:'tools',icon:'🏭',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html',badge:'live'},
+  {name:'Global ID',cat:'security',icon:'🪪',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html',badge:'new'},
+  {name:'Data Cloud',cat:'tools',icon:'☁️',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html',badge:'live'},
+  {name:'Hosting',cat:'tools',icon:'🏢',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html',badge:'live'},
+  {name:'Wholesale',cat:'finance',icon:'📦',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-wholesale-master.html',badge:'live'},
+  {name:'Nexal Ads',cat:'content',icon:'📢',url:'https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html',badge:'live'},
+  {name:'Newsletter',cat:'content',icon:'📧',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-newsletter-v2.html',badge:'live'},
+  {name:'Partner Platform',cat:'social',icon:'🤝',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-partner-platform.html',badge:'live'},
+  {name:'Browser',cat:'tools',icon:'🌐',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-browser.html',badge:'new'},
+  {name:'AI Agency',cat:'tools',icon:'🤖',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html',badge:'new'},
+  {name:'Pricing Calc',cat:'tools',icon:'🧮',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-pricing-calculator.html',badge:'live'},
+];
+
+let currentStoreFilter = 'all';
+
+function renderStoreApps() {
+  const grid = document.getElementById('store-grid');
+  if (!grid) return;
+  const apps = currentStoreFilter === 'all' ? storeApps : storeApps.filter(a => a.cat === currentStoreFilter);
+  grid.innerHTML = apps.map(a => 
+    '<div class="store-app" onclick="openLink(\''+a.url+'\')"><div class="store-app-icon">'+a.icon+'</div><div class="store-app-name">'+a.name+'</div><div class="store-app-cat">'+a.cat+'</div>' + (a.badge ? '<div class="store-app-badge store-badge-'+a.badge+'">'+a.badge.toUpperCase()+'</div>' : '') + '</div>'
+  ).join('');
+}
+
+function filterStore(cat) {
+  currentStoreFilter = cat;
+  document.querySelectorAll('.store-cat-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderStoreApps();
+}
+
+window.addEventListener('load', function() { setTimeout(renderStoreApps, 500); });
 
 </script>
 
