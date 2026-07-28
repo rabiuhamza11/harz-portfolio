@@ -237,6 +237,32 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .sr-loading{text-align:center;padding:16px;font-size:.75rem;color:var(--muted)}
 .sr-empty{text-align:center;padding:20px;font-size:.75rem;color:var(--muted)}
 
+
+/* HARZ Wallet */
+.wallet-section{padding:0 16px;margin-bottom:20px}
+.wallet-card{background:linear-gradient(135deg,#1a2040,#121830);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:12px}
+.wallet-total-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.wallet-total-amount{font-size:1.8rem;font-weight:800;margin:4px 0;background:linear-gradient(135deg,var(--p3),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.wallet-total-sub{font-size:.72rem;color:var(--muted)}
+.wallet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.wallet-coin{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center}
+.wallet-coin-icon{font-size:1.2rem;margin-bottom:4px}
+.wallet-coin-amt{font-size:.78rem;font-weight:700;color:var(--text)}
+.wallet-coin-cur{font-size:.58rem;color:var(--muted)}
+.wallet-tx{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.wallet-tx:last-child{border-bottom:none}
+.wallet-tx-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.wallet-tx-info{flex:1;min-width:0}
+.wallet-tx-title{font-size:.78rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wallet-tx-sub{font-size:.62rem;color:var(--muted)}
+.wallet-tx-amt{font-size:.78rem;font-weight:700;flex-shrink:0}
+.tx-positive{color:var(--p3)}
+.tx-negative{color:var(--p5)}
+.wallet-convert{display:flex;gap:8px;margin-top:12px}
+.wallet-convert select{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-size:.75rem;outline:none}
+.wallet-convert input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-size:.75rem;outline:none;width:80px}
+.wallet-convert button{background:linear-gradient(135deg,var(--p1),var(--p2));border:none;border-radius:8px;padding:8px 14px;color:#fff;font-size:.75rem;font-weight:600;cursor:pointer}
+
 </style>
 </head>
 <body>
@@ -291,7 +317,18 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div id="searchResults" style="display:none;margin-top:8px"></div>
 </div>
 
-<div class="quick-grid">
+<div 
+<!-- Wallet Cards -->
+<div class="wallet-section" style="padding:0;margin:0 0 16px">
+<div class="wallet-grid">
+<div class="wallet-coin" onclick="switchPage('wallet')" style="cursor:pointer"><div class="wallet-coin-icon">🇳🇬</div><div class="wallet-coin-amt" id="w-ngn">₦0</div><div class="wallet-coin-cur">NGN</div></div>
+<div class="wallet-coin" onclick="switchPage('wallet')" style="cursor:pointer"><div class="wallet-coin-icon">💵</div><div class="wallet-coin-amt" id="w-usd">$0</div><div class="wallet-coin-cur">USD</div></div>
+<div class="wallet-coin" onclick="switchPage('wallet')" style="cursor:pointer"><div class="wallet-coin-icon">⚡</div><div class="wallet-coin-amt" id="w-gdeg">0</div><div class="wallet-coin-cur">GDEG</div></div>
+<div class="wallet-coin" onclick="switchPage('wallet')" style="cursor:pointer"><div class="wallet-coin-icon">₮</div><div class="wallet-coin-amt" id="w-usdt">0</div><div class="wallet-coin-cur">USDT</div></div>
+</div>
+</div>
+
+class="quick-grid">
 <div class="quick" onclick="switchPage('pay')"><span class="quick-icon">💳</span><span class="quick-label">Pay</span></div>
 <div class="quick" onclick="switchPage('chat')"><span class="quick-icon">💬</span><span class="quick-label">Messages</span></div>
 <div class="quick" onclick="switchPage('business')"><span class="quick-icon">🤖</span><span class="quick-label">AI Assistant</span></div>
@@ -572,6 +609,42 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 
 <!-- MORE PAGE -->
+
+<!-- Wallet Page -->
+<div id="page-wallet" class="page">
+<div class="header"><h1>💰 HARZ Wallet</h1><div class="right" id="wallet-header-right"></div></div>
+
+<div class="wallet-section">
+<div class="wallet-card">
+<div class="wallet-total-label">Total Balance (NGN Equivalent)</div>
+<div class="wallet-total-amount" id="wallet-total">₦0</div>
+<div class="wallet-total-sub" id="wallet-sub">Loading balances...</div>
+<div class="wallet-grid">
+<div class="wallet-coin"><div class="wallet-coin-icon">🇳🇬</div><div class="wallet-coin-amt" id="w2-ngn">₦0</div><div class="wallet-coin-cur">NGN</div></div>
+<div class="wallet-coin"><div class="wallet-coin-icon">💵</div><div class="wallet-coin-amt" id="w2-usd">$0</div><div class="wallet-coin-cur">USD</div></div>
+<div class="wallet-coin"><div class="wallet-coin-icon">⚡</div><div class="wallet-coin-amt" id="w2-gdeg">0</div><div class="wallet-coin-cur">GDEG</div></div>
+<div class="wallet-coin"><div class="wallet-coin-icon">₮</div><div class="wallet-coin-amt" id="w2-usdt">0</div><div class="wallet-coin-cur">USDT</div></div>
+</div>
+<div class="wallet-convert">
+<select id="conv-from"><option value="NGN">From: NGN</option><option value="USD">From: USD</option><option value="GDEG">From: GDEG</option><option value="USDT">From: USDT</option></select>
+<input type="number" id="conv-amt" placeholder="Amount" value="100">
+<select id="conv-to"><option value="NGN">To: NGN</option><option value="USD">To: USD</option><option value="GDEG">To: GDEG</option><option value="USDT">To: USDT</option></select>
+<button onclick="doConvert()">Convert</button>
+</div>
+<div id="conv-result" style="font-size:.72rem;color:var(--p3);margin-top:8px;text-align:center"></div>
+</div>
+
+<div class="section-head" style="padding:0;margin-bottom:12px">
+<span class="section-title">Recent Activity</span>
+</div>
+<div class="card" style="padding:0">
+<div id="wallet-tx-list">
+<div style="text-align:center;padding:20px;font-size:.75rem;color:var(--muted)">No recent transactions</div>
+</div>
+</div>
+</div>
+</div>
+
 <div id="page-more" class="page">
 <div class="section" style="padding-top:16px">
 <div class="section-head"><span class="section-title">All Platforms (60+)</span></div>
@@ -1326,6 +1399,83 @@ document.addEventListener('click', function(e) {
   }
 });
 
+
+// ===== HARZ WALLET =====
+let walletLoaded = false;
+async function loadWallet() {
+  try {
+    const email = harzUser ? harzUser.email : '';
+    const res = await fetch(HARZ_BASE + '/harzWallet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'balance', email: email })
+    });
+    const data = await res.json();
+    if (data.success) {
+      const w = data.wallet;
+      const totalNgn = (w.total_ngn || 0).toLocaleString('en-NG', { maximumFractionDigits: 0 });
+      const usdBal = (w.usd || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+      const ngnBal = (w.ngn || 0).toLocaleString('en-NG', { maximumFractionDigits: 0 });
+      const gdegBal = (w.gdeg || 0).toLocaleString();
+      const usdtBal = (w.usdt || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+      
+      // Home page mini cards
+      const e1 = ['w-ngn','w-usd','w-gdeg','w-usdt'];
+      const v1 = ['₦' + ngnBal, '$' + usdBal, gdegBal, usdtBal];
+      e1.forEach((id,i) => { const el = document.getElementById(id); if(el) el.textContent = v1[i]; });
+      
+      // Wallet page full
+      const elTotal = document.getElementById('wallet-total');
+      if(elTotal) elTotal.textContent = '₦' + totalNgn;
+      const e2 = ['w2-ngn','w2-usd','w2-gdeg','w2-usdt'];
+      e2.forEach((id,i) => { const el = document.getElementById(id); if(el) el.textContent = v1[i]; });
+      const elSub = document.getElementById('wallet-sub');
+      if(elSub) elSub.textContent = usdBal != '0.00' ? '$' + usdBal + ' · ' + gdegBal + ' GDEG · ' + usdtBal + ' USDT' : 'Connect accounts to see full balances';
+      
+      // Transactions
+      if (w.transactions && w.transactions.length > 0) {
+        const txHtml = w.transactions.map(t => {
+          const isPositive = (t.amount || 0) > 0;
+          const amt = Math.abs(t.amount || 0).toLocaleString('en-NG', { maximumFractionDigits: 0 });
+          const icon = (t.amount || 0) < 0 ? '📉' : (t.amount || 0) > 0 ? '📈' : '🧾';
+          const bg = isPositive ? 'rgba(0,230,118,.1)' : 'rgba(255,61,113,.1)';
+          return '<div class="wallet-tx"><div class="wallet-tx-icon" style="background:' + bg + '">' + icon + '</div><div class="wallet-tx-info"><div class="wallet-tx-title">' + (t.title || 'Transaction') + '</div><div class="wallet-tx-sub">' + (t.method || '') + ' · ' + (t.status || '') + '</div></div><div class="wallet-tx-amt ' + (isPositive ? 'tx-positive' : 'tx-negative') + '">' + (isPositive ? '+' : '-') + '₦' + amt + '</div></div>';
+        }).join('');
+        const txList = document.getElementById('wallet-tx-list');
+        if(txList) txList.innerHTML = txHtml;
+      }
+      walletLoaded = true;
+    }
+  } catch(e) { console.log('Wallet error:', e); }
+}
+
+async function doConvert() {
+  const from = document.getElementById('conv-from').value;
+  const to = document.getElementById('conv-to').value;
+  const amt = parseFloat(document.getElementById('conv-amt').value) || 0;
+  if (!amt || from === to) { document.getElementById('conv-result').textContent = ''; return; }
+  try {
+    const res = await fetch(HARZ_BASE + '/harzWallet', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'transfer', from_currency: from, to_currency: to, amount: amt })
+    });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('conv-result').textContent = amt + ' ' + from + ' = ' + data.conversion.to.amount + ' ' + to + ' (rate: ' + data.conversion.rate + ')';
+    }
+  } catch(e) { document.getElementById('conv-result').textContent = 'Error'; }
+}
+
+// Hook into switchPage for wallet loading
+const _origSwitchPage = switchPage;
+switchPage = function(name) {
+  _origSwitchPage(name);
+  if (name === 'wallet' && !walletLoaded) loadWallet();
+};
+
+// Also load wallet on page init
+window.addEventListener('load', function() { setTimeout(loadWallet, 1000); });
+
 </script>
 
 <!-- SSO Auth Modal -->
@@ -1353,6 +1503,14 @@ document.addEventListener('click', function(e) {
 <div class="auth-error" id="auth-error"></div>
 <div class="auth-success" id="auth-success"></div>
 <div class="auth-info">Your HARZ account works across all 63+ platforms. One login, everywhere.</div>
+</div>
+</div>
+
+
+</div>
+<div class="card" style="padding:0">
+<div id="wallet-tx-list"><div style="text-align:center;padding:20px;font-size:.75rem;color:var(--muted)">No transactions</div></div>
+</div>
 </div>
 </div>
 
