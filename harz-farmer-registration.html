@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HARZ Farm to Market — Farmer Registration</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--purple:#7C4DFF;--red:#EF4444}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
+.header{background:linear-gradient(135deg,rgba(0,230,118,.1),rgba(245,158,11,.08));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.2rem;font-weight:800}
+.header h1 span{color:var(--green)}
+.header p{font-size:.72rem;color:var(--muted);margin-top:4px}
+.container{max-width:500px;margin:0 auto;padding:12px}
+.step-bar{display:flex;gap:4px;margin-bottom:16px}
+.step-dot{flex:1;height:4px;background:var(--border);border-radius:2px;transition:.3s}
+.step-dot.active{background:var(--green)}
+.step-dot.done{background:var(--green)}
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;display:none}
+.step-card.active{display:block}
+.step-title{font-size:1rem;font-weight:700;margin-bottom:6px}
+.step-desc{font-size:.72rem;color:var(--muted);margin-bottom:16px}
+.input-group{margin-bottom:12px}
+.input-label{font-size:.72rem;color:var(--muted);margin-bottom:4px;display:block}
+.input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-size:.85rem}
+.input:focus{outline:none;border-color:var(--green)}
+select.input{cursor:pointer}
+textarea.input{resize:vertical;min-height:60px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{width:100%;border:none;border-radius:12px;padding:14px;font-size:.9rem;font-weight:700;cursor:pointer}
+.btn-green{background:var(--green);color:#000}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+.btn:active{opacity:.8}
+.btn-row{display:flex;gap:8px}
+.btn-row .btn{flex:1}
+.photo-upload{border:2px dashed var(--border);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:12px}
+.photo-upload:active{border-color:var(--green)}
+.photo-upload-icon{font-size:2rem;margin-bottom:6px}
+.photo-upload-text{font-size:.75rem;color:var(--muted)}
+.photo-preview{display:none;position:relative;margin-bottom:12px}
+.photo-preview img{width:100%;border-radius:12px;max-height:200px;object-fit:cover}
+.photo-preview .remove{position:absolute;top:8px;right:8px;background:rgba(239,68,68,.9);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:1rem;cursor:pointer}
+.product-item{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;position:relative}
+.product-item .p-name{font-size:.85rem;font-weight:600}
+.product-item .p-meta{font-size:.7rem;color:var(--muted);margin-top:2px}
+.product-item .p-price{font-size:.85rem;font-weight:700;color:var(--green);margin-top:4px}
+.product-item .p-remove{position:absolute;top:8px;right:8px;background:rgba(239,68,68,.8);color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:.65rem;cursor:pointer}
+.success-card{text-align:center;padding:24px}
+.success-icon{font-size:3rem;margin-bottom:12px}
+.success-title{font-size:1.1rem;font-weight:700;margin-bottom:6px}
+.success-desc{font-size:.78rem;color:var(--muted);margin-bottom:20px}
+.success-ref{background:var(--card2);border:1px solid var(--green);border-radius:10px;padding:12px;margin-bottom:16px}
+.success-ref .ref-label{font-size:.7rem;color:var(--muted)}
+.success-ref .ref-num{font-size:1.1rem;font-weight:700;color:var(--green)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:10px 24px;border-radius:20px;font-size:.85rem;font-weight:600;z-index:300;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+.back{display:block;text-align:center;margin-top:16px;font-size:.8rem;color:var(--green);text-decoration:none}
+.farm-type{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.farm-chip{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:.15s;font-size:.78rem}
+.farm-chip.selected{border-color:var(--green);background:rgba(0,230,118,.08);color:var(--green)}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🌾 <span>Farm to Market</span> — Farmer Registration</h1>
+<p>Register your farm and start selling produce online</p>
+</div>
+<div class="container">
+
+<div class="step-bar">
+<div class="step-dot active" id="dot1"></div>
+<div class="step-dot" id="dot2"></div>
+<div class="step-dot" id="dot3"></div>
+</div>
+
+<div class="step-card active" id="step1">
+<div class="step-title">1. Farm Information</div>
+<div class="step-desc">Tell us about your farm</div>
+<div class="input-group"><label class="input-label">Farm Name</label><input class="input" id="farmName" placeholder="e.g. Rabiu Farms"></div>
+<div class="input-group"><label class="input-label">Farmer Full Name</label><input class="input" id="farmerName" placeholder="Your name"></div>
+<div class="row2">
+<div class="input-group"><label class="input-label">Phone Number</label><input class="input" id="farmerPhone" placeholder="080..."></div>
+<div class="input-group"><label class="input-label">WhatsApp</label><input class="input" id="farmerWhatsapp" placeholder="Same or different"></div>
+</div>
+<div class="input-group"><label class="input-label">Location (LGA, State)</label><input class="input" id="farmLocation" placeholder="e.g. Gusau, Zamfara"></div>
+<div class="input-group"><label class="input-label">Farm Type (select all that apply)</label></div>
+<div class="farm-type" id="farmTypes">
+<div class="farm-chip" onclick="toggleChip(this)">🌽 Crop Farming</div>
+<div class="farm-chip" onclick="toggleChip(this)">🐄 Livestock</div>
+<div class="farm-chip" onclick="toggleChip(this)">🐟 Fishery</div>
+<div class="farm-chip" onclick="toggleChip(this)">🐔 Poultry</div>
+<div class="farm-chip" onclick="toggleChip(this)">🥬 Vegetables</div>
+<div class="farm-chip" onclick="toggleChip(this)">🥔 Tubers</div>
+</div>
+<button class="btn btn-green" onclick="nextStep(2)">Continue →</button>
+</div>
+
+<div class="step-card" id="step2">
+<div class="step-title">2. Add Your Produce</div>
+<div class="step-desc">List products you want to sell on Farm to Market</div>
+<div class="input-group"><label class="input-label">Product Name</label><input class="input" id="prodName" placeholder="e.g. Fresh Tomatoes"></div>
+<div class="input-group"><label class="input-label">Category</label>
+<select class="input" id="prodCat">
+<option>Vegetables</option><option>Grains</option><option>Tubers</option><option>Fruits</option><option>Livestock</option><option>Poultry</option><option>Other</option>
+</select></div>
+<div class="row2">
+<div class="input-group"><label class="input-label">Price (₦)</label><input class="input" type="number" id="prodPrice" placeholder="e.g. 5000"></div>
+<div class="input-group"><label class="input-label">Unit</label><select class="input" id="prodUnit"><option>per bag</option><option>per kg</option><option>per crate</option><option>per basket</option><option>per piece</option><option>per dozen</option></select></div>
+</div>
+<div class="input-group"><label class="input-label">Available Quantity</label><input class="input" type="number" id="prodQty" placeholder="e.g. 50"></div>
+<div class="input-group"><label class="input-label">Description (optional)</label><textarea class="input" id="prodDesc" placeholder="Fresh, organic, harvested today..."></textarea></div>
+<div class="input-group"><label class="input-label">Product Photo</label></div>
+<div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+<div class="photo-upload-icon">📷</div>
+<div class="photo-upload-text">Tap to upload product photo</div>
+</div>
+<input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+<div class="photo-preview" id="photoPreview"><img id="photoImg"><button class="remove" onclick="removePhoto()">✕</button></div>
+<button class="btn btn-green" onclick="addProduct()">+ Add Product</button>
+<div id="productList" style="margin-top:16px"></div>
+<div class="btn-row" style="margin-top:16px">
+<button class="btn btn-secondary" onclick="nextStep(1)">← Back</button>
+<button class="btn btn-green" onclick="nextStep(3)">Review & Submit →</button>
+</div>
+</div>
+
+<div class="step-card" id="step3">
+<div class="step-title">3. Review & Submit</div>
+<div class="step-desc">Confirm your registration details</div>
+<div id="reviewContent"></div>
+<div class="input-group" style="margin-top:16px"><label class="input-label">Bank Account (for receiving payments)</label><input class="input" id="bankAccount" placeholder="Bank name + Account number"></div>
+<div class="input-group"><label class="input-label">Preferred Payment Method</label>
+<select class="input" id="payMethod"><option>Bank Transfer</option><option>Paystack</option><option>USDT (Crypto)</option><option>GDEG Token</option></select></div>
+<div class="btn-row" style="margin-top:16px">
+<button class="btn btn-secondary" onclick="nextStep(2)">← Back</button>
+<button class="btn btn-green" onclick="submitRegistration()">Submit Registration</button>
+</div>
+</div>
+
+<div class="step-card" id="stepSuccess">
+<div class="success-card">
+<div class="success-icon">✅</div>
+<div class="success-title">Registration Successful!</div>
+<div class="success-desc">Your farm has been registered on Farm to Market. We'll review and approve within 24 hours.</div>
+<div class="success-ref"><div class="ref-label">Your Farmer ID</div><div class="ref-num" id="farmerId">FRM-000000</div></div>
+<button class="btn btn-green" onclick="window.location.href='https://rabiuhamza11.github.io/harz-portfolio/harz-farm-to-market.html'">View Marketplace →</button>
+</div>
+</div>
+
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" class="back">← Back to Super App</a>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+var products=[];
+var photoData=null;
+var farmTypes=[];
+
+function toggleChip(el){el.classList.toggle('selected');if(el.classList.contains('selected')){if(!farmTypes.includes(el.textContent))farmTypes.push(el.textContent)}else{farmTypes=farmTypes.filter(function(t){return t!==el.textContent})}}
+
+function previewPhoto(input){if(input.files&&input.files[0]){var reader=new FileReader();reader.onload=function(e){document.getElementById('photoImg').src=e.target.result;document.getElementById('photoPreview').style.display='block';photoData=e.target.result};reader.readAsDataURL(input.files[0])}}
+
+function removePhoto(){document.getElementById('photoPreview').style.display='none';document.getElementById('photoInput').value='';photoData=null}
+
+function addProduct(){
+var name=document.getElementById('prodName').value.trim();
+var price=document.getElementById('prodPrice').value;
+var qty=document.getElementById('prodQty').value;
+var cat=document.getElementById('prodCat').value;
+var unit=document.getElementById('prodUnit').value;
+if(!name||!price){showToast('Enter product name and price');return}
+products.push({name:name,price:price,qty:qty,cat:cat,unit:unit,photo:photoData});
+document.getElementById('prodName').value='';document.getElementById('prodPrice').value='';document.getElementById('prodQty').value='';document.getElementById('prodDesc').value='';removePhoto();
+renderProducts();showToast('Product added!');
+}
+
+function renderProducts(){
+document.getElementById('productList').innerHTML=products.length?'<div style="font-size:.82rem;font-weight:700;margin-bottom:8px">Added Products ('+products.length+')</div>':''+products.map(function(p,i){return '<div class="product-item"><button class="p-remove" onclick="removeProduct('+i+')">Remove</button><div class="p-name">'+p.name+'</div><div class="p-meta">'+p.cat+' · '+p.qty+' '+p.unit+'</div><div class="p-price">₦'+Number(p.price).toLocaleString()+' '+p.unit+'</div>'+(p.photo?'<img src="'+p.photo+'" style="width:100%;border-radius:8px;margin-top:6px;max-height:80px;object-fit:cover">':'')+'</div>'}).join('');
+}
+
+function removeProduct(i){products.splice(i,1);renderProducts()}
+
+function nextStep(n){
+document.querySelectorAll('.step-card').forEach(function(c){c.classList.remove('active')});
+document.querySelectorAll('.step-dot').forEach(function(d){d.classList.remove('active','done')});
+for(var i=1;i<n;i++){document.getElementById('dot'+i).classList.add('done')}
+document.getElementById('dot'+n).classList.add('active');
+document.getElementById('step'+n).classList.add('active');
+if(n===3)renderReview();
+window.scrollTo(0,0);
+}
+
+function renderReview(){
+var types=farmTypes.join(', ')||'None selected';
+var html='<div style="font-size:.82rem;font-weight:700;margin-bottom:10px">Farm Details</div>';
+html+='<div style="font-size:.75rem;line-height:1.8;color:var(--text)">';
+html+='<b>Farm:</b> '+(document.getElementById('farmName').value||'—')+'<br>';
+html+='<b>Farmer:</b> '+(document.getElementById('farmerName').value||'—')+'<br>';
+html+='<b>Phone:</b> '+(document.getElementById('farmerPhone').value||'—')+'<br>';
+html+='<b>Location:</b> '+(document.getElementById('farmLocation').value||'—')+'<br>';
+html+='<b>Farm Type:</b> '+types+'<br>';
+html+='</div>';
+if(products.length){html+='<div style="font-size:.82rem;font-weight:700;margin:12px 0 6px">Products ('+products.length+')</div>';products.forEach(function(p){html+='<div style="font-size:.72rem;padding:4px 0;border-bottom:1px solid var(--border)">'+p.name+' — ₦'+Number(p.price).toLocaleString()+' '+p.unit+' × '+p.qty+'</div>'})}
+document.getElementById('reviewContent').innerHTML=html;
+}
+
+function submitRegistration(){
+var id='FRM-'+Math.random().toString(36).substring(2,8).toUpperCase();
+document.getElementById('farmerId').textContent=id;
+document.querySelectorAll('.step-card').forEach(function(c){c.classList.remove('active')});
+document.querySelectorAll('.step-dot').forEach(function(d){d.classList.add('done')});
+document.getElementById('stepSuccess').classList.add('active');
+showToast('Registration submitted!');
+}
+
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+</script>
+</body>
+</html>
