@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Exam Grading — Danfodio Memorial</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--p1:#7c4dff;--p2:#5362f6;--p3:#00d4aa;--pass:#22c55e;--fail:#ef4444;--a:#22c55e;--b:#3b82f6;--c:#f59e0b;--d:#f97316;--f:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:70px}
+.header{position:sticky;top:0;background:rgba(13,17,23,.95);backdrop-filter:blur(12px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.05rem;font-weight:700;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.view-tabs{display:flex;gap:6px;padding:12px 16px 0}
+.view-tab{flex:1;text-align:center;padding:8px;border-radius:8px;font-size:.76rem;font-weight:600;background:var(--card);border:1px solid var(--border);cursor:pointer}
+.view-tab.active{background:linear-gradient(135deg,var(--p1),var(--p2));border-color:transparent;color:#fff}
+.stat-row{display:flex;gap:8px;padding:10px 16px}
+.stat-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.stat-card .stat-num{font-size:1rem;font-weight:700}
+.stat-card .stat-lbl{font-size:.56rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.section-title{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:8px 16px 4px;font-weight:600}
+.exam-list,.student-list{padding:0 16px}
+.exam-card,.student-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;transition:.2s}
+.exam-card:active,.student-card:active{transform:scale(.98)}
+.exam-name{font-size:.88rem;font-weight:700;margin-bottom:4px}
+.exam-meta{font-size:.68rem;color:var(--muted)}
+.exam-class{display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(124,77,255,.12);color:var(--p1);font-size:.62rem;font-weight:600;margin-top:4px}
+.student-card{display:flex;align-items:center;gap:10px}
+.avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0}
+.s-info{flex:1;min-width:0}
+.s-name{font-size:.85rem;font-weight:600}
+.s-meta{font-size:.68rem;color:var(--muted);margin-top:2px}
+.grade-badge{padding:4px 12px;border-radius:10px;font-size:.82rem;font-weight:700;flex-shrink:0}
+.grade-a{background:rgba(34,197,94,.15);color:var(--a)}
+.grade-b{background:rgba(59,130,246,.15);color:var(--b)}
+.grade-c{background:rgba(245,158,11,.15);color:var(--c)}
+.grade-d{background:rgba(249,115,22,.15);color:var(--d)}
+.grade-f{background:rgba(239,68,68,.15);color:var(--f)}
+.grading-section{padding:0 16px}
+.subject-row{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px}
+.subject-row .sr-name{flex:1;font-size:.82rem;font-weight:600}
+.subject-row input{width:70px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;text-align:center;font-size:.85rem;font-weight:600}
+.subject-row input:focus{outline:none;border-color:var(--p1)}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:0 16px 16px}
+.result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.result-row:last-child{border:none}
+.result-row .rr-subj{color:var(--muted)}
+.result-row .rr-score{font-weight:600}
+.result-summary{text-align:center;padding:16px 0}
+.result-summary .rs-total{font-size:2rem;font-weight:700}
+.result-summary .rs-avg{font-size:1.2rem;color:var(--p3);margin-top:4px}
+.result-summary .rs-grade{font-size:1.5rem;font-weight:700;margin-top:6px}
+.report-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:0 16px 10px}
+.rc-header{text-align:center;margin-bottom:14px}
+.rc-header .rc-school{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.rc-header .rc-title{font-size:1rem;font-weight:700;margin:4px 0}
+.rc-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;font-size:.75rem}
+.rc-info .rc-lbl{color:var(--muted)}
+.rc-info .rc-val{font-weight:600}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h2{font-size:1.1rem;margin-bottom:14px}
+.form-group{margin-bottom:10px}
+.form-label{font-size:.72rem;color:var(--muted);margin-bottom:4px;display:block}
+.form-input,.form-select{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-size:.85rem;font-family:inherit}
+.form-input:focus{outline:none;border-color:var(--p1)}
+.form-row{display:flex;gap:8px}
+.form-row>*{flex:1}
+.modal-actions{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;padding:12px;border-radius:10px;font-size:.85rem;font-weight:600;border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+.fab{position:fixed;bottom:16px;right:16px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;color:#fff;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(124,77,255,.4);z-index:90;display:flex;align-items:center;justify-content:center}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 18px;border-radius:20px;font-size:.78rem;z-index:400;opacity:0;transition:.3s}
+.toast.show{opacity:1;bottom:90px}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.empty .emoji{font-size:2.5rem;margin-bottom:8px}
+.back-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:8px;font-size:.72rem;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="header"><h1>🎓 HARZ Exam Grading</h1><button class="back-btn" id="backBtn" style="display:none" onclick="goBack()">‹ Back</button></div>
+<div class="view-tabs">
+<div class="view-tab active" onclick="switchView('exams')" id="tabExams">Exams</div>
+<div class="view-tab" onclick="switchView('students')" id="tabStudents">Students</div>
+<div class="view-tab" onclick="switchView('reports')" id="tabReports">Reports</div>
+</div>
+<div id="examsView">
+<div class="stat-row">
+<div class="stat-card"><div class="stat-num" id="stExams">0</div><div class="stat-lbl">Exams</div></div>
+<div class="stat-card"><div class="stat-num" id="stStudents">0</div><div class="stat-lbl">Students</div></div>
+<div class="stat-card"><div class="stat-num" id="stAvg" style="color:var(--p3)">--</div><div class="stat-lbl">Avg Score</div></div>
+<div class="stat-card"><div class="stat-num" id="stPass" style="color:var(--pass)">0%</div><div class="stat-lbl">Pass Rate</div></div>
+</div>
+<div class="section-title">Created Exams</div>
+<div class="exam-list" id="examList"></div>
+</div>
+<div id="studentsView" style="display:none">
+<div class="section-title">Students</div>
+<div class="student-list" id="studentList"></div>
+</div>
+<div id="reportsView" style="display:none">
+<div class="section-title">Report Cards</div>
+<div id="reportList" style="padding:0 16px"></div>
+</div>
+<div id="gradeView" style="display:none"></div>
+<button class="fab" onclick="openModal()" id="fabBtn">+</button>
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<h2 id="modalTitle">Add Exam</h2>
+<div id="modalContent"></div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const subjects=['Mathematics','English','Basic Science','Social Studies','Civic Education','Computer Studies','Agric Science','Hausa','Islamic Studies','CRS'];
+const classOptions=['Nursery','Pry 1','Pry 2','Pry 3','Pry 4','Pry 5','Pry 6','JSS 1','JSS 2','JSS 3','SSS 1','SSS 2','SSS 3'];
+let exams=[],students=[],currentView='exams',gradeExamId=null,editingId=null;
+function load(){try{exams=JSON.parse(localStorage.getItem('harz_exams')||'[]');students=JSON.parse(localStorage.getItem('harz_students')||'[]')}catch(e){exams=[];students=[]}}
+function saveAll(){localStorage.setItem('harz_exams',JSON.stringify(exams));localStorage.setItem('harz_students',JSON.stringify(students))}
+function gradeFor(pct){if(pct>=80)return{g:'A',c:'grade-a'};if(pct>=70)return{g:'B',c:'grade-b'};if(pct>=60)return{g:'C',c:'grade-c'};if(pct>=50)return{g:'D',c:'grade-d'};return{g:'F',c:'grade-f'}}
+function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+function seed(){
+if(exams.length>0||students.length>0)return;
+const today=new Date().toISOString().split('T')[0];
+students=[
+{name:'Aisha Bello',class:'JSS 2',id:'s1'},{name:'Yusuf Sani',class:'Pry 5',id:'s2'},
+{name:'Fatima Ibrahim',class:'JSS 1',id:'s3'},{name:'Muhammad Musa',class:'SSS 1',id:'s4'},
+{name:'Zainab Garba',class:'Pry 3',id:'s5'},{name:'Abdullahi Tanko',class:'JSS 3',id:'s6'},
+{name:'Hauwa Dauda',class:'SSS 2',id:'s7'},{name:'Ibrahim Yusuf',class:'Pry 6',id:'s8'}
+];
+exams=[
+{name:'First Term Exam',class:'JSS 2',term:'First Term',date:today,subjects:subjects.slice(0,8).map(s=>({subject:s,scores:{}})),
+grades:{s1:{Mathematics:85,English:78,'Basic Science':82,'Social Studies':90,'Civic Education':75,'Computer Studies':88,'Agric Science':80,Hausa:92},
+s3:{Mathematics:72,English:65,'Basic Science':70,'Social Studies':78,'Civic Education':80,'Computer Studies':75,'Agric Science':68,Hausa:85}}},
+{name:'First Term Exam',class:'Pry 5',term:'First Term',date:today,subjects:subjects.slice(0,6).map(s=>({subject:s,scores:{}})),
+grades:{s2:{Mathematics:90,English:85,'Basic Science':88,'Social Studies':92,'Civic Education':80,'Computer Studies':95}}}
+];
+saveAll();
+}
+function render(){
+document.getElementById('stExams').textContent=exams.length;
+document.getElementById('stStudents').textContent=students.length;
+if(currentView==='exams')renderExams();
+else if(currentView==='students')renderStudents();
+else if(currentView==='reports')renderReports();
+}
+function renderExams(){
+const list=document.getElementById('examList');
+if(exams.length===0){list.innerHTML='<div class="empty"><div class="emoji">🎓</div><p>No exams. Tap + to create.</p></div>';return}
+let allPcts=[];
+exams.forEach(e=>{Object.values(e.grades||{}).forEach(s=>{const vals=Object.values(s);const avg=vals.reduce((a,b)=>a+b,0)/vals.length;allPcts.push(avg)})});
+const avgScore=allPcts.length?Math.round(allPcts.reduce((a,b)=>a+b,0)/allPcts.length):0;
+const passRate=allPcts.length?Math.round(allPcts.filter(p=>p>=50).length/allPcts.length*100):0;
+document.getElementById('stAvg').textContent=avgScore+'%';
+document.getElementById('stPass').textContent=passRate+'%';
+list.innerHTML=exams.map(e=>{
+const graded=Object.keys(e.grades||{}).length;
+return `<div class="exam-card" onclick="gradeExam('${e.id}')">
+<div class="exam-name">${esc(e.name)}</div>
+<div class="exam-meta">${e.term} · ${e.subjects.length} subjects · ${graded} students graded</div>
+<div class="exam-class">${e.class}</div>
+</div>`}).join('');
+}
+function renderStudents(){
+const list=document.getElementById('studentList');
+if(students.length===0){list.innerHTML='<div class="empty"><div class="emoji">👨‍🎓</div><p>No students. Tap + to add.</p></div>';return}
+list.innerHTML=students.map(s=>{
+const stExams=exams.filter(e=>e.class===s.class);
+let avg='--';
+if(stExams.length>0&&stExams[0].grades&&stExams[0].grades[s.id]){
+const vals=Object.values(stExams[0].grades[s.id]);
+avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)+'%';
+}
+const gr=avg!=='--'?gradeFor(parseInt(avg)):{g:'--',c:'grade-d'};
+return `<div class="student-card" onclick="editStudent('${s.id}')">
+<div class="avatar" style="background:rgba(124,77,255,.12);color:var(--p1)">${initials(s.name)}</div>
+<div class="s-info"><div class="s-name">${esc(s.name)}</div><div class="s-meta">${s.class}</div></div>
+<div class="grade-badge ${gr.c}">${gr.g}</div>
+</div>`}).join('');
+}
+function renderReports(){
+const list=document.getElementById('reportList');
+if(students.length===0){list.innerHTML='<div class="empty"><div class="emoji">📋</div><p>No students.</p></div>';return}
+list.innerHTML=students.map(s=>{
+const stExams=exams.filter(e=>e.class===s.class&&e.grades&&e.grades[s.id]);
+if(stExams.length===0)return '';
+const exam=stExams[0];
+const grades=exam.grades[s.id];
+const scores=Object.entries(grades);
+const total=scores.reduce((a,[,v])=>a+v,0);
+const avg=Math.round(total/scores.length);
+const gr=gradeFor(avg);
+return `<div class="report-card">
+<div class="rc-header">
+<div class="rc-school">Danfodio Memorial Academy</div>
+<div class="rc-title">Term Report</div>
+</div>
+<div class="rc-info">
+<div><span class="rc-lbl">Name:</span> <span class="rc-val">${esc(s.name)}</span></div>
+<div><span class="rc-lbl">Class:</span> <span class="rc-val">${s.class}</span></div>
+<div><span class="rc-lbl">Term:</span> <span class="rc-val">${esc(exam.term)}</span></div>
+<div><span class="rc-lbl">Date:</span> <span class="rc-val">${new Date(exam.date).toLocaleDateString('en-NG',{month:'short',day:'numeric',year:'numeric'})}</span></div>
+</div>
+${scores.map(([subj,score])=>{const sg=gradeFor(score);return `<div class="result-row"><span class="rr-subj">${subj}</span><span><span class="rr-score">${score}/100</span> <span class="grade-badge ${sg.c}" style="padding:2px 6px;font-size:.62rem">${sg.g}</span></span></div>`}).join('')}
+<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:8px">
+<div class="result-row"><span class="rr-subj" style="font-weight:600">Total</span><span class="rr-score" style="font-size:1rem">${total}/${scores.length*100}</span></div>
+<div class="result-row"><span class="rr-subj" style="font-weight:600">Average</span><span class="rr-score" style="font-size:1.1rem;color:var(--p3)">${avg}%</span></div>
+<div class="result-row"><span class="rr-subj" style="font-weight:600">Grade</span><span class="grade-badge ${gr.c}" style="font-size:1rem">${gr.g}</span></div>
+</div>
+</div>`}).filter(h=>h).join('');
+}
+function gradeExam(id){
+gradeExamId=id;const exam=exams.find(e=>e.id===id);if(!exam)return;
+document.getElementById('examsView').style.display='none';
+document.getElementById('gradeView').style.display='block';
+document.getElementById('backBtn').style.display='block';
+document.getElementById('fabBtn').style.display='none';
+const classStudents=students.filter(s=>s.class===exam.class);
+const subjList=exam.subjects.map(s=>s.subject);
+document.getElementById('gradeView').innerHTML=`
+<div class="section-title">Grade: ${esc(exam.name)} — ${exam.class}</div>
+${classStudents.map(s=>{
+const existing=exam.grades&&exam.grades[s.id]?exam.grades[s.id]:{};
+return `<div class="report-card">
+<div style="font-size:.88rem;font-weight:700;margin-bottom:10px">${esc(s.name)}</div>
+${subjList.map(sub=>`<div class="subject-row">
+<span class="sr-name">${sub}</span>
+<input type="number" min="0" max="100" value="${existing[sub]||''}" placeholder="--" data-student="${s.id}" data-subject="${sub}" onchange="updateGrade('${exam.id}','${s.id}','${sub}',this.value)">
+</div>`).join('')}
+</div>`}).join('')}
+`;
+}
+function updateGrade(examId,studentId,subject,score){
+const exam=exams.find(e=>e.id===examId);if(!exam)return;
+if(!exam.grades)exam.grades={};
+if(!exam.grades[studentId])exam.grades[studentId]={};
+exam.grades[studentId][subject]=parseInt(score)||0;
+saveAll();
+showToast('Grade saved ✓');
+}
+function goBack(){
+gradeExamId=null;
+document.getElementById('gradeView').style.display='none';
+document.getElementById('backBtn').style.display='none';
+document.getElementById('fabBtn').style.display='flex';
+switchView(currentView);
+}
+function switchView(v){
+currentView=v;
+document.getElementById('gradeView').style.display='none';
+document.getElementById('fabBtn').style.display='flex';
+['Exams','Students','Reports'].forEach(t=>{
+document.getElementById('tab'+t).classList.toggle('active',t.toLowerCase()===v);
+});
+document.getElementById('examsView').style.display=v==='exams'?'block':'none';
+document.getElementById('studentsView').style.display=v==='students'?'block':'none';
+document.getElementById('reportsView').style.display=v==='reports'?'block':'none';
+render();
+}
+function openModal(){
+const modalContent=document.getElementById('modalContent');
+if(currentView==='exams'){
+document.getElementById('modalTitle').textContent='New Exam';
+modalContent.innerHTML=`<div class="form-group"><label class="form-label">Exam Name</label><input class="form-input" id="exName" placeholder="e.g. First Term Exam"></div>
+<div class="form-row"><div class="form-group"><label class="form-label">Class</label><select class="form-select" id="exClass">${classOptions.map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div>
+<div class="form-group"><label class="form-label">Term</label><select class="form-select" id="exTerm"><option>First Term</option><option>Second Term</option><option>Third Term</option></select></div></div>
+<div class="form-group"><label class="form-label">Subjects</label><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">${subjects.map(s=>`<label style="font-size:.75rem;cursor:pointer;background:var(--card);padding:6px 10px;border-radius:8px;border:1px solid var(--border)"><input type="checkbox" value="${s}" checked style="margin-right:4px">${s}</label>`).join('')}</div></div>
+<div class="modal-actions"><button class="btn btn-cancel" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveExam()">Create</button></div>`;
+}else{
+document.getElementById('modalTitle').textContent='Add Student';
+modalContent.innerHTML=`<div class="form-group"><label class="form-label">Student Name</label><input class="form-input" id="stName" placeholder="Full name"></div>
+<div class="form-group"><label class="form-label">Class</label><select class="form-select" id="stClass">${classOptions.map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div>
+<div class="modal-actions"><button class="btn btn-cancel" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveStudent()">Save</button></div>`;
+}
+document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show')}
+function saveExam(){
+const name=document.getElementById('exName').value.trim();if(!name){showToast('Enter exam name');return}
+const cls=document.getElementById('exClass').value;
+const term=document.getElementById('exTerm').value;
+const selectedSubs=[...document.querySelectorAll('input[type=checkbox]:checked')].map(c=>c.value);
+if(selectedSubs.length===0){showToast('Select at least one subject');return}
+exams.push({id:Math.random().toString(36).substr(2,9),name,class:cls,term,date:new Date().toISOString().split('T')[0],subjects:selectedSubs.map(s=>({subject:s,scores:{}})),grades:{}});
+saveAll();closeModal();render();showToast('Exam created ✓');
+}
+function saveStudent(){
+const name=document.getElementById('stName').value.trim();if(!name){showToast('Enter name');return}
+students.push({id:Math.random().toString(36).substr(2,9),name,class:document.getElementById('stClass').value});
+saveAll();closeModal();render();showToast('Student added ✓');
+}
+function editStudent(id){
+// Could expand later
+showToast('Tap an exam to grade');
+}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+load();seed();render();
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target.id==='modalOverlay')closeModal()});
+</script>
+</body>
+</html>

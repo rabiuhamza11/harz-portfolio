@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Expense Tracker</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--p1:#7c4dff;--p2:#5362f6;--p3:#00d4aa;--expense:#ef4444;--income:#22c55e}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:70px}
+.header{position:sticky;top:0;background:rgba(13,17,23,.95);backdrop-filter:blur(12px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.balance-card{margin:12px 16px;background:linear-gradient(135deg,var(--p1),var(--p2));border-radius:16px;padding:20px}
+.balance-card .bc-label{font-size:.7rem;opacity:.8;text-transform:uppercase;letter-spacing:1px}
+.balance-card .bc-amount{font-size:2rem;font-weight:700;margin:4px 0}
+.balance-card .bc-row{display:flex;justify-content:space-between;margin-top:10px;font-size:.78rem}
+.balance-card .bc-row span{display:flex;align-items:center;gap:4px}
+.stat-row{display:flex;gap:8px;padding:0 16px;margin-top:10px}
+.stat-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.stat-card .stat-num{font-size:1rem;font-weight:700}
+.stat-card .stat-lbl{font-size:.56rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.cat-tabs{display:flex;gap:6px;padding:10px 16px;overflow-x:auto}
+.cat-tab{padding:6px 14px;border-radius:20px;font-size:.72rem;font-weight:600;white-space:nowrap;background:var(--card);border:1px solid var(--border);cursor:pointer}
+.cat-tab.active{background:linear-gradient(135deg,var(--p1),var(--p2));border-color:transparent;color:#fff}
+.txn-list{padding:0 16px}
+.txn-card{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;transition:.2s}
+.txn-card:active{transform:scale(.98)}
+.txn-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.txn-icon.expense{background:rgba(239,68,68,.12)}
+.txn-icon.income{background:rgba(34,197,94,.12)}
+.txn-info{flex:1;min-width:0}
+.txn-title{font-size:.85rem;font-weight:600}
+.txn-meta{font-size:.68rem;color:var(--muted);margin-top:2px}
+.txn-amount{font-size:.92rem;font-weight:700;flex-shrink:0}
+.txn-amount.expense{color:var(--expense)}
+.txn-amount.income{color:var(--income)}
+.chart-section{padding:12px 16px}
+.cs-title{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:120px}
+.chart-bar{flex:1;background:var(--card);border-radius:6px 6px 0 0;position:relative;min-height:4px;transition:.3s}
+.chart-bar .cb-fill{position:absolute;bottom:0;left:0;right:0;border-radius:6px 6px 0 0;transition:.3s}
+.chart-bar .cb-label{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:.55rem;color:var(--muted)}
+.chart-bar .cb-val{position:absolute;top:-16px;left:0;right:0;text-align:center;font-size:.55rem;color:var(--text);font-weight:600}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h2{font-size:1.1rem;margin-bottom:14px}
+.form-group{margin-bottom:10px}
+.form-label{font-size:.72rem;color:var(--muted);margin-bottom:4px;display:block}
+.form-input,.form-select{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-size:.85rem;font-family:inherit}
+.form-input:focus{outline:none;border-color:var(--p1)}
+.form-row{display:flex;gap:8px}
+.form-row>*{flex:1}
+.type-toggle{display:flex;gap:6px;margin-bottom:12px}
+.type-btn{flex:1;padding:10px;border-radius:10px;border:2px solid;font-size:.82rem;font-weight:600;cursor:pointer;background:transparent}
+.type-btn.expense{border-color:var(--expense);color:var(--expense)}
+.type-btn.income{border-color:var(--income);color:var(--income)}
+.type-btn.active.expense{background:var(--expense);color:#fff}
+.type-btn.active.income{background:var(--income);color:#fff}
+.modal-actions{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;padding:12px;border-radius:10px;font-size:.85rem;font-weight:600;border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+.btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.fab{position:fixed;bottom:16px;right:16px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;color:#fff;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(124,77,255,.4);z-index:90;display:flex;align-items:center;justify-content:center}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 18px;border-radius:20px;font-size:.78rem;z-index:400;opacity:0;transition:.3s}
+.toast.show{opacity:1;bottom:90px}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.empty .emoji{font-size:2.5rem;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="header"><h1>💰 HARZ Expenses</h1></div>
+<div class="balance-card">
+<div class="bc-label">Net Balance</div>
+<div class="bc-amount" id="balance">₦0</div>
+<div class="bc-row">
+<span style="color:#bef264">↑ Income: <span id="totalIncome">₦0</span></span>
+<span style="color:#fca5a5">↓ Expense: <span id="totalExpense">₦0</span></span>
+</div>
+</div>
+<div class="stat-row">
+<div class="stat-card"><div class="stat-num" id="stToday">₦0</div><div class="stat-lbl">Today</div></div>
+<div class="stat-card"><div class="stat-num" id="stWeek">₦0</div><div class="stat-lbl">This Week</div></div>
+<div class="stat-card"><div class="stat-num" id="stMonth">₦0</div><div class="stat-lbl">This Month</div></div>
+<div class="stat-card"><div class="stat-num" id="stCount">0</div><div class="stat-lbl">Entries</div></div>
+</div>
+<div class="chart-section">
+<div class="cs-title">Last 7 Days Spending</div>
+<div class="chart-bars" id="chartBars"></div>
+</div>
+<div class="cat-tabs" id="catTabs"></div>
+<div class="txn-list" id="txnList"></div>
+<button class="fab" onclick="openModal()">+</button>
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<h2 id="modalTitle">Add Transaction</h2>
+<div class="type-toggle">
+<button class="type-btn expense active" id="btnExpense" onclick="setType('expense')">📉 Expense</button>
+<button class="type-btn income" id="btnIncome" onclick="setType('income')">📈 Income</button>
+</div>
+<div class="form-group"><label class="form-label">Description</label><input class="form-input" id="tDesc" placeholder="e.g. Cement purchase, School fees received"></div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Amount (₦)</label><input type="number" class="form-input" id="tAmount" placeholder="0"></div>
+<div class="form-group"><label class="form-label">Category</label>
+<select class="form-select" id="tCat">
+<option value="school">🏫 School</option>
+<option value="farm">🌾 Farm</option>
+<option value="construction">🏗️ Construction</option>
+<option value="business">💼 Business</option>
+<option value="personal">👤 Personal</option>
+</select></div>
+</div>
+<div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="tDate"></div>
+<div class="form-group"><label class="form-label">Notes (optional)</label><input class="form-input" id="tNotes" placeholder="Additional notes"></div>
+<div class="modal-actions">
+<button class="btn btn-danger" id="delBtn" style="display:none" onclick="delTxn()">Delete</button>
+<button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+<button class="btn btn-primary" onclick="saveTxn()">Save</button>
+</div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const catIcons={school:'🏫',farm:'🌾',construction:'🏗️',business:'💼',personal:'👤'};
+let txns=[],activeCat='all',editingId=null,txnType='expense';
+function load(){try{txns=JSON.parse(localStorage.getItem('harz_expenses')||'[]')}catch(e){txns=[]}}
+function save(){localStorage.setItem('harz_expenses',JSON.stringify(txns))}
+function naira(n){return '₦'+Number(n||0).toLocaleString('en-NG')}
+function fmt(d){return d.toISOString().split('T')[0]}
+function seed(){
+if(txns.length>0)return;
+const today=new Date();
+const s=[
+{type:'expense',desc:'Cement (200 bags)',amount:1500000,cat:'construction',date:fmt(today),notes:'Wuse duplex project'},
+{type:'expense',desc:'Fertilizer NPK',amount:28000,cat:'farm',date:fmt(today),notes:'5 bags'},
+{type:'expense',desc:'Staff salary — school',amount:350000,cat:'school',date:fmt(today),notes:'Monthly salary'},
+{type:'income',desc:'School fees — JSS2',amount:80000,cat:'school',date:fmt(today),notes:'Malam Musa Bello'},
+{type:'expense',desc:'Pesticide spray',amount:25000,cat:'farm',date:fmt(new Date(today.getTime()-86400000*1)),notes:''},
+{type:'income',desc:'Construction payment',amount:2250000,cat:'construction',date:fmt(new Date(today.getTime()-86400000*2)),notes:'50% advance — Wuse'},
+{type:'expense',desc:'Tomato crates (50)',amount:225000,cat:'farm',date:fmt(new Date(today.getTime()-86400000*3)),notes:''},
+{type:'expense',desc:'Fuel for generator',amount:45000,cat:'business',date:fmt(new Date(today.getTime()-86400000*3)),notes:''},
+{type:'income',desc:'HarzDM product sales',amount:40000,cat:'business',date:fmt(new Date(today.getTime()-86400000*4)),notes:'2 products'},
+{type:'expense',desc:'Roofing sheets',amount:200000,cat:'construction',date:fmt(new Date(today.getTime()-86400000*5)),notes:'Gwarimpa renovation'},
+{type:'expense',desc:'Cattle feed',amount:96000,cat:'farm',date:fmt(new Date(today.getTime()-86400000*6)),notes:'8 bags'},
+];
+s.forEach(t=>{t.id=Math.random().toString(36).substr(2,9);txns.push(t)});
+save();
+}
+function render(){
+const income=txns.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+const expense=txns.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+document.getElementById('balance').textContent=naira(income-expense);
+document.getElementById('totalIncome').textContent=naira(income);
+document.getElementById('totalExpense').textContent=naira(expense);
+const today=fmt(new Date());
+const weekAgo=fmt(new Date(Date.now()-86400000*7));
+document.getElementById('stToday').textContent=naira(txns.filter(t=>t.date===today&&t.type==='expense').reduce((s,t)=>s+t.amount,0));
+document.getElementById('stWeek').textContent=naira(txns.filter(t=>t.date>=weekAgo&&t.type==='expense').reduce((s,t)=>s+t.amount,0));
+document.getElementById('stMonth').textContent=naira(txns.filter(t=>t.date.slice(0,7)===today.slice(0,7)&&t.type==='expense').reduce((s,t)=>s+t.amount,0));
+document.getElementById('stCount').textContent=txns.length;
+// Chart
+let chartHtml='';
+for(let i=6;i>=0;i--){
+const d=fmt(new Date(Date.now()-86400000*i));
+const dayExp=txns.filter(t=>t.date===d&&t.type==='expense').reduce((s,t)=>s+t.amount,0);
+const days=['S','M','T','W','T','F','S'];
+const dd=new Date(d);
+const maxExp=Math.max(...[...Array(7)].map((_,j)=>txns.filter(t=>t.date===fmt(new Date(Date.now()-86400000*(6-j)))&&t.type==='expense').reduce((s,t)=>s+t.amount,0)),1);
+const hPct=Math.max(4,(dayExp/maxExp)*100);
+const label=dayExp>0?(dayExp/1000).toFixed(0)+'K':'';
+chartHtml+=`<div class="chart-bar"><div class="cb-val">${label}</div><div class="cb-fill" style="height:${hPct}%;background:linear-gradient(180deg,var(--expense),rgba(239,68,68,.3))"></div><div class="cb-label">${days[dd.getDay()]}</div></div>`;
+}
+document.getElementById('chartBars').innerHTML=chartHtml;
+// Category tabs
+const cats=['all',...Object.keys(catIcons)];
+document.getElementById('catTabs').innerHTML=cats.map(c=>`<div class="cat-tab ${activeCat===c?'active':''}" onclick="setCat('${c}')">${c==='all'?'All':catIcons[c]+' '+c.charAt(0).toUpperCase()+c.slice(1)}</div>`).join('');
+// List
+const filtered=activeCat==='all'?txns:txns.filter(t=>t.cat===activeCat);
+const list=document.getElementById('txnList');
+if(filtered.length===0){list.innerHTML='<div class="empty"><div class="emoji">💰</div><p>No transactions. Tap + to add.</p></div>';return}
+list.innerHTML=filtered.sort((a,b)=>b.date.localeCompare(a.date)).map(t=>{
+const icon=t.type==='expense'?'📉':'📈';
+return `<div class="txn-card" onclick="editTxn('${t.id}')">
+<div class="txn-icon ${t.type}">${catIcons[t.cat]||'💰'}</div>
+<div class="txn-info">
+<div class="txn-title">${esc(t.desc)}</div>
+<div class="txn-meta">${t.cat} · ${new Date(t.date).toLocaleDateString('en-NG',{month:'short',day:'numeric'})}${t.notes?' · '+esc(t.notes):''}</div>
+</div>
+<div class="txn-amount ${t.type}">${t.type==='expense'?'-':'+'}${naira(t.amount)}</div>
+</div>`}).join('');
+}
+function setCat(c){activeCat=c;render()}
+function setType(t){txnType=t;document.getElementById('btnExpense').classList.toggle('active',t==='expense');document.getElementById('btnIncome').classList.toggle('active',t==='income')}
+function openModal(){editingId=null;document.getElementById('modalTitle').textContent='Add Transaction';setType('expense');document.getElementById('tDesc').value='';document.getElementById('tAmount').value='';document.getElementById('tCat').value='school';document.getElementById('tDate').value=fmt(new Date());document.getElementById('tNotes').value='';document.getElementById('delBtn').style.display='none';document.getElementById('modalOverlay').classList.add('show')}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show')}
+function editTxn(id){const t=txns.find(x=>x.id===id);if(!t)return;editingId=id;document.getElementById('modalTitle').textContent='Edit Transaction';setType(t.type);document.getElementById('tDesc').value=t.desc;document.getElementById('tAmount').value=t.amount;document.getElementById('tCat').value=t.cat;document.getElementById('tDate').value=t.date;document.getElementById('tNotes').value=t.notes||'';document.getElementById('delBtn').style.display='block';document.getElementById('modalOverlay').classList.add('show')}
+function saveTxn(){const desc=document.getElementById('tDesc').value.trim();if(!desc){showToast('Enter description');return}
+const data={type:txnType,desc,amount:parseInt(document.getElementById('tAmount').value)||0,cat:document.getElementById('tCat').value,date:document.getElementById('tDate').value,notes:document.getElementById('tNotes').value.trim()};
+if(editingId){Object.assign(txns.find(t=>t.id===editingId),data)}else{data.id=Math.random().toString(36).substr(2,9);txns.push(data)}
+save();closeModal();render();showToast('Saved ✓')}
+function delTxn(){if(!editingId)return;if(confirm('Delete this transaction?')){txns=txns.filter(t=>t.id!==editingId);save();closeModal();render();showToast('Deleted')}}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+load();seed();render();
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target.id==='modalOverlay')closeModal()});
+</script>
+</body>
+</html>
