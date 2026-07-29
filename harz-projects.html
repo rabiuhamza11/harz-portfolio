@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Project Manager — Construction Tracker</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--p1:#7c4dff;--p2:#5362f6;--p3:#00d4aa;--planning:#f59e0b;--active:#3b82f6;--completed:#22c55e;--onhold:#8b949e}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:70px}
+.header{position:sticky;top:0;background:rgba(13,17,23,.95);backdrop-filter:blur(12px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-actions{display:flex;gap:6px}
+.header-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:8px;font-size:.72rem;cursor:pointer}
+.stat-row{display:flex;gap:8px;padding:12px 16px}
+.stat-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.stat-card .stat-num{font-size:1.1rem;font-weight:700}
+.stat-card .stat-lbl{font-size:.58rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.filter-tabs{display:flex;gap:6px;padding:0 16px 10px;overflow-x:auto}
+.filter-tab{padding:6px 14px;border-radius:20px;font-size:.72rem;font-weight:600;white-space:nowrap;background:var(--card);border:1px solid var(--border);cursor:pointer}
+.filter-tab.active{background:linear-gradient(135deg,var(--p1),var(--p2));border-color:transparent;color:#fff}
+.proj-list{padding:0 16px}
+.proj-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer;transition:.2s}
+.proj-card:active{transform:scale(.98)}
+.proj-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.proj-name{font-size:.92rem;font-weight:700}
+.proj-status{padding:3px 10px;border-radius:10px;font-size:.6rem;font-weight:700;text-transform:uppercase}
+.proj-status.planning{background:rgba(245,158,11,.15);color:var(--planning)}
+.proj-status.active{background:rgba(59,130,246,.15);color:var(--active)}
+.proj-status.completed{background:rgba(34,197,94,.15);color:var(--completed)}
+.proj-status.onhold{background:rgba(139,148,158,.15);color:var(--onhold)}
+.proj-client{font-size:.78rem;color:var(--muted);margin-bottom:8px}
+.proj-meta{display:flex;gap:14px;font-size:.7rem;color:var(--muted);margin-bottom:8px}
+.proj-meta span{display:flex;align-items:center;gap:3px}
+.progress-bar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;border-radius:3px;transition:.3s}
+.proj-bottom{display:flex;justify-content:space-between;align-items:center}
+.proj-budget{font-size:.82rem;font-weight:700;color:var(--p3)}
+.proj-progress-text{font-size:.68rem;color:var(--muted)}
+/* Detail view */
+.detail-view{display:none;padding:0 16px}
+.detail-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back-btn{background:var(--card);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:8px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.detail-title{font-size:1.1rem;font-weight:700;flex:1}
+.detail-section{margin-bottom:16px}
+.ds-title{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px}
+.info-card .ic-label{font-size:.6rem;color:var(--muted);text-transform:uppercase}
+.info-card .ic-value{font-size:.82rem;font-weight:600;margin-top:2px}
+.phase-list{display:flex;flex-direction:column;gap:6px}
+.phase-item{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px}
+phase-checkbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.phase-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.8rem;transition:.2s}
+.phase-check.done{background:var(--completed);border-color:var(--completed);color:#fff}
+.phase-check:not(.done):active{transform:scale(.9)}
+.phase-info{flex:1}
+.phase-name{font-size:.82rem;font-weight:600}
+.phase-date{font-size:.65rem;color:var(--muted)}
+.phase-cost{font-size:.78rem;font-weight:600;color:var(--p3);flex-shrink:0}
+.team-list{display:flex;flex-direction:column;gap:6px}
+.team-item{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px}
+.team-avatar{width:36px;height:36px;border-radius:50%;background:rgba(124,77,255,.15);color:var(--p1);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.team-info{flex:1}
+.team-name{font-size:.82rem;font-weight:600}
+.team-role{font-size:.68rem;color:var(--muted)}
+.team-phone{font-size:.72rem;color:var(--p2)}
+.material-list{display:flex;flex-direction:column;gap:4px}
+.material-item{display:flex;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:.75rem}
+.material-item .mi-qty{color:var(--muted)}
+.material-item .mi-cost{font-weight:600;color:var(--p3)}
+.note-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.78rem;line-height:1.6;color:var(--text);white-space:pre-wrap}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h2{font-size:1.1rem;margin-bottom:14px}
+.form-group{margin-bottom:10px}
+.form-label{font-size:.72rem;color:var(--muted);margin-bottom:4px;display:block}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-size:.85rem;font-family:inherit}
+.form-input:focus{outline:none;border-color:var(--p1)}
+.form-row{display:flex;gap:8px}
+.form-row>*{flex:1}
+.modal-actions{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;padding:12px;border-radius:10px;font-size:.85rem;font-weight:600;border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+.btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.fab{position:fixed;bottom:16px;right:16px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));border:none;color:#fff;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(124,77,255,.4);z-index:90;display:flex;align-items:center;justify-content:center}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 18px;border-radius:20px;font-size:.78rem;z-index:400;opacity:0;transition:.3s}
+.toast.show{opacity:1;bottom:90px}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.empty .emoji{font-size:2.5rem;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🏗️ HARZ Projects</h1>
+<div class="header-actions">
+<button class="header-btn" onclick="switchView('list')" id="listViewBtn">List</button>
+</div>
+</div>
+<div class="stat-row">
+<div class="stat-card"><div class="stat-num" id="stTotal">0</div><div class="stat-lbl">Projects</div></div>
+<div class="stat-card"><div class="stat-num" id="stActive" style="color:var(--active)">0</div><div class="stat-lbl">Active</div></div>
+<div class="stat-card"><div class="stat-num" id="stBudget" style="color:var(--p3)">₦0</div><div class="stat-lbl">Total Budget</div></div>
+<div class="stat-card"><div class="stat-num" id="stDone" style="color:var(--completed)">0</div><div class="stat-lbl">Completed</div></div>
+</div>
+<div class="filter-tabs" id="filterTabs">
+<div class="filter-tab active" onclick="setFilter('all')">All</div>
+<div class="filter-tab" onclick="setFilter('planning')">Planning</div>
+<div class="filter-tab" onclick="setFilter('active')">Active</div>
+<div class="filter-tab" onclick="setFilter('completed')">Completed</div>
+<div class="filter-tab" onclick="setFilter('onhold')">On Hold</div>
+</div>
+<div id="listView">
+<div class="proj-list" id="projList"></div>
+</div>
+<div id="detailView" class="detail-view"></div>
+<button class="fab" onclick="openModal()">+</button>
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<h2 id="modalTitle">New Project</h2>
+<div class="form-group"><label class="form-label">Project Name</label><input class="form-input" id="pName" placeholder="e.g. Wuse Duplex, Gwarimpa Renovation"></div>
+<div class="form-group"><label class="form-label">Client Name</label><input class="form-input" id="pClient" placeholder="Client / Company"></div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Type</label>
+<select class="form-select" id="pType">
+<option value="residential">🏠 Residential</option>
+<option value="commercial">🏢 Commercial</option>
+<option value="renovation">🔧 Renovation</option>
+<option value="infrastructure">🛣️ Infrastructure</option>
+<option value="design">📐 Design Only</option>
+</select></div>
+<div class="form-group"><label class="form-label">Status</label>
+<select class="form-select" id="pStatus">
+<option value="planning">Planning</option>
+<option value="active">Active</option>
+<option value="completed">Completed</option>
+<option value="onhold">On Hold</option>
+</select></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Budget (₦)</label><input type="number" class="form-input" id="pBudget" placeholder="0"></div>
+<div class="form-group"><label class="form-label">Progress (%)</label><input type="number" class="form-input" id="pProgress" value="0" min="0" max="100"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Start Date</label><input type="date" class="form-input" id="pStart"></div>
+<div class="form-group"><label class="form-label">End Date</label><input type="date" class="form-input" id="pEnd"></div>
+</div>
+<div class="form-group"><label class="form-label">Location</label><input class="form-input" id="pLocation" placeholder="e.g. Wuse II, Abuja"></div>
+<div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="pNotes" placeholder="Project details, scope, special requirements..." style="resize:vertical;min-height:60px"></textarea></div>
+<div class="modal-actions">
+<button class="btn btn-danger" id="delBtn" style="display:none" onclick="delProject()">Delete</button>
+<button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+<button class="btn btn-primary" onclick="saveProject()">Save</button>
+</div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const typeLabels={residential:'Residential',commercial:'Commercial',renovation:'Renovation',infrastructure:'Infrastructure',design:'Design'};
+const typeIcons={residential:'🏠',commercial:'🏢',renovation:'🔧',infrastructure:'🛣️',design:'📐'};
+const statusColors={planning:'#f59e0b',active:'#3b82f6',completed:'#22c55e',onhold:'#8b949e'};
+const defaultPhases=[
+{name:'Site Survey & Layout',cost:50000},
+{name:'Foundation',cost:200000},
+{name:'Block Work',cost:300000},
+{name:'Roofing',cost:250000},
+{name:'Plastering',cost:150000},
+{name:'Electrical & Plumbing',cost:200000},
+{name:'Finishing & Painting',cost:180000},
+{name:'Handover',cost:20000}
+];
+let projects=[],activeFilter='all',editingId=null,currentView='list',detailId=null;
+function load(){try{projects=JSON.parse(localStorage.getItem('harz_projects')||'[]')}catch(e){projects=[]}}
+function save(){localStorage.setItem('harz_projects',JSON.stringify(projects))}
+function fmt(d){return d?new Date(d).toLocaleDateString('en-NG',{month:'short',day:'numeric',year:'numeric'}):'--'}
+function naira(n){return '₦'+Number(n||0).toLocaleString('en-NG')}
+function seed(){
+if(projects.length>0)return;
+const today=new Date();
+const s=[
+{
+name:'Wuse II Duplex',client:'Engr. Sani Garba',type:'residential',status:'active',budget:4500000,progress:45,
+startDate:fmt(new Date(today.getTime()-86400000*60)),endDate:fmt(new Date(today.getTime()+86400000*90)),
+location:'Wuse II, Abuja',notes:'4-bedroom duplex with BQ. 2 floors. Modern design with open kitchen.',
+phases:defaultPhases.map((p,i)=>({...p,done:i<3})),
+team:[{name:'Malam Audu',role:'Site Engineer',phone:'08033333222'},{name:'Ibrahim Sani',role:'Mason',phone:'08055554444'},{name:'Yusuf Bello',role:'Electrician',phone:'08077776666'}],
+materials:[{name:'Cement (50kg)',qty:200,unit:'bags',cost:1500000},{name:'Sand',qty:5,unit:'trips',cost:350000},{name:'Granite',qty:3,unit:'trips',cost:450000},{name:'Blocks (9in)',qty:2000,unit:'pieces',cost:600000}]
+},
+{
+name:'Gwarimpa Renovation',client:'Mrs. Grace Okoro',type:'renovation',status:'active',budget:2800000,progress:25,
+startDate:fmt(new Date(today.getTime()-86400000*20)),endDate:fmt(new Date(today.getTime()+86400000*60)),
+location:'Gwarimpa, Abuja',notes:'Complete interior renovation — 5 bedrooms, 4 bathrooms, kitchen, living areas.',
+phases:[
+{name:'Demolition',cost:100000,done:true},
+{name:'Electrical Rewiring',cost:350000,done:true},
+{name:'Plumbing',cost:250000,done:false},
+{name:'Tiling',cost:400000,done:false},
+{name:'Painting',cost:200000,done:false},
+{name:'Fixtures & Fittings',cost:500000,done:false},
+{name:'Final Inspection',cost:0,done:false}
+],
+team:[{name:'Chidi Okafor',role:'Foreman',phone:'08088889999'},{name:'Musa Ibrahim',role:'Tiler',phone:'08066667777'}],
+materials:[{name:'Tiles (porcelain)',qty:300,unit:'boxes',cost:900000},{name:'Paint',qty:40,unit:'gallons',cost:320000},{name:'Pipes & Fittings',qty:1,unit:'set',cost:180000}]
+},
+{
+name:'Danfodio School Extension',client:'Danfodio Memorial Academy',type:'commercial',status:'planning',budget:3500000,progress:5,
+startDate:fmt(new Date(today.getTime()+86400000*15)),endDate:fmt(new Date(today.getTime()+86400000*120)),
+location:'Kano',notes:'New classroom block — 6 rooms, admin office, and library. 2-story building.',
+phases:defaultPhases.map(p=>({...p,done:false})),
+team:[{name:'Malam Kabiru',role:'Headmaster',phone:'08066666777'}],
+materials:[]
+},
+{
+name:'Zaria Farm Store',client:'Alhaji Tanko Ibrahim',type:'commercial',status:'completed',budget:1200000,progress:100,
+startDate:fmt(new Date(today.getTime()-86400000*150)),endDate:fmt(new Date(today.getTime()-86400000*10)),
+location:'Zaria, Kaduna',notes:'Storage facility for farm produce. 200 sqm with cold storage section.',
+phases:defaultPhases.map(p=>({...p,done:true})),
+team:[{name:'Alhaji Tanko',role:'Owner',phone:'08011223344'}],
+materials:[{name:'Cement',qty:80,unit:'bags',cost:600000},{name:'Roofing Sheets',qty:50,unit:'pieces',cost:200000}]
+}
+];
+s.forEach(p=>{p.id=Math.random().toString(36).substr(2,9);p.created=new Date().toISOString();projects.push(p)});
+save();
+}
+function renderList(){
+const filtered=activeFilter==='all'?projects:projects.filter(p=>p.status===activeFilter);
+const totalBudget=projects.reduce((s,p)=>s+(p.budget||0),0);
+document.getElementById('stTotal').textContent=projects.length;
+document.getElementById('stActive').textContent=projects.filter(p=>p.status==='active').length;
+document.getElementById('stBudget').textContent='₦'+(totalBudget/1000000).toFixed(1)+'M';
+document.getElementById('stDone').textContent=projects.filter(p=>p.status==='completed').length;
+document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+[...document.querySelectorAll('.filter-tab')].forEach((t,i)=>{if(['all','planning','active','completed','onhold'][i]===activeFilter)t.classList.add('active')});
+const list=document.getElementById('projList');
+if(filtered.length===0){list.innerHTML='<div class="empty"><div class="emoji">🏗️</div><p>No projects yet. Tap + to create one.</p></div>';return}
+list.innerHTML=filtered.sort((a,b)=>{const order={active:0,planning:1,onhold:2,completed:3};return(order[a.status]||0)-(order[b.status]||0)}).map(p=>{
+const fillColor=statusColors[p.status];
+return `<div class="proj-card" onclick="showDetail('${p.id}')">
+<div class="proj-top">
+<div class="proj-name">${typeIcons[p.type]||'🏗️'} ${esc(p.name)}</div>
+<div class="proj-status ${p.status}">${p.status}</div>
+</div>
+<div class="proj-client">${esc(p.client)} · ${p.location||'--'}</div>
+<div class="proj-meta">
+<span>📅 ${fmt(p.startDate)}</span>
+<span>⏳ ${fmt(p.endDate)}</span>
+<span>👥 ${(p.team||[]).length} staff</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" style="width:${p.progress||0}%;background:${fillColor}"></div></div>
+<div class="proj-bottom">
+<div class="proj-budget">${naira(p.budget)}</div>
+<div class="proj-progress-text">${p.progress||0}% complete</div>
+</div>
+</div>`}).join('');
+}
+function showDetail(id){
+detailId=id;currentView='detail';
+const p=projects.find(x=>x.id===id);if(!p)return;
+document.getElementById('listView').style.display='none';
+document.getElementById('detailView').style.display='block';
+const phases=p.phases||[];
+const donePhases=phases.filter(ph=>ph.done).length;
+const team=p.team||[];
+const materials=p.materials||[];
+const matTotal=materials.reduce((s,m)=>s+(m.cost||0),0);
+document.getElementById('detailView').innerHTML=`
+<div class="detail-header">
+<button class="back-btn" onclick="backToList()">‹</button>
+<div class="detail-title">${typeIcons[p.type]||'🏗️'} ${esc(p.name)}</div>
+<span class="proj-status ${p.status}">${p.status}</span>
+</div>
+<div class="detail-section">
+<div class="ds-title">Project Info</div>
+<div class="info-grid">
+<div class="info-card"><div class="ic-label">Client</div><div class="ic-value">${esc(p.client)}</div></div>
+<div class="info-card"><div class="ic-label">Type</div><div class="ic-value">${typeLabels[p.type]}</div></div>
+<div class="info-card"><div class="ic-label">Budget</div><div class="ic-value" style="color:var(--p3)">${naira(p.budget)}</div></div>
+<div class="info-card"><div class="ic-label">Progress</div><div class="ic-value">${p.progress||0}%</div></div>
+<div class="info-card"><div class="ic-label">Start Date</div><div class="ic-value" style="font-size:.78rem">${fmt(p.startDate)}</div></div>
+<div class="info-card"><div class="ic-label">End Date</div><div class="ic-value" style="font-size:.78rem">${fmt(p.endDate)}</div></div>
+<div class="info-card"><div class="ic-label">Location</div><div class="ic-value">${esc(p.location||'--')}</div></div>
+<div class="info-card"><div class="ic-label">Phases Done</div><div class="ic-value">${donePhases}/${phases.length}</div></div>
+</div>
+</div>
+<div class="detail-section">
+<div class="ds-title">Construction Phases (${donePhases}/${phases.length} completed)</div>
+<div class="phase-list" id="phaseList">
+${phases.map((ph,i)=>`<div class="phase-item">
+<div class="phase-check ${ph.done?'done':''}" onclick="togglePhase('${p.id}',${i})">${ph.done?'✓':''}</div>
+<div class="phase-info"><div class="phase-name">${esc(ph.name)}</div></div>
+<div class="phase-cost">${naira(ph.cost)}</div>
+</div>`).join('')}
+</div>
+</div>
+<div class="detail-section">
+<div class="ds-title">Team (${team.length})</div>
+<div class="team-list">
+${team.map(t=>`<div class="team-item">
+<div class="team-avatar">${initials(t.name)}</div>
+<div class="team-info"><div class="team-name">${esc(t.name)}</div><div class="team-role">${esc(t.role)}</div></div>
+<a href="tel:${t.phone}" style="text-decoration:none"><div class="team-phone">📞 ${t.phone}</div></a>
+</div>`).join('')}
+${team.length===0?'<div style="font-size:.75rem;color:var(--muted);padding:8px">No team members added.</div>':''}
+</div>
+</div>
+<div class="detail-section">
+<div class="ds-title">Materials (${materials.length} items · ${naira(matTotal)})</div>
+<div class="material-list">
+${materials.map(m=>`<div class="material-item"><span>${esc(m.name)}</span><span class="mi-qty">${m.qty} ${m.unit}</span><span class="mi-cost">${naira(m.cost)}</span></div>`).join('')}
+${materials.length===0?'<div style="font-size:.75rem;color:var(--muted);padding:8px">No materials listed.</div>':''}
+</div>
+</div>
+<div class="detail-section">
+<div class="ds-title">Notes</div>
+<div class="note-box">${esc(p.notes||'No notes added.')}</div>
+</div>
+<div style="margin-top:14px;display:flex;gap:8px">
+<button class="btn btn-cancel" onclick="editProject('${p.id}')">✏️ Edit</button>
+<button class="btn btn-primary" onclick="backToList()">Back</button>
+</div>
+`;
+}
+function togglePhase(projId,phaseIdx){
+const p=projects.find(x=>x.id===projId);if(!p||!p.phases)return;
+p.phases[phaseIdx].done=!p.phases[phaseIdx].done;
+const doneCount=p.phases.filter(ph=>ph.done).length;
+p.progress=Math.round((doneCount/p.phases.length)*100);
+save();
+showDetail(projId);
+}
+function backToList(){currentView='list';detailId=null;document.getElementById('listView').style.display='block';document.getElementById('detailView').style.display='none';renderList()}
+function switchView(v){if(v==='list')backToList()}
+function setFilter(f){activeFilter=f;renderList()}
+function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+function openModal(){editingId=null;document.getElementById('modalTitle').textContent='New Project';['pName','pClient','pBudget','pLocation','pNotes'].forEach(i=>document.getElementById(i).value='');document.getElementById('pType').value='residential';document.getElementById('pStatus').value='planning';document.getElementById('pProgress').value='0';document.getElementById('pStart').value=new Date().toISOString().split('T')[0];document.getElementById('pEnd').value='';document.getElementById('delBtn').style.display='none';document.getElementById('modalOverlay').classList.add('show')}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show')}
+function editProject(id){
+const p=projects.find(x=>x.id===id);if(!p)return;editingId=id;
+document.getElementById('modalTitle').textContent='Edit Project';
+document.getElementById('pName').value=p.name;
+document.getElementById('pClient').value=p.client;
+document.getElementById('pType').value=p.type;
+document.getElementById('pStatus').value=p.status;
+document.getElementById('pBudget').value=p.budget||0;
+document.getElementById('pProgress').value=p.progress||0;
+document.getElementById('pStart').value=p.startDate?new Date(p.startDate).toISOString().split('T')[0]:'';
+document.getElementById('pEnd').value=p.endDate?new Date(p.endDate).toISOString().split('T')[0]:'';
+document.getElementById('pLocation').value=p.location||'';
+document.getElementById('pNotes').value=p.notes||'';
+document.getElementById('delBtn').style.display='block';
+document.getElementById('modalOverlay').classList.add('show');
+}
+function saveProject(){
+const name=document.getElementById('pName').value.trim();
+if(!name){showToast('Enter project name');return}
+const data={
+name,client:document.getElementById('pClient').value.trim(),
+type:document.getElementById('pType').value,
+status:document.getElementById('pStatus').value,
+budget:parseInt(document.getElementById('pBudget').value)||0,
+progress:parseInt(document.getElementById('pProgress').value)||0,
+startDate:document.getElementById('pStart').value,
+endDate:document.getElementById('pEnd').value,
+location:document.getElementById('pLocation').value.trim(),
+notes:document.getElementById('pNotes').value.trim()
+};
+if(editingId){const p=projects.find(x=>x.id===editingId);Object.assign(p,data)}else{data.id=Math.random().toString(36).substr(2,9);data.phases=defaultPhases.map(p=>({...p,done:false}));data.team=[];data.materials=[];data.created=new Date().toISOString();projects.push(data)}
+save();closeModal();if(currentView==='detail'&&detailId)showDetail(detailId);else renderList();showToast('Project saved ✓')}
+function delProject(){if(!editingId)return;if(confirm('Delete this project?')){projects=projects.filter(p=>p.id!==editingId);save();closeModal();backToList();showToast('Deleted')}}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+load();seed();renderList();
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target.id==='modalOverlay')closeModal()});
+</script>
+</body>
+</html>
