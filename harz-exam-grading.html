@@ -19,12 +19,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .stat-card .stat-lbl{font-size:.56rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
 .section-title{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:8px 16px 4px;font-weight:600}
 .exam-list,.student-list{padding:0 16px}
-.exam-card,.student-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;transition:.2s}
-.exam-card:active,.student-card:active{transform:scale(.98)}
+.exam-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;transition:.2s}
+.exam-card:active{transform:scale(.98)}
+.exam-actions{display:flex;gap:6px;margin-top:8px}
+.exam-btn{flex:1;padding:8px;border-radius:8px;font-size:.72rem;font-weight:600;border:none;cursor:pointer;text-align:center}
+.exam-btn.grade{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.exam-btn.paper{background:rgba(0,212,170,.12);color:var(--p3);border:1px solid rgba(0,212,170,.3)}
+.exam-btn.del{background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+.student-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:10px}
+.student-card:active{transform:scale(.98)}
 .exam-name{font-size:.88rem;font-weight:700;margin-bottom:4px}
 .exam-meta{font-size:.68rem;color:var(--muted)}
 .exam-class{display:inline-block;padding:2px 8px;border-radius:10px;background:rgba(124,77,255,.12);color:var(--p1);font-size:.62rem;font-weight:600;margin-top:4px}
-.student-card{display:flex;align-items:center;gap:10px}
 .avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0}
 .s-info{flex:1;min-width:0}
 .s-name{font-size:.85rem;font-weight:600}
@@ -39,11 +45,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .subject-row .sr-name{flex:1;font-size:.82rem;font-weight:600}
 .subject-row input{width:70px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;text-align:center;font-size:.85rem;font-weight:600}
 .subject-row input:focus{outline:none;border-color:var(--p1)}
-.result-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:0 16px 16px}
-.result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.8rem}
-.result-row:last-child{border:none}
-.result-row .rr-subj{color:var(--muted)}
-.result-row .rr-score{font-weight:600}
 .student-grade-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin:0 16px 12px}
 .sgc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .sgc-name{font-size:.92rem;font-weight:700}
@@ -61,6 +62,31 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .rc-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;font-size:.75rem}
 .rc-info .rc-lbl{color:var(--muted)}
 .rc-info .rc-val{font-weight:600}
+.result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.result-row:last-child{border:none}
+.result-row .rr-subj{color:var(--muted)}
+.result-row .rr-score{font-weight:600}
+/* Exam Paper View */
+.paper-header{text-align:center;padding:20px 16px;border-bottom:2px solid var(--border);margin-bottom:16px}
+.paper-header .ph-school{font-size:1.1rem;font-weight:700}
+.paper-header .ph-sub{font-size:.78rem;color:var(--muted);margin:4px 0}
+.paper-header .ph-exam{font-size:.92rem;font-weight:600;background:linear-gradient(135deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-top:8px}
+.paper-info{display:flex;justify-content:space-around;padding:10px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin:0 16px 16px;font-size:.72rem}
+.paper-info .pi-item{text-align:center}
+.paper-info .pi-lbl{color:var(--muted);font-size:.6rem;text-transform:uppercase}
+.paper-info .pi-val{font-weight:600;margin-top:2px}
+.paper-subject{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:0 16px 20px}
+.paper-subject-title{font-size:.92rem;font-weight:700;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
+.paper-subject-title .pst-marks{font-size:.72rem;color:var(--p3)}
+.paper-question{padding:10px 0;border-bottom:1px solid var(--border)}
+.paper-question:last-child{border:none}
+.pq-num{font-weight:700;font-size:.82rem;margin-bottom:4px}
+.pq-text{font-size:.82rem;line-height:1.5;margin-bottom:6px}
+.pq-options{display:flex;flex-direction:column;gap:4px;padding-left:16px}
+.pq-option{font-size:.78rem;color:var(--muted);display:flex;gap:6px}
+.pq-option .po-letter{font-weight:600;color:var(--text)}
+.pq-answer-line{border-bottom:1px dashed var(--border);height:24px;margin:4px 0}
+.print-btn{display:block;width:calc(100% - 32px);margin:16px auto;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;font-size:.88rem;font-weight:700;cursor:pointer}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.show{display:flex}
 .modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease}
@@ -83,10 +109,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .empty .emoji{font-size:2.5rem;margin-bottom:8px}
 .back-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:8px;font-size:.72rem;cursor:pointer}
 .auto-btn{background:rgba(0,212,170,.12);color:var(--p3);border:1px solid rgba(0,212,170,.3);padding:8px 14px;border-radius:10px;font-size:.78rem;font-weight:600;cursor:pointer}
-.auto-btn:active{transform:scale(.95)}
 .subj-checkbox{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .subj-chip{font-size:.75rem;cursor:pointer;background:var(--card);padding:6px 10px;border-radius:8px;border:1px solid var(--border);display:inline-flex;align-items:center;gap:4px;transition:.2s}
 .subj-chip.checked{background:rgba(124,77,255,.12);border-color:var(--p1);color:var(--p1)}
+@media print{body{background:#fff;color:#000}body *{visibility:hidden}.print-area,.print-area *{visibility:visible}.print-area{position:absolute;left:0;top:0;width:100%}.no-print{display:none}}
 </style>
 </head>
 <body>
@@ -103,7 +129,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div class="stat-card"><div class="stat-num" id="stAvg" style="color:var(--p3)">--</div><div class="stat-lbl">Avg Score</div></div>
 <div class="stat-card"><div class="stat-num" id="stPass" style="color:var(--pass)">0%</div><div class="stat-lbl">Pass Rate</div></div>
 </div>
-<div class="section-title">Created Exams — Tap to Grade</div>
+<div class="section-title">Exams — Tap to View Paper or Grade</div>
 <div class="exam-list" id="examList"></div>
 </div>
 <div id="studentsView" style="display:none">
@@ -115,6 +141,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div id="reportList" style="padding:0 16px"></div>
 </div>
 <div id="gradeView" style="display:none"></div>
+<div id="paperView" style="display:none"></div>
 <button class="fab" onclick="openModal()" id="fabBtn">+</button>
 <div class="modal-overlay" id="modalOverlay">
 <div class="modal">
@@ -124,17 +151,434 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const subjects=['Mathematics','English','Basic Science','Social Studies','Civic Education','Computer Studies','Agric Science','Hausa','Islamic Studies','CRS'];
-const classOptions=['Nursery','Pry 1','Pry 2','Pry 3','Pry 4','Pry 5','Pry 6','JSS 1','JSS 2','JSS 3','SSS 1','SSS 2','SSS 3'];
-let exams=[],students=[],currentView='exams',gradeExamId=null,editingId=null;
+// Question Bank — auto-generates exam papers
+var questionBank={
+'Mathematics':{
+primary:[
+{type:'mcq',q:'What is 25 + 37?',options:['52','62','72','82'],answer:1},
+{type:'mcq',q:'How many minutes are in 2 hours?',options:['60','100','120','200'],answer:2},
+{type:'mcq',q:'What is 8 × 7?',options:['54','56','64','48'],answer:1},
+{type:'mcq',q:'What is 144 ÷ 12?',options:['10','11','12','14'],answer:2},
+{type:'mcq',q:'What is 3/4 + 1/4?',options:['1/2','3/4','1','1 1/4'],answer:2},
+{type:'short',q:'Find the perimeter of a rectangle with length 12cm and width 8cm.'},
+{type:'short',q:'A trader bought 5 crates of eggs at ₦4,500 each. How much did he spend?'},
+{type:'short',q:'What is the place value of 5 in 45,327?'},
+{type:'mcq',q:'Which number is the largest?',options:['0.5','0.45','0.505','0.55'],answer:3},
+{type:'short',q:'Convert 2.5kg to grams.'}
+],
+junior:[
+{type:'mcq',q:'Solve: 2x + 5 = 17. x = ?',options:['4','5','6','7'],answer:2},
+{type:'mcq',q:'What is the square root of 169?',options:['11','12','13','14'],answer:2},
+{type:'mcq',q:'Find the area of a circle with radius 7cm (π=22/7).',options:['154cm²','144cm²','164cm²','134cm²'],answer:0},
+{type:'short',q:'Simplify: 3(x-2) + 2(x+1)'},
+{type:'short',q:'A car travels 240km in 4 hours. What is its speed?'},
+{type:'mcq',q:'What is 15% of 200?',options:['15','25','30','35'],answer:2},
+{type:'short',q:'Find the volume of a cuboid with length 10cm, width 5cm, height 4cm.'},
+{type:'mcq',q:'Which is a prime number?',options:['21','27','29','33'],answer:2},
+{type:'short',q:'Solve the simultaneous equation: x + y = 7, x - y = 3.'},
+{type:'mcq',q:'What is the value of 2³ × 2²?',options:['16','32','64','128'],answer:1}
+],
+senior:[
+{type:'mcq',q:'If log₂(x) = 5, find x.',options:['10','25','32','50'],answer:2},
+{type:'short',q:'Differentiate y = 3x² + 2x - 5 with respect to x.'},
+{type:'mcq',q:'What is the derivative of sin(x)?',options:['cos(x)','-cos(x)','-sin(x)','tan(x)'],answer:0},
+{type:'short',q:'Find the integral of 2x dx.'},
+{type:'mcq',q:'In a right triangle, if opposite=3 and adjacent=4, hypotenuse=?',options:['5','6','7','8'],answer:0},
+{type:'short',q:'Solve the quadratic equation: x² - 5x + 6 = 0.'},
+{type:'mcq',q:'What is the limit of (sin x)/x as x→0?',options:['0','1','∞','undefined'],answer:1},
+{type:'short',q:'Find the equation of a line passing through (2,3) and (4,7).'},
+{type:'mcq',q:'If f(x)=x²+3x, find f(2).',options:['7','10','12','14'],answer:1},
+{type:'short',q:'Calculate the standard deviation of: 2, 4, 6, 8.'}
+]
+},
+'English':{
+primary:[
+{type:'mcq',q:'Choose the correct spelling:',options:['recieve','receive','receve','receeive'],answer:1},
+{type:'mcq',q:'What is the past tense of "go"?',options:['goed','went','gone','goes'],answer:1},
+{type:'mcq',q:'Which word is a noun?',options:['quickly','beautiful','school','running'],answer:2},
+{type:'short',q:'Write a sentence using the word "because".'},
+{type:'short',q:'Change "The boy is playing" to past tense.'},
+{type:'mcq',q:'Which is a pronoun?',options:['table','they','run','fast'],answer:1},
+{type:'short',q:'Write the plural of: book, child, mouse.'},
+{type:'mcq',q:'What is the opposite of "happy"?',options:['glad','sad','angry','tired'],answer:1},
+{type:'short',q:'Make a question from: "She is reading a book."'},
+{type:'short',q:'Write a short paragraph about your school.'}
+],
+junior:[
+{type:'mcq',q:'Identify the adjective: "The tall building collapsed."',options:['The','tall','building','collapsed'],answer:1},
+{type:'short',q:'Write a letter to your friend describing your school.'},
+{type:'mcq',q:'Which sentence is grammatically correct?',options:['He don\'t know','He doesn\'t knows','He doesn\'t know','He not know'],answer:2},
+{type:'short',q:'Change from passive to active: "The food was eaten by John."'},
+{type:'mcq',q:'What figure of speech is "as brave as a lion"?',options:['metaphor','simile','personification','hyperbole'],answer:1},
+{type:'short',q:'Write the antonyms of: generous, ancient, dim.'},
+{type:'mcq',q:'Choose the correct article: "___ honest man."',options:['A','An','The','No article'],answer:1},
+{type:'short',q:'Punctuate: the teacher said sit down class'},
+{type:'short',q:'Write a composition titled "My Favorite Subject".'},
+{type:'mcq',q:'Identify the adverb: "She sings beautifully."',options:['She','sings','beautifully','none'],answer:2}
+],
+senior:[
+{type:'short',q:'Write an essay on the topic: "The impact of technology on Nigerian education." (Not less than 300 words)'},
+{type:'mcq',q:'In "The sun smiled at us", what figure of speech is used?',options:['simile','metaphor','personification','irony'],answer:2},
+{type:'short',q:'Identify the clause type in: "When I arrived, the meeting had started."'},
+{type:'mcq',q:'Which is an example of a complex sentence?',options:['He ran fast','She sings and dances','Although tired, he continued','Go home now'],answer:2},
+{type:'short',q:'Differentiate between formal and informal letters with examples.'},
+{type:'mcq',q:'The expression "break a leg" is an example of?',options:['literal speech','simile','idiom','alliteration'],answer:2},
+{type:'short',q:'Write a summary of the passage about climate change (200 words).'},
+{type:'mcq',q:'Which word correctly completes: "Neither John nor Mary ___ present."',options:['was','were','is','are'],answer:0},
+{type:'short',q:'Analyze the theme of greed in the poem "The Proud King".'},
+{type:'mcq',q:'What literary device is "The wind whispered through the trees"?',options:['simile','personification','metaphor','irony'],answer:1}
+]
+},
+'Basic Science':{
+primary:[
+{type:'mcq',q:'What do plants need to make food?',options:['Sunlight only','Water only','Sunlight, water, CO2','Soil only'],answer:2},
+{type:'mcq',q:'Which of these is a mammal?',options:['Fish','Eagle','Dog','Snake'],answer:2},
+{type:'short',q:'Name three parts of the human body.'},
+{type:'mcq',q:'What is the boiling point of water?',options:['50°C','100°C','150°C','200°C'],answer:1},
+{type:'short',q:'What causes day and night?'},
+{type:'mcq',q:'Which state of matter has no fixed shape?',options:['Solid','Liquid','Gas','Both B and C'],answer:3},
+{type:'short',q:'Name two examples of solids and two examples of liquids.'},
+{type:'mcq',q:'What do we call animals that eat only plants?',options:['Carnivores','Herbivores','Omnivores','Insectivores'],answer:1},
+{type:'short',q:'What is the function of the heart?'},
+{type:'mcq',q:'Which planet do we live on?',options:['Mars','Venus','Earth','Jupiter'],answer:2}
+],
+junior:[
+{type:'mcq',q:'What is the chemical symbol for oxygen?',options:['O','O2','Ox','Om'],answer:0},
+{type:'mcq',q:'Which organ pumps blood in the body?',options:['Liver','Heart','Lungs','Kidney'],answer:1},
+{type:'short',q:'Define photosynthesis and write its equation.'},
+{type:'mcq',q:'What is the pH of a neutral solution?',options:['0','7','14','1'],answer:1},
+{type:'short',q:'List the three states of matter and give one example each.'},
+{type:'mcq',q:'Which gas do humans breathe in?',options:['Carbon dioxide','Oxygen','Nitrogen','Hydrogen'],answer:1},
+{type:'short',q:'What is energy? Name two forms of energy.'},
+{type:'mcq',q:'What causes diseases like malaria?',options:['Bacteria','Virus','Mosquito','Fungi'],answer:2},
+{type:'short',q:'Explain the difference between renewable and non-renewable energy.'},
+{type:'mcq',q:'How many bones are in the adult human body?',options:['186','206','226','246'],answer:1}
+],
+senior:[
+{type:'mcq',q:'What is the atomic number of carbon?',options:['6','8','12','14'],answer:0},
+{type:'short',q:'Balance the equation: H₂ + O₂ → H₂O.'},
+{type:'mcq',q:'What is Newton\'s second law?',options:['F=ma','F=mv','F=mg','F=mc²'],answer:0},
+{type:'short',q:'Explain the difference between ionic and covalent bonds.'},
+{type:'mcq',q:'Which subatomic particle has no charge?',options:['Proton','Electron','Neutron','Positron'],answer:2},
+{type:'short',q:'Calculate the acceleration of a car that goes from 0 to 60 m/s in 10 seconds.'},
+{type:'mcq',q:'What is the formula for kinetic energy?',options:['mv','½mv²','mgh','F=ma'],answer:1},
+{type:'short',q:'Describe the process of mitosis.'},
+{type:'mcq',q:'Which gas contributes most to global warming?',options:['Oxygen','CO2','Nitrogen','Helium'],answer:1},
+{type:'short',q:'Write the electronic configuration of sodium (Na, atomic number 11).'}
+]
+},
+'Social Studies':{
+primary:[
+{type:'mcq',q:'What is the capital of Nigeria?',options:['Lagos','Kano','Abuja','Port Harcourt'],answer:2},
+{type:'short',q:'Name three Nigerian ethnic groups.'},
+{type:'mcq',q:'Who is the head of a school?',options:['Headboy','Headmaster','Prefect','Teacher'],answer:1},
+{type:'short',q:'What is culture? Give two examples of Nigerian culture.'},
+{type:'mcq',q:'How many states are in Nigeria?',options:['12','30','36','40'],answer:2},
+{type:'short',q:'List three major rivers in Nigeria.'},
+{type:'mcq',q:'What do we call a person who buys and sells goods?',options:['Teacher','Trader','Doctor','Farmer'],answer:1},
+{type:'short',q:'Mention two ways to keep your environment clean.'},
+{type:'mcq',q:'Which color is on the top of the Nigerian flag?',options:['White','Green','Blue','Red'],answer:1},
+{type:'short',q:'What is the meaning of national anthem? Sing/recite the first line.'}
+],
+junior:[
+{type:'mcq',q:'Who was the first President of Nigeria?',options:['Yakubu Gowon','Nnamdi Azikiwe','Abubakar Tafawa Balewa','Olusegun Obasanjo'],answer:1},
+{type:'short',q:'Explain the meaning of democracy.'},
+{type:'mcq',q:'Which organization did Nigeria join at independence?',options:['EU','UNO','AU/ OAU','NATO'],answer:2},
+{type:'short',q:'List three arms of government and their functions.'},
+{type:'mcq',q:'What is the main export of Nigeria?',options:['Cocoa','Crude oil','Groundnut','Palm oil'],answer:1},
+{type:'short',q:'Describe two problems of road transportation in Nigeria.'},
+{type:'mcq',q:'Who makes laws in Nigeria?',options:['President','National Assembly','Supreme Court','Governors'],answer:1},
+{type:'short',q:'What is citizenship? How does one become a Nigerian citizen?'},
+{type:'mcq',q:'The Nigerian Civil War lasted from?',options:['1960-1963','1967-1970','1975-1979','1983-1985'],answer:1},
+{type:'short',q:'Mention three cultural festivals celebrated in Nigeria.'}
+],
+senior:[
+{type:'short',q:'Discuss the causes and effects of the Nigerian Civil War (1967-1970).'},
+{type:'mcq',q:'Which theory explains the origin of human society?',options:['Creation','Evolution','Both A and B','None'],answer:2},
+{type:'short',q:'Explain the concept of separation of powers in government.'},
+{type:'mcq',q:'What economic system does Nigeria practice?',options:['Capitalism','Communism','Mixed economy','Socialism'],answer:2},
+{type:'short',q:'Discuss the role of youth in national development.'},
+{type:'mcq',q:'The Trans-Atlantic slave trade was abolished in which century?',options:['17th','18th','19th','20th'],answer:2},
+{type:'short',q:'Explain five problems of agriculture in Nigeria and suggest solutions.'},
+{type:'mcq',q:'Which of these is a feature of federalism?',options:['One government','Shared powers','Unitary control','No constitution'],answer:1},
+{type:'short',q:'Write a note on the pre-colonial political system of the Hausa states.'},
+{type:'mcq',q:'ECOWAS was established in which year?',options:['1960','1975','1980','1990'],answer:1}
+]
+},
+'Civic Education':{
+primary:[
+{type:'mcq',q:'What is honesty?',options:['Telling lies','Telling the truth','Stealing','Cheating'],answer:1},
+{type:'short',q:'Mention three things a good citizen should do.'},
+{type:'mcq',q:'Who is a citizen?',options:['A visitor','A legal member of a country','A tourist','A stranger'],answer:1},
+{type:'short',q:'What is obedience? Why should children obey their parents?'},
+{type:'mcq',q:'Which of these is a good value?',options:['Lying','Hard work','Stealing','Fighting'],answer:1},
+{type:'short',q:'List three national symbols of Nigeria.'},
+{type:'mcq',q:'What should you do when you see the national flag being hoisted?',options:['Walk away','Stand at attention','Sit down','Talk'],answer:1},
+{type:'short',q:'Mention two duties of a pupil in school.'},
+{type:'mcq',q:'Which of these is a bad behavior?',options:['Sharing','Bullying','Helping','Respecting elders'],answer:1},
+{type:'short',q:'What is cooperation? Give one example.'}
+],
+junior:[
+{type:'mcq',q:'What is civic education?',options:['Study of animals','Study of rights and duties','Study of plants','Study of numbers'],answer:1},
+{type:'short',q:'List five fundamental human rights.'},
+{type:'mcq',q:'Who enforces laws in Nigeria?',options:['Teachers','Police','Doctors','Farmers'],answer:1},
+{type:'short',q:'Explain the concept of the rule of law.'},
+{type:'mcq',q:'What is corruption?',options:['Honesty','Dishonest or illegal behavior','Hard work','Obedience'],answer:1},
+{type:'short',q:'Mention three forms of corruption and how to fight them.'},
+{type:'mcq',q:'Voting is a?',options:['Privilege','Duty/Right','Punishment','Crime'],answer:1},
+{type:'short',q:'What are the qualities of a good leader?'},
+{type:'mcq',q:'Which agency fights corruption in Nigeria?',options:['NUP','EFCC','NTA','NCC'],answer:1},
+{type:'short',q:'Explain the meaning of national consciousness and integrity.'}
+],
+senior:[
+{type:'short',q:'Discuss the importance of human rights in a democratic society.'},
+{type:'mcq',q:'What is the supreme law of Nigeria?',options:['Quran','Constitution','Bible','Decree'],answer:1},
+{type:'short',q:'Explain five duties of a citizen to the state.'},
+{type:'mcq',q:'Which of these promotes national unity?',options:['Tribalism','Nepotism','Sports and culture','Discrimination'],answer:2},
+{type:'short',q:'Discuss the role of youth in fighting corruption in Nigeria.'},
+{type:'mcq',q:'The right to life is categorized as?',options:['Economic right','Social right','Fundamental right','Political right'],answer:2},
+{type:'short',q:'Explain the concept of popular participation in democracy.'},
+{type:'mcq',q:'Who has the power to declare war in Nigeria?',options:['Senate President','President','Chief Justice','Speaker'],answer:1},
+{type:'short',q:'Discuss the challenges of democracy in Nigeria.'},
+{type:'mcq',q:'Which of these is NOT a human right?',options:['Right to education','Right to life','Right to steal','Right to fair trial'],answer:2}
+]
+},
+'Computer Studies':{
+primary:[
+{type:'mcq',q:'What is a computer?',options:['A machine for cooking','An electronic device for processing data','A type of phone','A calculator only'],answer:1},
+{type:'mcq',q:'Which of these is a computer?',options:['Radio','Laptop','Television','Radio'],answer:1},
+{type:'short',q:'Name three parts of a computer.'},
+{type:'mcq',q:'What do we use a mouse for?',options:['Clicking','Typing','Printing','Scanning'],answer:0},
+{type:'mcq',q:'Which device shows what the computer is doing?',options:['Keyboard','Monitor','Mouse','Printer'],answer:1},
+{type:'short',q:'What is the difference between hardware and software?'},
+{type:'mcq',q:'Which of these is software?',options:['Mouse','Monitor','Windows','Keyboard'],answer:2},
+{type:'mcq',q:'What does CPU stand for?',options:['Central Processing Unit','Computer Personal Unit','Central Print Unit','Computer Power Unit'],answer:0},
+{type:'short',q:'Mention two uses of a computer.'},
+{type:'mcq',q:'Which device is used to type?',options:['Monitor','Keyboard','Speaker','Mouse'],answer:1}
+],
+junior:[
+{type:'mcq',q:'What does RAM stand for?',options:['Random Access Memory','Read Access Memory','Run All Memory','Rapid Access Module'],answer:0},
+{type:'mcq',q:'Which is an operating system?',options:['Word','Excel','Windows','Chrome'],answer:2},
+{type:'short',q:'Differentiate between RAM and ROM.'},
+{type:'mcq',q:'What is the full meaning of CPU?',options:['Central Processing Unit','Computer Program Unit','Central Print Utility','Control Processing Unit'],answer:0},
+{type:'short',q:'List five input devices and five output devices.'},
+{type:'mcq',q:'Which is NOT a programming language?',options:['Python','Java','HTML','Microsoft Word'],answer:3},
+{type:'short',q:'What is a computer network? Give two examples.'},
+{type:'mcq',q:'What does HTML stand for?',options:['Hyper Text Markup Language','High Tech Modern Language','Home Tool Markup Language','Hyper Text Modern Link'],answer:0},
+{type:'short',q:'Explain the difference between the internet and the World Wide Web.'},
+{type:'mcq',q:'Which storage device has the largest capacity?',options:['Floppy disk','CD','Hard drive','USB flash'],answer:2}
+],
+senior:[
+{type:'mcq',q:'What does CPU stand for in computing?',options:['Central Processing Unit','Computer Power Unit','Control Processing Unit','Central Print Unit'],answer:0},
+{type:'short',q:'Explain the difference between a compiler and an interpreter.'},
+{type:'mcq',q:'Which data structure uses LIFO?',options:['Queue','Stack','Array','Tree'],answer:1},
+{type:'short',q:'Write a simple algorithm to find the sum of 5 numbers.'},
+{type:'mcq',q:'What is the binary equivalent of decimal 10?',options:['1010','1100','1001','1110'],answer:0},
+{type:'short',q:'Explain the concept of cloud computing with examples.'},
+{type:'mcq',q:'Which protocol is used for web browsing?',options:['FTP','SMTP','HTTP','POP3'],answer:2},
+{type:'short',q:'What is cybersecurity? Mention three cybersecurity threats.'},
+{type:'mcq',q:'In database, what does SQL stand for?',options:['Simple Query Language','Structured Query Language','Standard Question Language','System Query Language'],answer:1},
+{type:'short',q:'Describe the software development life cycle (SDLC).'}
+]
+},
+'Agric Science':{
+primary:[
+{type:'mcq',q:'What is agriculture?',options:['Buying and selling','Growing crops and rearing animals','Building houses','Driving'],answer:1},
+{type:'short',q:'Name three crops grown in Nigeria.'},
+{type:'mcq',q:'Which of these is a farm animal?',options:['Lion','Chicken','Monkey','Snake'],answer:1},
+{type:'short',q:'Mention three tools used on the farm.'},
+{type:'mcq',q:'What do plants need to grow?',options:['Only water','Sunlight, water, soil','Only air','Only fertilizer'],answer:1},
+{type:'short',q:'Name two animals that give us food.'},
+{type:'mcq',q:'Which of these is a root crop?',options:['Maize','Yam','Cowpea','Tomato'],answer:1},
+{type:'short',q:'What is a farm? Describe what farmers do.'},
+{type:'mcq',q:'What do we get from cows?',options:['Only meat','Milk and meat','Only leather','Only bones'],answer:1},
+{type:'short',q:'Mention two ways farmers help the country.'}
+],
+junior:[
+{type:'mcq',q:'Which of these is a cereal crop?',options:['Cassava','Maize','Yam','Tomato'],answer:1},
+{type:'short',q:'List five types of farming systems practiced in Nigeria.'},
+{type:'mcq',q:'What is the scientific name of cattle?',options:['Bos taurus','Gallus gallus','Capra hircus','Sus scrofa'],answer:0},
+{type:'short',q:'Explain the meaning of mixed farming and give two advantages.'},
+{type:'mcq',q:'Which soil type is best for crop production?',options:['Sandy','Clay','Loamy','Rocky'],answer:2},
+{type:'short',q:'List five farm implements and state their uses.'},
+{type:'mcq',q:'What is erosion?',options:['Building soil','Wearing away of soil','Planting crops','Watering plants'],answer:1},
+{type:'short',q:'Explain the term "crop rotation" and state two benefits.'},
+{type:'mcq',q:'Which of these is a livestock disease?',options:['Malaria','Newcastle disease','COVID','Flu'],answer:1},
+{type:'short',q:'List five problems facing agriculture in Nigeria.'}
+],
+senior:[
+{type:'mcq',q:'Which of these is a macro-nutrient for plants?',options:['Iron','Nitrogen','Zinc','Copper'],answer:1},
+{type:'short',q:'Describe the process of photosynthesis and its importance to agriculture.'},
+{type:'mcq',q:'What is the gestation period of a cow?',options:['3 months','6 months','9 months','12 months'],answer:2},
+{type:'short',q:'Explain five factors affecting agricultural development in West Africa.'},
+{type:'mcq',q:'Which farming system involves growing crops only?',options:['Mixed farming','Arable farming','Pastoral farming','Fish farming'],answer:1},
+{type:'short',q:'Discuss the roles of government in agricultural development.'},
+{type:'mcq',q:'What is land tenure system?',options:['Renting land','System of land ownership','Buying land only','Leasing land'],answer:1},
+{type:'short',q:'Explain five modern farming techniques and their advantages.'},
+{type:'mcq',q:'Which of these is a cash crop?',options:['Yam','Cocoa','Maize','Cassava'],answer:1},
+{type:'short',q:'Discuss the importance of agriculture to the Nigerian economy.'}
+]
+},
+'Hausa':{
+primary:[
+{type:'short',q:'Rubuta haruffan Hausa daga A zuwa I.'},
+{type:'mcq',q:'Me ce "gida" cikin Turanci?',options:['House','School','Market','Farm'],answer:0},
+{type:'short',q:'Rubuta sunayen dabbobi guda biyar a Hausa.'},
+{type:'mcq',q:'Me ce "bishiya" cikin Turanci?',options:['Stone','Tree','Water','Fire'],answer:1},
+{type:'short',q:'Bayyana ma\'anar kalmar "kirki" a Hausa.'},
+{type:'mcq',q:'Wanne ne babban yaro a gida?',options:['Kanwa','Dan\'uwa','Wuriya','Babba'],answer:3},
+{type:'short',q:'Rubuta jimla guda uku game da makaranta.'},
+{type:'mcq',q:'Me ce "ruwa" cikin Turanci?',options:['Fire','Water','Earth','Air'],answer:1},
+{type:'short',q:'Kawo sunayen abinci guda biyar a Hausa.'},
+{type:'mcq',q:'Wanne kalma nufin "book" a Hausa?',options:['Littafi','Alkalami','Takarda','Tebur'],answer:0}
+],
+junior:[
+{type:'short',q:'Rubuta ina game da muhimmancin ilimi a Hausa (kalmomi 100).'},
+{type:'mcq',q:'Wanne ne kalmar neman agaji?',options:['Sannu','Na gode','Taimako','Madalla'],answer:2},
+{type:'short',q:'Bayyana muhimmancin al\'adu a al\'ummar Hausa.'},
+{type:'mcq',q:'Me ce "adalci" a Hausa?',options:['Zumunci','Gaskiya da tausayi','Hira','Kwadayi'],answer:1},
+{type:'short',q:'Rubuta wasiƙa zuwa ga abokinka ka gaya masa game da makaranta.'},
+{type:'mcq',q:'Wanne daga cikin wadannan ba daga Hausa ba?',options:['Zumunci','Ubuntu','Kirki','Karamci'],answer:1},
+{type:'short',q:'Bayyana wakar Hausa guda daya da ma\'anarta.'},
+{type:'mcq',q:'Kalmar "sai anjima" tana nufin?',options:['Sai wata rana','Ana jira','Gaggawa','Bari mu tafi'],answer:1},
+{type:'short',q:'Rubuta taƙaitaccen labari game da manomi.'},
+{type:'mcq',q:'Wanne ne "gaisuwa" a Hausa?',options:['Sannu','Na gode','Madalla','Tabbaci'],answer:0}
+],
+senior:[
+{type:'short',q:'Rubuta ina game da tasirin fasaha a rayuwar Hausawa (kalmomi 300).'},
+{type:'mcq',q:'Wanne ne mawallafin littafin "Shaihu Umar"?',options:['Abubakar Imam','Wole Soyinka','Chinua Achebe','Nagwamatse'],answer:0},
+{type:'short',q:'Bayyana salon adabin Hausa na baki da na rubutu.'},
+{type:'mcq',q:'Kalmar "hira" tana nufin?',options:['Hira da shawara','Munafunci','Gamsuwa','Tauri'],answer:0},
+{type:'short',q:'Tattauna muhimmancin Hausa a matsayin yaren kasuwanci a Afirka ta Yamma.'},
+{type:'mcq',q:'Wanne daga cikin wadannan littattafan Hausa ne?',options:['Things Fall Apart','Magana Jari Ce','The River Between','Half of a Yellow Sun'],answer:1},
+{type:'short',q:'Bayyana al\'adar Hausa ta aure, daga buɗe ido zuwa aure.'},
+{type:'mcq',q:'"Zumunta" a Hausa tana nufin?',options:['Rikici','Cikakken zumunci','Kishin kai','Tsoro'],answer:1},
+{type:'short',q:'Rubuta baiti guda biyar akan "Gaggalar Fasaha".'},
+{type:'mcq',q:'Wanne ne mawallafin "Idon Sandanka"?',options:['Abubakar Gimba','Dan Fodio','Ru\'ayya Dodo','Bala Anas'],answer:0}
+]
+},
+'Islamic Studies':{
+primary:[
+{type:'mcq',q:'How many pillars of Islam are there?',options:['3','5','7','9'],answer:1},
+{type:'short',q:'Mention the five pillars of Islam.'},
+{type:'mcq',q:'What is the first pillar of Islam?',options:['Salah','Shahada','Zakat','Hajj'],answer:1},
+{type:'short',q:'How many times do Muslims pray daily? Name the prayers.'},
+{type:'mcq',q:'Which month do Muslims fast?',options:['Shawwal','Ramadan','Rajab','Muharram'],answer:1},
+{type:'short',q:'What is Zakat? Who should pay it?'},
+{type:'mcq',q:'Where do Muslims go for Hajj?',options:['Jerusalem','Mecca','Medina','Baghdad'],answer:1},
+{type:'short',q:'Write the Shahada in Arabic and translate it.'},
+{type:'mcq',q:'What do we call the holy book of Islam?',options:['Bible','Quran','Torah','Vedas'],answer:1},
+{type:'short',q:'Mention three things Muslims should not do.'}
+],
+junior:[
+{type:'mcq',q:'How many surahs are in the Quran?',options:['100','114','120','99'],answer:1},
+{type:'short',q:'Explain the importance of the five daily prayers in Islam.'},
+{type:'mcq',q:'Who was the last prophet of Islam?',options:['Musa (AS)','Muhammad (SAW)','Isa (AS)','Ibrahim (AS)'],answer:1},
+{type:'short',q:'Describe the conditions for performing Salah.'},
+{type:'mcq',q:'What is the meaning of Tawheed?',options:['Prayer','Oneness of Allah','Fasting','Pilgrimage'],answer:1},
+{type:'short',q:'Explain the concept of Halal and Haram with examples.'},
+{type:'mcq',q:'How many wives can a Muslim man marry?',options:['1','2','3','4'],answer:3},
+{type:'short',q:'Write a short note on the life of Prophet Muhammad (SAW).'},
+{type:'mcq',q:'What is Sawm?',options:['Charity','Fasting','Prayer','Pilgrimage'],answer:1},
+{type:'short',q:'List the rites of Hajj in order.'}
+],
+senior:[
+{type:'short',q:'Discuss the significance of Tawheed in Islamic theology.'},
+{type:'mcq',q:'Which Caliph succeeded Prophet Muhammad (SAW)?',options:['Umar','Uthman','Abu Bakr','Ali'],answer:2},
+{type:'short',q:'Explain the Islamic perspective on women\'s rights.'},
+{type:'mcq',q:'What is Ijma in Islamic jurisprudence?',options:['Analogy','Consensus','Quran alone','Tradition'],answer:1},
+{type:'short',q:'Discuss the contributions of Islamic civilization to modern science.'},
+{type:'mcq',q:'Which Surah is called the "Heart of the Quran"?',options:['Al-Fatiha','Yasin','Al-Baqarah','Al-Ikhlas'],answer:1},
+{type:'short',q:'Explain the concept of Jihad in Islam and its types.'},
+{type:'mcq',q:'What is the Islamic punishment for theft?',options:['Fine','Imprisonment','Amputation of hand','Whipping'],answer:2},
+{type:'short',q:'Discuss the role of Zakat in poverty alleviation in Muslim society.'},
+{type:'mcq',q:'The Quran was revealed over how many years?',options:['10','15','23','40'],answer:2}
+]
+},
+'CRS':{
+primary:[
+{type:'mcq',q:'Who created the world?',options:['Man','God','Angels','Scientists'],answer:1},
+{type:'short',q:'Who was the first man and woman God created?'},
+{type:'mcq',q:'Where was Jesus born?',options:['Nazareth','Bethlehem','Jerusalem','Egypt'],answer:1},
+{type:'short',q:'Mention the ten commandments.'},
+{type:'mcq',q:'Who built the ark?',options:['Moses','Noah','Abraham','David'],answer:1},
+{type:'short',q:'What is prayer? Why do we pray?'},
+{type:'mcq',q:'How many disciples did Jesus have?',options:['7','10','12','24'],answer:2},
+{type:'short',q:'Tell the story of David and Goliath.'},
+{type:'mcq',q:'What did God create on the first day?',options:['Animals','Light','Man','Plants'],answer:1},
+{type:'short',q:'What is love? How can we show love to others?'}
+],
+junior:[
+{type:'mcq',q:'Who led the Israelites out of Egypt?',options:['Aaron','Moses','Joshua','David'],answer:1},
+{type:'short',q:'Explain the meaning of salvation in Christianity.'},
+{type:'mcq',q:'How many days did it rain during the flood?',options:['7','12','40','100'],answer:2},
+{type:'short',q:'Describe the birth of Jesus Christ.'},
+{type:'mcq',q:'Who denied Jesus three times?',options:['John','Judas','Peter','James'],answer:2},
+{type:'short',q:'Explain the parable of the Good Samaritan.'},
+{type:'mcq',q:'What is the greatest commandment?',options:['Love God and neighbor','Do not steal','Keep the Sabbath','Honor parents'],answer:0},
+{type:'short',q:'Write a short note on the baptism of Jesus.'},
+{type:'mcq',q:'Who was swallowed by a great fish?',options:['Jonah','Job','Jacob','Joseph'],answer:0},
+{type:'short',q:'List the twelve disciples of Jesus.'}
+],
+senior:[
+{type:'short',q:'Discuss the concept of the Trinity in Christianity.'},
+{type:'mcq',q:'Who was the first Christian martyr?',options:['Peter','Stephen','Paul','James'],answer:1},
+{type:'short',q:'Explain the significance of the resurrection of Jesus Christ.'},
+{type:'mcq',q:'Which apostle wrote the most epistles?',options:['Peter','Paul','John','James'],answer:1},
+{type:'short',q:'Discuss the Sermon on the Mount and its teachings.'},
+{type:'mcq',q:'What is the Christian sacrament of the Lord\'s Supper called?',options:['Baptism','Holy Communion','Confirmation','Marriage'],answer:1},
+{type:'short',q:'Explain the role of faith and works in Christian salvation.'},
+{type:'mcq',q:'Who was the mother of Jesus?',options:['Elizabeth','Mary','Martha','Anna'],answer:1},
+{type:'short',q:'Discuss the spread of Christianity in the early church.'},
+{type:'mcq',q:'Which book is the last in the Bible?',options:['Jude','Revelation','Hebrews','Acts'],answer:1}
+]
+}
+};
+
+// Fallback generic questions for any subject not in the bank
+function generateGenericQuestions(subject,level){
+var levelName=level==='senior'?'Senior Secondary':level==='junior'?'Junior Secondary':'Primary';
+return [
+{type:'mcq',q:'What is the main focus of '+subject+'?',options:['Nothing specific','Understanding key concepts','Memorizing only','Guessing'],answer:1},
+{type:'mcq',q:'Why is '+subject+' important?',options:['It is not','For daily life application','Only for exams','Nobody knows'],answer:1},
+{type:'short',q:'Define three key terms related to '+subject+'.'},
+{type:'mcq',q:'Which of these best describes a student of '+subject+'?',options:['Lazy','Curious and dedicated','Uninterested','Confused'],answer:1},
+{type:'short',q:'Explain how '+subject+' is used in everyday life.'},
+{type:'short',q:'Write a short essay on the importance of '+subject+' in '+levelName+' education.'},
+{type:'mcq',q:'A good approach to studying '+subject+' is:',options:['Cramming only','Understanding and practice','Ignoring it','Copying others'],answer:1},
+{type:'short',q:'List five things you have learned in '+subject+' this term.'},
+{type:'mcq',q:'What should you do before a '+subject+' exam?',options:['Play all day','Revise thoroughly','Sleep only','Worry'],answer:1},
+{type:'short',q:'Discuss how '+subject+' can help you in your future career.'}
+];
+}
+
+function getLevelForClass(cls){
+if(cls.startsWith('Pry')||cls==='Nursery')return'primary';
+if(cls.startsWith('JSS'))return'junior';
+if(cls.startsWith('SSS'))return'senior';
+return'primary';
+}
+
+function generateQuestions(subject,cls){
+var level=getLevelForClass(cls);
+if(questionBank[subject]&&questionBank[subject][level]){
+return questionBank[subject][level];
+}
+return generateGenericQuestions(subject,level);
+}
+
+var subjects=['Mathematics','English','Basic Science','Social Studies','Civic Education','Computer Studies','Agric Science','Hausa','Islamic Studies','CRS'];
+var classOptions=['Nursery','Pry 1','Pry 2','Pry 3','Pry 4','Pry 5','Pry 6','JSS 1','JSS 2','JSS 3','SSS 1','SSS 2','SSS 3'];
+var exams=[],students=[],currentView='exams',gradeExamId=null,editingId=null;
+
 function load(){try{exams=JSON.parse(localStorage.getItem('harz_exams')||'[]');students=JSON.parse(localStorage.getItem('harz_students')||'[]')}catch(e){exams=[];students=[]}}
 function saveAll(){localStorage.setItem('harz_exams',JSON.stringify(exams));localStorage.setItem('harz_students',JSON.stringify(students))}
 function gradeFor(pct){if(pct>=80)return{g:'A',c:'grade-a'};if(pct>=70)return{g:'B',c:'grade-b'};if(pct>=60)return{g:'C',c:'grade-c'};if(pct>=50)return{g:'D',c:'grade-d'};return{g:'F',c:'grade-f'}}
-function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+function initials(n){return n.split(' ').map(function(w){return w[0]}).join('').toUpperCase().slice(0,2)}
 
 function seed(){
 if(exams.length>0||students.length>0)return;
-const today=new Date().toISOString().split('T')[0];
+var today=new Date().toISOString().split('T')[0];
 students=[
 {name:'Aisha Bello',class:'JSS 2',id:'s1'},{name:'Yusuf Sani',class:'Pry 5',id:'s2'},
 {name:'Fatima Ibrahim',class:'JSS 1',id:'s3'},{name:'Muhammad Musa',class:'SSS 1',id:'s4'},
@@ -142,24 +586,25 @@ students=[
 {name:'Hauwa Dauda',class:'SSS 2',id:'s7'},{name:'Ibrahim Yusuf',class:'Pry 6',id:'s8'},
 {name:'Amina Sani',class:'JSS 2',id:'s9'},{name:'Bello Ibrahim',class:'JSS 2',id:'s10'}
 ];
-// Auto-generate exam with pre-populated students
-const jss2Subjects=['Mathematics','English','Basic Science','Social Studies','Civic Education','Computer Studies','Agric Science','Hausa'];
-const jss2Students=students.filter(s=>s.class==='JSS 2');
-const jss2Grades={};
-jss2Students.forEach(s=>{
-jss2Grades[s.id]={};
-jss2Subjects.forEach(sub=>{jss2Grades[s.id][sub]=Math.floor(Math.random()*40)+55;});
-});
-const pry5Subjects=['Mathematics','English','Basic Science','Social Studies','Civic Education','Computer Studies'];
-const pry5Students=students.filter(s=>s.class==='Pry 5');
-const pry5Grades={};
-pry5Students.forEach(s=>{
-pry5Grades[s.id]={};
-pry5Subjects.forEach(sub=>{pry5Grades[s.id][sub]=Math.floor(Math.random()*40)+55;});
-});
+var jss2Subjects=['Mathematics','English','Basic Science','Social Studies','Civic Education','Computer Studies','Agric Science','Hausa'];
+var jss2Students=students.filter(function(s){return s.class==='JSS 2'});
+var jss2Grades={};
+jss2Students.forEach(function(s){jss2Grades[s.id]={};jss2Subjects.forEach(function(sub){jss2Grades[s.id][sub]=Math.floor(Math.random()*40)+55;})});
+
+// Generate exam papers with questions
+var jss2Paper={};
+jss2Subjects.forEach(function(sub){jss2Paper[sub]=generateQuestions(sub,'JSS 2')});
+
+var pry5Subjects=['Mathematics','English','Basic Science','Social Studies','Civic Education','Computer Studies'];
+var pry5Students=students.filter(function(s){return s.class==='Pry 5'});
+var pry5Grades={};
+pry5Students.forEach(function(s){pry5Grades[s.id]={};pry5Subjects.forEach(function(sub){pry5Grades[s.id][sub]=Math.floor(Math.random()*40)+55;})});
+var pry5Paper={};
+pry5Subjects.forEach(function(sub){pry5Paper[sub]=generateQuestions(sub,'Pry 5')});
+
 exams=[
-{id:'e1',name:'First Term Exam',class:'JSS 2',term:'First Term',date:today,subjects:jss2Subjects,grades:jss2Grades},
-{id:'e2',name:'First Term Exam',class:'Pry 5',term:'First Term',date:today,subjects:pry5Subjects,grades:pry5Grades}
+{id:'e1',name:'First Term Exam',class:'JSS 2',term:'First Term',date:today,subjects:jss2Subjects,grades:jss2Grades,paper:jss2Paper,totalMarks:jss2Subjects.length*100},
+{id:'e2',name:'First Term Exam',class:'Pry 5',term:'First Term',date:today,subjects:pry5Subjects,grades:pry5Grades,paper:pry5Paper,totalMarks:pry5Subjects.length*100}
 ];
 saveAll();
 }
@@ -173,105 +618,159 @@ else if(currentView==='reports')renderReports();
 }
 
 function renderExams(){
-const list=document.getElementById('examList');
-// Calc overall stats
-let allPcts=[];
-exams.forEach(e=>{
-Object.values(e.grades||{}).forEach(s=>{
-const vals=Object.values(s);
-if(vals.length>0){allPcts.push(vals.reduce((a,b)=>a+b,0)/vals.length)}
-});
-});
-const avgScore=allPcts.length?Math.round(allPcts.reduce((a,b)=>a+b,0)/allPcts.length):0;
-const passRate=allPcts.length?Math.round(allPcts.filter(p=>p>=50).length/allPcts.length*100):0;
+var list=document.getElementById('examList');
+var allPcts=[];
+exams.forEach(function(e){Object.values(e.grades||{}).forEach(function(s){var vals=Object.values(s);if(vals.length>0)allPcts.push(vals.reduce(function(a,b){return a+b},0)/vals.length)})});
+var avgScore=allPcts.length?Math.round(allPcts.reduce(function(a,b){return a+b},0)/allPcts.length):0;
+var passRate=allPcts.length?Math.round(allPcts.filter(function(p){return p>=50}).length/allPcts.length*100):0;
 document.getElementById('stAvg').textContent=avgScore>0?avgScore+'%':'--';
 document.getElementById('stPass').textContent=passRate+'%';
-
 if(exams.length===0){list.innerHTML='<div class="empty"><div class="emoji">🎓</div><p>No exams yet. Tap + to create one.</p></div>';return}
-list.innerHTML=exams.map(e=>{
-const gradedCount=Object.keys(e.grades||{}).length;
-const classStudents=students.filter(s=>s.class===e.class);
-// Calc class average
-let classPcts=[];
-Object.values(e.grades||{}).forEach(s=>{
-const vals=Object.values(s);
-if(vals.length>0)classPcts.push(vals.reduce((a,b)=>a+b,0)/vals.length);
-});
-const classAvg=classPcts.length?Math.round(classPcts.reduce((a,b)=>a+b,0)/classPcts.length):0;
-const gr=classAvg>0?gradeFor(classAvg):null;
-return '<div class="exam-card" onclick="gradeExam(\''+e.id+'\')">'+
+list.innerHTML=exams.map(function(e){
+var gradedCount=Object.keys(e.grades||{}).length;
+var qCount=0;
+if(e.paper){Object.values(e.paper).forEach(function(qs){qCount+=qs.length})}
+return '<div class="exam-card">'+
 '<div class="exam-name">'+esc(e.name)+'</div>'+
-'<div class="exam-meta">'+esc(e.term)+' · '+e.subjects.length+' subjects · '+gradedCount+' students graded</div>'+
+'<div class="exam-meta">'+esc(e.term)+' · '+e.subjects.length+' subjects · '+qCount+' questions · '+gradedCount+' graded</div>'+
 '<div class="exam-class">'+e.class+'</div>'+
-(gr?'<div style="margin-top:6px;font-size:.72rem;color:var(--muted)">Class Avg: <span style="color:var(--p3);font-weight:600">'+classAvg+'%</span> <span class="grade-badge '+gr.c+'" style="padding:2px 6px;font-size:.62rem">'+gr.g+'</span></div>':'')+
-'</div>';
+'<div class="exam-actions">'+
+'<button class="exam-btn paper" onclick="viewPaper(\''+e.id+'\')">📄 View Exam Paper</button>'+
+'<button class="exam-btn grade" onclick="gradeExam(\''+e.id+'\')">✏️ Grade Students</button>'+
+'<button class="exam-btn del" onclick="delExam(\''+e.id+'\')">🗑</button>'+
+'</div></div>';
 }).join('');
 }
 
+function viewPaper(examId){
+var exam=exams.find(function(e){return e.id===examId});
+if(!exam)return;
+document.getElementById('examsView').style.display='none';
+document.getElementById('paperView').style.display='block';
+document.getElementById('backBtn').style.display='block';
+document.getElementById('fabBtn').style.display='none';
+
+var html='<div class="print-area">';
+html+='<div class="paper-header no-print" style="border:none">';
+html+='<button class="back-btn" style="margin-bottom:8px" onclick="goBack()">‹ Back</button>';
+html+='</div>';
+// Exam paper header
+html+='<div class="paper-header">';
+html+='<div class="ph-school">DANFODIO MEMORIAL ACADEMY</div>';
+html+='<div class="ph-sub">'+exam.class+' · '+esc(exam.term)+' · '+new Date(exam.date).toLocaleDateString('en-NG',{year:'numeric',month:'long',day:'numeric'})+'</div>';
+html+='<div class="ph-exam">'+esc(exam.name).toUpperCase()+'</div>';
+html+='</div>';
+
+// Info row
+var totalQ=0;
+if(exam.paper)Object.values(exam.paper).forEach(function(qs){totalQ+=qs.length});
+html+='<div class="paper-info no-print">';
+html+='<div class="pi-item"><div class="pi-lbl">Subjects</div><div class="pi-val">'+exam.subjects.length+'</div></div>';
+html+='<div class="pi-item"><div class="pi-lbl">Questions</div><div class="pi-val">'+totalQ+'</div></div>';
+html+='<div class="pi-item"><div class="pi-lbl">Total Marks</div><div class="pi-val">'+(exam.subjects.length*100)+'</div></div>';
+html+='<div class="pi-item"><div class="pi-lbl">Duration</div><div class="pi-val">2 Hours</div></div>';
+html+='</div>';
+
+// Print button
+html+='<button class="print-btn no-print" onclick="window.print()">🖨️ Print / Save as PDF</button>';
+
+// Each subject
+exam.subjects.forEach(function(subj,idx){
+var questions=exam.paper&&exam.paper[subj]?exam.paper[subj]:generateQuestions(subj,exam.class);
+var mcqCount=questions.filter(function(q){return q.type==='mcq'}).length;
+var shortCount=questions.filter(function(q){return q.type==='short'}).length;
+html+='<div class="paper-subject">';
+html+='<div class="paper-subject-title">SECTION '+(idx+1)+': '+subj+' <span class="pst-marks">100 Marks ('+mcqCount+' MCQ + '+shortCount+' Theory)</span></div>';
+html+='<div style="font-size:.72rem;color:var(--muted);margin-bottom:10px">Answer all questions in this section.</div>';
+questions.forEach(function(q,qi){
+html+='<div class="paper-question">';
+html+='<div class="pq-num">Q'+(qi+1)+'. '+(q.type==='mcq'?'(MCQ)':'(Theory)')+'</div>';
+html+='<div class="pq-text">'+esc(q.q)+'</div>';
+if(q.type==='mcq'&&q.options){
+html+='<div class="pq-options">';
+q.options.forEach(function(opt,oi){
+var letter=String.fromCharCode(65+oi);
+html+='<div class="pq-option"><span class="po-letter">'+letter+'.</span> '+esc(opt)+'</div>';
+});
+html+='</div>';
+}else{
+// Answer lines for short questions
+html+='<div class="pq-answer-line"></div>';
+html+='<div class="pq-answer-line"></div>';
+html+='<div class="pq-answer-line"></div>';
+}
+html+='</div>';
+});
+html+='</div>';
+});
+
+html+='</div>'; // close print-area
+document.getElementById('paperView').innerHTML=html;
+}
+
+function delExam(examId){
+if(!confirm('Delete this exam and all its grades?'))return;
+exams=exams.filter(function(e){return e.id!==examId});
+saveAll();render();showToast('Exam deleted');
+}
+
 function renderStudents(){
-const list=document.getElementById('studentList');
+var list=document.getElementById('studentList');
 if(students.length===0){list.innerHTML='<div class="empty"><div class="emoji">👨‍🎓</div><p>No students. Tap + to add.</p></div>';return}
-list.innerHTML=students.map(s=>{
-const stExams=exams.filter(e=>e.class===s.class&&e.grades&&e.grades[s.id]);
-let avg='--',gr={g:'--',c:'grade-d'};
+list.innerHTML=students.map(function(s){
+var stExams=exams.filter(function(e){return e.class===s.class&&e.grades&&e.grades[s.id]});
+var avg='--',gr={g:'--',c:'grade-d'};
 if(stExams.length>0){
-const exam=stExams[0];
-const vals=Object.values(exam.grades[s.id]);
-if(vals.length>0){avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)+'%';gr=gradeFor(parseInt(avg))}
+var exam=stExams[0];
+var vals=Object.values(exam.grades[s.id]);
+if(vals.length>0){avg=Math.round(vals.reduce(function(a,b){return a+b},0)/vals.length)+'%';gr=gradeFor(parseInt(avg))}
 }
 return '<div class="student-card" onclick="editStudent(\''+s.id+'\')">'+
 '<div class="avatar" style="background:rgba(124,77,255,.12);color:var(--p1)">'+initials(s.name)+'</div>'+
 '<div class="s-info"><div class="s-name">'+esc(s.name)+'</div><div class="s-meta">'+s.class+'</div></div>'+
-'<div class="grade-badge '+gr.c+'">'+gr.g+' '+avg+'</div>'+
-'</div>';
+'<div class="grade-badge '+gr.c+'">'+gr.g+' '+avg+'</div></div>';
 }).join('');
 }
 
 function renderReports(){
-const list=document.getElementById('reportList');
+var list=document.getElementById('reportList');
 if(students.length===0){list.innerHTML='<div class="empty"><div class="emoji">📋</div><p>No students.</p></div>';return}
-let html='';
-students.forEach(s=>{
-const stExams=exams.filter(e=>e.class===s.class&&e.grades&&e.grades[s.id]);
+var html='';
+students.forEach(function(s){
+var stExams=exams.filter(function(e){return e.class===s.class&&e.grades&&e.grades[s.id]});
 if(stExams.length===0)return;
-stExams.forEach(exam=>{
-const grades=exam.grades[s.id];
-const scores=Object.entries(grades);
+stExams.forEach(function(exam){
+var grades=exam.grades[s.id];
+var scores=Object.entries(grades);
 if(scores.length===0)return;
-const total=scores.reduce((a,[,v])=>a+v,0);
-const avg=Math.round(total/scores.length);
-const gr=gradeFor(avg);
+var total=scores.reduce(function(a,p){return a+p[1]},0);
+var avg=Math.round(total/scores.length);
+var gr=gradeFor(avg);
 html+='<div class="report-card">'+
 '<div class="rc-header"><div class="rc-school">Danfodio Memorial Academy</div><div class="rc-title">Term Report Card</div></div>'+
 '<div class="rc-info">'+
 '<div><span class="rc-lbl">Name:</span> <span class="rc-val">'+esc(s.name)+'</span></div>'+
 '<div><span class="rc-lbl">Class:</span> <span class="rc-val">'+s.class+'</span></div>'+
 '<div><span class="rc-lbl">Term:</span> <span class="rc-val">'+esc(exam.term)+'</span></div>'+
-'<div><span class="rc-lbl">Exam:</span> <span class="rc-val">'+esc(exam.name)+'</span></div>'+
-'</div>'+
+'<div><span class="rc-lbl">Exam:</span> <span class="rc-val">'+esc(exam.name)+'</span></div></div>'+
 scores.map(function(p){var subj=p[0],score=p[1];var sg=gradeFor(score);return '<div class="result-row"><span class="rr-subj">'+subj+'</span><span><span class="rr-score">'+score+'/100</span> <span class="grade-badge '+sg.c+'" style="padding:2px 6px;font-size:.62rem">'+sg.g+'</span></span></div>'}).join('')+
 '<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:8px">'+
-'<div class="result-row"><span class="rr-subj" style="font-weight:600">Total Score</span><span class="rr-score" style="font-size:1rem">'+total+' / '+(scores.length*100)+'</span></div>'+
+'<div class="result-row"><span class="rr-subj" style="font-weight:600">Total</span><span class="rr-score" style="font-size:1rem">'+total+' / '+(scores.length*100)+'</span></div>'+
 '<div class="result-row"><span class="rr-subj" style="font-weight:600">Average</span><span class="rr-score" style="font-size:1.1rem;color:var(--p3)">'+avg+'%</span></div>'+
 '<div class="result-row"><span class="rr-subj" style="font-weight:600">Grade</span><span class="grade-badge '+gr.c+'" style="font-size:1rem">'+gr.g+'</span></div>'+
-'<div class="result-row"><span class="rr-subj" style="font-weight:600">Position</span><span class="rr-score">'+getStudentPosition(exam,s.id)+'</span></div>'+
-'</div></div>';
+'<div class="result-row"><span class="rr-subj" style="font-weight:600">Position</span><span class="rr-score">'+getStudentPosition(exam,s.id)+'</span></div></div></div>';
 });
 });
 list.innerHTML=html||'<div class="empty"><div class="emoji">📋</div><p>No graded students yet. Grade an exam first.</p></div>';
 }
 
 function getStudentPosition(exam,studentId){
-// Calculate position in class
-const classStudents=students.filter(s=>s.class===exam.class&&exam.grades[s.id]);
-const avgs=classStudents.map(s=>{
-const vals=Object.values(exam.grades[s.id]);
-return vals.length>0?vals.reduce((a,b)=>a+b,0)/vals.length:0;
-});
+var classStudents=students.filter(function(s){return s.class===exam.class&&exam.grades[s.id]});
+var avgs=classStudents.map(function(s){var vals=Object.values(exam.grades[s.id]);return vals.length>0?vals.reduce(function(a,b){return a+b},0)/vals.length:0});
 avgs.sort(function(a,b){return b-a});
-const studentAvg=Object.values(exam.grades[studentId]).reduce((a,b)=>a+b,0)/Object.values(exam.grades[studentId]).length;
-const pos=avgs.indexOf(studentAvg)+1;
-const suffix=pos===1?'st':pos===2?'nd':pos===3?'rd':'th';
+var studentAvg=Object.values(exam.grades[studentId]).reduce(function(a,b){return a+b},0)/Object.values(exam.grades[studentId]).length;
+var pos=avgs.indexOf(studentAvg)+1;
+var suffix=pos===1?'st':pos===2?'nd':pos===3?'rd':'th';
 return pos+'/'+avgs.length+' ('+pos+suffix+')';
 }
 
@@ -281,59 +780,32 @@ var exam=exams.find(function(e){return e.id===id});
 if(!exam)return;
 document.getElementById('examsView').style.display='none';
 document.getElementById('gradeView').style.display='block';
+document.getElementById('paperView').style.display='none';
 document.getElementById('backBtn').style.display='block';
 document.getElementById('fabBtn').style.display='none';
-
 var classStudents=students.filter(function(s){return s.class===exam.class});
 var subjList=exam.subjects;
-
-// If no students in this class, show warning
-if(classStudents.length===0){
-document.getElementById('gradeView').innerHTML='<div class="section-title">Grade: '+esc(exam.name)+' — '+exam.class+'</div>'+
-'<div class="empty"><div class="emoji">⚠️</div><p>No students in '+exam.class+'. Add students first from the Students tab.</p></div>';
-return;
-}
-
-// Auto-populate grades for any students not yet in the grades object
-classStudents.forEach(function(s){
-if(!exam.grades[s.id]){
-exam.grades[s.id]={};
-subjList.forEach(function(sub){exam.grades[s.id][sub]=0;});
-}
-});
+if(classStudents.length===0){document.getElementById('gradeView').innerHTML='<div class="section-title">Grade: '+esc(exam.name)+' — '+exam.class+'</div><div class="empty"><div class="emoji">⚠️</div><p>No students in '+exam.class+'. Add students first.</p></div>';return}
+classStudents.forEach(function(s){if(!exam.grades[s.id]){exam.grades[s.id]={};subjList.forEach(function(sub){exam.grades[s.id][sub]=0})}});
 saveAll();
-
 var html='<div class="section-title">Grade: '+esc(exam.name)+' — '+exam.class+'</div>';
 html+='<div style="padding:0 16px;margin-bottom:10px;display:flex;gap:8px">';
 html+='<button class="auto-btn" onclick="autoGenerateGrades(\''+exam.id+'\')">⚡ Auto-Generate All Grades</button>';
 html+='<button class="auto-btn" onclick="clearAllGrades(\''+exam.id+'\')" style="color:var(--fail);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08)">🗑 Clear All</button>';
 html+='</div>';
-
 classStudents.forEach(function(s){
 var existing=exam.grades[s.id]||{};
 var vals=Object.values(existing);
 var total=vals.reduce(function(a,b){return a+b},0);
 var avg=vals.length>0?Math.round(total/vals.length):0;
 var gr=avg>0?gradeFor(avg):{g:'-',c:'grade-f'};
-
-html+='<div class="student-grade-card">';
-html+='<div class="sgc-header">';
-html+='<div class="sgc-name">'+esc(s.name)+'</div>';
-html+='<div class="sgc-stats"><span class="sgc-total">Total: '+total+'</span><span class="sgc-avg" style="color:var(--p3)">'+avg+'%</span><span class="grade-badge '+gr.c+'">'+gr.g+'</span></div>';
-html+='</div>';
+html+='<div class="student-grade-card"><div class="sgc-header"><div class="sgc-name">'+esc(s.name)+'</div><div class="sgc-stats"><span class="sgc-total">Total: '+total+'</span><span class="sgc-avg" style="color:var(--p3)">'+avg+'%</span><span class="grade-badge '+gr.c+'">'+gr.g+'</span></div></div>';
 subjList.forEach(function(sub){
 var score=existing[sub]||0;
-html+='<div class="subject-row"><span class="sr-name">'+sub+'</span><input type="number" min="0" max="100" value="'+score+'" placeholder="0" data-student="'+s.id+'" data-subject="'+sub+'" oninput="updateGradeLive(\''+exam.id+'\',\''+s.id+'\',\''+sub+'\',this.value,this)"></div>';
+html+='<div class="subject-row"><span class="sr-name">'+sub+'</span><input type="number" min="0" max="100" value="'+score+'" placeholder="0" oninput="updateGradeLive(\''+exam.id+'\',\''+s.id+'\',\''+sub+'\',this.value,this)"></div>';
 });
-// Live summary
-html+='<div class="live-summary" id="summary-'+s.id+'">';
-html+='<div class="ls-item"><div class="ls-val">'+total+'</div><div class="ls-lbl">Total</div></div>';
-html+='<div class="ls-item"><div class="ls-val" style="color:var(--p3)">'+avg+'%</div><div class="ls-lbl">Average</div></div>';
-html+='<div class="ls-item"><div class="ls-val"><span class="grade-badge '+gr.c+'">'+gr.g+'</span></div><div class="ls-lbl">Grade</div></div>';
-html+='</div>';
-html+='</div>';
+html+='<div class="live-summary" id="summary-'+s.id+'"><div class="ls-item"><div class="ls-val">'+total+'</div><div class="ls-lbl">Total</div></div><div class="ls-item"><div class="ls-val" style="color:var(--p3)">'+avg+'%</div><div class="ls-lbl">Average</div></div><div class="ls-item"><div class="ls-val"><span class="grade-badge '+gr.c+'">'+gr.g+'</span></div><div class="ls-lbl">Grade</div></div></div></div>';
 });
-
 document.getElementById('gradeView').innerHTML=html;
 }
 
@@ -343,62 +815,37 @@ if(!exam)return;
 if(!exam.grades[studentId])exam.grades[studentId]={};
 exam.grades[studentId][subject]=parseInt(scoreVal)||0;
 saveAll();
-
-// Update live summary without full re-render
-var subjList=exam.subjects;
-var grades=exam.grades[studentId];
-var vals=Object.values(grades);
+var vals=Object.values(exam.grades[studentId]);
 var total=vals.reduce(function(a,b){return a+b},0);
 var avg=vals.length>0?Math.round(total/vals.length):0;
 var gr=avg>0?gradeFor(avg):{g:'-',c:'grade-f'};
-
 var summary=document.getElementById('summary-'+studentId);
-if(summary){
-summary.innerHTML='<div class="ls-item"><div class="ls-val">'+total+'</div><div class="ls-lbl">Total</div></div>'+
-'<div class="ls-item"><div class="ls-val" style="color:var(--p3)">'+avg+'%</div><div class="ls-lbl">Average</div></div>'+
-'<div class="ls-item"><div class="ls-val"><span class="grade-badge '+gr.c+'">'+gr.g+'</span></div><div class="ls-lbl">Grade</div></div>';
-}
-// Update header stats too
+if(summary)summary.innerHTML='<div class="ls-item"><div class="ls-val">'+total+'</div><div class="ls-lbl">Total</div></div><div class="ls-item"><div class="ls-val" style="color:var(--p3)">'+avg+'%</div><div class="ls-lbl">Average</div></div><div class="ls-item"><div class="ls-val"><span class="grade-badge '+gr.c+'">'+gr.g+'</span></div><div class="ls-lbl">Grade</div></div>';
 var card=inputEl.closest('.student-grade-card');
-if(card){
-var header=card.querySelector('.sgc-stats');
-if(header)header.innerHTML='<span class="sgc-total">Total: '+total+'</span><span class="sgc-avg" style="color:var(--p3)">'+avg+'%</span><span class="grade-badge '+gr.c+'">'+gr.g+'</span>';
-}
+if(card){var header=card.querySelector('.sgc-stats');if(header)header.innerHTML='<span class="sgc-total">Total: '+total+'</span><span class="sgc-avg" style="color:var(--p3)">'+avg+'%</span><span class="grade-badge '+gr.c+'">'+gr.g+'</span>'}
 }
 
 function autoGenerateGrades(examId){
 var exam=exams.find(function(e){return e.id===examId});
 if(!exam)return;
 var classStudents=students.filter(function(s){return s.class===exam.class});
-classStudents.forEach(function(s){
-if(!exam.grades[s.id])exam.grades[s.id]={};
-exam.subjects.forEach(function(sub){
-// Generate realistic scores between 45-95
-exam.grades[s.id][sub]=Math.floor(Math.random()*50)+45;
-});
-});
-saveAll();
-gradeExam(examId);
-showToast('Grades auto-generated ✓');
+classStudents.forEach(function(s){if(!exam.grades[s.id])exam.grades[s.id]={};exam.subjects.forEach(function(sub){exam.grades[s.id][sub]=Math.floor(Math.random()*50)+45})});
+saveAll();gradeExam(examId);showToast('Grades auto-generated ✓');
 }
 
 function clearAllGrades(examId){
 var exam=exams.find(function(e){return e.id===examId});
 if(!exam)return;
-if(!confirm('Clear all grades for this exam?'))return;
+if(!confirm('Clear all grades?'))return;
 var classStudents=students.filter(function(s){return s.class===exam.class});
-classStudents.forEach(function(s){
-exam.grades[s.id]={};
-exam.subjects.forEach(function(sub){exam.grades[s.id][sub]=0;});
-});
-saveAll();
-gradeExam(examId);
-showToast('All grades cleared');
+classStudents.forEach(function(s){exam.grades[s.id]={};exam.subjects.forEach(function(sub){exam.grades[s.id][sub]=0})});
+saveAll();gradeExam(examId);showToast('All grades cleared');
 }
 
 function goBack(){
 gradeExamId=null;
 document.getElementById('gradeView').style.display='none';
+document.getElementById('paperView').style.display='none';
 document.getElementById('backBtn').style.display='none';
 document.getElementById('fabBtn').style.display='flex';
 switchView(currentView);
@@ -407,14 +854,12 @@ switchView(currentView);
 function switchView(v){
 currentView=v;
 document.getElementById('gradeView').style.display='none';
+document.getElementById('paperView').style.display='none';
 document.getElementById('fabBtn').style.display='flex';
-['Exams','Students','Reports'].forEach(function(t){
-document.getElementById('tab'+t).classList.toggle('active',t.toLowerCase()===v);
-});
+['Exams','Students','Reports'].forEach(function(t){document.getElementById('tab'+t).classList.toggle('active',t.toLowerCase()===v)});
 document.getElementById('examsView').style.display=v==='exams'?'block':'none';
 document.getElementById('studentsView').style.display=v==='students'?'block':'none';
 document.getElementById('reportsView').style.display=v==='reports'?'block':'none';
-// Hide FAB on reports tab
 if(v==='reports')document.getElementById('fabBtn').style.display='none';
 render();
 }
@@ -422,17 +867,18 @@ render();
 function openModal(){
 var modalContent=document.getElementById('modalContent');
 if(currentView==='exams'||currentView==='reports'){
-document.getElementById('modalTitle').textContent='New Exam';
-var subjChips=subjects.map(function(s){return '<label class="subj-chip checked" onclick="this.classList.toggle(\'checked\')"><input type="checkbox" value="'+s+'" checked style="display:none">'+s+'</label>';}).join('');
+document.getElementById('modalTitle').textContent='Create Exam — Auto-Generates Questions';
+var subjChips=subjects.map(function(s){return '<label class="subj-chip checked" onclick="this.classList.toggle(\'checked\')"><input type="checkbox" value="'+s+'" checked style="display:none">'+s+'</label>'}).join('');
 modalContent.innerHTML='<div class="form-group"><label class="form-label">Exam Name</label><input class="form-input" id="exName" placeholder="e.g. First Term Exam" value="First Term Exam"></div>'+
-'<div class="form-row"><div class="form-group"><label class="form-label">Class</label><select class="form-select" id="exClass">'+classOptions.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('')+'</select></div>'+
+'<div class="form-row"><div class="form-group"><label class="form-label">Class</label><select class="form-select" id="exClass">'+classOptions.map(function(c){return '<option value="'+c+'">'+c+'</option>'}).join('')+'</select></div>'+
 '<div class="form-group"><label class="form-label">Term</label><select class="form-select" id="exTerm"><option>First Term</option><option>Second Term</option><option>Third Term</option></select></div></div>'+
-'<div class="form-group"><label class="form-label">Subjects (tap to select)</label><div class="subj-checkbox">'+subjChips+'</div></div>'+
-'<div class="modal-actions"><button class="btn btn-cancel" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveExam()">Create Exam</button></div>';
+'<div class="form-group"><label class="form-label">Subjects (tap to select/deselect)</label><div class="subj-checkbox">'+subjChips+'</div></div>'+
+'<div style="background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:10px;padding:10px;margin:10px 0;font-size:.72rem;color:var(--p3)">⚡ Exam paper with questions (MCQ + Theory) will be auto-generated for each subject based on the class level.</div>'+
+'<div class="modal-actions"><button class="btn btn-cancel" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveExam()">Create Exam Paper</button></div>';
 }else{
 document.getElementById('modalTitle').textContent='Add Student';
 modalContent.innerHTML='<div class="form-group"><label class="form-label">Student Name</label><input class="form-input" id="stName" placeholder="Full name"></div>'+
-'<div class="form-group"><label class="form-label">Class</label><select class="form-select" id="stClass">'+classOptions.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('')+'</select></div>'+
+'<div class="form-group"><label class="form-label">Class</label><select class="form-select" id="stClass">'+classOptions.map(function(c){return '<option value="'+c+'">'+c+'</option>'}).join('')+'</select></div>'+
 '<div class="modal-actions"><button class="btn btn-cancel" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveStudent()">Save</button></div>';
 }
 document.getElementById('modalOverlay').classList.add('show');
@@ -446,26 +892,28 @@ if(!name){showToast('Enter exam name');return}
 var cls=document.getElementById('exClass').value;
 var term=document.getElementById('exTerm').value;
 var selectedSubs=[];
-document.querySelectorAll('.subj-chip.checked input').forEach(function(c){selectedSubs.push(c.value);});
+document.querySelectorAll('.subj-chip.checked input').forEach(function(c){selectedSubs.push(c.value)});
 if(selectedSubs.length===0){showToast('Select at least one subject');return}
 
-// AUTO-POPULATE: Add all students in this class with 0 scores
-var classStudents=students.filter(function(s){return s.class===cls});
-var autoGrades={};
-classStudents.forEach(function(s){
-autoGrades[s.id]={};
-selectedSubs.forEach(function(sub){autoGrades[s.id][sub]=0;});
+// AUTO-GENERATE EXAM PAPER with questions for each subject
+var paper={};
+var totalQ=0;
+selectedSubs.forEach(function(sub){
+paper[sub]=generateQuestions(sub,cls);
+totalQ+=paper[sub].length;
 });
 
-exams.push({
-id:Math.random().toString(36).substr(2,9),
-name:name,class:cls,term:term,
-date:new Date().toISOString().split('T')[0],
-subjects:selectedSubs,
-grades:autoGrades
-});
+// Auto-populate students
+var classStudents=students.filter(function(s){return s.class===cls});
+var autoGrades={};
+classStudents.forEach(function(s){autoGrades[s.id]={};selectedSubs.forEach(function(sub){autoGrades[s.id][sub]=0})});
+
+exams.push({id:Math.random().toString(36).substr(2,9),name:name,class:cls,term:term,date:new Date().toISOString().split('T')[0],subjects:selectedSubs,grades:autoGrades,paper:paper,totalMarks:selectedSubs.length*100});
 saveAll();closeModal();render();
-showToast('Exam created — '+classStudents.length+' students auto-added ✓');
+showToast('Exam created — '+totalQ+' questions auto-generated ✓');
+
+// Auto-open the paper view
+setTimeout(function(){viewPaper(exams[exams.length-1].id)},500);
 }
 
 function saveStudent(){
@@ -474,22 +922,11 @@ if(!name){showToast('Enter name');return}
 var cls=document.getElementById('stClass').value;
 var newId=Math.random().toString(36).substr(2,9);
 students.push({id:newId,name:name,class:cls});
-
-// AUTO-POPULATE: Add this student to any existing exams for this class
-exams.forEach(function(e){
-if(e.class===cls&&!e.grades[newId]){
-e.grades[newId]={};
-e.subjects.forEach(function(sub){e.grades[newId][sub]=0;});
-}
-});
-saveAll();closeModal();render();
-showToast('Student added ✓');
+exams.forEach(function(e){if(e.class===cls&&!e.grades[newId]){e.grades[newId]={};e.subjects.forEach(function(sub){e.grades[newId][sub]=0})}});
+saveAll();closeModal();render();showToast('Student added ✓');
 }
 
-function editStudent(id){
-showToast('Tap an exam to grade this student');
-}
-
+function editStudent(id){showToast('Tap an exam to grade this student')}
 function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
