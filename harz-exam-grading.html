@@ -35,7 +35,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .grade-c{background:rgba(245,158,11,.15);color:var(--c)}
 .grade-d{background:rgba(249,115,22,.15);color:var(--d)}
 .grade-f{background:rgba(239,68,68,.15);color:var(--f)}
-.grading-section{padding:0 16px}
 .subject-row{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px}
 .subject-row .sr-name{flex:1;font-size:.82rem;font-weight:600}
 .subject-row input{width:70px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;text-align:center;font-size:.85rem;font-weight:600}
@@ -45,10 +44,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .result-row:last-child{border:none}
 .result-row .rr-subj{color:var(--muted)}
 .result-row .rr-score{font-weight:600}
-.result-summary{text-align:center;padding:16px 0}
-.result-summary .rs-total{font-size:2rem;font-weight:700}
-.result-summary .rs-avg{font-size:1.2rem;color:var(--p3);margin-top:4px}
-.result-summary .rs-grade{font-size:1.5rem;font-weight:700;margin-top:6px}
+.student-grade-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin:0 16px 12px}
+.sgc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sgc-name{font-size:.92rem;font-weight:700}
+.sgc-stats{display:flex;gap:8px;align-items:center}
+.sgc-total{font-size:.78rem;color:var(--muted)}
+.sgc-avg{font-size:1.1rem;font-weight:700}
+.live-summary{display:flex;justify-content:space-around;padding:10px;background:var(--bg);border-radius:10px;margin-top:10px;border:1px solid var(--border)}
+.live-summary .ls-item{text-align:center}
+.live-summary .ls-val{font-size:1.1rem;font-weight:700}
+.live-summary .ls-lbl{font-size:.58rem;color:var(--muted);text-transform:uppercase}
 .report-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:0 16px 10px}
 .rc-header{text-align:center;margin-bottom:14px}
 .rc-header .rc-school{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
@@ -77,6 +82,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .empty{text-align:center;padding:40px 16px;color:var(--muted)}
 .empty .emoji{font-size:2.5rem;margin-bottom:8px}
 .back-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:8px;font-size:.72rem;cursor:pointer}
+.auto-btn{background:rgba(0,212,170,.12);color:var(--p3);border:1px solid rgba(0,212,170,.3);padding:8px 14px;border-radius:10px;font-size:.78rem;font-weight:600;cursor:pointer}
+.auto-btn:active{transform:scale(.95)}
+.subj-checkbox{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.subj-chip{font-size:.75rem;cursor:pointer;background:var(--card);padding:6px 10px;border-radius:8px;border:1px solid var(--border);display:inline-flex;align-items:center;gap:4px;transition:.2s}
+.subj-chip.checked{background:rgba(124,77,255,.12);border-color:var(--p1);color:var(--p1)}
 </style>
 </head>
 <body>
@@ -93,15 +103,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div class="stat-card"><div class="stat-num" id="stAvg" style="color:var(--p3)">--</div><div class="stat-lbl">Avg Score</div></div>
 <div class="stat-card"><div class="stat-num" id="stPass" style="color:var(--pass)">0%</div><div class="stat-lbl">Pass Rate</div></div>
 </div>
-<div class="section-title">Created Exams</div>
+<div class="section-title">Created Exams — Tap to Grade</div>
 <div class="exam-list" id="examList"></div>
 </div>
 <div id="studentsView" style="display:none">
-<div class="section-title">Students</div>
+<div class="section-title">Students — Tap to Edit</div>
 <div class="student-list" id="studentList"></div>
 </div>
 <div id="reportsView" style="display:none">
-<div class="section-title">Report Cards</div>
+<div class="section-title">Auto-Generated Report Cards</div>
 <div id="reportList" style="padding:0 16px"></div>
 </div>
 <div id="gradeView" style="display:none"></div>
@@ -121,6 +131,7 @@ function load(){try{exams=JSON.parse(localStorage.getItem('harz_exams')||'[]');s
 function saveAll(){localStorage.setItem('harz_exams',JSON.stringify(exams));localStorage.setItem('harz_students',JSON.stringify(students))}
 function gradeFor(pct){if(pct>=80)return{g:'A',c:'grade-a'};if(pct>=70)return{g:'B',c:'grade-b'};if(pct>=60)return{g:'C',c:'grade-c'};if(pct>=50)return{g:'D',c:'grade-d'};return{g:'F',c:'grade-f'}}
 function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+
 function seed(){
 if(exams.length>0||students.length>0)return;
 const today=new Date().toISOString().split('T')[0];
@@ -128,17 +139,31 @@ students=[
 {name:'Aisha Bello',class:'JSS 2',id:'s1'},{name:'Yusuf Sani',class:'Pry 5',id:'s2'},
 {name:'Fatima Ibrahim',class:'JSS 1',id:'s3'},{name:'Muhammad Musa',class:'SSS 1',id:'s4'},
 {name:'Zainab Garba',class:'Pry 3',id:'s5'},{name:'Abdullahi Tanko',class:'JSS 3',id:'s6'},
-{name:'Hauwa Dauda',class:'SSS 2',id:'s7'},{name:'Ibrahim Yusuf',class:'Pry 6',id:'s8'}
+{name:'Hauwa Dauda',class:'SSS 2',id:'s7'},{name:'Ibrahim Yusuf',class:'Pry 6',id:'s8'},
+{name:'Amina Sani',class:'JSS 2',id:'s9'},{name:'Bello Ibrahim',class:'JSS 2',id:'s10'}
 ];
+// Auto-generate exam with pre-populated students
+const jss2Subjects=['Mathematics','English','Basic Science','Social Studies','Civic Education','Computer Studies','Agric Science','Hausa'];
+const jss2Students=students.filter(s=>s.class==='JSS 2');
+const jss2Grades={};
+jss2Students.forEach(s=>{
+jss2Grades[s.id]={};
+jss2Subjects.forEach(sub=>{jss2Grades[s.id][sub]=Math.floor(Math.random()*40)+55;});
+});
+const pry5Subjects=['Mathematics','English','Basic Science','Social Studies','Civic Education','Computer Studies'];
+const pry5Students=students.filter(s=>s.class==='Pry 5');
+const pry5Grades={};
+pry5Students.forEach(s=>{
+pry5Grades[s.id]={};
+pry5Subjects.forEach(sub=>{pry5Grades[s.id][sub]=Math.floor(Math.random()*40)+55;});
+});
 exams=[
-{name:'First Term Exam',class:'JSS 2',term:'First Term',date:today,subjects:subjects.slice(0,8).map(s=>({subject:s,scores:{}})),
-grades:{s1:{Mathematics:85,English:78,'Basic Science':82,'Social Studies':90,'Civic Education':75,'Computer Studies':88,'Agric Science':80,Hausa:92},
-s3:{Mathematics:72,English:65,'Basic Science':70,'Social Studies':78,'Civic Education':80,'Computer Studies':75,'Agric Science':68,Hausa:85}}},
-{name:'First Term Exam',class:'Pry 5',term:'First Term',date:today,subjects:subjects.slice(0,6).map(s=>({subject:s,scores:{}})),
-grades:{s2:{Mathematics:90,English:85,'Basic Science':88,'Social Studies':92,'Civic Education':80,'Computer Studies':95}}}
+{id:'e1',name:'First Term Exam',class:'JSS 2',term:'First Term',date:today,subjects:jss2Subjects,grades:jss2Grades},
+{id:'e2',name:'First Term Exam',class:'Pry 5',term:'First Term',date:today,subjects:pry5Subjects,grades:pry5Grades}
 ];
 saveAll();
 }
+
 function render(){
 document.getElementById('stExams').textContent=exams.length;
 document.getElementById('stStudents').textContent=students.length;
@@ -146,100 +171,231 @@ if(currentView==='exams')renderExams();
 else if(currentView==='students')renderStudents();
 else if(currentView==='reports')renderReports();
 }
+
 function renderExams(){
 const list=document.getElementById('examList');
-if(exams.length===0){list.innerHTML='<div class="empty"><div class="emoji">🎓</div><p>No exams. Tap + to create.</p></div>';return}
+// Calc overall stats
 let allPcts=[];
-exams.forEach(e=>{Object.values(e.grades||{}).forEach(s=>{const vals=Object.values(s);const avg=vals.reduce((a,b)=>a+b,0)/vals.length;allPcts.push(avg)})});
+exams.forEach(e=>{
+Object.values(e.grades||{}).forEach(s=>{
+const vals=Object.values(s);
+if(vals.length>0){allPcts.push(vals.reduce((a,b)=>a+b,0)/vals.length)}
+});
+});
 const avgScore=allPcts.length?Math.round(allPcts.reduce((a,b)=>a+b,0)/allPcts.length):0;
 const passRate=allPcts.length?Math.round(allPcts.filter(p=>p>=50).length/allPcts.length*100):0;
-document.getElementById('stAvg').textContent=avgScore+'%';
+document.getElementById('stAvg').textContent=avgScore>0?avgScore+'%':'--';
 document.getElementById('stPass').textContent=passRate+'%';
+
+if(exams.length===0){list.innerHTML='<div class="empty"><div class="emoji">🎓</div><p>No exams yet. Tap + to create one.</p></div>';return}
 list.innerHTML=exams.map(e=>{
-const graded=Object.keys(e.grades||{}).length;
-return `<div class="exam-card" onclick="gradeExam('${e.id}')">
-<div class="exam-name">${esc(e.name)}</div>
-<div class="exam-meta">${e.term} · ${e.subjects.length} subjects · ${graded} students graded</div>
-<div class="exam-class">${e.class}</div>
-</div>`}).join('');
+const gradedCount=Object.keys(e.grades||{}).length;
+const classStudents=students.filter(s=>s.class===e.class);
+// Calc class average
+let classPcts=[];
+Object.values(e.grades||{}).forEach(s=>{
+const vals=Object.values(s);
+if(vals.length>0)classPcts.push(vals.reduce((a,b)=>a+b,0)/vals.length);
+});
+const classAvg=classPcts.length?Math.round(classPcts.reduce((a,b)=>a+b,0)/classPcts.length):0;
+const gr=classAvg>0?gradeFor(classAvg):null;
+return '<div class="exam-card" onclick="gradeExam(\''+e.id+'\')">'+
+'<div class="exam-name">'+esc(e.name)+'</div>'+
+'<div class="exam-meta">'+esc(e.term)+' · '+e.subjects.length+' subjects · '+gradedCount+' students graded</div>'+
+'<div class="exam-class">'+e.class+'</div>'+
+(gr?'<div style="margin-top:6px;font-size:.72rem;color:var(--muted)">Class Avg: <span style="color:var(--p3);font-weight:600">'+classAvg+'%</span> <span class="grade-badge '+gr.c+'" style="padding:2px 6px;font-size:.62rem">'+gr.g+'</span></div>':'')+
+'</div>';
+}).join('');
 }
+
 function renderStudents(){
 const list=document.getElementById('studentList');
 if(students.length===0){list.innerHTML='<div class="empty"><div class="emoji">👨‍🎓</div><p>No students. Tap + to add.</p></div>';return}
 list.innerHTML=students.map(s=>{
-const stExams=exams.filter(e=>e.class===s.class);
-let avg='--';
-if(stExams.length>0&&stExams[0].grades&&stExams[0].grades[s.id]){
-const vals=Object.values(stExams[0].grades[s.id]);
-avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)+'%';
+const stExams=exams.filter(e=>e.class===s.class&&e.grades&&e.grades[s.id]);
+let avg='--',gr={g:'--',c:'grade-d'};
+if(stExams.length>0){
+const exam=stExams[0];
+const vals=Object.values(exam.grades[s.id]);
+if(vals.length>0){avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)+'%';gr=gradeFor(parseInt(avg))}
 }
-const gr=avg!=='--'?gradeFor(parseInt(avg)):{g:'--',c:'grade-d'};
-return `<div class="student-card" onclick="editStudent('${s.id}')">
-<div class="avatar" style="background:rgba(124,77,255,.12);color:var(--p1)">${initials(s.name)}</div>
-<div class="s-info"><div class="s-name">${esc(s.name)}</div><div class="s-meta">${s.class}</div></div>
-<div class="grade-badge ${gr.c}">${gr.g}</div>
-</div>`}).join('');
+return '<div class="student-card" onclick="editStudent(\''+s.id+'\')">'+
+'<div class="avatar" style="background:rgba(124,77,255,.12);color:var(--p1)">'+initials(s.name)+'</div>'+
+'<div class="s-info"><div class="s-name">'+esc(s.name)+'</div><div class="s-meta">'+s.class+'</div></div>'+
+'<div class="grade-badge '+gr.c+'">'+gr.g+' '+avg+'</div>'+
+'</div>';
+}).join('');
 }
+
 function renderReports(){
 const list=document.getElementById('reportList');
 if(students.length===0){list.innerHTML='<div class="empty"><div class="emoji">📋</div><p>No students.</p></div>';return}
-list.innerHTML=students.map(s=>{
+let html='';
+students.forEach(s=>{
 const stExams=exams.filter(e=>e.class===s.class&&e.grades&&e.grades[s.id]);
-if(stExams.length===0)return '';
-const exam=stExams[0];
+if(stExams.length===0)return;
+stExams.forEach(exam=>{
 const grades=exam.grades[s.id];
 const scores=Object.entries(grades);
+if(scores.length===0)return;
 const total=scores.reduce((a,[,v])=>a+v,0);
 const avg=Math.round(total/scores.length);
 const gr=gradeFor(avg);
-return `<div class="report-card">
-<div class="rc-header">
-<div class="rc-school">Danfodio Memorial Academy</div>
-<div class="rc-title">Term Report</div>
-</div>
-<div class="rc-info">
-<div><span class="rc-lbl">Name:</span> <span class="rc-val">${esc(s.name)}</span></div>
-<div><span class="rc-lbl">Class:</span> <span class="rc-val">${s.class}</span></div>
-<div><span class="rc-lbl">Term:</span> <span class="rc-val">${esc(exam.term)}</span></div>
-<div><span class="rc-lbl">Date:</span> <span class="rc-val">${new Date(exam.date).toLocaleDateString('en-NG',{month:'short',day:'numeric',year:'numeric'})}</span></div>
-</div>
-${scores.map(([subj,score])=>{const sg=gradeFor(score);return `<div class="result-row"><span class="rr-subj">${subj}</span><span><span class="rr-score">${score}/100</span> <span class="grade-badge ${sg.c}" style="padding:2px 6px;font-size:.62rem">${sg.g}</span></span></div>`}).join('')}
-<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:8px">
-<div class="result-row"><span class="rr-subj" style="font-weight:600">Total</span><span class="rr-score" style="font-size:1rem">${total}/${scores.length*100}</span></div>
-<div class="result-row"><span class="rr-subj" style="font-weight:600">Average</span><span class="rr-score" style="font-size:1.1rem;color:var(--p3)">${avg}%</span></div>
-<div class="result-row"><span class="rr-subj" style="font-weight:600">Grade</span><span class="grade-badge ${gr.c}" style="font-size:1rem">${gr.g}</span></div>
-</div>
-</div>`}).filter(h=>h).join('');
+html+='<div class="report-card">'+
+'<div class="rc-header"><div class="rc-school">Danfodio Memorial Academy</div><div class="rc-title">Term Report Card</div></div>'+
+'<div class="rc-info">'+
+'<div><span class="rc-lbl">Name:</span> <span class="rc-val">'+esc(s.name)+'</span></div>'+
+'<div><span class="rc-lbl">Class:</span> <span class="rc-val">'+s.class+'</span></div>'+
+'<div><span class="rc-lbl">Term:</span> <span class="rc-val">'+esc(exam.term)+'</span></div>'+
+'<div><span class="rc-lbl">Exam:</span> <span class="rc-val">'+esc(exam.name)+'</span></div>'+
+'</div>'+
+scores.map(function(p){var subj=p[0],score=p[1];var sg=gradeFor(score);return '<div class="result-row"><span class="rr-subj">'+subj+'</span><span><span class="rr-score">'+score+'/100</span> <span class="grade-badge '+sg.c+'" style="padding:2px 6px;font-size:.62rem">'+sg.g+'</span></span></div>'}).join('')+
+'<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:8px">'+
+'<div class="result-row"><span class="rr-subj" style="font-weight:600">Total Score</span><span class="rr-score" style="font-size:1rem">'+total+' / '+(scores.length*100)+'</span></div>'+
+'<div class="result-row"><span class="rr-subj" style="font-weight:600">Average</span><span class="rr-score" style="font-size:1.1rem;color:var(--p3)">'+avg+'%</span></div>'+
+'<div class="result-row"><span class="rr-subj" style="font-weight:600">Grade</span><span class="grade-badge '+gr.c+'" style="font-size:1rem">'+gr.g+'</span></div>'+
+'<div class="result-row"><span class="rr-subj" style="font-weight:600">Position</span><span class="rr-score">'+getStudentPosition(exam,s.id)+'</span></div>'+
+'</div></div>';
+});
+});
+list.innerHTML=html||'<div class="empty"><div class="emoji">📋</div><p>No graded students yet. Grade an exam first.</p></div>';
 }
+
+function getStudentPosition(exam,studentId){
+// Calculate position in class
+const classStudents=students.filter(s=>s.class===exam.class&&exam.grades[s.id]);
+const avgs=classStudents.map(s=>{
+const vals=Object.values(exam.grades[s.id]);
+return vals.length>0?vals.reduce((a,b)=>a+b,0)/vals.length:0;
+});
+avgs.sort(function(a,b){return b-a});
+const studentAvg=Object.values(exam.grades[studentId]).reduce((a,b)=>a+b,0)/Object.values(exam.grades[studentId]).length;
+const pos=avgs.indexOf(studentAvg)+1;
+const suffix=pos===1?'st':pos===2?'nd':pos===3?'rd':'th';
+return pos+'/'+avgs.length+' ('+pos+suffix+')';
+}
+
 function gradeExam(id){
-gradeExamId=id;const exam=exams.find(e=>e.id===id);if(!exam)return;
+gradeExamId=id;
+var exam=exams.find(function(e){return e.id===id});
+if(!exam)return;
 document.getElementById('examsView').style.display='none';
 document.getElementById('gradeView').style.display='block';
 document.getElementById('backBtn').style.display='block';
 document.getElementById('fabBtn').style.display='none';
-const classStudents=students.filter(s=>s.class===exam.class);
-const subjList=exam.subjects.map(s=>s.subject);
-document.getElementById('gradeView').innerHTML=`
-<div class="section-title">Grade: ${esc(exam.name)} — ${exam.class}</div>
-${classStudents.map(s=>{
-const existing=exam.grades&&exam.grades[s.id]?exam.grades[s.id]:{};
-return `<div class="report-card">
-<div style="font-size:.88rem;font-weight:700;margin-bottom:10px">${esc(s.name)}</div>
-${subjList.map(sub=>`<div class="subject-row">
-<span class="sr-name">${sub}</span>
-<input type="number" min="0" max="100" value="${existing[sub]||''}" placeholder="--" data-student="${s.id}" data-subject="${sub}" onchange="updateGrade('${exam.id}','${s.id}','${sub}',this.value)">
-</div>`).join('')}
-</div>`}).join('')}
-`;
+
+var classStudents=students.filter(function(s){return s.class===exam.class});
+var subjList=exam.subjects;
+
+// If no students in this class, show warning
+if(classStudents.length===0){
+document.getElementById('gradeView').innerHTML='<div class="section-title">Grade: '+esc(exam.name)+' — '+exam.class+'</div>'+
+'<div class="empty"><div class="emoji">⚠️</div><p>No students in '+exam.class+'. Add students first from the Students tab.</p></div>';
+return;
 }
-function updateGrade(examId,studentId,subject,score){
-const exam=exams.find(e=>e.id===examId);if(!exam)return;
-if(!exam.grades)exam.grades={};
-if(!exam.grades[studentId])exam.grades[studentId]={};
-exam.grades[studentId][subject]=parseInt(score)||0;
+
+// Auto-populate grades for any students not yet in the grades object
+classStudents.forEach(function(s){
+if(!exam.grades[s.id]){
+exam.grades[s.id]={};
+subjList.forEach(function(sub){exam.grades[s.id][sub]=0;});
+}
+});
 saveAll();
-showToast('Grade saved ✓');
+
+var html='<div class="section-title">Grade: '+esc(exam.name)+' — '+exam.class+'</div>';
+html+='<div style="padding:0 16px;margin-bottom:10px;display:flex;gap:8px">';
+html+='<button class="auto-btn" onclick="autoGenerateGrades(\''+exam.id+'\')">⚡ Auto-Generate All Grades</button>';
+html+='<button class="auto-btn" onclick="clearAllGrades(\''+exam.id+'\')" style="color:var(--fail);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08)">🗑 Clear All</button>';
+html+='</div>';
+
+classStudents.forEach(function(s){
+var existing=exam.grades[s.id]||{};
+var vals=Object.values(existing);
+var total=vals.reduce(function(a,b){return a+b},0);
+var avg=vals.length>0?Math.round(total/vals.length):0;
+var gr=avg>0?gradeFor(avg):{g:'-',c:'grade-f'};
+
+html+='<div class="student-grade-card">';
+html+='<div class="sgc-header">';
+html+='<div class="sgc-name">'+esc(s.name)+'</div>';
+html+='<div class="sgc-stats"><span class="sgc-total">Total: '+total+'</span><span class="sgc-avg" style="color:var(--p3)">'+avg+'%</span><span class="grade-badge '+gr.c+'">'+gr.g+'</span></div>';
+html+='</div>';
+subjList.forEach(function(sub){
+var score=existing[sub]||0;
+html+='<div class="subject-row"><span class="sr-name">'+sub+'</span><input type="number" min="0" max="100" value="'+score+'" placeholder="0" data-student="'+s.id+'" data-subject="'+sub+'" oninput="updateGradeLive(\''+exam.id+'\',\''+s.id+'\',\''+sub+'\',this.value,this)"></div>';
+});
+// Live summary
+html+='<div class="live-summary" id="summary-'+s.id+'">';
+html+='<div class="ls-item"><div class="ls-val">'+total+'</div><div class="ls-lbl">Total</div></div>';
+html+='<div class="ls-item"><div class="ls-val" style="color:var(--p3)">'+avg+'%</div><div class="ls-lbl">Average</div></div>';
+html+='<div class="ls-item"><div class="ls-val"><span class="grade-badge '+gr.c+'">'+gr.g+'</span></div><div class="ls-lbl">Grade</div></div>';
+html+='</div>';
+html+='</div>';
+});
+
+document.getElementById('gradeView').innerHTML=html;
 }
+
+function updateGradeLive(examId,studentId,subject,scoreVal,inputEl){
+var exam=exams.find(function(e){return e.id===examId});
+if(!exam)return;
+if(!exam.grades[studentId])exam.grades[studentId]={};
+exam.grades[studentId][subject]=parseInt(scoreVal)||0;
+saveAll();
+
+// Update live summary without full re-render
+var subjList=exam.subjects;
+var grades=exam.grades[studentId];
+var vals=Object.values(grades);
+var total=vals.reduce(function(a,b){return a+b},0);
+var avg=vals.length>0?Math.round(total/vals.length):0;
+var gr=avg>0?gradeFor(avg):{g:'-',c:'grade-f'};
+
+var summary=document.getElementById('summary-'+studentId);
+if(summary){
+summary.innerHTML='<div class="ls-item"><div class="ls-val">'+total+'</div><div class="ls-lbl">Total</div></div>'+
+'<div class="ls-item"><div class="ls-val" style="color:var(--p3)">'+avg+'%</div><div class="ls-lbl">Average</div></div>'+
+'<div class="ls-item"><div class="ls-val"><span class="grade-badge '+gr.c+'">'+gr.g+'</span></div><div class="ls-lbl">Grade</div></div>';
+}
+// Update header stats too
+var card=inputEl.closest('.student-grade-card');
+if(card){
+var header=card.querySelector('.sgc-stats');
+if(header)header.innerHTML='<span class="sgc-total">Total: '+total+'</span><span class="sgc-avg" style="color:var(--p3)">'+avg+'%</span><span class="grade-badge '+gr.c+'">'+gr.g+'</span>';
+}
+}
+
+function autoGenerateGrades(examId){
+var exam=exams.find(function(e){return e.id===examId});
+if(!exam)return;
+var classStudents=students.filter(function(s){return s.class===exam.class});
+classStudents.forEach(function(s){
+if(!exam.grades[s.id])exam.grades[s.id]={};
+exam.subjects.forEach(function(sub){
+// Generate realistic scores between 45-95
+exam.grades[s.id][sub]=Math.floor(Math.random()*50)+45;
+});
+});
+saveAll();
+gradeExam(examId);
+showToast('Grades auto-generated ✓');
+}
+
+function clearAllGrades(examId){
+var exam=exams.find(function(e){return e.id===examId});
+if(!exam)return;
+if(!confirm('Clear all grades for this exam?'))return;
+var classStudents=students.filter(function(s){return s.class===exam.class});
+classStudents.forEach(function(s){
+exam.grades[s.id]={};
+exam.subjects.forEach(function(sub){exam.grades[s.id][sub]=0;});
+});
+saveAll();
+gradeExam(examId);
+showToast('All grades cleared');
+}
+
 function goBack(){
 gradeExamId=null;
 document.getElementById('gradeView').style.display='none';
@@ -247,58 +403,98 @@ document.getElementById('backBtn').style.display='none';
 document.getElementById('fabBtn').style.display='flex';
 switchView(currentView);
 }
+
 function switchView(v){
 currentView=v;
 document.getElementById('gradeView').style.display='none';
 document.getElementById('fabBtn').style.display='flex';
-['Exams','Students','Reports'].forEach(t=>{
+['Exams','Students','Reports'].forEach(function(t){
 document.getElementById('tab'+t).classList.toggle('active',t.toLowerCase()===v);
 });
 document.getElementById('examsView').style.display=v==='exams'?'block':'none';
 document.getElementById('studentsView').style.display=v==='students'?'block':'none';
 document.getElementById('reportsView').style.display=v==='reports'?'block':'none';
+// Hide FAB on reports tab
+if(v==='reports')document.getElementById('fabBtn').style.display='none';
 render();
 }
+
 function openModal(){
-const modalContent=document.getElementById('modalContent');
-if(currentView==='exams'){
+var modalContent=document.getElementById('modalContent');
+if(currentView==='exams'||currentView==='reports'){
 document.getElementById('modalTitle').textContent='New Exam';
-modalContent.innerHTML=`<div class="form-group"><label class="form-label">Exam Name</label><input class="form-input" id="exName" placeholder="e.g. First Term Exam"></div>
-<div class="form-row"><div class="form-group"><label class="form-label">Class</label><select class="form-select" id="exClass">${classOptions.map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div>
-<div class="form-group"><label class="form-label">Term</label><select class="form-select" id="exTerm"><option>First Term</option><option>Second Term</option><option>Third Term</option></select></div></div>
-<div class="form-group"><label class="form-label">Subjects</label><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">${subjects.map(s=>`<label style="font-size:.75rem;cursor:pointer;background:var(--card);padding:6px 10px;border-radius:8px;border:1px solid var(--border)"><input type="checkbox" value="${s}" checked style="margin-right:4px">${s}</label>`).join('')}</div></div>
-<div class="modal-actions"><button class="btn btn-cancel" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveExam()">Create</button></div>`;
+var subjChips=subjects.map(function(s){return '<label class="subj-chip checked" onclick="this.classList.toggle(\'checked\')"><input type="checkbox" value="'+s+'" checked style="display:none">'+s+'</label>';}).join('');
+modalContent.innerHTML='<div class="form-group"><label class="form-label">Exam Name</label><input class="form-input" id="exName" placeholder="e.g. First Term Exam" value="First Term Exam"></div>'+
+'<div class="form-row"><div class="form-group"><label class="form-label">Class</label><select class="form-select" id="exClass">'+classOptions.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('')+'</select></div>'+
+'<div class="form-group"><label class="form-label">Term</label><select class="form-select" id="exTerm"><option>First Term</option><option>Second Term</option><option>Third Term</option></select></div></div>'+
+'<div class="form-group"><label class="form-label">Subjects (tap to select)</label><div class="subj-checkbox">'+subjChips+'</div></div>'+
+'<div class="modal-actions"><button class="btn btn-cancel" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveExam()">Create Exam</button></div>';
 }else{
 document.getElementById('modalTitle').textContent='Add Student';
-modalContent.innerHTML=`<div class="form-group"><label class="form-label">Student Name</label><input class="form-input" id="stName" placeholder="Full name"></div>
-<div class="form-group"><label class="form-label">Class</label><select class="form-select" id="stClass">${classOptions.map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div>
-<div class="modal-actions"><button class="btn btn-cancel" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveStudent()">Save</button></div>`;
+modalContent.innerHTML='<div class="form-group"><label class="form-label">Student Name</label><input class="form-input" id="stName" placeholder="Full name"></div>'+
+'<div class="form-group"><label class="form-label">Class</label><select class="form-select" id="stClass">'+classOptions.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('')+'</select></div>'+
+'<div class="modal-actions"><button class="btn btn-cancel" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveStudent()">Save</button></div>';
 }
 document.getElementById('modalOverlay').classList.add('show');
 }
+
 function closeModal(){document.getElementById('modalOverlay').classList.remove('show')}
+
 function saveExam(){
-const name=document.getElementById('exName').value.trim();if(!name){showToast('Enter exam name');return}
-const cls=document.getElementById('exClass').value;
-const term=document.getElementById('exTerm').value;
-const selectedSubs=[...document.querySelectorAll('input[type=checkbox]:checked')].map(c=>c.value);
+var name=document.getElementById('exName').value.trim();
+if(!name){showToast('Enter exam name');return}
+var cls=document.getElementById('exClass').value;
+var term=document.getElementById('exTerm').value;
+var selectedSubs=[];
+document.querySelectorAll('.subj-chip.checked input').forEach(function(c){selectedSubs.push(c.value);});
 if(selectedSubs.length===0){showToast('Select at least one subject');return}
-exams.push({id:Math.random().toString(36).substr(2,9),name,class:cls,term,date:new Date().toISOString().split('T')[0],subjects:selectedSubs.map(s=>({subject:s,scores:{}})),grades:{}});
-saveAll();closeModal();render();showToast('Exam created ✓');
+
+// AUTO-POPULATE: Add all students in this class with 0 scores
+var classStudents=students.filter(function(s){return s.class===cls});
+var autoGrades={};
+classStudents.forEach(function(s){
+autoGrades[s.id]={};
+selectedSubs.forEach(function(sub){autoGrades[s.id][sub]=0;});
+});
+
+exams.push({
+id:Math.random().toString(36).substr(2,9),
+name:name,class:cls,term:term,
+date:new Date().toISOString().split('T')[0],
+subjects:selectedSubs,
+grades:autoGrades
+});
+saveAll();closeModal();render();
+showToast('Exam created — '+classStudents.length+' students auto-added ✓');
 }
+
 function saveStudent(){
-const name=document.getElementById('stName').value.trim();if(!name){showToast('Enter name');return}
-students.push({id:Math.random().toString(36).substr(2,9),name,class:document.getElementById('stClass').value});
-saveAll();closeModal();render();showToast('Student added ✓');
+var name=document.getElementById('stName').value.trim();
+if(!name){showToast('Enter name');return}
+var cls=document.getElementById('stClass').value;
+var newId=Math.random().toString(36).substr(2,9);
+students.push({id:newId,name:name,class:cls});
+
+// AUTO-POPULATE: Add this student to any existing exams for this class
+exams.forEach(function(e){
+if(e.class===cls&&!e.grades[newId]){
+e.grades[newId]={};
+e.subjects.forEach(function(sub){e.grades[newId][sub]=0;});
 }
+});
+saveAll();closeModal();render();
+showToast('Student added ✓');
+}
+
 function editStudent(id){
-// Could expand later
-showToast('Tap an exam to grade');
+showToast('Tap an exam to grade this student');
 }
-function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
 load();seed();render();
-document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target.id==='modalOverlay')closeModal()});
+document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target.id==='modalOverlay')closeModal()});
 </script>
 </body>
 </html>
