@@ -817,7 +817,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <script>
 function openLink(u){
 // Sites that genuinely block iframe embedding (X-Frame-Options: DENY) — open in new tab
-const noIframe=['getly.store','t.me','onrender.com'];
+const noIframe=['getly.store','t.me','onrender.com','paddle.com'];
 for(let i=0;i<noIframe.length;i++){if(u.includes(noIframe[i])){window.open(u,'_blank');return;}}
 const overlay=document.getElementById('app-overlay');
 const frame=document.getElementById('app-frame');
