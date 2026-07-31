@@ -228,7 +228,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div style="padding:12px 16px 0">
 <div style="display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px">
 <span style="font-size:1rem">🔍</span>
-<input id="appSearch" type="text" placeholder="Search 60+ apps & tools..." style="flex:1;background:none;border:none;outline:none;color:var(--text);font-size:.82rem" oninput="searchApps(this.value)">
+<input id="appSearch" aria-label="Search apps" type="text" placeholder="Search 60+ apps & tools..." style="flex:1;background:none;border:none;outline:none;color:var(--text);font-size:.82rem" oninput="searchApps(this.value)">
 <span onclick="clearSearch()" id="searchClear" style="display:none;font-size:.85rem;color:var(--muted);cursor:pointer">✕</span>
 </div>
 <div id="searchResults" style="display:none;margin-top:8px"></div>
@@ -500,7 +500,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <button class="ai-chip" onclick="quickAI('Tell me about GDEG token')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p2);cursor:pointer">GDEG?</button>
 </div>
 <div class="biz-ctrl-input" style="background:var(--card);border-top:1px solid var(--border);padding:10px;display:flex;gap:8px">
-<input id="aiInput" placeholder="Ask Harz AI anything..." style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:.8rem" onkeydown="if(event.key==='Enter')sendAI()">
+<input id="aiInput" aria-label="Ask Harz AI" placeholder="Ask Harz AI anything..." style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:.8rem" onkeydown="if(event.key==='Enter')sendAI()">
 <button onclick="sendAI()" style="background:var(--p2);border:none;border-radius:8px;padding:8px 14px;color:#fff;font-size:.8rem;cursor:pointer">➤</button>
 </div>
 </div>
@@ -792,15 +792,15 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 <!-- Bottom Nav -->
 <div class="nav">
-<div class="nav-item active" onclick="switchPage('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
-<div class="nav-item" onclick="closeAI();switchPage('pay')"><div class="nav-icon">💸</div><div class="nav-label">Pay</div></div>
-<div class="nav-item" onclick="closeAI();switchPage('chat')"><div class="nav-icon">💬</div><div class="nav-label">Chat</div></div>
-<div class="nav-item" onclick="closeAI();switchPage('store')"><div class="nav-icon">🛍️</div><div class="nav-label">Store</div></div>
-<div class="nav-item" onclick="switchPage('learn')"><div class="nav-icon">📚</div><div class="nav-label">Learn</div></div>
+<div class="nav-item active" onclick="switchPage('home')" aria-label="Home"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+<div class="nav-item" onclick="closeAI();switchPage('pay')" aria-label="Payments"><div class="nav-icon">💸</div><div class="nav-label">Pay</div></div>
+<div class="nav-item" onclick="closeAI();switchPage('chat')" aria-label="Messages"><div class="nav-icon">💬</div><div class="nav-label">Chat</div></div>
+<div class="nav-item" onclick="closeAI();switchPage('store')" aria-label="Store"><div class="nav-icon">🛍️</div><div class="nav-label">Store</div></div>
+<div class="nav-item" onclick="switchPage('learn')" aria-label="Learn"><div class="nav-icon">📚</div><div class="nav-label">Learn</div></div>
 </div>
 
 <!-- App Overlay (in-app iframe viewer) -->
-<div id="app-overlay" style="position:fixed;inset:0;background:var(--bg);z-index:500;display:none;flex-direction:column">
+<div id="app-overlay" role="dialog" aria-label="App viewer" style="position:fixed;inset:0;background:var(--bg);z-index:500;display:none;flex-direction:column">
 <div style="background:var(--card);border-bottom:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:10">
 <div onclick="iframeBack()" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;cursor:pointer;color:var(--p2);font-size:1.1rem;font-weight:700;border-radius:8px;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.2)">‹</div>
 <div onclick="iframeForward()" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;cursor:pointer;color:var(--p2);font-size:1.1rem;font-weight:700;border-radius:8px;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.2)">›</div>
@@ -808,7 +808,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div onclick="iframeReload()" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;cursor:pointer;color:var(--muted);font-size:.95rem;border-radius:8px;background:var(--card);border:1px solid var(--border)">⟳</div>
 <div onclick="closeApp()" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;cursor:pointer;color:#ff5d6e;font-size:1rem;font-weight:700;border-radius:8px;background:rgba(255,93,110,.1);border:1px solid rgba(255,93,110,.2)">✕</div>
 </div>
-<iframe id="app-frame" style="flex:1;border:none;width:100%;background:#fff" allow="camera;microphone;geolocation;clipboard-read;clipboard-write;clipboard-write;allow-popups;allow-same-origin" allowfullscreen></iframe>
+<iframe id="app-frame" role="iframe" aria-label="Embedded application" style="flex:1;border:none;width:100%;background:#fff" allow="camera;microphone;geolocation;clipboard-read;clipboard-write;allow-popups;allow-same-origin" allowfullscreen></iframe>
 </div>
 <script>document.getElementById('app-overlay').style.display='none';</script>
 <!-- Toast -->
@@ -997,10 +997,14 @@ document.getElementById('searchClear').style.display='none';
 
 // Splash
 setTimeout(()=>document.getElementById('splash').classList.add('hidden'),1200);
+// Restore last visited page
+try{var lastP=localStorage.getItem('harz_lastPage');if(lastP&&lastP!=='home'&&lastP!=='pay'){setTimeout(function(){switchPage(lastP)},100)}}catch(e){}
 
 // Page navigation
 function switchPage(name){
 window._lastPage=name;
+try{localStorage.setItem('harz_lastPage',name)}catch(e){}
+try{localStorage.setItem('harz_lastPage',name)}catch(e){}
 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 const page=document.getElementById('page-'+name);
 if(page)page.classList.add('active');
@@ -1153,6 +1157,12 @@ if(d&&d.agents_available){document.getElementById('ctrl-agents').textContent=d.a
 }).catch(()=>{document.getElementById('ctrl-agents').textContent='20 agents';});
 }
 
+// === User Preferences (localStorage) ===
+function savePref(key,val){try{localStorage.setItem('harz_'+key,val)}catch(e){}}
+function getPref(key){try{return localStorage.getItem('harz_'+key)}catch(e){return null}}
+function rememberLastPage(){try{localStorage.setItem('harz_lastPage',currentPage||'home')}catch(e){}}
+function restoreLastPage(){try{var p=localStorage.getItem('harz_lastPage');if(p&&p!=='home'){switchPage(p)}}catch(e){}}
+
 function sendAI(){
 const input=document.getElementById('aiInput');
 const msg=input.value.trim();
@@ -1250,14 +1260,6 @@ alert('Connection error. Please try again.');
 });
 }
 
-function loadBizControl(){
-// Load CRM count
-fetch('https://superagent-2286fb2f.base44.app/functions/harzCRM?action=stats')
-.then(r=>r.json()).then(d=>{
-if(d&&(d.total||d.count)){document.getElementById('ctrl-crm').textContent=(d.total||d.count)+' leads';}
-else{document.getElementById('ctrl-crm').textContent='24 leads';}
-}).catch(()=>{document.getElementById('ctrl-crm').textContent='24 leads';});
-}
 function closeAI(){
 document.getElementById('ai-chat').classList.remove('show');
 }
