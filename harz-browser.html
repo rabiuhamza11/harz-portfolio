@@ -609,19 +609,21 @@ showLoading();
 }
 }
 
-// SOURCE 1: Google Suggest API (CORS-enabled, always works from browser)
+// SOURCE 1: Google Suggest API via JSONP (bypasses CORS)
 sourcesTotal++;
-fetch('https://suggestqueries.google.com/complete/search?client=firefox&q='+encodeURIComponent(query))
-.then(function(r){return r.json()})
-.then(function(d){
-if(d&&d[1]&&d[1].length>0){
-d[1].slice(0,8).forEach(function(s){
+window.harzGoogleCallback=function(data){
+if(data&&data[1]&&data[1].length>0){
+data[1].slice(0,8).forEach(function(s){
 allResults.push({title:s,snippet:'Google search suggestion',url:'',source:'Google',isSuggestion:true});
 });
 }
 renderResults();
-})
-.catch(function(){renderResults();});
+};
+var gScript=document.createElement('script');
+gScript.src='https://suggestqueries.google.com/complete/search?client=chrome&q='+encodeURIComponent(query)+'&callback=harzGoogleCallback';
+gScript.onerror=function(){renderResults();};
+document.head.appendChild(gScript);
+setTimeout(function(){if(gScript.parentNode)gScript.parentNode.removeChild(gScript);},5000);
 
 // SOURCE 2: Wikipedia REST API (CORS-enabled)
 if(engine!=='youtube'){
