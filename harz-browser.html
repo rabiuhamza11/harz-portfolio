@@ -529,28 +529,229 @@ document.getElementById('fallbackLink').textContent='Open '+hostname+' →';
 }
 
 // === SEARCH ===
-// === IN-APP SEARCH RESULTS ===
+// === IN-APP SEARCH RESULTS (Multi-source with fallbacks) ===
 function showSearchResults(query,engine){
 var resultsDiv=document.getElementById('searchResults');
 resultsDiv.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);font-size:.8rem">🔍 Searching for "'+escapeHtml(query)+'"...</div>';
 resultsDiv.style.display='block';
 
-var promises=[];
+var allResults=[];
 
-// 1. DuckDuckGo HTML search via allorigins CORS proxy (returns real web results)
-var ddgUrl='https://html.duckduckgo.com/html/?q='+encodeURIComponent(query);
-promises.push(
-fetch('https://api.allorigins.win/get?url='+encodeURIComponent(ddgUrl))
+// SOURCE 1: Wikipedia REST API (CORS-friendly, always works)
+fetch('https://en.wikipedia.org/w/rest.php/v1/search/page?q='+encodeURIComponent(query)+'&limit=10')
 .then(function(r){return r.json()})
 .then(function(d){
-var html=d.contents||'';
-var results=[];
+var pages=d.pages||[];
+pages.forEach(function(p){
+allResults.push({
+title:p.title,
+snippet:(p.excerpt||'').replace(/<[^>]*>/g,'').trim(),
+url:'https://en.wikipedia.org/wiki/'+encodeURIComponent(p.title.replace(/ /g,'_')),
+source:'Wikipedia',
+thumbnail:p.thumbnail? p.thumbnail.url : null
+});
+});
+renderResults();
+}).catch(function(){});
+
+// SOURCE 2: Wikipedia article summary for instant answer
+fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(query.replace(/ /g,'_')))
+.then(function(r){return r.json()})
+.then(function(d){
+if(d.type!=='disambiguation'&&d.extract){
+allResults.unshift({
+title:d.title,
+snippet:d.extract,
+url:d.content_urls? d.content_urls.desktop.page : '',
+source:'Wikipedia Summary',
+thumbnail:d.thumbnail? d.thumbnail.source : null,
+isInstantAnswer:true
+});
+renderResults();
+}
+}).catch(function(){});
+
+// SOURCE 3: DuckDuckGo Instant Answer API (CORS-friendly)
+fetch('https://api.duckduckgo.com/?q='+encodeURIComponent(query)+'&format=json&no_html=1&no_redirect=1&skip_disambig=1')
+.then(function(r){return r.json()})
+.then(function(d){
+if(d.AbstractText&&d.AbstractURL){
+allResults.push({
+title:d.Heading||query,
+snippet:d.AbstractText,
+url:d.AbstractURL,
+source:'DuckDuckGo'
+});
+}
+if(d.RelatedTopics){
+d.RelatedTopics.forEach(function(t){
+if(t.Text&&t.FirstURL){
+allResults.push({
+title:t.Text.split(' - ')[0]||t.Text.substring(0,80),
+snippet:t.Text,
+url:t.FirstURL,
+source:'Web'
+});
+}
+if(t.Topics){
+t.Topics.forEach(function(sub){
+if(sub.Text&&sub.FirstURL){
+allResults.push({
+title:sub.Text.split(' - ')[0]||sub.Text.substring(0,80),
+snippet:sub.Text,
+url:sub.FirstURL,
+source:'Web'
+});
+}
+});
+}
+});
+}
+renderResults();
+}).catch(function(){});
+
+// SOURCE 4: Try allorigins proxy for DuckDuckGo HTML (real web results)
+var proxyTries=0;
+function tryProxy(){
+var ddgUrl='https://html.duckduckgo.com/html/?q='+encodeURIComponent(query);
+fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(ddgUrl))
+.then(function(r){
+if(!r.ok)throw new Error('proxy failed');
+return r.text();
+})
+.then(function(html){
 var linkRegex=/class="result__a"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g;
 var snippetRegex=/class="result__snippet"[^>]*>([\s\S]*?)<\/a>/g;
 var snippets=[];
 var sm;
 while((sm=snippetRegex.exec(html))!==null){
 snippets.push(sm[1].replace(/<[^>]*>/g,'').trim());
+}
+var lm;var i=0;
+while((lm=linkRegex.exec(html))!==null){
+var rawUrl=lm[1];
+var ddgM=rawUrl.match(/uddg=([^&]+)/);
+if(ddgM){try{rawUrl=decodeURIComponent(ddgM[1])}catch(e){}}
+var title=lm[2].replace(/<[^>]*>/g,'').trim();
+if(title&&rawUrl){
+allResults.push({title:title,url:rawUrl,snippet:snippets[i]||'',source:'Web'});
+}
+i++;
+}
+renderResults();
+})
+.catch(function(){
+proxyTries++;
+if(proxyTries<3){
+setTimeout(tryProxy,1000);
+}
+});
+}
+tryProxy();
+
+// SOURCE 5: DuckDuckGo autocomplete (search suggestions)
+fetch('https://duckduckgo.com/ac/?q='+encodeURIComponent(query)+'&type=list')
+.then(function(r){return r.json()})
+.then(function(d){
+if(d&&d[1]&&d[1].length>0){
+d[1].forEach(function(suggestion){
+allResults.push({
+title:suggestion,
+snippet:'Search suggestion',
+url:'',
+source:'Suggestion',
+isSuggestion:true
+});
+});
+renderResults();
+}
+}).catch(function(){});
+
+// RENDER FUNCTION
+function renderResults(){
+// Remove duplicates
+var seen={};
+var unique=[];
+allResults.forEach(function(r){
+var key=r.title.toLowerCase().substring(0,40);
+if(!seen[key]&&unique.length<20){
+seen[key]=true;
+unique.push(r);
+}
+});
+
+if(unique.length===0){
+resultsDiv.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);font-size:.8rem">⏳ Still searching for "'+escapeHtml(query)+'"...<br><br>If results dont appear, the search servers may be slow. Try again in a moment.</div>';
+return;
+}
+
+var html='<div style="padding:10px 14px;max-width:680px;margin:0 auto">';
+html+='<div style="font-size:.65rem;color:var(--muted);margin-bottom:10px">Found '+unique.length+' results for "'+escapeHtml(query)+'"</div>';
+
+unique.forEach(function(r){
+var icon='🔍';
+var bgColor='rgba(0,212,255,.1)';
+if(r.source==='Wikipedia'||r.source==='Wikipedia Summary'){icon='📚';bgColor='rgba(124,77,255,.1)';}
+else if(r.source==='Web'){icon='🌐';bgColor='rgba(0,212,255,.1)';}
+else if(r.source==='DuckDuckGo'){icon='🦆';bgColor='rgba(255,171,0,.1)';}
+else if(r.source==='Suggestion'){icon='💡';bgColor='rgba(0,255,136,.1)';}
+
+if(r.isSuggestion){
+html+='<div class="sr-card" onclick="document.getElementById(\'searchInput\').value=\''+r.title.replace(/'/g,'')+'\';showSearchResults(\''+r.title.replace(/'/g,'')+'\',currentEngine)" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:8px">';
+html+='<span style="font-size:1rem">'+icon+'</span>';
+html+='<span style="font-size:.75rem;color:var(--text)">'+escapeHtml(r.title)+'</span>';
+html+='</div>';
+return;
+}
+
+if(r.isInstantAnswer){
+html+='<div style="background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,77,255,.08));border:2px solid var(--p1);border-radius:14px;padding:14px;margin-bottom:14px">';
+if(r.thumbnail){
+html+='<div style="display:flex;gap:12px">';
+html+='<img src="'+r.thumbnail+'" style="width:60px;height:60px;border-radius:10px;object-fit:cover" onerror="this.style.display=\'none\'">';
+html+='<div style="flex:1">';
+}
+html+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">';
+html+='<span style="font-size:.55rem;padding:2px 8px;border-radius:8px;background:'+bgColor+';color:var(--p1)">'+icon+' '+escapeHtml(r.source)+'</span>';
+html+='<span style="font-size:.5rem;color:var(--p2)">⚡ Instant Answer</span>';
+html+='</div>';
+html+='<div style="font-size:.85rem;font-weight:700;color:var(--p1);margin-bottom:6px">'+escapeHtml(r.title)+'</div>';
+html+='<div style="font-size:.72rem;color:var(--text);line-height:1.6">'+escapeHtml(r.snippet)+'</div>';
+if(r.url){
+html+='<div style="margin-top:8px"><a href="'+r.url+'" target="_blank" style="font-size:.65rem;color:var(--p1);text-decoration:none">Read more →</a></div>';
+}
+if(r.thumbnail){html+='</div>';}
+html+='</div>';
+return;
+}
+
+var safeUrl=r.url.replace(/'/g,'');
+var onclickFn=r.url?'openResultLink(\''+safeUrl+'\')':'';
+html+='<div class="sr-card" onclick="'+onclickFn+'" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;cursor:'+(r.url?'pointer':'default')+';transition:all .2s">';
+html+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">';
+html+='<span style="font-size:.55rem;padding:2px 6px;border-radius:8px;background:'+bgColor+';color:var(--p1)">'+icon+' '+escapeHtml(r.source)+'</span>';
+html+='</div>';
+if(r.thumbnail){
+html+='<div style="display:flex;gap:10px">';
+html+='<img src="'+r.thumbnail+'" style="width:50px;height:50px;border-radius:8px;object-fit:cover" onerror="this.style.display=\'none\'">';
+html+='<div style="flex:1">';
+}
+html+='<div style="font-size:.78rem;font-weight:600;color:var(--p1);margin-bottom:4px">'+escapeHtml(r.title)+'</div>';
+if(r.url){
+var displayUrl=r.url.replace(/https?:\/\//,'').substring(0,70);
+html+='<div style="font-size:.55rem;color:var(--muted);margin-bottom:4px;word-break:break-all">'+escapeHtml(displayUrl)+'</div>';
+}
+html+='<div style="font-size:.68rem;color:var(--text);line-height:1.5">'+escapeHtml(r.snippet.substring(0,200))+'</div>';
+if(r.thumbnail){html+='</div>';}
+html+='</div>';
+});
+
+html+='</div>';
+resultsDiv.innerHTML=html;
+}
+
+// Initial render attempt after a short delay
+setTimeout(renderResults,500);
 }
 var lm;var i=0;
 while((lm=linkRegex.exec(html))!==null){
