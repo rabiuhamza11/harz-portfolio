@@ -532,9 +532,10 @@ document.getElementById('fallbackLink').textContent='Open '+hostname+' →';
 // === IN-APP SEARCH RESULTS (Multi-source with fallbacks) ===
 function showSearchResults(query,engine){
 var resultsDiv=document.getElementById('searchResults');
-resultsDiv.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);font-size:.8rem">Searching for "'+escapeHtml(query)+'"...</div>';
 resultsDiv.style.display='block';
 var allResults=[];
+var sourcesTotal=0;
+var sourcesDone=0;
 var engineLabel='Web';
 if(engine==='bing')engineLabel='Bing';
 else if(engine==='duckduckgo')engineLabel='DuckDuckGo';
@@ -542,146 +543,36 @@ else if(engine==='google')engineLabel='Web';
 else if(engine==='youtube')engineLabel='YouTube';
 else if(engine==='wikipedia')engineLabel='Wikipedia';
 
-// Wikipedia search (CORS-friendly - always works)
-if(engine==='wikipedia'||engine==='google'||engine==='bing'||engine==='duckduckgo'){
-fetch('https://en.wikipedia.org/w/rest.php/v1/search/page?q='+encodeURIComponent(query)+'&limit=8')
-.then(function(r){return r.json()})
-.then(function(d){
-(d.pages||[]).forEach(function(p){
-allResults.push({title:p.title,snippet:(p.excerpt||'').replace(/<[^>]*>/g,'').trim(),url:'https://en.wikipedia.org/wiki/'+encodeURIComponent(p.title.replace(/ /g,'_')),source:'Wikipedia',thumbnail:p.thumbnail?p.thumbnail.url:null});
-});
-renderResults();
-}).catch(function(){});
+function showLoading(){
+resultsDiv.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:.8rem"><div style="display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--p1);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:12px"></div><div>Searching for "'+escapeHtml(query)+'"...</div></div>';
 }
-
-// Wikipedia instant answer
-if(engine!=='youtube'){
-fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(query.replace(/ /g,'_')))
-.then(function(r){return r.json()})
-.then(function(d){
-if(d.type!=='disambiguation'&&d.extract){
-allResults.unshift({title:d.title,snippet:d.extract,url:d.content_urls?d.content_urls.desktop.page:'',source:'Wikipedia',thumbnail:d.thumbnail?d.thumbnail.source:null,isInstantAnswer:true});
-renderResults();
-}
-}).catch(function(){});
-}
-
-// DuckDuckGo Instant Answer (CORS-friendly)
-if(engine==='duckduckgo'||engine==='google'||engine==='bing'){
-fetch('https://api.duckduckgo.com/?q='+encodeURIComponent(query)+'&format=json&no_html=1&no_redirect=1&skip_disambig=1')
-.then(function(r){return r.json()})
-.then(function(d){
-if(d.AbstractText&&d.AbstractURL){
-allResults.push({title:d.Heading||query,snippet:d.AbstractText,url:d.AbstractURL,source:'DuckDuckGo'});
-}
-(d.RelatedTopics||[]).forEach(function(t){
-if(t.Text&&t.FirstURL){
-allResults.push({title:t.Text.split(' - ')[0]||t.Text.substring(0,80),snippet:t.Text,url:t.FirstURL,source:engineLabel});
-}
-if(t.Topics){
-t.Topics.forEach(function(sub){
-if(sub.Text&&sub.FirstURL){
-allResults.push({title:sub.Text.split(' - ')[0]||sub.Text.substring(0,80),snippet:sub.Text,url:sub.FirstURL,source:engineLabel});
-}
-});
-}
-});
-renderResults();
-}).catch(function(){});
-}
-
-// DuckDuckGo autocomplete suggestions (CORS-friendly)
-fetch('https://duckduckgo.com/ac/?q='+encodeURIComponent(query)+'&type=list')
-.then(function(r){return r.json()})
-.then(function(d){
-if(d&&d[1]&&d[1].length>0){
-d[1].slice(0,5).forEach(function(s){
-allResults.push({title:s,snippet:'Search suggestion',url:'',source:'Suggestion',isSuggestion:true});
-});
-renderResults();
-}
-}).catch(function(){});
-
-// YouTube search via allorigins (if YouTube engine selected)
-if(engine==='youtube'){
-var ytUrl='https://www.youtube.com/results?search_query='+encodeURIComponent(query);
-fetch('https://api.allorigins.win/get?url='+encodeURIComponent(ytUrl))
-.then(function(r){return r.json()})
-.then(function(d){
-var html=d.contents||'';
-var ytRegex=/"videoRenderer":{"videoId":"([^"]+)".*?"title":{"runs":\[{"text":"([^"]+)/g;
-var m;
-while((m=ytRegex.exec(html))!==null&&allResults.length<20){
-allResults.push({title:m[2],snippet:'YouTube video',url:'https://www.youtube.com/watch?v='+m[1],source:'YouTube',thumbnail:'https://i.ytimg.com/vi/'+m[1]+'/default.jpg'});
-}
-renderResults();
-}).catch(function(){});
-}
-
-// Try allorigins proxy for full web results (Google/Bing/DuckDuckGo)
-if(engine==='google'||engine==='bing'||engine==='duckduckgo'){
-var ddgUrl='https://html.duckduckgo.com/html/?q='+encodeURIComponent(query);
-fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(ddgUrl))
-.then(function(r){
-if(!r.ok)throw new Error('fail');
-return r.text();
-})
-.then(function(html){
-var linkRegex=/class="result__a"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g;
-var snippetRegex=/class="result__snippet"[^>]*>([\s\S]*?)<\/a>/g;
-var snippets=[];
-var sm;
-while((sm=snippetRegex.exec(html))!==null){snippets.push(sm[1].replace(/<[^>]*>/g,'').trim());}
-var lm;var i=0;
-while((lm=linkRegex.exec(html))!==null){
-var rawUrl=lm[1];
-var ddgM=rawUrl.match(/uddg=([^&]+)/);
-if(ddgM){try{rawUrl=decodeURIComponent(ddgM[1])}catch(e){}}
-var title=lm[2].replace(/<[^>]*>/g,'').trim();
-if(title&&rawUrl){allResults.push({title:title,url:rawUrl,snippet:snippets[i]||'',source:engineLabel});}
-i++;
-}
-renderResults();
-}).catch(function(){});
-}
+showLoading();
 
 function renderResults(){
+if(allResults.length>0){
 var seen={};
 var unique=[];
 allResults.forEach(function(r){
 var key=r.title.toLowerCase().substring(0,40);
 if(!seen[key]&&unique.length<20){seen[key]=true;unique.push(r);}
 });
-if(unique.length===0){
-resultsDiv.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);font-size:.8rem">No results found for "'+escapeHtml(query)+'". Try different keywords.</div>';
-return;
-}
 var html='<div style="padding:10px 14px;max-width:680px;margin:0 auto">';
 html+='<div style="font-size:.65rem;color:var(--muted);margin-bottom:10px">'+unique.length+' results for "'+escapeHtml(query)+'"</div>';
 unique.forEach(function(r){
-var icon='web';
-var bgc='rgba(0,212,255,.1)';
+var icon='web';var bgc='rgba(0,212,255,.1)';
 if(r.source==='Wikipedia'){icon='wiki';bgc='rgba(124,77,255,.1)';}
 else if(r.source==='DuckDuckGo'){icon='ddg';bgc='rgba(255,171,0,.1)';}
 else if(r.source==='YouTube'){icon='yt';bgc='rgba(255,0,0,.1)';}
 else if(r.source==='Suggestion'){icon='idea';bgc='rgba(0,255,136,.1)';}
-
 if(r.isSuggestion){
 var safeTitle=r.title.replace(/'/g,'');
-html+='<div class="sr-card" onclick="document.getElementById(\'searchInput\').value=\''+safeTitle+'\';doSearch()" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:8px">';
-html+='<span style="font-size:1rem">'+icon+'</span>';
-html+='<span style="font-size:.75rem;color:var(--text)">'+escapeHtml(r.title)+'</span>';
-html+='</div>';
+html+='<div class="sr-card" onclick="document.getElementById(\'searchInput\').value=\''+safeTitle+'\';doSearch()" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:8px"><span style="font-size:1rem">'+icon+'</span><span style="font-size:.75rem;color:var(--text)">'+escapeHtml(r.title)+'</span></div>';
 return;
 }
-
 if(r.isInstantAnswer){
 html+='<div style="background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,77,255,.08));border:2px solid var(--p1);border-radius:14px;padding:14px;margin-bottom:14px">';
-if(r.thumbnail){
-html+='<div style="display:flex;gap:12px"><img src="'+r.thumbnail+'" style="width:60px;height:60px;border-radius:10px;object-fit:cover" onerror="this.style.display=\'none\'"><div style="flex:1">';
-}
-html+='<span style="font-size:.55rem;padding:2px 8px;border-radius:8px;background:'+bgc+';color:var(--p1)">'+icon+' '+escapeHtml(r.source)+'</span>';
-html+='<span style="font-size:.5rem;color:var(--p2);margin-left:6px">Instant Answer</span>';
+if(r.thumbnail){html+='<div style="display:flex;gap:12px"><img src="'+r.thumbnail+'" style="width:60px;height:60px;border-radius:10px;object-fit:cover" onerror="this.style.display=\'none\'"><div style="flex:1">';}
+html+='<span style="font-size:.55rem;padding:2px 8px;border-radius:8px;background:'+bgc+';color:var(--p1)">'+icon+' '+escapeHtml(r.source)+'</span><span style="font-size:.5rem;color:var(--p2);margin-left:6px">Instant Answer</span>';
 html+='<div style="font-size:.85rem;font-weight:700;color:var(--p1);margin:6px 0">'+escapeHtml(r.title)+'</div>';
 html+='<div style="font-size:.72rem;color:var(--text);line-height:1.6">'+escapeHtml(r.snippet)+'</div>';
 if(r.url)html+='<div style="margin-top:8px"><a href="'+r.url+'" target="_blank" style="font-size:.65rem;color:var(--p1);text-decoration:none">Read more</a></div>';
@@ -689,7 +580,6 @@ if(r.thumbnail)html+='</div>';
 html+='</div>';
 return;
 }
-
 var safeUrl=r.url.replace(/'/g,'');
 html+='<div class="sr-card" onclick="openResultLink(\''+safeUrl+'\')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;transition:all .2s">';
 html+='<span style="font-size:.55rem;padding:2px 6px;border-radius:8px;background:'+bgc+';color:var(--p1)">'+icon+' '+escapeHtml(r.source)+'</span>';
@@ -701,9 +591,114 @@ html+='</div>';
 });
 html+='</div>';
 resultsDiv.innerHTML=html;
+} else {
+sourcesDone++;
+if(sourcesDone>=sourcesTotal){
+resultsDiv.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:.8rem">No results found for "'+escapeHtml(query)+'".<br><br>Try different keywords or use Wikipedia engine.</div>';
+} else {
+showLoading();
+}
+}
 }
 
-setTimeout(renderResults,500);
+// Wikipedia search
+if(engine==='wikipedia'||engine==='google'||engine==='bing'||engine==='duckduckgo'){
+sourcesTotal++;
+fetch('https://en.wikipedia.org/w/rest.php/v1/search/page?q='+encodeURIComponent(query)+'&limit=8')
+.then(function(r){return r.json()})
+.then(function(d){
+(d.pages||[]).forEach(function(p){
+allResults.push({title:p.title,snippet:(p.excerpt||'').replace(/<[^>]*>/g,'').trim(),url:'https://en.wikipedia.org/wiki/'+encodeURIComponent(p.title.replace(/ /g,'_')),source:'Wikipedia',thumbnail:p.thumbnail?p.thumbnail.url:null});
+});
+renderResults();
+})
+.catch(function(){renderResults();});
+}
+
+// Wikipedia instant answer
+if(engine!=='youtube'){
+sourcesTotal++;
+fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(query.replace(/ /g,'_')))
+.then(function(r){return r.json()})
+.then(function(d){
+if(d.type!=='disambiguation'&&d.extract){
+allResults.unshift({title:d.title,snippet:d.extract,url:d.content_urls?d.content_urls.desktop.page:'',source:'Wikipedia',thumbnail:d.thumbnail?d.thumbnail.source:null,isInstantAnswer:true});
+renderResults();
+}
+})
+.catch(function(){renderResults();});
+}
+
+// DuckDuckGo Instant Answer
+if(engine==='duckduckgo'||engine==='google'||engine==='bing'){
+sourcesTotal++;
+fetch('https://api.duckduckgo.com/?q='+encodeURIComponent(query)+'&format=json&no_html=1&no_redirect=1&skip_disambig=1')
+.then(function(r){return r.json()})
+.then(function(d){
+if(d.AbstractText&&d.AbstractURL){allResults.push({title:d.Heading||query,snippet:d.AbstractText,url:d.AbstractURL,source:'DuckDuckGo'});}
+(d.RelatedTopics||[]).forEach(function(t){
+if(t.Text&&t.FirstURL){allResults.push({title:t.Text.split(' - ')[0]||t.Text.substring(0,80),snippet:t.Text,url:t.FirstURL,source:engineLabel});}
+if(t.Topics){t.Topics.forEach(function(sub){if(sub.Text&&sub.FirstURL){allResults.push({title:sub.Text.split(' - ')[0]||sub.Text.substring(0,80),snippet:sub.Text,url:sub.FirstURL,source:engineLabel});}});}
+});
+renderResults();
+})
+.catch(function(){renderResults();});
+}
+
+// DuckDuckGo autocomplete
+sourcesTotal++;
+fetch('https://duckduckgo.com/ac/?q='+encodeURIComponent(query)+'&type=list')
+.then(function(r){return r.json()})
+.then(function(d){
+if(d&&d[1]&&d[1].length>0){
+d[1].slice(0,5).forEach(function(s){allResults.push({title:s,snippet:'Search suggestion',url:'',source:'Suggestion',isSuggestion:true});});
+}
+renderResults();
+})
+.catch(function(){renderResults();});
+
+// YouTube search
+if(engine==='youtube'){
+sourcesTotal++;
+var ytUrl='https://www.youtube.com/results?search_query='+encodeURIComponent(query);
+fetch('https://api.allorigins.win/get?url='+encodeURIComponent(ytUrl))
+.then(function(r){return r.json()})
+.then(function(d){
+var html=d.contents||'';
+var ytRegex=/"videoRenderer":{"videoId":"([^"]+)".*?"title":{"runs":\[{"text":"([^"]+)/g;
+var m;
+while((m=ytRegex.exec(html))!==null&&allResults.length<20){
+allResults.push({title:m[2],snippet:'YouTube video',url:'https://www.youtube.com/watch?v='+m[1],source:'YouTube',thumbnail:'https://i.ytimg.com/vi/'+m[1]+'/default.jpg'});
+}
+renderResults();
+})
+.catch(function(){renderResults();});
+}
+
+// Allorigins proxy for full web results
+if(engine==='google'||engine==='bing'||engine==='duckduckgo'){
+sourcesTotal++;
+var ddgUrl='https://html.duckduckgo.com/html/?q='+encodeURIComponent(query);
+fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(ddgUrl))
+.then(function(r){if(!r.ok)throw new Error('fail');return r.text();})
+.then(function(html){
+var linkRegex=/class="result__a"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g;
+var snippetRegex=/class="result__snippet"[^>]*>([\s\S]*?)<\/a>/g;
+var snippets=[];
+var sm;
+while((sm=snippetRegex.exec(html))!==null){snippets.push(sm[1].replace(/<[^>]*>/g,'').trim());}
+var lm;var i=0;
+while((lm=linkRegex.exec(html))!==null){
+var rawUrl=lm[1];var ddgM=rawUrl.match(/uddg=([^&]+)/);
+if(ddgM){try{rawUrl=decodeURIComponent(ddgM[1])}catch(e){}}
+var title=lm[2].replace(/<[^>]*>/g,'').trim();
+if(title&&rawUrl){allResults.push({title:title,url:rawUrl,snippet:snippets[i]||'',source:engineLabel});}
+i++;
+}
+renderResults();
+})
+.catch(function(){renderResults();});
+}
 }
 
 function openResultLink(url){
