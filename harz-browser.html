@@ -529,7 +529,7 @@ document.getElementById('fallbackLink').textContent='Open '+hostname+' →';
 }
 
 // === SEARCH ===
-// === IN-APP SEARCH RESULTS (Multi-source with fallbacks) ===
+// === IN-APP SEARCH RESULTS (Google Suggest + Wikipedia + DuckDuckGo) ===
 function showSearchResults(query,engine){
 var resultsDiv=document.getElementById('searchResults');
 resultsDiv.style.display='block';
@@ -539,12 +539,12 @@ var sourcesDone=0;
 var engineLabel='Web';
 if(engine==='bing')engineLabel='Bing';
 else if(engine==='duckduckgo')engineLabel='DuckDuckGo';
-else if(engine==='google')engineLabel='Web';
+else if(engine==='google')engineLabel='Google';
 else if(engine==='youtube')engineLabel='YouTube';
 else if(engine==='wikipedia')engineLabel='Wikipedia';
 
 function showLoading(){
-resultsDiv.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:.8rem"><div style="display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--p1);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:12px"></div><div>Searching for "'+escapeHtml(query)+'"...</div></div>';
+resultsDiv.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:.8rem"><div style="display:inline-block;width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--p1);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px"></div><div>Searching "'+escapeHtml(query)+'" on '+engineLabel+'...</div></div>';
 }
 showLoading();
 
@@ -553,40 +553,48 @@ if(allResults.length>0){
 var seen={};
 var unique=[];
 allResults.forEach(function(r){
-var key=r.title.toLowerCase().substring(0,40);
-if(!seen[key]&&unique.length<20){seen[key]=true;unique.push(r);}
+var key=r.title.toLowerCase().substring(0,50);
+if(!seen[key]&&unique.length<25){seen[key]=true;unique.push(r);}
 });
 var html='<div style="padding:10px 14px;max-width:680px;margin:0 auto">';
-html+='<div style="font-size:.65rem;color:var(--muted);margin-bottom:10px">'+unique.length+' results for "'+escapeHtml(query)+'"</div>';
+html+='<div style="font-size:.65rem;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">'+unique.length+' results for "'+escapeHtml(query)+'" via '+engineLabel+'</div>';
 unique.forEach(function(r){
-var icon='web';var bgc='rgba(0,212,255,.1)';
-if(r.source==='Wikipedia'){icon='wiki';bgc='rgba(124,77,255,.1)';}
-else if(r.source==='DuckDuckGo'){icon='ddg';bgc='rgba(255,171,0,.1)';}
-else if(r.source==='YouTube'){icon='yt';bgc='rgba(255,0,0,.1)';}
-else if(r.source==='Suggestion'){icon='idea';bgc='rgba(0,255,136,.1)';}
+var icon='🌐';var bgc='rgba(0,212,255,.1)';
+if(r.source==='Wikipedia'){icon='📚';bgc='rgba(124,77,255,.1)';}
+else if(r.source==='Google'){icon='🔵';bgc='rgba(66,133,244,.1)';}
+else if(r.source==='DuckDuckGo'){icon='🦆';bgc='rgba(255,171,0,.1)';}
+else if(r.source==='YouTube'){icon='▶️';bgc='rgba(255,0,0,.1)';}
+else if(r.source==='Suggestion'){icon='💡';bgc='rgba(0,255,136,.1)';}
+
 if(r.isSuggestion){
 var safeTitle=r.title.replace(/'/g,'');
-html+='<div class="sr-card" onclick="document.getElementById(\'searchInput\').value=\''+safeTitle+'\';doSearch()" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:8px"><span style="font-size:1rem">'+icon+'</span><span style="font-size:.75rem;color:var(--text)">'+escapeHtml(r.title)+'</span></div>';
+html+='<div class="sr-card" onclick="document.getElementById(\'searchInput\').value=\''+safeTitle+'\';currentEngine=\'google\';doSearch()" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s">';
+html+='<span style="font-size:1.1rem">'+icon+'</span>';
+html+='<div style="flex:1"><div style="font-size:.78rem;color:var(--text);font-weight:500">'+escapeHtml(r.title)+'</div>';
+html+='<div style="font-size:.6rem;color:var(--muted);margin-top:2px">Search suggestion - click to search</div></div>';
+html+='<span style="font-size:.8rem;color:var(--muted)">→</span></div>';
 return;
 }
+
 if(r.isInstantAnswer){
-html+='<div style="background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,77,255,.08));border:2px solid var(--p1);border-radius:14px;padding:14px;margin-bottom:14px">';
-if(r.thumbnail){html+='<div style="display:flex;gap:12px"><img src="'+r.thumbnail+'" style="width:60px;height:60px;border-radius:10px;object-fit:cover" onerror="this.style.display=\'none\'"><div style="flex:1">';}
+html+='<div style="background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,77,255,.08));border:2px solid var(--p1);border-radius:14px;padding:16px;margin-bottom:14px">';
+if(r.thumbnail){html+='<div style="display:flex;gap:12px"><img src="'+r.thumbnail+'" style="width:70px;height:70px;border-radius:12px;object-fit:cover" onerror="this.style.display=\'none\'"><div style="flex:1">';}
 html+='<span style="font-size:.55rem;padding:2px 8px;border-radius:8px;background:'+bgc+';color:var(--p1)">'+icon+' '+escapeHtml(r.source)+'</span><span style="font-size:.5rem;color:var(--p2);margin-left:6px">Instant Answer</span>';
-html+='<div style="font-size:.85rem;font-weight:700;color:var(--p1);margin:6px 0">'+escapeHtml(r.title)+'</div>';
-html+='<div style="font-size:.72rem;color:var(--text);line-height:1.6">'+escapeHtml(r.snippet)+'</div>';
-if(r.url)html+='<div style="margin-top:8px"><a href="'+r.url+'" target="_blank" style="font-size:.65rem;color:var(--p1);text-decoration:none">Read more</a></div>';
+html+='<div style="font-size:.9rem;font-weight:700;color:var(--p1);margin:8px 0">'+escapeHtml(r.title)+'</div>';
+html+='<div style="font-size:.75rem;color:var(--text);line-height:1.6">'+escapeHtml((r.snippet||'').substring(0,300))+'</div>';
+if(r.url)html+='<div style="margin-top:10px"><a href="'+r.url+'" target="_blank" style="font-size:.7rem;color:var(--p1);text-decoration:none">Read full article →</a></div>';
 if(r.thumbnail)html+='</div>';
 html+='</div>';
 return;
 }
+
 var safeUrl=r.url.replace(/'/g,'');
 html+='<div class="sr-card" onclick="openResultLink(\''+safeUrl+'\')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;transition:all .2s">';
-html+='<span style="font-size:.55rem;padding:2px 6px;border-radius:8px;background:'+bgc+';color:var(--p1)">'+icon+' '+escapeHtml(r.source)+'</span>';
-html+='<div style="font-size:.78rem;font-weight:600;color:var(--p1);margin:4px 0">'+escapeHtml(r.title)+'</div>';
-if(r.url){html+='<div style="font-size:.55rem;color:var(--muted);margin-bottom:4px;word-break:break-all">'+escapeHtml(r.url.replace(/https?:\/\//,'').substring(0,70))+'</div>';}
-if(r.thumbnail){html+='<img src="'+r.thumbnail+'" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;margin:4px 0" onerror="this.style.display=\'none\'">';}
-html+='<div style="font-size:.68rem;color:var(--text);line-height:1.5">'+escapeHtml((r.snippet||'').substring(0,200))+'</div>';
+html+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:.9rem">'+icon+'</span><span style="font-size:.55rem;padding:2px 6px;border-radius:8px;background:'+bgc+';color:var(--p1)">'+escapeHtml(r.source)+'</span></div>';
+html+='<div style="font-size:.8rem;font-weight:600;color:var(--p1);margin:4px 0">'+escapeHtml(r.title)+'</div>';
+if(r.url){html+='<div style="font-size:.55rem;color:var(--muted);margin-bottom:4px;word-break:break-all">'+escapeHtml(r.url.replace(/https?:\/\//,'').substring(0,80))+'</div>';}
+if(r.thumbnail){html+='<img src="'+r.thumbnail+'" style="width:100%;max-height:140px;object-fit:cover;border-radius:8px;margin:4px 0" onerror="this.style.display=\'none\'">';}
+html+='<div style="font-size:.7rem;color:var(--text);line-height:1.5">'+escapeHtml((r.snippet||'').substring(0,200))+'</div>';
 html+='</div>';
 });
 html+='</div>';
@@ -594,17 +602,31 @@ resultsDiv.innerHTML=html;
 } else {
 sourcesDone++;
 if(sourcesDone>=sourcesTotal){
-resultsDiv.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:.8rem">No results found for "'+escapeHtml(query)+'".<br><br>Try different keywords or use Wikipedia engine.</div>';
+resultsDiv.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:.8rem">No results found for "'+escapeHtml(query)+'".<br><br>Try different keywords or check spelling.</div>';
 } else {
 showLoading();
 }
 }
 }
 
-// Wikipedia search
-if(engine==='wikipedia'||engine==='google'||engine==='bing'||engine==='duckduckgo'){
+// SOURCE 1: Google Suggest API (CORS-enabled, always works from browser)
 sourcesTotal++;
-fetch('https://en.wikipedia.org/w/rest.php/v1/search/page?q='+encodeURIComponent(query)+'&limit=8')
+fetch('https://suggestqueries.google.com/complete/search?client=firefox&q='+encodeURIComponent(query))
+.then(function(r){return r.json()})
+.then(function(d){
+if(d&&d[1]&&d[1].length>0){
+d[1].slice(0,8).forEach(function(s){
+allResults.push({title:s,snippet:'Google search suggestion',url:'',source:'Google',isSuggestion:true});
+});
+}
+renderResults();
+})
+.catch(function(){renderResults();});
+
+// SOURCE 2: Wikipedia REST API (CORS-enabled)
+if(engine!=='youtube'){
+sourcesTotal++;
+fetch('https://en.wikipedia.org/w/rest.php/v1/search/page?q='+encodeURIComponent(query)+'&limit=10')
 .then(function(r){return r.json()})
 .then(function(d){
 (d.pages||[]).forEach(function(p){
@@ -615,7 +637,7 @@ renderResults();
 .catch(function(){renderResults();});
 }
 
-// Wikipedia instant answer
+// SOURCE 3: Wikipedia instant answer
 if(engine!=='youtube'){
 sourcesTotal++;
 fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(query.replace(/ /g,'_')))
@@ -629,35 +651,47 @@ renderResults();
 .catch(function(){renderResults();});
 }
 
-// DuckDuckGo Instant Answer
+// SOURCE 4: DuckDuckGo Instant Answer API (CORS-enabled)
 if(engine==='duckduckgo'||engine==='google'||engine==='bing'){
 sourcesTotal++;
 fetch('https://api.duckduckgo.com/?q='+encodeURIComponent(query)+'&format=json&no_html=1&no_redirect=1&skip_disambig=1')
 .then(function(r){return r.json()})
 .then(function(d){
-if(d.AbstractText&&d.AbstractURL){allResults.push({title:d.Heading||query,snippet:d.AbstractText,url:d.AbstractURL,source:'DuckDuckGo'});}
+if(d.AbstractText&&d.AbstractURL){
+allResults.push({title:d.Heading||query,snippet:d.AbstractText,url:d.AbstractURL,source:'DuckDuckGo'});
+}
 (d.RelatedTopics||[]).forEach(function(t){
-if(t.Text&&t.FirstURL){allResults.push({title:t.Text.split(' - ')[0]||t.Text.substring(0,80),snippet:t.Text,url:t.FirstURL,source:engineLabel});}
-if(t.Topics){t.Topics.forEach(function(sub){if(sub.Text&&sub.FirstURL){allResults.push({title:sub.Text.split(' - ')[0]||sub.Text.substring(0,80),snippet:sub.Text,url:sub.FirstURL,source:engineLabel});}});}
+if(t.Text&&t.FirstURL){
+allResults.push({title:t.Text.split(' - ')[0]||t.Text.substring(0,80),snippet:t.Text,url:t.FirstURL,source:engineLabel});
+}
+if(t.Topics){
+t.Topics.forEach(function(sub){
+if(sub.Text&&sub.FirstURL){
+allResults.push({title:sub.Text.split(' - ')[0]||sub.Text.substring(0,80),snippet:sub.Text,url:sub.FirstURL,source:engineLabel});
+}
+});
+}
 });
 renderResults();
 })
 .catch(function(){renderResults();});
 }
 
-// DuckDuckGo autocomplete
+// SOURCE 5: DuckDuckGo Autocomplete (CORS-enabled)
 sourcesTotal++;
 fetch('https://duckduckgo.com/ac/?q='+encodeURIComponent(query)+'&type=list')
 .then(function(r){return r.json()})
 .then(function(d){
 if(d&&d[1]&&d[1].length>0){
-d[1].slice(0,5).forEach(function(s){allResults.push({title:s,snippet:'Search suggestion',url:'',source:'Suggestion',isSuggestion:true});});
+d[1].slice(0,5).forEach(function(s){
+allResults.push({title:s,snippet:'Search suggestion',url:'',source:'Suggestion',isSuggestion:true});
+});
 }
 renderResults();
 })
 .catch(function(){renderResults();});
 
-// YouTube search
+// SOURCE 6: YouTube search via allorigins proxy (if YouTube engine selected)
 if(engine==='youtube'){
 sourcesTotal++;
 var ytUrl='https://www.youtube.com/results?search_query='+encodeURIComponent(query);
@@ -667,33 +701,8 @@ fetch('https://api.allorigins.win/get?url='+encodeURIComponent(ytUrl))
 var html=d.contents||'';
 var ytRegex=/"videoRenderer":{"videoId":"([^"]+)".*?"title":{"runs":\[{"text":"([^"]+)/g;
 var m;
-while((m=ytRegex.exec(html))!==null&&allResults.length<20){
+while((m=ytRegex.exec(html))!==null&&allResults.length<25){
 allResults.push({title:m[2],snippet:'YouTube video',url:'https://www.youtube.com/watch?v='+m[1],source:'YouTube',thumbnail:'https://i.ytimg.com/vi/'+m[1]+'/default.jpg'});
-}
-renderResults();
-})
-.catch(function(){renderResults();});
-}
-
-// Allorigins proxy for full web results
-if(engine==='google'||engine==='bing'||engine==='duckduckgo'){
-sourcesTotal++;
-var ddgUrl='https://html.duckduckgo.com/html/?q='+encodeURIComponent(query);
-fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(ddgUrl))
-.then(function(r){if(!r.ok)throw new Error('fail');return r.text();})
-.then(function(html){
-var linkRegex=/class="result__a"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g;
-var snippetRegex=/class="result__snippet"[^>]*>([\s\S]*?)<\/a>/g;
-var snippets=[];
-var sm;
-while((sm=snippetRegex.exec(html))!==null){snippets.push(sm[1].replace(/<[^>]*>/g,'').trim());}
-var lm;var i=0;
-while((lm=linkRegex.exec(html))!==null){
-var rawUrl=lm[1];var ddgM=rawUrl.match(/uddg=([^&]+)/);
-if(ddgM){try{rawUrl=decodeURIComponent(ddgM[1])}catch(e){}}
-var title=lm[2].replace(/<[^>]*>/g,'').trim();
-if(title&&rawUrl){allResults.push({title:title,url:rawUrl,snippet:snippets[i]||'',source:engineLabel});}
-i++;
 }
 renderResults();
 })
