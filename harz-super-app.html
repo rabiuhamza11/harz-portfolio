@@ -816,12 +816,17 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 <script>
 function openLink(u){
-// Sites that block iframe embedding (X-Frame-Options: DENY) — open in new tab
-const noIframe=['getly.store'];
+// Sites that genuinely block iframe embedding (X-Frame-Options: DENY) — open in new tab
+const noIframe=['getly.store','t.me','onrender.com'];
 for(let i=0;i<noIframe.length;i++){if(u.includes(noIframe[i])){window.open(u,'_blank');return;}}
 const overlay=document.getElementById('app-overlay');
 const frame=document.getElementById('app-frame');
 const title=document.getElementById('app-title');
+// Clear any previous error overlay
+clearOverlayError();
+// Track if iframe successfully loaded (cross-origin safe)
+let loaded=false;
+frame.onload=function(){loaded=true;};
 frame.src=u;
 overlay.classList.add('show');
 // Extract app name from URL for the header
@@ -829,20 +834,24 @@ const parts=u.split('/');
 let name=parts[parts.length-1].replace('.html','').replace(/[-_]/g,' ');
 name=name.charAt(0).toUpperCase()+name.slice(1);
 if(u.includes('vercel.app')){name=parts[2].split('.')[0];}
+if(u.includes('onrender.com')){name=parts[2].split('.')[0];}
 title.textContent=name;
 document.body.style.overflow='hidden';
-// Fallback: if iframe content fails to load after 6s, show error overlay
+// Only show error if iframe genuinely never loaded after 10s
+// (can't check cross-origin content, so rely on onload event instead of accessing contentDocument)
 clearTimeout(window._iframeTimer);
 window._iframeTimer=setTimeout(function(){
-try{if(!frame.contentWindow||frame.contentWindow.length===0||frame.contentDocument.body.innerHTML.trim()===''){
-showOverlayError(name,u);}}catch(e){showOverlayError(name,u);}},6000);
+if(!loaded){
+showOverlayError(name,u);
+}},10000);
+}
 }
 function showOverlayError(name,url){
 const overlay=document.getElementById('app-overlay');
 const title=document.getElementById('app-title');
 title.textContent=name+' — Load Failed';
 const frame=document.getElementById('app-frame');
-frame.src='about:blank';
+frame.src='about:blank';frame.onload=null;
 const fallback=document.createElement('div');
 fallback.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);color:var(--text);text-align:center;padding:20px;z-index:10';
 fallback.innerHTML='<div style="font-size:2rem;margin-bottom:12px">⚠️</div><p style="font-size:1rem;font-weight:600;margin-bottom:8px">This site can\'t be embedded</p><p style="font-size:.8rem;color:var(--muted);margin-bottom:20px">'+name+' blocked loading inside the app.</p><a href="'+url+'" target="_blank" style="background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;font-size:.85rem">Open in New Tab →</a>';
@@ -857,10 +866,10 @@ clearTimeout(window._iframeTimer);
 clearOverlayError();
 const overlay=document.getElementById('app-overlay');
 const frame=document.getElementById('app-frame');
-frame.src='about:blank';
+frame.src='about:blank';frame.onload=null;
 overlay.classList.remove('show');
 document.body.style.overflow='';
-switchPage('home');
+switchPage(window._lastPage||'home');
 }
 function iframeBack(){
 try{document.getElementById('app-frame').contentWindow.history.back();}catch(e){closeApp();}
@@ -991,6 +1000,7 @@ setTimeout(()=>document.getElementById('splash').classList.add('hidden'),1200);
 
 // Page navigation
 function switchPage(name){
+window._lastPage=name;
 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 const page=document.getElementById('page-'+name);
 if(page)page.classList.add('active');
