@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Crypto Payments</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--purple:#7C4DFF;--red:#EF4444;--cyan:#00bcd4}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+.header{background:linear-gradient(135deg,rgba(0,230,118,.1),rgba(0,188,212,.08));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.3rem;font-weight:800}
+.header h1 span{color:var(--green)}
+.header p{font-size:.7rem;color:var(--muted);margin-top:4px}
+.container{max-width:500px;margin:0 auto;padding:16px}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:.7rem;color:var(--muted);margin-bottom:6px;display:block;font-weight:600}
+.form-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-size:.85rem}
+.form-input:focus{outline:none;border-color:var(--cyan)}
+.coin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.coin-btn{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s;font-size:.65rem}
+.coin-btn:hover{border-color:var(--cyan)}
+.coin-btn.active{border-color:var(--green);background:rgba(0,230,118,.08)}
+.coin-icon{font-size:1.2rem;margin-bottom:4px}
+.coin-name{font-weight:600}
+.pay-btn{width:100%;background:linear-gradient(135deg,var(--green),var(--cyan));color:#000;border:none;padding:14px;border-radius:12px;font-size:.85rem;font-weight:800;cursor:pointer;transition:.2s}
+.pay-btn:hover{opacity:.9}
+.pay-btn:disabled{opacity:.5;cursor:not-allowed}
+.result-card{background:var(--card);border:1px solid var(--green);border-radius:16px;padding:20px;margin-bottom:16px;display:none}
+.result-card.show{display:block}
+.result-title{font-size:.9rem;font-weight:700;color:var(--green);margin-bottom:12px}
+.result-addr{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;font-family:monospace;font-size:.75rem;word-break:break-all;margin:10px 0;text-align:center}
+.result-amount{font-size:1.5rem;font-weight:800;text-align:center;margin:10px 0}
+.result-coin{text-align:center;color:var(--muted);font-size:.7rem;margin-bottom:10px}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:8px;font-size:.65rem;font-weight:700;text-align:center}
+.status-waiting{background:rgba(245,158,11,.12);color:var(--gold)}
+.status-confirmed{background:rgba(0,230,118,.12);color:var(--green)}
+.status-error{background:rgba(239,68,68,.12);color:var(--red)}
+.loading{text-align:center;padding:20px;color:var(--muted)}
+.back{display:block;text-align:center;margin-top:20px;font-size:.8rem;color:var(--cyan);text-decoration:none}
+.alert{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:10px;padding:12px;font-size:.7rem;color:var(--red);margin-bottom:16px;display:none}
+.alert.show{display:block}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>HARZ <span>Crypto Pay</span></h1>
+<p>Pay with USDT, BTC, ETH & 100+ coins via NowPayments</p>
+</div>
+<div class="container">
+
+<div class="alert" id="alertBox"></div>
+
+<div class="form-card">
+<div class="form-group">
+<label class="form-label">Product / Description</label>
+<input class="form-input" id="productInput" placeholder="e.g. Harz Productivity OS" value="HARZ Product">
+</div>
+<div class="form-group">
+<label class="form-label">Amount (USD)</label>
+<input class="form-input" id="amountInput" type="number" placeholder="10" value="10" min="1">
+</div>
+<div class="form-group">
+<label class="form-label">Select Cryptocurrency</label>
+<div class="coin-grid" id="coinGrid"></div>
+</div>
+<button class="pay-btn" id="payBtn" onclick="createPayment()">Pay with Crypto</button>
+</div>
+
+<div class="result-card" id="resultCard">
+<div class="result-title">Payment Address Created</div>
+<div class="result-coin" id="resultCoin"></div>
+<div class="result-amount" id="resultAmount"></div>
+<div class="result-addr" id="resultAddr"></div>
+<div style="text-align:center;margin:10px 0">
+<span class="status-badge status-waiting" id="statusBadge">Waiting for payment...</span>
+</div>
+<button class="pay-btn" style="background:var(--blue);color:#fff" onclick="checkStatus()">Check Payment Status</button>
+</div>
+
+<div class="loading" id="loading" style="display:none">
+<p>Creating payment...</p>
+</div>
+
+<a class="back" href="harz-super-app.html">Back to HARZ Super App</a>
+</div>
+
+<script>
+const BACKEND_URL = "https://app.base44.com/api/functions/harzPayments";
+
+const coins = [
+{code:"usdttrc20",name:"USDT TRC20",icon:"U"},
+{code:"btc",name:"Bitcoin",icon:"B"},
+{code:"eth",name:"Ethereum",icon:"E"},
+{code:"bnb",name:"BNB",icon:"N"},
+{code:"trx",name:"Tron",icon:"T"},
+{code:"sol",name:"Solana",icon:"S"},
+{code:"usdc",name:"USDC",icon:"$"},
+{code:"ltc",name:"Litecoin",icon:"L"},
+{code:"doge",name:"Dogecoin",icon:"D"}
+];
+
+let selectedCoin = "usdttrc20";
+let currentPaymentId = null;
+
+const grid = document.getElementById("coinGrid");
+coins.forEach((c,i) => {
+  const btn = document.createElement("div");
+  btn.className = "coin-btn" + (i === 0 ? " active" : "");
+  btn.innerHTML = '<div class="coin-icon">'+c.icon+'</div><div class="coin-name">'+c.name+'</div>';
+  btn.onclick = () => {
+    document.querySelectorAll(".coin-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    selectedCoin = c.code;
+  };
+  grid.appendChild(btn);
+});
+
+function showAlert(msg) {
+  const box = document.getElementById("alertBox");
+  box.textContent = msg;
+  box.classList.add("show");
+  setTimeout(() => box.classList.remove("show"), 5000);
+}
+
+async function createPayment() {
+  const amount = document.getElementById("amountInput").value;
+  const product = document.getElementById("productInput").value;
+  if (!amount || amount < 1) { showAlert("Enter a valid amount"); return; }
+
+  document.getElementById("payBtn").disabled = true;
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("resultCard").classList.remove("show");
+
+  try {
+    const resp = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "create_crypto_payment",
+        amount: parseFloat(amount),
+        currency: selectedCoin,
+        product: product,
+        reference: "HARZ-" + Date.now()
+      })
+    });
+
+    const data = await resp.json();
+
+    if (data.success && data.payment_id) {
+      currentPaymentId = data.payment_id;
+      const coinInfo = coins.find(c => c.code === selectedCoin) || {name: selectedCoin};
+      document.getElementById("resultCoin").textContent = coinInfo.name;
+      document.getElementById("resultAmount").textContent = data.pay_amount + " " + data.pay_currency.toUpperCase();
+      document.getElementById("resultAddr").textContent = data.pay_address;
+      document.getElementById("resultCard").classList.add("show");
+      document.getElementById("loading").style.display = "none";
+
+      let txns = JSON.parse(localStorage.getItem("harzCryptoTxns") || "[]");
+      txns.push({
+        payment_id: data.payment_id,
+        reference: "HARZ-" + Date.now(),
+        product: product,
+        amount_usd: amount,
+        coin: selectedCoin,
+        pay_amount: data.pay_amount,
+        pay_address: data.pay_address,
+        status: data.status,
+        date: new Date().toISOString()
+      });
+      localStorage.setItem("harzCryptoTxns", JSON.stringify(txns));
+    } else {
+      showAlert(data.error || "Failed to create payment");
+      document.getElementById("loading").style.display = "none";
+    }
+  } catch (e) {
+    showAlert("Connection error: " + e.message);
+    document.getElementById("loading").style.display = "none";
+  }
+  document.getElementById("payBtn").disabled = false;
+}
+
+async function checkStatus() {
+  if (!currentPaymentId) { showAlert("No payment to check"); return; }
+  const badge = document.getElementById("statusBadge");
+  badge.textContent = "Checking...";
+  badge.className = "status-badge status-waiting";
+
+  try {
+    const resp = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "check_payment", payment_id: currentPaymentId })
+    });
+    const data = await resp.json();
+
+    if (data.success) {
+      if (data.status === "confirmed" || data.status === "finished") {
+        badge.textContent = "Payment Confirmed";
+        badge.className = "status-badge status-confirmed";
+      } else if (data.status === "expired" || data.status === "failed") {
+        badge.textContent = "Payment Failed";
+        badge.className = "status-badge status-error";
+      } else {
+        badge.textContent = "Status: " + data.status;
+      }
+    }
+  } catch (e) {
+    badge.textContent = "Check failed";
+    badge.className = "status-badge status-error";
+  }
+}
+</script>
+</body>
+</html>
