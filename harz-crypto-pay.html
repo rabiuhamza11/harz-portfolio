@@ -3,212 +3,277 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HARZ Crypto Payments</title>
+<meta name="theme-color" content="#0A0A0F">
+<title>HARZ Crypto Pay — Pay with Crypto</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--purple:#7C4DFF;--red:#EF4444;--cyan:#00bcd4}
-body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
-.header{background:linear-gradient(135deg,rgba(0,230,118,.1),rgba(0,188,212,.08));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
-.header h1{font-size:1.3rem;font-weight:800}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.container{max-width:480px;margin:0 auto;padding:0 16px 40px}
+.header{text-align:center;padding:30px 0 20px}
+.header h1{font-size:1.6rem;font-weight:900}
 .header h1 span{color:var(--green)}
-.header p{font-size:.7rem;color:var(--muted);margin-top:4px}
-.container{max-width:500px;margin:0 auto;padding:16px}
+.header p{font-size:.75rem;color:var(--muted);margin-top:4px}
+.back-link{display:inline-block;margin-bottom:16px;font-size:.75rem;color:var(--cyan);text-decoration:none}
 .form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+.form-label{font-size:.7rem;color:var(--muted);margin-bottom:6px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.form-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-size:.9rem;outline:none;transition:.2s}
+.form-input:focus{border-color:var(--green)}
+.form-input::placeholder{color:var(--muted)}
 .form-group{margin-bottom:16px}
-.form-label{font-size:.7rem;color:var(--muted);margin-bottom:6px;display:block;font-weight:600}
-.form-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-size:.85rem}
-.form-input:focus{outline:none;border-color:var(--cyan)}
+.amount-row{display:flex;gap:8px}
+.amount-row .form-input{flex:1}
+.ngn-usd{display:flex;gap:4px;align-items:center;font-size:.65rem;color:var(--muted);margin-top:6px}
+.ngn-usd span{color:var(--green);font-weight:600}
 .coin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
 .coin-btn{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s;font-size:.65rem}
-.coin-btn:hover{border-color:var(--cyan)}
+.coin-btn:active{transform:scale(.95)}
 .coin-btn.active{border-color:var(--green);background:rgba(0,230,118,.08)}
 .coin-icon{font-size:1.2rem;margin-bottom:4px}
 .coin-name{font-weight:600}
-.pay-btn{width:100%;background:linear-gradient(135deg,var(--green),var(--cyan));color:#000;border:none;padding:14px;border-radius:12px;font-size:.85rem;font-weight:800;cursor:pointer;transition:.2s}
-.pay-btn:hover{opacity:.9}
+.pay-btn{width:100%;background:linear-gradient(135deg,var(--green),var(--cyan));color:#000;border:none;padding:16px;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;transition:.2s}
+.pay-btn:active{transform:scale(.97)}
 .pay-btn:disabled{opacity:.5;cursor:not-allowed}
 .result-card{background:var(--card);border:1px solid var(--green);border-radius:16px;padding:20px;margin-bottom:16px;display:none}
 .result-card.show{display:block}
-.result-title{font-size:.9rem;font-weight:700;color:var(--green);margin-bottom:12px}
+.result-title{font-size:.9rem;font-weight:700;color:var(--green);margin-bottom:12px;text-align:center}
 .result-addr{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;font-family:monospace;font-size:.75rem;word-break:break-all;margin:10px 0;text-align:center}
 .result-amount{font-size:1.5rem;font-weight:800;text-align:center;margin:10px 0}
 .result-coin{text-align:center;color:var(--muted);font-size:.7rem;margin-bottom:10px}
+.result-link{display:block;text-align:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#000;text-decoration:none;padding:14px;border-radius:12px;font-size:.85rem;font-weight:700;margin-top:12px}
+.result-link:active{transform:scale(.97)}
 .status-badge{display:inline-block;padding:4px 12px;border-radius:8px;font-size:.65rem;font-weight:700;text-align:center}
 .status-waiting{background:rgba(245,158,11,.12);color:var(--gold)}
 .status-confirmed{background:rgba(0,230,118,.12);color:var(--green)}
 .status-error{background:rgba(239,68,68,.12);color:var(--red)}
-.loading{text-align:center;padding:20px;color:var(--muted)}
-.back{display:block;text-align:center;margin-top:20px;font-size:.8rem;color:var(--cyan);text-decoration:none}
-.alert{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:10px;padding:12px;font-size:.7rem;color:var(--red);margin-bottom:16px;display:none}
+.loading{text-align:center;padding:30px;color:var(--muted);font-size:.8rem}
+.loading .spin{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.check-btn{display:block;width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-size:.8rem;font-weight:600;cursor:pointer;margin-top:12px;transition:.2s}
+.check-btn:active{transform:scale(.97)}
+.alert{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:10px;padding:12px;font-size:.72rem;color:var(--red);margin-bottom:16px;display:none}
 .alert.show{display:block}
+.success-icon{font-size:3rem;text-align:center;margin-bottom:8px}
+.new-pay{display:block;text-align:center;margin-top:16px;color:var(--cyan);font-size:.8rem;text-decoration:none}
+.info-note{font-size:.6rem;color:var(--muted);text-align:center;margin-top:12px;line-height:1.5}
+.qr-wrap{text-align:center;margin:12px 0}
+.qr-wrap img{border-radius:8px}
 </style>
 </head>
 <body>
+<div class="container">
+<a href="harz-super-app.html" class="back-link">← Back to Super App</a>
 <div class="header">
 <h1>HARZ <span>Crypto Pay</span></h1>
 <p>Pay with USDT, BTC, ETH & 100+ coins via NowPayments</p>
 </div>
-<div class="container">
 
-<div class="alert" id="alertBox"></div>
+<div class="alert" id="alert"></div>
 
+<!-- Payment Form -->
+<div id="payForm">
 <div class="form-card">
 <div class="form-group">
-<label class="form-label">Product / Description</label>
-<input class="form-input" id="productInput" placeholder="e.g. Harz Productivity OS" value="HARZ Product">
+<label class="form-label">Product / Service</label>
+<input class="form-input" id="product" placeholder="e.g. HARZ Digital Product" value="HARZ Digital Product">
 </div>
 <div class="form-group">
 <label class="form-label">Amount (USD)</label>
-<input class="form-input" id="amountInput" type="number" placeholder="10" value="10" min="1">
+<div class="amount-row">
+<input class="form-input" id="amount" type="number" placeholder="10" value="10" min="1" step="0.5">
+</div>
+<div class="ngn-usd">≈ <span id="ngnEst">15,000</span> NGN (at ₦1,500/$)</div>
 </div>
 <div class="form-group">
 <label class="form-label">Select Cryptocurrency</label>
 <div class="coin-grid" id="coinGrid"></div>
 </div>
-<button class="pay-btn" id="payBtn" onclick="createPayment()">Pay with Crypto</button>
+</div>
+<button class="pay-btn" id="payBtn" onclick="createInvoice()">🪙 Create Payment</button>
+<p class="info-note">Powered by NowPayments — No KYC required<br>Secure crypto payment processing</p>
 </div>
 
+<!-- Loading -->
+<div id="loadingDiv" style="display:none">
+<div class="loading"><span class="spin"></span>Creating your payment...</div>
+</div>
+
+<!-- Payment Result -->
 <div class="result-card" id="resultCard">
-<div class="result-title">Payment Address Created</div>
-<div class="result-coin" id="resultCoin"></div>
-<div class="result-amount" id="resultAmount"></div>
-<div class="result-addr" id="resultAddr"></div>
-<div style="text-align:center;margin:10px 0">
-<span class="status-badge status-waiting" id="statusBadge">Waiting for payment...</span>
-</div>
-<button class="pay-btn" style="background:var(--blue);color:#fff" onclick="checkStatus()">Check Payment Status</button>
+<div class="result-title" id="resultTitle">✅ Payment Created!</div>
+<div id="resultBody"></div>
 </div>
 
-<div class="loading" id="loading" style="display:none">
-<p>Creating payment...</p>
+<!-- Success -->
+<div id="successDiv" style="display:none">
+<div class="result-card show">
+<div class="success-icon">🎉</div>
+<div class="result-title">Payment Confirmed!</div>
+<p style="text-align:center;font-size:.8rem;color:var(--muted);margin-bottom:12px">Your payment has been received. Thank you!</p>
+<a href="harz-transactions.html" class="result-link">View Transaction</a>
+</div>
 </div>
 
-<a class="back" href="harz-super-app.html">Back to HARZ Super App</a>
 </div>
 
 <script>
-const BACKEND_URL = "https://app.base44.com/api/functions/harzPayments";
+const NP_API = "63WEPHP-X0M5MDM-HPMWTQF-1NZGM9H";
+const NP_BASE = "https://api.nowpayments.io/v1";
 
 const coins = [
-{code:"usdttrc20",name:"USDT TRC20",icon:"U"},
-{code:"btc",name:"Bitcoin",icon:"B"},
-{code:"eth",name:"Ethereum",icon:"E"},
-{code:"bnb",name:"BNB",icon:"N"},
-{code:"trx",name:"Tron",icon:"T"},
-{code:"sol",name:"Solana",icon:"S"},
-{code:"usdc",name:"USDC",icon:"$"},
-{code:"ltc",name:"Litecoin",icon:"L"},
-{code:"doge",name:"Dogecoin",icon:"D"}
+{icon:"💵",name:"USDT TRC20",code:"usdttrc20"},
+{icon:"₿",name:"Bitcoin",code:"btc"},
+{icon:"Ξ",name:"Ethereum",code:"eth"},
+{icon:"🟡",name:"BNB",code:"bnb"},
+{icon:"◎",name:"Solana",code:"sol"},
+{icon:"🔺",name:"TRX",code:"trx"},
+{icon:"USD",name:"USDC",code:"usdc"},
+{icon:"Ł",name:"Litecoin",code:"ltc"},
+{icon:"🐕",name:"Dogecoin",code:"doge"}
 ];
 
 let selectedCoin = "usdttrc20";
+let currentInvoiceId = null;
 let currentPaymentId = null;
 
-const grid = document.getElementById("coinGrid");
+// Render coin grid
+const coinGrid = document.getElementById("coinGrid");
 coins.forEach((c,i) => {
   const btn = document.createElement("div");
   btn.className = "coin-btn" + (i === 0 ? " active" : "");
-  btn.innerHTML = '<div class="coin-icon">'+c.icon+'</div><div class="coin-name">'+c.name+'</div>';
+  btn.innerHTML = `<div class="coin-icon">${c.icon}</div><div class="coin-name">${c.name}</div>`;
   btn.onclick = () => {
     document.querySelectorAll(".coin-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     selectedCoin = c.code;
   };
-  grid.appendChild(btn);
+  coinGrid.appendChild(btn);
+});
+
+// NGN estimate
+document.getElementById("amount").addEventListener("input", function() {
+  const usd = parseFloat(this.value) || 0;
+  document.getElementById("ngnEst").textContent = (usd * 1500).toLocaleString();
 });
 
 function showAlert(msg) {
-  const box = document.getElementById("alertBox");
-  box.textContent = msg;
-  box.classList.add("show");
-  setTimeout(() => box.classList.remove("show"), 5000);
+  const a = document.getElementById("alert");
+  a.textContent = msg;
+  a.classList.add("show");
+  setTimeout(() => a.classList.remove("show"), 5000);
 }
 
-async function createPayment() {
-  const amount = document.getElementById("amountInput").value;
-  const product = document.getElementById("productInput").value;
-  if (!amount || amount < 1) { showAlert("Enter a valid amount"); return; }
-
-  document.getElementById("payBtn").disabled = true;
-  document.getElementById("loading").style.display = "block";
-  document.getElementById("resultCard").classList.remove("show");
-
+async function createInvoice() {
+  const amount = parseFloat(document.getElementById("amount").value);
+  const product = document.getElementById("product").value || "HARZ Product";
+  
+  if (!amount || amount < 1) { showAlert("Enter a valid amount (min $1)"); return; }
+  
+  const payBtn = document.getElementById("payBtn");
+  payBtn.disabled = true;
+  payBtn.textContent = "Creating...";
+  document.getElementById("loadingDiv").style.display = "block";
+  document.getElementById("payForm").style.display = "none";
+  
   try {
-    const resp = await fetch(BACKEND_URL, {
+    const ref = "HARZ-" + Date.now().toString(36).toUpperCase();
+    
+    // Create invoice via NowPayments
+    const resp = await fetch(NP_BASE + "/invoice", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "x-api-key": NP_API,
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        action: "create_crypto_payment",
-        amount: parseFloat(amount),
-        currency: selectedCoin,
-        product: product,
-        reference: "HARZ-" + Date.now()
+        price_amount: amount,
+        price_currency: "usd",
+        order_id: ref,
+        order_description: product + " (" + selectedCoin.toUpperCase() + ")",
+        success_url: location.origin + location.pathname.replace("harz-crypto-pay.html","") + "harz-transactions.html?status=success&ref=" + ref,
+        cancel_url: location.href,
+        pay_currency: selectedCoin
       })
     });
-
+    
     const data = await resp.json();
-
-    if (data.success && data.payment_id) {
-      currentPaymentId = data.payment_id;
-      const coinInfo = coins.find(c => c.code === selectedCoin) || {name: selectedCoin};
-      document.getElementById("resultCoin").textContent = coinInfo.name;
-      document.getElementById("resultAmount").textContent = data.pay_amount + " " + data.pay_currency.toUpperCase();
-      document.getElementById("resultAddr").textContent = data.pay_address;
-      document.getElementById("resultCard").classList.add("show");
-      document.getElementById("loading").style.display = "none";
-
-      let txns = JSON.parse(localStorage.getItem("harzCryptoTxns") || "[]");
+    
+    if (data.id || data.invoice_id) {
+      currentInvoiceId = data.id || data.invoice_id;
+      const invoiceUrl = data.invoice_url || ("https://nowpayments.io/payment/?iid=" + currentInvoiceId);
+      
+      document.getElementById("loadingDiv").style.display = "none";
+      const card = document.getElementById("resultCard");
+      card.classList.add("show");
+      
+      document.getElementById("resultTitle").textContent = "✅ Payment Created!";
+      document.getElementById("resultBody").innerHTML = `
+        <div class="result-amount">$${amount.toFixed(2)}</div>
+        <div class="result-coin">Paying with ${coins.find(c=>c.code===selectedCoin).name}</div>
+        <div class="result-addr">Ref: ${ref}</div>
+        <p style="font-size:.7rem;color:var(--muted);text-align:center;margin:12px 0">Click below to complete your payment securely on NowPayments</p>
+        <a href="${invoiceUrl}" class="result-link" target="_blank">Pay with ${coins.find(c=>c.code===selectedCoin).name} →</a>
+        <button class="check-btn" onclick="checkStatus()">🔄 Check Payment Status</button>
+        <a href="harz-crypto-pay.html" class="new-pay">← New Payment</a>
+      `;
+      
+      // Save to localStorage
+      const txns = JSON.parse(localStorage.getItem("harzCryptoTxns") || "[]");
       txns.push({
-        payment_id: data.payment_id,
-        reference: "HARZ-" + Date.now(),
-        product: product,
-        amount_usd: amount,
-        coin: selectedCoin,
-        pay_amount: data.pay_amount,
-        pay_address: data.pay_address,
-        status: data.status,
-        date: new Date().toISOString()
+        ref, product, amount, coin: selectedCoin, invoiceId: currentInvoiceId,
+        status: "waiting", date: new Date().toISOString()
       });
       localStorage.setItem("harzCryptoTxns", JSON.stringify(txns));
+      
+      // Auto-check status every 15 seconds
+      statusInterval = setInterval(() => checkStatus(true), 15000);
     } else {
-      showAlert(data.error || "Failed to create payment");
-      document.getElementById("loading").style.display = "none";
+      throw new Error(data.message || "Failed to create payment");
     }
-  } catch (e) {
-    showAlert("Connection error: " + e.message);
-    document.getElementById("loading").style.display = "none";
+  } catch(e) {
+    document.getElementById("loadingDiv").style.display = "none";
+    document.getElementById("payForm").style.display = "block";
+    payBtn.disabled = false;
+    payBtn.textContent = "🪙 Create Payment";
+    showAlert("Error: " + e.message);
   }
-  document.getElementById("payBtn").disabled = false;
 }
 
-async function checkStatus() {
-  if (!currentPaymentId) { showAlert("No payment to check"); return; }
-  const badge = document.getElementById("statusBadge");
-  badge.textContent = "Checking...";
-  badge.className = "status-badge status-waiting";
+let statusInterval = null;
 
+async function checkStatus(silent) {
+  if (!currentInvoiceId) { if(!silent) showAlert("No payment to check"); return; }
+  
   try {
-    const resp = await fetch(BACKEND_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "check_payment", payment_id: currentPaymentId })
+    // Check invoice status
+    const resp = await fetch(NP_BASE + "/invoice/" + currentInvoiceId, {
+      headers: { "x-api-key": NP_API }
     });
     const data = await resp.json();
-
-    if (data.success) {
-      if (data.status === "confirmed" || data.status === "finished") {
-        badge.textContent = "Payment Confirmed";
-        badge.className = "status-badge status-confirmed";
-      } else if (data.status === "expired" || data.status === "failed") {
-        badge.textContent = "Payment Failed";
-        badge.className = "status-badge status-error";
-      } else {
-        badge.textContent = "Status: " + data.status;
-      }
+    
+    const status = (data.payment_status || data.status || "waiting").toLowerCase();
+    
+    if (status === "confirmed" || status === "finished" || status === "paid") {
+      if (statusInterval) clearInterval(statusInterval);
+      document.getElementById("resultCard").classList.remove("show");
+      document.getElementById("successDiv").style.display = "block";
+      
+      // Update localStorage
+      const txns = JSON.parse(localStorage.getItem("harzCryptoTxns") || "[]");
+      const txn = txns.find(t => t.invoiceId === currentInvoiceId);
+      if (txn) { txn.status = "confirmed"; localStorage.setItem("harzCryptoTxns", JSON.stringify(txns)); }
+    } else if (!silent) {
+      const card = document.getElementById("resultCard");
+      const statusText = status === "waiting" ? "⏳ Waiting for payment..." : "⏳ Status: " + status;
+      const badge = status === "waiting" ? "waiting" : "waiting";
+      card.querySelector(".result-title").innerHTML = `<span class="status-badge status-${badge}">${statusText}</span>
+        <div style="margin-top:12px">
+          <a href="https://nowpayments.io/payment/?iid=${currentInvoiceId}" class="result-link" target="_blank">Complete Payment →</a>
+          <button class="check-btn" onclick="checkStatus()">🔄 Check Again</button>
+        </div>`;
     }
-  } catch (e) {
-    badge.textContent = "Check failed";
-    badge.className = "status-badge status-error";
+  } catch(e) {
+    if (!silent) showAlert("Could not check status: " + e.message);
   }
 }
 </script>
