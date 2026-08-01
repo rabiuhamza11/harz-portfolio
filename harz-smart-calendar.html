@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Smart Calendar</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--purple:#7C4DFF;--red:#EF4444;--cyan:#00bcd4}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+.header{background:linear-gradient(135deg,rgba(124,77,255,.1),rgba(0,188,212,.08));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.3rem;font-weight:800}
+.header h1 span{color:var(--cyan)}
+.header p{font-size:.7rem;color:var(--muted);margin-top:4px}
+.container{max-width:600px;margin:0 auto;padding:16px}
+.date-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.date-display{font-size:1.1rem;font-weight:700}
+.nav-btn{background:var(--card);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:10px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.nav-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.cat-tabs{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.cat-tab{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:20px;font-size:.75rem;font-weight:600;white-space:nowrap;cursor:pointer;transition:.2s}
+.cat-tab.active{background:var(--cyan);color:#000;border-color:var(--cyan)}
+.section-head{font-size:.85rem;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.add-btn{background:var(--cyan);color:#000;border:none;padding:6px 14px;border-radius:8px;font-size:.7rem;font-weight:700;cursor:pointer;transition:.2s}
+.event-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;gap:12px;align-items:flex-start;transition:.2s}
+.event-card:hover{border-color:var(--cyan)}
+.event-date{width:50px;text-align:center;flex-shrink:0}
+.event-day{font-size:1.4rem;font-weight:800;line-height:1}
+.event-month{font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.event-info{flex:1;min-width:0}
+.event-title{font-size:.8rem;font-weight:700;margin-bottom:4px}
+.event-desc{font-size:.68rem;color:var(--muted);margin-bottom:6px}
+.event-meta{display:flex;gap:12px;font-size:.6rem;color:var(--muted)}
+.event-cat{font-size:.55rem;padding:2px 8px;border-radius:6px;font-weight:600}
+.cat-school{background:rgba(59,130,246,.15);color:var(--blue)}
+.cat-farm{background:rgba(0,230,118,.15);color:var(--green)}
+.cat-construction{background:rgba(245,158,11,.15);color:var(--gold)}
+.progress-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.progress-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.progress-row:last-child{border:none}
+.progress-label{font-size:.72rem;font-weight:600}
+.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px;width:80px}
+.progress-fill{height:100%;border-radius:3px}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;max-width:400px;width:100%}
+.modal h2{font-size:1rem;font-weight:800;margin-bottom:16px}
+.modal input,.modal select,.modal textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:.75rem;margin-bottom:10px}
+.modal label{font-size:.65rem;color:var(--muted);margin-bottom:4px;display:block}
+.modal-actions{display:flex;gap:10px;margin-top:14px}
+.modal-btn{flex:1;padding:10px;border-radius:10px;font-size:.75rem;font-weight:700;cursor:pointer;border:none;transition:.2s}
+.modal-btn.primary{background:var(--cyan);color:#000}
+.modal-btn.secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+.back{display:block;text-align:center;margin-top:20px;font-size:.8rem;color:var(--cyan);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>HARZ <span>Smart Calendar</span></h1>
+<p>School · Farm · Construction · Tasks & Events</p>
+</div>
+<div class="container">
+<div class="date-bar">
+<button class="nav-btn" onclick="changeWeek(-1)">&#8249;</button>
+<div class="date-display" id="dateDisplay">Loading...</div>
+<button class="nav-btn" onclick="changeWeek(1)">&#8250;</button>
+</div>
+<div class="cat-tabs">
+<button class="cat-tab active" onclick="filterCat('all',this)">All</button>
+<button class="cat-tab" onclick="filterCat('school',this)">School</button>
+<button class="cat-tab" onclick="filterCat('farm',this)">Farm</button>
+<button class="cat-tab" onclick="filterCat('construction',this)">Construction</button>
+</div>
+<div class="progress-section">
+<div class="section-head">Weekly Progress</div>
+<div class="progress-row"><div><div class="progress-label">School</div><div class="progress-bar"><div class="progress-fill" style="width:75%;background:var(--blue)"></div></div></div><span style="color:var(--blue);font-size:.7rem;font-weight:700">75%</span></div>
+<div class="progress-row"><div><div class="progress-label">Farm</div><div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--green)"></div></div></div><span style="color:var(--green);font-size:.7rem;font-weight:700">45%</span></div>
+<div class="progress-row"><div><div class="progress-label">Construction</div><div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--gold)"></div></div></div><span style="color:var(--gold);font-size:.7rem;font-weight:700">60%</span></div>
+</div>
+<div class="section-head">Upcoming Events <button class="add-btn" onclick="openModal()">+ Add</button></div>
+<div id="eventList"></div>
+<a class="back" href="harz-super-app.html">Back to HARZ Super App</a>
+</div>
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<h2>Add New Event</h2>
+<label>Title</label>
+<input type="text" id="evTitle" placeholder="Event title">
+<label>Category</label>
+<select id="evCat"><option value="school">School</option><option value="farm">Farm</option><option value="construction">Construction</option></select>
+<label>Date</label>
+<input type="date" id="evDate">
+<label>Time</label>
+<input type="time" id="evTime" value="09:00">
+<label>Description</label>
+<textarea id="evDesc" rows="2" placeholder="Event description"></textarea>
+<div class="modal-actions">
+<button class="modal-btn secondary" onclick="closeModal()">Cancel</button>
+<button class="modal-btn primary" onclick="saveEvent()">Save Event</button>
+</div>
+</div>
+</div>
+<script>
+const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+let currentWeek=0; let currentFilter="all";
+let events=JSON.parse(localStorage.getItem("harzCalendarEvents")||"[]");
+if(events.length===0){
+events=[
+{title:"PTA Meeting",cat:"school",date:"2026-08-03",time:"10:00",desc:"Termly parent-teacher meeting at Danfodio Memorial"},
+{title:"Harvest Tomatoes",cat:"farm",date:"2026-08-02",time:"06:00",desc:"Harvest ripe tomatoes from Plot A"},
+{title:"Site Inspection",cat:"construction",date:"2026-08-01",time:"08:00",desc:"Inspect foundation at Abuja Estate site"},
+{title:"Submit Exam Results",cat:"school",date:"2026-08-04",time:"14:00",desc:"Submit JSS3 final exam results to board"},
+{title:"Fertilizer Application",cat:"farm",date:"2026-08-05",time:"07:00",desc:"Apply NPK fertilizer to maize farm"},
+{title:"Material Delivery",cat:"construction",date:"2026-08-03",time:"11:00",desc:"Receive cement and rods delivery"},
+{title:"Staff Training",cat:"school",date:"2026-08-06",time:"09:00",desc:"Teacher training on new curriculum"},
+{title:"Vaccination Day",cat:"farm",date:"2026-08-07",time:"08:00",desc:"Poultry vaccination schedule"}
+];
+localStorage.setItem("harzCalendarEvents",JSON.stringify(events));
+}
+function getWeekRange(weekOffset){
+const d=new Date(); d.setDate(d.getDate()+weekOffset*7);
+const day=d.getDay(); const start=new Date(d); start.setDate(d.getDate()-day);
+const end=new Date(start); end.setDate(start.getDate()+6);
+return start.toLocaleDateString("en-US",{month:"short",day:"numeric"})+" - "+end.toLocaleDateString("en-US",{month:"short",day:"numeric"});
+}
+function renderEvents(){
+const list=document.getElementById("eventList");
+let filtered=currentFilter==="all"?events:events.filter(e=>e.cat===currentFilter);
+filtered.sort((a,b)=>new Date(a.date)-new Date(b.date));
+if(filtered.length===0){list.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);font-size:.75rem">No events found</div>';return;}
+list.innerHTML=filtered.map(e=>{
+const d=new Date(e.date);
+return '<div class="event-card"><div class="event-date"><div class="event-day">'+d.getDate()+'</div><div class="event-month">'+months[d.getMonth()]+'</div></div><div class="event-info"><div class="event-title">'+e.title+'</div><div class="event-desc">'+(e.desc||"")+'</div><div class="event-meta"><span>'+e.time+'</span><span class="event-cat cat-'+e.cat+'">'+e.cat.toUpperCase()+'</span></div></div></div>';
+}).join("");
+}
+function filterCat(cat,btn){
+currentFilter=cat;
+document.querySelectorAll(".cat-tab").forEach(t=>t.classList.remove("active"));
+btn.classList.add("active");
+renderEvents();
+}
+function changeWeek(dir){currentWeek+=dir;document.getElementById("dateDisplay").textContent=getWeekRange(currentWeek);}
+function openModal(){
+document.getElementById("modalOverlay").classList.add("active");
+const tomorrow=new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+document.getElementById("evDate").value=tomorrow.toISOString().split("T")[0];
+}
+function closeModal(){document.getElementById("modalOverlay").classList.remove("active");}
+function saveEvent(){
+const title=document.getElementById("evTitle").value.trim();
+if(!title){return;}
+events.push({title:title,cat:document.getElementById("evCat").value,date:document.getElementById("evDate").value,time:document.getElementById("evTime").value,desc:document.getElementById("evDesc").value.trim()});
+localStorage.setItem("harzCalendarEvents",JSON.stringify(events));
+document.getElementById("evTitle").value=""; document.getElementById("evDesc").value="";
+closeModal(); renderEvents();
+}
+document.getElementById("dateDisplay").textContent=getWeekRange(0);
+renderEvents();
+</script>
+</body>
+</html>

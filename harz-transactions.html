@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Transaction History</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--purple:#7C4DFF;--red:#EF4444;--cyan:#00bcd4}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+.header{background:linear-gradient(135deg,rgba(0,188,212,.1),rgba(124,77,255,.08));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.3rem;font-weight:800}
+.header h1 span{color:var(--cyan)}
+.header p{font-size:.7rem;color:var(--muted);margin-top:4px}
+.container{max-width:600px;margin:0 auto;padding:16px}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
+.kpi-label{font-size:.6rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.kpi-value{font-size:1.3rem;font-weight:800}
+.kpi-sub{font-size:.55rem;color:var(--muted);margin-top:4px}
+.section-head{font-size:.85rem;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.section-head .badge{font-size:.6rem;background:rgba(0,230,118,.12);color:var(--green);padding:2px 8px;border-radius:6px;font-weight:600}
+.tx-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;transition:.2s}
+.tx-card:hover{border-color:var(--cyan)}
+.tx-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.tx-icon.bank{background:rgba(59,130,246,.15);color:var(--blue)}
+.tx-icon.paystack{background:rgba(0,188,212,.15);color:var(--cyan)}
+.tx-icon.usdt{background:rgba(0,230,118,.15);color:var(--green)}
+.tx-icon.ussd{background:rgba(245,158,11,.15);color:var(--gold)}
+.tx-icon.gdeg{background:rgba(124,77,255,.15);color:var(--purple)}
+.tx-info{flex:1;min-width:0}
+.tx-ref{font-size:.75rem;font-weight:700;margin-bottom:2px}
+.tx-product{font-size:.68rem;color:var(--muted);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-date{font-size:.6rem;color:var(--muted)}
+.tx-amount{font-size:.85rem;font-weight:800;text-align:right}
+.tx-status{font-size:.55rem;padding:2px 8px;border-radius:6px;font-weight:600;margin-top:4px;display:inline-block}
+.status-paid{background:rgba(0,230,118,.12);color:var(--green)}
+.status-pending{background:rgba(245,158,11,.12);color:var(--gold)}
+.status-failed{background:rgba(239,68,68,.12);color:var(--red)}
+.status-refunded{background:rgba(124,77,255,.12);color:var(--purple)}
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.filter-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:20px;font-size:.7rem;font-weight:600;white-space:nowrap;cursor:pointer;transition:.2s}
+.filter-btn.active{background:var(--cyan);color:#000;border-color:var(--cyan)}
+.back{display:block;text-align:center;margin-top:20px;font-size:.8rem;color:var(--cyan);text-decoration:none}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:2rem;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>HARZ <span>Transactions</span></h1>
+<p>Payment History · Orders · Revenue</p>
+</div>
+<div class="container">
+
+<div class="kpi-grid">
+<div class="kpi-card">
+<div class="kpi-label">Total Revenue</div>
+<div class="kpi-value" style="color:var(--green)">₦5K</div>
+<div class="kpi-sub">Paid orders</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Pending</div>
+<div class="kpi-value" style="color:var(--gold)">₦113.8K</div>
+<div class="kpi-sub">Awaiting payment</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Total Orders</div>
+<div class="kpi-value">11</div>
+<div class="kpi-sub">1 paid · 9 pending · 1 test</div>
+</div>
+</div>
+
+<div class="filter-bar">
+<button class="filter-btn active" onclick="filterTx('all')">All</button>
+<button class="filter-btn" onclick="filterTx('paid')">Paid</button>
+<button class="filter-btn" onclick="filterTx('pending')">Pending</button>
+<button class="filter-btn" onclick="filterTx('failed')">Failed</button>
+</div>
+
+<div class="section-head">Transaction History <span class="badge">Live</span></div>
+<div id="txList"></div>
+
+<a class="back" href="harz-super-app.html">← Back to HARZ Super App</a>
+</div>
+
+<script>
+const transactions = [
+{ref:"HARZ-TEST-001",product:"Notion Productivity OS",amount:86400,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 1"},
+{ref:"HARZ-TEST-002",product:"MindCare AI Pro",amount:5000,method:"paystack",status:"paid",date:"2026-07-28",customer:"Test Customer 2"},
+{ref:"HARZ-TEST-003",product:"Harz Product",amount:5000,method:"bank_transfer",status:"pending",date:"2026-07-28",customer:"Test Customer 3"},
+{ref:"HARZ-TEST-004",product:"Test Product",amount:2500,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 4"},
+{ref:"HARZ-TEST-005",product:"Notion Productivity OS",amount:28800,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 5"},
+{ref:"HARZ-TEST-006",product:"Notion Productivity OS",amount:28800,method:"usdt",status:"pending",date:"2026-07-28",customer:"Test Customer 6"},
+{ref:"HARZ-TEST-007",product:"MindCare AI Pro",amount:5000,method:"bank_transfer",status:"pending",date:"2026-07-28",customer:"Test Customer 7"},
+{ref:"HARZ-TEST-008",product:"Harz Product",amount:5000,method:"ussd",status:"pending",date:"2026-07-28",customer:"Test Customer 8"},
+{ref:"HARZ-TEST-009",product:"Test Product",amount:2500,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 9"},
+{ref:"HARZ-TEST-010",product:"Harz Product",amount:5000,method:"gdeg",status:"failed",date:"2026-07-28",customer:"Test Customer 10"},
+{ref:"HARZ-TEST-011",product:"MindCare AI Pro",amount:5000,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 11"},
+];
+
+const methodIcons = {bank_transfer:"🏦",paystack:"💳",usdt:"₿",ussd:"📱",gdeg:"🪙"};
+const methodClass = {bank_transfer:"bank",paystack:"paystack",usdt:"usdt",ussd:"ussd",gdeg:"gdeg"};
+const methodLabels = {bank_transfer:"Bank Transfer",paystack:"Paystack",usdt:"USDT (TRC20)",ussd:"USSD",gdeg:"GDEG Token"};
+
+function formatNaira(n){return "₦"+n.toLocaleString()}
+
+function renderTx(filter){
+const list = document.getElementById("txList");
+const filtered = filter==="all" ? transactions : transactions.filter(t=>t.status===filter);
+if(filtered.length===0){
+list.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>No transactions found</p></div>';
+return;
+}
+list.innerHTML = filtered.map(t=>`
+<div class="tx-card">
+<div class="tx-icon ${methodClass[t.method]}">${methodIcons[t.method]}</div>
+<div class="tx-info">
+<div class="tx-ref">${t.ref}</div>
+<div class="tx-product">${t.product} · ${t.customer}</div>
+<div class="tx-date">${t.date} · ${methodLabels[t.method]}</div>
+</div>
+<div>
+<div class="tx-amount" style="color:${t.status==='paid'?'var(--green)':t.status==='failed'?'var(--red)':'var(--gold)'}">${formatNaira(t.amount)}</div>
+<div class="tx-status status-${t.status}">${t.status.toUpperCase()}</div>
+</div>
+</div>
+`).join("");
+}
+
+function filterTx(f){
+document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+event.target.classList.add("active");
+renderTx(f);
+}
+
+renderTx("all");
+</script>
+</body>
+</html>
