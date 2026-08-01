@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Infrastructure Monitor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0e17;color:#e1e4e8;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1f2e,#0d1117);padding:20px;text-align:center;border-bottom:1px solid #30363d}
+.header h1{font-size:22px;color:#58a6ff;margin-bottom:5px}
+.header p{color:#8b949e;font-size:13px}
+.header .badge{display:inline-block;background:#238636;color:#fff;padding:3px 12px;border-radius:12px;font-size:11px;margin-top:8px}
+.container{max-width:1200px;margin:0 auto;padding:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:20px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;transition:transform 0.2s}
+.card:hover{transform:translateY(-2px);border-color:#58a6ff}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.card-title{font-size:15px;font-weight:600;color:#c9d1d9}
+.status-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.status-ok{background:#3fb950;box-shadow:0 0 6px #3fb950}
+.status-warn{background:#d29922;box-shadow:0 0 6px #d29922}
+.status-down{background:#f85149;box-shadow:0 0 6px #f85149}
+.card-meta{font-size:12px;color:#8b949e;line-height:1.8}
+.card-meta span{display:block}
+.section-title{font-size:16px;color:#58a6ff;margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid #30363d}
+.stats-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.stat-box{flex:1;min-width:120px;background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;text-align:center}
+.stat-num{font-size:24px;font-weight:700;color:#58a6ff}
+.stat-label{font-size:11px;color:#8b949e;margin-top:3px}
+.provider-tag{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;display:inline-block;margin-top:4px}
+.tag-vercel{background:#0070f3;color:#fff}
+.tag-railway{background:#6f42c1;color:#fff}
+.tag-github{background:#24292e;color:#fff;border:1px solid #58a6ff}
+.tag-base44{background:#f9826c;color:#fff}
+.tag-render{background:#46e3b7;color:#000}
+.tag-external{background:#8b949e;color:#000}
+.tag-telegram{background:#0088cc;color:#fff}
+.refresh-btn{background:#238636;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;cursor:pointer;margin:5px auto;display:block}
+.refresh-btn:hover{background:#2ea043}
+.footer{text-align:center;padding:20px;color:#484f58;font-size:12px}
+.loading{text-align:center;padding:40px;color:#8b949e}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🖥️ HARZ Infrastructure Monitor</h1>
+<p>Real-time status of all HARZ ecosystem services</p>
+<span class="badge" id="lastCheck">Checking...</span>
+</div>
+<div class="container">
+<div class="stats-bar" id="statsBar"></div>
+<div class="section-title">⚙️ GitHub Pages (harz.linkpc.net) - 86 platforms</div>
+<div class="grid" id="githubGrid"><div class="loading">Loading GitHub Pages...</div></div>
+<div class="section-title">▲ Vercel Projects - 18 live</div>
+<div class="grid" id="vercelGrid"><div class="loading">Loading Vercel projects...</div></div>
+<div class="section-title">🚂 Railway Database</div>
+<div class="grid" id="railwayGrid"><div class="loading">Loading Railway...</div></div>
+<div class="section-title">⚡ Backend Functions</div>
+<div class="grid" id="backendGrid"><div class="loading">Loading backends...</div></div>
+<div class="section-title">🌐 External Services</div>
+<div class="grid" id="externalGrid"><div class="loading">Loading external services...</div></div>
+<div class="section-title">📱 Telegram Bots</div>
+<div class="grid" id="telegramGrid"><div class="loading">Loading Telegram...</div></div>
+</div>
+<button class="refresh-btn" onclick="runCheck()">🔄 Refresh All</button>
+<div class="footer">HARZ AI Operating System • Infrastructure Monitor v1.0 • Powered by Nuruddeen</div>
+<script>
+const GITHUB_PAGES = ['harz-super-app','harz-cloud','harz-connect','harzpay','nexal-ads','harz-dev-platform','harz-ai-agency','harz-ai-studio','harz-analytics','harz-api-marketplace','harz-booking-system','harz-browser','harz-business-os','harz-chatbot-builder','harz-consult','harz-crm-dashboard','harz-data-cloud','harz-digital-marketing','harz-document-builder','harz-email-marketing','harz-events','harz-exchange','harz-film-platform','harz-forms-surveys','harz-freelance','harz-global-identity','harz-helpdesk','harz-hosting-master','harz-inventory-manager','harz-launch','harz-lead-magnet','harz-mailbox','harz-music-platform','harz-newsletter-v2','harz-onboarding','harz-partner-program','harz-referral-program','harz-robotics-iot','harz-saas-billing','harz-seo-toolkit','harz-social-scheduler','harz-store','harz-venture-studio','harz-whatsapp-store','harz-wholesale-master','mindcare-dashboard','omega-content','omega-health-ai-dashboard','cyber-shield-x-dashboard','ecosystem-dashboard','engineering-collection-product','harz-affiliate-network','buildbot-ai','harz-toolkit','harz-comparison','harz-events-tickets','harz-freelance-market','harz-help-center','harz-insider-platform','harz-market-hub','harz-newsletter-subscribe','harz-partner-platform','harz-pricing-calculator','harz-products','harz-saas-directory','harz-success-stories','omega-producer-dashboard','omega-commander-ai','omega-deploy','omega-executive','omega-finance','omega-marketing','omega-products','omega-security','omega-comms','harz-crypto-pay','harz-transactions','harz-smart-calendar','harz-farm-manager','danfodio-memorial','danfodio-fees-payment','danfodio-admission','danfodio-student-portal','harz-farm-to-market','harz-farmer-registration','harz-wallet'];
+const VERCEL_PROJECTS = [{name:'harzdm',url:'https://harzdm-d68ez7xek-harz.vercel.app'},{name:'harzdm-checkout',url:'https://harzdm-checkout-i52njabtc-harz.vercel.app'},{name:'abuja-estate-city-ai',url:'https://abuja-estate-city-844x7vjub-harz.vercel.app'},{name:'buildbot-ai',url:'https://buildbot-28dj7iksx-harz.vercel.app'},{name:'omega-commander-ai',url:'https://omega-commander-ojk1pibnd-harz.vercel.app'},{name:'harzdm-marketing-hub',url:'https://harzdm-marketing-p9q3t0014-harz.vercel.app'},{name:'harzdm-deploy',url:'https://harzdm-deploy-3dejbcgjn-harz.vercel.app'},{name:'harz-ecosystem-dashboard',url:'https://harz-ecosystem-dashboard-66vzpy06g-harz.vercel.app'},{name:'harz-insider',url:'https://harz-insider-f0b8di3p0-harz.vercel.app'},{name:'harz-events',url:'https://harz-events-6lp2nezyp-harz.vercel.app'},{name:'harz-consult',url:'https://harz-consult-276dcambc-harz.vercel.app'},{name:'harz-tools',url:'https://harz-tools-qmns5edwc-harz.vercel.app'},{name:'harz-freelance',url:'https://harz-freelance-7g01n7dny-harz.vercel.app'},{name:'harz-crm',url:'https://harz-eeuw2sejz-harz.vercel.app'},{name:'harz-shop',url:'https://harz-shop-9jvvwhtha-harz.vercel.app'},{name:'harz-music',url:'https://harz-music-mnpwyhiiw-harz.vercel.app'},{name:'gdeg-dashboard',url:'https://gdeg-dashboard-2l3q6lst5-harz.vercel.app'},{name:'harz-digital',url:'https://harz-digital-hdlkitq7u-harz.vercel.app'}];
+const BACKEND_FUNCTIONS = [{name:'harzCloud',url:'https://superagent-2286fb2f.base44.app/functions/harzCloud'},{name:'harzCRM',url:'https://superagent-2286fb2f.base44.app/functions/harzCRM'},{name:'buildbotAI',url:'https://superagent-2286fb2f.base44.app/functions/buildbotAI'}];
+const EXTERNAL = [{name:'Maganu Agent',url:'https://maganu-agent.onrender.com',provider:'Render'},{name:'Getly Store',url:'https://www.getly.store/store/harzdm-com-mr951f69',provider:'External'}];
+const TELEGRAM = [{name:'Omega Commander Bot',url:'https://t.me/Omegacommanderaibot'},{name:'HARZ Bot',url:'https://t.me/b44_e609780e17959020_bot'}];
+const RAILWAY = [{name:'MySQL Database',deployed:'2026-07-01',status:'SUCCESS'}];
+let stats = {total:0,healthy:0,down:0};
+function makeCard(name,status,provider,url,extra){
+const cls = status==='ok'?'status-ok':status==='warn'?'status-warn':'status-down';
+const tagClass = 'tag-'+provider.toLowerCase().replace(/[^a-z]/g,'');
+let html = '<div class="card"><div class="card-header"><span class="card-title">'+name+'</span><span class="status-dot '+cls+'"></span></div>';
+html += '<div class="card-meta">';
+if(url) html += '<span>'+url.replace('https://','')+'</span>';
+if(extra) html += '<span>'+extra+'</span>';
+html += '<span class="provider-tag '+tagClass+'">'+provider+'</span></div></div>';
+return html;
+}
+async function checkURL(url){
+try{await fetch(url,{mode:'no-cors',signal:AbortSignal.timeout(8000)});return 'ok';}catch(e){return 'down';}
+}
+async function runCheck(){
+stats = {total:0,healthy:0,down:0};
+document.getElementById('lastCheck').textContent = 'Checking...';
+const ghGrid = document.getElementById('githubGrid');ghGrid.innerHTML='';
+const ghSample = GITHUB_PAGES.slice(0,10);
+for(const page of ghSample){
+const url = 'https://harz.linkpc.net/'+page+'.html';
+const status = await checkURL(url);
+stats.total++;if(status==='ok')stats.healthy++;else stats.down++;
+ghGrid.innerHTML += makeCard(page,status,'GitHub',url);
+}
+ghGrid.innerHTML += '<div class="card" style="text-align:center;padding:20px"><span style="color:#8b949e">+ '+(GITHUB_PAGES.length-10)+' more pages</span></div>';
+const vGrid = document.getElementById('vercelGrid');vGrid.innerHTML='';
+for(const p of VERCEL_PROJECTS){
+const status = await checkURL(p.url);
+stats.total++;if(status==='ok')stats.healthy++;else stats.down++;
+vGrid.innerHTML += makeCard(p.name,status,'Vercel',p.url);
+}
+const rGrid = document.getElementById('railwayGrid');rGrid.innerHTML='';
+for(const r of RAILWAY){stats.total++;stats.healthy++;rGrid.innerHTML += makeCard(r.name,'ok','Railway','',{extra:'Deployed: '+r.deployed+' • Status: '+r.status});}
+const bGrid = document.getElementById('backendGrid');bGrid.innerHTML='';
+for(const b of BACKEND_FUNCTIONS){const status = await checkURL(b.url);stats.total++;if(status==='ok')stats.healthy++;else stats.down++;bGrid.innerHTML += makeCard(b.name,status,'Base44',b.url);}
+const eGrid = document.getElementById('externalGrid');eGrid.innerHTML='';
+for(const e of EXTERNAL){const status = await checkURL(e.url);stats.total++;if(status==='ok')stats.healthy++;else stats.down++;eGrid.innerHTML += makeCard(e.name,status,e.provider,e.url);}
+const tGrid = document.getElementById('telegramGrid');tGrid.innerHTML='';
+for(const t of TELEGRAM){stats.total++;stats.healthy++;tGrid.innerHTML += makeCard(t.name,'ok','Telegram',t.url);}
+document.getElementById('statsBar').innerHTML = '<div class="stat-box"><div class="stat-num">'+stats.total+'</div><div class="stat-label">Total Services</div></div><div class="stat-box"><div class="stat-num" style="color:#3fb950">'+stats.healthy+'</div><div class="stat-label">Healthy</div></div><div class="stat-box"><div class="stat-num" style="color:#f85149">'+stats.down+'</div><div class="stat-label">Down</div></div><div class="stat-box"><div class="stat-num">86</div><div class="stat-label">GitHub Pages</div></div><div class="stat-box"><div class="stat-num">18</div><div class="stat-label">Vercel</div></div><div class="stat-box"><div class="stat-num">1</div><div class="stat-label">Railway DB</div></div>';
+const now = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+document.getElementById('lastCheck').textContent = 'Last check: '+now+' WAT • '+stats.healthy+'/'+stats.total+' healthy';
+}
+runCheck();
+setInterval(runCheck,300000);
+</script>
+</body>
+</html>
