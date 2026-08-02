@@ -299,6 +299,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="quick" onclick="closeAI();switchPage('store')"><span class="quick-icon">🛍️</span><span class="quick-label">Store</span></div>
 <div class="quick" onclick="switchPage('learn')"><span class="quick-icon">📚</span><span class="quick-label">Learn</span></div>
 <div class="quick" onclick="closeAI();switchPage('producer')"><span class="quick-icon" style="background:rgba(63,185,80,.15)">⚡</span><span class="quick-label">Producer</span></div>
+<div class="quick" onclick="closeAI();switchPage('agentbuilder')"><span class="quick-icon" style="background:rgba(124,77,255,.15)">🤖</span><span class="quick-label">AI Builder</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><span class="quick-icon">🛠️</span><span class="quick-label">Dev Platform</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html')"><span class="quick-icon">🤖</span><span class="quick-label">AI Agency</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html')"><span class="quick-icon">🏭</span><span class="quick-label">IoT & Robotics</span></div>
@@ -803,6 +804,78 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 </div>
 
+<!-- AGENT BUILDER PAGE -->
+<div id="page-agentbuilder" class="page">
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">AI Agent Builder</span><span class="badge b-live">LIVE</span></div>
+</div>
+
+<!-- Create New Agent -->
+<div style="padding:0 16px">
+<div class="biz-card" style="border-color:var(--p2)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+<div style="width:36px;height:36px;border-radius:8px;background:rgba(124,77,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
+<div style="flex:1;font-size:.8rem;font-weight:700;color:var(--p2)">Create New AI Agent</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<input id="ab-name" placeholder="Agent name (e.g. Talle)" style="padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem">
+<input id="ab-role" placeholder="Role (e.g. Market Research)" style="padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem">
+<select id="ab-avatar" style="padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem">
+<option value="🤖">🤖 Robot</option>
+<option value="📈">📈 Chart</option>
+<option value="💻">💻 Code</option>
+<option value="✍️">✍️ Write</option>
+<option value="🎨">🎨 Art</option>
+<option value="📊">📊 Analytics</option>
+<option value="🛡️">🛡️ Security</option>
+<option value="💰">💰 Finance</option>
+<option value="📚">📚 Knowledge</option>
+<option value="🎯">🎯 Target</option>
+<option value="🧠">🧠 Brain</option>
+<option value="🚀">🚀 Rocket</option>
+</select>
+<select id="ab-model" style="padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem">
+<option value="nvidia/nemotron-3-ultra-550b-a55b:free">Nemotron 550B (Smart)</option>
+<option value="nvidia/nemotron-3-super-120b-a12b:free">Nemotron 120B (Fast)</option>
+<option value="nvidia/nemotron-3-mini-4b-instruct:free">Nemotron 4B (Light)</option>
+</select>
+<textarea id="ab-prompt" placeholder="System prompt: What does this agent do? What is its personality?" style="padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.75rem;min-height:80px;resize:vertical"></textarea>
+<input id="ab-welcome" placeholder="Welcome message (e.g. Sannu! Ni Talle ne...)" style="padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem">
+<button class="btn btn-blue" style="width:auto" onclick="abCreateAgent()">Create Agent</button>
+</div>
+</div>
+</div>
+
+<!-- Agent List -->
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Your AI Agents</span><span class="section-link" onclick="abLoadAgents()">Refresh</span></div>
+</div>
+<div style="padding:0 16px">
+<div id="ab-agent-list" style="font-size:.75rem;color:var(--muted)">Loading agents...</div>
+</div>
+
+<!-- Agent Chat -->
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Chat with Agent</span></div>
+</div>
+<div style="padding:0 16px">
+<div id="ab-chat-agent-name" style="font-size:.8rem;font-weight:700;margin-bottom:8px;color:var(--muted)">Select an agent to chat</div>
+<div id="ab-chat-log" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:.7rem;color:var(--p3);max-height:200px;overflow:auto;margin-bottom:8px;white-space:pre-wrap">No agent selected.</div>
+<div style="display:flex;gap:6px">
+<input id="ab-chat-input" placeholder="Type message..." style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem" onkeypress="if(event.key==='Enter')abSendMessage()">
+<button class="btn btn-blue" style="width:auto;padding:8px 16px" onclick="abSendMessage()">Send</button>
+</div>
+</div>
+
+<!-- Stats -->
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Backend Stats</span><span class="section-link" onclick="abLoadStats()">Refresh</span></div>
+</div>
+<div style="padding:0 16px">
+<div id="ab-stats" style="font-size:.75rem;color:var(--muted)">Loading...</div>
+</div>
+</div>
+
 <!-- PROFILE PAGE -->
 <div id="page-profile" class="page">
 <div class="profile-header">
@@ -846,6 +919,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-saas-billing.html')">📊 Harz SaaS Billing</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html')">🏢 Hosting Master — Domains & Hosting</div>
 <div class="more-item" onclick="closeAI();switchPage('producer')">⚡ Omega Producer — Backend + Agents</div>
+<div class="more-item" onclick="closeAI();switchPage('agentbuilder')">🤖 AI Agent Builder — Create Custom Agents</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/deployforge.html')">📦 Wholesale + Deploy — DeployForge</div>
 </div>
 
@@ -1886,6 +1960,146 @@ showTab = function(name, el) {
   origShowTabOP(name, el);
   if (name === 'producer') {
     opLoadOrders(); opLoadCRM(); opLoadProducts(); opLoadStats();
+  }
+};
+
+
+// ===== AGENT BUILDER =====
+const AB_BACKEND = 'https://harz-backend.harz.workers.dev';
+const AB_PRODUCER = 'https://superagent-2286fb2f.base44.app/functions/omegaProducer';
+const AB_KEY = 'omega_harz_321424_2026';
+// API calls go through Omega Producer backend - no direct keys
+let abCurrentAgent = null;
+
+async function abCreateAgent() {
+  const name = document.getElementById('ab-name').value.trim();
+  const role = document.getElementById('ab-role').value.trim();
+  const prompt = document.getElementById('ab-prompt').value.trim();
+  const avatar = document.getElementById('ab-avatar').value;
+  const model = document.getElementById('ab-model').value;
+  const welcome = document.getElementById('ab-welcome').value.trim() || 'Hello! How can I help you?';
+  
+  if (!name || !role || !prompt) { showToast('Fill name, role, and prompt'); return; }
+  
+  showToast('Creating agent...');
+  
+  const resp = await fetch(AB_BACKEND + '/api/custom_agents', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name, role, system_prompt: prompt, model, avatar, color: '#58a6ff',
+      capabilities: 'chat', welcome_message: welcome
+    })
+  });
+  const data = await resp.json();
+  
+  if (data.success) {
+    showToast('Agent created: ' + name);
+    document.getElementById('ab-name').value = '';
+    document.getElementById('ab-role').value = '';
+    document.getElementById('ab-prompt').value = '';
+    document.getElementById('ab-welcome').value = '';
+    abLoadAgents();
+  } else {
+    showToast('Error: ' + (data.error || 'Failed'));
+  }
+}
+
+async function abLoadAgents() {
+  try {
+    const resp = await fetch(AB_BACKEND + '/api/custom_agents');
+    const data = await resp.json();
+    const el = document.getElementById('ab-agent-list');
+    if (!data.data || data.count === 0) { el.textContent = 'No agents yet. Create one above!'; return; }
+    
+    let html = '';
+    for (const a of data.data) {
+      html += '<div class="biz-card" style="padding:10px;margin-bottom:8px;cursor:pointer" onclick="abSelectAgent(\'' + a.id + '\',\'' + a.name.replace(/'/g,"") + '\',\'' + (a.system_prompt||'').substring(0,200).replace(/'/g,"") + '\',\'' + (a.model||'') + '\',\'' + (a.welcome_message||'Hello') + '\')">';
+      html += '<div style="display:flex;align-items:center;gap:8px">';
+      html += '<div style="font-size:24px">' + (a.avatar||'🤖') + '</div>';
+      html += '<div style="flex:1"><div style="font-weight:700;font-size:.85rem">' + a.name + '</div>';
+      html += '<div style="font-size:.68rem;color:var(--muted)">' + a.role + '</div></div>';
+      html += '<div style="font-size:.6rem;background:rgba(63,185,80,.1);color:var(--p3);padding:2px 6px;border-radius:8px">' + (a.status||'active') + '</div>';
+      html += '</div></div>';
+    }
+    el.innerHTML = html;
+  } catch(e) { document.getElementById('ab-agent-list').textContent = 'Error: ' + e.message; }
+}
+
+function abSelectAgent(id, name, prompt, model, welcome) {
+  abCurrentAgent = { id, name, prompt, model };
+  document.getElementById('ab-chat-agent-name').textContent = '💬 Chatting with: ' + name;
+  document.getElementById('ab-chat-log').textContent = welcome || 'Hello! How can I help you?';
+  showToast('Selected: ' + name);
+}
+
+async function abSendMessage() {
+  const input = document.getElementById('ab-chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  if (!abCurrentAgent) { showToast('Select an agent first'); return; }
+  
+  const log = document.getElementById('ab-chat-log');
+  log.textContent += '\n\nYou: ' + msg + '\n';
+  input.value = '';
+  log.textContent += '[' + abCurrentAgent.name + ' thinking...]\n';
+  log.scrollTop = log.scrollHeight;
+  
+  try {
+    // Call Omega Producer with agent context
+    const resp = await fetch(AB_PRODUCER, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: msg,
+        api_key: AB_KEY,
+        history: [{ role: 'system', content: abCurrentAgent.prompt }, { role: 'user', content: msg }]
+      })
+    });
+    const data = await resp.json();
+    
+    if (data.response) {
+      log.textContent += abCurrentAgent.name + ': ' + data.response + '\n';
+      
+      // Save chat to backend
+      fetch(AB_BACKEND + '/api/agent_chats', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          agent_id: abCurrentAgent.id,
+          agent_name: abCurrentAgent.name,
+          user_message: msg,
+          agent_response: data.response.substring(0, 500),
+          model: data.model || abCurrentAgent.model
+        })
+      }).catch(()=>{});
+    } else {
+      log.textContent += 'Error: No response\n';
+    }
+  } catch(e) { log.textContent += 'Error: ' + e.message + '\n'; }
+  log.scrollTop = log.scrollHeight;
+}
+
+async function abLoadStats() {
+  try {
+    const resp = await fetch(AB_BACKEND + '/stats');
+    const data = await resp.json();
+    const s = data.stats || {};
+    document.getElementById('ab-stats').innerHTML = 
+      '<div class="biz-card" style="padding:10px"><div style="display:flex;flex-wrap:wrap;gap:8px;font-size:.75rem">' +
+      '<div>Agents: <b>' + (s.custom_agents||0) + '</b></div>' +
+      '<div>Chats: <b>' + (s.agent_chats||0) + '</b></div>' +
+      '<div>Orders: <b>' + (s.orders||0) + '</b></div>' +
+      '<div>CRM: <b>' + (s.crm||0) + '</b></div>' +
+      '<div>Products: <b>' + (s.products||0) + '</b></div>' +
+      '<div>Users: <b>' + (s.total_users||0) + '</b></div></div></div>';
+  } catch(e) { document.getElementById('ab-stats').textContent = 'Error: ' + e.message; }
+}
+
+// Load agent builder data when page shown
+const origShowTabAB = showTab;
+showTab = function(name, el) {
+  origShowTabAB(name, el);
+  if (name === 'agentbuilder') { abLoadAgents(); abLoadStats(); }
+  if (name === 'producer') {
+    if (typeof opLoadOrders === 'function') { opLoadOrders(); opLoadCRM(); opLoadProducts(); opLoadStats(); }
   }
 };
 
