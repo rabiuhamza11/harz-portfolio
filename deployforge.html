@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#0d1117">
-<title>DeployForge v6.0 — Multi-Cloud Platform</title>
+<title>DeployForge v7.0 — Multi-Cloud Platform</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0d1117;--card:#161b22;--card2:#1c2333;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922;--red:#f85149;--gold:#FFD700;--radius:12px}
@@ -68,7 +68,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="header">
 <a href="harz-super-app.html">&#8592;</a>
 <span style="font-size:20px">&#128736;</span>
-<span class="title">DeployForge v6.0</span>
+<span class="title">DeployForge v7.0</span>
 <span class="badge b-gold">PRO</span>
 </div>
 <div class="tab-bar">
@@ -78,6 +78,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="tab" onclick="showTab('server',this)">&#9889; API</div>
 <div class="tab" onclick="showTab('docker',this)">&#128021; Docker</div>
 <div class="tab" onclick="showTab('cloudflare',this)">&#9729; Workers</div>
+<div class="tab" onclick="showTab('hf',this)">🤗 HuggingFace</div>
 <div class="tab" onclick="showTab('cicd',this)">&#128260; CI/CD</div>
 <div class="tab" onclick="showTab('monitor',this)">&#128276; Monitor</div>
 <div class="tab" onclick="showTab('repos',this)">&#128230; Repos</div>
@@ -92,8 +93,8 @@ textarea{resize:vertical;min-height:80px}
 <div class="stat"><div class="num" style="color:var(--purple)" id="stat-cicd">-</div><div class="lbl">CI/CD Runs</div></div>
 </div>
 <div class="card">
-<h3>&#128640; DeployForge v6.0 — Multi-Cloud Platform</h3>
-<p>5 cloud providers, 9 HARZ templates, automated CI/CD, real-time monitoring</p>
+<h3>&#128640; DeployForge v7.0 — Multi-Cloud Platform</h3>
+<p>6 cloud providers, 9 HARZ templates, automated CI/CD, real-time monitoring</p>
 <div class="feat-grid" style="margin-top:10px">
 <div class="feat"><div class="fi">&#128196;</div><div class="fn">Static</div><div class="fd">GitHub Pages</div></div>
 <div class="feat"><div class="fi">&#9889;</div><div class="fn">Serverless</div><div class="fd">Vercel</div></div>
@@ -106,7 +107,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="card"><h3>&#128293; Recent Deployments</h3><div id="recent-deploys"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
 <div class="card">
 <h3>&#128176; Cost: DeployForge vs Render vs Vercel</h3>
-<p>DeployForge: &#8358;0/mo (all 4 providers free tier)</p>
+<p>DeployForge: &#8358;0/mo (all 5 providers free tier)</p>
 <p>Render Starter: $7/mo (&#8358;11,200)</p>
 <p>Vercel Pro: $20/mo (&#8358;32,000)</p>
 <p>Railway Hobby: $5/mo (500hrs free)</p>
@@ -188,6 +189,60 @@ textarea{resize:vertical;min-height:80px}
 </div>
 
 <!-- CI/CD -->
+
+<!-- HUGGING FACE -->
+<div class="section" id="sec-hf">
+<div class="card">
+<h3>🤗 Hugging Face Spaces</h3>
+<p>Deploy static sites & AI apps to HF Spaces — free hosting with CDN</p>
+</div>
+<div class="card">
+<h3>🔑 HF Token</h3>
+<span class="form-label">Hugging Face Access Token (hf_xxx)</span>
+<input type="password" id="hfToken" placeholder="hf_xxxxxxxxxxxxxxxx">
+<button class="btn btn-blue" onclick="hfVerifyToken()">Verify Token</button>
+<div id="hfTokenStatus" style="margin-top:8px"></div>
+</div>
+<div class="card">
+<h3>📋 My HF Spaces</h3>
+<button class="btn btn-sm" onclick="loadHfSpaces()">Refresh Spaces</button>
+<div id="hfSpacesList" style="margin-top:10px"></div>
+</div>
+<div class="card">
+<h3>🚀 Create New Space</h3>
+<span class="form-label">Space Name</span>
+<input type="text" id="hfSpaceName" placeholder="my-app">
+<span class="form-label">SDK Type</span>
+<select id="hfSdk">
+<option value="static">Static HTML (free)</option>
+<option value="gradio">Gradio (Python AI)</option>
+<option value="streamlit">Streamlit (Python)</option>
+<option value="docker">Docker Container</option>
+</select>
+<span class="form-label">Description</span>
+<input type="text" id="hfSpaceDesc" placeholder="My awesome app">
+<button class="btn" onclick="hfCreateSpace()">Create Space</button>
+<div id="hfCreateResult" style="margin-top:8px"></div>
+</div>
+<div class="card">
+<h3>📤 Deploy File to Space</h3>
+<span class="form-label">Target Space</span>
+<select id="hfTargetSpace"></select>
+<span class="form-label">File Name</span>
+<input type="text" id="hfFileName" placeholder="index.html">
+<span class="form-label">File Content</span>
+<textarea id="hfFileContent" placeholder="<!DOCTYPE html>..." style="min-height:120px"></textarea>
+<button class="btn btn-purple" onclick="hfDeployFile()">Deploy to Space</button>
+<div id="hfDeployResult" style="margin-top:8px"></div>
+</div>
+<div class="card">
+<h3>📂 Space Files</h3>
+<span class="form-label">Select Space</span>
+<select id="hfFilesSpace" onchange="loadHfFiles()"></select>
+<div id="hfFilesList" style="margin-top:10px"></div>
+</div>
+</div>
+
 <div class="section" id="sec-cicd">
 <div class="card">
 <h3>&#128260; CI/CD Pipeline Management</h3>
@@ -423,6 +478,19 @@ async function delCfWorker(name){
 
 
 loadDashboard();
+
+// HUGGING FACE FUNCTIONS
+function getHfToken(){return document.getElementById('hfToken')?.value||localStorage.getItem('hfToken')||'';}
+function saveHfToken(){var t=document.getElementById('hfToken').value;if(t){localStorage.setItem('hfToken',t);}return t;}
+async function hfVerifyToken(){var t=document.getElementById('hfToken').value;if(!t){document.getElementById('hfTokenStatus').innerHTML='<span style="color:var(--red)">Enter token first</span>';return;}localStorage.setItem('hfToken',t);document.getElementById('hfTokenStatus').innerHTML='<span class="spinner"></span> Verifying...';try{const data=await apiCall('hf_whoami',{hfToken:t});if(data.success){document.getElementById('hfTokenStatus').innerHTML='<span style="color:var(--green)">✅ Valid! User: '+data.user+'</span>';loadHfSpaces();}else{document.getElementById('hfTokenStatus').innerHTML='<span style="color:var(--red)">❌ '+(data.error||'Invalid')+'</span>';}}catch(e){document.getElementById('hfTokenStatus').innerHTML='<span style="color:var(--red)">Error: '+e.message+'</span>';}}
+async function loadHfSpaces(){var t=getHfToken();if(!t){document.getElementById('hfSpacesList').innerHTML='<p style="color:var(--orange)">Enter HF token first</p>';return;}document.getElementById('hfSpacesList').innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';try{const data=await apiCall('hf_list',{hfToken:t});if(data.spaces){var html=data.spaces.map(function(s){var status=s.status==='RUNNING'?'live':'down';var dotClass=s.status==='RUNNING'?'dot-live':'dot-down';return '<div class="site-item" onclick="window.open(\''+s.url+'\',\'_blank\')"><div class="site-icon">🤗</div><div class="site-info"><div class="site-name">'+s.name+' <span class="badge b-'+status+'">'+s.status+'</span></div><div class="site-url">'+s.sdk+' - '+s.url+'</div></div><div class="status-dot '+dotClass+'"></div></div>';}).join('');document.getElementById('hfSpacesList').innerHTML=html||'<p style="color:var(--dim)">No spaces found</p>';var opts=data.spaces.map(function(s){return '<option value="'+s.name+'">'+s.name+' ('+s.sdk+')</option>';}).join('');var ts=document.getElementById('hfTargetSpace');if(ts)ts.innerHTML=opts;var fs=document.getElementById('hfFilesSpace');if(fs)fs.innerHTML=opts;}else{document.getElementById('hfSpacesList').innerHTML='<p style="color:var(--red)">Error: '+(data.error||'failed')+'</p>';}}catch(e){document.getElementById('hfSpacesList').innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}}
+async function hfCreateSpace(){var t=getHfToken();var name=document.getElementById('hfSpaceName').value.trim();var sdk=document.getElementById('hfSdk').value;var desc=document.getElementById('hfSpaceDesc').value;var result=document.getElementById('hfCreateResult');if(!name){result.innerHTML='<p style="color:var(--red)">Enter space name</p>';return;}if(!t){result.innerHTML='<p style="color:var(--red)">Enter HF token first</p>';return;}result.innerHTML='<p style="color:var(--blue)"><span class="spinner"></span> Creating space...</p>';try{const data=await apiCall('hf_create',{hfToken:t,spaceName:name,sdk:sdk,description:desc});if(data.success){result.innerHTML='<div style="color:var(--green)">✅ Space created!<br>URL: <a href="'+data.url+'" target="_blank" style="color:var(--blue)">'+data.url+'</a><br>Live: <a href="'+data.live_url+'" target="_blank" style="color:var(--blue)">'+data.live_url+'</a></div>';document.getElementById('hfSpaceName').value='';document.getElementById('hfSpaceDesc').value='';loadHfSpaces();}else{result.innerHTML='<p style="color:var(--red)">❌ '+(data.error||'failed')+'</p>';}}catch(e){result.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}}
+async function hfDeployFile(){var t=getHfToken();var space=document.getElementById('hfTargetSpace').value;var fileName=document.getElementById('hfFileName').value;var content=document.getElementById('hfFileContent').value;var result=document.getElementById('hfDeployResult');if(!space||!fileName||!content){result.innerHTML='<p style="color:var(--red)">Fill all fields</p>';return;}if(!t){result.innerHTML='<p style="color:var(--red)">Enter HF token first</p>';return;}result.innerHTML='<p style="color:var(--blue)"><span class="spinner"></span> Deploying '+fileName+'...</p>';try{const data=await apiCall('hf_deploy_single',{hfToken:t,spaceName:space,fileName:fileName,fileContent:content});if(data.success){result.innerHTML='<div style="color:var(--green)">✅ Deployed!<br>File: '+fileName+'<br>Live: <a href="'+data.live_url+'" target="_blank" style="color:var(--blue)">'+data.live_url+'</a></div>';}else{result.innerHTML='<p style="color:var(--red)">❌ '+(data.error||'failed')+'</p>';}}catch(e){result.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}}
+async function loadHfFiles(){var t=getHfToken();var space=document.getElementById('hfFilesSpace').value;var c=document.getElementById('hfFilesList');if(!space||!t){c.innerHTML='';return;}c.innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';try{const data=await apiCall('hf_list_files',{hfToken:t,spaceName:space});if(data.files){c.innerHTML=data.files.map(function(f){return '<div class="site-item"><div class="site-icon">📄</div><div class="site-info"><div class="site-name">'+f.name+'</div><div class="site-url">'+f.type+' - '+(f.size||'?')+' bytes</div></div><button class="del-btn" onclick="hfDeleteFile(\''+space+'\',\''+f.name+'\')">Delete</button></div>';}).join('');}else{c.innerHTML='<p style="color:var(--red)">Error</p>';}}catch(e){c.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}}
+async function hfDeleteFile(space,file){if(!confirm('Delete '+file+'?'))return;var t=getHfToken();try{const data=await apiCall('hf_delete_file',{hfToken:t,spaceName:space,fileName:file});if(data.success){loadHfFiles();}else{alert('Error: '+(data.error||'failed'));}}catch(e){alert('Error: '+e.message);}}
+// Load saved HF token on page load
+(function(){var t=localStorage.getItem('hfToken');if(t){var el=document.getElementById('hfToken');if(el)el.value=t;}})();
+
 </script>
 </body>
 </html>
