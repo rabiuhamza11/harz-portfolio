@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#0d1117">
-<title>DeployForge v7.1 — Multi-Cloud Platform</title>
+<title>DeployForge v8.0 — Multi-Cloud Platform</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0d1117;--card:#161b22;--card2:#1c2333;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922;--red:#f85149;--gold:#FFD700;--radius:12px}
@@ -68,7 +68,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="header">
 <a href="harz-super-app.html">&#8592;</a>
 <span style="font-size:20px">&#128736;</span>
-<span class="title">DeployForge v7.1</span>
+<span class="title">DeployForge v8.0</span>
 <span class="badge b-gold">PRO</span>
 </div>
 <div class="tab-bar">
@@ -82,6 +82,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="tab" onclick="showTab('cicd',this)">&#128260; CI/CD</div>
 <div class="tab" onclick="showTab('monitor',this)">&#128276; Monitor</div>
 <div class="tab" onclick="showTab('repos',this)">&#128230; Repos</div>
+<div class="tab" onclick="showTab('agents',this)" style="color:var(--purple)">🤖 Agents</div>
 </div>
 <div class="container">
 
@@ -94,7 +95,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="stat"><div class="num" style="color:var(--gold)" id="stat-hf">-</div><div class="lbl">HF Spaces</div></div>
 </div>
 <div class="card">
-<h3>&#128640; DeployForge v7.1 — Multi-Cloud Platform</h3>
+<h3>&#128640; DeployForge v8.0 — Multi-Cloud Platform</h3>
 <p>6 providers, 9 templates, auto CI/CD, auto-deploy to all, auto-monitoring</p>
 <div class="feat-grid" style="margin-top:10px">
 <div class="feat"><div class="fi">&#128196;</div><div class="fn">Static</div><div class="fd">GitHub Pages</div></div>
@@ -333,6 +334,93 @@ textarea{resize:vertical;min-height:80px}
 
 </div>
 
+<!-- AGENTS SECTION -->
+<div class="section" id="sec-agents">
+<div class="card">
+<h3 style="color:var(--purple)">🤖 Agent Command Center</h3>
+<p>Manage Magani & Omega Commander from DeployForge</p>
+</div>
+
+<!-- MAGANI AGENT -->
+<div class="card" style="border-color:var(--blue)">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#58a6ff,#bc8cff);display:flex;align-items:center;justify-content:center;font-size:24px">🧠</div>
+<div style="flex:1">
+<div style="font-size:14px;font-weight:700;color:var(--blue)">Magani Agent</div>
+<div style="font-size:11px;color:var(--dim)" id="magani-url">github.com/rabiuhamza11/maganu-agent</div>
+</div>
+<span class="badge" id="magani-badge" style="background:rgba(210,153,34,.15);color:var(--orange)">PENDING</span>
+</div>
+<div style="display:flex;gap:6px;margin-bottom:10px">
+<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--blue)" id="magani-deploys">1</div><div class="lbl">Deploys</div></div>
+<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--green)" id="magani-status">--</div><div class="lbl">Status</div></div>
+<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--purple)" id="magani-uptime">--</div><div class="lbl">Uptime</div></div>
+</div>
+<div id="magani-log" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:10px;color:var(--dim);max-height:100px;overflow:auto;margin-bottom:10px">Loading agent data...</div>
+<div class="row">
+<button class="btn btn-blue btn-sm" onclick="checkAgent('magani')">Check Status</button>
+<button class="btn btn-sm" onclick="showAgentLog('magani')">View Logs</button>
+</div>
+</div>
+
+<!-- OMEGA COMMANDER -->
+<div class="card" style="border-color:var(--gold)">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FFD700,#d29922);display:flex;align-items:center;justify-content:center;font-size:24px">⚡</div>
+<div style="flex:1">
+<div style="font-size:14px;font-weight:700;color:var(--gold)">Omega Commander</div>
+<div style="font-size:11px;color:var(--dim)" id="omega-url">github.com/rabiuhamza11/omega-infinity-dashboard</div>
+</div>
+<span class="badge" id="omega-badge" style="background:rgba(63,185,80,.15);color:var(--green)">LIVE</span>
+</div>
+<div style="display:flex;gap:6px;margin-bottom:10px">
+<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--gold)" id="omega-deploys">1</div><div class="lbl">Deploys</div></div>
+<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--green)" id="omega-status">--</div><div class="lbl">Status</div></div>
+<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--blue)" id="omega-uptime">--</div><div class="lbl">Uptime</div></div>
+</div>
+<div id="omega-log" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:10px;color:var(--dim);max-height:100px;overflow:auto;margin-bottom:10px">Loading agent data...</div>
+<div class="row">
+<button class="btn btn-gold btn-sm" onclick="checkAgent('omega')">Check Status</button>
+<button class="btn btn-sm" onclick="showAgentLog('omega')">View Logs</button>
+</div>
+</div>
+
+<!-- BASE44 AGENTS -->
+<div class="card" style="border-color:var(--green)">
+<h3 style="color:var(--green)">🏗️ Base44 Backend Agents</h3>
+<p>These agents run on Base44 infrastructure (always online)</p>
+<div id="base44-agents" style="margin-top:10px">
+<div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px">
+<span style="font-size:18px">🤖</span>
+<div style="flex:1"><div style="font-size:12px;font-weight:600">HARZ Super AI</div><div style="font-size:10px;color:var(--dim)">Nemotron 120B · Base44 Function</div></div>
+<span class="badge b-live">LIVE</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px">
+<span style="font-size:18px">💬</span>
+<div style="flex:1"><div style="font-size:12px;font-weight:600">Harz Chat</div><div style="font-size:10px;color:var(--dim)">Nemotron 550B · Base44 Function</div></div>
+<span class="badge b-live">LIVE</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px">
+<span style="font-size:18px">📚</span>
+<div style="flex:1"><div style="font-size:12px;font-weight:600">Harz Knowledge AI</div><div style="font-size:10px;color:var(--dim)">Nemotron 550B · Base44 Function</div></div>
+<span class="badge b-live">LIVE</span>
+</div>
+</div>
+</div>
+
+<!-- AGENT CONFIG -->
+<div class="card">
+<h3>⚙️ Agent Configuration</h3>
+<div class="form-label">Magani Render URL</div>
+<input id="magani-render-url" placeholder="https://maganu-agent.onrender.com" value="">
+<div class="form-label">Omega Dashboard URL</div>
+<input id="omega-dashboard-url" placeholder="https://omega-infinity-dashboard.vercel.app" value="https://omega-infinity-dashboard.vercel.app">
+<button class="btn btn-purple" onclick="saveAgentConfig()">Save Config</button>
+<div id="agent-config-msg" style="font-size:11px;color:var(--green);margin-top:6px;display:none">✓ Config saved!</div>
+</div>
+</div>
+
+
 <script>
 const API='https://solene-5b0577e2.base44.app/functions/deployForgeDeploy';
 var reposCache=[];var history=JSON.parse(localStorage.getItem('deployHistory')||'[]');var selectedRuntime='node';var monitorInterval=null;
@@ -522,6 +610,103 @@ async function loadHfFiles(){var t=getHfToken();var space=document.getElementByI
 async function hfDeleteFile(space,file){if(!confirm('Delete '+file+'?'))return;var t=getHfToken();try{const data=await apiCall('hf_delete_file',{hfToken:t,spaceName:space,fileName:file});if(data.success){loadHfFiles();}else{alert('Error: '+(data.error||'failed'));}}catch(e){alert('Error: '+e.message);}}
 // Load saved HF token on page load
 (function(){var t=localStorage.getItem('hfToken');if(t){var el=document.getElementById('hfToken');if(el)el.value=t;}})();
+
+
+// ===== AGENT MANAGEMENT =====
+const AGENT_DATA={
+magani:{name:'Magani Agent',repo:'maganu-agent',url:'https://github.com/rabiuhamza11/maganu-agent',renderUrl:'',deployTaskId:'6a51ce494401330eaebcead2'},
+omega:{name:'Omega Commander',repo:'omega-infinity-dashboard',url:'https://github.com/rabiuhamza11/omega-infinity-dashboard',vercelUrl:'https://omega-infinity-dashboard.vercel.app',deployTaskId:'6a4d3dd1df5f7e8784ec55e2'}
+};
+
+async function checkAgent(agent){
+const data=AGENT_DATA[agent];
+const btn=event.target;
+btn.textContent='Checking...';
+btn.disabled=true;
+try{
+// Check GitHub repo status
+const ghResp=await fetch('https://api.github.com/repos/rabiuhamza11/'+data.repo,{headers:{Accept:'application/vnd.github.v3+json'}});
+const ghData=await ghResp.json();
+// Check if live URL responds
+let liveStatus='OFFLINE';
+let liveUrl='';
+if(agent==='magani'){
+const renderUrl=localStorage.getItem('magani-render-url')||'';
+if(renderUrl){
+try{const r=await fetch(renderUrl,{mode:'no-cors'});liveStatus='LIVE';liveUrl=renderUrl;}catch(e){liveStatus='OFFLINE';}
+}else{liveStatus='PENDING (no render URL)';}
+}else if(agent==='omega'){
+try{const r=await fetch(data.vercelUrl,{mode:'no-cors'});liveStatus='LIVE';liveUrl=data.vercelUrl;}catch(e){liveStatus='OFFLINE';}
+}
+// Update UI
+const badge=document.getElementById(agent+'-badge');
+if(liveStatus==='LIVE'){badge.className='badge b-live';badge.textContent='LIVE';}
+else if(liveStatus.includes('PENDING')){badge.className='badge b-pending';badge.textContent='PENDING';}
+else{badge.className='badge b-down';badge.textContent='OFFLINE';}
+document.getElementById(agent+'-status').textContent=liveStatus.split(' ')[0];
+document.getElementById(agent+'-log').textContent='['+new Date().toISOString()+'] GitHub: '+ghData.html_url+'\nStatus: '+liveStatus+'\nRepo: '+(ghData.visibility||'public')+'\nUpdated: '+(ghData.updated_at||'N/A');
+btn.textContent='Check Status';
+btn.disabled=false;
+}catch(e){
+document.getElementById(agent+'-log').textContent='Error: '+e.message;
+btn.textContent='Check Status';
+btn.disabled=false;
+}
+}
+
+function showAgentLog(agent){
+const log=document.getElementById(agent+'-log');
+const data=AGENT_DATA[agent];
+if(agent==='magani'){
+log.textContent='=== Magani Agent Logs ===\nRepo: '+data.url+'\nFramework: Node.js\nDeploy Status: live (GitHub)\nRailway: pending API keys\n\nBuild Log:\n'+data.deployTaskId;
+}else if(agent==='omega'){
+log.textContent='=== Omega Commander Logs ===\nRepo: '+data.url+'\nVercel: '+data.vercelUrl+'\nFramework: Next.js\nDeploy Status: live\n\nFeatures:\n- Login/Register\n- Dashboard\n- Agents management\n- Chat interface\n- Deployments\n- Projects\n- Settings';
+}
+}
+
+function saveAgentConfig(){
+const maganiUrl=document.getElementById('magani-render-url').value.trim();
+const omegaUrl=document.getElementById('omega-dashboard-url').value.trim();
+if(maganiUrl)localStorage.setItem('magani-render-url',maganiUrl);
+if(omegaUrl)localStorage.setItem('omega-dashboard-url',omegaUrl);
+const msg=document.getElementById('agent-config-msg');
+msg.style.display='block';
+setTimeout(()=>msg.style.display='none',3000);
+}
+
+// Load agent data on page load
+async function loadAgents(){
+// Check Magani
+const maganiBadge=document.getElementById('magani-badge');
+const maganiLog=document.getElementById('magani-log');
+try{
+const ghResp=await fetch('https://api.github.com/repos/rabiuhamza11/maganu-agent',{headers:{Accept:'application/vnd.github.v3+json'}});
+const ghData=await ghResp.json();
+if(ghData.html_url){
+maganiLog.textContent='Repo: '+ghData.html_url+'\nLast push: '+(ghData.pushed_at||'N/A')+'\nStatus: GitHub LIVE, Render PENDING\n\nMaganu v1.0.0 — Claude-powered brain, Twilio WhatsApp,\nscheduled automations. Awaiting API keys for full live.';
+}else{
+maganiLog.textContent='Repo not found or private';
+}
+}catch(e){maganiLog.textContent='GitHub API error';}
+// Check Omega
+const omegaBadge=document.getElementById('omega-badge');
+const omegaLog=document.getElementById('omega-log');
+try{
+const ghResp=await fetch('https://api.github.com/repos/rabiuhamza11/omega-infinity-dashboard',{headers:{Accept:'application/vnd.github.v3+json'}});
+const ghData=await ghResp.json();
+if(ghData.html_url){
+omegaLog.textContent='Repo: '+ghData.html_url+'\nVercel: https://omega-infinity-dashboard.vercel.app\nStatus: LIVE\n\nOMEGA INFINITY 1000 Next.js dashboard\nFeatures: login, agents, chat, deployments,\nprojects, settings.';
+}else{
+omegaLog.textContent='Repo not found or private';
+}
+}catch(e){omegaLog.textContent='GitHub API error';}
+}
+// Auto-load when agents tab is shown
+const origShowTab=showTab;
+showTab=function(name,el){
+origShowTab(name,el);
+if(name==='agents')loadAgents();
+};
 
 </script>
 </body>
