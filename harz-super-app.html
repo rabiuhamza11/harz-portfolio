@@ -190,6 +190,24 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .pay-tab.active{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border-color:transparent}
 .pay-tab:active{transform:scale(.97)}
 .paytab-content{animation:fadeIn .3s ease}
+
+.profile-header{background:linear-gradient(135deg,rgba(124,77,255,.2),rgba(0,188,212,.08));padding:30px 16px 20px;text-align:center;border-bottom:1px solid var(--border)}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p5));display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;color:#fff;margin:0 auto 10px}
+.profile-name{font-size:1.1rem;font-weight:700;color:var(--text)}
+.profile-email{font-size:.78rem;color:var(--muted);margin-top:2px}
+.profile-badge{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:700;text-transform:uppercase}
+.profile-badge.admin{background:rgba(255,171,0,.15);color:#ffab00}
+.profile-badge.user{background:rgba(0,230,118,.15);color:#00e676}
+.profile-section{padding:16px}
+.profile-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.profile-row:last-child{border-bottom:none}
+.profile-label{font-size:.78rem;color:var(--muted)}
+.profile-value{font-size:.82rem;color:var(--text);font-weight:600}
+.profile-balance-card{background:linear-gradient(135deg,var(--p1),var(--p5));border-radius:14px;padding:18px;margin:16px;color:#fff;text-align:center}
+.profile-balance-label{font-size:.68rem;text-transform:uppercase;opacity:.8}
+.profile-balance-amount{font-size:1.6rem;font-weight:800;margin:4px 0}
+.profile-balance-sub{font-size:.7rem;opacity:.8}
+
 </style>
 </head>
 <body>
@@ -701,6 +719,35 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="biz-card" onclick="showToast('Loading HarzAjo...')"><div class="biz-icon" style="background:rgba(255,171,0,.12)">💰</div><div class="biz-info"><div class="biz-title">HarzAjo</div><div class="biz-desc">Group savings (ESUSU)</div></div><div class="card-arrow">›</div></div>
 <div class="biz-card" onclick="showToast('Loading HarzLend...')"><div class="biz-icon" style="background:rgba(0,230,118,.12)">💵</div><div class="biz-info"><div class="biz-title">HarzLend</div><div class="biz-desc">Microloans</div></div><div class="card-arrow">›</div></div>
 <div class="biz-card" onclick="showToast('Loading HarzFX...')"><div class="biz-icon" style="background:rgba(124,77,255,.12)">💱</div><div class="biz-info"><div class="biz-title">HarzFX</div><div class="biz-desc">Currency exchange</div></div><div class="card-arrow">›</div></div>
+</div>
+</div>
+
+
+<!-- PROFILE PAGE -->
+<div id="page-profile" class="page">
+<div class="profile-header">
+<div class="profile-avatar" id="profile-avatar">RH</div>
+<div class="profile-name" id="profile-name">Loading...</div>
+<div class="profile-email" id="profile-email"></div>
+<div class="profile-badge user" id="profile-role">USER</div>
+</div>
+<div class="profile-balance-card">
+<div class="profile-balance-label">Wallet Balance</div>
+<div class="profile-balance-amount" id="profile-wallet">₦0</div>
+<div class="profile-balance-sub" id="profile-gdeg">0 GDEG</div>
+</div>
+<div class="profile-section">
+<div class="section-head"><span class="section-title" style="font-size:.7rem;color:var(--muted)">ACCOUNT DETAILS</span></div>
+<div class="profile-row"><span class="profile-label">Full Name</span><span class="profile-value" id="prof-fullName">—</span></div>
+<div class="profile-row"><span class="profile-label">Email</span><span class="profile-value" id="prof-email">—</span></div>
+<div class="profile-row"><span class="profile-label">Phone</span><span class="profile-value" id="prof-phone">—</span></div>
+<div class="profile-row"><span class="profile-label">City</span><span class="profile-value" id="prof-city">—</span></div>
+<div class="profile-row"><span class="profile-label">Country</span><span class="profile-value" id="prof-country">—</span></div>
+<div class="profile-row"><span class="profile-label">Subscription</span><span class="profile-value" id="prof-plan">Free</span></div>
+<div class="profile-row"><span class="profile-label">Member Since</span><span class="profile-value" id="prof-since">—</span></div>
+</div>
+<div style="padding:0 16px 20px">
+<button onclick="harzLogout()" style="width:100%;background:rgba(255,93,110,.1);border:1px solid rgba(255,93,110,.2);border-radius:10px;padding:13px;color:#ff5d6e;font-size:.85rem;font-weight:700;cursor:pointer">⏻ Sign Out</button>
 </div>
 </div>
 
@@ -1573,21 +1620,70 @@ function updateUIForUser(user) {
     var initials = user.fullName.split(' ').map(function(n){ return n[0] }).join('').substring(0,2).toUpperCase();
     var avatars = document.querySelectorAll('.avatar');
     avatars.forEach(function(a) { a.textContent = initials; });
-
-    // Update name in header area if exists
-    var nameEl = document.querySelector('.balance-label');
-    if (nameEl && user.fullName) {
-      // Could update greeting here
+    
+    // Update profile avatar
+    var pa = document.getElementById('profile-avatar');
+    if (pa) pa.textContent = initials;
+    
+    // Update profile name
+    var pn = document.getElementById('profile-name');
+    if (pn) pn.textContent = user.fullName || 'User';
+    
+    // Update profile email
+    var pe = document.getElementById('profile-email');
+    if (pe) pe.textContent = user.email || '';
+    
+    // Update profile role badge
+    var pr = document.getElementById('profile-role');
+    if (pr) {
+      pr.textContent = (user.role || 'user').toUpperCase();
+      pr.className = 'profile-badge ' + (user.role || 'user');
     }
-
-    // Update wallet balance if available
+    
+    // Update profile detail rows
+    var setVal = function(id, val) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = val || '—';
+    };
+    setVal('prof-fullName', user.fullName);
+    setVal('prof-email', user.email);
+    setVal('prof-phone', user.phone);
+    setVal('prof-city', user.city);
+    setVal('prof-country', user.country);
+    setVal('prof-plan', user.subscriptionPlan ? user.subscriptionPlan.charAt(0).toUpperCase() + user.subscriptionPlan.slice(1) : 'Free');
+    if (user.id) {
+      var dateStr = user.created_date ? new Date(user.created_date).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : 'Aug 2026';
+      setVal('prof-since', dateStr);
+    }
+    
+    // Update wallet balance on home page
     if (user.walletBalance !== undefined) {
       var balEl = document.querySelector('.balance-amount');
       if (balEl) {
-        balEl.textContent = '\u20a6' + user.walletBalance.toLocaleString();
+        balEl.textContent = '\u20a6' + Number(user.walletBalance).toLocaleString();
       }
+      var pw = document.getElementById('profile-wallet');
+      if (pw) pw.textContent = '\u20a6' + Number(user.walletBalance).toLocaleString();
     }
-  } catch(e) {}
+    
+    // Update GDEG balance
+    if (user.gdegBalance !== undefined) {
+      var pg = document.getElementById('profile-gdeg');
+      if (pg) pg.textContent = Number(user.gdegBalance).toLocaleString() + ' GDEG';
+      // Update header pill
+      var pill = document.querySelector('.wallet-pill');
+      if (pill) pill.textContent = '\u26a1 ' + Number(user.gdegBalance).toLocaleString() + ' GDEG';
+    }
+    
+    // Update balance sub text
+    var subEl = document.querySelector('.balance-sub');
+    if (subEl && user.walletBalance !== undefined) {
+      var ngn = Number(user.walletBalance);
+      var usd = (ngn / 1500).toFixed(2);
+      var gdeg = user.gdegBalance || Math.round(ngn / 15);
+      subEl.textContent = '~ $' + usd + ' \u00b7 ' + Number(gdeg).toLocaleString() + ' GDEG';
+    }
+  } catch(e) { console.log('updateUIForUser error:', e); }
 }
 
 function harzLogout() {
