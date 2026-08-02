@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>DeployForge — Deploy + Manage</title>
+<title>DeployForge v5.0 — Deploy + Manage</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0d1117;--card:#161b22;--card2:#1c2333;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922;--red:#f85149;--gold:#FFD700;--radius:12px}
@@ -46,17 +46,12 @@ textarea{resize:vertical;min-height:80px}
 .hidden{display:none}.section{display:none}.section.active{display:block}
 .form-label{font-size:11px;color:var(--dim);margin-bottom:4px;display:block}
 .info-box{background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:8px;padding:10px;font-size:11px;color:var(--blue);margin-bottom:10px}
+.warn-box{background:rgba(210,153,34,.08);border:1px solid rgba(210,153,34,.2);border-radius:8px;padding:10px;font-size:11px;color:var(--orange);margin-bottom:10px}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading{text-align:center;padding:20px;color:var(--dim);font-size:13px}
 .del-btn{background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;flex-shrink:0}
 .check-btn{background:rgba(88,166,255,.15);color:var(--blue);border:1px solid rgba(88,166,255,.3);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;flex-shrink:0;text-decoration:none}
-.platform-card{background:var(--card2);border:2px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
-.platform-card:active{opacity:.8}
-.platform-card.selected{border-color:var(--green)}
-.platform-card .pn{font-size:14px;font-weight:700;margin-bottom:4px}
-.platform-card .pd{font-size:11px;color:var(--dim)}
-.platform-card .pi{font-size:24px;float:left;margin-right:10px}
 .runtime-btn{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:var(--card);color:var(--dim)}
 .runtime-btn.active{border-color:var(--green);color:var(--green);background:rgba(63,185,80,.1)}
 .code-editor{background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--green);font-family:monospace;font-size:12px;width:100%;min-height:120px;resize:vertical;outline:none}
@@ -66,13 +61,14 @@ textarea{resize:vertical;min-height:80px}
 <div class="header">
 <a href="harz-super-app.html">&#8592;</a>
 <span style="font-size:20px">&#128736;</span>
-<span class="title">DeployForge v4.0</span>
+<span class="title">DeployForge v5.0</span>
 <span class="badge b-live">LIVE</span>
 </div>
 <div class="tab-bar">
 <div class="tab active" onclick="showTab('dashboard',this)">&#128202; Dashboard</div>
-<div class="tab" onclick="showTab('deploy',this)">&#128640; Deploy</div>
-<div class="tab" onclick="showTab('server',this)">&#9889; Server</div>
+<div class="tab" onclick="showTab('deploy',this)">&#128640; HTML</div>
+<div class="tab" onclick="showTab('server',this)">&#9889; Node/Py</div>
+<div class="tab" onclick="showTab('docker',this)">&#128021; Docker</div>
 <div class="tab" onclick="showTab('repos',this)">&#128230; Repos</div>
 <div class="tab" onclick="showTab('vercel',this)">&#9729; Vercel</div>
 </div>
@@ -86,20 +82,20 @@ textarea{resize:vertical;min-height:80px}
 <div class="stat"><div class="num" style="color:var(--purple)" id="stat-files">-</div><div class="lbl">Files</div></div>
 </div>
 <div class="card">
-<h3>&#128640; Deploy Anything</h3>
-<div class="info-box">DeployForge v4.0 now supports 3 runtimes:</div>
+<h3>&#128640; Deploy Anything — 4 Runtimes</h3>
 <p>&#128196; Static HTML &#8594; GitHub Pages (free)</p>
 <p>&#9889; Node.js &#8594; Vercel (free serverless)</p>
 <p>&#128013; Python &#8594; Vercel (free serverless)</p>
-<p style="margin-top:8px;color:var(--orange)">&#128064; Docker coming soon (needs Railway/Render token)</p>
+<p>&#128021; Docker &#8594; Railway (project + service auto-created)</p>
+<p style="margin-top:8px">&#8358;0/mo total for all 4 runtimes</p>
 </div>
 <div class="card"><h3>&#128293; Recent Deployments</h3><div id="recent-deploys"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
 <div class="card">
-<h3>&#128176; Cost: DeployForge vs Others</h3>
-<p>DeployForge: &#8358;0/mo (GitHub + Vercel free tier)</p>
+<h3>&#128176; Cost Comparison</h3>
+<p>DeployForge: &#8358;0/mo (GitHub + Vercel + Railway free)</p>
 <p>Render Starter: $7/mo (~&#8358;11,200)</p>
 <p>Vercel Pro: $20/mo (~&#8358;32,000)</p>
-<p>Railway: $5/mo minimum</p>
+<p>Railway Hobby: $5/mo (first 500hrs free)</p>
 </div>
 </div>
 
@@ -123,12 +119,7 @@ textarea{resize:vertical;min-height:80px}
 </div>
 <div id="template-source" class="hidden">
 <span class="form-label">Template</span>
-<select id="templateChoice">
-<option value="landing">Landing Page</option>
-<option value="store">E-commerce Store</option>
-<option value="blog">Blog</option>
-<option value="dashboard">Dashboard</option>
-</select>
+<select id="templateChoice"><option value="landing">Landing Page</option><option value="store">E-commerce Store</option><option value="blog">Blog</option><option value="dashboard">Dashboard</option></select>
 </div>
 <div id="github-source" class="hidden">
 <span class="form-label">GitHub Raw URL</span>
@@ -142,7 +133,7 @@ textarea{resize:vertical;min-height:80px}
 <!-- SERVER (Node.js + Python) -->
 <div class="section" id="sec-server">
 <div class="card">
-<h3>&#9889; Deploy Server-Side App &#8594; Vercel</h3>
+<h3>&#9889; Deploy Node.js / Python &#8594; Vercel</h3>
 <span class="form-label">Project Name</span>
 <input type="text" id="serverName" placeholder="my-api">
 <span class="form-label">Runtime</span>
@@ -151,7 +142,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="runtime-btn" onclick="selectRuntime('python',this)">&#128013; Python</div>
 </div>
 <span class="form-label">Code</span>
-<textarea id="serverCode" class="code-editor" placeholder="// Write your code here...">export default function handler(req, res) {
+<textarea id="serverCode" class="code-editor">export default function handler(req, res) {
   res.status(200).json({
     message: 'Hello from DeployForge!',
     runtime: 'Node.js on Vercel',
@@ -162,27 +153,50 @@ textarea{resize:vertical;min-height:80px}
 <div class="log hidden" id="serverLog"></div>
 </div>
 <div class="card">
-<h3>&#128196; Example: Node.js API</h3>
-<div class="info-box">Your function runs at: /api/handler</div>
+<h3>&#128196; How It Works</h3>
 <p>1. Write your function code above</p>
 <p>2. Click Deploy to Vercel</p>
 <p>3. Access at: yourproject.vercel.app/api/handler</p>
 <p>4. Free: 100GB bandwidth, 100k invocations/mo</p>
 </div>
-<div class="card">
-<h3>&#128013; Example: Python API</h3>
-<div class="info-box">Switch to Python runtime and use this template:</div>
-<p style="font-family:monospace;font-size:11px;color:var(--green);background:#000;padding:8px;border-radius:6px">from http.server import BaseHTTPRequestHandler
-import json
+</div>
 
-class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type','application/json')
-        self.end_headers()
-        self.wfile.write(json.dumps({
-            'message': 'Hello from Python!'
-        }).encode())</p>
+<!-- DOCKER (Railway) -->
+<div class="section" id="sec-docker">
+<div class="card">
+<h3>&#128021; Deploy Docker Container &#8594; Railway</h3>
+<div class="warn-box">&#9888; Railway token has limited scope. DeployForge will create the project + service + set env vars. You click Deploy in Railway dashboard (1 click).</div>
+<span class="form-label">Project Name</span>
+<input type="text" id="dockerProject" placeholder="my-docker-app">
+<span class="form-label">Service Name</span>
+<input type="text" id="dockerService" placeholder="app">
+<span class="form-label">Docker Image</span>
+<input type="text" id="dockerImage" placeholder="nginx:alpine">
+<span class="form-label">Environment Variables (one per line, KEY=value)</span>
+<textarea id="dockerEnv" placeholder="PORT=80&#10;NODE_ENV=production" style="min-height:60px"></textarea>
+<button class="btn btn-purple" id="dockerDeployBtn" onclick="doDockerDeploy()">&#128021; Deploy to Railway</button>
+<div class="log hidden" id="dockerLog"></div>
+</div>
+<div class="card">
+<h3>&#128021; Popular Docker Images</h3>
+<div style="display:flex;flex-direction:column;gap:4px">
+<div class="site-item" onclick="document.getElementById('dockerImage').value='nginx:alpine'"><div class="site-icon">&#128021;</div><div class="site-info"><div class="site-name">nginx:alpine</div><div class="site-url">Web server — lightweight</div></div></div>
+<div class="site-item" onclick="document.getElementById('dockerImage').value='node:20-alpine'"><div class="site-icon">&#9889;</div><div class="site-info"><div class="site-name">node:20-alpine</div><div class="site-url">Node.js runtime</div></div></div>
+<div class="site-item" onclick="document.getElementById('dockerImage').value='python:3.12-slim'"><div class="site-icon">&#128013;</div><div class="site-info"><div class="site-name">python:3.12-slim</div><div class="site-url">Python runtime</div></div></div>
+<div class="site-item" onclick="document.getElementById('dockerImage').value='postgres:16-alpine'"><div class="site-icon">&#128451;</div><div class="site-info"><div class="site-name">postgres:16-alpine</div><div class="site-url">PostgreSQL database</div></div></div>
+<div class="site-item" onclick="document.getElementById('dockerImage').value='redis:7-alpine'"><div class="site-icon">&#128451;</div><div class="site-info"><div class="site-name">redis:7-alpine</div><div class="site-url">Redis cache</div></div></div>
+<div class="site-item" onclick="document.getElementById('dockerImage').value='mongo:7'"><div class="site-icon">&#128451;</div><div class="site-info"><div class="site-name">mongo:7</div><div class="site-url">MongoDB database</div></div></div>
+</div>
+</div>
+<div class="card">
+<h3>&#128196; How Railway Deploy Works</h3>
+<p>1. DeployForge creates Railway project + service</p>
+<p>2. Sets Docker image + environment variables</p>
+<p>3. You get a dashboard link</p>
+<p>4. Click "Deploy" in Railway (1 click)</p>
+<p>5. Railway auto-builds and runs your container</p>
+<p>6. Get a live URL from Railway</p>
+<p style="margin-top:8px;color:var(--green)">Free: 500 hours/mo on Railway hobby plan</p>
 </div>
 </div>
 
@@ -204,7 +218,7 @@ class handler(BaseHTTPRequestHandler):
 <div class="section" id="sec-vercel">
 <div class="card"><h3>&#9729; Vercel Projects</h3><div id="vercel-list"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
 <div class="card">
-<h3>&#128193; Files in harz-portfolio</h3>
+<h3>&#128193; Files in Repo</h3>
 <select id="filesRepo" onchange="loadFiles()"><option value="harz-portfolio">harz-portfolio</option></select>
 <div id="files-list" style="margin-top:8px"></div>
 </div>
@@ -226,7 +240,6 @@ function showTab(name,el){
   if(name==='dashboard')loadDashboard();
   if(name==='repos')loadRepos();
   if(name==='vercel')loadVercel();
-  if(name==='files')loadFiles();
 }
 
 function toggleSource(){
@@ -247,7 +260,7 @@ function selectRuntime(rt,el){
   }
 }
 
-async function apiCall(action,data={}) {
+async function apiCall(action,data={}){
   const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...data})});
   return res.json();
 }
@@ -260,12 +273,10 @@ async function loadDashboard(){
       reposCache=ghData.repos;
       document.getElementById('stat-repos').textContent=ghData.repos.length;
       var repoOpts=ghData.repos.map(r=>'<option value="'+r.name+'">'+r.name+'</option>').join('');
-      document.getElementById('targetRepo').innerHTML=repoOpts;
-      document.getElementById('filesRepo').innerHTML=repoOpts;
+      var tr=document.getElementById('targetRepo');if(tr)tr.innerHTML=repoOpts;
+      var fr=document.getElementById('filesRepo');if(fr)fr.innerHTML=repoOpts;
     }
-    if(vcData.projects){
-      document.getElementById('stat-vercel').textContent=vcData.projects.length;
-    }
+    if(vcData.projects)document.getElementById('stat-vercel').textContent=vcData.projects.length;
     renderHistory();
   }catch(e){document.getElementById('recent-deploys').innerHTML='<p style="color:var(--red)">Failed to load</p>';}
 }
@@ -286,22 +297,21 @@ async function doDeploy(){
   var srcType=document.getElementById('sourceType').value;
   var targetRepo=document.getElementById('targetRepo').value;
   log.classList.remove('hidden');log.textContent='';btn.disabled=true;
-  function al(m,t){var p=t==='err'?'[ERROR] ':t==='warn'?'[WARN] ':'[INFO] ';var c=t==='err'?'#f85149':t==='warn'?'#d29922':'#3fb950';log.innerHTML+='<span style="color:'+c+'">'+p+m+'</span>\n';log.scrollTop=log.scrollHeight;}
+  function al(m,t){var p=t==='err'?'[ERROR] ':'[INFO] ';var c=t==='err'?'#f85149':'#3fb950';log.innerHTML+='<span style="color:'+c+'">'+p+m+'</span>\n';log.scrollTop=log.scrollHeight;}
   try{
     al('Deploying: '+name+' to '+targetRepo);
     var htmlCode='';
     if(srcType==='html'){htmlCode=document.getElementById('htmlCode').value;if(!htmlCode){al('No HTML provided','err');btn.disabled=false;return;}}
-    else if(srcType==='template'){htmlCode=generateTemplate(document.getElementById('templateChoice').value,name);al('Using template');}
-    else if(srcType==='github'){var url=document.getElementById('githubUrl').value;if(!url){al('No URL','err');btn.disabled=false;return;}al('Fetching...');var fr=await fetch(url);if(!fr.ok){al('Fetch failed','err');btn.disabled=false;return;}htmlCode=await fr.text();}
+    else if(srcType==='template'){htmlCode=generateTemplate(document.getElementById('templateChoice').value,name);}
+    else if(srcType==='github'){var url=document.getElementById('githubUrl').value;if(!url){al('No URL','err');btn.disabled=false;return;}var fr=await fetch(url);if(!fr.ok){al('Fetch failed','err');btn.disabled=false;return;}htmlCode=await fr.text();}
     var fileName=name.endsWith('.html')?name:name+'.html';
     al('Uploading to GitHub...');
     const data=await apiCall('deploy_file',{repoName:targetRepo,fileName,fileContent:htmlCode,message:'DeployForge: '+fileName});
     if(data.success){
       al('Deployed! '+data.file);
       al('URL: '+data.file_url,'ok');
-      al('Cost: N0.00');
       log.innerHTML+='<br><a href="'+data.file_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#3fb950;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Live Site</a>\n';
-      history.unshift({file:data.file,platform:'GitHub Pages',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.file_url,icon:'📄'});
+      history.unshift({file:data.file,platform:'GitHub Pages',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.file_url,icon:'\u{1F4C4}'});
       history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();
     }else{al('Failed: '+(data.error||'unknown'),'err');}
   }catch(e){al('Error: '+e.message,'err');}
@@ -318,17 +328,61 @@ async function doServerDeploy(){
   function al(m,t){var p=t==='err'?'[ERROR] ':'[INFO] ';var c=t==='err'?'#f85149':'#3fb950';log.innerHTML+='<span style="color:'+c+'">'+p+m+'</span>\n';log.scrollTop=log.scrollHeight;}
   try{
     al('Deploying '+selectedRuntime+' app: '+name);
-    al('Uploading code to Vercel...');
+    al('Uploading to Vercel...');
     const data=await apiCall('vercel_deploy',{projectName:name,runtime:selectedRuntime,fileContent:code});
     if(data.success){
       al('Deployed! State: '+data.state);
       al('URL: '+data.url,'ok');
-      al('Function: '+data.url+'/api/handler','ok');
-      al('Cost: N0.00 (Vercel free tier)');
+      al('Test: '+data.url+'/api/handler','ok');
       log.innerHTML+='<br><a href="'+data.url+'/api/handler" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#58a6ff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Test API</a>\n';
-      history.unshift({file:name+' ('+selectedRuntime+')',platform:'Vercel',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.url+'/api/handler',icon:'⚡'});
+      history.unshift({file:name+' ('+selectedRuntime+')',platform:'Vercel',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.url+'/api/handler',icon:'\u26A1'});
       history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();
     }else{al('Failed: '+(data.error||'unknown'),'err');if(data.detail)al(data.detail,'err');}
+  }catch(e){al('Error: '+e.message,'err');}
+  btn.disabled=false;
+}
+
+// DOCKER DEPLOY (Railway)
+async function doDockerDeploy(){
+  var project=document.getElementById('dockerProject').value||'harz-docker';
+  var service=document.getElementById('dockerService').value||'app';
+  var image=document.getElementById('dockerImage').value;
+  var envText=document.getElementById('dockerEnv').value;
+  var log=document.getElementById('dockerLog');
+  var btn=document.getElementById('dockerDeployBtn');
+  if(!image){log.classList.remove('hidden');log.innerHTML='<span style="color:#f85149">[ERROR] Enter a Docker image</span>';return;}
+  log.classList.remove('hidden');log.textContent='';btn.disabled=true;
+  function al(m,t){var p=t==='err'?'[ERROR] ':'[INFO] ';var c=t==='err'?'#f85149':t==='warn'?'#d29922':'#bc8cff';log.innerHTML+='<span style="color:'+c+'">'+p+m+'</span>\n';log.scrollTop=log.scrollHeight;}
+  try{
+    al('Creating Railway project: '+project);
+    al('Docker image: '+image);
+    
+    // Parse env vars
+    var envVars=[];
+    if(envText.trim()){
+      envText.split('\n').forEach(function(line){
+        var parts=line.split('=');
+        if(parts.length>=2){envVars.push({name:parts[0].trim(),value:parts.slice(1).join('=').trim()});}
+      });
+      al('Environment variables: '+envVars.length);
+    }
+    
+    al('Deploying to Railway...');
+    const data=await apiCall('railway_docker_deploy',{projectName:project,serviceName:service,dockerImage:image,envVars:envVars});
+    if(data.success){
+      al('Project created!');
+      al('Service created with image: '+image);
+      if(envVars.length)al('Environment variables set: '+envVars.length);
+      if(data.deployed){
+        al('Deployment triggered!','ok');
+      }else{
+        al('Click "Deploy" in Railway dashboard (1 click)','warn');
+      }
+      al('Dashboard: '+data.dashboard_url,'ok');
+      log.innerHTML+='<br><a href="'+data.dashboard_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#bc8cff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Railway Dashboard</a>\n';
+      history.unshift({file:project+' (Docker: '+image+')',platform:'Railway',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.dashboard_url,icon:'\u{1F431}'});
+      history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();
+    }else{al('Failed: '+(data.error||'unknown'),'err');}
   }catch(e){al('Error: '+e.message,'err');}
   btn.disabled=false;
 }
@@ -369,18 +423,17 @@ async function doCreateRepo(){
 // VERCEL
 async function loadVercel(){
   var c=document.getElementById('vercel-list');
-  c.innerHTML='<div class="loading"><span class="spinner"></span> Loading Vercel projects...</div>';
+  c.innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';
   try{
     const data=await apiCall('vercel_list');
     if(data.projects){
-      if(!data.projects.length){c.innerHTML='<p style="color:var(--dim);font-size:12px">No Vercel projects yet. Deploy a server app!</p>';return;}
+      if(!data.projects.length){c.innerHTML='<p style="color:var(--dim);font-size:12px">No Vercel projects yet.</p>';return;}
       c.innerHTML=data.projects.map(p=>{
         var fw=p.framework||'serverless';
         return '<div class="site-item"><div class="site-icon">&#9729;</div><div class="site-info"><div class="site-name">'+p.name+' <span class="badge b-blue">'+fw+'</span></div><div class="site-url">'+(p.url||'no deploy')+'</div></div><button class="del-btn" onclick="deleteVercel(\''+p.name+'\',event)">Del</button></div>';
       }).join('');
-    }else{c.innerHTML='<p style="color:var(--red)">Failed to load</p>';}
-  }catch(e){c.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}
-  // Also load files
+    }else{c.innerHTML='<p style="color:var(--red)">Failed</p>';}
+  }catch(e){c.innerHTML='<p style="color:var(--red)">Error</p>';}
   loadFiles();
 }
 
@@ -392,15 +445,14 @@ async function loadFiles(){
   try{
     const data=await apiCall('list_files',{repoName:repo});
     if(data.files){
-      var html=data.files.filter(f=>f.type==='file'&&f.name.endsWith('.html'));
-      document.getElementById('stat-files').textContent=html.length+'+';
+      document.getElementById('stat-files').textContent=data.files.length+'+';
       if(!data.files.length){c.innerHTML='<p style="color:var(--dim);font-size:12px">No files</p>';return;}
       var dirs=data.files.filter(f=>f.type==='dir');
-      var html2=data.files.filter(f=>f.type==='file'&&f.name.endsWith('.html'));
+      var html=data.files.filter(f=>f.type==='file'&&f.name.endsWith('.html'));
       var other=data.files.filter(f=>f.type==='file'&&!f.name.endsWith('.html'));
       var h='';
       dirs.forEach(f=>h+='<div class="site-item"><div class="site-icon">&#128193;</div><div class="site-info"><div class="site-name">'+f.name+'</div><div class="site-url">Directory</div></div></div>');
-      html2.forEach(f=>{var url='https://rabiuhamza11.github.io/'+repo+'/'+f.name;h+='<div class="site-item"><div class="site-icon">&#128196;</div><div class="site-info"><div class="site-name">'+f.name+'</div><div class="site-url">'+(f.size/1024).toFixed(1)+'KB</div></div><a href="'+url+'" target="_blank" class="check-btn">Open</a><button class="del-btn" onclick="deleteFile(\''+repo+'\',\''+f.name+'\',event)">Del</button></div>';});
+      html.forEach(f=>{var url='https://rabiuhamza11.github.io/'+repo+'/'+f.name;h+='<div class="site-item"><div class="site-icon">&#128196;</div><div class="site-info"><div class="site-name">'+f.name+'</div><div class="site-url">'+(f.size/1024).toFixed(1)+'KB</div></div><a href="'+url+'" target="_blank" class="check-btn">Open</a><button class="del-btn" onclick="deleteFile(\''+repo+'\',\''+f.name+'\',event)">Del</button></div>';});
       other.slice(0,15).forEach(f=>h+='<div class="site-item"><div class="site-icon">&#128206;</div><div class="site-info"><div class="site-name">'+f.name+'</div><div class="site-url">'+(f.size/1024).toFixed(1)+'KB</div></div></div>');
       c.innerHTML=h;
     }else{c.innerHTML='<p style="color:var(--red)">Failed</p>';}
