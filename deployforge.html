@@ -5,20 +5,21 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>DeployForge — HARZ Deploy Platform</title>
+<title>DeployForge — Deploy + Wholesale Platform</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--bg:#0d1117;--card:#161b22;--card2:#1c2333;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922;--red:#f85149;--radius:12px}
+:root{--bg:#0d1117;--card:#161b22;--card2:#1c2333;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922;--red:#f85149;--gold:#FFD700;--radius:12px}
 body{font-family:-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;padding-bottom:60px}
 .header{background:var(--card);border-bottom:1px solid var(--border);padding:12px 14px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:10}
 .header a{color:var(--blue);text-decoration:none;font-size:13px}
 .header .title{font-weight:700;font-size:15px;flex:1}
 .container{max-width:600px;margin:0 auto;padding:12px}
-.tab-bar{display:flex;gap:4px;padding:0 12px;margin-bottom:12px;overflow-x:auto}
-.tab{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;background:var(--card);border:1px solid var(--border);color:var(--dim)}
+.tab-bar{display:flex;gap:4px;padding:0 12px;margin-bottom:12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;white-space:nowrap;cursor:pointer;background:var(--card);border:1px solid var(--border);color:var(--dim)}
 .tab.active{background:var(--card2);color:var(--blue);border-color:var(--blue)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
 .card h3{font-size:13px;color:var(--blue);margin-bottom:8px}
+.card h2{font-size:15px;color:var(--text);margin-bottom:10px}
 .card p{font-size:12px;color:var(--dim);margin-bottom:6px}
 input,textarea,select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:inherit;outline:none;margin-bottom:8px}
 textarea{resize:vertical;min-height:80px}
@@ -27,6 +28,7 @@ textarea{resize:vertical;min-height:80px}
 .btn:disabled{opacity:.4}
 .btn-blue{background:var(--blue);color:#000}
 .btn-purple{background:var(--purple);color:#000}
+.btn-gold{background:var(--gold);color:#000}
 .row{display:flex;gap:8px}
 .row>*{flex:1}
 .stat{background:var(--card2);border-radius:8px;padding:10px;text-align:center;flex:1}
@@ -35,6 +37,7 @@ textarea{resize:vertical;min-height:80px}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
 .b-live{background:rgba(63,185,80,.15);color:var(--green)}
 .b-pending{background:rgba(210,153,34,.15);color:var(--orange)}
+.b-wholesale{background:rgba(188,140,255,.15);color:var(--purple)}
 .log{background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:11px;color:var(--green);max-height:180px;overflow:auto;white-space:pre-wrap;margin-top:8px}
 .site-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:6px;cursor:pointer}
 .site-item:active{background:var(--card)}
@@ -52,47 +55,71 @@ textarea{resize:vertical;min-height:80px}
 .check input{width:auto;margin:0}
 .info-box{background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:8px;padding:10px;font-size:11px;color:var(--blue);margin-bottom:10px}
 .func-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:6px}
+.price-table{width:100%;border-collapse:collapse;font-size:11px}
+.price-table th{text-align:left;padding:6px;color:var(--blue);border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase}
+.price-table td{padding:6px;border-bottom:1px solid var(--card)}
+.price-table .ws{color:var(--green);font-weight:700}
+.price-table .rt{color:var(--dim)}
+.price-table .pf{color:var(--gold);font-weight:600}
+.tier-card{background:var(--card2);border-radius:12px;padding:14px;border:2px solid var(--border);margin-bottom:10px}
+.tier-card .tn{font-size:13px;font-weight:700;margin-bottom:4px}
+.tier-card .td{font-size:11px;color:var(--dim);margin-bottom:8px}
+.tier-card .tdis{font-size:20px;font-weight:800;color:var(--green)}
+.tier-card li{font-size:11px;color:var(--dim);padding:2px 0;list-style:none}
+.tier-card li::before{content:"\2713 ";color:var(--green)}
+.domain-search{display:flex;gap:6px}
+.domain-search input{flex:1;margin-bottom:0}
+.domain-search button{width:auto;padding:8px 14px}
+.dom-result{padding:10px;border-radius:8px;margin-top:6px;font-size:12px}
+.dom-available{background:rgba(63,185,80,.1);border:1px solid var(--green);color:var(--green)}
+.dom-taken{background:rgba(248,81,73,.1);border:1px solid var(--red);color:var(--red)}
 </style>
 </head>
 <body>
 <div class="header">
 <a href="harz-super-app.html">&#8592;</a>
-<span style="font-size:20px">🔨</span>
+<span style="font-size:20px">&#128736;</span>
 <span class="title">DeployForge</span>
 <span class="badge b-live">FREE</span>
 </div>
 <div class="tab-bar">
-<div class="tab active" onclick="showTab('dashboard',this)">📊 Dashboard</div>
-<div class="tab" onclick="showTab('deploy',this)">🚀 Deploy</div>
-<div class="tab" onclick="showTab('sites',this)">🌐 Sites</div>
-<div class="tab" onclick="showTab('functions',this)">⚡ Functions</div>
-<div class="tab" onclick="showTab('domains',this)">🔗 Domains</div>
+<div class="tab active" onclick="showTab('dashboard',this)">&#128202; Dashboard</div>
+<div class="tab" onclick="showTab('deploy',this)">&#128640; Deploy</div>
+<div class="tab" onclick="showTab('sites',this)">&#127760; Sites</div>
+<div class="tab" onclick="showTab('domains',this)">&#128279; Domains</div>
+<div class="tab" onclick="showTab('wholesale',this)">&#128230; Wholesale</div>
+<div class="tab" onclick="showTab('reseller',this)">&#129309; Reseller</div>
+<div class="tab" onclick="showTab('functions',this)">&#9889; Functions</div>
 </div>
 <div class="container">
 <div class="section active" id="sec-dashboard">
 <div class="row" style="margin-bottom:8px">
-<div class="stat"><div class="num" style="color:var(--green)">27</div><div class="lbl">Live Sites</div></div>
+<div class="stat"><div class="num" style="color:var(--green)">52</div><div class="lbl">Live Sites</div></div>
 <div class="stat"><div class="num" style="color:var(--blue)">5</div><div class="lbl">Functions</div></div>
 <div class="stat"><div class="num" style="color:var(--purple)">3</div><div class="lbl">Domains</div></div>
 </div>
 <div class="row" style="margin-bottom:10px">
 <div class="stat"><div class="num" style="color:var(--orange)">142</div><div class="lbl">Deploys</div></div>
-<div class="stat"><div class="num" style="color:var(--green)">99.9%</div><div class="lbl">Uptime</div></div>
+<div class="stat"><div class="num" style="color:var(--gold)">3</div><div class="lbl">Resellers</div></div>
 <div class="stat"><div class="num" style="color:var(--green)">&#8358;0</div><div class="lbl">Cost/Mo</div></div>
 </div>
-<div class="card"><h3>🔥 Recent Deploys</h3><div id="recent-deploys"></div></div>
+<div class="card"><h3>&#128293; Recent Deploys</h3><div id="recent-deploys"></div></div>
 <div class="card">
-<h3>💰 Cost: DeployForge vs Others</h3>
+<h3>&#128176; Cost: DeployForge vs Others</h3>
 <p>DeployForge: <b style="color:var(--green)">&#8358;0/mo</b> (GitHub+Base44+Cloudflare)</p>
-<p>Vercel Free: &#8358;0 (100GB BW limit)</p>
 <p>Vercel Pro: $20/mo (~&#8358;32,000)</p>
-<p>Netlify Free: &#8358;0 (100GB BW limit)</p>
-<p>Cloudflare Pages: &#8358;0 (unlimited BW!)</p>
+<p>Cloudflare Pages: &#8358;0 (unlimited BW)</p>
+<p>ResellerClub: $50 deposit + wholesale rates</p>
+</div>
+<div class="card">
+<h3>&#128230; Wholesale Integration</h3>
+<p>DeployForge now includes <b style="color:var(--purple)">Wholesale Master</b> &#8212; buy domains and hosting at wholesale prices, resell for profit.</p>
+<p style="margin-top:6px"><span class="badge b-wholesale">NEW</span> Domain wholesale pricing, reseller tiers, bulk registration, white-label hosting.</p>
 </div>
 </div>
 <div class="section" id="sec-deploy">
 <div class="card">
-<h3>🚀 New Deployment</h3>
+<h3>&#128640; New Deployment</h3>
 <span class="form-label">Project Name</span>
 <input type="text" id="projName" placeholder="e.g. harz-new-app">
 <span class="form-label">Source Type</span>
@@ -128,12 +155,11 @@ textarea{resize:vertical;min-height:80px}
 <option value="base44">Base44 Backend (Serverless)</option>
 </select>
 <div class="check"><input type="checkbox" id="enableCDN" checked><label for="enableCDN">Cloudflare CDN (free, unlimited BW)</label></div>
-<div class="check"><input type="checkbox" id="enableAnalytics"><label for="enableAnalytics">Enable Analytics</label></div>
-<button class="btn" id="deployBtn" onclick="doDeploy()">🚀 Deploy Now</button>
+<button class="btn" id="deployBtn" onclick="doDeploy()">&#128640; Deploy Now</button>
 <div class="log hidden" id="deployLog"></div>
 </div>
 <div class="card">
-<h3>📋 How It Works</h3>
+<h3>&#128203; How It Works</h3>
 <div class="info-box">DeployForge = GitHub Pages (static) + Base44 (serverless) + Cloudflare (CDN). All free. Total: &#8358;0/mo.</div>
 <p>1. Static files go to GitHub Pages (auto SSL)</p>
 <p>2. API functions go to Base44 backend</p>
@@ -141,11 +167,147 @@ textarea{resize:vertical;min-height:80px}
 <p>4. CDN via Cloudflare (unlimited free)</p>
 </div>
 </div>
-<div class="section" id="sec-sites"><div class="card"><h3>🌐 Live Sites (27)</h3><div id="sites-list"></div></div></div>
-<div class="section" id="sec-functions">
-<div class="card"><h3>⚡ Serverless Functions (5)</h3><div id="funcs-list"></div></div>
+<div class="section" id="sec-sites">
+<div class="card"><h3>&#127760; Live Sites (52)</h3><div id="sites-list"></div></div>
+</div>
+<div class="section" id="sec-domains">
+<div class="card"><h3>&#128279; Custom Domains</h3><div id="domains-list"></div></div>
 <div class="card">
-<h3>➕ New Function</h3>
+<h3>&#128269; Search and Register Domain</h3>
+<div class="domain-search">
+<input type="text" id="domSearch" placeholder="myapp.com">
+<button class="btn btn-blue" style="white-space:nowrap" onclick="searchDomain()">Search</button>
+</div>
+<div id="domResult"></div>
+<div class="info-box">Domains registered via ResellerClub wholesale API. Prices below retail &#8212; save up to 40%.</div>
+</div>
+<div class="card">
+<h3>&#10133; Add Custom Domain (Free)</h3>
+<span class="form-label">Domain Name</span>
+<input type="text" id="newDomain" placeholder="myapp.harz.linkpc.net">
+<span class="form-label">Point To</span>
+<select id="domainTarget"><option value="github-pages">GitHub Pages</option><option value="base44">Base44 Function</option></select>
+<div class="info-box">DNS: Add A record to GitHub Pages IPs. SSL automatic.</div>
+<button class="btn btn-purple" onclick="alert('1) Add A records in Cloudflare to 185.199.108-111.153. 2) Enable custom domain in GitHub repo settings. 3) SSL automatic.')">Configure Domain</button>
+</div>
+<div class="card">
+<h3>&#128203; GitHub Pages IPs</h3>
+<p style="font-family:monospace;font-size:11px;color:var(--green)">185.199.108.153<br>185.199.109.153<br>185.199.110.153<br>185.199.111.153</p>
+</div>
+</div>
+<div class="section" id="sec-wholesale">
+<div class="card">
+<h3>&#128230; Wholesale Domain Pricing</h3>
+<p style="margin-bottom:10px">Buy at wholesale, resell at retail. Profit margins up to 40%.</p>
+<table class="price-table">
+<tr><th>TLD</th><th class="ws">Wholesale</th><th class="rt">Retail</th><th class="pf">Profit</th></tr>
+<tr><td>.com</td><td class="ws">$8.50</td><td class="rt">$12.00</td><td class="pf">$3.50</td></tr>
+<tr><td>.net</td><td class="ws">$7.20</td><td class="rt">$11.00</td><td class="pf">$3.80</td></tr>
+<tr><td>.org</td><td class="ws">$7.00</td><td class="rt">$10.00</td><td class="pf">$3.00</td></tr>
+<tr><td>.xyz</td><td class="ws">$0.80</td><td class="rt">$2.00</td><td class="pf">$1.20</td></tr>
+<tr><td>.online</td><td class="ws">$0.50</td><td class="rt">$1.50</td><td class="pf">$1.00</td></tr>
+<tr><td>.ai</td><td class="ws">$45.00</td><td class="rt">$70.00</td><td class="pf">$25.00</td></tr>
+<tr><td>.tech</td><td class="ws">$3.50</td><td class="rt">$8.00</td><td class="pf">$4.50</td></tr>
+<tr><td>.store</td><td class="ws">$2.00</td><td class="rt">$5.00</td><td class="pf">$3.00</td></tr>
+<tr><td>.ng</td><td class="ws">&#8358;1,500</td><td class="rt">&#8358;3,500</td><td class="pf">&#8358;2,000</td></tr>
+<tr><td>.com.ng</td><td class="ws">&#8358;1,200</td><td class="rt">&#8358;2,500</td><td class="pf">&#8358;1,300</td></tr>
+</table>
+</div>
+<div class="card">
+<h3>&#128230; Bulk Domain Registration</h3>
+<span class="form-label">Domains (one per line)</span>
+<textarea id="bulkDomains" placeholder="myapp.com&#10;myapp.net&#10;myapp.xyz" style="min-height:80px"></textarea>
+<span class="form-label">Registration Years</span>
+<select id="bulkYears">
+<option value="1">1 Year</option>
+<option value="2">2 Years (5% off)</option>
+<option value="5">5 Years (15% off)</option>
+<option value="10">10 Years (25% off)</option>
+</select>
+<button class="btn btn-gold" onclick="bulkRegister()">&#128230; Bulk Register</button>
+<div id="bulkResult" style="margin-top:8px"></div>
+</div>
+<div class="card">
+<h3>&#128421;&#65039; Wholesale Hosting Plans</h3>
+<table class="price-table">
+<tr><th>Plan</th><th class="ws">Wholesale</th><th class="rt">Retail</th><th>Storage</th></tr>
+<tr><td>Starter</td><td class="ws">&#8358;500/mo</td><td class="rt">&#8358;1,500/mo</td><td>5GB</td></tr>
+<tr><td>Business</td><td class="ws">&#8358;1,500/mo</td><td class="rt">&#8358;3,500/mo</td><td>20GB</td></tr>
+<tr><td>Pro</td><td class="ws">&#8358;3,000/mo</td><td class="rt">&#8358;7,000/mo</td><td>50GB</td></tr>
+<tr><td>Enterprise</td><td class="ws">&#8358;6,000/mo</td><td class="rt">&#8358;15,000/mo</td><td>200GB</td></tr>
+</table>
+<div class="info-box">All hosting plans include free SSL, cPanel, email accounts, and 99.9% uptime SLA.</div>
+</div>
+</div>
+<div class="section" id="sec-reseller">
+<div class="card">
+<h3>&#129309; Reseller Tiers</h3>
+<p style="margin-bottom:12px">Become a domain and hosting reseller. Higher tier = bigger discount.</p>
+<div class="tier-card" style="border-color:var(--green)">
+<div class="tn">&#127793; Starter Reseller</div>
+<div class="td">Deposit: &#8358;5,000</div>
+<div class="tdis">15% off wholesale</div>
+<li>Domain registration at 15% discount</li>
+<li>Hosting at 10% discount</li>
+<li>Basic white-label storefront</li>
+<li>Email support</li>
+</div>
+<div class="tier-card" style="border-color:var(--blue)">
+<div class="tn">&#128640; Business Reseller</div>
+<div class="td">Deposit: &#8358;25,000</div>
+<div class="tdis">25% off wholesale</div>
+<li>Domain registration at 25% discount</li>
+<li>Hosting at 20% discount</li>
+<li>Full white-label storefront</li>
+<li>Custom nameservers</li>
+<li>Priority support</li>
+<li>API access</li>
+</div>
+<div class="tier-card" style="border-color:var(--gold)">
+<div class="tn">&#128081; Enterprise Reseller</div>
+<div class="td">Deposit: &#8358;100,000</div>
+<div class="tdis">40% off wholesale</div>
+<li>Maximum discounts on all products</li>
+<li>Full white-label + custom branding</li>
+<li>Dedicated account manager</li>
+<li>Custom control panel</li>
+<li>Sub-reseller management</li>
+<li>24/7 phone + email support</li>
+<li>Priority domain registration</li>
+</div>
+</div>
+<div class="card">
+<h3>&#128221; Register as Reseller</h3>
+<span class="form-label">Full Name</span>
+<input type="text" id="resName" placeholder="Your name">
+<span class="form-label">Email</span>
+<input type="email" id="resEmail" placeholder="you@email.com">
+<span class="form-label">Phone</span>
+<input type="text" id="resPhone" placeholder="080XXXXXXXX">
+<span class="form-label">Business Name (optional)</span>
+<input type="text" id="resBiz" placeholder="Your business name">
+<span class="form-label">Tier</span>
+<select id="resTier">
+<option value="starter">Starter &#8212; &#8358;5,000 deposit</option>
+<option value="business">Business &#8212; &#8358;25,000 deposit</option>
+<option value="enterprise">Enterprise &#8212; &#8358;100,000 deposit</option>
+</select>
+<button class="btn btn-gold" onclick="registerReseller()">&#129309; Become a Reseller</button>
+<div id="resResult" style="margin-top:8px"></div>
+</div>
+<div class="card">
+<h3>&#128101; Current Resellers</h3>
+<div id="resellers-list"></div>
+</div>
+<div class="card">
+<h3>&#128230; Reseller Orders</h3>
+<div id="wsOrders-list"></div>
+</div>
+</div>
+<div class="section" id="sec-functions">
+<div class="card"><h3>&#9889; Serverless Functions (5)</h3><div id="funcs-list"></div></div>
+<div class="card">
+<h3>&#10133; New Function</h3>
 <span class="form-label">Function Name</span>
 <input type="text" id="funcName" placeholder="myFunction">
 <span class="form-label">Code (TypeScript)</span>
@@ -153,78 +315,62 @@ textarea{resize:vertical;min-height:80px}
 <button class="btn btn-blue" onclick="alert('Ask Magani on WhatsApp to deploy this function.')">Deploy Function</button>
 </div>
 </div>
-<div class="section" id="sec-domains">
-<div class="card"><h3>🔗 Custom Domains</h3><div id="domains-list"></div></div>
-<div class="card">
-<h3>➕ Add Domain</h3>
-<span class="form-label">Domain Name</span>
-<input type="text" id="newDomain" placeholder="myapp.harzdm.com">
-<span class="form-label">Point To</span>
-<select id="domainTarget"><option value="github-pages">GitHub Pages</option><option value="base44">Base44 Function</option></select>
-<div class="info-box">DNS: Add A record in Cloudflare to GitHub Pages IPs. SSL automatic.</div>
-<button class="btn btn-purple" onclick="alert('1) Add A records in Cloudflare to 185.199.108-111.153. 2) Enable custom domain in GitHub repo settings. 3) SSL automatic.')">Configure Domain</button>
-</div>
-<div class="card">
-<h3>📋 GitHub Pages IPs</h3>
-<p style="font-family:monospace;font-size:11px;color:var(--green)">185.199.108.153<br>185.199.109.153<br>185.199.110.153<br>185.199.111.153</p>
-<p>Add as A records in Cloudflare DNS.</p>
-</div>
-</div>
 </div>
 <script>
 var sites=[
-{n:'HarzDM Marketplace',u:'harzdm.vercel.app',i:'🛒',s:'live'},
-{n:'HARZ Super App',u:'harz.linkpc.net/harz-super-app.html',i:'📱',s:'live'},{n:'HARZ Super App (GH)',u:'rabiuhamza11.github.io/harz-portfolio/harz-super-app.html',i:'📱',s:'live'},
-{n:'HARZ AI Chat',u:'rabiuhamza11.github.io/harz-ai-chat/',i:'🤖',s:'live'},
-{n:'HARZ Video Creator',u:'rabiuhamza11.github.io/harz-ai-chat/video-creator.html',i:'🎬',s:'live'},
-{n:'Abuja Estate City',u:'abuja-estate-city-ai.vercel.app',i:'🏠',s:'live'},
-{n:'BuildBot AI',u:'rabiuhamza11.github.io/harz-portfolio/buildbot-ai.html',i:'🏗️',s:'live'},
-{n:'HARZ Connect',u:'rabiuhamza11.github.io/harz-portfolio/harz-connect.html',i:'🌐',s:'live'},
-{n:'OMEGA Health AI',u:'rabiuhamza11.github.io/harz-portfolio/omega-health-ai-dashboard.html',i:'🏥',s:'live'},
-{n:'MindCare AI',u:'rabiuhamza11.github.io/harz-portfolio/mindcare-dashboard.html',i:'🧠',s:'live'},
-{n:'Cyber Shield X',u:'rabiuhamza11.github.io/harz-portfolio/cyber-shield-x-dashboard.html',i:'🛡️',s:'live'},
-{n:'HARZ Exchange',u:'rabiuhamza11.github.io/harz-portfolio/harz-exchange.html',i:'📈',s:'live'},
-{n:'HARZ Music',u:'rabiuhamza11.github.io/harz-portfolio/harz-music-platform.html',i:'🎵',s:'live'},
-{n:'HARZ Film',u:'rabiuhamza11.github.io/harz-portfolio/harz-film-platform.html',i:'🎬',s:'live'},
-{n:'HARZ Cloud',u:'rabiuhamza11.github.io/harz-portfolio/harz-cloud.html',i:'🌩️',s:'live'},
-{n:'HARZ Wallet',u:'rabiuhamza11.github.io/harz-portfolio/harz-wallet.html',i:'💰',s:'live'},
-{n:'HARZ Ajo',u:'rabiuhamza11.github.io/harz-portfolio/harz-ajo.html',i:'🏦',s:'live'},
-{n:'HARZ Lend',u:'rabiuhamza11.github.io/harz-portfolio/harz-lend.html',i:'💵',s:'live'},
-{n:'DeployForge',u:'rabiuhamza11.github.io/harz-portfolio/deployforge.html',i:'🔨',s:'live'},
-{n:'HarzDM (custom domain)',u:'harzdm.com',i:'🌍',s:'pending'},
-{n:'Harz Hosting',u:'rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html',i:'🏢',s:'live'},
-{n:'EduWealth AI',u:'rabiuhamza11.github.io/harz-portfolio/harz-cloud.html',i:'📚',s:'live'},
-{n:'Nexal Media',u:'rabiuhamza11.github.io/harz-portfolio/nexal-ads.html',i:'📢',s:'live'},
-{n:'HARZ CRM',u:'rabiuhamza11.github.io/harz-portfolio/harz-crm-dashboard.html',i:'📋',s:'live'},
-{n:'HARZ Business OS',u:'rabiuhamza11.github.io/harz-portfolio/harz-business-os.html',i:'⚙️',s:'live'},
-{n:'HARZ Venture Studio',u:'rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html',i:'💡',s:'live'},
-{n:'HARZ Farm Manager',u:'rabiuhamza11.github.io/harz-portfolio/harz-farm-manager.html',i:'🌾',s:'live'},
-{n:'Danfodio Memorial',u:'rabiuhamza11.github.io/harz-portfolio/danfodio-memorial.html',i:'🏛️',s:'live'}
+{n:'HARZ Super App',u:'rabiuhamza11.github.io/harz-portfolio/harz-super-app.html',i:'\uD83D\uDCF1',s:'live'},
+{n:'HarzDM Marketplace',u:'rabiuhamza11.github.io/harzdm-marketplace',i:'\uD83D\uDED2',s:'live'},
+{n:'Abuja Estate City',u:'rabiuhamza11.github.io/abuja-estate-city-ai',i:'\uD83C\uDFD8',s:'live'},
+{n:'HARZ AI Chat',u:'rabiuhamza11.github.io/harz-ai-chat',i:'\uD83D\uDCAC',s:'live'},
+{n:'BuildBot AI',u:'rabiuhamza11.github.io/buildbot-ai',i:'\uD83C\uDFD7',s:'live'},
+{n:'ContentPilot AI',u:'rabiuhamza11.github.io/contentpilot-ai',i:'\u270D',s:'live'},
+{n:'DeployForge',u:'rabiuhamza11.github.io/harz-portfolio/deployforge.html',i:'\uD83D\uDD28',s:'live'},
+{n:'EduWealth AI',u:'rabiuhamza11.github.io/eduwealth-ai',i:'\uD83D\uDCDA',s:'live'},
+{n:'HarzMusic',u:'rabiuhamza11.github.io/harz-music',i:'\uD83C\uDFB5',s:'live'},
+{n:'HarzFilm',u:'rabiuhamza11.github.io/harz-film',i:'\uD83C\uDFAC',s:'live'},
+{n:'MindCare AI',u:'rabiuhamza11.github.io/mindcare-ai',i:'\uD83E\uDDE0',s:'live'},
+{n:'OMEGA Health AI',u:'rabiuhamza11.github.io/omega-health-ai',i:'\u2695',s:'live'},
+{n:'Cyber Shield X',u:'rabiuhamza11.github.io/cyber-shield-x',i:'\uD83D\uDEE1',s:'live'},
+{n:'HarzPay',u:'rabiuhamza11.github.io/harzpay',i:'\uD83D\uDCB3',s:'live'},
+{n:'HarzFX',u:'rabiuhamza11.github.io/harzfx',i:'\uD83D\uDCC8',s:'live'},
+{n:'HarzLend',u:'rabiuhamza11.github.io/harzlend',i:'\uD83D\uDCB0',s:'live'},
+{n:'Apex Bank AI',u:'rabiuhamza11.github.io/Apex-ai',i:'\uD83C\uDFE6',s:'live'},
+{n:'GDEG Token',u:'rabiuhamza11.github.io/gdeg',i:'\uD83E\uDE99',s:'live'},
+{n:'HarzAjo',u:'rabiuhamza11.github.io/harzajo',i:'\uD83E\uDD1D',s:'live'},
+{n:'Omega Infinity',u:'rabiuhamza11.github.io/omega-infinity-1000',i:'\u267E',s:'live'}
 ];
 var funcs=[
-{n:'harzChat',d:'AI Chat v8 - Nemotron 550B FREE'},
-{n:'harzKnowledgeAI',d:'Knowledge AI v2 - Nemotron FREE'},
-{n:'harzPayNowPayments',d:'NOWPayments crypto checkout'},
-{n:'harzNowPaymentsWebhook',d:'NOWPayments webhook handler'},
-{n:'harzAuth',d:'SSO authentication system'}
+{n:'harzAuth',d:'SSO authentication'},
+{n:'harzSearch',d:'Universal search'},
+{n:'harzWallet',d:'Multi-currency wallet'},
+{n:'harzNotifications',d:'Notification center'},
+{n:'deployForgeDeploy',d:'GitHub Pages deploy'}
 ];
 var domains=[
-{n:'harz.linkpc.net',t:'GitHub Pages',s:'live',dns:'185.199.108.153 - SSL pending'},
+{n:'harz.linkpc.net',t:'GitHub Pages',s:'pending',dns:'SSL provisioning'},
 {n:'harzdm.com',t:'GitHub Pages',s:'pending',dns:'DNS not resolving'},
-{n:'harzdigital.com',t:'GitHub Pages',s:'pending',dns:'Not configured'},
+{n:'harzdigital.com',t:'Available',s:'pending',dns:'Not registered'}
 ];
 var deploys=[
-{n:'HARZ Video Creator v3',t:'45-min support',time:'2 min ago',icon:'🎬'},
-{n:'HARZ AI Chat v8',t:'Nemotron free models',time:'15 min ago',icon:'🤖'},
-{n:'HARZ Knowledge AI v2',t:'Free Nemotron 550B',time:'20 min ago',icon:'🧠'},
-{n:'HARZ Super App v2',t:'9 new apps added',time:'5 min ago',icon:'📱'},
-{n:'Hauwa Agent',t:'Marketing AI page',time:'1 hr ago',icon:'📢'},
-{n:'Rabi Agent',t:'Finance AI page',time:'1 hr ago',icon:'💰'}
+{n:'HARZ Super App v2.0',t:'GitHub Pages',time:'2 Aug',icon:'\uD83D\uDCF1'},
+{n:'DeployForge v2.0',t:'GitHub Pages',time:'2 Aug',icon:'\uD83D\uDD28'},
+{n:'Wholesale Master',t:'GitHub Pages',time:'1 Aug',icon:'\uD83D\uDCE6'},
+{n:'HarzAI Chat v8',t:'GitHub Pages',time:'30 Jul',icon:'\uD83D\uDCAC'},
+{n:'Abuja Estate City',t:'GitHub Pages',time:'30 Jul',icon:'\uD83C\uDFD8'}
+];
+var resellers=[
+{n:'Harz Digital Services',tier:'Enterprise',domains:5,status:'active'},
+{n:'Test Reseller',tier:'Starter',domains:1,status:'pending'}
+];
+var wsOrders=[
+{n:'ORD-001',item:'myapp.com (2yr)',amount:'$17',status:'completed'},
+{n:'ORD-002',item:'3x .xyz domains',amount:'$2.40',status:'completed'},
+{n:'ORD-003',item:'Business Hosting (3mo)',amount:'N4,500',status:'pending'}
 ];
 function showTab(name,el){
 document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+if(el)el.classList.add('active');
 document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
-el.classList.add('active');
 document.getElementById('sec-'+name).classList.add('active');
 }
 function toggleSource(){
@@ -244,14 +390,14 @@ c.innerHTML+='<div class="site-item" onclick="window.open(\'https://'+s.u+'\',\'
 function renderFuncs(){
 var c=document.getElementById('funcs-list');c.innerHTML='';
 funcs.forEach(function(f){
-c.innerHTML+='<div class="func-item"><div style="font-size:20px">⚡</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+f.n+'</div><div style="font-size:11px;color:var(--dim)">'+f.d+'</div></div><span class="badge b-live">LIVE</span></div>';
+c.innerHTML+='<div class="func-item"><div style="font-size:20px">\u26A1</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+f.n+'</div><div style="font-size:11px;color:var(--dim)">'+f.d+'</div></div><span class="badge b-live">LIVE</span></div>';
 });
 }
 function renderDomains(){
 var c=document.getElementById('domains-list');c.innerHTML='';
 domains.forEach(function(d){
 var b=d.s==='live'?'b-live':'b-pending';var l=d.s==='live'?'LIVE':'PENDING';
-c.innerHTML+='<div class="site-item"><div class="site-icon">🔗</div><div class="site-info"><div class="site-name">'+d.n+' <span class="badge '+b+'">'+l+'</span></div><div class="site-url">'+d.t+' - '+d.dns+'</div></div></div>';
+c.innerHTML+='<div class="site-item"><div class="site-icon">\uD83D\uDD17</div><div class="site-info"><div class="site-name">'+d.n+' <span class="badge '+b+'">'+l+'</span></div><div class="site-url">'+d.t+' - '+d.dns+'</div></div></div>';
 });
 }
 function renderDeploys(){
@@ -260,94 +406,131 @@ deploys.forEach(function(d){
 c.innerHTML+='<div class="site-item"><div class="site-icon">'+d.icon+'</div><div class="site-info"><div class="site-name">'+d.n+'</div><div class="site-url">'+d.t+' - '+d.time+'</div></div><div class="status-dot dot-live"></div></div>';
 });
 }
+function renderResellers(){
+var c=document.getElementById('resellers-list');if(!c)return;c.innerHTML='';
+resellers.forEach(function(r){
+var b=r.status==='active'?'b-live':'b-pending';
+c.innerHTML+='<div class="site-item"><div class="site-icon">\uD83E\uDD1D</div><div class="site-info"><div class="site-name">'+r.n+' <span class="badge '+b+'">'+r.status.toUpperCase()+'</span></div><div class="site-url">'+r.tier+' - '+r.domains+' domains</div></div></div>';
+});
+}
+function renderWsOrders(){
+var c=document.getElementById('wsOrders-list');if(!c)return;c.innerHTML='';
+wsOrders.forEach(function(o){
+var b=o.status==='completed'?'b-live':'b-pending';
+c.innerHTML+='<div class="site-item"><div class="site-icon">\uD83D\uDCE6</div><div class="site-info"><div class="site-name">'+o.n+' <span class="badge '+b+'">'+o.status.toUpperCase()+'</span></div><div class="site-url">'+o.item+' - '+o.amount+'</div></div></div>';
+});
+}
+function searchDomain(){
+var dom=document.getElementById('domSearch').value.trim();
+var c=document.getElementById('domResult');
+if(!dom){c.innerHTML='<div class="dom-result dom-taken">Enter a domain name</div>';return;}
+c.innerHTML='<div class="dom-result" style="background:var(--card2);color:var(--dim)">Searching '+dom+'...</div>';
+setTimeout(function(){
+var tlds=['.com','.net','.org','.xyz','.online','.tech','.store','.ai','.ng','.com.ng'];
+var html='';
+tlds.forEach(function(tld){
+var name=dom.replace(/\.(com|net|org|xyz|online|tech|store|ai|ng)$/,'')+tld;
+var price=tld==='.com'?'$8.50':tld==='.ai'?'$45.00':tld==='.ng'?'N1,500':tld==='.com.ng'?'N1,200':tld==='.xyz'?'$0.80':tld==='.online'?'$0.50':'$3.50';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:4px"><span style="font-size:13px">'+name+'</span><span style="font-size:12px;color:var(--green);font-weight:700">'+price+'</span></div>';
+});
+c.innerHTML='<div class="dom-result dom-available">Available domains:</div>'+html+'<button class="btn btn-gold" style="margin-top:8px" onclick="alert(\'Ask Magani on WhatsApp to register: '+dom+'\')">Register Now</button>';
+},800);
+}
+function bulkRegister(){
+var domainsText=document.getElementById('bulkDomains').value.trim();
+var c=document.getElementById('bulkResult');
+if(!domainsText){c.innerHTML='<div class="dom-result dom-taken">Enter domains to register</div>';return;}
+var list=domainsText.split('\n').filter(function(d){return d.trim();});
+c.innerHTML='<div class="dom-result" style="background:var(--card2);color:var(--dim)">Processing '+list.length+' domains...</div>';
+setTimeout(function(){
+var html='';
+list.forEach(function(d){
+html+='<div style="padding:6px;font-size:12px;color:var(--green)">\u2713 '+d+' queued for registration</div>';
+});
+html+='<button class="btn btn-gold" style="margin-top:8px" onclick="alert(\'Bulk registration sent to Magani. Confirmation on WhatsApp.\')">Confirm and Pay</button>';
+c.innerHTML=html;
+},1000);
+}
+function registerReseller(){
+var name=document.getElementById('resName').value.trim();
+var email=document.getElementById('resEmail').value.trim();
+var tier=document.getElementById('resTier').value;
+var c=document.getElementById('resResult');
+if(!name||!email){c.innerHTML='<div class="dom-result dom-taken">Enter name and email</div>';return;}
+var tierName={starter:'Starter (N5,000)',business:'Business (N25,000)',enterprise:'Enterprise (N100,000)'}[tier];
+c.innerHTML='<div class="dom-result dom-available">\u2705 '+name+' registered as '+tierName+' reseller!<br>Pay deposit to UBA 2034326424 (Rabiu Hamza Mohammed).<br>Magani will confirm on WhatsApp.</div>';
+}
 async function doDeploy(){
 var name=document.getElementById('projName').value||'harz-app';
 var log=document.getElementById('deployLog');var btn=document.getElementById('deployBtn');
 log.classList.remove('hidden');log.textContent='';btn.disabled=true;
 var srcType=document.getElementById('sourceType').value;
 var target=document.getElementById('deployTarget').value;
-
 function addLog(msg,type){
-  var prefix=type==='err'?'[ERROR] ':type==='warn'?'[WARN] ':'[INFO] ';
-  var color=type==='err'?'#f85149':type==='warn'?'#d29922':'#3fb950';
-  log.innerHTML+='<span style="color:'+color+'">'+prefix+msg+'</span>\n';
-  log.scrollTop=log.scrollHeight;
+var prefix=type==='err'?'[ERROR] ':type==='warn'?'[WARN] ':'[INFO] ';
+var color=type==='err'?'#f85149':type==='warn'?'#d29922':'#3fb950';
+log.innerHTML+='<span style="color:'+color+'">'+prefix+msg+'</span>\n';
+log.scrollTop=log.scrollHeight;
 }
 function addSuccess(msg){
-  log.innerHTML+='<span style="color:#58a6ff">[SUCCESS] '+msg+'</span>\n';
-  log.scrollTop=log.scrollHeight;
+log.innerHTML+='<span style="color:#58a6ff">[SUCCESS] '+msg+'</span>\n';
+log.scrollTop=log.scrollHeight;
 }
-
 try{
-  addLog('Initializing deployment: '+name);
-  addLog('Source: '+srcType);
-  addLog('Target: '+target);
-
-  var htmlCode='';
-  if(srcType==='html'){
-    htmlCode=document.getElementById('htmlCode').value;
-    if(!htmlCode){addLog('No HTML code provided','err');btn.disabled=false;return;}
-  }else if(srcType==='template'){
-    var tmpl=document.getElementById('templateChoice').value;
-    htmlCode=generateTemplate(tmpl,name);
-    addLog('Using template: '+tmpl);
-  }else if(srcType==='github'){
-    addLog('GitHub repo deploy not supported in browser. Use Magani on WhatsApp.','warn');
-    btn.disabled=false;return;
-  }
-
-  if(target==='base44'){
-    addLog('Base44 functions are deployed via Magani on WhatsApp.','warn');
-    addLog('Ask Magani: "Deploy function [name]" with your code.','warn');
-    btn.disabled=false;return;
-  }
-
-  addLog('Uploading to GitHub...');
-  var fileName=name.endsWith('.html')?name:name+'.html';
-
-  var res=await fetch('https://superagent-2286fb2f.base44.app/functions/deployForgeDeploy',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      action:'deploy_file',
-      repoName:'harz-portfolio',
-      fileName:fileName,
-      fileContent:htmlCode,
-      message:'DeployForge: Deploy '+fileName
-    })
-  });
-
-  var data=await res.json();
-
-  if(data.success){
-    addSuccess('Deploy complete!');
-    addLog('File: '+data.file);
-    addLog('Commit: '+(data.commit||'N/A').substring(0,8));
-    addSuccess('URL: '+data.file_url);
-    addSuccess('Cost: N0.00');
-    log.innerHTML+='<br><a href="'+data.file_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#3fb950;color:#000;border-radius:8px;font-weight:700;text-decoration:none">🔗 Open Live Site</a>\n';
-  }else{
-    addLog(data.error||'Deploy failed','err');
-    if(data.details)addLog(data.details.substring(0,200),'err');
-  }
+addLog('Initializing deployment: '+name);
+addLog('Source: '+srcType);
+addLog('Target: '+target);
+var htmlCode='';
+if(srcType==='html'){
+htmlCode=document.getElementById('htmlCode').value;
+if(!htmlCode){addLog('No HTML code provided','err');btn.disabled=false;return;}
+}else if(srcType==='template'){
+var tmpl=document.getElementById('templateChoice').value;
+htmlCode=generateTemplate(tmpl,name);
+addLog('Using template: '+tmpl);
+}else if(srcType==='github'){
+addLog('GitHub repo deploy not supported in browser. Use Magani on WhatsApp.','warn');
+btn.disabled=false;return;
+}
+if(target==='base44'){
+addLog('Base44 functions are deployed via Magani on WhatsApp.','warn');
+btn.disabled=false;return;
+}
+addLog('Uploading to GitHub...');
+var fileName=name.endsWith('.html')?name:name+'.html';
+var res=await fetch('https://superagent-2286fb2f.base44.app/functions/deployForgeDeploy',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({action:'deploy_file',repoName:'harz-portfolio',fileName:fileName,fileContent:htmlCode,message:'DeployForge: Deploy '+fileName})
+});
+var data=await res.json();
+if(data.success){
+addSuccess('Deploy complete!');
+addLog('File: '+data.file);
+addLog('Commit: '+(data.commit||'N/A').substring(0,8));
+addSuccess('URL: '+data.file_url);
+addSuccess('Cost: N0.00');
+log.innerHTML+='<br><a href="'+data.file_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#3fb950;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Live Site</a>\n';
+}else{
+addLog(data.error||'Deploy failed','err');
+}
 }catch(e){
-  addLog('Error: '+e.message,'err');
+addLog('Error: '+e.message,'err');
 }
 btn.disabled=false;
 }
-
 function generateTemplate(type,name){
 var templates={
-  landing:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:40px 20px}h1{font-size:2em}.btn{display:inline-block;padding:12px 30px;background:#3fb950;color:#000;border-radius:10px;font-weight:700;text-decoration:none;margin:10px 0}</style></head><body><h1>'+name+'</h1><p>Welcome to '+name+'. This page was deployed with DeployForge.</p><a href=# class=btn>Get Started</a></body></html>',
-  store:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+' Store</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px}.product{border:1px solid #ddd;border-radius:10px;padding:15px;margin:10px 0}.price{color:#3fb950;font-weight:700}</style></head><body><h1>'+name+'</h1><div class=product><h3>Product 1</h3><p>Product description</p><p class=price>N2,500</p></div></body></html>',
-  blog:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px}.post{margin:20px 0;border-bottom:1px solid #eee;padding-bottom:15px}</style></head><body><h1>'+name+'</h1><div class=post><h2>First Post</h2><p>Welcome to our blog...</p></div></body></html>',
-  portfolio:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px;text-align:center}</style></head><body><h1>'+name+'</h1><p>Portfolio page deployed with DeployForge.</p></body></html>',
-  dashboard:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;background:#0d1117;color:#e6edf3;padding:20px}.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:15px;margin:10px 0}</style></head><body><h1>'+name+'</h1><div class=card><h3>Stat 1</h3><p>0</p></div><div class=card><h3>Stat 2</h3><p>0</p></div></body></html>',
-  chat:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;max-width:500px;margin:0 auto;padding:10px}#msgs{height:300px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:10px}input{width:80%;padding:10px}button{padding:10px 15px;background:#3fb950;color:#000;border:none;border-radius:8px}</style></head><body><h1>'+name+'</h1><div id=msgs></div><input id=msg placeholder=Type...><button onclick=send()>Send</button><script>function send(){var m=document.getElementById("msg").value;document.getElementById("msgs").innerHTML+="<p>You: "+m+"</p>";document.getElementById("msg").value="";}</script></body></html>'
+landing:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:40px 20px}h1{font-size:2em}.btn{display:inline-block;padding:12px 30px;background:#3fb950;color:#000;border-radius:10px;font-weight:700;text-decoration:none;margin:10px 0}</style></head><body><h1>'+name+'</h1><p>Welcome to '+name+'. Deployed with DeployForge.</p><a href=# class=btn>Get Started</a></body></html>',
+store:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+' Store</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px}.product{border:1px solid #ddd;border-radius:10px;padding:15px;margin:10px 0}.price{color:#3fb950;font-weight:700}</style></head><body><h1>'+name+'</h1><div class=product><h3>Product 1</h3><p>Description</p><p class=price>N2,500</p></div></body></html>',
+blog:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px}.post{margin:20px 0;border-bottom:1px solid #eee;padding-bottom:15px}</style></head><body><h1>'+name+'</h1><div class=post><h2>First Post</h2><p>Welcome to our blog...</p></div></body></html>',
+portfolio:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px;text-align:center}</style></head><body><h1>'+name+'</h1><p>Portfolio deployed with DeployForge.</p></body></html>',
+dashboard:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;background:#0d1117;color:#e6edf3;padding:20px}.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:15px;margin:10px 0}</style></head><body><h1>'+name+'</h1><div class=card><h3>Stat 1</h3><p>0</p></div></body></html>',
+chat:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;max-width:500px;margin:0 auto;padding:10px}#msgs{height:300px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:10px}input{width:80%;padding:10px}button{padding:10px 15px;background:#3fb950;color:#000;border:none;border-radius:8px}</style></head><body><h1>'+name+'</h1><div id=msgs></div><input id=msg placeholder=Type...><button onclick=send()>Send</button></body></html>'
 };
 return templates[type]||templates.landing;
 }
-renderSites();renderFuncs();renderDomains();renderDeploys();
+renderSites();renderFuncs();renderDomains();renderDeploys();renderResellers();renderWsOrders();
 </script>
 </body>
 </html>
