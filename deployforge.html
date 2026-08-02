@@ -260,12 +260,92 @@ deploys.forEach(function(d){
 c.innerHTML+='<div class="site-item"><div class="site-icon">'+d.icon+'</div><div class="site-info"><div class="site-name">'+d.n+'</div><div class="site-url">'+d.t+' - '+d.time+'</div></div><div class="status-dot dot-live"></div></div>';
 });
 }
-function doDeploy(){
-var name=document.getElementById('projName').value||'unnamed';
+async function doDeploy(){
+var name=document.getElementById('projName').value||'harz-app';
 var log=document.getElementById('deployLog');var btn=document.getElementById('deployBtn');
 log.classList.remove('hidden');log.textContent='';btn.disabled=true;
-var steps=['[INFO] Initializing: '+name,'[INFO] Source: '+document.getElementById('sourceType').value,'[INFO] Target: '+document.getElementById('deployTarget').value,'[INFO] Preparing files...','[INFO] Uploading to GitHub Pages...','[INFO] SSL automatic...','[INFO] Cloudflare CDN...','[SUCCESS] Deploy complete!','[INFO] URL: https://rabiuhamza11.github.io/'+name+'/','[SUCCESS] Cost: N0.00'];
-var i=0;var int=setInterval(function(){if(i<steps.length){log.textContent+=steps[i]+'\n';log.scrollTop=log.scrollHeight;i++;}else{clearInterval(int);btn.disabled=false;}},400);
+var srcType=document.getElementById('sourceType').value;
+var target=document.getElementById('deployTarget').value;
+
+function addLog(msg,type){
+  var prefix=type==='err'?'[ERROR] ':type==='warn'?'[WARN] ':'[INFO] ';
+  var color=type==='err'?'#f85149':type==='warn'?'#d29922':'#3fb950';
+  log.innerHTML+='<span style="color:'+color+'">'+prefix+msg+'</span>\n';
+  log.scrollTop=log.scrollHeight;
+}
+function addSuccess(msg){
+  log.innerHTML+='<span style="color:#58a6ff">[SUCCESS] '+msg+'</span>\n';
+  log.scrollTop=log.scrollHeight;
+}
+
+try{
+  addLog('Initializing deployment: '+name);
+  addLog('Source: '+srcType);
+  addLog('Target: '+target);
+
+  var htmlCode='';
+  if(srcType==='html'){
+    htmlCode=document.getElementById('htmlCode').value;
+    if(!htmlCode){addLog('No HTML code provided','err');btn.disabled=false;return;}
+  }else if(srcType==='template'){
+    var tmpl=document.getElementById('templateChoice').value;
+    htmlCode=generateTemplate(tmpl,name);
+    addLog('Using template: '+tmpl);
+  }else if(srcType==='github'){
+    addLog('GitHub repo deploy not supported in browser. Use Magani on WhatsApp.','warn');
+    btn.disabled=false;return;
+  }
+
+  if(target==='base44'){
+    addLog('Base44 functions are deployed via Magani on WhatsApp.','warn');
+    addLog('Ask Magani: "Deploy function [name]" with your code.','warn');
+    btn.disabled=false;return;
+  }
+
+  addLog('Uploading to GitHub...');
+  var fileName=name.endsWith('.html')?name:name+'.html';
+
+  var res=await fetch('https://superagent-2286fb2f.base44.app/functions/deployForgeDeploy',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      action:'deploy_file',
+      repoName:'harz-portfolio',
+      fileName:fileName,
+      fileContent:htmlCode,
+      message:'DeployForge: Deploy '+fileName
+    })
+  });
+
+  var data=await res.json();
+
+  if(data.success){
+    addSuccess('Deploy complete!');
+    addLog('File: '+data.file);
+    addLog('Commit: '+(data.commit||'N/A').substring(0,8));
+    addSuccess('URL: '+data.file_url);
+    addSuccess('Cost: N0.00');
+    log.innerHTML+='<br><a href="'+data.file_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#3fb950;color:#000;border-radius:8px;font-weight:700;text-decoration:none">🔗 Open Live Site</a>\n';
+  }else{
+    addLog(data.error||'Deploy failed','err');
+    if(data.details)addLog(data.details.substring(0,200),'err');
+  }
+}catch(e){
+  addLog('Error: '+e.message,'err');
+}
+btn.disabled=false;
+}
+
+function generateTemplate(type,name){
+var templates={
+  landing:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:40px 20px}h1{font-size:2em}.btn{display:inline-block;padding:12px 30px;background:#3fb950;color:#000;border-radius:10px;font-weight:700;text-decoration:none;margin:10px 0}</style></head><body><h1>'+name+'</h1><p>Welcome to '+name+'. This page was deployed with DeployForge.</p><a href=# class=btn>Get Started</a></body></html>',
+  store:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+' Store</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px}.product{border:1px solid #ddd;border-radius:10px;padding:15px;margin:10px 0}.price{color:#3fb950;font-weight:700}</style></head><body><h1>'+name+'</h1><div class=product><h3>Product 1</h3><p>Product description</p><p class=price>N2,500</p></div></body></html>',
+  blog:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px}.post{margin:20px 0;border-bottom:1px solid #eee;padding-bottom:15px}</style></head><body><h1>'+name+'</h1><div class=post><h2>First Post</h2><p>Welcome to our blog...</p></div></body></html>',
+  portfolio:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px;text-align:center}</style></head><body><h1>'+name+'</h1><p>Portfolio page deployed with DeployForge.</p></body></html>',
+  dashboard:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;background:#0d1117;color:#e6edf3;padding:20px}.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:15px;margin:10px 0}</style></head><body><h1>'+name+'</h1><div class=card><h3>Stat 1</h3><p>0</p></div><div class=card><h3>Stat 2</h3><p>0</p></div></body></html>',
+  chat:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>'+name+'</title><style>body{font-family:system-ui;max-width:500px;margin:0 auto;padding:10px}#msgs{height:300px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:10px}input{width:80%;padding:10px}button{padding:10px 15px;background:#3fb950;color:#000;border:none;border-radius:8px}</style></head><body><h1>'+name+'</h1><div id=msgs></div><input id=msg placeholder=Type...><button onclick=send()>Send</button><script>function send(){var m=document.getElementById("msg").value;document.getElementById("msgs").innerHTML+="<p>You: "+m+"</p>";document.getElementById("msg").value="";}</script></body></html>'
+};
+return templates[type]||templates.landing;
 }
 renderSites();renderFuncs();renderDomains();renderDeploys();
 </script>
