@@ -7,7 +7,7 @@
 <title>HARZ Agent Builder</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#c9d1d9;--muted:#8b949e;--p1:#58a6ff;--p2:#7c3aed;--p3:#3fa550;--red:#f85149}
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#c9d1d9;--muted:#8b949e;--p1:#58a6ff;--p2:#7c3aed;--p3:#3fa550;--red:#f85149;--wa:#25d366;--sl:#4a154b;--im:#00b4ff;--tg:#0088cc}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;max-width:600px;margin:0 auto;min-height:100vh;padding-bottom:60px}
 .header{background:linear-gradient(135deg,var(--p2),var(--p1));padding:20px 16px;color:#fff;position:sticky;top:0;z-index:100}
 .header h1{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:8px}
@@ -26,16 +26,20 @@ label{font-size:.7rem;color:var(--muted);margin-bottom:4px;display:block;font-we
 .field{margin-bottom:10px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:10px;border:none;font-size:.85rem;font-weight:600;cursor:pointer;width:100%}
 .btn-blue{background:linear-gradient(135deg,var(--p2),var(--p1));color:#fff}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-sl{background:#611f69;color:#fff}
+.btn-im{background:var(--im);color:#fff}
+.btn-tg{background:var(--tg);color:#fff}
+.btn-sm{width:auto;padding:6px 12px;font-size:.75rem}
 .btn:active{transform:scale(.97)}
 .badge{display:inline-flex;font-size:.55rem;padding:2px 8px;border-radius:10px;font-weight:700}
 .badge-live{background:rgba(63,185,80,.15);color:var(--p3)}
 .badge-draft{background:rgba(88,166,255,.15);color:var(--p1)}
+.badge-off{background:rgba(139,148,158,.15);color:var(--muted)}
 .chat-log{background:#000;border:1px solid var(--border);border-radius:10px;padding:12px;font-family:monospace;font-size:.75rem;color:var(--p3);max-height:250px;overflow:auto;white-space:pre-wrap;line-height:1.5}
-.chat-row{display:flex;gap:8px;margin-bottom:8px}
-.avatar{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.avatar{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .agent-name{font-size:.85rem;font-weight:700}
 .agent-role{font-size:.68rem;color:var(--muted)}
-.agent-status{font-size:.6rem;padding:2px 6px;border-radius:8px}
 .empty{text-align:center;padding:20px;color:var(--muted);font-size:.8rem}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--p1);color:var(--text);padding:10px 20px;border-radius:10px;font-size:.8rem;z-index:200;display:none;max-width:90vw;text-align:center}
 .loading{text-align:center;padding:8px;color:var(--muted);font-size:.75rem}
@@ -43,13 +47,19 @@ label{font-size:.7rem;color:var(--muted);margin-bottom:4px;display:block;font-we
 .stat-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 10px}
 .stat-item b{color:var(--p1)}
 .row{display:flex;gap:8px;align-items:center}
+.chan-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.chan-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;font-size:.75rem;font-weight:600;color:var(--text);transition:all .15s}
+.chan-btn:active{transform:scale(.95)}
+.chan-btn.active{border-color:var(--p3);background:rgba(63,185,80,.1)}
+.chan-icon{font-size:1.2rem}
+.deploy-info{font-size:.7rem;color:var(--muted);margin-top:8px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;line-height:1.5}
 </style>
 </head>
 <body>
 
 <div class="header">
 <h1>🤖 HARZ Agent Builder</h1>
-<div class="sub">Create custom AI agents — powered by Omega Producer v3</div>
+<div class="sub">Create & deploy AI agents to WhatsApp, Slack, iMessage & Telegram</div>
 </div>
 
 <div class="section">
@@ -58,51 +68,28 @@ label{font-size:.7rem;color:var(--muted);margin-bottom:4px;display:block;font-we
 <span class="badge badge-live">LIVE</span>
 </div>
 <div class="card" style="border-color:var(--p2)">
-<div class="field">
-<label>Agent Name</label>
-<input id="ab-name" placeholder="e.g. Talle Market Expert">
-</div>
-<div class="field">
-<label>Role / Specialty</label>
-<input id="ab-role" placeholder="e.g. Market Research & Pricing">
-</div>
-<div class="field">
-<label>Avatar</label>
-<select id="ab-avatar">
-<option value="🤖">🤖 Robot</option>
-<option value="📈">📈 Chart</option>
-<option value="💻">💻 Code</option>
-<option value="✍️">✍️ Writer</option>
-<option value="🎨">🎨 Artist</option>
-<option value="📊">📊 Analytics</option>
-<option value="🛡️">🛡️ Security</option>
-<option value="💰">💰 Finance</option>
-<option value="📚">📚 Knowledge</option>
-<option value="🎯">🎯 Target</option>
-<option value="🧠">🧠 Brain</option>
-<option value="🚀">🚀 Rocket</option>
-<option value="🔥">🔥 Fire</option>
-<option value="⚡">⚡ Energy</option>
-<option value="🌟">🌟 Star</option>
-</select>
-</div>
-<div class="field">
-<label>AI Model</label>
-<select id="ab-model">
+<div class="field"><label>Agent Name</label><input id="ab-name" placeholder="e.g. Talle Market Expert"></div>
+<div class="field"><label>Role / Specialty</label><input id="ab-role" placeholder="e.g. Market Research & Pricing"></div>
+<div class="field"><label>Avatar</label><select id="ab-avatar">
+<option value="🤖">🤖 Robot</option><option value="📈">📈 Chart</option><option value="💻">💻 Code</option>
+<option value="✍️">✍️ Writer</option><option value="🎨">🎨 Artist</option><option value="📊">📊 Analytics</option>
+<option value="🛡️">🛡️ Security</option><option value="💰">💰 Finance</option><option value="📚">📚 Knowledge</option>
+<option value="🧠">🧠 Brain</option><option value="🚀">🚀 Rocket</option><option value="🔥">🔥 Fire</option>
+<option value="⚡">⚡ Energy</option><option value="🌟">🌟 Star</option></select></div>
+<div class="field"><label>AI Model</label><select id="ab-model">
 <option value="nvidia/nemotron-3-ultra-550b-a55b:free">Nemotron 550B (Smart)</option>
 <option value="nvidia/nemotron-3-super-120b-a12b:free">Nemotron 120B (Fast)</option>
-<option value="nvidia/nemotron-3-mini-4b-instruct:free">Nemotron 4B (Light)</option>
-</select>
-</div>
-<div class="field">
-<label>System Prompt (personality & instructions)</label>
-<textarea id="ab-prompt" placeholder="You are Talle, a market research expert. You analyze trends, suggest pricing, and identify profitable niches. You speak English, Hausa, and Pidgin."></textarea>
-</div>
-<div class="field">
-<label>Welcome Message</label>
-<input id="ab-welcome" placeholder="Sannu! Ni Talle ne. Ina taimaka maka...">
-</div>
-<button class="btn btn-blue" onclick="abCreateAgent()">🚀 Create Agent</button>
+<option value="nvidia/nemotron-3-mini-4b-instruct:free">Nemotron 4B (Light)</option></select></div>
+<div class="field"><label>System Prompt</label><textarea id="ab-prompt" placeholder="You are Talle, a market research expert. You analyze trends and suggest pricing. You speak English, Hausa, and Pidgin."></textarea></div>
+<div class="field"><label>Welcome Message</label><input id="ab-welcome" placeholder="Sannu! Ni Talle ne..."></div>
+<div class="field"><label>Deploy To Channels</label>
+<div class="chan-grid">
+<div class="chan-btn" id="chan-wa" onclick="abToggleChan('wa')"><span class="chan-icon">💬</span> WhatsApp</div>
+<div class="chan-btn" id="chan-sl" onclick="abToggleChan('sl')"><span class="chan-icon">💼</span> Slack</div>
+<div class="chan-btn" id="chan-im" onclick="abToggleChan('im')"><span class="chan-icon">📱</span> iMessage</div>
+<div class="chan-btn" id="chan-tg" onclick="abToggleChan('tg')"><span class="chan-icon">✈️</span> Telegram</div>
+</div></div>
+<button class="btn btn-blue" onclick="abCreateAgent()">🚀 Create & Deploy Agent</button>
 </div>
 </div>
 
@@ -122,8 +109,16 @@ label{font-size:.7rem;color:var(--muted);margin-bottom:4px;display:block;font-we
 <div class="chat-log" id="ab-chat-log">Select an agent to start chatting.</div>
 <div style="display:flex;gap:8px;margin-top:8px">
 <input id="ab-chat-input" placeholder="Type message..." style="flex:1" onkeypress="if(event.key==='Enter')abSendMessage()">
-<button class="btn btn-blue" style="width:auto;padding:10px 16px" onclick="abSendMessage()">➤</button>
+<button class="btn btn-blue btn-sm" style="width:auto;padding:10px 16px" onclick="abSendMessage()">➤</button>
 </div>
+</div>
+
+<div class="section" id="deploy-section" style="display:none">
+<div class="section-head">
+<span class="section-title">Channel Deployment</span>
+<span id="ab-deploy-name" style="font-size:.8rem;font-weight:700;color:var(--p1)"></span>
+</div>
+<div id="ab-deploy-info" class="loading">Select an agent to manage channels</div>
 </div>
 
 <div class="section">
@@ -141,12 +136,10 @@ const BACKEND='https://harz-backend.harz.workers.dev';
 const PRODUCER='https://superagent-2286fb2f.base44.app/functions/omegaProducer';
 const KEY='omega_harz_321424_2026';
 let currentAgent=null;
+let selectedChans={wa:false,sl:false,im:false,tg:false};
 
-function showToast(msg){
-var t=document.getElementById('toast');
-t.textContent=msg;t.style.display='block';
-setTimeout(function(){t.style.display='none'},2500);
-}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(function(){t.style.display='none'},3000);}
+function abToggleChan(c){var el=document.getElementById('chan-'+c);selectedChans[c]=!selectedChans[c];if(selectedChans[c]){el.classList.add('active');}else{el.classList.remove('active');}}
 
 async function abCreateAgent(){
 var name=document.getElementById('ab-name').value.trim();
@@ -156,20 +149,47 @@ var avatar=document.getElementById('ab-avatar').value;
 var model=document.getElementById('ab-model').value;
 var welcome=document.getElementById('ab-welcome').value.trim()||'Hello! How can I help you?';
 if(!name||!role||!prompt){showToast('Fill name, role, and prompt');return;}
+var chans=[];
+if(selectedChans.wa)chans.push('whatsapp');
+if(selectedChans.sl)chans.push('slack');
+if(selectedChans.im)chans.push('imessage');
+if(selectedChans.tg)chans.push('telegram');
 showToast('Creating '+name+'...');
 try{
-var r=await fetch(BACKEND+'/api/custom_agents',{
-method:'POST',headers:{'Content-Type':'application/json'},
-body:JSON.stringify({name:name,role:role,system_prompt:prompt,model:model,avatar:avatar,color:'#58a6ff',capabilities:'chat',welcome_message:welcome})
-});
+var r=await fetch(BACKEND+'/api/custom_agents',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,role:role,system_prompt:prompt,model:model,avatar:avatar,color:'#58a6ff',capabilities:'chat',welcome_message:welcome})});
 var d=await r.json();
 if(d.success){
-showToast('Agent '+name+' created!');
-document.getElementById('ab-name').value='';
-document.getElementById('ab-role').value='';
-document.getElementById('ab-prompt').value='';
-document.getElementById('ab-welcome').value='';
+var aid=d.data.id;
+var deployResults='<div class="deploy-info"><b>Agent created!</b> ID: '+aid.substring(0,8)+'</div>';
+// Deploy to selected channels
+for(var i=0;i<chans.length;i++){
+try{
+var dr=await fetch(PRODUCER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deploy_agent',api_key:KEY,agent_id:aid,channel:chans[i]})});
+var dd=await dr.json();
+if(dd.success){
+var info=dd.deploy;
+var di='<div class="deploy-info"><b>'+chans[i].toUpperCase()+'</b> ';
+if(chans[i]==='whatsapp'){
+di+='DEPLOYED\nKeyword: "'+info.keyword+'"\nSend WhatsApp msg: "'+info.keyword+' your question" to route to '+info.agent_name;
+}else if(chans[i]==='slack'){
+di+='SETUP NEEDED\nWebhook: '+info.webhook_url+'\nSteps:\n'+info.setup_steps.join('\n');
+}else if(chans[i]==='imessage'){
+di+='DEPLOYED (email bridge)\nAgent email: '+info.agent_email+'\n'+info.instructions.join('\n');
+}else if(chans[i]==='telegram'){
+di+='DEPLOYED\nBot: '+info.bot_url+'\nSend: "'+info.agent_name.toLowerCase().split(' ')[0]+' your question"';
+}
+di+='</div>';
+deployResults+=di;
+}catch(e){deployResults+='<div class="deploy-info">Error deploying to '+chans[i]+': '+e.message+'</div>';}
+}
+document.getElementById('ab-name').value='';document.getElementById('ab-role').value='';document.getElementById('ab-prompt').value='';document.getElementById('ab-welcome').value='';
+['wa','sl','im','tg'].forEach(function(c){document.getElementById('chan-'+c).classList.remove('active');selectedChans[c]=false;});
+showToast('Agent '+name+' created & deployed to '+chans.length+' channels!');
 abLoadAgents();
+// Show deploy info
+document.getElementById('deploy-section').style.display='block';
+document.getElementById('ab-deploy-name').textContent=name;
+document.getElementById('ab-deploy-info').innerHTML=deployResults;
 }else{showToast('Error: '+(d.error||'Failed'));}
 }catch(e){showToast('Error: '+e.message);}
 }
@@ -183,20 +203,25 @@ if(!d.data||d.count===0){el.innerHTML='<div class="empty">No agents yet. Create 
 var html='';
 for(var i=0;i<d.data.length;i++){
 var a=d.data[i];
-var sc=a.status==='active'?'badge-live':'badge-draft';
-var sb=a.status==='active'?'rgba(63,185,80,.15)':'rgba(88,166,255,.15)';
-var st=a.status==='active'?'var(--p3)':'var(--p1)';
 var oid=a.id.replace(/'/g,'');
 var nm=a.name.replace(/'/g,'');
 var pp=(a.system_prompt||'').substring(0,300).replace(/'/g,'');
 var wm=(a.welcome_message||'Hello').replace(/'/g,'');
 var md=a.model||'';
+var chansHtml='';
+if(a.whatsapp_enabled)chansHtml+='<span class="badge badge-live">WA</span> ';
+if(a.slack_enabled)chansHtml+='<span class="badge badge-live">Slack</span> ';
+if(a.imessage_enabled)chansHtml+='<span class="badge badge-live">iMsg</span> ';
+if(a.telegram_enabled)chansHtml+='<span class="badge badge-live">TG</span> ';
+if(!chansHtml)chansHtml='<span class="badge badge-off">No channels</span>';
 html+='<div class="card card-tap" onclick="abSelectAgent(\''+oid+'\',\''+nm+'\',\''+pp+'\',\''+md+'\',\''+wm+'\')">';
 html+='<div class="row"><div class="avatar" style="background:rgba(124,77,255,.15)">'+(a.avatar||'🤖')+'</div>';
 html+='<div style="flex:1"><div class="agent-name">'+a.name+'</div>';
 html+='<div class="agent-role">'+a.role+'</div></div>';
-html+='<div class="agent-status '+sc+'" style="background:'+sb+';color:'+st+'">'+a.status+'</div>';
-html+='</div></div>';
+html+='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">';
+html+='<span class="badge '+(a.status==='active'?'badge-live':'badge-draft')+'">'+a.status+'</span>';
+html+='<div style="font-size:.6rem">'+chansHtml+'</div>';
+html+='</div></div></div>';
 }
 el.innerHTML=html;
 }catch(e){document.getElementById('ab-agent-list').innerHTML='<div class="empty">Error: '+e.message+'</div>';}
@@ -207,31 +232,65 @@ currentAgent={id:id,name:name,prompt:prompt,model:model};
 document.getElementById('chat-section').style.display='block';
 document.getElementById('ab-chat-name').textContent=name;
 document.getElementById('ab-chat-log').textContent=welcome;
+// Also show deployment options
+abShowDeploy(id,name);
 showToast('Selected: '+name);
+}
+
+async function abShowDeploy(id,name){
+document.getElementById('deploy-section').style.display='block';
+document.getElementById('ab-deploy-name').textContent=name;
+var html='<div class="card"><div style="font-size:.75rem;margin-bottom:8px">Deploy '+name+' to additional channels:</div>';
+html+='<div class="chan-grid">';
+html+='<button class="btn btn-wa btn-sm" onclick="abDeployChan(\''+id+'\',\'whatsapp\',\''+name+'\')">💬 WhatsApp</button>';
+html+='<button class="btn btn-sl btn-sm" onclick="abDeployChan(\''+id+'\',\'slack\',\''+name+'\')">💼 Slack</button>';
+html+='<button class="btn btn-im btn-sm" onclick="abDeployChan(\''+id+'\',\'imessage\',\''+name+'\')">📱 iMessage</button>';
+html+='<button class="btn btn-tg btn-sm" onclick="abDeployChan(\''+id+'\',\'telegram\',\''+name+'\')">✈️ Telegram</button>';
+html+='</div></div>';
+document.getElementById('ab-deploy-info').innerHTML=html;
+}
+
+async function abDeployChan(id,channel,name){
+showToast('Deploying '+name+' to '+channel+'...');
+try{
+var r=await fetch(PRODUCER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deploy_agent',api_key:KEY,agent_id:id,channel:channel})});
+var d=await r.json();
+if(d.success){
+var info=d.deploy;
+var html='<div class="card"><div style="font-size:.75rem;margin-bottom:8px"><b>'+name+'</b> on '+channel.toUpperCase()+'</div>';
+if(channel==='whatsapp'){
+html+='<div class="deploy-info"><b>DEPLOYED</b>\n\nKeyword: "'+info.keyword+'"\n\nHow to use:\nSend a WhatsApp message starting with "'+info.keyword+'" followed by your question.\n\nExample:\n"'+info.keyword+' what is the market trend?"\n\nThe agent will respond automatically via Omega Producer.</div>';
+}else if(channel==='slack'){
+html+='<div class="deploy-info"><b>SETUP NEEDED</b>\n\nWebhook URL:\n'+info.webhook_url+'\n\nSetup steps:\n';
+for(var s=0;s<info.setup_steps.length;s++){html+=info.setup_steps[s]+'\n';}
+html+='\nApp name: '+info.slack_app_name+'</div>';
+}else if(channel==='imessage'){
+html+='<div class="deploy-info"><b>DEPLOYED (Email Bridge)</b>\n\nAgent email:\n'+info.agent_email+'\n\n';
+for(var s=0;s<info.instructions.length;s++){html+=info.instructions[s]+'\n';}
+html+='\nAlternative:\n'+info.alternative+'</div>';
+}else if(channel==='telegram'){
+html+='<div class="deploy-info"><b>DEPLOYED</b>\n\nBot: '+info.bot_url+'\n\nSend a message starting with "'+name.toLowerCase().split(" ")[0]+'" to route to '+name+'.</div>';
+}
+html+='</div>';
+document.getElementById('ab-deploy-info').innerHTML=html;
+abLoadAgents();
+showToast(name+' deployed to '+channel+'!');
+}else{showToast('Error: '+d.error);}
+}catch(e){showToast('Error: '+e.message);}
 }
 
 async function abSendMessage(){
 var input=document.getElementById('ab-chat-input');
-var msg=input.value.trim();
-if(!msg)return;
-if(!currentAgent){showToast('Select an agent first');return;}
+var msg=input.value.trim();if(!msg)return;if(!currentAgent){showToast('Select an agent first');return;}
 var log=document.getElementById('ab-chat-log');
-log.textContent+='\n\nYou: '+msg+'\n';
-input.value='';
-log.textContent+='['+currentAgent.name+' thinking...]\n';
-log.scrollTop=log.scrollHeight;
+log.textContent+='\n\nYou: '+msg+'\n';input.value='';
+log.textContent+='['+currentAgent.name+' thinking...]\n';log.scrollTop=log.scrollHeight;
 try{
-var r=await fetch(PRODUCER,{
-method:'POST',headers:{'Content-Type':'application/json'},
-body:JSON.stringify({message:msg,api_key:KEY,history:[{role:'system',content:currentAgent.prompt},{role:'user',content:msg}]})
-});
+var r=await fetch(PRODUCER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,api_key:KEY,history:[{role:'system',content:currentAgent.prompt},{role:'user',content:msg}]})});
 var d=await r.json();
 if(d.response){
 log.textContent+=currentAgent.name+': '+d.response+'\n';
-fetch(BACKEND+'/api/agent_chats',{
-method:'POST',headers:{'Content-Type':'application/json'},
-body:JSON.stringify({agent_id:currentAgent.id,agent_name:currentAgent.name,user_message:msg,agent_response:d.response.substring(0,500),model:d.model||currentAgent.model})
-}).catch(function(){});
+fetch(BACKEND+'/api/agent_chats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agent_id:currentAgent.id,agent_name:currentAgent.name,user_message:msg,agent_response:d.response.substring(0,500),model:d.model||currentAgent.model})}).catch(function(){});
 }else{log.textContent+='Error: No response\n';}
 }catch(e){log.textContent+='Error: '+e.message+'\n';}
 log.scrollTop=log.scrollHeight;
@@ -239,9 +298,7 @@ log.scrollTop=log.scrollHeight;
 
 async function abLoadStats(){
 try{
-var r=await fetch(BACKEND+'/stats');
-var d=await r.json();
-var s=d.stats||{};
+var r=await fetch(BACKEND+'/stats');var d=await r.json();var s=d.stats||{};
 var h='<div class="card"><div class="stats">';
 h+='<div class="stat-item">Agents: <b>'+(s.custom_agents||0)+'</b></div>';
 h+='<div class="stat-item">Chats: <b>'+(s.agent_chats||0)+'</b></div>';
@@ -254,8 +311,7 @@ document.getElementById('ab-stats').innerHTML=h;
 }catch(e){document.getElementById('ab-stats').innerHTML='Error: '+e.message;}
 }
 
-abLoadAgents();
-abLoadStats();
+abLoadAgents();abLoadStats();
 </script>
 </body>
 </html>
