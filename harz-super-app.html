@@ -298,6 +298,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="quick" onclick="closeAI();switchPage('business')"><span class="quick-icon">🤖</span><span class="quick-label">AI Assistant</span></div>
 <div class="quick" onclick="closeAI();switchPage('store')"><span class="quick-icon">🛍️</span><span class="quick-label">Store</span></div>
 <div class="quick" onclick="switchPage('learn')"><span class="quick-icon">📚</span><span class="quick-label">Learn</span></div>
+<div class="quick" onclick="closeAI();switchPage('producer')"><span class="quick-icon" style="background:rgba(63,185,80,.15)">⚡</span><span class="quick-label">Producer</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-dev-platform.html')"><span class="quick-icon">🛠️</span><span class="quick-label">Dev Platform</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-agency.html')"><span class="quick-icon">🤖</span><span class="quick-label">AI Agency</span></div>
 <div class="quick" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html')"><span class="quick-icon">🏭</span><span class="quick-label">IoT & Robotics</span></div>
@@ -704,6 +705,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="section-head"><span class="section-title">Business Hub</span></div>
 </div>
 <div style="padding:0 16px">
+<div class="biz-card" onclick="closeAI();switchPage('producer')" style="border-color:var(--p3)"><div class="biz-icon" style="background:rgba(63,185,80,.15)">⚡</div><div class="biz-info"><div class="biz-title">Omega Producer <span class="badge b-live" style="font-size:.55rem;padding:1px 6px">LIVE</span></div><div class="biz-desc">Backend + Agents + WebSocket</div></div><div class="biz-stat"><div class="biz-num">3</div><div class="biz-lbl">systems</div></div></div>
 <div class="biz-card" onclick="showToast('Loading CRM...')"><div class="biz-icon" style="background:rgba(37,211,102,.12)">📋</div><div class="biz-info"><div class="biz-title">WhatsApp CRM</div><div class="biz-desc">Customer inquiries & leads</div></div><div class="biz-stat"><div class="biz-num">24</div><div class="biz-lbl">leads</div></div></div>
 <div class="biz-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html')"><div class="biz-icon" style="background:rgba(0,188,212,.12)">📢</div><div class="biz-info"><div class="biz-title">Nexal Ads</div><div class="biz-desc">Ad campaigns & marketing</div></div><div class="biz-stat"><div class="biz-num">5</div><div class="biz-lbl">active</div></div></div>
 <div class="biz-card" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/buildbot-ai.html')"><div class="biz-icon" style="background:rgba(124,77,255,.12)">🏗️</div><div class="biz-info"><div class="biz-title">BuildBot AI</div><div class="biz-desc">Construction planning & quotes</div></div><div class="biz-stat"><div class="biz-num">12</div><div class="biz-lbl">projects</div></div></div>
@@ -722,6 +724,84 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 </div>
 
+
+<!-- OMEGA PRODUCER PAGE -->
+<div id="page-producer" class="page">
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Omega Producer v2.0</span><span class="badge b-live">ONLINE</span></div>
+</div>
+
+<!-- System Status -->
+<div style="padding:0 16px">
+<div class="biz-card" style="border-color:var(--p3)">
+<div class="biz-icon" style="background:rgba(63,185,80,.15)">⚡</div>
+<div class="biz-info"><div class="biz-title">3 Systems Connected</div><div class="biz-desc">Backend + Agent Server + Base44</div></div>
+<div class="biz-stat"><div class="biz-num" id="op-orders">--</div><div class="biz-lbl">orders</div></div>
+</div>
+</div>
+
+<!-- Orders -->
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Orders</span><span class="section-link" onclick="opLoadOrders()">Refresh</span></div>
+</div>
+<div style="padding:0 16px">
+<div id="op-orders-list" style="font-size:.75rem;color:var(--muted)">Loading orders...</div>
+</div>
+
+<!-- CRM -->
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">CRM (Customers)</span><span class="section-link" onclick="opLoadCRM()">Refresh</span></div>
+</div>
+<div style="padding:0 16px">
+<div id="op-crm-list" style="font-size:.75rem;color:var(--muted)">Loading CRM...</div>
+</div>
+
+<!-- Products -->
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Products</span><span class="section-link" onclick="opLoadProducts()">Refresh</span></div>
+</div>
+<div style="padding:0 16px">
+<div id="op-products-list" style="font-size:.75rem;color:var(--muted)">Loading products...</div>
+</div>
+
+<!-- Agent Chat -->
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Agent Chat (7 Agents)</span></div>
+</div>
+<div style="padding:0 16px">
+<select id="op-agent-select" style="margin-bottom:8px;width:100%;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text)">
+<option value="magani">Magani (Orchestrator)</option>
+<option value="omega">Omega (Commander)</option>
+<option value="hauwa">Hauwa (Marketing)</option>
+<option value="rabi">Rabi (Finance)</option>
+<option value="aisha">Aisha (Support)</option>
+<option value="nuruddeen">Nuruddeen (Knowledge)</option>
+<option value="danjuma">Danjuma (Security)</option>
+</select>
+<div id="op-chat-log" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:.7rem;color:var(--p3);max-height:180px;overflow:auto;margin-bottom:8px;white-space:pre-wrap">Select agent and type below...</div>
+<div style="display:flex;gap:6px">
+<input id="op-chat-input" placeholder="Type message..." style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem" onkeypress="if(event.key==='Enter')opSendMessage()">
+<button class="btn btn-blue" style="width:auto;padding:8px 16px" onclick="opSendMessage()">Send</button>
+</div>
+</div>
+
+<!-- Backend Stats -->
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Backend Stats</span><span class="section-link" onclick="opLoadStats()">Refresh</span></div>
+</div>
+<div style="padding:0 16px">
+<div id="op-stats" style="font-size:.75rem;color:var(--muted)">Loading stats...</div>
+</div>
+
+<!-- Ecosystem Status -->
+<div class="section" style="padding-top:16px">
+<div class="section-head"><span class="section-title">Ecosystem Status</span></div>
+</div>
+<div style="padding:0 16px">
+<button class="btn btn-blue" style="width:auto" onclick="opCheckEcosystem()">Check All Systems</button>
+<div id="op-ecosystem" style="margin-top:8px;font-size:.75rem;color:var(--muted)"></div>
+</div>
+</div>
 
 <!-- PROFILE PAGE -->
 <div id="page-profile" class="page">
@@ -765,6 +845,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-exchange.html')">📈 Harz Exchange — Crypto & P2P</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-saas-billing.html')">📊 Harz SaaS Billing</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/harz-hosting-master.html')">🏢 Hosting Master — Domains & Hosting</div>
+<div class="more-item" onclick="closeAI();switchPage('producer')">⚡ Omega Producer — Backend + Agents</div>
 <div class="more-item" onclick="openLink('https://rabiuhamza11.github.io/harz-portfolio/deployforge.html')">📦 Wholesale + Deploy — DeployForge</div>
 </div>
 
@@ -1698,6 +1779,116 @@ window.doLogin = doLogin;
 window.doSignup = doSignup;
 window.showAuth = showAuth;
 window.harzLogout = harzLogout;
+
+// ===== OMEGA PRODUCER =====
+const OP_API = 'https://superagent-2286fb2f.base44.app/functions/omegaProducer';
+const OP_KEY = 'omega_harz_321424_2026';
+const OP_BACKEND = 'https://harz-backend.harz.workers.dev';
+const OP_AGENT = 'https://harz-agent-server.harz.workers.dev';
+
+async function opFetch(action, extra) {
+  const body = Object.assign({ action, api_key: OP_KEY }, extra || {});
+  const resp = await fetch(OP_API, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  return resp.json();
+}
+
+async function opLoadOrders() {
+  try {
+    const d = await opFetch('list_orders');
+    const el = document.getElementById('op-orders-list');
+    if (d.count === 0 || !d.orders) { el.textContent = 'No orders yet'; document.getElementById('op-orders').textContent = '0'; return; }
+    document.getElementById('op-orders').textContent = d.count;
+    let html = '';
+    for (const o of d.orders) {
+      html += '<div class="biz-card" style="padding:8px;margin-bottom:6px"><div style="display:flex;justify-content:space-between"><div><b>' + (o.product_title||'') + '</b></div><div>' + (o.amount||0) + ' ' + (o.currency||'NGN') + '</div></div><div style="font-size:.68rem;color:var(--muted)">' + (o.buyer_name||'') + ' | ' + (o.payment_status||'pending') + ' | ' + (o.status||'new') + '</div></div>';
+    }
+    el.innerHTML = html;
+  } catch(e) { document.getElementById('op-orders-list').textContent = 'Error: ' + e.message; }
+}
+
+async function opLoadCRM() {
+  try {
+    const d = await opFetch('list_crm');
+    const el = document.getElementById('op-crm-list');
+    if (d.count === 0 || !d.crm) { el.textContent = 'No CRM records'; return; }
+    let html = '';
+    for (const c of d.crm) {
+      html += '<div class="biz-card" style="padding:8px;margin-bottom:6px"><div><b>' + (c.customer_name||'Unknown') + '</b> - ' + (c.inquiry_type||'general') + '</div><div style="font-size:.68rem;color:var(--muted)">' + (c.customer_phone||'') + ' | ' + (c.status||'new') + '</div></div>';
+    }
+    el.innerHTML = html;
+  } catch(e) { document.getElementById('op-crm-list').textContent = 'Error: ' + e.message; }
+}
+
+async function opLoadProducts() {
+  try {
+    const d = await opFetch('list_products');
+    const el = document.getElementById('op-products-list');
+    if (d.count === 0 || !d.products) { el.textContent = 'No products'; return; }
+    let html = '';
+    for (const p of d.products) {
+      html += '<div class="biz-card" style="padding:8px;margin-bottom:6px"><div style="display:flex;justify-content:space-between"><div><b>' + (p.title||'') + '</b></div><div>' + (p.price||0) + ' ' + (p.currency||'NGN') + '</div></div><div style="font-size:.68rem;color:var(--muted)">' + (p.category||'') + ' | ' + (p.status||'active') + '</div></div>';
+    }
+    el.innerHTML = html;
+  } catch(e) { document.getElementById('op-products-list').textContent = 'Error: ' + e.message; }
+}
+
+async function opLoadStats() {
+  try {
+    const d = await opFetch('stats');
+    const s = d.stats || {};
+    document.getElementById('op-stats').innerHTML = 
+      '<div class="biz-card" style="padding:10px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">' +
+      '<div>Orders: <b>' + (s.orders||0) + '</b></div>' +
+      '<div>CRM: <b>' + (s.crm||0) + '</b></div>' +
+      '<div>Products: <b>' + (s.products||0) + '</b></div>' +
+      '<div>Users: <b>' + (s.total_users||0) + '</b></div>' +
+      '<div>Automations: <b>' + (s.total_automations||0) + '</b></div></div></div>';
+  } catch(e) { document.getElementById('op-stats').textContent = 'Error: ' + e.message; }
+}
+
+async function opSendMessage() {
+  const input = document.getElementById('op-chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const agent = document.getElementById('op-agent-select').value;
+  const log = document.getElementById('op-chat-log');
+  log.textContent += '\nYou: ' + msg + '\n';
+  input.value = '';
+  log.textContent += '[' + agent + ' thinking...]\n';
+  log.scrollTop = log.scrollHeight;
+  try {
+    const d = await opFetch('agent_chat', { agent, message: msg });
+    log.textContent += (d.agent || agent) + ': ' + (d.response || 'No response') + '\n\n';
+  } catch(e) { log.textContent += 'Error: ' + e.message + '\n'; }
+  log.scrollTop = log.scrollHeight;
+}
+
+async function opCheckEcosystem() {
+  const el = document.getElementById('op-ecosystem');
+  el.textContent = 'Checking all systems...';
+  try {
+    const d = await opFetch('ecosystem_status');
+    let html = '<div class="biz-card" style="padding:10px">';
+    const sys = d.systems || {};
+    html += '<div>Backend: <b style="color:' + (sys.harz_backend==='online'?'var(--p3)':'var(--red)') + '">' + (sys.harz_backend||'?') + '</b></div>';
+    html += '<div>Agent Server: <b style="color:' + (sys.agent_server==='online'?'var(--p3)':'var(--red)') + '">' + (sys.agent_server||'?') + '</b></div>';
+    html += '<div>Base44: <b style="color:' + (sys.base44==='online'?'var(--p3)':'var(--red)') + '">' + (sys.base44||'?') + '</b></div>';
+    const stats = d.data && d.data.stats || {};
+    html += '<div style="margin-top:6px;font-size:.68rem">Orders: ' + (stats.orders||0) + ' | CRM: ' + (stats.crm||0) + ' | Products: ' + (stats.products||0) + '</div>';
+    html += '</div>';
+    el.innerHTML = html;
+  } catch(e) { el.textContent = 'Error: ' + e.message; }
+}
+
+// Load producer data when page shown
+const origShowTabOP = showTab;
+showTab = function(name, el) {
+  origShowTabOP(name, el);
+  if (name === 'producer') {
+    opLoadOrders(); opLoadCRM(); opLoadProducts(); opLoadStats();
+  }
+};
+
 </script>
 
 </body>
