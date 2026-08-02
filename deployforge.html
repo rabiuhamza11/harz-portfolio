@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#0d1117">
-<title>DeployForge v8.0 — Multi-Cloud Platform</title>
+<title>DeployForge v9.0 — Multi-Cloud Platform</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0d1117;--card:#161b22;--card2:#1c2333;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922;--red:#f85149;--gold:#FFD700;--radius:12px}
@@ -68,7 +68,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="header">
 <a href="harz-super-app.html">&#8592;</a>
 <span style="font-size:20px">&#128736;</span>
-<span class="title">DeployForge v8.0</span>
+<span class="title">DeployForge v9.0</span>
 <span class="badge b-gold">PRO</span>
 </div>
 <div class="tab-bar">
@@ -83,6 +83,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="tab" onclick="showTab('monitor',this)">&#128276; Monitor</div>
 <div class="tab" onclick="showTab('repos',this)">&#128230; Repos</div>
 <div class="tab" onclick="showTab('agents',this)" style="color:var(--purple)">🤖 Agents</div>
+<div class="tab" onclick="showTab('server',this)" style="color:var(--green)">⚡ Agent Server</div>
 </div>
 <div class="container">
 
@@ -95,7 +96,7 @@ textarea{resize:vertical;min-height:80px}
 <div class="stat"><div class="num" style="color:var(--gold)" id="stat-hf">-</div><div class="lbl">HF Spaces</div></div>
 </div>
 <div class="card">
-<h3>&#128640; DeployForge v8.0 — Multi-Cloud Platform</h3>
+<h3>&#128640; DeployForge v9.0 — Multi-Cloud Platform</h3>
 <p>6 providers, 9 templates, auto CI/CD, auto-deploy to all, auto-monitoring</p>
 <div class="feat-grid" style="margin-top:10px">
 <div class="feat"><div class="fi">&#128196;</div><div class="fn">Static</div><div class="fd">GitHub Pages</div></div>
@@ -421,6 +422,103 @@ textarea{resize:vertical;min-height:80px}
 </div>
 
 
+<!-- AGENT SERVER SECTION -->
+<div class="section" id="sec-server-ui">
+
+<!-- Server Status -->
+<div class="card" style="border-color:var(--green)">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#3fb950,#58a6ff);display:flex;align-items:center;justify-content:center;font-size:22px">⚡</div>
+<div style="flex:1">
+<div style="font-size:14px;font-weight:700;color:var(--green)">HARZ Agent Server</div>
+<div style="font-size:11px;color:var(--dim)" id="server-url-display">harz-agent-server.harz.workers.dev</div>
+</div>
+<span class="badge" id="server-status-badge" style="background:rgba(63,185,80,.15);color:var(--green)">CHECKING...</span>
+</div>
+<div style="display:flex;gap:6px;margin-bottom:10px">
+<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--green)" id="ws-status">--</div><div class="lbl">WebSocket</div></div>
+<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--blue)" id="mem-status">--</div><div class="lbl">Memory</div></div>
+<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--purple)" id="task-status">--</div><div class="lbl">Tasks</div></div>
+</div>
+<button class="btn btn-sm" style="width:auto" onclick="checkServerStatus()">Refresh Status</button>
+</div>
+
+<!-- WebSocket Console -->
+<div class="card">
+<h3 style="color:var(--blue)">🔌 WebSocket Console</h3>
+<p style="font-size:11px;color:var(--dim)">Real-time bidirectional connection to HARZ agents</p>
+<div class="form-label" style="margin-top:8px">Select Agent</div>
+<select id="ws-agent-select" style="margin-bottom:8px">
+<option value="magani">🧠 Magani (Orchestrator)</option>
+<option value="omega">⚡ Omega (Commander)</option>
+<option value="hauwa">📢 Hauwa (Marketing)</option>
+<option value="rabi">💰 Rabi (Finance)</option>
+<option value="aisha">💬 Aisha (Support)</option>
+<option value="nuruddeen">📚 Nuruddeen (Knowledge)</option>
+<option value="danjuma">🛡️ Danjuma (Security)</option>
+</select>
+<div id="ws-chat" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:11px;color:var(--green);max-height:200px;overflow:auto;margin-bottom:8px;white-space:pre-wrap">Connect to start chatting...</div>
+<div class="row" style="margin-bottom:8px">
+<input id="ws-input" placeholder="Type message..." style="flex:1;margin-bottom:0" onkeypress="if(event.key==='Enter')wsSend()">
+<button class="btn btn-blue btn-sm" style="width:auto" onclick="wsSend()">Send</button>
+</div>
+<div class="row">
+<button class="btn btn-sm" style="width:auto;background:var(--green);color:#000" id="ws-connect-btn" onclick="wsConnect()">Connect</button>
+<button class="btn btn-sm" style="width:auto;background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3)" onclick="wsDisconnect()">Disconnect</button>
+</div>
+</div>
+
+<!-- Persistent Memory Viewer -->
+<div class="card">
+<h3 style="color:var(--purple)">🧠 Persistent Memory</h3>
+<p style="font-size:11px;color:var(--dim)">Agent memories stored in Cloudflare KV (survives restarts)</p>
+<div class="form-label" style="margin-top:8px">Agent Memory</div>
+<select id="mem-agent-select" style="margin-bottom:8px">
+<option value="magani">🧠 Magani</option>
+<option value="omega">⚡ Omega</option>
+<option value="hauwa">📢 Hauwa</option>
+<option value="rabi">💰 Rabi</option>
+<option value="aisha">💬 Aisha</option>
+<option value="nuruddeen">📚 Nuruddeen</option>
+<option value="danjuma">🛡️ Danjuma</option>
+</select>
+<div id="mem-display" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:10px;color:var(--purple);max-height:180px;overflow:auto;margin-bottom:8px;white-space:pre-wrap">Loading...</div>
+<div class="row">
+<button class="btn btn-sm" style="width:auto;background:var(--purple);color:#000" onclick="loadMemory()">Load Memory</button>
+<button class="btn btn-sm" style="width:auto;background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3)" onclick="clearMemory()">Clear</button>
+</div>
+</div>
+
+<!-- Task Queue -->
+<div class="card">
+<h3 style="color:var(--orange)">📋 Task Queue (Long-Running)</h3>
+<p style="font-size:11px;color:var(--dim)">Async tasks that run in background</p>
+<div class="row" style="margin-bottom:8px">
+<button class="btn btn-sm" style="width:auto;background:var(--orange);color:#000" onclick="createTask('ecosystem_health')">Health Check</button>
+<button class="btn btn-sm" style="width:auto;background:var(--blue);color:#000" onclick="createTask('agent_report')">Agent Report</button>
+<button class="btn btn-sm" style="width:auto;background:var(--purple);color:#000" onclick="createTask('ai_analysis')">AI Analysis</button>
+</div>
+<div id="task-display" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:10px;color:var(--orange);max-height:180px;overflow:auto;white-space:pre-wrap">No tasks yet. Create one above.</div>
+<button class="btn btn-sm" style="width:auto;margin-top:8px" onclick="listTasks()">Refresh Tasks</button>
+</div>
+
+<!-- Server Info -->
+<div class="card">
+<h3>📊 Server Details</h3>
+<div style="font-size:11px;color:var(--dim);line-height:1.8">
+<div><b style="color:var(--green)">WebSocket:</b> wss://harz-agent-server.harz.workers.dev/ws</div>
+<div><b style="color:var(--blue)">Chat API:</b> POST /api/chat</div>
+<div><b style="color:var(--purple)">Memory API:</b> POST /api/memory</div>
+<div><b style="color:var(--orange)">Task API:</b> POST /api/task</div>
+<div><b style="color:var(--green)">KV Storage:</b> Cloudflare Workers KV (1GB free)</div>
+<div><b style="color:var(--blue)">Models:</b> Nemotron 550B + 120B (free)</div>
+<div><b style="color:var(--purple)">Agents:</b> 7 (Magani, Omega, Hauwa, Rabi, Aisha, Nuruddeen, Danjuma)</div>
+</div>
+</div>
+
+</div>
+
+
 <script>
 const API='https://solene-5b0577e2.base44.app/functions/deployForgeDeploy';
 var reposCache=[];var history=JSON.parse(localStorage.getItem('deployHistory')||'[]');var selectedRuntime='node';var monitorInterval=null;
@@ -706,6 +804,190 @@ const origShowTab=showTab;
 showTab=function(name,el){
 origShowTab(name,el);
 if(name==='agents')loadAgents();
+};
+
+
+// ===== AGENT SERVER MANAGEMENT =====
+const SERVER_URL = 'https://harz-agent-server.harz.workers.dev';
+const WS_URL = 'wss://harz-agent-server.harz.workers.dev/ws';
+let wsConnection = null;
+let wsSessionId = null;
+
+async function checkServerStatus() {
+  try {
+    const resp = await fetch(SERVER_URL + '/health');
+    const data = await resp.json();
+    document.getElementById('server-status-badge').textContent = 'ONLINE';
+    document.getElementById('server-status-badge').className = 'badge b-live';
+    document.getElementById('ws-status').textContent = 'Ready';
+    document.getElementById('ws-status').style.color = 'var(--green)';
+    document.getElementById('mem-status').textContent = 'Active';
+    document.getElementById('mem-status').style.color = 'var(--blue)';
+    document.getElementById('task-status').textContent = 'Ready';
+    document.getElementById('task-status').style.color = 'var(--purple)';
+    document.getElementById('server-url-display').textContent = SERVER_URL.replace('https://','');
+  } catch(e) {
+    document.getElementById('server-status-badge').textContent = 'OFFLINE';
+    document.getElementById('server-status-badge').className = 'badge b-down';
+  }
+}
+
+function wsConnect() {
+  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) { return; }
+  const btn = document.getElementById('ws-connect-btn');
+  btn.textContent = 'Connecting...';
+  wsConnection = new WebSocket(WS_URL);
+  
+  wsConnection.onopen = function() {
+    btn.textContent = 'Connected';
+    btn.style.background = 'var(--green)';
+    document.getElementById('ws-chat').textContent += '\n[Connected to HARZ Agent Server]\n';
+  };
+  
+  wsConnection.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    if (data.type === 'connected') {
+      wsSessionId = data.sessionId;
+      document.getElementById('ws-chat').textContent += '[Session: ' + data.sessionId.substring(0,8) + ']\n';
+      document.getElementById('ws-chat').textContent += '[Agents: ' + data.agents.join(', ') + ']\n';
+    } else if (data.type === 'status') {
+      document.getElementById('ws-chat').textContent += '[' + data.agent + ' thinking... (' + data.model + ')]\n';
+    } else if (data.type === 'message') {
+      document.getElementById('ws-chat').textContent += data.agent + ': ' + data.content + '\n\n';
+    } else if (data.type === 'error') {
+      document.getElementById('ws-chat').textContent += '[Error: ' + data.message + ']\n';
+    }
+    var chatDiv = document.getElementById('ws-chat');
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+  };
+  
+  wsConnection.onclose = function() {
+    btn.textContent = 'Connect';
+    btn.style.background = 'var(--green)';
+    document.getElementById('ws-chat').textContent += '\n[Disconnected]\n';
+  };
+  
+  wsConnection.onerror = function() {
+    btn.textContent = 'Connect';
+    document.getElementById('ws-chat').textContent += '[Connection error]\n';
+  };
+}
+
+function wsDisconnect() {
+  if (wsConnection) { wsConnection.close(); wsConnection = null; }
+}
+
+function wsSend() {
+  const input = document.getElementById('ws-input');
+  const msg = input.value.trim();
+  if (!msg || !wsConnection || wsConnection.readyState !== WebSocket.OPEN) {
+    if (!wsConnection || wsConnection.readyState !== WebSocket.OPEN) {
+      document.getElementById('ws-chat').textContent += '[Not connected. Click Connect first.]\n';
+    }
+    return;
+  }
+  const agent = document.getElementById('ws-agent-select').value;
+  wsConnection.send(JSON.stringify({ message: msg, agent: agent, sessionId: wsSessionId }));
+  document.getElementById('ws-chat').textContent += 'You: ' + msg + '\n';
+  input.value = '';
+  var chatDiv = document.getElementById('ws-chat');
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+async function loadMemory() {
+  const agent = document.getElementById('mem-agent-select').value;
+  try {
+    const resp = await fetch(SERVER_URL + '/api/memory', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get', agent: agent })
+    });
+    const data = await resp.json();
+    const mem = data.memory || [];
+    const display = document.getElementById('mem-display');
+    if (mem.length === 0) {
+      display.textContent = 'No memories stored yet for ' + agent;
+    } else {
+      let text = '=== ' + agent + ' Memory (' + mem.length + ' entries) ===\n\n';
+      for (const m of mem) {
+        text += '[' + (m.timestamp || '') + ']\n' + m.role + ': ' + m.content.substring(0,100) + (m.content.length > 100 ? '...' : '') + '\n\n';
+      }
+      display.textContent = text;
+    }
+  } catch(e) {
+    document.getElementById('mem-display').textContent = 'Error: ' + e.message;
+  }
+}
+
+async function clearMemory() {
+  const agent = document.getElementById('mem-agent-select').value;
+  if (!confirm('Clear all memory for ' + agent + '?')) return;
+  try {
+    const resp = await fetch(SERVER_URL + '/api/memory', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'clear', agent: agent })
+    });
+    const data = await resp.json();
+    document.getElementById('mem-display').textContent = 'Memory cleared for ' + agent;
+  } catch(e) {
+    document.getElementById('mem-display').textContent = 'Error: ' + e.message;
+  }
+}
+
+async function createTask(type) {
+  try {
+    const resp = await fetch(SERVER_URL + '/api/task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'create', taskType: type, data: { ecosystem: 'HARZ', platforms: 63 } })
+    });
+    const data = await resp.json();
+    document.getElementById('task-display').textContent = 'Task created: ' + data.taskId.substring(0,8) + '\nStatus: ' + data.status + '\n\nWaiting for completion... (refresh in 5s)';
+    setTimeout(listTasks, 5000);
+  } catch(e) {
+    document.getElementById('task-display').textContent = 'Error: ' + e.message;
+  }
+}
+
+async function listTasks() {
+  try {
+    // Use status endpoint since list has issues with KV listing
+    const resp = await fetch(SERVER_URL + '/api/task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'list' })
+    });
+    if (!resp.ok) {
+      document.getElementById('task-display').textContent = 'No tasks found or KV listing unavailable.';
+      return;
+    }
+    const data = await resp.json();
+    const tasks = data.tasks || [];
+    if (tasks.length === 0) {
+      document.getElementById('task-display').textContent = 'No tasks found. Create one above.';
+      return;
+    }
+    let text = '=== Task Queue (' + tasks.length + ' tasks) ===\n\n';
+    for (const t of tasks) {
+      text += 'ID: ' + t.id.substring(0,8) + '\n';
+      text += 'Type: ' + t.type + '\n';
+      text += 'Status: ' + t.status + '\n';
+      if (t.result) { text += 'Result: ' + JSON.stringify(t.result).substring(0,100) + '...\n'; }
+      text += '\n';
+    }
+    document.getElementById('task-display').textContent = text;
+  } catch(e) {
+    document.getElementById('task-display').textContent = 'Error loading tasks. KV listing may be unavailable on free tier.';
+  }
+}
+
+// Override showTab to load server data
+const origShowTabV2 = showTab;
+showTab = function(name, el) {
+  origShowTabV2(name, el);
+  if (name === 'server-ui') { checkServerStatus(); }
+  if (name === 'agents') { loadAgents(); }
 };
 
 </script>
