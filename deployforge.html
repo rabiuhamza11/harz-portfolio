@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#0d1117">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>DeployForge v5.0 — Deploy + Manage</title>
+<title>DeployForge v6.0 — Multi-Cloud Platform</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0d1117;--card:#161b22;--card2:#1c2333;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922;--red:#f85149;--gold:#FFD700;--radius:12px}
@@ -15,7 +14,7 @@ body{font-family:-apple-system,system-ui,sans-serif;background:var(--bg);color:v
 .header .title{font-weight:700;font-size:15px;flex:1}
 .container{max-width:600px;margin:0 auto;padding:12px}
 .tab-bar{display:flex;gap:4px;padding:0 12px;margin-bottom:12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tab{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;white-space:nowrap;cursor:pointer;background:var(--card);border:1px solid var(--border);color:var(--dim)}
+.tab{padding:8px 14px;border-radius:8px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer;background:var(--card);border:1px solid var(--border);color:var(--dim)}
 .tab.active{background:var(--card2);color:var(--blue);border-color:var(--blue)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
 .card h3{font-size:13px;color:var(--blue);margin-bottom:8px}
@@ -34,11 +33,11 @@ textarea{resize:vertical;min-height:80px}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
 .b-live{background:rgba(63,185,80,.15);color:var(--green)}.b-pending{background:rgba(210,153,34,.15);color:var(--orange)}
 .b-down{background:rgba(248,81,73,.15);color:var(--red)}.b-blue{background:rgba(88,166,255,.15);color:var(--blue)}
-.b-purple{background:rgba(188,140,255,.15);color:var(--purple)}
+.b-purple{background:rgba(188,140,255,.15);color:var(--purple)}.b-gold{background:rgba(255,215,0,.15);color:var(--gold)}
 .log{background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:11px;color:var(--green);max-height:180px;overflow:auto;white-space:pre-wrap;margin-top:8px}
 .site-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:6px;cursor:pointer}
 .site-item:active{background:var(--card)}
-.site-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:var(--card)}
+.site-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--card)}
 .site-info{flex:1;min-width:0}.site-name{font-size:13px;font-weight:600}
 .site-url{font-size:10px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -55,22 +54,32 @@ textarea{resize:vertical;min-height:80px}
 .runtime-btn{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:var(--card);color:var(--dim)}
 .runtime-btn.active{border-color:var(--green);color:var(--green);background:rgba(63,185,80,.1)}
 .code-editor{background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--green);font-family:monospace;font-size:12px;width:100%;min-height:120px;resize:vertical;outline:none}
+.tpl-card{display:flex;align-items:center;gap:10px;padding:12px;background:var(--card2);border:2px solid var(--border);border-radius:12px;margin-bottom:8px;cursor:pointer}
+.tpl-card:active{opacity:.8}
+.tpl-card .ti{font-size:24px}.tpl-card .tn{font-size:14px;font-weight:700}.tpl-card .td{font-size:11px;color:var(--dim)}
+.cicd-run{padding:10px;background:var(--card2);border-radius:8px;margin-bottom:6px}
+.cicd-run .rn{font-size:13px;font-weight:600}.cicd-run .rs{font-size:11px;color:var(--dim)}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.feat{background:var(--card2);border-radius:8px;padding:10px;text-align:center}
+.feat .fi{font-size:20px;margin-bottom:4px}.feat .fn{font-size:11px;font-weight:600}.feat .fd{font-size:9px;color:var(--dim)}
 </style>
 </head>
 <body>
 <div class="header">
 <a href="harz-super-app.html">&#8592;</a>
 <span style="font-size:20px">&#128736;</span>
-<span class="title">DeployForge v5.0</span>
-<span class="badge b-live">LIVE</span>
+<span class="title">DeployForge v6.0</span>
+<span class="badge b-gold">PRO</span>
 </div>
 <div class="tab-bar">
 <div class="tab active" onclick="showTab('dashboard',this)">&#128202; Dashboard</div>
+<div class="tab" onclick="showTab('templates',this)">&#128194; Templates</div>
 <div class="tab" onclick="showTab('deploy',this)">&#128640; HTML</div>
-<div class="tab" onclick="showTab('server',this)">&#9889; Node/Py</div>
+<div class="tab" onclick="showTab('server',this)">&#9889; API</div>
 <div class="tab" onclick="showTab('docker',this)">&#128021; Docker</div>
+<div class="tab" onclick="showTab('cicd',this)">&#128260; CI/CD</div>
+<div class="tab" onclick="showTab('monitor',this)">&#128276; Monitor</div>
 <div class="tab" onclick="showTab('repos',this)">&#128230; Repos</div>
-<div class="tab" onclick="showTab('vercel',this)">&#9729; Vercel</div>
 </div>
 <div class="container">
 
@@ -78,24 +87,40 @@ textarea{resize:vertical;min-height:80px}
 <div class="section active" id="sec-dashboard">
 <div class="row" style="margin-bottom:8px">
 <div class="stat"><div class="num" style="color:var(--green)" id="stat-repos">-</div><div class="lbl">GH Repos</div></div>
-<div class="stat"><div class="num" style="color:var(--blue)" id="stat-vercel">-</div><div class="lbl">Vercel Apps</div></div>
-<div class="stat"><div class="num" style="color:var(--purple)" id="stat-files">-</div><div class="lbl">Files</div></div>
+<div class="stat"><div class="num" style="color:var(--blue)" id="stat-vercel">-</div><div class="lbl">Vercel</div></div>
+<div class="stat"><div class="num" style="color:var(--purple)" id="stat-cicd">-</div><div class="lbl">CI/CD Runs</div></div>
 </div>
 <div class="card">
-<h3>&#128640; Deploy Anything — 4 Runtimes</h3>
-<p>&#128196; Static HTML &#8594; GitHub Pages (free)</p>
-<p>&#9889; Node.js &#8594; Vercel (free serverless)</p>
-<p>&#128013; Python &#8594; Vercel (free serverless)</p>
-<p>&#128021; Docker &#8594; Railway (project + service auto-created)</p>
-<p style="margin-top:8px">&#8358;0/mo total for all 4 runtimes</p>
+<h3>&#128640; DeployForge v6.0 — Multi-Cloud Platform</h3>
+<p>4 cloud providers, 9 HARZ templates, automated CI/CD, real-time monitoring</p>
+<div class="feat-grid" style="margin-top:10px">
+<div class="feat"><div class="fi">&#128196;</div><div class="fn">Static</div><div class="fd">GitHub Pages</div></div>
+<div class="feat"><div class="fi">&#9889;</div><div class="fn">Serverless</div><div class="fd">Vercel</div></div>
+<div class="feat"><div class="fi">&#128021;</div><div class="fn">Docker</div><div class="fd">Railway</div></div>
+<div class="feat"><div class="fi">&#9729;</div><div class="fn">Workers</div><div class="fd">Cloudflare</div></div>
+<div class="feat"><div class="fi">&#128260;</div><div class="fn">CI/CD</div><div class="fd">GitHub Actions</div></div>
+<div class="feat"><div class="fi">&#128276;</div><div class="fn">Monitor</div><div class="fd">Live Status</div></div>
+</div>
 </div>
 <div class="card"><h3>&#128293; Recent Deployments</h3><div id="recent-deploys"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
 <div class="card">
-<h3>&#128176; Cost Comparison</h3>
-<p>DeployForge: &#8358;0/mo (GitHub + Vercel + Railway free)</p>
-<p>Render Starter: $7/mo (~&#8358;11,200)</p>
-<p>Vercel Pro: $20/mo (~&#8358;32,000)</p>
-<p>Railway Hobby: $5/mo (first 500hrs free)</p>
+<h3>&#128176; Cost: DeployForge vs Render vs Vercel</h3>
+<p>DeployForge: &#8358;0/mo (all 4 providers free tier)</p>
+<p>Render Starter: $7/mo (&#8358;11,200)</p>
+<p>Vercel Pro: $20/mo (&#8358;32,000)</p>
+<p>Railway Hobby: $5/mo (500hrs free)</p>
+</div>
+</div>
+
+<!-- TEMPLATES -->
+<div class="section" id="sec-templates">
+<div class="card"><h3>&#128194; HARZ Deployment Templates</h3><div id="tpl-list"><div class="loading"><span class="spinner"></span> Loading templates...</div></div></div>
+<div class="card">
+<h3>&#128196; How Templates Work</h3>
+<p>1. Pick a template (Construction, Estate, School, etc.)</p>
+<p>2. Preview the generated code</p>
+<p>3. Click Deploy to GitHub Pages or Vercel</p>
+<p>4. Get a live URL instantly</p>
 </div>
 </div>
 
@@ -108,23 +133,10 @@ textarea{resize:vertical;min-height:80px}
 <span class="form-label">Target Repo</span>
 <select id="targetRepo"><option value="harz-portfolio">harz-portfolio</option></select>
 <span class="form-label">Source</span>
-<select id="sourceType" onchange="toggleSource()">
-<option value="html">Write HTML</option>
-<option value="template">From Template</option>
-<option value="github">From GitHub URL</option>
-</select>
-<div id="html-source">
-<span class="form-label">HTML Code</span>
-<textarea id="htmlCode" placeholder="<!DOCTYPE html>..." style="min-height:100px"></textarea>
-</div>
-<div id="template-source" class="hidden">
-<span class="form-label">Template</span>
-<select id="templateChoice"><option value="landing">Landing Page</option><option value="store">E-commerce Store</option><option value="blog">Blog</option><option value="dashboard">Dashboard</option></select>
-</div>
-<div id="github-source" class="hidden">
-<span class="form-label">GitHub Raw URL</span>
-<input type="text" id="githubUrl" placeholder="https://raw.githubusercontent.com/...">
-</div>
+<select id="sourceType" onchange="toggleSource()"><option value="html">Write HTML</option><option value="template">From Template</option><option value="github">From GitHub URL</option></select>
+<div id="html-source"><span class="form-label">HTML Code</span><textarea id="htmlCode" placeholder="<!DOCTYPE html>..." style="min-height:100px"></textarea></div>
+<div id="template-source" class="hidden"><span class="form-label">Template</span><select id="templateChoice"><option value="landing">Landing Page</option><option value="store">E-commerce Store</option><option value="blog">Blog</option><option value="dashboard">Dashboard</option></select></div>
+<div id="github-source" class="hidden"><span class="form-label">GitHub Raw URL</span><input type="text" id="githubUrl" placeholder="https://raw.githubusercontent.com/..."></div>
 <button class="btn" id="deployBtn" onclick="doDeploy()">&#128640; Deploy to GitHub Pages</button>
 <div class="log hidden" id="deployLog"></div>
 </div>
@@ -152,51 +164,60 @@ textarea{resize:vertical;min-height:80px}
 <button class="btn btn-blue" id="serverDeployBtn" onclick="doServerDeploy()">&#9889; Deploy to Vercel</button>
 <div class="log hidden" id="serverLog"></div>
 </div>
-<div class="card">
-<h3>&#128196; How It Works</h3>
-<p>1. Write your function code above</p>
-<p>2. Click Deploy to Vercel</p>
-<p>3. Access at: yourproject.vercel.app/api/handler</p>
-<p>4. Free: 100GB bandwidth, 100k invocations/mo</p>
-</div>
 </div>
 
 <!-- DOCKER (Railway) -->
 <div class="section" id="sec-docker">
 <div class="card">
-<h3>&#128021; Deploy Docker Container &#8594; Railway</h3>
-<div class="warn-box">&#9888; Railway token has limited scope. DeployForge will create the project + service + set env vars. You click Deploy in Railway dashboard (1 click).</div>
+<h3>&#128021; Deploy Docker &#8594; Railway</h3>
+<div class="warn-box">&#9888; Railway creates project+service+env auto. Click Deploy in dashboard (1 click).</div>
 <span class="form-label">Project Name</span>
 <input type="text" id="dockerProject" placeholder="my-docker-app">
-<span class="form-label">Service Name</span>
-<input type="text" id="dockerService" placeholder="app">
 <span class="form-label">Docker Image</span>
 <input type="text" id="dockerImage" placeholder="nginx:alpine">
-<span class="form-label">Environment Variables (one per line, KEY=value)</span>
+<span class="form-label">Environment Variables (KEY=value per line)</span>
 <textarea id="dockerEnv" placeholder="PORT=80&#10;NODE_ENV=production" style="min-height:60px"></textarea>
 <button class="btn btn-purple" id="dockerDeployBtn" onclick="doDockerDeploy()">&#128021; Deploy to Railway</button>
 <div class="log hidden" id="dockerLog"></div>
 </div>
 <div class="card">
 <h3>&#128021; Popular Docker Images</h3>
-<div style="display:flex;flex-direction:column;gap:4px">
-<div class="site-item" onclick="document.getElementById('dockerImage').value='nginx:alpine'"><div class="site-icon">&#128021;</div><div class="site-info"><div class="site-name">nginx:alpine</div><div class="site-url">Web server — lightweight</div></div></div>
-<div class="site-item" onclick="document.getElementById('dockerImage').value='node:20-alpine'"><div class="site-icon">&#9889;</div><div class="site-info"><div class="site-name">node:20-alpine</div><div class="site-url">Node.js runtime</div></div></div>
-<div class="site-item" onclick="document.getElementById('dockerImage').value='python:3.12-slim'"><div class="site-icon">&#128013;</div><div class="site-info"><div class="site-name">python:3.12-slim</div><div class="site-url">Python runtime</div></div></div>
-<div class="site-item" onclick="document.getElementById('dockerImage').value='postgres:16-alpine'"><div class="site-icon">&#128451;</div><div class="site-info"><div class="site-name">postgres:16-alpine</div><div class="site-url">PostgreSQL database</div></div></div>
-<div class="site-item" onclick="document.getElementById('dockerImage').value='redis:7-alpine'"><div class="site-icon">&#128451;</div><div class="site-info"><div class="site-name">redis:7-alpine</div><div class="site-url">Redis cache</div></div></div>
-<div class="site-item" onclick="document.getElementById('dockerImage').value='mongo:7'"><div class="site-icon">&#128451;</div><div class="site-info"><div class="site-name">mongo:7</div><div class="site-url">MongoDB database</div></div></div>
+<div id="docker-images"></div>
 </div>
 </div>
+
+<!-- CI/CD -->
+<div class="section" id="sec-cicd">
 <div class="card">
-<h3>&#128196; How Railway Deploy Works</h3>
-<p>1. DeployForge creates Railway project + service</p>
-<p>2. Sets Docker image + environment variables</p>
-<p>3. You get a dashboard link</p>
-<p>4. Click "Deploy" in Railway (1 click)</p>
-<p>5. Railway auto-builds and runs your container</p>
-<p>6. Get a live URL from Railway</p>
-<p style="margin-top:8px;color:var(--green)">Free: 500 hours/mo on Railway hobby plan</p>
+<h3>&#128260; CI/CD Pipeline Management</h3>
+<span class="form-label">Repository</span>
+<select id="cicdRepo"><option value="harz-portfolio">harz-portfolio</option></select>
+<div style="display:flex;gap:8px;margin-top:8px">
+<button class="btn btn-sm" style="background:var(--green);color:#000" onclick="cicdCreate('pages')">GitHub Pages</button>
+<button class="btn btn-sm" style="background:var(--blue);color:#000" onclick="cicdCreate('vercel')">Vercel Auto</button>
+<button class="btn btn-sm" style="background:var(--purple);color:#000" onclick="cicdCreate('railway')">Railway Auto</button>
+<button class="btn btn-sm" style="background:var(--gold);color:#000" onclick="cicdCreate('multi')">Multi-Cloud</button>
+</div>
+<div class="log hidden" id="cicdLog"></div>
+</div>
+<div class="card"><h3>&#128260; Recent Pipeline Runs</h3><div id="cicd-runs"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
+<div class="card">
+<h3>&#128196; CI/CD Pipelines</h3>
+<p>&#9989; Pages: Auto-deploy on push to main</p>
+<p>&#9989; Vercel: Auto-deploy on API changes</p>
+<p>&#9989; Railway: Auto-deploy on push</p>
+<p>&#9989; Multi: Deploy to all platforms at once</p>
+</div>
+</div>
+
+<!-- MONITOR -->
+<div class="section" id="sec-monitor">
+<div class="card"><h3>&#128276; Live Monitoring</h3><div id="monitor-results"><div class="loading"><span class="spinner"></span> Checking all deployments...</div></div></div>
+<div class="card">
+<h3>&#128276; Monitored Services</h3>
+<p>GitHub Pages, Vercel apps, Railway projects, backends</p>
+<p>Checks: HTTP status, response time, uptime</p>
+<p>Auto-refresh: every 60 seconds</p>
 </div>
 </div>
 
@@ -214,267 +235,53 @@ textarea{resize:vertical;min-height:80px}
 </div>
 </div>
 
-<!-- VERCEL -->
-<div class="section" id="sec-vercel">
-<div class="card"><h3>&#9729; Vercel Projects</h3><div id="vercel-list"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
-<div class="card">
-<h3>&#128193; Files in Repo</h3>
-<select id="filesRepo" onchange="loadFiles()"><option value="harz-portfolio">harz-portfolio</option></select>
-<div id="files-list" style="margin-top:8px"></div>
-</div>
-</div>
-
 </div>
 
 <script>
 const API='https://solene-5b0577e2.base44.app/functions/deployForgeDeploy';
-var reposCache=[];
-var history=JSON.parse(localStorage.getItem('deployHistory')||'[]');
-var selectedRuntime='node';
+var reposCache=[];var history=JSON.parse(localStorage.getItem('deployHistory')||'[]');var selectedRuntime='node';var monitorInterval=null;
+var dockerImages=[{img:'nginx:alpine',icon:'\u{1F431}',desc:'Web server'},{img:'node:20-alpine',icon:'\u26A1',desc:'Node.js runtime'},{img:'python:3.12-slim',icon:'\u{1F40D}',desc:'Python runtime'},{img:'postgres:16-alpine',icon:'\u{1F4C3}',desc:'PostgreSQL DB'},{img:'redis:7-alpine',icon:'\u{1F9E0',desc:'Redis cache'},{img:'mongo:7',icon:'\u{1F4C3}',desc:'MongoDB DB'}];
 
-function showTab(name,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  if(el)el.classList.add('active');
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('sec-'+name).classList.add('active');
-  if(name==='dashboard')loadDashboard();
-  if(name==='repos')loadRepos();
-  if(name==='vercel')loadVercel();
-}
-
-function toggleSource(){
-  var v=document.getElementById('sourceType').value;
-  document.getElementById('html-source').classList.toggle('hidden',v!=='html');
-  document.getElementById('template-source').classList.toggle('hidden',v!=='template');
-  document.getElementById('github-source').classList.toggle('hidden',v!=='github');
-}
-
-function selectRuntime(rt,el){
-  selectedRuntime=rt;
-  document.querySelectorAll('.runtime-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  if(rt==='node'){
-    document.getElementById('serverCode').value="export default function handler(req, res) {\n  res.status(200).json({\n    message: 'Hello from DeployForge!',\n    runtime: 'Node.js on Vercel',\n    timestamp: new Date().toISOString()\n  });\n}";
-  }else{
-    document.getElementById('serverCode').value="from http.server import BaseHTTPRequestHandler\nimport json\n\nclass handler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        self.send_response(200)\n        self.send_header('Content-type','application/json')\n        self.end_headers()\n        self.wfile.write(json.dumps({\n            'message': 'Hello from Python on Vercel!'\n        }).encode())";
-  }
-}
-
-async function apiCall(action,data={}){
-  const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...data})});
-  return res.json();
-}
+function showTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById('sec-'+name).classList.add('active');
+if(name==='dashboard')loadDashboard();if(name==='templates')loadTemplates();if(name==='repos')loadRepos();if(name==='cicd')loadCICD();if(name==='monitor')loadMonitor();if(name==='docker')renderDockerImages();}
+function toggleSource(){var v=document.getElementById('sourceType').value;document.getElementById('html-source').classList.toggle('hidden',v!=='html');document.getElementById('template-source').classList.toggle('hidden',v!=='template');document.getElementById('github-source').classList.toggle('hidden',v!=='github');}
+function selectRuntime(rt,el){selectedRuntime=rt;document.querySelectorAll('.runtime-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');if(rt==='node'){document.getElementById('serverCode').value="export default function handler(req, res) {\n  res.status(200).json({ message: 'Hello from DeployForge!', runtime: 'Node.js on Vercel', timestamp: new Date().toISOString() });\n}";}else{document.getElementById('serverCode').value="from http.server import BaseHTTPRequestHandler\nimport json\nclass handler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        self.send_response(200)\n        self.send_header('Content-type','application/json')\n        self.end_headers()\n        self.wfile.write(json.dumps({'message':'Hello from Python on Vercel!'}).encode())";}}
+async function apiCall(action,data={}){const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...data})});return res.json();}
 
 // DASHBOARD
-async function loadDashboard(){
-  try{
-    const[ghData,vcData]=await Promise.all([apiCall('list_repos'),apiCall('vercel_list')]);
-    if(ghData.repos){
-      reposCache=ghData.repos;
-      document.getElementById('stat-repos').textContent=ghData.repos.length;
-      var repoOpts=ghData.repos.map(r=>'<option value="'+r.name+'">'+r.name+'</option>').join('');
-      var tr=document.getElementById('targetRepo');if(tr)tr.innerHTML=repoOpts;
-      var fr=document.getElementById('filesRepo');if(fr)fr.innerHTML=repoOpts;
-    }
-    if(vcData.projects)document.getElementById('stat-vercel').textContent=vcData.projects.length;
-    renderHistory();
-  }catch(e){document.getElementById('recent-deploys').innerHTML='<p style="color:var(--red)">Failed to load</p>';}
-}
+async function loadDashboard(){try{const[ghData,vcData,cicdData]=await Promise.all([apiCall('list_repos'),apiCall('vercel_list'),apiCall('cicd_status')]);if(ghData.repos){reposCache=ghData.repos;document.getElementById('stat-repos').textContent=ghData.repos.length;var opts=ghData.repos.map(r=>'<option value="'+r.name+'">'+r.name+'</option>').join('');var tr=document.getElementById('targetRepo');if(tr)tr.innerHTML=opts;var cr=document.getElementById('cicdRepo');if(cr)cr.innerHTML=opts;}if(vcData.projects)document.getElementById('stat-vercel').textContent=vcData.projects.length;if(cicdData.runs)document.getElementById('stat-cicd').textContent=cicdData.runs.length;renderHistory();}catch(e){document.getElementById('recent-deploys').innerHTML='<p style="color:var(--red)">Failed</p>';}}
+function renderHistory(){var c=document.getElementById('recent-deploys');if(!history.length){c.innerHTML='<p style="color:var(--dim);font-size:12px">No deployments yet.</p>';return;}c.innerHTML=history.slice(0,5).map(h=>'<div class="site-item"><div class="site-icon">'+h.icon+'</div><div class="site-info"><div class="site-name">'+h.file+'</div><div class="site-url">'+h.platform+' - '+h.time+'</div></div><a href="'+h.url+'" target="_blank" class="check-btn">Open</a></div>').join('');}
 
-function renderHistory(){
-  var c=document.getElementById('recent-deploys');
-  if(!history.length){c.innerHTML='<p style="color:var(--dim);font-size:12px">No deployments yet.</p>';return;}
-  c.innerHTML=history.slice(0,5).map(h=>
-    '<div class="site-item"><div class="site-icon">'+h.icon+'</div><div class="site-info"><div class="site-name">'+h.file+'</div><div class="site-url">'+h.platform+' - '+h.time+'</div></div><a href="'+h.url+'" target="_blank" class="check-btn">Open</a></div>'
-  ).join('');
-}
+// TEMPLATES
+async function loadTemplates(){var c=document.getElementById('tpl-list');try{const data=await apiCall('template_list');if(data.templates){c.innerHTML=data.templates.map(t=>'<div class="tpl-card" onclick="deployTemplate(\''+t.id+'\')"><div class="ti">'+t.icon+'</div><div style="flex:1"><div class="tn">'+t.name+'</div><div class="td">'+t.desc+'</div></div><div class="badge b-'+(t.runtime==='html'?'blue':t.runtime==='node'?'purple':t.runtime==='docker'?'gold':'live')+'">'+t.runtime+'</div></div>').join('');}}catch(e){c.innerHTML='<p style="color:var(--red)">Failed</p>';}}
+async function deployTemplate(id){try{const data=await apiCall('template_get',{templateId:id});if(data.success&&data.template&&data.template.code){if(data.template.runtime==='html'){showTab('deploy',null);document.getElementById('htmlCode').value=data.template.code;document.getElementById('projName').value=data.template.fileName;alert('Template loaded! Click Deploy to push to GitHub Pages.');}else if(data.template.runtime==='node'){showTab('server',null);document.getElementById('serverCode').value=data.template.code;document.getElementById('serverName').value=id;alert('Template loaded! Click Deploy to push to Vercel.');}else if(data.template.runtime==='docker'){showTab('docker',null);alert('Select a Docker image and deploy to Railway.');}}else{alert('Template code not available yet.');}}catch(e){alert('Error: '+e.message);}}
 
 // STATIC DEPLOY
-async function doDeploy(){
-  var name=document.getElementById('projName').value||'harz-app';
-  var log=document.getElementById('deployLog');
-  var btn=document.getElementById('deployBtn');
-  var srcType=document.getElementById('sourceType').value;
-  var targetRepo=document.getElementById('targetRepo').value;
-  log.classList.remove('hidden');log.textContent='';btn.disabled=true;
-  function al(m,t){var p=t==='err'?'[ERROR] ':'[INFO] ';var c=t==='err'?'#f85149':'#3fb950';log.innerHTML+='<span style="color:'+c+'">'+p+m+'</span>\n';log.scrollTop=log.scrollHeight;}
-  try{
-    al('Deploying: '+name+' to '+targetRepo);
-    var htmlCode='';
-    if(srcType==='html'){htmlCode=document.getElementById('htmlCode').value;if(!htmlCode){al('No HTML provided','err');btn.disabled=false;return;}}
-    else if(srcType==='template'){htmlCode=generateTemplate(document.getElementById('templateChoice').value,name);}
-    else if(srcType==='github'){var url=document.getElementById('githubUrl').value;if(!url){al('No URL','err');btn.disabled=false;return;}var fr=await fetch(url);if(!fr.ok){al('Fetch failed','err');btn.disabled=false;return;}htmlCode=await fr.text();}
-    var fileName=name.endsWith('.html')?name:name+'.html';
-    al('Uploading to GitHub...');
-    const data=await apiCall('deploy_file',{repoName:targetRepo,fileName,fileContent:htmlCode,message:'DeployForge: '+fileName});
-    if(data.success){
-      al('Deployed! '+data.file);
-      al('URL: '+data.file_url,'ok');
-      log.innerHTML+='<br><a href="'+data.file_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#3fb950;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Live Site</a>\n';
-      history.unshift({file:data.file,platform:'GitHub Pages',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.file_url,icon:'\u{1F4C4}'});
-      history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();
-    }else{al('Failed: '+(data.error||'unknown'),'err');}
-  }catch(e){al('Error: '+e.message,'err');}
-  btn.disabled=false;
-}
+async function doDeploy(){var name=document.getElementById('projName').value||'harz-app';var log=document.getElementById('deployLog');var btn=document.getElementById('deployBtn');var srcType=document.getElementById('sourceType').value;var targetRepo=document.getElementById('targetRepo').value;log.classList.remove('hidden');log.textContent='';btn.disabled=true;function al(m,t){var c=t==='err'?'#f85149':'#3fb950';log.innerHTML+='<span style="color:'+c+'">'+(t==='err'?'[ERROR] ':'[INFO] ')+m+'</span>\n';log.scrollTop=log.scrollHeight;}
+try{al('Deploying: '+name+' to '+targetRepo);var htmlCode='';if(srcType==='html'){htmlCode=document.getElementById('htmlCode').value;if(!htmlCode){al('No HTML','err');btn.disabled=false;return;}}else if(srcType==='template'){htmlCode=generateTemplate(document.getElementById('templateChoice').value,name);}else if(srcType==='github'){var url=document.getElementById('githubUrl').value;if(!url){al('No URL','err');btn.disabled=false;return;}var fr=await fetch(url);if(!fr.ok){al('Fetch failed','err');btn.disabled=false;return;}htmlCode=await fr.text();}
+var fileName=name.endsWith('.html')?name:name+'.html';al('Uploading to GitHub...');const data=await apiCall('deploy_file',{repoName:targetRepo,fileName,fileContent:htmlCode});if(data.success){al('Deployed! '+data.file);al('URL: '+data.file_url);log.innerHTML+='<br><a href="'+data.file_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#3fb950;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Live Site</a>\n';history.unshift({file:data.file,platform:'GitHub Pages',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.file_url,icon:'\u{1F4C4}'});history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();}else{al('Failed: '+(data.error||'unknown'),'err');}}catch(e){al('Error: '+e.message,'err');}btn.disabled=false;}
 
-// SERVER DEPLOY (Vercel)
-async function doServerDeploy(){
-  var name=document.getElementById('serverName').value||'harz-api';
-  var code=document.getElementById('serverCode').value;
-  var log=document.getElementById('serverLog');
-  var btn=document.getElementById('serverDeployBtn');
-  log.classList.remove('hidden');log.textContent='';btn.disabled=true;
-  function al(m,t){var p=t==='err'?'[ERROR] ':'[INFO] ';var c=t==='err'?'#f85149':'#3fb950';log.innerHTML+='<span style="color:'+c+'">'+p+m+'</span>\n';log.scrollTop=log.scrollHeight;}
-  try{
-    al('Deploying '+selectedRuntime+' app: '+name);
-    al('Uploading to Vercel...');
-    const data=await apiCall('vercel_deploy',{projectName:name,runtime:selectedRuntime,fileContent:code});
-    if(data.success){
-      al('Deployed! State: '+data.state);
-      al('URL: '+data.url,'ok');
-      al('Test: '+data.url+'/api/handler','ok');
-      log.innerHTML+='<br><a href="'+data.url+'/api/handler" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#58a6ff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Test API</a>\n';
-      history.unshift({file:name+' ('+selectedRuntime+')',platform:'Vercel',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.url+'/api/handler',icon:'\u26A1'});
-      history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();
-    }else{al('Failed: '+(data.error||'unknown'),'err');if(data.detail)al(data.detail,'err');}
-  }catch(e){al('Error: '+e.message,'err');}
-  btn.disabled=false;
-}
+// SERVER DEPLOY
+async function doServerDeploy(){var name=document.getElementById('serverName').value||'harz-api';var code=document.getElementById('serverCode').value;var log=document.getElementById('serverLog');var btn=document.getElementById('serverDeployBtn');log.classList.remove('hidden');log.textContent='';btn.disabled=true;function al(m,t){var c=t==='err'?'#f85149':'#3fb950';log.innerHTML+='<span style="color:'+c+'">'+(t==='err'?'[ERROR] ':'[INFO] ')+m+'</span>\n';log.scrollTop=log.scrollHeight;}
+try{al('Deploying '+selectedRuntime+': '+name);al('Uploading to Vercel...');const data=await apiCall('vercel_deploy',{projectName:name,runtime:selectedRuntime,fileContent:code});if(data.success){al('Deployed! State: '+data.state);al('URL: '+data.url);log.innerHTML+='<br><a href="'+data.url+'/api/handler" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#58a6ff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Test API</a>\n';history.unshift({file:name+' ('+selectedRuntime+')',platform:'Vercel',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.url+'/api/handler',icon:'\u26A1'});history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();}else{al('Failed: '+(data.error||'unknown'),'err');}}catch(e){al('Error: '+e.message,'err');}btn.disabled=false;}
 
-// DOCKER DEPLOY (Railway)
-async function doDockerDeploy(){
-  var project=document.getElementById('dockerProject').value||'harz-docker';
-  var service=document.getElementById('dockerService').value||'app';
-  var image=document.getElementById('dockerImage').value;
-  var envText=document.getElementById('dockerEnv').value;
-  var log=document.getElementById('dockerLog');
-  var btn=document.getElementById('dockerDeployBtn');
-  if(!image){log.classList.remove('hidden');log.innerHTML='<span style="color:#f85149">[ERROR] Enter a Docker image</span>';return;}
-  log.classList.remove('hidden');log.textContent='';btn.disabled=true;
-  function al(m,t){var p=t==='err'?'[ERROR] ':'[INFO] ';var c=t==='err'?'#f85149':t==='warn'?'#d29922':'#bc8cff';log.innerHTML+='<span style="color:'+c+'">'+p+m+'</span>\n';log.scrollTop=log.scrollHeight;}
-  try{
-    al('Creating Railway project: '+project);
-    al('Docker image: '+image);
-    
-    // Parse env vars
-    var envVars=[];
-    if(envText.trim()){
-      envText.split('\n').forEach(function(line){
-        var parts=line.split('=');
-        if(parts.length>=2){envVars.push({name:parts[0].trim(),value:parts.slice(1).join('=').trim()});}
-      });
-      al('Environment variables: '+envVars.length);
-    }
-    
-    al('Deploying to Railway...');
-    const data=await apiCall('railway_docker_deploy',{projectName:project,serviceName:service,dockerImage:image,envVars:envVars});
-    if(data.success){
-      al('Project created!');
-      al('Service created with image: '+image);
-      if(envVars.length)al('Environment variables set: '+envVars.length);
-      if(data.deployed){
-        al('Deployment triggered!','ok');
-      }else{
-        al('Click "Deploy" in Railway dashboard (1 click)','warn');
-      }
-      al('Dashboard: '+data.dashboard_url,'ok');
-      log.innerHTML+='<br><a href="'+data.dashboard_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#bc8cff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Railway Dashboard</a>\n';
-      history.unshift({file:project+' (Docker: '+image+')',platform:'Railway',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.dashboard_url,icon:'\u{1F431}'});
-      history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();
-    }else{al('Failed: '+(data.error||'unknown'),'err');}
-  }catch(e){al('Error: '+e.message,'err');}
-  btn.disabled=false;
-}
+// DOCKER DEPLOY
+function renderDockerImages(){var c=document.getElementById('docker-images');if(c)c.innerHTML=dockerImages.map(d=>'<div class="site-item" onclick="document.getElementById(\'dockerImage\').value=\''+d.img+'\'"><div class="site-icon">'+d.icon+'</div><div class="site-info"><div class="site-name">'+d.img+'</div><div class="site-url">'+d.desc+'</div></div></div>').join('');}
+async function doDockerDeploy(){var project=document.getElementById('dockerProject').value||'harz-docker';var image=document.getElementById('dockerImage').value;var envText=document.getElementById('dockerEnv').value;var log=document.getElementById('dockerLog');var btn=document.getElementById('dockerDeployBtn');if(!image){log.classList.remove('hidden');log.innerHTML='<span style="color:#f85149">[ERROR] Enter a Docker image</span>';return;}log.classList.remove('hidden');log.textContent='';btn.disabled=true;function al(m,t){var c=t==='err'?'#f85149':t==='warn'?'#d29922':'#bc8cff';log.innerHTML+='<span style="color:'+c+'">'+(t==='err'?'[ERROR] ':t==='warn'?'[WARN] ':'[INFO] ')+m+'</span>\n';log.scrollTop=log.scrollHeight;}
+try{al('Creating Railway project: '+project);al('Docker image: '+image);var envVars=[];if(envText.trim()){envText.split('\n').forEach(function(line){var p=line.split('=');if(p.length>=2)envVars.push({name:p[0].trim(),value:p.slice(1).join('=').trim()});});al('Env vars: '+envVars.length);}al('Deploying...');const data=await apiCall('railway_docker_deploy',{projectName:project,dockerImage:image,envVars:envVars});if(data.success){al('Project created!');al('Service: '+image);if(envVars.length)al('Env set: '+envVars.length);if(data.deployed){al('Deploy triggered!');}else{al('Click Deploy in Railway dashboard','warn');}al('Dashboard: '+data.dashboard_url);log.innerHTML+='<br><a href="'+data.dashboard_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#bc8cff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Railway</a>\n';history.unshift({file:project+' (Docker)',platform:'Railway',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.dashboard_url,icon:'\u{1F431}'});history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();}else{al('Failed: '+(data.error||'unknown'),'err');}}catch(e){al('Error: '+e.message,'err');}btn.disabled=false;}
+
+// CI/CD
+async function loadCICD(){var c=document.getElementById('cicd-runs');try{const data=await apiCall('cicd_status');if(data.runs){c.innerHTML=data.runs.map(r=>{var s=r.conclusion||r.status;var color=s==='success'?'var(--green)':s==='failure'?'var(--red)':'var(--orange)';return '<div class="cicd-run"><div class="rn">'+r.name+' <span style="color:'+color+'">'+s+'</span></div><div class="rs">'+r.branch+' - '+r.commit+' - '+r.created.substring(0,16)+'</div></div>';}).join('');}}catch(e){c.innerHTML='<p style="color:var(--red)">Failed</p>';}}
+async function cicdCreate(type){var repo=document.getElementById('cicdRepo')?.value||'harz-portfolio';var log=document.getElementById('cicdLog');log.classList.remove('hidden');log.textContent='';log.innerHTML='<span style="color:#3fb950">[INFO] Creating '+type+' pipeline...</span>';try{const data=await apiCall('cicd_create',{repoName:repo,pipelineType:type});if(data.success){log.innerHTML+='<span style="color:#3fb950">[OK] Pipeline created: '+data.workflow+'</span>\n';log.innerHTML+='<span style="color:#3fb950">[OK] Commit: '+data.commit+'</span>\n';}else{log.innerHTML+='<span style="color:#f85149">[ERROR] '+(data.error||'failed')+'</span>\n';}}catch(e){log.innerHTML+='<span style="color:#f85149">[ERROR] '+e.message+'</span>\n';}loadCICD();}
+
+// MONITOR
+async function loadMonitor(){var c=document.getElementById('monitor-results');c.innerHTML='<div class="loading"><span class="spinner"></span> Checking...</div>';try{var urls=['https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html','https://rabiuhamza11.github.io/harz-portfolio/deployforge.html','https://harzdm.vercel.app','https://abuja-estate.vercel.app'];const data=await apiCall('monitor',{urls:urls});if(data.results){c.innerHTML=data.results.map(r=>{var color=r.ok?'var(--green)':'var(--red)';var badge=r.ok?'<span class="badge b-live">LIVE</span>':'<span class="badge b-down">DOWN</span>';return '<div class="site-item"><div class="status-dot '+(r.ok?'dot-live':'dot-down')+'"></div><div class="site-info"><div class="site-name">'+r.url.split('/').slice(-1)[0]+' '+badge+'</div><div class="site-url">HTTP '+r.status+' - '+r.latency+'ms</div></div></div>';}).join('');}}catch(e){c.innerHTML='<p style="color:var(--red)">Failed</p>';}if(monitorInterval)clearInterval(monitorInterval);monitorInterval=setInterval(loadMonitor,60000);}
 
 // REPOS
-async function loadRepos(){
-  var c=document.getElementById('repos-list');
-  c.innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';
-  try{
-    const data=await apiCall('list_repos');
-    if(data.repos){
-      reposCache=data.repos;
-      c.innerHTML=data.repos.map(r=>{
-        var dot=r.has_pages?'dot-live':'dot-down';
-        var badge=r.has_pages?'<span class="badge b-live">PAGES</span>':'<span class="badge b-down">NO PAGES</span>';
-        var url=r.has_pages?'https://rabiuhamza11.github.io/'+r.name+'/':r.url;
-        return '<div class="site-item" onclick="window.open(\''+url+'\',\'_blank\')"><div class="site-icon">&#128230;</div><div class="site-info"><div class="site-name">'+r.name+' '+badge+'</div><div class="site-url">Updated: '+r.updated.substring(0,10)+'</div></div><div class="status-dot '+dot+'"></div></div>';
-      }).join('');
-    }else{c.innerHTML='<p style="color:var(--red)">Failed</p>';}
-  }catch(e){c.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}
-}
+async function loadRepos(){var c=document.getElementById('repos-list');c.innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';try{const data=await apiCall('list_repos');if(data.repos){reposCache=data.repos;c.innerHTML=data.repos.map(r=>{var dot=r.has_pages?'dot-live':'dot-down';var badge=r.has_pages?'<span class="badge b-live">PAGES</span>':'<span class="badge b-down">NO PAGES</span>';var url=r.has_pages?'https://rabiuhamza11.github.io/'+r.name+'/':r.url;return '<div class="site-item" onclick="window.open(\''+url+'\',\'_blank\')"><div class="site-icon">&#128230;</div><div class="site-info"><div class="site-name">'+r.name+' '+badge+'</div><div class="site-url">Updated: '+r.updated.substring(0,10)+'</div></div><div class="status-dot '+dot+'"></div></div>';}).join('');}}catch(e){c.innerHTML='<p style="color:var(--red)">Error</p>';}}
+async function doCreateRepo(){var name=document.getElementById('newRepoName').value.trim();var desc=document.getElementById('newRepoDesc').value;var btn=document.getElementById('createRepoBtn');var result=document.getElementById('createResult');if(!name){result.innerHTML='<p style="color:var(--red)">Enter repo name</p>';return;}btn.disabled=true;result.innerHTML='<p style="color:var(--blue)"><span class="spinner"></span> Creating...</p>';try{const data=await apiCall('create_repo',{repoName:name,description:desc});if(data.success){result.innerHTML='<div style="color:var(--green)">Created! '+data.repo+'</div><a href="'+data.url+'" target="_blank" class="btn btn-sm" style="margin-top:8px;display:inline-block;width:auto">Open</a>';document.getElementById('newRepoName').value='';document.getElementById('newRepoDesc').value='';}else{result.innerHTML='<p style="color:var(--red)">Failed: '+(data.error||'unknown')+'</p>';}}catch(e){result.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}btn.disabled=false;}
 
-async function doCreateRepo(){
-  var name=document.getElementById('newRepoName').value.trim();
-  var desc=document.getElementById('newRepoDesc').value;
-  var btn=document.getElementById('createRepoBtn');
-  var result=document.getElementById('createResult');
-  if(!name){result.innerHTML='<p style="color:var(--red)">Enter repo name</p>';return;}
-  btn.disabled=true;result.innerHTML='<p style="color:var(--blue)"><span class="spinner"></span> Creating...</p>';
-  try{
-    const data=await apiCall('create_repo',{repoName:name,description:desc});
-    if(data.success){result.innerHTML='<div style="color:var(--green);font-size:13px">Created! '+data.repo+'</div><a href="'+data.url+'" target="_blank" class="btn btn-sm" style="margin-top:8px;display:inline-block;width:auto">Open on GitHub</a>';document.getElementById('newRepoName').value='';document.getElementById('newRepoDesc').value='';}
-    else{result.innerHTML='<p style="color:var(--red)">Failed: '+(data.error||'unknown')+'</p>';}
-  }catch(e){result.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}
-  btn.disabled=false;
-}
-
-// VERCEL
-async function loadVercel(){
-  var c=document.getElementById('vercel-list');
-  c.innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';
-  try{
-    const data=await apiCall('vercel_list');
-    if(data.projects){
-      if(!data.projects.length){c.innerHTML='<p style="color:var(--dim);font-size:12px">No Vercel projects yet.</p>';return;}
-      c.innerHTML=data.projects.map(p=>{
-        var fw=p.framework||'serverless';
-        return '<div class="site-item"><div class="site-icon">&#9729;</div><div class="site-info"><div class="site-name">'+p.name+' <span class="badge b-blue">'+fw+'</span></div><div class="site-url">'+(p.url||'no deploy')+'</div></div><button class="del-btn" onclick="deleteVercel(\''+p.name+'\',event)">Del</button></div>';
-      }).join('');
-    }else{c.innerHTML='<p style="color:var(--red)">Failed</p>';}
-  }catch(e){c.innerHTML='<p style="color:var(--red)">Error</p>';}
-  loadFiles();
-}
-
-async function loadFiles(){
-  var c=document.getElementById('files-list');
-  var repo=document.getElementById('filesRepo')?.value||'harz-portfolio';
-  if(!c)return;
-  c.innerHTML='<div class="loading"><span class="spinner"></span> Loading files...</div>';
-  try{
-    const data=await apiCall('list_files',{repoName:repo});
-    if(data.files){
-      document.getElementById('stat-files').textContent=data.files.length+'+';
-      if(!data.files.length){c.innerHTML='<p style="color:var(--dim);font-size:12px">No files</p>';return;}
-      var dirs=data.files.filter(f=>f.type==='dir');
-      var html=data.files.filter(f=>f.type==='file'&&f.name.endsWith('.html'));
-      var other=data.files.filter(f=>f.type==='file'&&!f.name.endsWith('.html'));
-      var h='';
-      dirs.forEach(f=>h+='<div class="site-item"><div class="site-icon">&#128193;</div><div class="site-info"><div class="site-name">'+f.name+'</div><div class="site-url">Directory</div></div></div>');
-      html.forEach(f=>{var url='https://rabiuhamza11.github.io/'+repo+'/'+f.name;h+='<div class="site-item"><div class="site-icon">&#128196;</div><div class="site-info"><div class="site-name">'+f.name+'</div><div class="site-url">'+(f.size/1024).toFixed(1)+'KB</div></div><a href="'+url+'" target="_blank" class="check-btn">Open</a><button class="del-btn" onclick="deleteFile(\''+repo+'\',\''+f.name+'\',event)">Del</button></div>';});
-      other.slice(0,15).forEach(f=>h+='<div class="site-item"><div class="site-icon">&#128206;</div><div class="site-info"><div class="site-name">'+f.name+'</div><div class="site-url">'+(f.size/1024).toFixed(1)+'KB</div></div></div>');
-      c.innerHTML=h;
-    }else{c.innerHTML='<p style="color:var(--red)">Failed</p>';}
-  }catch(e){c.innerHTML='<p style="color:var(--red)">Error</p>';}
-}
-
-async function deleteFile(repo,file,e){e.stopPropagation();if(!confirm('Delete '+file+'?'))return;
-  try{const data=await apiCall('delete_file',{repoName:repo,fileName:file});if(data.success){alert('Deleted!');loadFiles();}else{alert('Failed: '+(data.error||'unknown'));}}catch(e){alert('Error: '+e.message);}}
-
-async function deleteVercel(name,e){e.stopPropagation();if(!confirm('Delete '+name+' from Vercel?'))return;
-  try{const data=await apiCall('vercel_delete',{projectName:name});if(data.success){alert('Deleted!');loadVercel();}else{alert('Failed: '+(data.error||'unknown'));}}catch(e){alert('Error: '+e.message);}}
-
-function generateTemplate(type,name){
-  var t={
-    landing:'<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3}.hero{text-align:center;padding:60px 20px}.hero h1{font-size:32px;margin-bottom:12px;color:#58a6ff}.hero p{font-size:16px;color:#8b949e;max-width:400px;margin:0 auto 24px}.btn{display:inline-block;padding:12px 28px;background:#3fb950;color:#000;border-radius:8px;text-decoration:none;font-weight:700}</style></head><body><div class="hero"><h1>'+name+'</h1><p>Built with DeployForge</p><a href="#" class="btn">Get Started</a></div></body></html>',
-    store:'<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3}h1{text-align:center;padding:20px;color:#58a6ff}.grid{max-width:600px;margin:0 auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.item{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:12px}.item h3{font-size:14px}.price{color:#3fb950;font-weight:700}</style></head><body><h1>'+name+'</h1><div class="grid"><div class="item"><h3>Product 1</h3><div class="price">N5,000</div></div><div class="item"><h3>Product 2</h3><div class="price">N10,000</div></div></div></body></html>',
-    blog:'<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3;max-width:600px;margin:0 auto;padding:20px}h1{color:#58a6ff;margin-bottom:16px}.post{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:12px}.post h2{font-size:16px}.post p{font-size:13px;color:#8b949e;margin-top:4px}</style></head><body><h1>'+name+'</h1><div class="post"><h2>First Post</h2><p>Welcome to our blog.</p></div></body></html>',
-    dashboard:'<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3;padding:12px}.header{padding:12px 0;color:#58a6ff;font-size:18px;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.stat{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;text-align:center}.stat .num{font-size:20px;font-weight:700;color:#3fb950}.stat .lbl{font-size:10px;color:#8b949e}</style></head><body><div class="header">'+name+'</div><div class="grid"><div class="stat"><div class="num">0</div><div class="lbl">Users</div></div><div class="stat"><div class="num">0</div><div class="lbl">Orders</div></div><div class="stat"><div class="num">N0</div><div class="lbl">Revenue</div></div></div></body></html>'
-  };
-  return t[type]||t.landing;
-}
-
+function generateTemplate(type,name){var t={landing:'<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3}.hero{text-align:center;padding:60px 20px}.hero h1{font-size:32px;margin-bottom:12px;color:#58a6ff}.hero p{font-size:16px;color:#8b949e;max-width:400px;margin:0 auto 24px}.btn{display:inline-block;padding:12px 28px;background:#3fb950;color:#000;border-radius:8px;text-decoration:none;font-weight:700}</style></head><body><div class="hero"><h1>'+name+'</h1><p>Built with DeployForge</p><a href="#" class="btn">Get Started</a></div></body></html>',store:'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0d1117;color:#e6edf3}h1{text-align:center;padding:20px;color:#58a6ff}.grid{max-width:600px;margin:0 auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.item{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:12px}.price{color:#3fb950;font-weight:700}</style></head><body><h1>'+name+'</h1><div class="grid"><div class="item"><h3>Product 1</h3><div class="price">N5,000</div></div></div></body></html>',blog:'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0d1117;color:#e6edf3;max-width:600px;margin:0 auto;padding:20px}h1{color:#58a6ff;margin-bottom:16px}.post{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:12px}</style></head><body><h1>'+name+'</h1><div class="post"><h2>First Post</h2><p>Welcome to our blog.</p></div></body></html>',dashboard:'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0d1117;color:#e6edf3;padding:12px}.header{padding:12px 0;color:#58a6ff;font-size:18px;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.stat{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;text-align:center}.stat .num{font-size:20px;font-weight:700;color:#3fb950}</style></head><body><div class="header">'+name+'</div><div class="grid"><div class="stat"><div class="num">0</div><div class="lbl">Users</div></div></div></body></html>'};return t[type]||t.landing;}
 loadDashboard();
 </script>
 </body>
