@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>DeployForge — Deploy + Wholesale Platform</title>
+<title>DeployForge — Deploy + Manage</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0d1117;--card:#161b22;--card2:#1c2333;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922;--red:#f85149;--gold:#FFD700;--radius:12px}
@@ -29,6 +29,8 @@ textarea{resize:vertical;min-height:80px}
 .btn-blue{background:var(--blue);color:#000}
 .btn-purple{background:var(--purple);color:#000}
 .btn-gold{background:var(--gold);color:#000}
+.btn-red{background:var(--red);color:#fff}
+.btn-sm{padding:6px 12px;width:auto;font-size:11px}
 .row{display:flex;gap:8px}
 .row>*{flex:1}
 .stat{background:var(--card2);border-radius:8px;padding:10px;text-align:center;flex:1}
@@ -37,42 +39,27 @@ textarea{resize:vertical;min-height:80px}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
 .b-live{background:rgba(63,185,80,.15);color:var(--green)}
 .b-pending{background:rgba(210,153,34,.15);color:var(--orange)}
-.b-wholesale{background:rgba(188,140,255,.15);color:var(--purple)}
+.b-down{background:rgba(248,81,73,.15);color:var(--red)}
 .log{background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:11px;color:var(--green);max-height:180px;overflow:auto;white-space:pre-wrap;margin-top:8px}
 .site-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:6px;cursor:pointer}
 .site-item:active{background:var(--card)}
-.site-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.site-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:var(--card)}
 .site-info{flex:1;min-width:0}
 .site-name{font-size:13px;font-weight:600}
 .site-url{font-size:10px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dot-live{background:var(--green)}.dot-pending{background:var(--orange)}
+.dot-live{background:var(--green)}.dot-pending{background:var(--orange)}.dot-down{background:var(--red)}
 .hidden{display:none}
 .section{display:none}
 .section.active{display:block}
 .form-label{font-size:11px;color:var(--dim);margin-bottom:4px;display:block}
-.check{display:flex;align-items:center;gap:6px;font-size:12px;margin-bottom:6px;cursor:pointer}
-.check input{width:auto;margin:0}
 .info-box{background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:8px;padding:10px;font-size:11px;color:var(--blue);margin-bottom:10px}
-.func-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:6px}
-.price-table{width:100%;border-collapse:collapse;font-size:11px}
-.price-table th{text-align:left;padding:6px;color:var(--blue);border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase}
-.price-table td{padding:6px;border-bottom:1px solid var(--card)}
-.price-table .ws{color:var(--green);font-weight:700}
-.price-table .rt{color:var(--dim)}
-.price-table .pf{color:var(--gold);font-weight:600}
-.tier-card{background:var(--card2);border-radius:12px;padding:14px;border:2px solid var(--border);margin-bottom:10px}
-.tier-card .tn{font-size:13px;font-weight:700;margin-bottom:4px}
-.tier-card .td{font-size:11px;color:var(--dim);margin-bottom:8px}
-.tier-card .tdis{font-size:20px;font-weight:800;color:var(--green)}
-.tier-card li{font-size:11px;color:var(--dim);padding:2px 0;list-style:none}
-.tier-card li::before{content:"\2713 ";color:var(--green)}
-.domain-search{display:flex;gap:6px}
-.domain-search input{flex:1;margin-bottom:0}
-.domain-search button{width:auto;padding:8px 14px}
-.dom-result{padding:10px;border-radius:8px;margin-top:6px;font-size:12px}
-.dom-available{background:rgba(63,185,80,.1);border:1px solid var(--green);color:var(--green)}
-.dom-taken{background:rgba(248,81,73,.1);border:1px solid var(--red);color:var(--red)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{text-align:center;padding:20px;color:var(--dim);font-size:13px}
+.del-btn{background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;flex-shrink:0}
+.del-btn:active{background:rgba(248,81,73,.3)}
+.check-btn{background:rgba(88,166,255,.15);color:var(--blue);border:1px solid rgba(88,166,255,.3);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -80,63 +67,59 @@ textarea{resize:vertical;min-height:80px}
 <a href="harz-super-app.html">&#8592;</a>
 <span style="font-size:20px">&#128736;</span>
 <span class="title">DeployForge</span>
-<span class="badge b-live">FREE</span>
+<span class="badge b-live">LIVE</span>
 </div>
 <div class="tab-bar">
 <div class="tab active" onclick="showTab('dashboard',this)">&#128202; Dashboard</div>
 <div class="tab" onclick="showTab('deploy',this)">&#128640; Deploy</div>
-<div class="tab" onclick="showTab('sites',this)">&#127760; Sites</div>
-<div class="tab" onclick="showTab('domains',this)">&#128279; Domains</div>
-<div class="tab" onclick="showTab('wholesale',this)">&#128230; Wholesale</div>
-<div class="tab" onclick="showTab('reseller',this)">&#129309; Reseller</div>
-<div class="tab" onclick="showTab('functions',this)">&#9889; Functions</div>
+<div class="tab" onclick="showTab('repos',this)">&#128230; Repos</div>
+<div class="tab" onclick="showTab('files',this)">&#128193; Files</div>
+<div class="tab" onclick="showTab('create',this)">&#10133; New Repo</div>
 </div>
 <div class="container">
+
+<!-- DASHBOARD -->
 <div class="section active" id="sec-dashboard">
 <div class="row" style="margin-bottom:8px">
-<div class="stat"><div class="num" style="color:var(--green)">52</div><div class="lbl">Live Sites</div></div>
-<div class="stat"><div class="num" style="color:var(--blue)">5</div><div class="lbl">Functions</div></div>
-<div class="stat"><div class="num" style="color:var(--purple)">3</div><div class="lbl">Domains</div></div>
+<div class="stat"><div class="num" style="color:var(--green)" id="stat-repos">-</div><div class="lbl">Repos</div></div>
+<div class="stat"><div class="num" style="color:var(--blue)" id="stat-pages">-</div><div class="lbl">Pages Live</div></div>
+<div class="stat"><div class="num" style="color:var(--purple)" id="stat-files">-</div><div class="lbl">Files</div></div>
 </div>
-<div class="row" style="margin-bottom:10px">
-<div class="stat"><div class="num" style="color:var(--orange)">142</div><div class="lbl">Deploys</div></div>
-<div class="stat"><div class="num" style="color:var(--gold)">3</div><div class="lbl">Resellers</div></div>
-<div class="stat"><div class="num" style="color:var(--green)">&#8358;0</div><div class="lbl">Cost/Mo</div></div>
-</div>
-<div class="card"><h3>&#128293; Recent Deploys</h3><div id="recent-deploys"></div></div>
+<div class="card"><h3>&#128293; Recent Deployments</h3><div id="recent-deploys"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
 <div class="card">
 <h3>&#128176; Cost: DeployForge vs Others</h3>
-<p>DeployForge: <b style="color:var(--green)">&#8358;0/mo</b> (GitHub+Base44+Cloudflare)</p>
+<p>DeployForge: <b style="color:var(--green)">&#8358;0/mo</b> (GitHub Pages + free)</p>
 <p>Vercel Pro: $20/mo (~&#8358;32,000)</p>
+<p>Render Starter: $7/mo (~&#8358;11,200)</p>
 <p>Cloudflare Pages: &#8358;0 (unlimited BW)</p>
-<p>ResellerClub: $50 deposit + wholesale rates</p>
 </div>
 <div class="card">
-<h3>&#128230; Wholesale Integration</h3>
-<p>DeployForge now includes <b style="color:var(--purple)">Wholesale Master</b> &#8212; buy domains and hosting at wholesale prices, resell for profit.</p>
-<p style="margin-top:6px"><span class="badge b-wholesale">NEW</span> Domain wholesale pricing, reseller tiers, bulk registration, white-label hosting.</p>
+<h3>&#9881; How It Works</h3>
+<div class="info-box">DeployForge uses GitHub Pages for static hosting + Base44 for serverless functions. All free. Total: &#8358;0/mo.</div>
+<p>1. Static files go to GitHub Pages (auto SSL)</p>
+<p>2. API functions go to Base44 backend</p>
+<p>3. Custom domains via Cloudflare DNS</p>
+<p>4. Deploy, list, delete files from your phone</p>
 </div>
 </div>
+
+<!-- DEPLOY -->
 <div class="section" id="sec-deploy">
 <div class="card">
 <h3>&#128640; New Deployment</h3>
 <span class="form-label">Project Name</span>
 <input type="text" id="projName" placeholder="e.g. harz-new-app">
+<span class="form-label">Target Repo</span>
+<select id="targetRepo"><option value="harz-portfolio">harz-portfolio</option></select>
 <span class="form-label">Source Type</span>
 <select id="sourceType" onchange="toggleSource()">
 <option value="html">Static HTML</option>
-<option value="github">GitHub Repo</option>
 <option value="template">From Template</option>
+<option value="github">From GitHub URL</option>
 </select>
 <div id="html-source">
 <span class="form-label">HTML Code</span>
 <textarea id="htmlCode" placeholder="<!DOCTYPE html>..." style="min-height:100px"></textarea>
-</div>
-<div id="github-source" class="hidden">
-<span class="form-label">Repo URL</span>
-<input type="text" id="repoUrl" placeholder="github.com/rabiuhamza11/repo">
-<span class="form-label">Branch</span>
-<input type="text" id="repoBranch" value="main">
 </div>
 <div id="template-source" class="hidden">
 <span class="form-label">Template</span>
@@ -144,393 +127,307 @@ textarea{resize:vertical;min-height:80px}
 <option value="landing">Landing Page</option>
 <option value="store">E-commerce Store</option>
 <option value="blog">Blog</option>
-<option value="portfolio">Portfolio</option>
 <option value="dashboard">Dashboard</option>
-<option value="chat">AI Chat</option>
 </select>
 </div>
-<span class="form-label">Deploy To</span>
-<select id="deployTarget">
-<option value="github-pages">GitHub Pages (Free + SSL)</option>
-<option value="base44">Base44 Backend (Serverless)</option>
-</select>
-<div class="check"><input type="checkbox" id="enableCDN" checked><label for="enableCDN">Cloudflare CDN (free, unlimited BW)</label></div>
+<div id="github-source" class="hidden">
+<span class="form-label">GitHub Raw URL</span>
+<input type="text" id="githubUrl" placeholder="https://raw.githubusercontent.com/user/repo/main/file.html">
+</div>
 <button class="btn" id="deployBtn" onclick="doDeploy()">&#128640; Deploy Now</button>
 <div class="log hidden" id="deployLog"></div>
 </div>
 <div class="card">
-<h3>&#128203; How It Works</h3>
-<div class="info-box">DeployForge = GitHub Pages (static) + Base44 (serverless) + Cloudflare (CDN). All free. Total: &#8358;0/mo.</div>
-<p>1. Static files go to GitHub Pages (auto SSL)</p>
-<p>2. API functions go to Base44 backend</p>
-<p>3. Custom domains via Cloudflare DNS</p>
-<p>4. CDN via Cloudflare (unlimited free)</p>
+<h3>&#128203; Deploy History</h3>
+<div id="deploy-history"></div>
 </div>
 </div>
-<div class="section" id="sec-sites">
-<div class="card"><h3>&#127760; Live Sites (52)</h3><div id="sites-list"></div></div>
+
+<!-- REPOS -->
+<div class="section" id="sec-repos">
+<div class="card"><h3>&#128230; Your Repositories</h3><div id="repos-list"><div class="loading"><span class="spinner"></span> Loading repos...</div></div></div>
 </div>
-<div class="section" id="sec-domains">
-<div class="card"><h3>&#128279; Custom Domains</h3><div id="domains-list"></div></div>
+
+<!-- FILES -->
+<div class="section" id="sec-files">
 <div class="card">
-<h3>&#128269; Search and Register Domain</h3>
-<div class="domain-search">
-<input type="text" id="domSearch" placeholder="myapp.com">
-<button class="btn btn-blue" style="white-space:nowrap" onclick="searchDomain()">Search</button>
+<h3>&#128193; Browse Files</h3>
+<span class="form-label">Repo</span>
+<select id="filesRepo" onchange="loadFiles()"><option value="harz-portfolio">harz-portfolio</option></select>
+<div id="files-list"><div class="loading">Select a repo to browse files</div></div>
 </div>
-<div id="domResult"></div>
-<div class="info-box">Domains registered via ResellerClub wholesale API. Prices below retail &#8212; save up to 40%.</div>
 </div>
+
+<!-- CREATE REPO -->
+<div class="section" id="sec-create">
 <div class="card">
-<h3>&#10133; Add Custom Domain (Free)</h3>
-<span class="form-label">Domain Name</span>
-<input type="text" id="newDomain" placeholder="myapp.harz.linkpc.net">
-<span class="form-label">Point To</span>
-<select id="domainTarget"><option value="github-pages">GitHub Pages</option><option value="base44">Base44 Function</option></select>
-<div class="info-box">DNS: Add A record to GitHub Pages IPs. SSL automatic.</div>
-<button class="btn btn-purple" onclick="alert('1) Add A records in Cloudflare to 185.199.108-111.153. 2) Enable custom domain in GitHub repo settings. 3) SSL automatic.')">Configure Domain</button>
-</div>
-<div class="card">
-<h3>&#128203; GitHub Pages IPs</h3>
-<p style="font-family:monospace;font-size:11px;color:var(--green)">185.199.108.153<br>185.199.109.153<br>185.199.110.153<br>185.199.111.153</p>
+<h3>&#10133; Create New Repository</h3>
+<span class="form-label">Repo Name</span>
+<input type="text" id="newRepoName" placeholder="e.g. harz-new-project">
+<span class="form-label">Description (optional)</span>
+<input type="text" id="newRepoDesc" placeholder="Project description">
+<button class="btn btn-blue" id="createRepoBtn" onclick="doCreateRepo()">Create Repository</button>
+<div id="createResult" style="margin-top:8px"></div>
 </div>
 </div>
-<div class="section" id="sec-wholesale">
-<div class="card">
-<h3>&#128230; Wholesale Domain Pricing</h3>
-<p style="margin-bottom:10px">Buy at wholesale, resell at retail. Profit margins up to 40%.</p>
-<table class="price-table">
-<tr><th>TLD</th><th class="ws">Wholesale</th><th class="rt">Retail</th><th class="pf">Profit</th></tr>
-<tr><td>.com</td><td class="ws">$8.50</td><td class="rt">$12.00</td><td class="pf">$3.50</td></tr>
-<tr><td>.net</td><td class="ws">$7.20</td><td class="rt">$11.00</td><td class="pf">$3.80</td></tr>
-<tr><td>.org</td><td class="ws">$7.00</td><td class="rt">$10.00</td><td class="pf">$3.00</td></tr>
-<tr><td>.xyz</td><td class="ws">$0.80</td><td class="rt">$2.00</td><td class="pf">$1.20</td></tr>
-<tr><td>.online</td><td class="ws">$0.50</td><td class="rt">$1.50</td><td class="pf">$1.00</td></tr>
-<tr><td>.ai</td><td class="ws">$45.00</td><td class="rt">$70.00</td><td class="pf">$25.00</td></tr>
-<tr><td>.tech</td><td class="ws">$3.50</td><td class="rt">$8.00</td><td class="pf">$4.50</td></tr>
-<tr><td>.store</td><td class="ws">$2.00</td><td class="rt">$5.00</td><td class="pf">$3.00</td></tr>
-<tr><td>.ng</td><td class="ws">&#8358;1,500</td><td class="rt">&#8358;3,500</td><td class="pf">&#8358;2,000</td></tr>
-<tr><td>.com.ng</td><td class="ws">&#8358;1,200</td><td class="rt">&#8358;2,500</td><td class="pf">&#8358;1,300</td></tr>
-</table>
+
 </div>
-<div class="card">
-<h3>&#128230; Bulk Domain Registration</h3>
-<span class="form-label">Domains (one per line)</span>
-<textarea id="bulkDomains" placeholder="myapp.com&#10;myapp.net&#10;myapp.xyz" style="min-height:80px"></textarea>
-<span class="form-label">Registration Years</span>
-<select id="bulkYears">
-<option value="1">1 Year</option>
-<option value="2">2 Years (5% off)</option>
-<option value="5">5 Years (15% off)</option>
-<option value="10">10 Years (25% off)</option>
-</select>
-<button class="btn btn-gold" onclick="bulkRegister()">&#128230; Bulk Register</button>
-<div id="bulkResult" style="margin-top:8px"></div>
-</div>
-<div class="card">
-<h3>&#128421;&#65039; Wholesale Hosting Plans</h3>
-<table class="price-table">
-<tr><th>Plan</th><th class="ws">Wholesale</th><th class="rt">Retail</th><th>Storage</th></tr>
-<tr><td>Starter</td><td class="ws">&#8358;500/mo</td><td class="rt">&#8358;1,500/mo</td><td>5GB</td></tr>
-<tr><td>Business</td><td class="ws">&#8358;1,500/mo</td><td class="rt">&#8358;3,500/mo</td><td>20GB</td></tr>
-<tr><td>Pro</td><td class="ws">&#8358;3,000/mo</td><td class="rt">&#8358;7,000/mo</td><td>50GB</td></tr>
-<tr><td>Enterprise</td><td class="ws">&#8358;6,000/mo</td><td class="rt">&#8358;15,000/mo</td><td>200GB</td></tr>
-</table>
-<div class="info-box">All hosting plans include free SSL, cPanel, email accounts, and 99.9% uptime SLA.</div>
-</div>
-</div>
-<div class="section" id="sec-reseller">
-<div class="card">
-<h3>&#129309; Reseller Tiers</h3>
-<p style="margin-bottom:12px">Become a domain and hosting reseller. Higher tier = bigger discount.</p>
-<div class="tier-card" style="border-color:var(--green)">
-<div class="tn">&#127793; Starter Reseller</div>
-<div class="td">Deposit: &#8358;5,000</div>
-<div class="tdis">15% off wholesale</div>
-<li>Domain registration at 15% discount</li>
-<li>Hosting at 10% discount</li>
-<li>Basic white-label storefront</li>
-<li>Email support</li>
-</div>
-<div class="tier-card" style="border-color:var(--blue)">
-<div class="tn">&#128640; Business Reseller</div>
-<div class="td">Deposit: &#8358;25,000</div>
-<div class="tdis">25% off wholesale</div>
-<li>Domain registration at 25% discount</li>
-<li>Hosting at 20% discount</li>
-<li>Full white-label storefront</li>
-<li>Custom nameservers</li>
-<li>Priority support</li>
-<li>API access</li>
-</div>
-<div class="tier-card" style="border-color:var(--gold)">
-<div class="tn">&#128081; Enterprise Reseller</div>
-<div class="td">Deposit: &#8358;100,000</div>
-<div class="tdis">40% off wholesale</div>
-<li>Maximum discounts on all products</li>
-<li>Full white-label + custom branding</li>
-<li>Dedicated account manager</li>
-<li>Custom control panel</li>
-<li>Sub-reseller management</li>
-<li>24/7 phone + email support</li>
-<li>Priority domain registration</li>
-</div>
-</div>
-<div class="card">
-<h3>&#128221; Register as Reseller</h3>
-<span class="form-label">Full Name</span>
-<input type="text" id="resName" placeholder="Your name">
-<span class="form-label">Email</span>
-<input type="email" id="resEmail" placeholder="you@email.com">
-<span class="form-label">Phone</span>
-<input type="text" id="resPhone" placeholder="080XXXXXXXX">
-<span class="form-label">Business Name (optional)</span>
-<input type="text" id="resBiz" placeholder="Your business name">
-<span class="form-label">Tier</span>
-<select id="resTier">
-<option value="starter">Starter &#8212; &#8358;5,000 deposit</option>
-<option value="business">Business &#8212; &#8358;25,000 deposit</option>
-<option value="enterprise">Enterprise &#8212; &#8358;100,000 deposit</option>
-</select>
-<button class="btn btn-gold" onclick="registerReseller()">&#129309; Become a Reseller</button>
-<div id="resResult" style="margin-top:8px"></div>
-</div>
-<div class="card">
-<h3>&#128101; Current Resellers</h3>
-<div id="resellers-list"></div>
-</div>
-<div class="card">
-<h3>&#128230; Reseller Orders</h3>
-<div id="wsOrders-list"></div>
-</div>
-</div>
-<div class="section" id="sec-functions">
-<div class="card"><h3>&#9889; Serverless Functions (5)</h3><div id="funcs-list"></div></div>
-<div class="card">
-<h3>&#10133; New Function</h3>
-<span class="form-label">Function Name</span>
-<input type="text" id="funcName" placeholder="myFunction">
-<span class="form-label">Code (TypeScript)</span>
-<textarea id="funcCode" placeholder="export default async function(req) { return new Response('Hello'); }" style="min-height:100px"></textarea>
-<button class="btn btn-blue" onclick="alert('Ask Magani on WhatsApp to deploy this function.')">Deploy Function</button>
-</div>
-</div>
-</div>
+
 <script>
-var sites=[
-{n:'HARZ Super App',u:'rabiuhamza11.github.io/harz-portfolio/harz-super-app.html',i:'\uD83D\uDCF1',s:'live'},
-{n:'HarzDM Marketplace',u:'rabiuhamza11.github.io/harzdm-marketplace',i:'\uD83D\uDED2',s:'live'},
-{n:'Abuja Estate City',u:'rabiuhamza11.github.io/abuja-estate-city-ai',i:'\uD83C\uDFD8',s:'live'},
-{n:'HARZ AI Chat',u:'rabiuhamza11.github.io/harz-ai-chat',i:'\uD83D\uDCAC',s:'live'},
-{n:'BuildBot AI',u:'rabiuhamza11.github.io/buildbot-ai',i:'\uD83C\uDFD7',s:'live'},
-{n:'ContentPilot AI',u:'rabiuhamza11.github.io/contentpilot-ai',i:'\u270D',s:'live'},
-{n:'DeployForge',u:'rabiuhamza11.github.io/harz-portfolio/deployforge.html',i:'\uD83D\uDD28',s:'live'},
-{n:'EduWealth AI',u:'rabiuhamza11.github.io/eduwealth-ai',i:'\uD83D\uDCDA',s:'live'},
-{n:'HarzMusic',u:'rabiuhamza11.github.io/harz-music',i:'\uD83C\uDFB5',s:'live'},
-{n:'HarzFilm',u:'rabiuhamza11.github.io/harz-film',i:'\uD83C\uDFAC',s:'live'},
-{n:'MindCare AI',u:'rabiuhamza11.github.io/mindcare-ai',i:'\uD83E\uDDE0',s:'live'},
-{n:'OMEGA Health AI',u:'rabiuhamza11.github.io/omega-health-ai',i:'\u2695',s:'live'},
-{n:'Cyber Shield X',u:'rabiuhamza11.github.io/cyber-shield-x',i:'\uD83D\uDEE1',s:'live'},
-{n:'HarzPay',u:'rabiuhamza11.github.io/harzpay',i:'\uD83D\uDCB3',s:'live'},
-{n:'HarzFX',u:'rabiuhamza11.github.io/harzfx',i:'\uD83D\uDCC8',s:'live'},
-{n:'HarzLend',u:'rabiuhamza11.github.io/harzlend',i:'\uD83D\uDCB0',s:'live'},
-{n:'Apex Bank AI',u:'rabiuhamza11.github.io/Apex-ai',i:'\uD83C\uDFE6',s:'live'},
-{n:'GDEG Token',u:'rabiuhamza11.github.io/gdeg',i:'\uD83E\uDE99',s:'live'},
-{n:'HarzAjo',u:'rabiuhamza11.github.io/harzajo',i:'\uD83E\uDD1D',s:'live'},
-{n:'Omega Infinity',u:'rabiuhamza11.github.io/omega-infinity-1000',i:'\u267E',s:'live'}
-];
-var funcs=[
-{n:'harzAuth',d:'SSO authentication'},
-{n:'harzSearch',d:'Universal search'},
-{n:'harzWallet',d:'Multi-currency wallet'},
-{n:'harzNotifications',d:'Notification center'},
-{n:'deployForgeDeploy',d:'GitHub Pages deploy'}
-];
-var domains=[
-{n:'harz.linkpc.net',t:'GitHub Pages',s:'pending',dns:'SSL provisioning'},
-{n:'harzdm.com',t:'GitHub Pages',s:'pending',dns:'DNS not resolving'},
-{n:'harzdigital.com',t:'Available',s:'pending',dns:'Not registered'}
-];
-var deploys=[
-{n:'HARZ Super App v2.0',t:'GitHub Pages',time:'2 Aug',icon:'\uD83D\uDCF1'},
-{n:'DeployForge v2.0',t:'GitHub Pages',time:'2 Aug',icon:'\uD83D\uDD28'},
-{n:'Wholesale Master',t:'GitHub Pages',time:'1 Aug',icon:'\uD83D\uDCE6'},
-{n:'HarzAI Chat v8',t:'GitHub Pages',time:'30 Jul',icon:'\uD83D\uDCAC'},
-{n:'Abuja Estate City',t:'GitHub Pages',time:'30 Jul',icon:'\uD83C\uDFD8'}
-];
-var resellers=[
-{n:'Harz Digital Services',tier:'Enterprise',domains:5,status:'active'},
-{n:'Test Reseller',tier:'Starter',domains:1,status:'pending'}
-];
-var wsOrders=[
-{n:'ORD-001',item:'myapp.com (2yr)',amount:'$17',status:'completed'},
-{n:'ORD-002',item:'3x .xyz domains',amount:'$2.40',status:'completed'},
-{n:'ORD-003',item:'Business Hosting (3mo)',amount:'N4,500',status:'pending'}
-];
-function showTab(name,el){
-document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
-if(el)el.classList.add('active');
-document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
-document.getElementById('sec-'+name).classList.add('active');
+const API = 'https://solene-5b0577e2.base44.app/functions/deployForgeDeploy';
+var reposCache = [];
+var history = JSON.parse(localStorage.getItem('deployHistory') || '[]');
+
+function showTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'repos') loadRepos();
+  if (name === 'files') loadFiles();
 }
-function toggleSource(){
-var v=document.getElementById('sourceType').value;
-document.getElementById('html-source').classList.toggle('hidden',v!=='html');
-document.getElementById('github-source').classList.toggle('hidden',v!=='github');
-document.getElementById('template-source').classList.toggle('hidden',v!=='template');
+
+function toggleSource() {
+  var v = document.getElementById('sourceType').value;
+  document.getElementById('html-source').classList.toggle('hidden', v !== 'html');
+  document.getElementById('template-source').classList.toggle('hidden', v !== 'template');
+  document.getElementById('github-source').classList.toggle('hidden', v !== 'github');
 }
-function renderSites(){
-var c=document.getElementById('sites-list');c.innerHTML='';
-sites.forEach(function(s){
-var dot=s.s==='live'?'dot-live':'dot-pending';
-var badge=s.s==='live'?'<span class="badge b-live">LIVE</span>':'<span class="badge b-pending">PENDING</span>';
-c.innerHTML+='<div class="site-item" onclick="window.open(\'https://'+s.u+'\',\'_blank\')"><div class="site-icon">'+s.i+'</div><div class="site-info"><div class="site-name">'+s.n+' '+badge+'</div><div class="site-url">'+s.u+'</div></div><div class="status-dot '+dot+'"></div></div>';
-});
+
+async function apiCall(action, data = {}) {
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, ...data })
+  });
+  return res.json();
 }
-function renderFuncs(){
-var c=document.getElementById('funcs-list');c.innerHTML='';
-funcs.forEach(function(f){
-c.innerHTML+='<div class="func-item"><div style="font-size:20px">\u26A1</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+f.n+'</div><div style="font-size:11px;color:var(--dim)">'+f.d+'</div></div><span class="badge b-live">LIVE</span></div>';
-});
+
+// DASHBOARD
+async function loadDashboard() {
+  try {
+    const data = await apiCall('list_repos');
+    if (data.repos) {
+      reposCache = data.repos;
+      const pagesCount = data.repos.filter(r => r.has_pages).length;
+      document.getElementById('stat-repos').textContent = data.repos.length;
+      document.getElementById('stat-pages').textContent = pagesCount;
+
+      // Update repo dropdowns
+      const repoOpts = data.repos.map(r => `<option value="${r.name}">${r.name}</option>`).join('');
+      document.getElementById('targetRepo').innerHTML = repoOpts;
+      document.getElementById('filesRepo').innerHTML = repoOpts;
+
+      // Recent deploys from history
+      renderHistory();
+    }
+  } catch (e) {
+    document.getElementById('recent-deploys').innerHTML = '<p style="color:var(--red)">Failed to load. Check connection.</p>';
+  }
 }
-function renderDomains(){
-var c=document.getElementById('domains-list');c.innerHTML='';
-domains.forEach(function(d){
-var b=d.s==='live'?'b-live':'b-pending';var l=d.s==='live'?'LIVE':'PENDING';
-c.innerHTML+='<div class="site-item"><div class="site-icon">\uD83D\uDD17</div><div class="site-info"><div class="site-name">'+d.n+' <span class="badge '+b+'">'+l+'</span></div><div class="site-url">'+d.t+' - '+d.dns+'</div></div></div>';
-});
+
+function renderHistory() {
+  const c = document.getElementById('recent-deploys');
+  if (history.length === 0) {
+    c.innerHTML = '<p style="color:var(--dim);font-size:12px">No deployments yet. Deploy something!</p>';
+    return;
+  }
+  c.innerHTML = history.slice(0, 5).map(h => 
+    `<div class="site-item"><div class="site-icon">&#128640;</div><div class="site-info"><div class="site-name">${h.file}</div><div class="site-url">${h.repo} - ${h.time}</div></div><a href="${h.url}" target="_blank" class="check-btn">Open</a></div>`
+  ).join('');
 }
-function renderDeploys(){
-var c=document.getElementById('recent-deploys');c.innerHTML='';
-deploys.forEach(function(d){
-c.innerHTML+='<div class="site-item"><div class="site-icon">'+d.icon+'</div><div class="site-info"><div class="site-name">'+d.n+'</div><div class="site-url">'+d.t+' - '+d.time+'</div></div><div class="status-dot dot-live"></div></div>';
-});
+
+// DEPLOY
+async function doDeploy() {
+  var name = document.getElementById('projName').value || 'harz-app';
+  var log = document.getElementById('deployLog');
+  var btn = document.getElementById('deployBtn');
+  var srcType = document.getElementById('sourceType').value;
+  var targetRepo = document.getElementById('targetRepo').value;
+  
+  log.classList.remove('hidden');
+  log.textContent = '';
+  btn.disabled = true;
+
+  function addLog(msg, type) {
+    var prefix = type === 'err' ? '[ERROR] ' : type === 'warn' ? '[WARN] ' : '[INFO] ';
+    var color = type === 'err' ? '#f85149' : type === 'warn' ? '#d29922' : '#3fb950';
+    log.innerHTML += `<span style="color:${color}">${prefix}${msg}</span>\n`;
+    log.scrollTop = log.scrollHeight;
+  }
+
+  try {
+    addLog('Initializing deployment: ' + name);
+    addLog('Target: ' + targetRepo);
+    
+    var htmlCode = '';
+    if (srcType === 'html') {
+      htmlCode = document.getElementById('htmlCode').value;
+      if (!htmlCode) { addLog('No HTML code provided', 'err'); btn.disabled = false; return; }
+    } else if (srcType === 'template') {
+      var tmpl = document.getElementById('templateChoice').value;
+      htmlCode = generateTemplate(tmpl, name);
+      addLog('Using template: ' + tmpl);
+    } else if (srcType === 'github') {
+      var githubUrl = document.getElementById('githubUrl').value;
+      if (!githubUrl) { addLog('No GitHub URL provided', 'err'); btn.disabled = false; return; }
+      addLog('Fetching from GitHub...');
+      var fetchRes = await fetch(githubUrl);
+      if (!fetchRes.ok) { addLog('Failed to fetch from GitHub URL', 'err'); btn.disabled = false; return; }
+      htmlCode = await fetchRes.text();
+      addLog('Fetched ' + htmlCode.length + ' bytes');
+    }
+
+    var fileName = name.endsWith('.html') ? name : name + '.html';
+    addLog('Uploading to GitHub...');
+
+    const data = await apiCall('deploy_file', {
+      repoName: targetRepo,
+      fileName: fileName,
+      fileContent: htmlCode,
+      message: 'DeployForge: Deploy ' + fileName
+    });
+
+    if (data.success) {
+      addLog('Deploy complete!', 'ok');
+      addLog('File: ' + data.file);
+      addLog('Commit: ' + (data.commit || 'N/A').substring(0, 8));
+      addLog('URL: ' + data.file_url, 'ok');
+      addLog('Cost: N0.00');
+      log.innerHTML += `<br><a href="${data.file_url}" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#3fb950;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Live Site</a>\n`;
+      
+      // Save to history
+      history.unshift({ file: data.file, repo: targetRepo, time: new Date().toLocaleDateString('en', {month:'short',day:'numeric'}) + ' ' + new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}), url: data.file_url });
+      history = history.slice(0, 20);
+      localStorage.setItem('deployHistory', JSON.stringify(history));
+      renderHistory();
+    } else {
+      addLog('Deploy failed: ' + (data.error || 'Unknown error'), 'err');
+    }
+  } catch (e) {
+    addLog('Error: ' + e.message, 'err');
+  }
+  btn.disabled = false;
 }
-function renderResellers(){
-var c=document.getElementById('resellers-list');if(!c)return;c.innerHTML='';
-resellers.forEach(function(r){
-var b=r.status==='active'?'b-live':'b-pending';
-c.innerHTML+='<div class="site-item"><div class="site-icon">\uD83E\uDD1D</div><div class="site-info"><div class="site-name">'+r.n+' <span class="badge '+b+'">'+r.status.toUpperCase()+'</span></div><div class="site-url">'+r.tier+' - '+r.domains+' domains</div></div></div>';
-});
+
+function generateTemplate(type, name) {
+  var templates = {
+    landing: `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3}.hero{text-align:center;padding:60px 20px}.hero h1{font-size:32px;margin-bottom:12px;color:#58a6ff}.hero p{font-size:16px;color:#8b949e;max-width:400px;margin:0 auto 24px}.btn{display:inline-block;padding:12px 28px;background:#3fb950;color:#000;border-radius:8px;text-decoration:none;font-weight:700}.features{max-width:600px;margin:0 auto;padding:20px}.feat{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:8px}.feat h3{color:#58a6ff;font-size:14px;margin-bottom:4px}.feat p{font-size:13px;color:#8b949e}</style></head><body><div class="hero"><h1>${name}</h1><p>Welcome to ${name}. Built with DeployForge.</p><a href="#" class="btn">Get Started</a></div><div class="features"><div class="feat"><h3>Fast</h3><p>Deployed on GitHub Pages with global CDN</p></div><div class="feat"><h3>Free</h3><p>Zero hosting cost, unlimited bandwidth</p></div><div class="feat"><h3>Secure</h3><p>Automatic SSL certificates included</p></div></div></body></html>`,
+    store: `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name} Store</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3}h1{text-align:center;padding:20px;color:#58a6ff}.grid{max-width:600px;margin:0 auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.item{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:12px}.item img{width:100%;border-radius:8px;margin-bottom:8px}.item h3{font-size:14px}.item p{font-size:12px;color:#8b949e}.price{color:#3fb950;font-weight:700;font-size:14px}</style></head><body><h1>${name}</h1><div class="grid"><div class="item"><h3>Product 1</h3><p>Description</p><div class="price">N5,000</div></div><div class="item"><h3>Product 2</h3><p>Description</p><div class="price">N10,000</div></div></div></body></html>`,
+    blog: `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3;max-width:600px;margin:0 auto;padding:20px}h1{color:#58a6ff;margin-bottom:16px}.post{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:12px}.post h2{font-size:16px;color:#e6edf3}.post p{font-size:13px;color:#8b949e;margin-top:4px}.date{font-size:11px;color:#8b949e}</style></head><body><h1>${name}</h1><div class="post"><div class="date">Aug 2, 2026</div><h2>First Post</h2><p>Welcome to our blog. More content coming soon.</p></div></body></html>`,
+    dashboard: `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3;padding:12px}.header{padding:12px 0;color:#58a6ff;font-size:18px;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}.stat{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;text-align:center}.stat .num{font-size:20px;font-weight:700;color:#3fb950}.stat .lbl{font-size:10px;color:#8b949e}.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:14px;margin-bottom:8px}.card h3{font-size:13px;color:#58a6ff;margin-bottom:8px}</style></head><body><div class="header">${name}</div><div class="grid"><div class="stat"><div class="num">0</div><div class="lbl">Users</div></div><div class="stat"><div class="num">0</div><div class="lbl">Orders</div></div><div class="stat"><div class="num">N0</div><div class="lbl">Revenue</div></div></div><div class="card"><h3>Recent Activity</h3><p style="font-size:12px;color:#8b949e">No activity yet</p></div></body></html>`
+  };
+  return templates[type] || templates.landing;
 }
-function renderWsOrders(){
-var c=document.getElementById('wsOrders-list');if(!c)return;c.innerHTML='';
-wsOrders.forEach(function(o){
-var b=o.status==='completed'?'b-live':'b-pending';
-c.innerHTML+='<div class="site-item"><div class="site-icon">\uD83D\uDCE6</div><div class="site-info"><div class="site-name">'+o.n+' <span class="badge '+b+'">'+o.status.toUpperCase()+'</span></div><div class="site-url">'+o.item+' - '+o.amount+'</div></div></div>';
-});
+
+// REPOS
+async function loadRepos() {
+  var c = document.getElementById('repos-list');
+  c.innerHTML = '<div class="loading"><span class="spinner"></span> Loading repos...</div>';
+  try {
+    const data = await apiCall('list_repos');
+    if (data.repos) {
+      reposCache = data.repos;
+      c.innerHTML = data.repos.map(r => {
+        var dot = r.has_pages ? 'dot-live' : 'dot-down';
+        var badge = r.has_pages ? '<span class="badge b-live">PAGES</span>' : '<span class="badge b-down">NO PAGES</span>';
+        var url = r.has_pages ? `https://rabiuhamza11.github.io/${r.name}/` : r.url;
+        return `<div class="site-item" onclick="window.open('${url}','_blank')"><div class="site-icon">&#128230;</div><div class="site-info"><div class="site-name">${r.name} ${badge}</div><div class="site-url">Updated: ${r.updated.substring(0,10)}</div></div><div class="status-dot ${dot}"></div></div>`;
+      }).join('');
+    } else {
+      c.innerHTML = '<p style="color:var(--red)">Failed to load repos</p>';
+    }
+  } catch (e) {
+    c.innerHTML = '<p style="color:var(--red)">Error: ' + e.message + '</p>';
+  }
 }
-function searchDomain(){
-var dom=document.getElementById('domSearch').value.trim();
-var c=document.getElementById('domResult');
-if(!dom){c.innerHTML='<div class="dom-result dom-taken">Enter a domain name</div>';return;}
-c.innerHTML='<div class="dom-result" style="background:var(--card2);color:var(--dim)">Searching '+dom+'...</div>';
-setTimeout(function(){
-var tlds=['.com','.net','.org','.xyz','.online','.tech','.store','.ai','.ng','.com.ng'];
-var html='';
-tlds.forEach(function(tld){
-var name=dom.replace(/\.(com|net|org|xyz|online|tech|store|ai|ng)$/,'')+tld;
-var price=tld==='.com'?'$8.50':tld==='.ai'?'$45.00':tld==='.ng'?'N1,500':tld==='.com.ng'?'N1,200':tld==='.xyz'?'$0.80':tld==='.online'?'$0.50':'$3.50';
-html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:4px"><span style="font-size:13px">'+name+'</span><span style="font-size:12px;color:var(--green);font-weight:700">'+price+'</span></div>';
-});
-c.innerHTML='<div class="dom-result dom-available">Available domains:</div>'+html+'<button class="btn btn-gold" style="margin-top:8px" onclick="alert(\'Ask Magani on WhatsApp to register: '+dom+'\')">Register Now</button>';
-},800);
+
+// FILES
+async function loadFiles() {
+  var c = document.getElementById('files-list');
+  var repo = document.getElementById('filesRepo').value || 'harz-portfolio';
+  if (!repo) return;
+  c.innerHTML = '<div class="loading"><span class="spinner"></span> Loading files...</div>';
+  try {
+    const data = await apiCall('list_files', { repoName: repo });
+    if (data.files) {
+      var htmlFiles = data.files.filter(f => f.type === 'file' && f.name.endsWith('.html'));
+      var otherFiles = data.files.filter(f => f.type === 'file' && !f.name.endsWith('.html'));
+      var dirs = data.files.filter(f => f.type === 'dir');
+      
+      document.getElementById('stat-files').textContent = htmlFiles.length + '+';
+      
+      if (htmlFiles.length === 0 && otherFiles.length === 0 && dirs.length === 0) {
+        c.innerHTML = '<p style="color:var(--dim);font-size:12px">No files found</p>';
+        return;
+      }
+      
+      var html = '';
+      dirs.forEach(f => {
+        html += `<div class="site-item"><div class="site-icon">&#128193;</div><div class="site-info"><div class="site-name">${f.name}</div><div class="site-url">Directory</div></div></div>`;
+      });
+      htmlFiles.forEach(f => {
+        var url = `https://rabiuhamza11.github.io/${repo}/${f.name}`;
+        html += `<div class="site-item"><div class="site-icon">&#128196;</div><div class="site-info"><div class="site-name">${f.name}</div><div class="site-url">${(f.size/1024).toFixed(1)}KB</div></div><a href="${url}" target="_blank" class="check-btn">Open</a><button class="del-btn" onclick="deleteFile('${repo}','${f.name}',event)">Del</button></div>`;
+      });
+      otherFiles.slice(0, 20).forEach(f => {
+        html += `<div class="site-item"><div class="site-icon">&#128206;</div><div class="site-info"><div class="site-name">${f.name}</div><div class="site-url">${(f.size/1024).toFixed(1)}KB</div></div></div>`;
+      });
+      c.innerHTML = html;
+    } else {
+      c.innerHTML = '<p style="color:var(--red)">Failed to load: ' + (data.error || 'unknown') + '</p>';
+    }
+  } catch (e) {
+    c.innerHTML = '<p style="color:var(--red)">Error: ' + e.message + '</p>';
+  }
 }
-function bulkRegister(){
-var domainsText=document.getElementById('bulkDomains').value.trim();
-var c=document.getElementById('bulkResult');
-if(!domainsText){c.innerHTML='<div class="dom-result dom-taken">Enter domains to register</div>';return;}
-var list=domainsText.split('\n').filter(function(d){return d.trim();});
-c.innerHTML='<div class="dom-result" style="background:var(--card2);color:var(--dim)">Processing '+list.length+' domains...</div>';
-setTimeout(function(){
-var html='';
-list.forEach(function(d){
-html+='<div style="padding:6px;font-size:12px;color:var(--green)">\u2713 '+d+' queued for registration</div>';
-});
-html+='<button class="btn btn-gold" style="margin-top:8px" onclick="alert(\'Bulk registration sent to Magani. Confirmation on WhatsApp.\')">Confirm and Pay</button>';
-c.innerHTML=html;
-},1000);
+
+async function deleteFile(repo, file, e) {
+  e.stopPropagation();
+  if (!confirm('Delete ' + file + '?')) return;
+  try {
+    const data = await apiCall('delete_file', { repoName: repo, fileName: file });
+    if (data.success) {
+      alert('Deleted: ' + file);
+      loadFiles();
+    } else {
+      alert('Delete failed: ' + (data.error || 'unknown'));
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
 }
-function registerReseller(){
-var name=document.getElementById('resName').value.trim();
-var email=document.getElementById('resEmail').value.trim();
-var tier=document.getElementById('resTier').value;
-var c=document.getElementById('resResult');
-if(!name||!email){c.innerHTML='<div class="dom-result dom-taken">Enter name and email</div>';return;}
-var tierName={starter:'Starter (N5,000)',business:'Business (N25,000)',enterprise:'Enterprise (N100,000)'}[tier];
-c.innerHTML='<div class="dom-result dom-available">\u2705 '+name+' registered as '+tierName+' reseller!<br>Pay deposit to UBA 2034326424 (Rabiu Hamza Mohammed).<br>Magani will confirm on WhatsApp.</div>';
+
+// CREATE REPO
+async function doCreateRepo() {
+  var name = document.getElementById('newRepoName').value.trim();
+  var desc = document.getElementById('newRepoDesc').value;
+  var btn = document.getElementById('createRepoBtn');
+  var result = document.getElementById('createResult');
+  
+  if (!name) { result.innerHTML = '<p style="color:var(--red)">Enter a repo name</p>'; return; }
+  
+  btn.disabled = true;
+  result.innerHTML = '<p style="color:var(--blue)"><span class="spinner"></span> Creating...</p>';
+  
+  try {
+    const data = await apiCall('create_repo', { repoName: name, description: desc });
+    if (data.success) {
+      result.innerHTML = `<div style="color:var(--green);font-size:13px">Repo created! ${data.repo}</div><a href="${data.url}" target="_blank" class="btn btn-sm" style="margin-top:8px;display:inline-block;width:auto">Open on GitHub</a>`;
+      document.getElementById('newRepoName').value = '';
+      document.getElementById('newRepoDesc').value = '';
+    } else {
+      result.innerHTML = '<p style="color:var(--red)">Failed: ' + (data.error || 'unknown') + '</p>';
+    }
+  } catch (e) {
+    result.innerHTML = '<p style="color:var(--red)">Error: ' + e.message + '</p>';
+  }
+  btn.disabled = false;
 }
-async function doDeploy(){
-var name=document.getElementById('projName').value||'harz-app';
-var log=document.getElementById('deployLog');var btn=document.getElementById('deployBtn');
-log.classList.remove('hidden');log.textContent='';btn.disabled=true;
-var srcType=document.getElementById('sourceType').value;
-var target=document.getElementById('deployTarget').value;
-function addLog(msg,type){
-var prefix=type==='err'?'[ERROR] ':type==='warn'?'[WARN] ':'[INFO] ';
-var color=type==='err'?'#f85149':type==='warn'?'#d29922':'#3fb950';
-log.innerHTML+='<span style="color:'+color+'">'+prefix+msg+'</span>\n';
-log.scrollTop=log.scrollHeight;
-}
-function addSuccess(msg){
-log.innerHTML+='<span style="color:#58a6ff">[SUCCESS] '+msg+'</span>\n';
-log.scrollTop=log.scrollHeight;
-}
-try{
-addLog('Initializing deployment: '+name);
-addLog('Source: '+srcType);
-addLog('Target: '+target);
-var htmlCode='';
-if(srcType==='html'){
-htmlCode=document.getElementById('htmlCode').value;
-if(!htmlCode){addLog('No HTML code provided','err');btn.disabled=false;return;}
-}else if(srcType==='template'){
-var tmpl=document.getElementById('templateChoice').value;
-htmlCode=generateTemplate(tmpl,name);
-addLog('Using template: '+tmpl);
-}else if(srcType==='github'){
-addLog('GitHub repo deploy not supported in browser. Use Magani on WhatsApp.','warn');
-btn.disabled=false;return;
-}
-if(target==='base44'){
-addLog('Base44 functions are deployed via Magani on WhatsApp.','warn');
-btn.disabled=false;return;
-}
-addLog('Uploading to GitHub...');
-var fileName=name.endsWith('.html')?name:name+'.html';
-var res=await fetch('https://superagent-2286fb2f.base44.app/functions/deployForgeDeploy',{
-method:'POST',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({action:'deploy_file',repoName:'harz-portfolio',fileName:fileName,fileContent:htmlCode,message:'DeployForge: Deploy '+fileName})
-});
-var data=await res.json();
-if(data.success){
-addSuccess('Deploy complete!');
-addLog('File: '+data.file);
-addLog('Commit: '+(data.commit||'N/A').substring(0,8));
-addSuccess('URL: '+data.file_url);
-addSuccess('Cost: N0.00');
-log.innerHTML+='<br><a href="'+data.file_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#3fb950;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Live Site</a>\n';
-}else{
-addLog(data.error||'Deploy failed','err');
-}
-}catch(e){
-addLog('Error: '+e.message,'err');
-}
-btn.disabled=false;
-}
-function generateTemplate(type,name){
-var templates={
-landing:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:40px 20px}h1{font-size:2em}.btn{display:inline-block;padding:12px 30px;background:#3fb950;color:#000;border-radius:10px;font-weight:700;text-decoration:none;margin:10px 0}</style></head><body><h1>'+name+'</h1><p>Welcome to '+name+'. Deployed with DeployForge.</p><a href=# class=btn>Get Started</a></body></html>',
-store:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+' Store</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px}.product{border:1px solid #ddd;border-radius:10px;padding:15px;margin:10px 0}.price{color:#3fb950;font-weight:700}</style></head><body><h1>'+name+'</h1><div class=product><h3>Product 1</h3><p>Description</p><p class=price>N2,500</p></div></body></html>',
-blog:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px}.post{margin:20px 0;border-bottom:1px solid #eee;padding-bottom:15px}</style></head><body><h1>'+name+'</h1><div class=post><h2>First Post</h2><p>Welcome to our blog...</p></div></body></html>',
-portfolio:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;max-width:600px;margin:0 auto;padding:20px;text-align:center}</style></head><body><h1>'+name+'</h1><p>Portfolio deployed with DeployForge.</p></body></html>',
-dashboard:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;background:#0d1117;color:#e6edf3;padding:20px}.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:15px;margin:10px 0}</style></head><body><h1>'+name+'</h1><div class=card><h3>Stat 1</h3><p>0</p></div></body></html>',
-chat:'<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>'+name+'</title><style>body{font-family:system-ui;max-width:500px;margin:0 auto;padding:10px}#msgs{height:300px;overflow-y:auto;border:1px solid #ddd;border-radius:10px;padding:10px}input{width:80%;padding:10px}button{padding:10px 15px;background:#3fb950;color:#000;border:none;border-radius:8px}</style></head><body><h1>'+name+'</h1><div id=msgs></div><input id=msg placeholder=Type...><button onclick=send()>Send</button></body></html>'
-};
-return templates[type]||templates.landing;
-}
-renderSites();renderFuncs();renderDomains();renderDeploys();renderResellers();renderWsOrders();
+
+// Init
+loadDashboard();
 </script>
 </body>
 </html>
