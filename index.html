@@ -1,319 +1,273 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ha">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="HARZ AI Operating System — 600+ tools, 98 platforms, crypto payments, school management, farm tracking, construction estimation. By Rabiu Hamza.">
-<meta name="theme-color" content="#0A0A0F">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="HARZ">
-<link rel="manifest" href="manifest.json">
-<meta property="og:type" content="website">
-<meta property="og:title" content="HARZ AI OS — harz.linkpc.net">
-<meta property="og:description" content="600+ tools, 98 platforms, crypto payments. All in one place.">
-<title>HARZ AI OS — harz.linkpc.net</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--purple:#7C4DFF;--red:#EF4444;--cyan:#00bcd4;--pink:#ec4899}
-body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
-.bg-glow{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
-.bg-glow::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(124,77,255,.08) 0%,transparent 70%);top:-200px;right:-100px;animation:float1 8s ease-in-out infinite}
-.bg-glow::after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,230,118,.06) 0%,transparent 70%);bottom:-150px;left:-100px;animation:float2 10s ease-in-out infinite}
-@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(30px)}}
-@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-40px)}}
-.container{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:0 16px}
-nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
-.logo{font-size:1.1rem;font-weight:800}
-.logo span{color:var(--green)}
-.nav-links{display:flex;gap:12px;font-size:.75rem}
-.nav-links a{color:var(--muted);text-decoration:none}
-/* Search */
-.search-wrap{margin-bottom:20px}
-.search-box{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;color:var(--text);font-size:.85rem;display:flex;align-items:center;gap:10px;transition:.2s}
-.search-box:focus-within{border-color:var(--green)}
-.search-box input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:.85rem}
-.search-box input::placeholder{color:var(--muted)}
-.search-icon{font-size:1rem;opacity:.5}
-.search-results{display:none;margin-top:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;max-height:300px;overflow-y:auto}
-.search-results.show{display:block}
-.search-item{padding:10px 14px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);display:block;font-size:.75rem;transition:.15s}
-.search-item:hover{background:var(--card2)}
-.search-item:last-child{border-bottom:none}
-.search-item .si-icon{margin-right:6px}
-.search-no{padding:14px;text-align:center;color:var(--muted);font-size:.75rem}
-/* Hero */
-.hero{text-align:center;padding:30px 0 24px}
-.hero h1{font-size:2.2rem;font-weight:900;line-height:1.1;letter-spacing:-1px;margin-bottom:8px}
-.hero h1 .grad{background:linear-gradient(135deg,var(--green),var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:.85rem;color:var(--muted);max-width:400px;margin:0 auto 24px;line-height:1.5}
-.hero-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
-.badge{font-size:.6rem;padding:4px 10px;border-radius:20px;font-weight:600;background:var(--card);border:1px solid var(--border)}
-.badge.green{color:var(--green);border-color:rgba(0,230,118,.3)}
-.badge.blue{color:var(--blue);border-color:rgba(59,130,246,.3)}
-.badge.purple{color:var(--purple);border-color:rgba(124,77,255,.3)}
-.badge.gold{color:var(--gold);border-color:rgba(245,158,11,.3)}
-.cta-row{display:flex;gap:10px;justify-content:center;margin-bottom:36px}
-.cta{padding:14px 24px;border-radius:12px;font-size:.85rem;font-weight:700;text-decoration:none;transition:.2s;border:none;cursor:pointer}
-.cta-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#000}
-.cta-primary:active{transform:scale(.95)}
-.cta-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
-/* Stats */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:30px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center}
-.stat-num{font-size:1.4rem;font-weight:900}
-.stat-lbl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-/* Sections */
-.section-title{font-size:.9rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.section-title .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
-/* Platforms */
-.platforms{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:30px}
-.platform{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-decoration:none;color:var(--text);transition:.2s;display:flex;flex-direction:column;gap:6px}
-.platform:active{transform:scale(.97);border-color:var(--green)}
-.platform-icon{font-size:1.5rem}
-.platform-name{font-size:.78rem;font-weight:700}
-.platform-desc{font-size:.62rem;color:var(--muted);line-height:1.3}
-/* Services scroll */
-.services{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:30px;-webkit-overflow-scrolling:touch}
-.service{min-width:120px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;flex-shrink:0;text-decoration:none;color:var(--text)}
-.service-icon{font-size:1.5rem;margin-bottom:6px}
-.service-name{font-size:.68rem;font-weight:600}
-.service-desc{font-size:.55rem;color:var(--muted);margin-top:2px}
-/* Updates */
-.updates{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:30px}
-.update-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.72rem}
-.update-item:last-child{border-bottom:none}
-.update-date{color:var(--green);font-weight:600;min-width:60px;font-size:.62rem}
-.update-text{color:var(--text);line-height:1.4}
-/* Crypto */
-.crypto-section{background:linear-gradient(135deg,rgba(0,230,118,.06),rgba(0,188,212,.04));border:1px solid rgba(0,230,118,.2);border-radius:16px;padding:20px;margin-bottom:30px;text-align:center}
-.crypto-section h3{font-size:.9rem;margin-bottom:6px}
-.crypto-section p{font-size:.7rem;color:var(--muted);margin-bottom:14px}
-.crypto-coins{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-.coin-tag{font-size:.6rem;padding:4px 10px;border-radius:8px;background:var(--card);border:1px solid var(--border);font-weight:600}
-.payments{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:14px 0}
-.pay-tag{font-size:.55rem;padding:3px 8px;border-radius:6px;background:var(--card2);color:var(--muted);border:1px solid var(--border)}
-/* Contact */
-.contact-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:30px;text-align:center}
-.contact-section h3{font-size:.9rem;margin-bottom:14px}
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.contact-btn{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:4px;transition:.2s}
-.contact-btn:active{transform:scale(.95)}
-.contact-btn-icon{font-size:1.3rem}
-.contact-btn-label{font-size:.65rem;font-weight:600}
-.contact-btn-sub{font-size:.55rem;color:var(--muted)}
-/* Footer */
-footer{text-align:center;padding:30px 0 20px;border-top:1px solid var(--border)}
-footer .footer-logo{font-size:.9rem;font-weight:800;margin-bottom:6px}
-footer .footer-logo span{color:var(--green)}
-footer p{font-size:.65rem;color:var(--muted);line-height:1.6}
-footer .social{display:flex;gap:12px;justify-content:center;margin:12px 0}
-footer .social a{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1rem;transition:.2s}
-footer .social a:active{transform:scale(.9)}
-footer .quick-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:10px 0}
-footer .quick-links a{color:var(--muted);text-decoration:none;font-size:.65rem;transition:.2s}
-footer .credit{font-size:.6rem;color:var(--muted);margin-top:10px}
-footer .credit a{color:var(--cyan);text-decoration:none}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HARZ Digital - Koya Trading & Digital Marketing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
+            color: #fff;
+            line-height: 1.6;
+        }
+        .hero {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 50%, #2a1f5a 100%);
+            padding: 60px 20px 40px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #25D366, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.1em;
+            color: #aab;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        .hero .tagline {
+            font-size: 1.3em;
+            color: #25D366;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .products {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .products h2 {
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            color: #00d4ff;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background: linear-gradient(135deg, #1a1f4a, #2a1f5a);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #333;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #25D366;
+        }
+        .product-card h3 {
+            font-size: 1.3em;
+            color: #25D366;
+            margin-bottom: 10px;
+        }
+        .product-card .desc {
+            color: #ccd;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+        .product-card .price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+        .product-card .price-usd {
+            color: #889;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        .product-card .btn {
+            display: inline-block;
+            background: #25D366;
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .product-card .btn:hover {
+            background: #1eb858;
+        }
+        .payment-section {
+            background: #111633;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .payment-section h2 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .payment-badge {
+            background: #1a1f4a;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            font-size: 0.95em;
+        }
+        .payment-badge strong {
+            color: #25D366;
+        }
+        .affiliate-section {
+            padding: 40px 20px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .affiliate-section h2 {
+            color: #25D366;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+        .affiliate-section p {
+            color: #ccd;
+            margin-bottom: 20px;
+        }
+        .affiliate-codes {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .affiliate-code {
+            background: #1a1f4a;
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: 2px solid #25D366;
+        }
+        .affiliate-code .code {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #25D366;
+        }
+        .affiliate-code .rate {
+            color: #889;
+            font-size: 0.85em;
+        }
+        .whatsapp-btn {
+            display: inline-block;
+            background: #25D366;
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        .whatsapp-btn:hover {
+            background: #1eb858;
+        }
+        .contact-section {
+            background: #0a0e27;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid #222;
+        }
+        .contact-section p {
+            color: #889;
+            margin: 5px 0;
+        }
+        .contact-section .name {
+            color: #25D366;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.8em; }
+            .product-card { padding: 20px; }
+        }
+    </style>
 </head>
 <body>
-<div class="bg-glow"></div>
-<div class="container">
+    <div class="hero">
+        <h1>HARZ Digital</h1>
+        <div class="tagline">Koya Trading & Digital Marketing</div>
+        <p>Kuɿi, ilimi, da damar kasuwanci. Daga ƙaramin mataki zuwa babban ciniki. Mu koya tare.</p>
+    </div>
 
-<nav>
-<div class="logo">HARZ<span>.</span>linkpc<span>.net</span></div>
-<div class="nav-links"><a href="harz-super-app.html">Super App</a><a href="#platforms">Platforms</a><a href="#crypto">Crypto</a></div>
-</nav>
+    <div class="products">
+        <h2>Kayayyakin Mu</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <h3>Digital Marketing Course</h3>
+                <p class="desc">Koyi yadda za ka sayar da kayayka a intanet — social media marketing, content creation, da sales funnels. Cikakken koyarwa.</p>
+                <div class="price">₦16,000</div>
+                <div class="price-usd">~$10 USD</div>
+                <a href="https://wa.me/2348028687857?text=Na%20so%20Digital%20Marketing%20Course" class="btn">Sayi Yanzu</a>
+            </div>
+            <div class="product-card">
+                <h3>Trading Basics eBook</h3>
+                <p class="desc">Littafi kan asalin trading — yadda za ka fara ciniki a kasuwar kudi da crypto. Sauƙi fahimta.</p>
+                <div class="price">₦8,000</div>
+                <div class="price-usd">~$5 USD</div>
+                <a href="https://wa.me/2348028687857?text=Na%20so%20Trading%20Basics%20eBook" class="btn">Sayi Yanzu</a>
+            </div>
+            <div class="product-card">
+                <h3>Premium Mentorship Program</h3>
+                <p class="desc">Koyarwa ta musamman daga Rabiu — trading da digital marketing mataimatai zuwa gaba. Kujeru kaɗan.</p>
+                <div class="price">₦64,000</div>
+                <div class="price-usd">~$40 USD</div>
+                <a href="https://wa.me/2348028687857?text=Na%20so%20Premium%20Mentorship" class="btn">Sayi Yanzu</a>
+            </div>
+        </div>
+    </div>
 
-<div class="search-wrap">
-<div class="search-box">
-<span class="search-icon">🔍</span>
-<input type="text" id="searchInput" placeholder="Search 600+ tools, platforms, services..." autocomplete="off">
-</div>
-<div class="search-results" id="searchResults"></div>
-</div>
+    <div class="payment-section">
+        <h2>Hanyoyin Biya</h2>
+        <div class="payment-methods">
+            <div class="payment-badge"><strong>UBA Bank Transfer</strong><br>2034326424<br>Rabiu Hamza Mohammed</div>
+            <div class="payment-badge"><strong>Paystack</strong><br>Card Payment</div>
+            <div class="payment-badge"><strong>GDEG Token</strong><br>Polygon Network</div>
+            <div class="payment-badge"><strong>USDT TRC20</strong><br>Crypto</div>
+            <div class="payment-badge"><strong>Gumroad</strong><br>Global Card</div>
+            <div class="payment-badge"><strong>Paddle</strong><br>Global Checkout</div>
+        </div>
+    </div>
 
-<div class="hero">
-<h1>HARZ <span class="grad">AI OS</span></h1>
-<p>Your complete digital ecosystem — 600+ tools, 98 platforms, school management, farm tracking, construction estimation, crypto payments. All in one place.</p>
-<div class="hero-badges">
-<span class="badge green">600+ Assets</span>
-<span class="badge blue">98 Platforms</span>
-<span class="badge purple">Crypto Ready</span>
-<span class="badge gold">CAC RC 321424</span>
-</div>
-<div class="cta-row">
-<a class="cta cta-primary" href="harz-super-app.html">Launch Super App</a>
-<a class="cta cta-secondary" href="#platforms">Explore</a>
-</div>
-</div>
+    <div class="affiliate-section">
+        <h2>Shiga Affiliate Program</h2>
+        <p>Raba lambar tallata mu, ka sami kwamishin akan kowane sayarwa. Babu kuɗi a gaba!</p>
+        <div class="affiliate-codes">
+            <div class="affiliate-code">
+                <div class="code">RABIU10</div>
+                <div class="rate">10% kwamishin</div>
+            </div>
+            <div class="affiliate-code">
+                <div class="code">HAUWA15</div>
+                <div class="rate">15% kwamishin</div>
+            </div>
+            <div class="affiliate-code">
+                <div class="code">PARTNER20</div>
+                <div class="rate">20% kwamishin</div>
+            </div>
+        </div>
+        <a href="https://wa.me/2348028687857?text=Na%20so%20in%20zama%20affiliate" class="whatsapp-btn">Rajista Yanzu</a>
+    </div>
 
-<div class="stats">
-<div class="stat"><div class="stat-num" style="color:var(--green)">600+</div><div class="stat-lbl">Total Assets</div></div>
-<div class="stat"><div class="stat-num" style="color:var(--blue)">98</div><div class="stat-lbl">Platforms</div></div>
-<div class="stat"><div class="stat-num" style="color:var(--purple)">490</div><div class="stat-lbl">Tools</div></div>
-</div>
-
-<div id="platforms">
-<div class="section-title"><div class="dot"></div> Core Platforms</div>
-<div class="platforms">
-<a class="platform" href="harz-super-app.html"><div class="platform-icon">🟢</div><div class="platform-name">HARZ Super App</div><div class="platform-desc">Central dashboard for all HARZ services</div></a>
-<a class="platform" href="harz-crypto-pay.html"><div class="platform-icon">🪙</div><div class="platform-name">Crypto Pay</div><div class="platform-desc">Pay with USDT, BTC, ETH & 100+ coins</div></a>
-<a class="platform" href="harz-transactions.html"><div class="platform-icon">💳</div><div class="platform-name">Transactions</div><div class="platform-desc">Payment history & analytics</div></a>
-<a class="platform" href="harz-analytics.html"><div class="platform-icon">📊</div><div class="platform-name">Analytics</div><div class="platform-desc">Revenue, orders & ecosystem health</div></a>
-<a class="platform" href="harz-wallet.html"><div class="platform-icon">👛</div><div class="platform-name">HARZ Wallet</div><div class="platform-desc">GDEG/USDT/NGN wallet & swap</div></a>
-<a class="platform" href="harz-contacts.html"><div class="platform-icon">👥</div><div class="platform-name">Contacts CRM</div><div class="platform-desc">Parents, farmers, clients & suppliers</div></a>
-<a class="platform" href="harz-invoicing.html"><div class="platform-icon">🧾</div><div class="platform-name">Invoicing</div><div class="platform-desc">Create & track invoices</div></a>
-<a class="platform" href="harz-weather.html"><div class="platform-icon">🌤️</div><div class="platform-name">Weather</div><div class="platform-desc">Forecast for farm & construction</div></a>
-<a class="platform" href="harz-notes.html"><div class="platform-icon">📝</div><div class="platform-name">Notes</div><div class="platform-desc">Quick notes & reminders</div></a>
-<a class="platform" href="harz-inventory.html"><div class="platform-icon">📦</div><div class="platform-name">Inventory</div><div class="platform-desc">Track products & stock levels</div></a>
-</div>
-</div>
-
-<div class="section-title"><div class="dot" style="background:var(--blue)"></div> Business & School</div>
-<div class="services">
-<a class="service" href="danfodio-memorial.html"><div class="service-icon">🏫</div><div class="service-name">Danfodio Memorial</div><div class="service-desc">School website</div></a>
-<a class="service" href="danfodio-student-portal.html"><div class="service-icon">📚</div><div class="service-name">Student Portal</div><div class="service-desc">Results & assignments</div></a>
-<a class="service" href="danfodio-fees-payment.html"><div class="service-icon">💳</div><div class="service-name">Fees Payment</div><div class="service-desc">Online school fees</div></a>
-<a class="service" href="danfodio-admission.html"><div class="service-icon">📋</div><div class="service-name">Admission</div><div class="service-desc">Apply online</div></a>
-<a class="service" href="harz-farm-manager.html"><div class="service-icon">🌾</div><div class="service-name">Farm Manager</div><div class="service-desc">Crops & livestock</div></a>
-<a class="service" href="harz-farm-to-market.html"><div class="service-icon">🛒</div><div class="service-name">Farm to Market</div><div class="service-desc">Sell produce</div></a>
-<a class="service" href="buildbot-ai.html"><div class="service-icon">🏗️</div><div class="service-name">BuildBot AI</div><div class="service-desc">Construction estimates</div></a>
-<a class="service" href="harz-smart-calendar.html"><div class="service-icon">📅</div><div class="service-name">Calendar</div><div class="service-desc">Schedule & tasks</div></a>
-<a class="service" href="harz-sms-blast.html"><div class="service-icon">📱</div><div class="service-name">SMS Blast</div><div class="service-desc">Bulk messaging</div></a>
-<a class="service" href="harz-project-manager.html"><div class="service-icon">📁</div><div class="service-name">Project Manager</div><div class="service-desc">Construction tracking</div></a>
-</div>
-
-<div class="section-title"><div class="dot" style="background:var(--gold)"></div> Latest Updates</div>
-<div class="updates">
-<div class="update-item"><div class="update-date">Aug 01</div><div class="update-text">Custom domain harz.linkpc.net is now live!</div></div>
-<div class="update-item"><div class="update-date">Aug 01</div><div class="update-text">NowPayments crypto integration added (USDT, BTC, ETH & 100+ coins)</div></div>
-<div class="update-item"><div class="update-date">Jul 29</div><div class="update-text">Exam Grading system with auto-generated question papers for 10 subjects</div></div>
-<div class="update-item"><div class="update-date">Jul 28</div><div class="update-text">HARZ AI OS unified with PWA offline mode, universal search & SSO</div></div>
-<div class="update-item"><div class="update-date">Jul 28</div><div class="update-text">BuildBot AI backend deployed for construction estimates & materials</div></div>
-</div>
-
-<div id="crypto">
-<div class="crypto-section">
-<h3>🪙 Pay with Crypto</h3>
-<p>Powered by NowPayments — No KYC required</p>
-<div class="crypto-coins">
-<span class="coin-tag">USDT TRC20</span>
-<span class="coin-tag">BTC</span>
-<span class="coin-tag">ETH</span>
-<span class="coin-tag">BNB</span>
-<span class="coin-tag">SOL</span>
-<span class="coin-tag">TRX</span>
-<span class="coin-tag">USDC</span>
-<span class="coin-tag">LTC</span>
-<span class="coin-tag">DOGE</span>
-</div>
-<div class="payments">
-<span class="pay-tag">Bank Transfer</span>
-<span class="pay-tag">USSD</span>
-<span class="pay-tag">Paystack</span>
-<span class="pay-tag">GDEG Token</span>
-<span class="pay-tag">NowPayments</span>
-</div>
-<a class="cta cta-primary" href="harz-crypto-pay.html" style="margin-top:6px">Pay Now</a>
-</div>
-</div>
-
-<div class="section-title"><div class="dot" style="background:var(--cyan)"></div> Contact HARZ</div>
-<div class="contact-section">
-<h3>Get in Touch</h3>
-<div class="contact-grid">
-<a class="contact-btn" href="https://wa.me/2348028687857"><div class="contact-btn-icon">💬</div><div class="contact-btn-label">WhatsApp</div><div class="contact-btn-sub">+234 802 868 7857</div></a>
-<a class="contact-btn" href="tel:+2348028687857"><div class="contact-btn-icon">📞</div><div class="contact-btn-label">Call</div><div class="contact-btn-sub">+234 802 868 7857</div></a>
-<a class="contact-btn" href="harz-super-app.html"><div class="contact-btn-icon">🟢</div><div class="contact-btn-label">Super App</div><div class="contact-btn-sub">All platforms</div></a>
-<a class="contact-btn" href="harz-crypto-pay.html"><div class="contact-btn-icon">🪙</div><div class="contact-btn-label">Crypto Pay</div><div class="contact-btn-sub">100+ coins</div></a>
-</div>
-</div>
-
-<footer>
-<div class="footer-logo">HARZ<span>.</span>linkpc<span>.net</span></div>
-<p>HARZ Digital Services ● CAC RC 321424 ● Since 2014</p>
-<p>Bauchi, Nigeria</p>
-<div class="social">
-<a href="https://wa.me/2348028687857" title="WhatsApp">💬</a>
-<a href="tel:+2348028687857" title="Call">📞</a>
-<a href="harz-super-app.html" title="Super App">🟢</a>
-<a href="harz-crypto-pay.html" title="Crypto">🪙</a>
-</div>
-<div class="quick-links">
-<a href="harz-super-app.html">Super App</a>
-<a href="harz-transactions.html">Transactions</a>
-<a href="harz-analytics.html">Analytics</a>
-<a href="harz-wallet.html">Wallet</a>
-<a href="harz-contacts.html">CRM</a>
-<a href="about.html">About</a>
-</div>
-<p class="credit">Built by Rabiu Hamza & Nuruddeen AI</p>
-</footer>
-
-</div>
-
-<script>
-// Search functionality
-const searchInput = document.getElementById('searchInput');
-const searchResults = document.getElementById('searchResults');
-
-const allItems = [
-{name:'HARZ Super App',icon:'🟢',url:'harz-super-app.html',tags:'dashboard main home central'},
-{name:'Crypto Pay',icon:'🪙',url:'harz-crypto-pay.html',tags:'crypto bitcoin usdt payment nowpayments'},
-{name:'Transactions',icon:'💳',url:'harz-transactions.html',tags:'payments history orders sales'},
-{name:'Analytics',icon:'📊',url:'harz-analytics.html',tags:'analytics revenue stats dashboard'},
-{name:'HARZ Wallet',icon:'👛',url:'harz-wallet.html',tags:'wallet gdeg usdt ngn swap send receive'},
-{name:'Contacts CRM',icon:'👥',url:'harz-contacts.html',tags:'contacts crm customers parents farmers clients'},
-{name:'Invoicing',icon:'🧾',url:'harz-invoicing.html',tags:'invoice billing receipt'},
-{name:'Weather',icon:'🌤️',url:'harz-weather.html',tags:'weather forecast rain farm construction'},
-{name:'Notes',icon:'📝',url:'harz-notes.html',tags:'notes reminder memo quick'},
-{name:'Inventory',icon:'📦',url:'harz-inventory.html',tags:'inventory stock products warehouse'},
-{name:'Danfodio Memorial',icon:'🏫',url:'danfodio-memorial.html',tags:'school danfodio memorial academy education'},
-{name:'Student Portal',icon:'📚',url:'danfodio-student-portal.html',tags:'student portal results assignments grades'},
-{name:'Fees Payment',icon:'💳',url:'danfodio-fees-payment.html',tags:'fees payment school tuition paystack'},
-{name:'Admission',icon:'📋',url:'danfodio-admission.html',tags:'admission apply school register enrollment'},
-{name:'Farm Manager',icon:'🌾',url:'harz-farm-manager.html',tags:'farm crops livestock agriculture harvest'},
-{name:'Farm to Market',icon:'🛒',url:'harz-farm-to-market.html',tags:'market sell produce farm trade'},
-{name:'BuildBot AI',icon:'🏗️',url:'buildbot-ai.html',tags:'construction build estimate materials building'},
-{name:'Smart Calendar',icon:'📅',url:'harz-smart-calendar.html',tags:'calendar schedule tasks events planning'},
-{name:'SMS Blast',icon:'📱',url:'harz-sms-blast.html',tags:'sms bulk message blast text'},
-{name:'Project Manager',icon:'📁',url:'harz-project-manager.html',tags:'project manager construction tracking'},
-{name:'HARZ AI Cloud',icon:'☁️',url:'harz-ai-cloud.html',tags:'ai cloud agents api intelligence'},
-{name:'HarzDM Store',icon:'🏪',url:'harzdm-store.html',tags:'store shop products marketplace ecommerce'},
-{name:'Nexal Ads',icon:'📢',url:'nexal-ads.html',tags:'ads advertising marketing campaigns'},
-{name:'Dev Platform',icon:'⚙️',url:'harz-dev-platform.html',tags:'developer api sdk code programming'},
-{name:'HARZ Connect',icon:'🔗',url:'harz-connect.html',tags:'connect social feed community'},
-{name:'Abuja Estate City',icon:'🏠',url:'abuja-estate-city.html',tags:'estate city real estate property housing'},
-{name:'Exam Grading',icon:'✏️',url:'harz-exam-grading.html',tags:'exam grading test questions school'},
-{name:'About HARZ',icon:'ℹ️',url:'about.html',tags:'about company info harz digital services'}
-];
-
-searchInput.addEventListener('input', function() {
-  const q = this.value.toLowerCase().trim();
-  if (!q || q.length < 2) {
-    searchResults.classList.remove('show');
-    searchResults.innerHTML = '';
-    return;
-  }
-  const matches = allItems.filter(item =>
-    item.name.toLowerCase().includes(q) ||
-    item.tags.toLowerCase().includes(q)
-  );
-  if (matches.length === 0) {
-    searchResults.innerHTML = '<div class="search-no">No results for "' + q + '"</div>';
-    searchResults.classList.add('show');
-    return;
-  }
-  searchResults.innerHTML = matches.map(m =>
-    '<a class="search-item" href="' + m.url + '"><span class="si-icon">' + m.icon + '</span>' + m.name + '</a>'
-  ).join('');
-  searchResults.classList.add('show');
-});
-
-searchInput.addEventListener('blur', function() {
-  setTimeout(() => searchResults.classList.remove('show'), 200);
-});
-</script>
+    <div class="contact-section">
+        <p class="name">Rabiu Hamza Mohammed</p>
+        <p>HARZ Digital</p>
+        <p>WhatsApp: 0802 868 7857</p>
+        <p>&copy; 2026 HARZ Digital. All rights reserved.</p>
+    </div>
 </body>
 </html>
