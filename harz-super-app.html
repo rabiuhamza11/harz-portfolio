@@ -194,6 +194,46 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </head>
 <body>
 
+<!-- HARZ Auth System -->
+<div id="auth-overlay" style="position:fixed;inset:0;z-index:9999;background:#0a0e1a;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px">
+  <div style="width:100%;max-width:380px">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#7c4dff,#00bcd4);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;color:#fff;margin:0 auto 14px;box-shadow:0 8px 30px rgba(124,77,255,.4)">H</div>
+      <div style="font-size:1.6rem;font-weight:800;color:#fff;letter-spacing:-.5px">HARZ</div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:2px">SUPER APP · AI OPERATING SYSTEM</div>
+    </div>
+
+    <!-- Login Form -->
+    <div id="auth-login" style="background:#12121e;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px">
+      <div style="font-size:.95rem;font-weight:700;color:#fff;margin-bottom:18px">Sign in to your account</div>
+      <input id="login-email" type="email" placeholder="Email address" style="width:100%;background:#1a1a2e;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;color:#fff;font-size:.85rem;outline:none;margin-bottom:10px;box-sizing:border-box">
+      <input id="login-password" type="password" placeholder="Password" style="width:100%;background:#1a1a2e;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;color:#fff;font-size:.85rem;outline:none;margin-bottom:14px;box-sizing:border-box">
+      <button onclick="doLogin()" id="login-btn" style="width:100%;background:linear-gradient(135deg,#7c4dff,#00bcd4);border:none;border-radius:10px;padding:13px;color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;transition:opacity .2s">Sign In</button>
+      <div style="text-align:center;margin-top:14px;font-size:.8rem;color:rgba(255,255,255,.5)">No account? <span onclick="showAuth('signup')" style="color:#00bcd4;cursor:pointer;font-weight:600">Sign up</span></div>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="auth-signup" style="background:#12121e;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px;display:none">
+      <div style="font-size:.95rem;font-weight:700;color:#fff;margin-bottom:18px">Create your account</div>
+      <input id="signup-name" type="text" placeholder="Full name" style="width:100%;background:#1a1a2e;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;color:#fff;font-size:.85rem;outline:none;margin-bottom:8px;box-sizing:border-box">
+      <input id="signup-email" type="email" placeholder="Email address" style="width:100%;background:#1a1a2e;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;color:#fff;font-size:.85rem;outline:none;margin-bottom:8px;box-sizing:border-box">
+      <input id="signup-phone" type="tel" placeholder="Phone (optional)" style="width:100%;background:#1a1a2e;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;color:#fff;font-size:.85rem;outline:none;margin-bottom:8px;box-sizing:border-box">
+      <input id="signup-city" type="text" placeholder="City (optional)" style="width:100%;background:#1a1a2e;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;color:#fff;font-size:.85rem;outline:none;margin-bottom:8px;box-sizing:border-box">
+      <input id="signup-password" type="password" placeholder="Password" style="width:100%;background:#1a1a2e;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;color:#fff;font-size:.85rem;outline:none;margin-bottom:14px;box-sizing:border-box">
+      <button onclick="doSignup()" id="signup-btn" style="width:100%;background:linear-gradient(135deg,#7c4dff,#00bcd4);border:none;border-radius:10px;padding:13px;color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;transition:opacity .2s">Create Account</button>
+      <div style="text-align:center;margin-top:14px;font-size:.8rem;color:rgba(255,255,255,.5)">Have an account? <span onclick="showAuth('login')" style="color:#00bcd4;cursor:pointer;font-weight:600">Sign in</span></div>
+    </div>
+
+    <!-- Auth message -->
+    <div id="auth-msg" style="text-align:center;margin-top:14px;font-size:.8rem;color:#ff5d6e;display:none"></div>
+
+    <!-- Loading -->
+    <div id="auth-loading" style="text-align:center;margin-top:14px;font-size:.8rem;color:rgba(255,255,255,.4);display:none">Please wait...</div>
+  </div>
+</div>
+
+
+
 <!-- Splash -->
 <div id="splash">
 <div class="splash-logo">H</div>
@@ -816,7 +856,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 </div>
 </div></div>
+
+<div style="padding:16px;margin-top:20px">
+<button onclick="harzLogout()" style="width:100%;background:rgba(255,93,110,.1);border:1px solid rgba(255,93,110,.2);border-radius:10px;padding:13px;color:#ff5d6e;font-size:.85rem;font-weight:700;cursor:pointer">⏻ Sign Out</button>
 </div>
+</div>
+
 
 <!-- Bottom Nav -->
 <div class="nav">
@@ -1414,6 +1459,150 @@ if('serviceWorker'in navigator){
     };
 }
 </script>
+
+<!-- HARZ Auth Script -->
+<script>
+const HARZ_AUTH_URL = "https://app.base44.com/api/apps/6a66fd3abd8d16365b0577e2/functions/harzAuth";
+
+// Check auth on load
+(function() {
+  var token = localStorage.getItem('harz_auth_token');
+  var userData = localStorage.getItem('harz_user');
+  if (!token || !userData) {
+    setTimeout(function() {
+      document.getElementById('auth-overlay').style.display = 'flex';
+      document.getElementById('splash').style.display = 'none';
+    }, 800);
+  } else {
+    try {
+      var user = JSON.parse(userData);
+      updateUIForUser(user);
+    } catch(e) {}
+  }
+})();
+
+function showAuth(tab) {
+  document.getElementById('auth-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('auth-signup').style.display = tab === 'signup' ? 'block' : 'none';
+  document.getElementById('auth-msg').style.display = 'none';
+}
+
+function showAuthMsg(msg, isError) {
+  var el = document.getElementById('auth-msg');
+  el.textContent = msg;
+  el.style.color = isError ? '#ff5d6e' : '#00e676';
+  el.style.display = 'block';
+}
+
+function setAuthLoading(loading) {
+  document.getElementById('auth-loading').style.display = loading ? 'block' : 'none';
+  document.getElementById('login-btn').style.opacity = loading ? '0.5' : '1';
+  document.getElementById('signup-btn').style.opacity = loading ? '0.5' : '1';
+  document.getElementById('login-btn').disabled = loading;
+  document.getElementById('signup-btn').disabled = loading;
+}
+
+async function doLogin() {
+  var email = document.getElementById('login-email').value.trim();
+  var password = document.getElementById('login-password').value;
+  if (!email || !password) { showAuthMsg('Please fill in all fields', true); return; }
+
+  setAuthLoading(true);
+  try {
+    var res = await fetch(HARZ_AUTH_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'login', email: email, password: password })
+    });
+    var data = await res.json();
+    setAuthLoading(false);
+
+    if (data.success) {
+      localStorage.setItem('harz_auth_token', data.token);
+      localStorage.setItem('harz_user', JSON.stringify(data.user));
+      updateUIForUser(data.user);
+      document.getElementById('auth-overlay').style.display = 'none';
+      showAuthMsg('Welcome back, ' + data.user.fullName.split(' ')[0] + '!', false);
+      setTimeout(function(){ document.getElementById('auth-msg').style.display = 'none'; }, 2000);
+    } else {
+      showAuthMsg(data.error || 'Login failed', true);
+    }
+  } catch(e) {
+    setAuthLoading(false);
+    showAuthMsg('Connection error. Try again.', true);
+  }
+}
+
+async function doSignup() {
+  var fullName = document.getElementById('signup-name').value.trim();
+  var email = document.getElementById('signup-email').value.trim();
+  var phone = document.getElementById('signup-phone').value.trim();
+  var city = document.getElementById('signup-city').value.trim();
+  var password = document.getElementById('signup-password').value;
+  if (!fullName || !email || !password) { showAuthMsg('Name, email and password required', true); return; }
+
+  setAuthLoading(true);
+  try {
+    var res = await fetch(HARZ_AUTH_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'signup', email: email, password: password, fullName: fullName, phone: phone, city: city })
+    });
+    var data = await res.json();
+    setAuthLoading(false);
+
+    if (data.success) {
+      localStorage.setItem('harz_auth_token', data.token);
+      localStorage.setItem('harz_user', JSON.stringify(data.user));
+      updateUIForUser(data.user);
+      document.getElementById('auth-overlay').style.display = 'none';
+      showToast('Account created! Welcome to HARZ 🎉');
+    } else {
+      showAuthMsg(data.error || 'Signup failed', true);
+    }
+  } catch(e) {
+    setAuthLoading(false);
+    showAuthMsg('Connection error. Try again.', true);
+  }
+}
+
+function updateUIForUser(user) {
+  try {
+    // Update avatar initials
+    var initials = user.fullName.split(' ').map(function(n){ return n[0] }).join('').substring(0,2).toUpperCase();
+    var avatars = document.querySelectorAll('.avatar');
+    avatars.forEach(function(a) { a.textContent = initials; });
+
+    // Update name in header area if exists
+    var nameEl = document.querySelector('.balance-label');
+    if (nameEl && user.fullName) {
+      // Could update greeting here
+    }
+
+    // Update wallet balance if available
+    if (user.walletBalance !== undefined) {
+      var balEl = document.querySelector('.balance-amount');
+      if (balEl) {
+        balEl.textContent = '\u20a6' + user.walletBalance.toLocaleString();
+      }
+    }
+  } catch(e) {}
+}
+
+function harzLogout() {
+  localStorage.removeItem('harz_auth_token');
+  localStorage.removeItem('harz_user');
+  document.getElementById('auth-overlay').style.display = 'flex';
+  showAuth('login');
+}
+
+// Make available globally
+window.doLogin = doLogin;
+window.doSignup = doSignup;
+window.showAuth = showAuth;
+window.harzLogout = harzLogout;
+</script>
+
 </body>
 </html>
 
