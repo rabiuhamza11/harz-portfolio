@@ -336,10 +336,23 @@ textarea{resize:vertical;min-height:80px}
 <script>
 const API='https://solene-5b0577e2.base44.app/functions/deployForgeDeploy';
 var reposCache=[];var history=JSON.parse(localStorage.getItem('deployHistory')||'[]');var selectedRuntime='node';var monitorInterval=null;
-var dockerImages=[{img:'nginx:alpine',icon:'\u{1F431}',desc:'Web server'},{img:'node:20-alpine',icon:'\u26A1',desc:'Node.js runtime'},{img:'python:3.12-slim',icon:'\u{1F40D}',desc:'Python runtime'},{img:'postgres:16-alpine',icon:'\u{1F4C3}',desc:'PostgreSQL DB'},{img:'redis:7-alpine',icon:'\u{1F9E0',desc:'Redis cache'},{img:'mongo:7',icon:'\u{1F4C3}',desc:'MongoDB DB'}];
+var dockerImages=[{img:'nginx:alpine',icon:'\u{1F431}',desc:'Web server'},{img:'node:20-alpine',icon:'\u26A1',desc:'Node.js runtime'},{img:'python:3.12-slim',icon:'\u{1F40D}',desc:'Python runtime'},{img:'postgres:16-alpine',icon:'\u{1F4C3}',desc:'PostgreSQL DB'},{img:'redis:7-alpine',icon:'\u{1F9E0}',desc:'Redis cache'},{img:'mongo:7',icon:'\u{1F4C3}',desc:'MongoDB DB'}];
 
-function showTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById('sec-'+name).classList.add('active');
-if(name==='dashboard')
+function showTab(name,el){
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+if(el)el.classList.add('active');
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById('sec-'+name).classList.add('active');
+if(name==='dashboard')loadDashboard();
+if(name==='templates')loadTemplates();
+if(name==='repos')loadRepos();
+if(name==='cicd')loadCICD();
+if(name==='monitor')loadMonitor();
+if(name==='docker')renderDockerImages();
+if(name==='cloudflare')loadCfList();
+if(name==='hf')autoLoadHf();
+}
+
 // CLOUDFLARE WORKERS
 const CF_API='https://solene-5b0577e2.base44.app/functions/cfWorkers';
 async function doCfDeploy(){
@@ -391,7 +404,10 @@ async function delCfWorker(name){
 }
 
 
-loadDashboard();autoLoadHf();autoRefreshDashboard();if(name==='templates')loadTemplates();if(name==='repos')loadRepos();if(name==='cicd')loadCICD();if(name==='monitor')loadMonitor();if(name==='docker')renderDockerImages();if(name==='cloudflare')loadCfList();if(name==='hf')autoLoadHf();}
+// PAGE INIT — auto-load everything on open
+loadDashboard();
+autoLoadHf();
+autoRefreshDashboard();
 function toggleSource(){var v=document.getElementById('sourceType').value;document.getElementById('html-source').classList.toggle('hidden',v!=='html');document.getElementById('template-source').classList.toggle('hidden',v!=='template');document.getElementById('github-source').classList.toggle('hidden',v!=='github');}
 function selectRuntime(rt,el){selectedRuntime=rt;document.querySelectorAll('.runtime-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');if(rt==='node'){document.getElementById('serverCode').value="export default function handler(req, res) {\n  res.status(200).json({ message: 'Hello from DeployForge!', runtime: 'Node.js on Vercel', timestamp: new Date().toISOString() });\n}";}else{document.getElementById('serverCode').value="from http.server import BaseHTTPRequestHandler\nimport json\nclass handler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        self.send_response(200)\n        self.send_header('Content-type','application/json')\n        self.end_headers()\n        self.wfile.write(json.dumps({'message':'Hello from Python on Vercel!'}).encode())";}}
 async function apiCall(action,data={}){const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...data})});return res.json();}
@@ -432,7 +448,6 @@ async function doCreateRepo(){var name=document.getElementById('newRepoName').va
 function generateTemplate(type,name){var t={landing:'<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3}.hero{text-align:center;padding:60px 20px}.hero h1{font-size:32px;margin-bottom:12px;color:#58a6ff}.hero p{font-size:16px;color:#8b949e;max-width:400px;margin:0 auto 24px}.btn{display:inline-block;padding:12px 28px;background:#3fb950;color:#000;border-radius:8px;text-decoration:none;font-weight:700}</style></head><body><div class="hero"><h1>'+name+'</h1><p>Built with DeployForge</p><a href="#" class="btn">Get Started</a></div></body></html>',store:'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0d1117;color:#e6edf3}h1{text-align:center;padding:20px;color:#58a6ff}.grid{max-width:600px;margin:0 auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.item{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:12px}.price{color:#3fb950;font-weight:700}</style></head><body><h1>'+name+'</h1><div class="grid"><div class="item"><h3>Product 1</h3><div class="price">N5,000</div></div></div></body></html>',blog:'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0d1117;color:#e6edf3;max-width:600px;margin:0 auto;padding:20px}h1{color:#58a6ff;margin-bottom:16px}.post{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:12px}</style></head><body><h1>'+name+'</h1><div class="post"><h2>First Post</h2><p>Welcome to our blog.</p></div></body></html>',dashboard:'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0d1117;color:#e6edf3;padding:12px}.header{padding:12px 0;color:#58a6ff;font-size:18px;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.stat{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;text-align:center}.stat .num{font-size:20px;font-weight:700;color:#3fb950}</style></head><body><div class="header">'+name+'</div><div class="grid"><div class="stat"><div class="num">0</div><div class="lbl">Users</div></div></div></body></html>'};return t[type]||t.landing;}
 
 // CLOUDFLARE WORKERS
-const CF_API='https://solene-5b0577e2.base44.app/functions/cfWorkers';
 async function doCfDeploy(){
   var name=document.getElementById('cfName').value||'harz-worker';
   var code=document.getElementById('cfCode').value;
