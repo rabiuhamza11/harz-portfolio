@@ -465,7 +465,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div id="ai-chat" class="biz-control">
 <div class="biz-ctrl-header">
 <span class="back" onclick="closeAI()">‹</span>
-<div><div class="name">Harz AI Assistant</div><div class="status" id="ai-status">● Live · llama-3.3-70b</div></div>
+<div><div class="name">Harz AI Assistant</div><div class="status" id="ai-status">● Live · Nemotron 120B (Free)</div></div>
 </div>
 <div class="biz-ctrl-body" id="aiMsgs">
 <div class="biz-ctrl-grid">
@@ -497,12 +497,22 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="biz-ctrl-section">
 <div class="biz-ctrl-title">Ask Harz AI</div>
 <div id="aiMsgList" style="margin-bottom:10px">
-<div class="ai-msg bot" style="background:var(--card);padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem">Hey! I'm your Harz AI assistant. Ask me about the ecosystem, products, payments, or anything else.</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+<button onclick="selectAgent('harz')" style="background:var(--p1);color:#fff;border:none;border-radius:16px;padding:5px 12px;font-size:.68rem;cursor:pointer">🤖 HARZ AI</button>
+<button onclick="selectAgent('hauwa')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:5px 12px;font-size:.68rem;color:#e91e63;cursor:pointer">📢 Hauwa</button>
+<button onclick="selectAgent('rabi')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:5px 12px;font-size:.68rem;color:#2196f3;cursor:pointer">💰 Rabi</button>
+<button onclick="selectAgent('aisha')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:5px 12px;font-size:.68rem;color:#ff9800;cursor:pointer">💬 Aisha</button>
+<button onclick="selectAgent('nuruddeen')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:5px 12px;font-size:.68rem;color:#4caf50;cursor:pointer">📚 Nuruddeen</button>
+</div>
+<div class="ai-msg bot" style="background:var(--card);padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem">Sannu! Ni HARZ AI ne. Ina iya taimaka maka da platforms, products, payments, da kowane abu a cikin HARZ ecosystem.</div>
 </div>
 <div class="ai-quick-row" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-<button class="ai-chip" onclick="quickAI('What platforms are in the Harz ecosystem?')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p2);cursor:pointer">Platforms?</button>
-<button class="ai-chip" onclick="quickAI('How do I accept payments?')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p2);cursor:pointer">Payments?</button>
+<button class="ai-chip" onclick="quickAI('Me platforms din HARZ ke yi?')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p2);cursor:pointer">Platforms?</button>
+<button class="ai-chip" onclick="quickAI('Ta yaya zan biya?')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p2);cursor:pointer">Payments?</button>
 <button class="ai-chip" onclick="quickAI('Tell me about GDEG token')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p2);cursor:pointer">GDEG?</button>
+<button class="ai-chip" onclick="quickAI('Open Abuja Estate City')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p3);cursor:pointer">🏠 Estate</button>
+<button class="ai-chip" onclick="quickAI('Open HarzMusic')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p4);cursor:pointer">🎵 Music</button>
+<button class="ai-chip" onclick="quickAI('Open EduWealth courses')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:.7rem;color:var(--p1);cursor:pointer">📚 Courses</button>
 </div>
 <div class="biz-ctrl-input" style="background:var(--card);border-top:1px solid var(--border);padding:10px;display:flex;gap:8px">
 <input id="aiInput" aria-label="Ask Harz AI" placeholder="Ask Harz AI anything..." style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:.8rem" onkeydown="if(event.key==='Enter')sendAI()">
@@ -830,6 +840,52 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 </div>
 <script>document.getElementById('app-overlay').style.display='none';</script>
 <!-- Toast -->
+<!-- AI Command Palette -->
+<div id="ai-palette" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;display:none;align-items:flex-start;justify-content:center;padding-top:60px">
+<div style="background:var(--card);border:1px solid var(--p1);border-radius:14px;width:90%;max-width:400px;overflow:hidden;box-shadow:0 8px 32px rgba(124,77,255,.3)">
+<div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+<span style="font-size:1.2rem">🤖</span>
+<span style="font-size:.85rem;font-weight:700;color:var(--p1)">HARZ AI Command</span>
+<span onclick="closePalette()" style="margin-left:auto;color:var(--muted);cursor:pointer;font-size:1.1rem">✕</span>
+</div>
+<input id="paletteInput" onkeydown="if(event.key==='Enter')paletteSearch();if(event.key==='Escape')closePalette()" placeholder="Type a command or ask AI..." style="width:100%;background:var(--bg);border:none;border-bottom:1px solid var(--border);padding:12px 16px;color:var(--text);font-size:.85rem;outline:none">
+<div id="paletteResults" style="max-height:300px;overflow-y:auto;padding:8px"></div>
+<div style="padding:8px 16px;border-top:1px solid var(--border);font-size:.65rem;color:var(--muted)">Press Enter to ask AI · Esc to close</div>
+</div>
+</div>
+<!-- AI FAB -->
+<div onclick="openPalette()" style="position:fixed;bottom:80px;right:16px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;z-index:99;box-shadow:0 4px 20px rgba(124,77,255,.4)">🤖</div>
+<script>
+function openPalette(){document.getElementById('ai-palette').style.display='flex';setTimeout(()=>document.getElementById('paletteInput').focus(),100)}
+function closePalette(){document.getElementById('ai-palette').style.display='none';document.getElementById('paletteInput').value='';document.getElementById('paletteResults').innerHTML=''}
+function paletteSearch(){
+const q=document.getElementById('paletteInput').value.trim();
+if(!q)return;
+const results=document.getElementById('paletteResults');
+results.innerHTML='<div style="padding:12px;color:var(--muted);font-size:.8rem"><span style="animation:pulse 1s infinite">●●●</span> Thinking...</div>';
+fetch('https://superagent-2286fb2f.base44.app/functions/harzSuperAI',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,agent:'harz'})})
+.then(r=>r.json()).then(d=>{
+results.innerHTML='';
+const div=document.createElement('div');
+div.style.cssText='padding:12px;background:var(--bg);border-radius:10px;font-size:.8rem;line-height:1.5;color:var(--text);white-space:pre-wrap';
+div.textContent=d.response||'No response';
+results.appendChild(div);
+// Check for open command
+const openMatch=(d.response||'').match(/\[OPEN:(https?:\/\/[^\]]+)\]/);
+if(openMatch){
+const btn=document.createElement('div');
+btn.style.cssText='margin-top:8px;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;padding:10px;border-radius:8px;text-align:center;cursor:pointer;font-size:.8rem;font-weight:600';
+btn.textContent='Open →';
+btn.onclick=function(){closePalette();openLink(openMatch[1]);};
+results.appendChild(btn);
+}
+}).catch(()=>{results.innerHTML='<div style="padding:12px;color:var(--p5);font-size:.8rem">Connection error</div>';});
+}
+document.addEventListener('keydown',function(e){
+if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openPalette();}
+});
+</script>
+
 <div id="toast" class="toast"></div>
 
 <script>
@@ -1186,6 +1242,31 @@ function getPref(key){try{return localStorage.getItem('harz_'+key)}catch(e){retu
 function rememberLastPage(){try{localStorage.setItem('harz_lastPage',currentPage||'home')}catch(e){}}
 function restoreLastPage(){try{var p=localStorage.getItem('harz_lastPage');if(p&&p!=='home'){switchPage(p)}}catch(e){}}
 
+// AI Chat History
+let aiHistory=[];
+let currentAgent='harz';
+const AGENTS=[
+{id:'harz',name:'HARZ AI',icon:'🤖',color:'var(--p1)',desc:'General assistant'},
+{id:'hauwa',name:'Hauwa',icon:'📢',color:'#e91e63',desc:'Marketing agent'},
+{id:'rabi',name:'Rabi',icon:'💰',color:'#2196f3',desc:'Finance agent'},
+{id:'aisha',name:'Aisha',icon:'💬',color:'#ff9800',desc:'Support agent'},
+{id:'nuruddeen',name:'Nuruddeen',icon:'📚',color:'#4caf50',desc:'Knowledge agent'}
+];
+
+function selectAgent(id){
+currentAgent=id;
+const a=AGENTS.find(x=>x.id===id);
+if(a){
+document.getElementById('ai-status').innerHTML='● '+a.name+' · '+a.desc;
+document.getElementById('aiMsgList').innerHTML='';
+aiHistory=[];
+const botDiv=document.createElement('div');
+botDiv.style.cssText='background:var(--card);padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem';
+botDiv.textContent='Sannu! Ni '+a.name+'. Yadda zan taimaka?';
+document.getElementById('aiMsgList').appendChild(botDiv);
+}
+}
+
 function sendAI(){
 const input=document.getElementById('aiInput');
 const msg=input.value.trim();
@@ -1199,17 +1280,39 @@ input.value='';
 msgList.scrollTop=msgList.scrollHeight;
 const thinkDiv=document.createElement('div');
 thinkDiv.style.cssText='background:var(--card);padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem;color:var(--muted)';
-thinkDiv.textContent='Thinking...';
+thinkDiv.innerHTML='<span style="animation:pulse 1s infinite">●●●</span> Thinking...';
 msgList.appendChild(thinkDiv);
 msgList.scrollTop=msgList.scrollHeight;
-fetch(HARZ_BASE+'/harzCloud',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'chat',message:msg,api_key:HARZ_API_KEY})})
+fetch('https://superagent-2286fb2f.base44.app/functions/harzSuperAI',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,history:aiHistory,agent:currentAgent})})
 .then(r=>r.json()).then(d=>{
 thinkDiv.remove();
 const botDiv=document.createElement('div');
-botDiv.style.cssText='background:var(--card);padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem';
-botDiv.textContent=d.response||d.error||'Sorry, I could not process that.';
+botDiv.style.cssText='background:var(--card);padding:10px;border-radius:10px;margin-bottom:6px;font-size:.8rem;line-height:1.5';
+let reply=d.response||d.error||'Sorry, I could not process that.';
+// Check for [OPEN:url] commands
+const openMatch=reply.match(/\[OPEN:(https?:\/\/[^\]]+)\]/);
+if(openMatch){
+reply=reply.replace(/\[OPEN:[^\]]+\]/,'').trim();
+const openBtn=document.createElement('div');
+openBtn.style.cssText='background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;padding:8px 14px;border-radius:8px;margin-bottom:6px;font-size:.78rem;text-align:center;cursor:pointer';
+openBtn.textContent='Tap to open →';
+openBtn.onclick=function(){openLink(openMatch[1]);};
+botDiv.textContent=reply;
 msgList.appendChild(botDiv);
+msgList.appendChild(openBtn);
+}else{
+botDiv.textContent=reply;
+msgList.appendChild(botDiv);
+}
+// Save to history
+aiHistory.push({role:'user',content:msg});
+aiHistory.push({role:'assistant',content:reply});
+if(aiHistory.length>20)aiHistory=aiHistory.slice(-20);
 msgList.scrollTop=msgList.scrollHeight;
+// Update status with model
+if(d.model){
+document.getElementById('ai-status').textContent='● '+d.model.split('/')[1].split(':')[0]+' · Live';
+}
 }).catch(()=>{
 thinkDiv.textContent='Connection error. Please try again.';
 });
