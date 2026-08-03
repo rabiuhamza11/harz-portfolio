@@ -56,8 +56,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
 .success-icon{font-size:3rem;text-align:center;margin-bottom:8px}
 .new-pay{display:block;text-align:center;margin-top:16px;color:var(--cyan);font-size:.8rem;text-decoration:none}
 .info-note{font-size:.6rem;color:var(--muted);text-align:center;margin-top:12px;line-height:1.5}
-.qr-wrap{text-align:center;margin:12px 0}
-.qr-wrap img{border-radius:8px}
 </style>
 </head>
 <body>
@@ -70,7 +68,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
 
 <div class="alert" id="alert"></div>
 
-<!-- Payment Form -->
 <div id="payForm">
 <div class="form-card">
 <div class="form-group">
@@ -93,18 +90,15 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
 <p class="info-note">Powered by NowPayments — No KYC required<br>Secure crypto payment processing</p>
 </div>
 
-<!-- Loading -->
 <div id="loadingDiv" style="display:none">
 <div class="loading"><span class="spin"></span>Creating your payment...</div>
 </div>
 
-<!-- Payment Result -->
 <div class="result-card" id="resultCard">
 <div class="result-title" id="resultTitle">✅ Payment Created!</div>
 <div id="resultBody"></div>
 </div>
 
-<!-- Success -->
 <div id="successDiv" style="display:none">
 <div class="result-card show">
 <div class="success-icon">🎉</div>
@@ -117,14 +111,14 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
 </div>
 
 <script>
-const NP_API = "63WEPHP-X0CMCC3-KS5F4EA-59G7CBK";
-const NP_BASE = "https://api.nowpayments.io/v1";
+// Backend handles NowPayments API key securely
+const BACKEND_URL = "https://solene-5b0577e2.base44.app/functions/harzPayments";
 
 const coins = [
 {icon:"💵",name:"USDT TRC20",code:"usdttrc20"},
 {icon:"₿",name:"Bitcoin",code:"btc"},
 {icon:"Ξ",name:"Ethereum",code:"eth"},
-{icon:"🟡",name:"BNB",code:"bnb"},
+{icon:"🟡",name:"BNB",code:"bnbbsc"},
 {icon:"◎",name:"Solana",code:"sol"},
 {icon:"🔺",name:"TRX",code:"trx"},
 {icon:"USD",name:"USDC",code:"usdc"},
@@ -134,14 +128,12 @@ const coins = [
 
 let selectedCoin = "usdttrc20";
 let currentInvoiceId = null;
-let currentPaymentId = null;
 
-// Render coin grid
 const coinGrid = document.getElementById("coinGrid");
 coins.forEach((c,i) => {
   const btn = document.createElement("div");
   btn.className = "coin-btn" + (i === 0 ? " active" : "");
-  btn.innerHTML = `<div class="coin-icon">${c.icon}</div><div class="coin-name">${c.name}</div>`;
+  btn.innerHTML = '<div class="coin-icon">' + c.icon + '</div><div class="coin-name">' + c.name + '</div>';
   btn.onclick = () => {
     document.querySelectorAll(".coin-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
@@ -150,7 +142,6 @@ coins.forEach((c,i) => {
   coinGrid.appendChild(btn);
 });
 
-// NGN estimate
 document.getElementById("amount").addEventListener("input", function() {
   const usd = parseFloat(this.value) || 0;
   document.getElementById("ngnEst").textContent = (usd * 1500).toLocaleString();
@@ -176,23 +167,19 @@ async function createInvoice() {
   document.getElementById("payForm").style.display = "none";
   
   try {
-    const ref = "HARZ-" + Date.now().toString(36).toUpperCase();
+    const ref = "HARZ-CRYPTO-" + Date.now().toString(36).toUpperCase();
     
-    // Create invoice via NowPayments
-    const resp = await fetch(NP_BASE + "/invoice", {
+    const resp = await fetch(BACKEND_URL, {
       method: "POST",
-      headers: {
-        "x-api-key": NP_API,
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        action: "create_crypto",
         price_amount: amount,
         price_currency: "usd",
+        pay_currency: selectedCoin,
         order_id: ref,
         order_description: product + " (" + selectedCoin.toUpperCase() + ")",
-        success_url: location.origin + location.pathname.replace("harz-crypto-pay.html","") + "harz-transactions.html?status=success&ref=" + ref,
-        cancel_url: location.href,
-        pay_currency: selectedCoin
+        product: product
       })
     });
     
@@ -207,74 +194,90 @@ async function createInvoice() {
       card.classList.add("show");
       
       document.getElementById("resultTitle").textContent = "✅ Payment Created!";
-      document.getElementById("resultBody").innerHTML = `
-        <div class="result-amount">$${amount.toFixed(2)}</div>
-        <div class="result-coin">Paying with ${coins.find(c=>c.code===selectedCoin).name}</div>
-        <div class="result-addr">Ref: ${ref}</div>
-        <p style="font-size:.7rem;color:var(--muted);text-align:center;margin:12px 0">Click below to complete your payment securely on NowPayments</p>
-        <a href="${invoiceUrl}" class="result-link" target="_blank">Pay with ${coins.find(c=>c.code===selectedCoin).name} →</a>
-        <button class="check-btn" onclick="checkStatus()">🔄 Check Payment Status</button>
-        <a href="harz-crypto-pay.html" class="new-pay">← New Payment</a>
-      `;
-      
-      // Save to localStorage
-      const txns = JSON.parse(localStorage.getItem("harzCryptoTxns") || "[]");
-      txns.push({
-        ref, product, amount, coin: selectedCoin, invoiceId: currentInvoiceId,
-        status: "waiting", date: new Date().toISOString()
-      });
-      localStorage.setItem("harzCryptoTxns", JSON.stringify(txns));
-      
-      // Auto-check status every 15 seconds
-      statusInterval = setInterval(() => checkStatus(true), 15000);
+      document.getElementById("resultBody").innerHTML = 
+        '<div class="result-amount">$' + amount.toFixed(2) + '</div>' +
+        '<div class="result-coin">' + selectedCoin.toUpperCase() + '</div>' +
+        '<div class="result-addr">Order: ' + ref + '</div>' +
+        '<p style="text-align:center;font-size:.72rem;color:var(--muted);margin:10px 0">Click below to complete your crypto payment via NowPayments secure checkout</p>' +
+        '<a href="' + invoiceUrl + '" target="_blank" class="result-link">🪙 Pay with ' + selectedCoin.toUpperCase() + ' →</a>' +
+        '<button class="check-btn" onclick="checkStatus()">📊 Check Payment Status</button>' +
+        '<button class="check-btn" onclick="newPayment()" style="margin-top:8px">← New Payment</button>';
     } else {
-      throw new Error(data.message || "Failed to create payment");
+      throw new Error(data.message || data.error || "Failed to create payment");
     }
-  } catch(e) {
+  } catch(err) {
     document.getElementById("loadingDiv").style.display = "none";
     document.getElementById("payForm").style.display = "block";
+    showAlert("Error: " + err.message);
     payBtn.disabled = false;
     payBtn.textContent = "🪙 Create Payment";
-    showAlert("Error: " + e.message);
   }
 }
 
-let statusInterval = null;
-
-async function checkStatus(silent) {
-  if (!currentInvoiceId) { if(!silent) showAlert("No payment to check"); return; }
+async function checkStatus() {
+  if (!currentInvoiceId) { showAlert("No active payment"); return; }
+  
+  const card = document.getElementById("resultCard");
+  card.innerHTML = '<div class="loading"><span class="spin"></span>Checking payment status...</div>';
   
   try {
-    // Check invoice status
-    const resp = await fetch(NP_BASE + "/invoice/" + currentInvoiceId, {
-      headers: { "x-api-key": NP_API }
+    const resp = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "crypto_status",
+        invoice_id: currentInvoiceId
+      })
     });
     const data = await resp.json();
     
-    const status = (data.payment_status || data.status || "waiting").toLowerCase();
+    let statusBadge = "";
+    let statusText = "";
     
-    if (status === "confirmed" || status === "finished" || status === "paid") {
-      if (statusInterval) clearInterval(statusInterval);
+    if (data.payment_status === "confirmed" || data.payment_status === "finished") {
+      statusBadge = '<div class="status-badge status-confirmed">CONFIRMED ✅</div>';
+      statusText = "Your payment has been confirmed! Thank you.";
+      
       document.getElementById("resultCard").classList.remove("show");
       document.getElementById("successDiv").style.display = "block";
-      
-      // Update localStorage
-      const txns = JSON.parse(localStorage.getItem("harzCryptoTxns") || "[]");
-      const txn = txns.find(t => t.invoiceId === currentInvoiceId);
-      if (txn) { txn.status = "confirmed"; localStorage.setItem("harzCryptoTxns", JSON.stringify(txns)); }
-    } else if (!silent) {
-      const card = document.getElementById("resultCard");
-      const statusText = status === "waiting" ? "⏳ Waiting for payment..." : "⏳ Status: " + status;
-      const badge = status === "waiting" ? "waiting" : "waiting";
-      card.querySelector(".result-title").innerHTML = `<span class="status-badge status-${badge}">${statusText}</span>
-        <div style="margin-top:12px">
-          <a href="https://nowpayments.io/payment/?iid=${currentInvoiceId}" class="result-link" target="_blank">Complete Payment →</a>
-          <button class="check-btn" onclick="checkStatus()">🔄 Check Again</button>
-        </div>`;
+      return;
+    } else if (data.payment_status === "waiting" || data.payment_status === "partially_paid") {
+      statusBadge = '<div class="status-badge status-waiting">WAITING ⏳</div>';
+      statusText = "Waiting for payment. Please complete your payment.";
+    } else if (data.payment_status === "expired" || data.payment_status === "failed") {
+      statusBadge = '<div class="status-badge status-error">EXPIRED ❌</div>';
+      statusText = "This payment has expired. Please create a new one.";
+    } else {
+      statusBadge = '<div class="status-badge status-waiting">PENDING ⏳</div>';
+      statusText = "Payment status: " + (data.payment_status || "unknown");
     }
-  } catch(e) {
-    if (!silent) showAlert("Could not check status: " + e.message);
+    
+    card.classList.add("show");
+    card.innerHTML = 
+      '<div class="result-title">Payment Status</div>' +
+      statusBadge +
+      '<p style="text-align:center;font-size:.72rem;color:var(--muted);margin:10px 0">' + statusText + '</p>' +
+      '<button class="check-btn" onclick="checkStatus()">📊 Check Again</button>' +
+      '<button class="check-btn" onclick="newPayment()" style="margin-top:8px">← New Payment</button>';
+  } catch(err) {
+    showAlert("Error checking status: " + err.message);
   }
+}
+
+function newPayment() {
+  document.getElementById("resultCard").classList.remove("show");
+  document.getElementById("successDiv").style.display = "none";
+  document.getElementById("payForm").style.display = "block";
+  const payBtn = document.getElementById("payBtn");
+  payBtn.disabled = false;
+  payBtn.textContent = "🪙 Create Payment";
+  currentInvoiceId = null;
+}
+
+const params = new URLSearchParams(location.search);
+if (params.get("status") === "success") {
+  document.getElementById("payForm").style.display = "none";
+  document.getElementById("successDiv").style.display = "block";
 }
 </script>
 </body>
