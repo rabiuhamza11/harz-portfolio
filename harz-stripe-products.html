@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Stripe Products — International Payments</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{background:linear-gradient(135deg,#0a0e27,#1a1f3a);min-height:100vh;color:#fff;padding:16px}
+.header{text-align:center;padding:30px 0 20px}
+.header h1{font-size:2.2rem;background:linear-gradient(90deg,#635BFF,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{color:#8892b0;margin-top:6px;font-size:0.95rem}
+.stripe-logo{display:inline-flex;align-items:center;gap:8px;background:rgba(99,91,255,0.1);padding:8px 16px;border-radius:20px;margin-bottom:16px;font-size:0.85rem;color:#7C7FFF}
+.stripe-logo svg{width:16px;height:16px}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1000px;margin:24px auto}
+.product{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;transition:0.3s;position:relative;overflow:hidden}
+.product:hover{border-color:rgba(99,91,255,0.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(99,91,255,0.15)}
+.product::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#635BFF,#00d4ff)}
+.product-icon{font-size:2.5rem;margin-bottom:12px}
+.product h3{font-size:1.15rem;margin-bottom:6px}
+.product .desc{color:#8892b0;font-size:0.85rem;margin-bottom:16px;line-height:1.5}
+.product .price{font-size:2rem;font-weight:bold;background:linear-gradient(90deg,#635BFF,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.product .price-unit{color:#8892b0;font-size:0.8rem;margin-bottom:16px}
+.product .features{list-style:none;margin-bottom:20px}
+.product .features li{padding:6px 0;color:#a0aec0;font-size:0.82rem;padding-left:20px;position:relative}
+.product .features li::before{content:'✓';position:absolute;left:0;color:#00ff64;font-weight:bold}
+.buy-btn{display:block;width:100%;background:linear-gradient(90deg,#635BFF,#0A2540);color:#fff;border:none;border-radius:10px;padding:14px;font-size:0.95rem;font-weight:bold;cursor:pointer;transition:0.3s;text-decoration:none;text-align:center}
+.buy-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,91,255,0.3)}
+.test-banner{text-align:center;background:rgba(255,200,0,0.08);border:1px solid rgba(255,200,0,0.2);border-radius:12px;padding:12px;margin:0 auto 20px;max-width:600px;font-size:0.85rem;color:#ffd700}
+.test-banner code{background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:4px;font-family:monospace;color:#fff}
+.footer{text-align:center;padding:30px 0;color:#4a5568;font-size:0.8rem}
+.footer a{color:#635BFF;text-decoration:none}
+.badge{display:inline-block;font-size:0.65rem;padding:3px 8px;border-radius:10px;margin-left:6px;vertical-align:middle}
+.badge.sub{background:rgba(0,255,100,0.15);color:#00ff64}
+.badge.one{background:rgba(99,91,255,0.15);color:#7C7FFF}
+@media(max-width:600px){.products-grid{grid-template-columns:1fr}.header h1{font-size:1.6rem}}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="stripe-logo">
+<svg viewBox="0 0 60 25" fill="#7C7FFF"><path d="M59.64 14.28h-8.06c.19 1.93 1.6 2.55 3.2 2.55 1.64 0 2.96-.37 4.05-.95v3.02a8.33 8.33 0 0 1-4.56 1.1c-4.01 0-6.83-2.47-6.83-7.31 0-4.1 2.27-7.37 6.28-7.37 4.02 0 6.12 3.16 6.12 7.3 0 .39-.04.77-.1 1.66zm-8.1-2.74c0-1.84-1.13-2.6-2.63-2.6s-2.7.76-2.83 2.6h5.46zm-13.04-4.66c1.27 0 2.5.22 3.67.73v3.52c-1.02-.57-2.17-.82-3.37-.82-1.1 0-1.99.32-1.99 1.12 0 2.04 6.07.5 6.07 5.26 0 3.26-2.9 4.42-5.86 4.42-1.45 0-2.95-.27-4.28-.92v-3.62c1.33.72 2.65 1.12 3.92 1.12 1.37 0 2.36-.37 2.36-1.27 0-2.26-6.22-.67-6.22-5.48 0-3.06 2.73-4.06 5.7-4.06zm-9.99.18v12.38h-4.04V6.96h4.04zM24.5 3.96c1.32 0 2.37 1.06 2.37 2.37 0 1.32-1.05 2.37-2.37 2.37-1.31 0-2.37-1.05-2.37-2.37 0-1.31 1.06-2.37 2.37-2.37zM14.62 1.06c2.92 0 5.68 1.27 5.68 4.47 0 2.77-1.88 4.02-4.15 4.7-1.98.57-2.66.6-2.66 1.12 0 .45.45.68 1.65.68 1.6 0 3.6-.62 5.28-1.47v3.82c-1.97.92-4.05 1.27-6.16 1.27-3.16 0-6.07-1.32-6.07-4.85 0-3.32 2.77-4.27 5.14-4.87 1.83-.47 2.59-.5 2.59-1.02 0-.47-.55-.77-1.7-.77-2.07 0-5.6.55-5.6.55V1.06s3.05-.06 6-.06z"/></svg>
+Powered by Stripe
+</div>
+<h1>HARZ Stripe Products</h1>
+<p>International payments in USD — Card, Apple Pay, Google Pay</p>
+</div>
+
+<div class="test-banner">
+⚠️ Test Mode — Use card <code>4242 4242 4242 4242</code> with any future expiry & CVC. No real charges.
+</div>
+
+<div class="products-grid">
+
+<div class="product">
+<div class="product-icon">💻</div>
+<h3>HARZ Cloud AI <span class="badge sub">SUBSCRIPTION</span></h3>
+<p class="desc">Monthly access to 20+ AI agents for construction, education, farming, and business automation.</p>
+<div class="price">$29<span style="font-size:1rem;color:#8892b0">/mo</span></div>
+<div class="price-unit">Billed monthly · Cancel anytime</div>
+<ul class="features">
+<li>20+ specialized AI agents</li>
+<li>Construction estimation (BuildBot)</li>
+<li>Exam grading & school management</li>
+<li>Farm tracking & analytics</li>
+<li>CRM & invoicing tools</li>
+<li>API access included</li>
+</ul>
+<a class="buy-btn" href="https://buy.stripe.com/test_aFadR9eY286Efnw4AA9MY05">💳 Subscribe Now</a>
+</div>
+
+<div class="product">
+<div class="product-icon">📦</div>
+<h3>Digital Products Bundle <span class="badge one">ONE-TIME</span></h3>
+<p class="desc">Complete collection of HARZ digital products, templates, and tools for business and education.</p>
+<div class="price">$49</div>
+<div class="price-unit">One-time payment · Lifetime access</div>
+<ul class="features">
+<li>All HARZ digital templates</li>
+<li>Construction project templates</li>
+<li>School management resources</li>
+<li>Business plan templates</li>
+<li>Farm tracking spreadsheets</li>
+<li>Free future updates</li>
+</ul>
+<a class="buy-btn" href="https://buy.stripe.com/test_aFa9AT9DIdqYfnw5EE9MY06">💳 Buy Now</a>
+</div>
+
+<div class="product">
+<div class="product-icon">🎓</div>
+<h3>Danfodio School Fees <span class="badge one">ANNUAL</span></h3>
+<p class="desc">Annual school fees for international students at Danfodio Memorial Academy.</p>
+<div class="price">$150</div>
+<div class="price-unit">Per academic year · International rate</div>
+<ul class="features">
+<li>Nursery through SSS programs</li>
+<li>Full academic curriculum</li>
+<li>Online portal access</li>
+<li>Exam results & report cards</li>
+<li>Parent-teacher communication</li>
+<li>Admission support included</li>
+</ul>
+<a class="buy-btn" href="https://buy.stripe.com/test_5kQ28r7vAfz6grAeba9MY07">💳 Pay School Fees</a>
+</div>
+
+<div class="product">
+<div class="product-icon">🏗️</div>
+<h3>Construction Consulting <span class="badge one">PER HOUR</span></h3>
+<p class="desc">Professional construction estimation, project management, and architectural consulting.</p>
+<div class="price">$200<span style="font-size:1rem;color:#8892b0">/hr</span></div>
+<div class="price-unit">Per hour · Remote or on-site</div>
+<ul class="features">
+<li>Cost estimation & BOQ</li>
+<li>Architectural plan review</li>
+<li>Project management guidance</li>
+<li>Material calculation</li>
+<li>Structural analysis</li>
+<li>Site visit reports</li>
+</ul>
+<a class="buy-btn" href="https://buy.stripe.com/test_dRm8wPaHM4Usejsgji9MY08">💳 Book Session</a>
+</div>
+
+<div class="product">
+<div class="product-icon">💡</div>
+<h3>GDEG Token <span class="badge one">PER TOKEN</span></h3>
+<p class="desc">HARZ ecosystem digital token for internal exchange, P2P trading, and platform services.</p>
+<div class="price">$1</div>
+<div class="price-unit">Per token · ERC-20 compatible</div>
+<ul class="features">
+<li>Internal ecosystem exchange</li>
+<li>P2P trading enabled</li>
+<li>Discount on HARZ services</li>
+<li>Staking rewards program</li>
+<li>Wallet integration</li>
+<li>Low transaction fees</li>
+</ul>
+<a class="buy-btn" href="https://buy.stripe.com/test_9B6cN59DI4UsgrA6II9MY09">💳 Buy Tokens</a>
+</div>
+
+</div>
+
+<div class="footer">
+<p>HARZ AI Operating System · International Payments via Stripe</p>
+<p style="margin-top:6px"><a href="https://rabiuhamza11.github.io/harz-portfolio/harz-pay-live.html">← Back to HARZ Pay</a> · <a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html">HARZ Home</a></p>
+</div>
+</body>
+</html>
