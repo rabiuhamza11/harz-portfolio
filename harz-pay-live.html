@@ -102,7 +102,7 @@ const HARZ_PRODUCTS = [
 ];
 
 const PAYSTACK_PUBLIC_KEY = 'pk_live_ea1681539460832272b943243689d9a514f45acb';
-const BACKEND_URL = 'https://backend.base44.com/proxy/apps/6a66fd3abd8d16365b0577e2/functions/harzPaystack';
+const BACKEND_URL = 'https://solene-5b0577e2.base44.app/functions/harzPaystack';
 let selectedProduct = null;
 
 // Load user email from localStorage
@@ -280,7 +280,7 @@ updateTotal();
     document.getElementById('resultRef').textContent = 'Reference: ' + reference;
     
     // Verify payment via backend
-    const BACKEND_URL = 'https://backend.base44.com/proxy/apps/6a66fd3abd8d16365b0577e2/functions/harzPaystack';
+    const BACKEND_URL = 'https://solene-5b0577e2.base44.app/functions/harzPaystack';
     
     fetch(BACKEND_URL, {
       method: 'POST',
