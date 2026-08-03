@@ -6,10 +6,10 @@
 <title>Danfodio Memorial — Online Fees Payment</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--gold:#F59E0B;--navy:#1e3a5f;--green:#00e676;--blue:#3b82f6;--red:#EF4444}
+:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--gold:#F59E0B;--navy:#1e3a5f;--green:#00e676;--blue:#3b82f6;--red:#EF4444;--cyan:#00bcd4}
 body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 .header{background:linear-gradient(135deg,var(--navy),#0a1628);padding:20px 16px;text-align:center;border-bottom:2px solid var(--gold)}
-.header h1{font-size:1.2rem;color:var(--cream);font-weight:800}
+.header h1{font-size:1.2rem;color:#fff;font-weight:800}
 .header p{font-size:.75rem;color:var(--gold);margin-top:4px}
 .container{max-width:500px;margin:0 auto;padding:16px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
@@ -22,6 +22,7 @@ input:focus,select:focus{border-color:var(--gold)}
 .fee-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
 .pay-btn{width:100%;background:linear-gradient(135deg,var(--green),#00b24d);color:#000;border:none;border-radius:10px;padding:14px;font-size:.95rem;font-weight:800;cursor:pointer;margin-top:8px}
 .pay-btn:active{opacity:.8}
+.pay-btn:disabled{opacity:.5;cursor:not-allowed}
 .pay-btn.secondary{background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff}
 .pay-btn.gold{background:linear-gradient(135deg,var(--gold),#d97706);color:#000}
 .summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.8rem;border-bottom:1px solid var(--border)}
@@ -36,12 +37,24 @@ input:focus,select:focus{border-color:var(--gold)}
 .back{display:inline-block;margin-top:12px;font-size:.8rem;color:var(--gold);text-decoration:none}
 .success-screen{text-align:center;padding:30px 16px}
 .success-icon{font-size:3rem;margin-bottom:12px}
+.coin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.coin-btn{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 4px;text-align:center;cursor:pointer;font-size:.6rem;transition:.2s}
+.coin-btn.active{border-color:var(--green);background:rgba(0,230,118,.06)}
+.coin-icon{font-size:1rem;margin-bottom:2px}
+.coin-name{font-weight:600}
+.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,10,15,.85);display:none;align-items:center;justify-content:center;z-index:500}
+.loading-overlay.show{display:flex}
+.loading-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center}
+.spin{display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.result-addr{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:.7rem;word-break:break-all;margin:8px 0;text-align:center}
+.result-link{display:block;text-align:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#000;text-decoration:none;padding:12px;border-radius:10px;font-size:.85rem;font-weight:700;margin-top:10px}
 </style>
-<script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="https://js.paystack.co/v2/inline.js"></script>
 </head>
 <body>
 <div class="header">
-<h1>🏛️ Danfodio Memorial Academy</h1>
+<h1>Danfodio Memorial Academy</h1>
 <p>Online School Fees Payment</p>
 </div>
 
@@ -71,30 +84,34 @@ input:focus,select:focus{border-color:var(--gold)}
 <option value="2026/2027">2026/2027</option>
 <option value="2027/2028">2027/2028</option>
 </select>
+<label>Parent Email</label>
+<input type="email" id="parentEmail" placeholder="parent@email.com">
+<label>Parent Phone</label>
+<input type="tel" id="parentPhone" placeholder="08012345678">
 </div>
 
 <div class="card">
 <h2>Fees Summary</h2>
 <div class="fee-display">
-<div class="fee-amount" id="feeAmount">₦0</div>
+<div class="fee-amount" id="feeAmount">N0</div>
 <div class="fee-label">Total Fees Due</div>
 </div>
-<div class="summary-row"><span>Tuition</span><span id="tuitionFee">₦0</span></div>
-<div class="summary-row"><span>ICT & Library</span><span>₦5,000</span></div>
-<div class="summary-row"><span>Sports & Activities</span><span>₦3,000</span></div>
-<div class="summary-row"><span>Medical (annual)</span><span>₦2,000</span></div>
-<div class="summary-row"><span>PTA Levy</span><span>₦2,000</span></div>
-<div class="summary-row"><span>Discount (early payment -5%)</span><span style="color:var(--green)" id="discount">-₦0</span></div>
-<div class="summary-row"><span>Total Payable</span><span id="totalPayable">₦0</span></div>
+<div class="summary-row"><span>Tuition</span><span id="tuitionFee">N0</span></div>
+<div class="summary-row"><span>ICT & Library</span><span>N5,000</span></div>
+<div class="summary-row"><span>Sports & Activities</span><span>N3,000</span></div>
+<div class="summary-row"><span>Medical (annual)</span><span>N2,000</span></div>
+<div class="summary-row"><span>PTA Levy</span><span>N2,000</span></div>
+<div class="summary-row"><span>Discount (early payment -5%)</span><span style="color:var(--green)" id="discount">-N0</span></div>
+<div class="summary-row"><span>Total Payable</span><span id="totalPayable">N0</span></div>
 </div>
 
 <div class="card">
 <h2>Payment Method</h2>
 <div class="payment-methods">
-<div class="method-card selected" onclick="selectMethod(this,'paystack')"><div class="method-icon">💳</div><div class="method-name">Card (Paystack)</div></div>
-<div class="method-card" onclick="selectMethod(this,'bank')"><div class="method-icon">🏦</div><div class="method-name">Bank Transfer</div></div>
-<div class="method-card" onclick="selectMethod(this,'usdt')"><div class="method-icon">₮</div><div class="method-name">USDT (Crypto)</div></div>
-<div class="method-card" onclick="selectMethod(this,'harzpay')"><div class="method-icon">🌐</div><div class="method-name">HarzPay Wallet</div></div>
+<div class="method-card selected" onclick="selectMethod(this,'paystack')"><div class="method-icon">Card</div><div class="method-name">Card / USSD (Paystack)</div></div>
+<div class="method-card" onclick="selectMethod(this,'bank')"><div class="method-icon">Bank</div><div class="method-name">Bank Transfer</div></div>
+<div class="method-card" onclick="selectMethod(this,'crypto')"><div class="method-icon">USDT</div><div class="method-name">Crypto (USDT/BTC)</div></div>
+<div class="method-card" onclick="selectMethod(this,'wallet')"><div class="method-icon">WAL</div><div class="method-name">HarzPay Wallet</div></div>
 </div>
 </div>
 
@@ -104,29 +121,41 @@ input:focus,select:focus{border-color:var(--gold)}
 <div><strong>Bank:</strong> Access Bank</div>
 <div><strong>Account Name:</strong> Danfodio Memorial Academy</div>
 <div><strong>Account No:</strong> 0123456789</div>
-<div><strong>Reference:</strong> <span id="paymentRef">DMA-XXXXXX</span></div>
+<div><strong>Reference:</strong> <span id="paymentRef" style="color:var(--gold)">DMA-XXXXXX</span></div>
 </div>
+<p style="font-size:.7rem;color:var(--muted);margin-top:8px">After transfer, click "I've Paid" to submit for verification. You'll be notified via WhatsApp once confirmed.</p>
 <button class="pay-btn secondary" onclick="copyBank()">Copy Account Details</button>
 </div>
 
-<div class="card" id="usdtDetails" style="display:none">
-<h2>USDT Payment</h2>
-<div style="font-size:.8rem;line-height:2">
-<div><strong>Network:</strong> TRC20 (Tron)</div>
-<div><strong>USDT Address:</strong></div>
-<div style="font-family:monospace;font-size:.7rem;word-break:break-all;background:var(--bg);padding:8px;border-radius:6px;margin:4px 0">TXYZ1234567890ABCDEFghijklmnop</div>
-<div><strong>Amount in USDT:</strong> <span id="usdtAmount">$0</span></div>
+<div class="card" id="cryptoDetails" style="display:none">
+<h2>Crypto Payment</h2>
+<label>Select Coin</label>
+<div class="coin-grid" id="coinGrid"></div>
+<div style="font-size:.8rem;line-height:2;margin-top:10px">
+<div><strong>Amount (USD):</strong> <span id="cryptoUsdAmount">$0</span></div>
+<div><strong>Amount (NGN):</strong> <span id="cryptoNgnAmount">N0</span></div>
 </div>
 </div>
 
-<button class="pay-btn" onclick="processPayment()" id="payButton">Pay ₦0 Now</button>
-<button class="pay-btn gold" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/danfodio-memorial.html','_blank')">← Back to School</button>
+<div class="card" id="walletDetails" style="display:none">
+<h2>HarzPay Wallet</h2>
+<label>Wallet Email</label>
+<input type="email" id="walletEmail" placeholder="Your HARZ wallet email">
+<div style="font-size:.8rem;line-height:2;margin-top:8px">
+<div><strong>Balance:</strong> <span id="walletBal" style="color:var(--gold)">N0</span></div>
+<div><strong>GDEG Tokens:</strong> <span id="walletGdeg">0</span></div>
+</div>
+<button class="pay-btn secondary" style="margin-top:8px" onclick="checkWallet()">Check Balance</button>
+</div>
+
+<button class="pay-btn" onclick="processPayment()" id="payButton">Pay N0 Now</button>
+<button class="pay-btn gold" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/danfodio-memorial.html','_self')">Back to School</button>
 </div>
 
 <div class="container" id="successScreen" style="display:none">
 <div class="card">
 <div class="success-screen">
-<div class="success-icon">✅</div>
+<div class="success-icon">PAID</div>
 <h2 style="color:var(--green)">Payment Successful!</h2>
 <p style="font-size:.85rem;margin:12px 0;color:var(--muted)" id="successDetails"></p>
 <div style="font-size:.75rem;color:var(--muted);margin-top:8px">Receipt sent to your email</div>
@@ -135,88 +164,286 @@ input:focus,select:focus{border-color:var(--gold)}
 </div>
 </div>
 
+<div class="container" id="cryptoResult" style="display:none">
+<div class="card">
+<h2 style="color:var(--green)">Crypto Payment Created</h2>
+<div id="cryptoResultBody"></div>
+</div>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+<div class="loading-box">
+<span class="spin"></span><span id="loadingText">Processing payment...</span>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 var selectedMethod='paystack';
+var selectedCoin='usdttrc20';
 var baseFees={nursery:45000,primary:65000,jss:85000,sss:120000};
 var extras=5000+3000+2000+2000;
+var PAYSTACK_PUBLIC_KEY='pk_live_ea1681539460832272b943243689d9a514f45acb';
+var HARZ_BACKEND='https://solene-5b0577e2.base44.app/functions/harzPaystack';
+var PAYMENTS_BACKEND='https://solene-5b0577e2.base44.app/functions/harzPayments';
+
+var coins=[
+{icon:'$',name:'USDT TRC20',code:'usdttrc20'},
+{icon:'B',name:'Bitcoin',code:'btc'},
+{icon:'E',name:'Ethereum',code:'eth'},
+{icon:'S',name:'Solana',code:'sol'},
+{icon:'D',name:'Dogecoin',code:'doge'},
+{icon:'L',name:'Litecoin',code:'ltc'}
+];
+
+var coinGrid=document.getElementById('coinGrid');
+coins.forEach(function(c,i){
+  var btn=document.createElement('div');
+  btn.className='coin-btn'+(i===0?' active':'');
+  btn.innerHTML='<div class="coin-icon">'+c.icon+'</div><div class="coin-name">'+c.name+'</div>';
+  btn.onclick=function(){
+    document.querySelectorAll('.coin-btn').forEach(function(b){b.classList.remove('active')});
+    btn.classList.add('active');
+    selectedCoin=c.code;
+  };
+  coinGrid.appendChild(btn);
+});
 
 function updateFee(){
-var sel=document.getElementById('studentClass');
-var cls=sel.value;
-if(!cls){document.getElementById('feeAmount').textContent='₦0';document.getElementById('tuitionFee').textContent='₦0';document.getElementById('totalPayable').textContent='₦0';document.getElementById('discount').textContent='-₦0';document.getElementById('payButton').textContent='Pay ₦0 Now';return}
-var tuition=baseFees[cls];
-var total=tuition+extras;
-var discount=Math.round(total*0.05);
-var payable=total-discount;
-document.getElementById('tuitionFee').textContent='₦'+tuition.toLocaleString();
-document.getElementById('feeAmount').textContent='₦'+payable.toLocaleString();
-document.getElementById('totalPayable').textContent='₦'+payable.toLocaleString();
-document.getElementById('discount').textContent='-₦'+discount.toLocaleString();
-document.getElementById('payButton').textContent='Pay ₦'+payable.toLocaleString()+' Now';
-document.getElementById('usdtAmount').textContent='$'+Math.round(payable/1500);
+  var cls=document.getElementById('studentClass').value;
+  if(!cls){
+    document.getElementById('feeAmount').textContent='\u20A60';
+    document.getElementById('tuitionFee').textContent='\u20A60';
+    document.getElementById('totalPayable').textContent='\u20A60';
+    document.getElementById('discount').textContent='-\u20A60';
+    document.getElementById('payButton').textContent='Pay \u20A60 Now';
+    return;
+  }
+  var tuition=baseFees[cls];
+  var total=tuition+extras;
+  var discount=Math.round(total*0.05);
+  var payable=total-discount;
+  document.getElementById('tuitionFee').textContent='\u20A6'+tuition.toLocaleString();
+  document.getElementById('feeAmount').textContent='\u20A6'+payable.toLocaleString();
+  document.getElementById('totalPayable').textContent='\u20A6'+payable.toLocaleString();
+  document.getElementById('discount').textContent='-\u20A6'+discount.toLocaleString();
+  document.getElementById('payButton').textContent='Pay \u20A6'+payable.toLocaleString()+' Now';
+  var usd=Math.round(payable/1500);
+  document.getElementById('cryptoUsdAmount').textContent='$'+usd;
+  document.getElementById('cryptoNgnAmount').textContent='\u20A6'+payable.toLocaleString();
+  document.getElementById('paymentRef').textContent='DMA-FEE-'+Date.now().toString().slice(-8);
 }
 
 function selectMethod(el,method){
-document.querySelectorAll('.method-card').forEach(function(c){c.classList.remove('selected')});
-el.classList.add('selected');
-selectedMethod=method;
-document.getElementById('bankDetails').style.display=method==='bank'?'block':'none';
-document.getElementById('usdtDetails').style.display=method==='usdt'?'block':'none';
+  document.querySelectorAll('.method-card').forEach(function(c){c.classList.remove('selected')});
+  el.classList.add('selected');
+  selectedMethod=method;
+  document.getElementById('bankDetails').style.display=method==='bank'?'block':'none';
+  document.getElementById('cryptoDetails').style.display=method==='crypto'?'block':'none';
+  document.getElementById('walletDetails').style.display=method==='wallet'?'block':'none';
 }
 
-var PAYSTACK_PUBLIC_KEY='pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Replace with real key
-function processPayment(){
-var name=document.getElementById('studentName').value.trim();
-var adm=document.getElementById('admissionNo').value.trim();
-var cls=document.getElementById('studentClass').value;
-if(!name||!adm||!cls){showToast('Please fill all fields');return}
-var totalText=document.getElementById('totalPayable').textContent;
-var amount=parseInt(totalText.replace(/[^0-9]/g,''));
-
-if(selectedMethod==='paystack'){
-var handler=PaystackPop.setup({
-key:PAYSTACK_PUBLIC_KEY,
-email:'parent@danfodiomemorial.edu.ng',
-amount:amount*100,
-currency:'NGN',
-ref:'DMA-FEE-'+Date.now().toString().slice(-8),
-metadata:{custom_fields:[
-{display_name:'Student',variable_name:'student',value:name},
-{display_name:'Admission No',variable_name:'admission_no',value:adm},
-{display_name:'Class',variable_name:'class',value:cls}
-]},
-callback:function(response){
-showSuccess(name,adm,totalText,'Paystack (Ref: '+response.reference+')');
-},
-onClose:function(){showToast('Payment window closed')}
-});
-handler.openIframe();
-}else if(selectedMethod==='bank'){
-var ref='DMA-'+Date.now().toString().slice(-6);
-document.getElementById('paymentRef').textContent=ref;
-showToast('Account details ready — transfer and use reference');
-}else if(selectedMethod==='usdt'){
-showToast('Send USDT to address above');
-}else if(selectedMethod==='harzpay'){
-showToast('Opening HarzPay...');
-setTimeout(function(){showSuccess(name,adm,totalText,'HarzPay')},2000);
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},3000);
 }
+
+function showLoading(msg){
+  document.getElementById('loadingText').textContent=msg;
+  document.getElementById('loadingOverlay').classList.add('show');
+}
+
+function hideLoading(){
+  document.getElementById('loadingOverlay').classList.remove('show');
+}
+
+function getPayable(){
+  var totalText=document.getElementById('totalPayable').textContent;
+  return parseInt(totalText.replace(/[^0-9]/g,''));
+}
+
+function getStudentInfo(){
+  return {
+    name:document.getElementById('studentName').value.trim(),
+    adm:document.getElementById('admissionNo').value.trim(),
+    cls:document.getElementById('studentClass').value,
+    term:document.getElementById('term').value,
+    session:document.getElementById('session').value,
+    email:document.getElementById('parentEmail').value.trim()||'parent@danfodiomemorial.edu.ng',
+    phone:document.getElementById('parentPhone').value.trim()
+  };
+}
+
+function validateForm(){
+  var s=getStudentInfo();
+  if(!s.name||!s.adm||!s.cls){showToast('Please fill all fields');return false;}
+  return true;
 }
 
 function showSuccess(name,adm,amount,method){
-document.getElementById('paymentForm').style.display='none';
-document.getElementById('successScreen').style.display='block';
-document.getElementById('successDetails').innerHTML=name+' ('+adm+')<br>'+amount+' via '+method+'<br>Term: '+document.getElementById('term').value+', '+document.getElementById('session').value;
+  document.getElementById('paymentForm').style.display='none';
+  document.getElementById('successScreen').style.display='block';
+  document.getElementById('successDetails').textContent=
+    name+' ('+adm+') - \u20A6'+amount.toLocaleString()+' via '+method+' - '+new Date().toLocaleDateString();
 }
 
 function copyBank(){
-var text='Danfodio Memorial Academy\nAccess Bank\n0123456789\nRef: '+document.getElementById('paymentRef').textContent;
-showToast('Copied to clipboard');
+  var ref=document.getElementById('paymentRef').textContent;
+  var text='Access Bank\nDanfodio Memorial Academy\n0123456789\nReference: '+ref;
+  navigator.clipboard.writeText(text).then(function(){showToast('Copied!')});
 }
 
-function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+async function checkWallet(){
+  var email=document.getElementById('walletEmail').value.trim();
+  if(!email){showToast('Enter wallet email');return;}
+  showLoading('Checking wallet...');
+  try{
+    var resp=await fetch(PAYMENTS_BACKEND,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'wallet_balance',email:email})
+    });
+    var data=await resp.json();
+    document.getElementById('walletBal').textContent='\u20A6'+(data.wallet_balance||0).toLocaleString();
+    document.getElementById('walletGdeg').textContent=(data.gdeg_balance||0)+' tokens';
+    showToast('Balance loaded');
+  }catch(e){showToast('Error checking wallet');}
+  hideLoading();
+}
+
+async function processPayment(){
+  if(!validateForm())return;
+  var s=getStudentInfo();
+  var amount=getPayable();
+  if(amount<=0){showToast('Select a class');return;}
+
+  if(selectedMethod==='paystack'){
+    payWithPaystack(s,amount);
+  }else if(selectedMethod==='bank'){
+    confirmBankTransfer(s,amount);
+  }else if(selectedMethod==='crypto'){
+    payWithCrypto(s,amount);
+  }else if(selectedMethod==='wallet'){
+    payWithWallet(s,amount);
+  }
+}
+
+function payWithPaystack(s,amount){
+  var ref='DMA-FEE-'+Date.now().toString().slice(-8);
+  var handler=PaystackPop.setup({
+    key:PAYSTACK_PUBLIC_KEY,
+    email:s.email,
+    amount:amount*100,
+    currency:'NGN',
+    ref:ref,
+    metadata:{custom_fields:[
+      {display_name:'Student',variable_name:'student',value:s.name},
+      {display_name:'Admission No',variable_name:'admission_no',value:s.adm},
+      {display_name:'Class',variable_name:'class',value:s.cls},
+      {display_name:'Term',variable_name:'term',value:s.term}
+    ],product:'School Fees',phone:s.phone},
+    callback:function(response){
+      showSuccess(s.name,s.adm,amount,'Paystack Card');
+    },
+    onClose:function(){
+      showToast('Payment cancelled');
+    }
+  });
+  handler.openIframe();
+}
+
+async function confirmBankTransfer(s,amount){
+  var ref=document.getElementById('paymentRef').textContent;
+  showLoading('Submitting transfer...');
+  try{
+    var resp=await fetch(PAYMENTS_BACKEND,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'confirm_bank',
+        reference:ref,
+        amount:amount,
+        sender_name:s.name,
+        sender_account:s.phone,
+        email:s.email,
+        phone:s.phone,
+        product:'School Fees - '+s.cls+' '+s.term
+      })
+    });
+    var data=await resp.json();
+    hideLoading();
+    if(data.status){
+      document.getElementById('paymentForm').style.display='none';
+      document.getElementById('successScreen').style.display='block';
+      document.getElementById('successDetails').textContent=
+        s.name+' ('+s.adm+') - \u20A6'+amount.toLocaleString()+' via Bank Transfer - Pending verification. Ref: '+ref;
+    }else{showToast('Error: '+(data.error||'Failed'));}
+  }catch(e){hideLoading();showToast('Error submitting transfer');}
+}
+
+async function payWithCrypto(s,amount){
+  var usdAmount=Math.round(amount/1500);
+  var ref='DMA-CRYPTO-'+Date.now().toString(36).toUpperCase();
+  showLoading('Creating crypto payment...');
+  try{
+    var resp=await fetch(PAYMENTS_BACKEND,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'create_crypto',
+        price_amount:usdAmount,
+        price_currency:'usd',
+        pay_currency:selectedCoin,
+        order_id:ref,
+        order_description:'School Fees - '+s.name+' ('+s.adm+') '+s.cls+' '+s.term,
+        product:'School Fees',
+        email:s.email
+      })
+    });
+    var data=await resp.json();
+    hideLoading();
+    if(data.id||data.invoice_id){
+      var invoiceId=data.id||data.invoice_id;
+      var invoiceUrl=data.invoice_url||('https://nowpayments.io/payment/?iid='+invoiceId);
+      document.getElementById('paymentForm').style.display='none';
+      document.getElementById('cryptoResult').style.display='block';
+      document.getElementById('cryptoResultBody').innerHTML=
+        '<div style="text-align:center;font-size:1.5rem;font-weight:800;color:var(--gold)">$'+usdAmount+'</div>'+
+        '<div style="text-align:center;font-size:.8rem;color:var(--muted);margin-bottom:10px">'+selectedCoin.toUpperCase()+'</div>'+
+        '<div class="result-addr">Ref: '+ref+'</div>'+
+        '<p style="font-size:.75rem;color:var(--muted);text-align:center;margin:8px 0">Click below to pay via NowPayments secure checkout</p>'+
+        '<a href="'+invoiceUrl+'" target="_blank" class="result-link">Pay with '+selectedCoin.toUpperCase()+' ></a>'+
+        '<button class="pay-btn secondary" style="margin-top:8px" onclick="window.location.reload()">Back to Payment</button>';
+    }else{showToast('Error: '+(data.message||data.error||'Failed'));}
+  }catch(e){hideLoading();showToast('Error creating crypto payment');}
+}
+
+async function payWithWallet(s,amount){
+  var email=document.getElementById('walletEmail').value.trim();
+  if(!email){showToast('Enter wallet email');return;}
+  showLoading('Processing wallet payment...');
+  try{
+    var resp=await fetch(PAYMENTS_BACKEND,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'wallet_transfer',
+        from_email:email,
+        to_email:'admin@harz.io',
+        amount:amount,
+        currency:'NGN'
+      })
+    });
+    var data=await resp.json();
+    hideLoading();
+    if(data.status){
+      showSuccess(s.name,s.adm,amount,'HarzPay Wallet');
+    }else{showToast('Error: '+(data.error||'Insufficient balance'));}
+  }catch(e){hideLoading();showToast('Wallet payment failed');}
+}
 </script>
 </body>
 </html>
