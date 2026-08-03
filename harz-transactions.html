@@ -2,139 +2,162 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>HARZ Transaction History</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--purple:#7C4DFF;--red:#EF4444;--cyan:#00bcd4}
-body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
-.header{background:linear-gradient(135deg,rgba(0,188,212,.1),rgba(124,77,255,.08));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
-.header h1{font-size:1.3rem;font-weight:800}
-.header h1 span{color:var(--cyan)}
-.header p{font-size:.7rem;color:var(--muted);margin-top:4px}
+:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--red:#EF4444;--cyan:#00bcd4;--blue:#3b82f6}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 .container{max-width:600px;margin:0 auto;padding:16px}
-.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
-.kpi-label{font-size:.6rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
-.kpi-value{font-size:1.3rem;font-weight:800}
-.kpi-sub{font-size:.55rem;color:var(--muted);margin-top:4px}
-.section-head{font-size:.85rem;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
-.section-head .badge{font-size:.6rem;background:rgba(0,230,118,.12);color:var(--green);padding:2px 8px;border-radius:6px;font-weight:600}
-.tx-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;transition:.2s}
-.tx-card:hover{border-color:var(--cyan)}
-.tx-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-.tx-icon.bank{background:rgba(59,130,246,.15);color:var(--blue)}
-.tx-icon.paystack{background:rgba(0,188,212,.15);color:var(--cyan)}
-.tx-icon.usdt{background:rgba(0,230,118,.15);color:var(--green)}
-.tx-icon.ussd{background:rgba(245,158,11,.15);color:var(--gold)}
-.tx-icon.gdeg{background:rgba(124,77,255,.15);color:var(--purple)}
-.tx-info{flex:1;min-width:0}
-.tx-ref{font-size:.75rem;font-weight:700;margin-bottom:2px}
-.tx-product{font-size:.68rem;color:var(--muted);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tx-date{font-size:.6rem;color:var(--muted)}
-.tx-amount{font-size:.85rem;font-weight:800;text-align:right}
-.tx-status{font-size:.55rem;padding:2px 8px;border-radius:6px;font-weight:600;margin-top:4px;display:inline-block}
-.status-paid{background:rgba(0,230,118,.12);color:var(--green)}
-.status-pending{background:rgba(245,158,11,.12);color:var(--gold)}
-.status-failed{background:rgba(239,68,68,.12);color:var(--red)}
-.status-refunded{background:rgba(124,77,255,.12);color:var(--purple)}
-.filter-bar{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.4rem;font-weight:800}
+.header h1 span{color:var(--cyan)}
+.header p{font-size:.75rem;color:var(--muted);margin-top:4px}
+.back-link{display:inline-block;margin-bottom:12px;font-size:.75rem;color:var(--cyan);text-decoration:none}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.stat-num{font-size:1.3rem;font-weight:800;color:var(--gold)}
+.stat-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.filter-bar{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
 .filter-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:20px;font-size:.7rem;font-weight:600;white-space:nowrap;cursor:pointer;transition:.2s}
 .filter-btn.active{background:var(--cyan);color:#000;border-color:var(--cyan)}
-.back{display:block;text-align:center;margin-top:20px;font-size:.8rem;color:var(--cyan);text-decoration:none}
-.empty{text-align:center;padding:40px 20px;color:var(--muted)}
-.empty-icon{font-size:2rem;margin-bottom:10px}
+.tx-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;transition:.2s}
+.tx-card:active{transform:scale(.98)}
+.tx-row{display:flex;justify-content:space-between;align-items:center}
+.tx-left{display:flex;align-items:center;gap:10px}
+.tx-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700}
+.tx-icon.paystack{background:rgba(0,230,118,.12);color:var(--green)}
+.tx-icon.crypto{background:rgba(245,158,11,.12);color:var(--gold)}
+.tx-icon.bank_transfer{background:rgba(59,130,246,.12);color:var(--blue)}
+.tx-icon.wallet{background:rgba(0,188,212,.12);color:var(--cyan)}
+.tx-icon.unknown{background:rgba(102,102,102,.12);color:var(--muted)}
+.tx-info h4{font-size:.85rem;font-weight:600}
+.tx-info p{font-size:.7rem;color:var(--muted)}
+.tx-right{text-align:right}
+.tx-amount{font-size:.9rem;font-weight:700}
+.tx-amount.paid{color:var(--green)}
+.tx-amount.pending{color:var(--gold)}
+.tx-status{font-size:.6rem;padding:2px 8px;border-radius:6px;margin-top:4px;display:inline-block}
+.tx-status.paid{background:rgba(0,230,118,.1);color:var(--green)}
+.tx-status.pending{background:rgba(245,158,11,.1);color:var(--gold)}
+.tx-status.pending_verification{background:rgba(59,130,246,.1);color:var(--blue)}
+.tx-status.failed{background:rgba(239,68,68,.1);color:var(--red)}
+.tx-date{font-size:.65rem;color:var(--muted);margin-top:4px}
+.empty{text-align:center;padding:40px;color:var(--muted)}
+.empty-icon{font-size:2.5rem;margin-bottom:8px}
+.loading{text-align:center;padding:30px;color:var(--muted);font-size:.8rem}
+.spin{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
+<div class="container">
+<a href="harz-super-app.html" class="back-link">← Back to Super App</a>
 <div class="header">
 <h1>HARZ <span>Transactions</span></h1>
-<p>Payment History · Orders · Revenue</p>
+<p>Complete payment history across all methods</p>
 </div>
-<div class="container">
 
-<div class="kpi-grid">
-<div class="kpi-card">
-<div class="kpi-label">Total Revenue</div>
-<div class="kpi-value" style="color:var(--green)">₦5K</div>
-<div class="kpi-sub">Paid orders</div>
-</div>
-<div class="kpi-card">
-<div class="kpi-label">Pending</div>
-<div class="kpi-value" style="color:var(--gold)">₦113.8K</div>
-<div class="kpi-sub">Awaiting payment</div>
-</div>
-<div class="kpi-card">
-<div class="kpi-label">Total Orders</div>
-<div class="kpi-value">11</div>
-<div class="kpi-sub">1 paid · 9 pending · 1 test</div>
-</div>
+<div class="stats-grid" id="statsGrid">
+<div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total</div></div>
+<div class="stat-card"><div class="stat-num" id="statPaid" style="color:var(--green)">0</div><div class="stat-label">Paid</div></div>
+<div class="stat-card"><div class="stat-num" id="statVolume" style="color:var(--gold)">N0</div><div class="stat-label">Volume</div></div>
 </div>
 
 <div class="filter-bar">
 <button class="filter-btn active" onclick="filterTx('all')">All</button>
 <button class="filter-btn" onclick="filterTx('paid')">Paid</button>
 <button class="filter-btn" onclick="filterTx('pending')">Pending</button>
-<button class="filter-btn" onclick="filterTx('failed')">Failed</button>
+<button class="filter-btn" onclick="filterTx('crypto')">Crypto</button>
+<button class="filter-btn" onclick="filterTx('paystack')">Paystack</button>
+<button class="filter-btn" onclick="filterTx('bank_transfer')">Bank</button>
 </div>
 
-<div class="section-head">Transaction History <span class="badge">Live</span></div>
-<div id="txList"></div>
-
-<a class="back" href="harz-super-app.html">← Back to HARZ Super App</a>
+<div id="txList">
+<div class="loading"><span class="spin"></span>Loading transactions...</div>
+</div>
 </div>
 
 <script>
-const transactions = [
-{ref:"HARZ-TEST-001",product:"Notion Productivity OS",amount:86400,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 1"},
-{ref:"HARZ-TEST-002",product:"MindCare AI Pro",amount:5000,method:"paystack",status:"paid",date:"2026-07-28",customer:"Test Customer 2"},
-{ref:"HARZ-TEST-003",product:"Harz Product",amount:5000,method:"bank_transfer",status:"pending",date:"2026-07-28",customer:"Test Customer 3"},
-{ref:"HARZ-TEST-004",product:"Test Product",amount:2500,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 4"},
-{ref:"HARZ-TEST-005",product:"Notion Productivity OS",amount:28800,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 5"},
-{ref:"HARZ-TEST-006",product:"Notion Productivity OS",amount:28800,method:"usdt",status:"pending",date:"2026-07-28",customer:"Test Customer 6"},
-{ref:"HARZ-TEST-007",product:"MindCare AI Pro",amount:5000,method:"bank_transfer",status:"pending",date:"2026-07-28",customer:"Test Customer 7"},
-{ref:"HARZ-TEST-008",product:"Harz Product",amount:5000,method:"ussd",status:"pending",date:"2026-07-28",customer:"Test Customer 8"},
-{ref:"HARZ-TEST-009",product:"Test Product",amount:2500,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 9"},
-{ref:"HARZ-TEST-010",product:"Harz Product",amount:5000,method:"gdeg",status:"failed",date:"2026-07-28",customer:"Test Customer 10"},
-{ref:"HARZ-TEST-011",product:"MindCare AI Pro",amount:5000,method:"paystack",status:"pending",date:"2026-07-28",customer:"Test Customer 11"},
-];
+const BACKEND_URL="https://solene-5b0577e2.base44.app/functions/harzPayments";
+let allTx=[];
+let currentFilter='all';
 
-const methodIcons = {bank_transfer:"🏦",paystack:"💳",usdt:"₿",ussd:"📱",gdeg:"🪙"};
-const methodClass = {bank_transfer:"bank",paystack:"paystack",usdt:"usdt",ussd:"ussd",gdeg:"gdeg"};
-const methodLabels = {bank_transfer:"Bank Transfer",paystack:"Paystack",usdt:"USDT (TRC20)",ussd:"USSD",gdeg:"GDEG Token"};
-
-function formatNaira(n){return "₦"+n.toLocaleString()}
-
-function renderTx(filter){
-const list = document.getElementById("txList");
-const filtered = filter==="all" ? transactions : transactions.filter(t=>t.status===filter);
-if(filtered.length===0){
-list.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>No transactions found</p></div>';
-return;
+async function loadTransactions(){
+  try{
+    const resp=await fetch(BACKEND_URL,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'list_transactions'})
+    });
+    const data=await resp.json();
+    if(data.status){
+      allTx=data.transactions||[];
+      updateStats(data.stats||{});
+      renderTx();
+    }else{
+      document.getElementById('txList').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><p>'+((data.error||'Failed to load'))+'</p></div>';
+    }
+  }catch(e){
+    document.getElementById('txList').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><p>Connection error</p></div>';
+  }
 }
-list.innerHTML = filtered.map(t=>`
-<div class="tx-card">
-<div class="tx-icon ${methodClass[t.method]}">${methodIcons[t.method]}</div>
-<div class="tx-info">
-<div class="tx-ref">${t.ref}</div>
-<div class="tx-product">${t.product} · ${t.customer}</div>
-<div class="tx-date">${t.date} · ${methodLabels[t.method]}</div>
-</div>
-<div>
-<div class="tx-amount" style="color:${t.status==='paid'?'var(--green)':t.status==='failed'?'var(--red)':'var(--gold)'}">${formatNaira(t.amount)}</div>
-<div class="tx-status status-${t.status}">${t.status.toUpperCase()}</div>
-</div>
-</div>
-`).join("");
+
+function updateStats(s){
+  document.getElementById('statTotal').textContent=s.total||0;
+  document.getElementById('statPaid').textContent=s.paid||0;
+  document.getElementById('statVolume').textContent='\u20A6'+(s.total_volume||0).toLocaleString();
 }
 
 function filterTx(f){
-document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
-event.target.classList.add("active");
-renderTx(f);
+  currentFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderTx();
 }
 
-renderTx("all");
+function renderTx(){
+  let filtered=allTx;
+  if(currentFilter==='paid')filtered=allTx.filter(t=>t.status==='paid');
+  else if(currentFilter==='pending')filtered=allTx.filter(t=>t.status==='pending'||t.status==='pending_verification');
+  else if(currentFilter!=='all')filtered=allTx.filter(t=>t.method===currentFilter);
+  
+  if(filtered.length===0){
+    document.getElementById('txList').innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>No transactions found</p></div>';
+    return;
+  }
+  
+  document.getElementById('txList').innerHTML=filtered.map(t=>{
+    var icon='?';
+    var iconClass=t.method||'unknown';
+    if(t.method==='paystack')icon='💳';
+    else if(t.method==='crypto')icon='🪙';
+    else if(t.method==='bank_transfer')icon='🏦';
+    else if(t.method==='wallet')icon='🌐';
+    
+    var amtClass=t.status==='paid'?'paid':'pending';
+    var date=t.created_date?new Date(t.created_date).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+    
+    return '<div class="tx-card">'+
+      '<div class="tx-row">'+
+        '<div class="tx-left">'+
+          '<div class="tx-icon '+iconClass+'">'+icon+'</div>'+
+          '<div class="tx-info">'+
+            '<h4>'+(t.product||t.description||'Payment')+'</h4>'+
+            '<p>'+(t.reference||'')+'</p>'+
+          '</div>'+
+        '</div>'+
+        '<div class="tx-right">'+
+          '<div class="tx-amount '+amtClass+'">₦'+(t.amount||0).toLocaleString()+'</div>'+
+          '<div class="tx-status '+t.status+'">'+t.status.replace(/_/g,' ')+'</div>'+
+          '<div class="tx-date">'+date+'</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+loadTransactions();
+setInterval(loadTransactions,30000);
 </script>
 </body>
 </html>
