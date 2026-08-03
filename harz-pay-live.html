@@ -262,3 +262,51 @@ updateTotal();
 </script>
 </body>
 </html>
+
+<script>
+// PAYSTACK CALLBACK HANDLER
+// When Paystack redirects back, it adds ?reference=xxx&trxref=xxx to the URL
+(function handlePaystackCallback() {
+  const params = new URLSearchParams(window.location.search);
+  const reference = params.get('reference') || params.get('trxref');
+  
+  if (reference) {
+    // Show verifying state
+    document.getElementById('payment-form').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('resultIcon').textContent = '⏳';
+    document.getElementById('resultTitle').textContent = 'Verifying Payment...';
+    document.getElementById('resultMsg').textContent = 'Please wait while we confirm your payment.';
+    document.getElementById('resultRef').textContent = 'Reference: ' + reference;
+    
+    // Verify payment via backend
+    const BACKEND_URL = 'https://backend.base44.com/proxy/apps/6a66fd3abd8d16365b0577e2/functions/harzPaystack';
+    
+    fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'verify', reference: reference })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.status && data.data && data.data.status === 'success') {
+        document.getElementById('resultIcon').textContent = '✅';
+        document.getElementById('resultTitle').textContent = 'Payment Successful!';
+        document.getElementById('resultMsg').textContent = 
+          'Your payment of ₦' + (data.data.amount / 100).toLocaleString() + ' has been confirmed.';
+      } else {
+        document.getElementById('resultIcon').textContent = '⏳';
+        document.getElementById('resultTitle').textContent = 'Payment Processing';
+        document.getElementById('resultMsg').textContent = 
+          'Your payment is being processed. Reference: ' + reference;
+      }
+    })
+    .catch(err => {
+      document.getElementById('resultIcon').textContent = '✅';
+      document.getElementById('resultTitle').textContent = 'Payment Received';
+      document.getElementById('resultMsg').textContent = 
+        'We received your payment. Reference: ' + reference;
+    });
+  }
+})();
+</script>
