@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Pay — Live Payments</title>
+<script src="https://js.paystack.co/v2/inline.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{background:linear-gradient(135deg,#0a0e27,#1a1f3a);min-height:100vh;color:#fff;padding:16px}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:2rem;background:linear-gradient(90deg,#00d4ff,#7b2ff7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{color:#8892b0;margin-top:4px}
+.card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;margin:16px 0;backdrop-filter:blur(10px)}
+.label{color:#8892b0;font-size:0.85rem;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.input{width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:14px 16px;color:#fff;font-size:1rem;margin-bottom:16px;transition:0.3s}
+.input:focus{outline:none;border-color:#00d4ff;box-shadow:0 0 0 3px rgba(0,212,255,0.1)}
+.input::placeholder{color:#4a5568}
+select.input option{background:#1a1f3a;color:#fff}
+.row{display:flex;gap:12px}
+.row>div{flex:1}
+.amount-display{text-align:center;padding:20px 0}
+.amount-display .naira{font-size:3rem;font-weight:bold;color:#00d4ff}
+.amount-display .label{font-size:0.9rem}
+.pay-btn{width:100%;background:linear-gradient(90deg,#00d4ff,#7b2ff7);color:#fff;border:none;border-radius:12px;padding:16px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:0.3s}
+.pay-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,0.3)}
+.pay-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.product-card{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.05);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:0.2s;border:1px solid transparent}
+.product-card:hover{border-color:rgba(0,212,255,0.3);background:rgba(255,255,255,0.08)}
+.product-card.selected{border-color:#00d4ff;background:rgba(0,212,255,0.1)}
+.product-icon{font-size:1.5rem}
+.product-info{flex:1}
+.product-info h4{font-size:0.95rem;margin-bottom:2px}
+.product-info p{font-size:0.8rem;color:#8892b0}
+.product-price{font-weight:bold;color:#00d4ff}
+#result{display:none;text-align:center;padding:40px 20px}
+#result .icon{font-size:3rem}
+#result h2{margin:12px 0}
+#result .ref{font-size:0.85rem;color:#8892b0;margin-top:8px}
+.badge{display:inline-block;background:rgba(0,255,100,0.15);color:#00ff64;font-size:0.75rem;padding:4px 10px;border-radius:20px;margin-left:8px}
+.badge.live{background:rgba(255,100,100,0.15);color:#ff6464}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>HARZ Pay <span class="badge live">LIVE</span></h1>
+<p>Pay securely with Paystack</p>
+</div>
+
+<div id="payment-form">
+<div class="card">
+<div class="label">Select Product / Service</div>
+<div id="products"></div>
+</div>
+
+<div class="card">
+<div class="row">
+<div>
+<div class="label">Email</div>
+<input class="input" type="email" id="email" placeholder="your@email.com" value="">
+</div>
+<div>
+<div class="label">Phone</div>
+<input class="input" type="tel" id="phone" placeholder="08012345678" value="">
+</div>
+</div>
+<div class="label">Custom Amount (₦)</div>
+<input class="input" type="number" id="amount" placeholder="Enter amount" value="">
+<div class="label">Payment Description</div>
+<input class="input" type="text" id="description" placeholder="What are you paying for?" value="">
+</div>
+
+<div class="card">
+<div class="amount-display">
+<div class="label">Total</div>
+<div class="naira" id="total">₦0</div>
+</div>
+<button class="pay-btn" id="payBtn" onclick="payWithPaystack()">
+🔒 Pay Securely with Paystack
+</button>
+</div>
+</div>
+
+<div id="result">
+<div class="icon" id="resultIcon">✅</div>
+<h2 id="resultTitle">Payment Successful!</h2>
+<p id="resultMsg"></p>
+<p class="ref" id="resultRef"></p>
+<button class="pay-btn" style="margin-top:20px" onclick="resetForm()">New Payment</button>
+</div>
+
+<script>
+const HARZ_PRODUCTS = [
+{icon:'🎓',name:'Danfodio School Fees',price:45000,desc:'Per term'},
+{icon:'🏗️',name:'BuildBot Construction Estimate',price:5000,desc:'Project estimate'},
+{icon:'🌾',name:'HARZ Farm Products',price:15000,desc:'Bulk produce'},
+{icon:'🏠',name:'Abuja Estate Plot',price:5000000,desc:'Land purchase'},
+{icon:'💻',name:'HARZ Cloud Subscription',price:2500,desc:'Monthly plan'},
+{icon:'📦',name:'HarzDM Digital Product',price:3500,desc:'Digital download'},
+{icon:'📱',name:'Nexal Ads Campaign',price:10000,desc:'Ad placement'},
+{icon:'💡',name:'GDEG Token Purchase',price:150,desc:'Per token'},
+];
+
+const PAYSTACK_PUBLIC_KEY = 'pk_live_ea1681539460832272b943243689d9a514f45acb';
+const BACKEND_URL = 'https://backend.base44.com/proxy/apps/6a66fd3abd8d16365b0577e2/functions/harzPaystack';
+let selectedProduct = null;
+
+// Load user email from localStorage
+const savedUser = JSON.parse(localStorage.getItem('harzUser') || '{}');
+if (savedUser.email) document.getElementById('email').value = savedUser.email;
+if (savedUser.phone) document.getElementById('phone').value = savedUser.phone;
+
+// Render products
+const productsDiv = document.getElementById('products');
+HARZ_PRODUCTS.forEach((p, i) => {
+const card = document.createElement('div');
+card.className = 'product-card';
+card.onclick = () => selectProduct(i);
+card.innerHTML = `
+<div class="product-icon">${p.icon}</div>
+<div class="product-info"><h4>${p.name}</h4><p>${p.desc}</p></div>
+<div class="product-price">₦${p.price.toLocaleString()}</div>
+`;
+productsDiv.appendChild(card);
+});
+
+function selectProduct(i) {
+selectedProduct = HARZ_PRODUCTS[i];
+document.querySelectorAll('.product-card').forEach((c, idx) => {
+c.classList.toggle('selected', idx === i);
+});
+document.getElementById('amount').value = selectedProduct.price;
+document.getElementById('description').value = selectedProduct.name;
+updateTotal();
+}
+
+document.getElementById('amount').addEventListener('input', updateTotal);
+
+function updateTotal() {
+const amt = parseFloat(document.getElementById('amount').value) || 0;
+document.getElementById('total').textContent = '₦' + amt.toLocaleString();
+}
+
+async function payWithPaystack() {
+const email = document.getElementById('email').value.trim();
+const amount = parseFloat(document.getElementById('amount').value);
+const phone = document.getElementById('phone').value.trim();
+const description = document.getElementById('description').value.trim();
+
+if (!email) { alert('Please enter your email'); return; }
+if (!amount || amount < 100) { alert('Minimum amount is ₦100'); return; }
+
+document.getElementById('payBtn').disabled = true;
+document.getElementById('payBtn').textContent = 'Processing...';
+
+const reference = 'HARZ_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+
+// Initialize via backend
+try {
+const resp = await fetch(BACKEND_URL, {
+method: 'POST',
+headers: {'Content-Type': 'application/json'},
+body: JSON.stringify({
+action: 'initialize',
+email,
+amount,
+reference,
+metadata: { product: description, description, phone },
+})
+});
+const data = await resp.json();
+
+if (data.status) {
+// Open Paystack inline checkout
+const handler = PaystackPop.setup({
+key: PAYSTACK_PUBLIC_KEY,
+email,
+amount: amount * 100,
+currency: 'NGN',
+ref: reference,
+metadata: { product: description, phone },
+callback: function(response) {
+verifyPayment(response.reference || reference);
+},
+onClose: function() {
+document.getElementById('payBtn').disabled = false;
+document.getElementById('payBtn').textContent = '🔒 Pay Securely with Paystack';
+}
+});
+handler.openIframe();
+} else {
+alert('Error: ' + (data.message || data.error || 'Failed to initialize'));
+document.getElementById('payBtn').disabled = false;
+document.getElementById('payBtn').textContent = '🔒 Pay Securely with Paystack';
+}
+} catch (e) {
+// Fallback: use inline checkout directly
+const handler = PaystackPop.setup({
+key: PAYSTACK_PUBLIC_KEY,
+email,
+amount: amount * 100,
+currency: 'NGN',
+ref: reference,
+metadata: { product: description, phone },
+callback: function(response) {
+verifyPayment(response.reference || reference);
+},
+onClose: function() {
+document.getElementById('payBtn').disabled = false;
+document.getElementById('payBtn').textContent = '🔒 Pay Securely with Paystack';
+}
+});
+handler.openIframe();
+}
+}
+
+async function verifyPayment(ref) {
+try {
+const resp = await fetch(BACKEND_URL, {
+method: 'POST',
+headers: {'Content-Type': 'application/json'},
+body: JSON.stringify({ action: 'verify', reference: ref })
+});
+const data = await resp.json();
+
+if (data.status && data.data && data.data.status === 'success') {
+document.getElementById('payment-form').style.display = 'none';
+document.getElementById('result').style.display = 'block';
+document.getElementById('resultIcon').textContent = '✅';
+document.getElementById('resultTitle').textContent = 'Payment Successful!';
+document.getElementById('resultMsg').textContent = 'Thank you! Your payment of ₦' + (data.data.amount / 100).toLocaleString() + ' has been confirmed.';
+document.getElementById('resultRef').textContent = 'Reference: ' + ref;
+} else {
+document.getElementById('payment-form').style.display = 'none';
+document.getElementById('result').style.display = 'block';
+document.getElementById('resultIcon').textContent = '⏳';
+document.getElementById('resultTitle').textContent = 'Payment Pending';
+document.getElementById('resultMsg').textContent = 'Your payment is being processed. You will be notified once confirmed.';
+document.getElementById('resultRef').textContent = 'Reference: ' + ref;
+}
+} catch (e) {
+document.getElementById('payment-form').style.display = 'none';
+document.getElementById('result').style.display = 'block';
+document.getElementById('resultIcon').textContent = '✅';
+document.getElementById('resultTitle').textContent = 'Payment Initiated';
+document.getElementById('resultMsg').textContent = 'Your payment reference: ' + ref;
+document.getElementById('resultRef').textContent = 'Keep this reference for your records.';
+}
+}
+
+function resetForm() {
+document.getElementById('result').style.display = 'none';
+document.getElementById('payment-form').style.display = 'block';
+document.getElementById('payBtn').disabled = false;
+document.getElementById('payBtn').textContent = '🔒 Pay Securely with Paystack';
+document.getElementById('amount').value = '';
+document.getElementById('description').value = '';
+document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+selectedProduct = null;
+updateTotal();
+}
+</script>
+</body>
+</html>
