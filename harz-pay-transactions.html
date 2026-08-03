@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Pay — Live Transactions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{background:linear-gradient(135deg,#0a0e27,#1a1f3a);min-height:100vh;color:#fff;padding:16px}
+.header{text-align:center;padding:20px 0}
+.header h1{font-size:1.8rem;background:linear-gradient(90deg,#00d4ff,#7b2ff7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{color:#8892b0;margin-top:4px}
+.badge{display:inline-block;background:rgba(255,100,100,0.15);color:#ff6464;font-size:0.7rem;padding:3px 8px;border-radius:20px;margin-left:6px;vertical-align:middle}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+.stat-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;text-align:center}
+.stat-value{font-size:1.5rem;font-weight:bold;margin:4px 0}
+.stat-label{color:#8892b0;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px}
+.stat-success{color:#00ff64}
+.stat-pending{color:#ffa500}
+.stat-total{color:#00d4ff}
+.filter-bar{display:flex;gap:8px;margin:16px 0;overflow-x:auto;padding-bottom:4px}
+.filter-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:8px 16px;color:#fff;font-size:0.85rem;cursor:pointer;white-space:nowrap;transition:0.2s}
+.filter-btn.active{background:linear-gradient(90deg,#00d4ff,#7b2ff7);border-color:transparent}
+.filter-btn:hover{background:rgba(255,255,255,0.12)}
+.tx-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.tx-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.tx-icon.success{background:rgba(0,255,100,0.15)}
+.tx-icon.pending{background:rgba(255,165,0,0.15)}
+.tx-icon.failed{background:rgba(255,100,100,0.15)}
+.tx-info{flex:1;min-width:0}
+.tx-info h4{font-size:0.9rem;margin-bottom:2px}
+.tx-info p{font-size:0.75rem;color:#8892b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-amount{font-weight:bold;font-size:1rem;text-align:right}
+.tx-amount.success{color:#00ff64}
+.tx-amount.pending{color:#ffa500}
+.tx-amount.failed{color:#ff6464}
+.tx-status{font-size:0.7rem;text-transform:uppercase;margin-top:2px}
+.tx-date{font-size:0.7rem;color:#4a5568;margin-top:4px}
+.empty{text-align:center;padding:40px;color:#8892b0}
+.empty .icon{font-size:3rem;margin-bottom:12px}
+.refresh-btn{background:linear-gradient(90deg,#00d4ff,#7b2ff7);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:0.9rem;cursor:pointer;margin:0 auto;display:block}
+.loading{text-align:center;padding:40px;color:#8892b0}
+.loading .spinner{display:inline-block;width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top:3px solid #00d4ff;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>HARZ Pay <span class="badge">LIVE</span></h1>
+<p>Live Transaction History</p>
+</div>
+
+<div id="stats" class="stats-grid"></div>
+
+<div class="filter-bar">
+<button class="filter-btn active" onclick="filterTx('all')">All</button>
+<button class="filter-btn" onclick="filterTx('success')">Successful</button>
+<button class="filter-btn" onclick="filterTx('pending')">Pending</button>
+<button class="filter-btn" onclick="filterTx('abandoned')">Failed</button>
+</div>
+
+<div id="tx-list">
+<div class="loading"><div class="spinner"></div><p style="margin-top:12px">Loading transactions...</p></div>
+</div>
+
+<button class="refresh-btn" onclick="loadTransactions()">🔄 Refresh</button>
+
+<script>
+const BACKEND_URL = 'https://backend.base44.com/proxy/apps/6a66fd3abd8d16365b0577e2/functions/harzPaystack';
+let allTransactions = [];
+let currentFilter = 'all';
+
+async function loadTransactions() {
+  const list = document.getElementById('tx-list');
+  list.innerHTML = '<div class="loading"><div class="spinner"></div><p style="margin-top:12px">Loading transactions...</p></div>';
+  
+  try {
+    const resp = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'dashboard' })
+    });
+    const data = await resp.json();
+    
+    if (data.status) {
+      const stats = data.stats;
+      document.getElementById('stats').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Total Volume</div><div class="stat-value stat-total">₦${stats.total_volume.toLocaleString()}</div></div>
+        <div class="stat-card"><div class="stat-label">Successful</div><div class="stat-value stat-success">${stats.successful}</div></div>
+        <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value stat-pending">${stats.pending}</div></div>
+        <div class="stat-card"><div class="stat-label">Total TX</div><div class="stat-value stat-total">${stats.total_transactions}</div></div>
+      `;
+      
+      allTransactions = data.transactions || [];
+      renderTx();
+    } else {
+      list.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Failed to load transactions</p></div>';
+    }
+  } catch (e) {
+    list.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Connection error. Tap refresh.</p></div>';
+  }
+}
+
+function filterTx(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderTx();
+}
+
+function renderTx() {
+  const list = document.getElementById('tx-list');
+  let filtered = allTransactions;
+  if (currentFilter !== 'all') {
+    filtered = allTransactions.filter(t => t.status === currentFilter);
+  }
+  
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="icon">📭</div><p>No transactions found</p></div>';
+    return;
+  }
+  
+  list.innerHTML = filtered.map(t => {
+    const amount = (t.amount / 100).toLocaleString();
+    const statusIcon = t.status === 'success' ? '✅' : t.status === 'pending' ? '⏳' : '❌';
+    const statusClass = t.status === 'success' ? 'success' : t.status === 'pending' ? 'pending' : 'failed';
+    const date = new Date(t.created_at).toLocaleString('en-NG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const channel = t.channel || 'card';
+    const email = t.customer?.email || 'N/A';
+    const product = t.metadata?.product || 'Payment';
+    
+    return `
+      <div class="tx-card">
+        <div class="tx-icon ${statusClass}">${statusIcon}</div>
+        <div class="tx-info">
+          <h4>${product}</h4>
+          <p>${email} · ${channel.toUpperCase()}</p>
+          <div class="tx-date">${date} · Ref: ${t.reference.substring(0, 20)}...</div>
+        </div>
+        <div>
+          <div class="tx-amount ${statusClass}">₦${amount}</div>
+          <div class="tx-status" style="text-align:right;color:${t.status === 'success' ? '#00ff64' : t.status === 'pending' ? '#ffa500' : '#ff6464'}">${t.status}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+loadTransactions();
+setInterval(loadTransactions, 30000);
+</script>
+</body>
+</html>
