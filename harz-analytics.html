@@ -6,162 +6,106 @@
 <title>HARZ Analytics Dashboard</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0A0A0F;--card:#13131a;--card2:#1a1a24;--border:#22223a;--text:#e0e0e0;--muted:#666;--green:#00e676;--gold:#F59E0B;--blue:#3b82f6;--purple:#7C4DFF;--red:#EF4444;--cyan:#00bcd4}
-body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
-.header{background:linear-gradient(135deg,rgba(124,77,255,.1),rgba(0,188,212,.08));padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
-.header h1{font-size:1.2rem;font-weight:800}
-.header h1 span{color:var(--cyan)}
-.header p{font-size:.72rem;color:var(--muted);margin-top:4px}
-.container{max-width:500px;margin:0 auto;padding:12px}
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden}
-.kpi-label{font-size:.68rem;color:var(--muted);margin-bottom:6px}
-.kpi-value{font-size:1.6rem;font-weight:800}
-.kpi-sub{font-size:.65rem;margin-top:4px}
-.kpi-icon{position:absolute;top:12px;right:12px;font-size:1.3rem;opacity:.3}
-.section-head{font-size:.85rem;font-weight:700;margin:16px 0 10px;display:flex;justify-content:space-between;align-items:center}
-.section-head .badge{font-size:.6rem;background:rgba(0,230,118,.12);color:var(--green);padding:2px 8px;border-radius:6px;font-weight:600}
-.chart-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
-.bar-chart{display:flex;align-items:flex-end;gap:6px;height:120px;margin-top:12px}
-.bar{flex:1;background:linear-gradient(180deg,var(--purple),var(--blue));border-radius:4px 4px 0 0;position:relative;min-height:4px;transition:.3s}
-.bar:hover{opacity:.8}
+:root{--bg:#0A0A0F;--card:#13131a;--border:#22223a;--text:#e0e0e0;--muted:#666;--gold:#F59E0B;--green:#00e676;--blue:#3b82f6;--cyan:#00bcd4;--red:#EF4444;--purple:#7C4DFF}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.container{max-width:600px;margin:0 auto;padding:16px}
+.header{text-align:center;padding:16px 0}
+.header h1{font-size:1.4rem;font-weight:900}
+.header h1 span{color:var(--gold)}
+.back-link{display:inline-block;margin-bottom:12px;font-size:.75rem;color:var(--cyan);text-decoration:none}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+.stat-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.stat-value{font-size:1.8rem;font-weight:800;margin-top:4px}
+.stat-sub{font-size:.7rem;color:var(--muted);margin-top:2px}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.chart-title{font-size:.8rem;font-weight:700;margin-bottom:8px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px;margin-top:12px}
+.bar{flex:1;background:linear-gradient(180deg,var(--gold),rgba(245,158,11,.2));border-radius:4px 4px 0 0;min-height:4px;transition:.3s;position:relative}
+.bar:hover{filter:brightness(1.2)}
 .bar-label{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--muted);white-space:nowrap}
-.bar-val{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--text);font-weight:600;white-space:nowrap}
-.list-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:16px}
-.list-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
-.list-row:last-child{border-bottom:none}
-.list-left{display:flex;align-items:center;gap:10px}
-.list-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
-.list-name{font-size:.78rem;font-weight:600}
-.list-desc{font-size:.65rem;color:var(--muted)}
-.list-val{font-size:.82rem;font-weight:700;text-align:right}
-.list-sub{font-size:.6rem;color:var(--muted);text-align:right}
-.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
-.dot-green{background:var(--green)}.dot-red{background:var(--red)}.dot-yellow{background:var(--gold)}
-.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:6px}
-.progress-fill{height:100%;border-radius:3px;transition:.3s}
-.back{display:block;text-align:center;margin-top:16px;font-size:.8rem;color:var(--cyan);text-decoration:none}
-.pie-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
-.pie-row{display:flex;align-items:center;gap:10px;padding:6px 0}
-.pie-color{width:12px;height:12px;border-radius:3px;flex-shrink:0}
-.pie-label{flex:1;font-size:.75rem}
-.pie-val{font-size:.75rem;font-weight:700}
+.bar-value{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:.5rem;color:var(--gold);white-space:nowrap}
+.method-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px}
+.method-row{display:flex;justify-content:space-between;align-items:center}
+.method-name{font-size:.8rem;font-weight:600}
+.method-stats{font-size:.75rem;color:var(--muted)}
+.method-bar{height:6px;background:var(--border);border-radius:3px;margin-top:8px;overflow:hidden}
+.method-fill{height:100%;border-radius:3px;transition:.5s}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.product-name{font-size:.75rem;font-weight:600}
+.product-count{font-size:.7rem;color:var(--muted)}
+.product-volume{font-size:.8rem;font-weight:700;color:var(--green)}
+.loading{text-align:center;padding:40px;color:var(--muted)}
+.spin{display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div class="header">
-<h1>📊 <span>HARZ</span> Analytics</h1>
-<p>Revenue · Orders · Users · Platform Health</p>
-</div>
 <div class="container">
-
-<div class="kpi-grid">
-<div class="kpi-card">
-<div class="kpi-icon" style="color:var(--green)">💰</div>
-<div class="kpi-label">Revenue (Paid)</div>
-<div class="kpi-value" style="color:var(--green)">₦5K</div>
-<div class="kpi-sub" style="color:var(--muted)">Pending: ₦113.8K</div>
-</div>
-<div class="kpi-card">
-<div class="kpi-icon" style="color:var(--blue)">📦</div>
-<div class="kpi-label">Total Orders</div>
-<div class="kpi-value">11</div>
-<div class="kpi-sub" style="color:var(--muted)">1 paid · 9 pending · 1 test</div>
-</div>
-<div class="kpi-card">
-<div class="kpi-icon" style="color:var(--purple)">👥</div>
-<div class="kpi-label">Total Users</div>
-<div class="kpi-value">1</div>
-<div class="kpi-sub" style="color:var(--muted)">Active: 1</div>
-</div>
-<div class="kpi-card">
-<div class="kpi-icon" style="color:var(--cyan)">🌐</div>
-<div class="kpi-label">Live Platforms</div>
-<div class="kpi-value">98</div>
-<div class="kpi-sub" style="color:var(--muted)">+ 490 tools = 588</div>
-</div>
+<a href="harz-super-app.html" class="back-link">← Back</a>
+<div class="header">
+<h1>HARZ <span>Analytics</span></h1>
 </div>
 
-<div class="section-head">Revenue (Last 7 Days) <span class="badge">Live</span></div>
-<div class="chart-card">
-<div class="bar-chart" id="revenueChart"></div>
-<div style="margin-top:24px;font-size:.65rem;color:var(--muted);text-align:center">Daily revenue in ₦</div>
+<div id="content">
+<div class="loading"><span class="spin"></span>Loading analytics...</div>
 </div>
-
-<div class="section-head">Top Products (by orders)</div>
-<div class="list-card">
-<div class="list-row">
-<div class="list-left"><div class="list-icon" style="background:rgba(124,77,255,.15)">📔</div><div><div class="list-name">Notion Productivity OS</div><div class="list-desc">Digital product · ₦28,800</div></div></div>
-<div class="list-val">3 orders<div class="list-sub">₦86,400</div></div>
-</div>
-<div class="list-row">
-<div class="list-left"><div class="list-icon" style="background:rgba(0,188,212,.15)">🧠</div><div><div class="list-name">MindCare AI Pro</div><div class="list-desc">Subscription · ₦5,000/mo</div></div></div>
-<div class="list-val">1 order<div class="list-sub">₦5,000</div></div>
-</div>
-<div class="list-row">
-<div class="list-left"><div class="list-icon" style="background:rgba(245,158,11,.15)">📦</div><div><div class="list-name">Harz Product</div><div class="list-desc">Digital product · ₦5,000</div></div></div>
-<div class="list-val">1 order<div class="list-sub">₦5,000</div></div>
-</div>
-<div class="list-row">
-<div class="list-left"><div class="list-icon" style="background:rgba(0,230,118,.15)">🧪</div><div><div class="list-name">Test Product</div><div class="list-desc">Test · ₦2,500</div></div></div>
-<div class="list-val">1 order<div class="list-sub">₦2,500</div></div>
-</div>
-</div>
-
-<div class="section-head">Payment Methods</div>
-<div class="pie-card">
-<div class="pie-row"><div class="pie-color" style="background:var(--green)"></div><div class="pie-label">Bank Transfer (UBA)</div><div class="pie-val">LIVE ✅</div></div>
-<div class="pie-row"><div class="pie-color" style="background:var(--blue)"></div><div class="pie-label">USSD</div><div class="pie-val">LIVE ✅</div></div>
-<div class="pie-row"><div class="pie-color" style="background:var(--gold)"></div><div class="pie-label">GDEG Token (Polygon)</div><div class="pie-val">LIVE ✅</div></div>
-<div class="pie-row"><div class="pie-color" style="background:var(--red)"></div><div class="pie-label">Paystack</div><div class="pie-val">TEST ⚠️</div></div>
-<div class="pie-row"><div class="pie-color" style="background:var(--muted)"></div><div class="pie-label">USDT (TRC20)</div><div class="pie-val">SOON</div></div>
-</div>
-
-<div class="section-head">Platform Health <span class="badge">All OK</span></div>
-<div class="list-card">
-<div class="list-row">
-<div class="list-left"><div class="list-icon" style="background:rgba(0,230,118,.12)">🌐</div><div><div class="list-name">Super App</div><div class="list-desc">GitHub Pages</div></div></div>
-<div><span class="status-dot dot-green"></span><span style="font-size:.78rem;font-weight:600;color:var(--green)">200 OK</span></div>
-</div>
-<div class="list-row">
-<div class="list-left"><div class="list-icon" style="background:rgba(124,77,255,.12)">🛒</div><div><div class="list-name">HarzDM Marketplace</div><div class="list-desc">Vercel</div></div></div>
-<div><span class="status-dot dot-green"></span><span style="font-size:.78rem;font-weight:600;color:var(--green)">200 OK</span></div>
-</div>
-<div class="list-row">
-<div class="list-left"><div class="list-icon" style="background:rgba(0,188,212,.12)">📈</div><div><div class="list-name">Harz Exchange</div><div class="list-desc">Base44 Backend</div></div></div>
-<div><span class="status-dot dot-green"></span><span style="font-size:.78rem;font-weight:600;color:var(--green)">OK</span></div>
-</div>
-<div class="list-row">
-<div class="list-left"><div class="list-icon" style="background:rgba(245,158,11,.12)">💳</div><div><div class="list-name">harzPayments</div><div class="list-desc">Base44 Backend</div></div></div>
-<div><span class="status-dot dot-yellow"></span><span style="font-size:.78rem;font-weight:600;color:var(--gold)">TEST MODE</span></div>
-</div>
-<div class="list-row">
-<div class="list-left"><div class="list-icon" style="background:rgba(239,68,68,.12)">📚</div><div><div class="list-name">Gumroad Products</div><div class="list-desc">5 product links</div></div></div>
-<div><span class="status-dot dot-red"></span><span style="font-size:.78rem;font-weight:600;color:var(--red)">404 ❌</span></div>
-</div>
-</div>
-
-<div class="section-head">Ecosystem Breakdown</div>
-<div class="list-card">
-<div class="list-row"><div class="list-name">Main Platforms</div><div class="list-val">98</div></div>
-<div class="list-row"><div class="list-name">Utility Tools (Toolkit)</div><div class="list-val">490</div></div>
-<div class="list-row"><div class="list-name">External Services (Vercel)</div><div class="list-val">3</div></div>
-<div class="list-row"><div class="list-name">Backend Functions (Base44)</div><div class="list-val">2</div></div>
-<div class="list-row"><div class="list-name" style="font-weight:700">Total Ecosystem Assets</div><div class="list-val" style="color:var(--cyan);font-size:1rem">588</div></div>
-</div>
-
-<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html" class="back">← Back to Super App</a>
 </div>
 
 <script>
-var revenueData=[
-{day:'Wed',val:0},{day:'Thu',val:0},{day:'Fri',val:5000},{day:'Sat',val:0},{day:'Sun',val:0},{day:'Mon',val:0},{day:'Tue',val:0}
-];
-var max=Math.max.apply(null,revenueData.map(function(d){return d.val}))||1;
-document.getElementById('revenueChart').innerHTML=revenueData.map(function(d){
-var h=Math.max(4,(d.val/max)*100);
-return '<div class="bar" style="height:'+h+'%"><span class="bar-val">'+(d.val>0?'₦'+d.val:'')+'</span><span class="bar-label">'+d.day+'</span></div>'
-}).join('');
+const BACKEND_URL="https://solene-5b0577e2.base44.app/functions/harzPayments";
+
+async function loadAnalytics(){
+  try{
+    const resp=await fetch(BACKEND_URL,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'analytics'})
+    });
+    const data=await resp.json();
+    if(data.status&&data.analytics){
+      renderAnalytics(data.analytics);
+    }else{
+      document.getElementById('content').innerHTML='<div class="loading">Failed to load analytics</div>';
+    }
+  }catch(e){
+    document.getElementById('content').innerHTML='<div class="loading">Connection error</div>';
+  }
+}
+
+function renderAnalytics(a){
+  var maxRev=Math.max.apply(null,a.daily_revenue.map(function(d){return d.val}))||1;
+  var bars=a.daily_revenue.map(function(d){
+    var h=Math.round((d.val/maxRev)*100);
+    var day=new Date(d.date).toLocaleDateString('en',{weekday:'short'}).charAt(0);
+    return '<div class="bar" style="height:'+h+'%"><div class="bar-value">'+(d.val>0?'₦'+(d.val/1000).toFixed(0)+'k':'')+'</div><div class="bar-label">'+day+'</div></div>';
+  }).join('');
+  
+  var methods=Object.keys(a.by_method).map(function(m){
+    var info=a.by_method[m];
+    var pct=info.count>0?Math.round((info.count/a.total_transactions)*100):0;
+    var color=m==='paystack'?'var(--green)':m==='crypto'?'var(--gold)':m==='bank_transfer'?'var(--blue)':m==='wallet'?'var(--cyan)':'var(--muted)';
+    return '<div class="method-card"><div class="method-row"><div class="method-name">'+m.replace(/_/g,' ')+'</div><div class="method-stats">'+info.count+' txns · ₦'+info.volume.toLocaleString()+'</div></div><div class="method-bar"><div class="method-fill" style="width:'+pct+'%;background:'+color+'"></div></div></div>';
+  }).join('');
+  
+  var products=Object.keys(a.by_product).map(function(p){
+    var info=a.by_product[p];
+    return '<div class="product-card"><div><div class="product-name">'+p+'</div><div class="product-count">'+info.count+' orders</div></div><div class="product-volume">₦'+info.volume.toLocaleString()+'</div></div>';
+  }).join('');
+  
+  document.getElementById('content').innerHTML=
+    '<div class="stat-grid">'+
+      '<div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-value" style="color:var(--gold)">₦'+a.total_revenue.toLocaleString()+'</div><div class="stat-sub">'+a.paid+' paid transactions</div></div>'+
+      '<div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" style="color:var(--blue)">₦'+(a.pending)+'</div><div class="stat-sub">'+a.pending+' pending orders</div></div>'+
+      '<div class="stat-card"><div class="stat-label">Total Orders</div><div class="stat-value">'+a.total_transactions+'</div><div class="stat-sub">All methods</div></div>'+
+      '<div class="stat-card"><div class="stat-label">Avg Order</div><div class="stat-value" style="color:var(--green)">₦'+(a.paid>0?Math.round(a.total_revenue/a.paid).toLocaleString():0)+'</div><div class="stat-sub">Per paid order</div></div>'+
+    '</div>'+
+    '<div class="chart-card"><div class="chart-title">Revenue (Last 7 Days)</div><div class="bar-chart">'+bars+'</div></div>'+
+    '<div class="chart-card"><div class="chart-title">Payment Methods</div>'+methods+'</div>'+
+    '<div class="chart-card"><div class="chart-title">Top Products</div>'+products+'</div>';
+}
+
+loadAnalytics();
+setInterval(loadAnalytics,60000);
 </script>
 </body>
 </html>
