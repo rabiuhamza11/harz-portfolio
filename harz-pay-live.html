@@ -25,6 +25,8 @@ select.input option{background:#1a1f3a;color:#fff}
 .pay-btn{width:100%;background:linear-gradient(90deg,#00d4ff,#7b2ff7);color:#fff;border:none;border-radius:12px;padding:16px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:0.3s}
 .pay-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,0.3)}
 .pay-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.stripe-btn{width:100%;background:linear-gradient(90deg,#635BFF,#0A2540);color:#fff;border:none;border-radius:12px;padding:16px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:0.3s;margin-top:10px}
+.stripe-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,91,255,0.3)}
 .product-card{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.05);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:0.2s;border:1px solid transparent}
 .product-card:hover{border-color:rgba(0,212,255,0.3);background:rgba(255,255,255,0.08)}
 .product-card.selected{border-color:#00d4ff;background:rgba(0,212,255,0.1)}
@@ -39,12 +41,25 @@ select.input option{background:#1a1f3a;color:#fff}
 #result .ref{font-size:0.85rem;color:#8892b0;margin-top:8px}
 .badge{display:inline-block;background:rgba(0,255,100,0.15);color:#00ff64;font-size:0.75rem;padding:4px 10px;border-radius:20px;margin-left:8px}
 .badge.live{background:rgba(255,100,100,0.15);color:#ff6464}
+.currency-toggle{display:flex;gap:0;border-radius:12px;overflow:hidden;margin:0 0 20px;border:1px solid rgba(255,255,255,0.15)}
+.currency-toggle button{flex:1;padding:14px;background:rgba(255,255,255,0.05);border:none;color:#8892b0;font-weight:bold;font-size:0.95rem;cursor:pointer;transition:0.3s}
+.currency-toggle button.active{background:linear-gradient(90deg,#00d4ff,#7b2ff7);color:#fff}
+.currency-toggle button:first-child{border-right:1px solid rgba(255,255,255,0.1)}
+.stripe-note{text-align:center;font-size:0.8rem;color:#8892b0;margin-top:8px;padding:8px;background:rgba(99,91,255,0.08);border-radius:8px}
+.provider-badge{display:inline-block;font-size:0.7rem;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle}
+.provider-badge.ngn{background:rgba(0,212,255,0.15);color:#00d4ff}
+.provider-badge.usd{background:rgba(99,91,255,0.15);color:#7C7FFF}
 </style>
 </head>
 <body>
 <div class="header">
 <h1>HARZ Pay <span class="badge live">LIVE</span></h1>
-<p>Pay securely with Paystack</p>
+<p>Pay securely — Paystack (NGN) & Stripe (USD)</p>
+</div>
+
+<div class="currency-toggle">
+<button id="tabNGN" class="active" onclick="switchCurrency('NGN')">₦ NGN — Paystack</button>
+<button id="tabUSD" onclick="switchCurrency('USD')">$ USD — Stripe</button>
 </div>
 
 <div id="payment-form">
@@ -53,7 +68,7 @@ select.input option{background:#1a1f3a;color:#fff}
 <div id="products"></div>
 </div>
 
-<div class="card">
+<div class="card" id="ngnForm">
 <div class="row">
 <div>
 <div class="label">Email</div>
@@ -70,13 +85,22 @@ select.input option{background:#1a1f3a;color:#fff}
 <input class="input" type="text" id="description" placeholder="What are you paying for?" value="">
 </div>
 
+<div class="card" id="usdForm" style="display:none">
+<div class="label">Email</div>
+<input class="input" type="email" id="emailUSD" placeholder="your@email.com" value="">
+<div class="stripe-note">Stripe checkout supports Card, Apple Pay, Google Pay, and bank transfers internationally.</div>
+</div>
+
 <div class="card">
 <div class="amount-display">
 <div class="label">Total</div>
 <div class="naira" id="total">₦0</div>
 </div>
 <button class="pay-btn" id="payBtn" onclick="payWithPaystack()">
-🔒 Pay Securely with Paystack
+🔒 Pay with Paystack (₦)
+</button>
+<button class="stripe-btn" id="stripeBtn" style="display:none" onclick="payWithStripe()">
+💳 Pay with Stripe ($)
 </button>
 </div>
 </div>
@@ -90,7 +114,9 @@ select.input option{background:#1a1f3a;color:#fff}
 </div>
 
 <script>
-const HARZ_PRODUCTS = [
+let currentCurrency = 'NGN';
+
+const NGN_PRODUCTS = [
 {icon:'🎓',name:'Danfodio School Fees',price:45000,desc:'Per term'},
 {icon:'🏗️',name:'BuildBot Construction Estimate',price:5000,desc:'Project estimate'},
 {icon:'🌾',name:'HARZ Farm Products',price:15000,desc:'Bulk produce'},
@@ -101,44 +127,76 @@ const HARZ_PRODUCTS = [
 {icon:'💡',name:'GDEG Token Purchase',price:150,desc:'Per token'},
 ];
 
+const USD_PRODUCTS = [
+{icon:'💻',name:'HARZ Cloud AI Subscription',price:29,desc:'Monthly AI agents',stripe_url:'https://buy.stripe.com/test_bJe6oHaHMaeMa3c2ss9MY00'},
+{icon:'📦',name:'HARZ Digital Products Bundle',price:49,desc:'All digital products',stripe_url:'https://buy.stripe.com/test_aFa6oHdTY9aIb7gc329MY01'},
+{icon:'🎓',name:'Danfodio School Fees (International)',price:150,desc:'Annual fees',stripe_url:'https://buy.stripe.com/test_dRm5kDbLQ5Yw3EO6II9MY02'},
+{icon:'🏗️',name:'HARZ Construction Consulting',price:200,desc:'Per hour consulting',stripe_url:'https://buy.stripe.com/test_7sY7sLdTYcmU2AKc329MY03'},
+{icon:'💡',name:'GDEG Token',price:1,desc:'Per token',stripe_url:'https://buy.stripe.com/test_28E4gz7vA86E7V44AA9MY04'},
+];
+
 const PAYSTACK_PUBLIC_KEY = 'pk_live_ea1681539460832272b943243689d9a514f45acb';
 const BACKEND_URL = 'https://solene-5b0577e2.base44.app/functions/harzPaystack';
 let selectedProduct = null;
 
-// Load user email from localStorage
 const savedUser = JSON.parse(localStorage.getItem('harzUser') || '{}');
-if (savedUser.email) document.getElementById('email').value = savedUser.email;
+if (savedUser.email) { document.getElementById('email').value = savedUser.email; document.getElementById('emailUSD').value = savedUser.email; }
 if (savedUser.phone) document.getElementById('phone').value = savedUser.phone;
 
-// Render products
+function switchCurrency(cur) {
+currentCurrency = cur;
+document.getElementById('tabNGN').classList.toggle('active', cur === 'NGN');
+document.getElementById('tabUSD').classList.toggle('active', cur === 'USD');
+document.getElementById('ngnForm').style.display = cur === 'NGN' ? '' : 'none';
+document.getElementById('usdForm').style.display = cur === 'USD' ? '' : 'none';
+document.getElementById('payBtn').style.display = cur === 'NGN' ? '' : 'none';
+document.getElementById('stripeBtn').style.display = cur === 'USD' ? '' : 'none';
+renderProducts();
+updateTotal();
+}
+
+function renderProducts() {
+const products = currentCurrency === 'NGN' ? NGN_PRODUCTS : USD_PRODUCTS;
+const symbol = currentCurrency === 'NGN' ? '₦' : '$';
+const badge = currentCurrency === 'NGN' ? '<span class="provider-badge ngn">Paystack</span>' : '<span class="provider-badge usd">Stripe</span>';
 const productsDiv = document.getElementById('products');
-HARZ_PRODUCTS.forEach((p, i) => {
+productsDiv.innerHTML = '';
+products.forEach((p, i) => {
 const card = document.createElement('div');
 card.className = 'product-card';
 card.onclick = () => selectProduct(i);
-card.innerHTML = `
-<div class="product-icon">${p.icon}</div>
-<div class="product-info"><h4>${p.name}</h4><p>${p.desc}</p></div>
-<div class="product-price">₦${p.price.toLocaleString()}</div>
-`;
+card.innerHTML = '<div class="product-icon">' + p.icon + '</div>' +
+'<div class="product-info"><h4>' + p.name + badge + '</h4><p>' + p.desc + '</p></div>' +
+'<div class="product-price">' + symbol + p.price.toLocaleString() + '</div>';
 productsDiv.appendChild(card);
 });
+}
 
 function selectProduct(i) {
-selectedProduct = HARZ_PRODUCTS[i];
+const products = currentCurrency === 'NGN' ? NGN_PRODUCTS : USD_PRODUCTS;
+selectedProduct = products[i];
 document.querySelectorAll('.product-card').forEach((c, idx) => {
 c.classList.toggle('selected', idx === i);
 });
+if (currentCurrency === 'NGN') {
 document.getElementById('amount').value = selectedProduct.price;
 document.getElementById('description').value = selectedProduct.name;
+} else {
+document.getElementById('total').textContent = '$' + selectedProduct.price;
+}
 updateTotal();
 }
 
 document.getElementById('amount').addEventListener('input', updateTotal);
 
 function updateTotal() {
+if (currentCurrency === 'NGN') {
 const amt = parseFloat(document.getElementById('amount').value) || 0;
 document.getElementById('total').textContent = '₦' + amt.toLocaleString();
+} else {
+const symbol = '$';
+document.getElementById('total').textContent = selectedProduct ? (symbol + selectedProduct.price) : '$0';
+}
 }
 
 async function payWithPaystack() {
@@ -155,63 +213,60 @@ document.getElementById('payBtn').textContent = 'Processing...';
 
 const reference = 'HARZ_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
 
-// Initialize via backend
 try {
 const resp = await fetch(BACKEND_URL, {
 method: 'POST',
 headers: {'Content-Type': 'application/json'},
 body: JSON.stringify({
 action: 'initialize',
-email,
-amount,
-reference,
+email, amount, reference,
 metadata: { product: description, description, phone },
 })
 });
 const data = await resp.json();
 
 if (data.status) {
-// Open Paystack inline checkout
 const handler = PaystackPop.setup({
 key: PAYSTACK_PUBLIC_KEY,
-email,
-amount: amount * 100,
-currency: 'NGN',
-ref: reference,
+email, amount: amount * 100, currency: 'NGN', ref: reference,
 metadata: { product: description, phone },
-callback: function(response) {
-verifyPayment(response.reference || reference);
-},
+callback: function(response) { verifyPayment(response.reference || reference); },
 onClose: function() {
 document.getElementById('payBtn').disabled = false;
-document.getElementById('payBtn').textContent = '🔒 Pay Securely with Paystack';
+document.getElementById('payBtn').textContent = '🔒 Pay with Paystack (₦)';
 }
 });
 handler.openIframe();
 } else {
 alert('Error: ' + (data.message || data.error || 'Failed to initialize'));
 document.getElementById('payBtn').disabled = false;
-document.getElementById('payBtn').textContent = '🔒 Pay Securely with Paystack';
+document.getElementById('payBtn').textContent = '🔒 Pay with Paystack (₦)';
 }
 } catch (e) {
-// Fallback: use inline checkout directly
 const handler = PaystackPop.setup({
 key: PAYSTACK_PUBLIC_KEY,
-email,
-amount: amount * 100,
-currency: 'NGN',
-ref: reference,
+email, amount: amount * 100, currency: 'NGN', ref: reference,
 metadata: { product: description, phone },
-callback: function(response) {
-verifyPayment(response.reference || reference);
-},
+callback: function(response) { verifyPayment(response.reference || reference); },
 onClose: function() {
 document.getElementById('payBtn').disabled = false;
-document.getElementById('payBtn').textContent = '🔒 Pay Securely with Paystack';
+document.getElementById('payBtn').textContent = '🔒 Pay with Paystack (₦)';
 }
 });
 handler.openIframe();
 }
+}
+
+function payWithStripe() {
+if (!selectedProduct) { alert('Please select a product first'); return; }
+if (!selectedProduct.stripe_url) { alert('Stripe link not available for this product'); return; }
+window.open(selectedProduct.stripe_url, '_blank');
+document.getElementById('payment-form').style.display = 'none';
+document.getElementById('result').style.display = 'block';
+document.getElementById('resultIcon').textContent = '💳';
+document.getElementById('resultTitle').textContent = 'Redirecting to Stripe...';
+document.getElementById('resultMsg').textContent = 'You are being redirected to Stripe to complete your payment of $' + selectedProduct.price + ' for ' + selectedProduct.name + '.';
+document.getElementById('resultRef').textContent = 'Product: ' + selectedProduct.name;
 }
 
 async function verifyPayment(ref) {
@@ -244,69 +299,23 @@ document.getElementById('result').style.display = 'block';
 document.getElementById('resultIcon').textContent = '✅';
 document.getElementById('resultTitle').textContent = 'Payment Initiated';
 document.getElementById('resultMsg').textContent = 'Your payment reference: ' + ref;
-document.getElementById('resultRef').textContent = 'Keep this reference for your records.';
+document.getElementById('resultRef').textContent = 'We will confirm shortly.';
 }
 }
 
 function resetForm() {
+document.getElementById('payment-form').style.display = '';
 document.getElementById('result').style.display = 'none';
-document.getElementById('payment-form').style.display = 'block';
 document.getElementById('payBtn').disabled = false;
-document.getElementById('payBtn').textContent = '🔒 Pay Securely with Paystack';
+document.getElementById('payBtn').textContent = '🔒 Pay with Paystack (₦)';
+selectedProduct = null;
+document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
 document.getElementById('amount').value = '';
 document.getElementById('description').value = '';
-document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
-selectedProduct = null;
-updateTotal();
+document.getElementById('total').textContent = '₦0';
 }
+
+renderProducts();
 </script>
 </body>
 </html>
-
-<script>
-// PAYSTACK CALLBACK HANDLER
-// When Paystack redirects back, it adds ?reference=xxx&trxref=xxx to the URL
-(function handlePaystackCallback() {
-  const params = new URLSearchParams(window.location.search);
-  const reference = params.get('reference') || params.get('trxref');
-  
-  if (reference) {
-    // Show verifying state
-    document.getElementById('payment-form').style.display = 'none';
-    document.getElementById('result').style.display = 'block';
-    document.getElementById('resultIcon').textContent = '⏳';
-    document.getElementById('resultTitle').textContent = 'Verifying Payment...';
-    document.getElementById('resultMsg').textContent = 'Please wait while we confirm your payment.';
-    document.getElementById('resultRef').textContent = 'Reference: ' + reference;
-    
-    // Verify payment via backend
-    const BACKEND_URL = 'https://solene-5b0577e2.base44.app/functions/harzPaystack';
-    
-    fetch(BACKEND_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'verify', reference: reference })
-    })
-    .then(r => r.json())
-    .then(data => {
-      if (data.status && data.data && data.data.status === 'success') {
-        document.getElementById('resultIcon').textContent = '✅';
-        document.getElementById('resultTitle').textContent = 'Payment Successful!';
-        document.getElementById('resultMsg').textContent = 
-          'Your payment of ₦' + (data.data.amount / 100).toLocaleString() + ' has been confirmed.';
-      } else {
-        document.getElementById('resultIcon').textContent = '⏳';
-        document.getElementById('resultTitle').textContent = 'Payment Processing';
-        document.getElementById('resultMsg').textContent = 
-          'Your payment is being processed. Reference: ' + reference;
-      }
-    })
-    .catch(err => {
-      document.getElementById('resultIcon').textContent = '✅';
-      document.getElementById('resultTitle').textContent = 'Payment Received';
-      document.getElementById('resultMsg').textContent = 
-        'We received your payment. Reference: ' + reference;
-    });
-  }
-})();
-</script>
