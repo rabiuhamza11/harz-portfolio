@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abuja Estate City - HARZ Digital Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0a0e17;color:#fff}
+.header{background:linear-gradient(135deg,#0a4d2e,#0a0e17);padding:20px;text-align:center;border-bottom:3px solid #d4af37}
+.header h1{font-size:24px;color:#d4af37;margin-bottom:5px}
+.header p{color:#aaa;font-size:14px}
+.container{max-width:1200px;margin:0 auto;padding:15px}
+.hero{background:linear-gradient(135deg,#0a4d2e,#064e3b);border-radius:12px;padding:30px 20px;margin:15px 0;text-align:center}
+.hero h2{font-size:20px;margin-bottom:10px}
+.hero p{color:#ccc;font-size:14px;line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:20px 0}
+.stat{background:#111827;border-radius:8px;padding:15px;text-align:center;border:1px solid #1f2937}
+.stat .num{font-size:22px;font-weight:bold;color:#d4af37}
+.stat .label{font-size:12px;color:#888;margin-top:3px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+.filter-btn{padding:8px 16px;background:#1f2937;border:1px solid #374151;border-radius:20px;color:#fff;font-size:13px;cursor:pointer}
+.filter-btn.active{background:#0a4d2e;border-color:#d4af37}
+.properties{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px;margin:15px 0}
+.card{background:#111827;border-radius:12px;overflow:hidden;border:1px solid #1f2937;transition:transform .2s}
+.card:hover{transform:translateY(-3px);border-color:#d4af37}
+.card-img{height:160px;background:linear-gradient(135deg,#1f2937,#0a4d2e);display:flex;align-items:center;justify-content:center;font-size:40px}
+.card-body{padding:15px}
+.badge{display:inline-block;padding:3px 10px;background:#0a4d2e;color:#d4af37;border-radius:12px;font-size:11px;margin-bottom:8px}
+.badge.featured{background:#d4af37;color:#000}
+.card-title{font-size:16px;font-weight:bold;margin-bottom:5px}
+.card-location{color:#888;font-size:12px;margin-bottom:8px}
+.card-desc{color:#aaa;font-size:13px;line-height:1.5;margin-bottom:10px}
+.card-meta{display:flex;gap:12px;font-size:12px;color:#666;margin-bottom:10px}
+.card-price{font-size:18px;font-weight:bold;color:#d4af37;margin-bottom:10px}
+.card-btn{display:block;text-align:center;padding:10px;background:#0a4d2e;color:#fff;border-radius:8px;text-decoration:none;font-size:14px}
+.card-btn:hover{background:#064e3b}
+.contact{background:#111827;border-radius:12px;padding:20px;margin:20px 0;text-align:center}
+.contact h3{color:#d4af37;margin-bottom:10px}
+.contact p{color:#ccc;font-size:14px;margin:5px 0}
+.footer{text-align:center;padding:20px;color:#444;font-size:12px}
+@media(max-width:600px){.properties{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>ABUJA ESTATE CITY</h1>
+<p>Premium Real Estate in Nigeria's Capital | HARZ Digital Services</p>
+</div>
+<div class="container">
+<div class="hero">
+<h2>Find Your Dream Property in Abuja</h2>
+<p>From luxury villas in Asokoro to serviced plots in Gousa District, we connect you with the finest properties in Abuja. Verified listings, transparent pricing, and expert guidance.</p>
+</div>
+<div class="stats">
+<div class="stat"><div class="num">20+</div><div class="label">Properties Listed</div></div>
+<div class="stat"><div class="num">12</div><div class="label">Districts Covered</div></div>
+<div class="stat"><div class="num">100%</div><div class="label">Verified Listings</div></div>
+<div class="stat"><div class="num">0</div><div class="label">Agent Fees</div></div>
+</div>
+<div class="filters">
+<button class="filter-btn active" onclick="filterAll()">All Properties</button>
+<button class="filter-btn" onclick="filterType('Residential')">Residential</button>
+<button class="filter-btn" onclick="filterType('Luxury Home')">Luxury</button>
+<button class="filter-btn" onclick="filterType('Land')">Land</button>
+<button class="filter-btn" onclick="filterType('Commercial')">Commercial</button>
+<button class="filter-btn" onclick="filterType('Office')">Office</button>
+</div>
+<div class="properties" id="props"></div>
+<div class="contact">
+<h3>Interested in a Property?</h3>
+<p>WhatsApp: 08028687857</p>
+<p>Email: hamzarabiu390@gmail.com</p>
+<p>Payment: UBA 2034326424 | Paystack | USDT TRC20</p>
+</div>
+</div>
+<div class="footer">HARZ Digital Services | CAC RC 321424 | &copy; 2026</div>
+<script>
+const props=[
+{t:"Luxury 5-Bedroom Detached Villa, Asokoro",l:"Asokoro, Abuja",p:650000000,b:5,ba:7,s:680,d:"Ultra-luxury detached villa with swimming pool, smart home automation, private garden, and panoramic city views. Fully fitted kitchen with imported appliances.",ty:"Luxury Home",f:true},
+{t:"Modern 3-Bedroom Terrace Duplex, Lokogoma",l:"Lokogoma, Abuja",p:95000000,b:3,ba:4,s:280,d:"Contemporary terrace duplex with open-plan living, fitted kitchen, and 2 car parks. Part of a serviced estate with playground.",ty:"Residential",f:false},
+{t:"2-Bedroom Apartment, Wuse 2",l:"Wuse 2, Abuja",p:4500000,b:2,ba:3,s:120,d:"Modern 2-bedroom apartment in the heart of Wuse 2. Walking distance to malls, restaurants, and banks.",ty:"Residential",f:true},
+{t:"Commercial Land, Central Area",l:"Central Area, Abuja",p:850000000,b:0,ba:0,s:2000,d:"Prime commercial land in Central Area with C of O. Ideal for high-rise office, hotel, or mixed-use development.",ty:"Land",f:true},
+{t:"4-Bedroom Semi-Detached Duplex, Maitama",l:"Maitama, Abuja",p:280000000,b:4,ba:5,s:380,d:"Elegant semi-detached duplex in exclusive Maitama neighborhood. Marble flooring, designer bathrooms, landscaped garden.",ty:"Residential",f:true},
+{t:"Office Space, Central Business District",l:"CBD, Abuja",p:8000000,b:0,ba:2,s:250,d:"Grade-A office space in CBD with open floor plan, meeting rooms, fiber internet, and 24/7 power. Annual rent.",ty:"Office",f:true},
+{t:"Residential Plot, Maitama",l:"Maitama, Abuja",p:120000000,b:0,ba:0,s:800,d:"Premium residential plot in Maitama with C of O and approved building plan. Ready for immediate construction.",ty:"Land",f:false},
+{t:"Shopping Complex, Garki",l:"Garki, Abuja",p:450000000,b:0,ba:4,s:1100,d:"Well-maintained shopping complex with 24 retail units, ample parking, and steady tenant income.",ty:"Commercial",f:false},
+{t:"1-Bedroom Studio, Jabi",l:"Jabi, Abuja",p:1800000,b:1,ba:1,s:45,d:"Compact studio apartment near Jabi Lake. Ideal for young professionals. Includes kitchenette and balcony.",ty:"Residential",f:false},
+{t:"Industrial Warehouse, Idu",l:"Idu, Abuja",p:45000000,b:0,ba:2,s:2500,d:"Large industrial warehouse with crane access, loading docks, and office space. Near Idu rail terminal.",ty:"Commercial",f:false},
+{t:"5-Bedroom Mansion, Asokoro",l:"Asokoro, Abuja",p:950000000,b:5,ba:8,s:950,d:"Palatial mansion with elevator, home theater, gym, infinity pool, and 4-car garage. Landscaped grounds with water features.",ty:"Luxury Home",f:true},
+{t:"Serviced Plot, Gousa District Phase 2",l:"Gousa District, Abuja",p:65000000,b:0,ba:0,s:1000,d:"Serviced plot in Gousa District Phase 2 with electricity, water, and access roads completed. Title documents ready.",ty:"Land",f:false},
+{t:"3-Bedroom Flat, Gwarinpa",l:"Gwarinpa, Abuja",p:3000000,b:3,ba:2,s:150,d:"Spacious 3-bedroom flat in Gwarinpa with parking, balcony, and estate security. Close to main road and shops.",ty:"Residential",f:false},
+{t:"Penthouse Suite, Wuse 2",l:"Wuse 2, Abuja",p:390000000,b:4,ba:5,s:420,d:"Stunning penthouse with wraparound terrace, panoramic city views, private elevator, and rooftop garden.",ty:"Luxury Home",f:false},
+{t:"Commercial Plot, Gudu District",l:"Gudu, Abuja",p:180000000,b:0,ba:0,s:1500,d:"Strategic commercial plot in Gudu with C of O. Near AMAC and major shopping centers.",ty:"Land",f:false},
+{t:"4-Bedroom Duplex, Gousa District",l:"Gousa District, Abuja",p:185000000,b:4,ba:5,s:450,d:"Modern 4-bedroom duplex with BQ, inside Abuja Estate City gated community.",ty:"Residential",f:false},
+{t:"Commercial Plaza, Wuse 2",l:"Wuse 2, Abuja",p:320000000,b:0,ba:0,s:900,d:"3-storey commercial plaza with 12 retail units, prime road frontage.",ty:"Commercial",f:false},
+{t:"3-Bedroom Serviced Apartment, Maitama",l:"Maitama, Abuja",p:12000000,b:3,ba:3,s:220,d:"Fully furnished serviced apartment, annual rent, 24/7 power.",ty:"Residential",f:false},
+{t:"Warehouse, Idu Industrial Area",l:"Idu, Abuja",p:25000000,b:0,ba:0,s:1200,d:"Large warehouse with loading bay, close to Idu rail terminal.",ty:"Commercial",f:false},
+{t:"Residential Plot, Gousa District",l:"Gousa District, Abuja",p:45000000,b:0,ba:0,s:650,d:"Serviced residential plot with title documents, ready for development.",ty:"Land",f:false}
+];
+const fmt=n=>n>=1e9?(n/1e9).toFixed(1)+"B":n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?(n/1e3).toFixed(0)+"K":n;
+function render(list){
+const c=document.getElementById("props");
+c.innerHTML=list.map(p=>`
+<div class="card">
+<div class="card-img">${p.ty==="Land"?"&mapstilde;":p.ty==="Luxury Home"?"&starf;":p.ty==="Office"?"&boxplus;":p.ty==="Commercial"?"&plusacute;":"&home;"}</div>
+<div class="card-body">
+${p.f?'<span class="badge featured">Featured</span> ':''}<span class="badge">${p.ty}</span>
+<div class="card-title">${p.t}</div>
+<div class="card-location">${p.l}</div>
+<div class="card-desc">${p.d.substring(0,100)}...</div>
+<div class="card-meta">
+${p.b>0?`<span>${p.b} Beds</span>`:""}
+${p.ba>0?`<span>${p.ba} Baths</span>`:""}
+${p.s>0?`<span>${p.s} sqm</span>`:""}
+</div>
+<div class="card-price">N${fmt(p.p)}</div>
+<a href="https://wa.me/2348028687857?text=I'm%20interested%20in%20${encodeURIComponent(p.t)}" class="card-btn">Enquire on WhatsApp</a>
+</div>
+</div>`).join("");
+}
+function filterAll(){document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));event.target.classList.add("active");render(props)}
+function filterType(t){document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));event.target.classList.add("active");render(props.filter(p=>p.ty===t))}
+render(props);
+</script>
+</body>
+</html>
