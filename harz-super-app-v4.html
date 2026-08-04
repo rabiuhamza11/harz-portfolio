@@ -89,7 +89,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 <div class="card">
 <h3>📊 Ecosystem Overview</h3>
 <div class="stat-grid" id="statsGrid">
-<div class="stat"><div class="num" id="statPlatforms">63+</div><div class="label">Platforms</div></div>
+<div class="stat"><div class="num" id="statPlatforms">101</div><div class="label">Platforms</div></div>
 <div class="stat"><div class="num" id="statProducts">468</div><div class="label">Products</div></div>
 <div class="stat"><div class="num" id="statAgents">7</div><div class="label">AI Agents</div></div>
 <div class="stat"><div class="num" id="statRevenue">₦0</div><div class="label">Revenue</div></div>
@@ -221,7 +221,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
 <script>
 // HARZ Cloud API Configuration
-const API_URL = localStorage.getItem('harz_api_url') || 'https://harz-cloud-backend.onrender.com';
+const API_URL = localStorage.getItem('harz_api_url') || 'https://solene-5b0577e2.base44.app/functions/harzCDN';
 let authToken = localStorage.getItem('harz_token') || null;
 let currentUser = null;
 let ws = null;
@@ -229,29 +229,29 @@ let ws = null;
 // Platforms data
 const PLATFORMS = [
 {n:'HarzDM',u:'https://harzdm.vercel.app',i:'🛒',s:'LIVE'},
-{n:'Abuja Estate',u:'https://abuja-estate-city.vercel.app',i:'🏘️',s:'LIVE'},
-{n:'HARZ Connect',u:'https://harzconnect.vercel.app',i:'💬',s:'LIVE'},
+{n:'Abuja Estate',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html',i:'🏘️',s:'LIVE'},
+{n:'HARZ Connect',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-connect.html',i:'💬',s:'LIVE'},
 {n:'EduWealth',u:'https://eduwealth-ai.vercel.app',i:'📚',s:'LIVE'},
 {n:'OMEGA Health',u:'https://omega-health-ai.vercel.app',i:'🏥',s:'LIVE'},
-{n:'HarzMusic',u:'https://harzmusic.vercel.app',i:'🎵',s:'LIVE'},
-{n:'HarzFilm',u:'https://harzfilm.vercel.app',i:'🎬',s:'LIVE'},
-{n:'BuildBot AI',u:'https://buildbot-ai.vercel.app',i:'🏗️',s:'LIVE'},
+{n:'HarzMusic',u:'https://rabiuhamza11.github.io/harz-portfolio/harzmusic-checkout.html',i:'🎵',s:'LIVE'},
+{n:'HarzFilm',u:'https://rabiuhamza11.github.io/harz-portfolio/harzfilm-checkout.html',i:'🎬',s:'LIVE'},
+{n:'BuildBot AI',u:'https://rabiuhamza11.github.io/harz-portfolio/buildbot-ai.html',i:'🏗️',s:'LIVE'},
 {n:'HarzPay',u:'https://harzpay.vercel.app',i:'💳',s:'LIVE'},
 {n:'HarzFX',u:'https://harzfx.vercel.app',i:'📈',s:'LIVE'},
 {n:'Harz Store',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-store.html',i:'🏪',s:'LIVE'},
 {n:'Gumroad',u:'https://hamzarabiu.gumroad.com',i:'🌍',s:'LIVE'},
 {n:'Getly',u:'https://www.getly.store/store/harzdm-com-mr951f69',i:'📦',s:'LIVE'},
-{n:'MindCare',u:'https://mindcare-harz.vercel.app',i:'🧠',s:'LIVE'},
-{n:'CyberShield',u:'https://cybershield-harz.vercel.app',i:'🛡️',s:'LIVE'},
-{n:'Apex Bank',u:'https://apex-bank-harz.vercel.app',i:'🏦',s:'LIVE'},
+{n:'MindCare',u:'https://rabiuhamza11.github.io/harz-portfolio/mindcare-dashboard.html',i:'🧠',s:'LIVE'},
+{n:'CyberShield',u:'https://rabiuhamza11.github.io/harz-portfolio/cyber-shield-x-dashboard.html',i:'🛡️',s:'LIVE'},
+{n:'Apex Bank',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-wallet.html',i:'🏦',s:'LIVE'},
 {n:'HarzAjo',u:'https://harzajo.vercel.app',i:'🤝',s:'LIVE'},
 {n:'HarzLend',u:'https://harzlend.vercel.app',i:'💰',s:'LIVE'},
-{n:'Oracle AI',u:'https://oracle-harz.vercel.app',i:'🔮',s:'LIVE'},
-{n:'Nexal Ads',u:'https://nexal-harz.vercel.app',i:'📢',s:'LIVE'},
-{n:'Harz Cloud',u:'https://harz-cloud-backend.onrender.com',i:'☁️',s:'NEW'},
-{n:'Harz Identity',u:'https://identity-harz.vercel.app',i:'🪪',s:'LIVE'},
-{n:'Harz IoT',u:'https://iot-harz.vercel.app',i:'📡',s:'LIVE'},
-{n:'Venture Studio',u:'https://venture-harz.vercel.app',i:'🚀',s:'LIVE'}
+{n:'Oracle AI',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-analytics.html',i:'🔮',s:'LIVE'},
+{n:'Nexal Ads',u:'https://rabiuhamza11.github.io/harz-portfolio/nexal-ads.html',i:'📢',s:'LIVE'},
+{n:'Harz Cloud',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html',i:'☁️',s:'NEW'},
+{n:'Harz Identity',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-global-identity.html',i:'🪪',s:'LIVE'},
+{n:'Harz IoT',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-robotics-iot.html',i:'📡',s:'LIVE'},
+{n:'Venture Studio',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-venture-studio.html',i:'🚀',s:'LIVE'}
 ];
 
 // AI Agents
