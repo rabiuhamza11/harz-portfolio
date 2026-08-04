@@ -241,8 +241,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 </div>
 <div class="section-title">About</div>
 <div class="card" style="text-align:center;color:var(--muted);font-size:12px;line-height:1.8">
-<span class="fw" style="color:var(--accent2)">HARZ Cloud v5.0</span><br>
-38 modules + Base44 Bridge | 154 endpoints, 131 entity mappings<br>
+<span class="fw" style="color:var(--accent2)">HARZ Cloud v5.1</span><br>
+38 modules + Base44 Bridge | 154 endpoints, 131 entities, 15 actions<br>
 7 AI Agents | 24 Platforms<br>
 Built by Rabiu Hamza Mohammed<br>
 © HARZ Digital Services 2026
@@ -264,7 +264,7 @@ Built by Rabiu Hamza Mohammed<br>
 <div class="toast" id="toast"></div>
 
 <script>
-// Config — HARZ Cloud v5.0 with built-in Base44 bridge
+// Config — HARZ Cloud v5.1 with built-in Base44 bridge
 const CLOUD_API = 'https://harz-cloud-backend.onrender.com';
 const B44_FUNCTIONS = 'https://superagent-2286fb2f.base44.app/functions';
 let apiUrl = CLOUD_API;
@@ -327,7 +327,7 @@ document.getElementById('app').style.display = 'block';
 }
 
 // API helper — uses HARZ Cloud bridge (which handles Base44 internally)
-// Falls back to direct Base44 omegaProducer if HARZ Cloud is down
+// Falls back to direct Base44 harzBridge if HARZ Cloud is down
 async function api(path, method, body) {
 const opts = {method: method || 'GET', headers: {'Content-Type': 'application/json'}};
 if (token) opts.headers['x-auth-token'] = token;
@@ -342,12 +342,12 @@ throw new Error('Cloud API error: ' + res.status);
 cloudWorking = false;
 }
 }
-// Fall back to Base44 directly via omegaProducer
+// Fall back to Base44 directly via harzBridge
 if (path.includes('/auth/')) {
 // Auth needs HARZ Cloud — can't bridge
 throw new Error('HARZ Cloud required for auth');
 }
-// Map to omegaProducer actions
+// Map to harzBridge actions
 let action = 'ecosystem_status';
 if (path.includes('ecosystem')) action = 'ecosystem_status';
 else if (path.includes('agent-chat')) action = 'agent_chat';
@@ -355,7 +355,7 @@ else if (path.includes('revenue')) action = 'revenue_report';
 else if (path.includes('orders')) action = 'list_orders';
 else if (path.includes('crm')) action = 'list_crm';
 else if (path.includes('products')) action = 'list_products';
-const res = await fetch(B44_FUNCTIONS + '/omegaProducer', {
+const res = await fetch(B44_FUNCTIONS + '/harzBridge', {
 method: 'POST',
 headers: {'Content-Type': 'application/json'},
 body: JSON.stringify({action, api_key: 'omega_harz_321424_2026', ...body})
@@ -373,12 +373,12 @@ if (data.bridge === 'active') {
 cloudWorking = true;
 apiUrl = CLOUD_API;
 const b44Conn = data.base44_connected;
-setBadge('cloudStatus', 'LIVE v5.0', 'live');
+setBadge('cloudStatus', 'LIVE v5.1', 'live');
 setBadge('b44Status', b44Conn ? 'LIVE' : 'OFFLINE', b44Conn ? 'live' : 'off');
 setBadge('cdnStatus', b44Conn ? 'BRIDGED' : 'OFFLINE', b44Conn ? 'live' : 'off');
 setBadge('hookStatus', b44Conn ? 'SYNCED' : 'OFFLINE', b44Conn ? 'live' : 'off');
 document.getElementById('connDot').className = 'dot dot-on';
-document.getElementById('connText').textContent = 'HARZ Cloud v5.0 + Base44 Bridge (' + data.sync.total_entities + ' entities)';
+document.getElementById('connText').textContent = 'HARZ Cloud v5.1 + Base44 Bridge (' + data.sync.total_entities + ' entities)';
 document.getElementById('apiUrl').textContent = CLOUD_API + '/bridge';
 return;
 }
@@ -388,10 +388,10 @@ setBadge('cloudStatus', 'OFFLINE', 'off');
 setBadge('cdnStatus', 'OFFLINE', 'off');
 setBadge('hookStatus', 'OFFLINE', 'off');
 try {
-const res = await fetch(B44_FUNCTIONS + '/omegaProducer', {
+const res = await fetch(B44_FUNCTIONS + '/harzBridge', {
 method: 'POST',
 headers: {'Content-Type': 'application/json'},
-body: JSON.stringify({action: 'ecosystem_status', api_key: 'omega_harz_321424_2026'}),
+body: JSON.stringify({action: 'bridge_status', api_key: 'omega_harz_321424_2026'}),
 signal: AbortSignal.timeout(3000)
 });
 if (res.ok) {
@@ -400,8 +400,8 @@ b44Working = true;
 setBadge('b44Status', 'LIVE', 'live');
 setBadge('cdnStatus', 'DIRECT', 'live');
 document.getElementById('connDot').className = 'dot dot-on';
-document.getElementById('connText').textContent = 'Base44 Direct (HARZ Cloud offline)';
-document.getElementById('apiUrl').textContent = B44_FUNCTIONS + '/omegaProducer';
+document.getElementById('connText').textContent = 'HARZ Bridge v1.0 (Base44)';
+document.getElementById('apiUrl').textContent = B44_FUNCTIONS + '/harzBridge';
 } else {
 setBadge('b44Status', 'OFFLINE', 'off');
 document.getElementById('connDot').className = 'dot dot-off';
@@ -577,7 +577,7 @@ box.scrollTop = box.scrollHeight;
 // Try HARZ Cloud bridge first, then Base44 direct
 const chatUrl = cloudWorking
   ? CLOUD_API + '/bridge/agent-chat'
-  : B44_FUNCTIONS + '/omegaProducer';
+  : B44_FUNCTIONS + '/harzBridge';
 const chatBody = cloudWorking
   ? JSON.stringify({agent: 'magani', message: msg, sender: 'superapp'})
   : JSON.stringify({action: 'agent_chat', api_key: 'omega_harz_321424_2026', agent: 'magani', message: msg});
@@ -659,7 +659,7 @@ toast('Bridge data exported (' + Object.keys(data.results).length + ' tables)!')
 } catch(e) {
 // Try Base44 directly
 try {
-const res = await fetch(B44_FUNCTIONS + '/omegaProducer', {
+const res = await fetch(B44_FUNCTIONS + '/harzBridge', {
 method: 'POST', headers: {'Content-Type': 'application/json'},
 body: JSON.stringify({action: 'ecosystem_status', api_key: 'omega_harz_321424_2026'}),
 signal: AbortSignal.timeout(5000)
@@ -692,15 +692,15 @@ const res = await fetch(CLOUD_API + '/bridge/status', {signal: AbortSignal.timeo
 if (res.ok) {
 const d = await res.json();
 if (d.base44_connected) {
-toast('Bridge: HARZ Cloud v5.0 + Base44 (' + d.sync.total_entities + ' entities) ✓');
+toast('Bridge: HARZ Cloud v5.1 + Base44 (' + d.sync.total_entities + ' entities) ✓');
 } else {
-toast('HARZ Cloud v5.0: Bridge active, Base44 disconnected');
+toast('HARZ Cloud v5.1: Bridge active, Base44 disconnected');
 }
 return;
 }
 } catch(e) {}
 try {
-const res = await fetch(B44_FUNCTIONS + '/omegaProducer', {
+const res = await fetch(B44_FUNCTIONS + '/harzBridge', {
 method: 'POST', headers: {'Content-Type': 'application/json'},
 body: JSON.stringify({action: 'ecosystem_status', api_key: 'omega_harz_321424_2026'}),
 signal: AbortSignal.timeout(3000)
