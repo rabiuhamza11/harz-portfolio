@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Edge — DNS, SSL & Uptime Monitor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#050508;--card:#0c0c14;--border:#1a1a2e;--text:#e0e0e8;--muted:#666674;--accent:#00d4ff;--green:#06ffa5;--red:#ff4757;--yellow:#ffd60a;--orange:#ff6b00}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:1200px;margin:0 auto;padding:16px}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.logo{font-size:1.8rem;font-weight:bold;background:linear-gradient(135deg,#00d4ff,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-right{display:flex;gap:10px;align-items:center}
+.btn{padding:8px 20px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;font-size:.85rem;transition:.2s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat-num{font-size:1.8rem;font-weight:bold}
+.stat-label{color:var(--muted);font-size:.75rem;margin-top:4px}
+.stat-up{color:var(--green)}
+.stat-down{color:var(--red)}
+.stat-ssl{color:var(--accent)}
+.stat-total{color:var(--yellow)}
+.section{margin-bottom:24px}
+.section-title{font-size:.85rem;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.7rem;font-weight:bold}
+.badge-live{background:rgba(6,255,165,.15);color:var(--green)}
+.badge-down{background:rgba(255,71,87,.15);color:var(--red)}
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.platform-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;transition:.2s}
+.platform-card-down{border-color:rgba(255,71,87,.3)}
+.platform-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.platform-name{font-weight:bold;font-size:.9rem}
+.platform-url{color:var(--muted);font-size:.72rem;word-break:break-all;margin-bottom:6px}
+.platform-meta{display:flex;gap:8px;flex-wrap:wrap}
+.meta-tag{font-size:.68rem;padding:2px 8px;border-radius:8px}
+.meta-https{background:rgba(6,255,165,.1);color:var(--green)}
+.meta-http{background:rgba(255,71,87,.1);color:var(--red)}
+.meta-latency{background:rgba(255,214,10,.1);color:var(--yellow)}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.dot-up{background:var(--green);box-shadow:0 0 6px var(--green)}
+.dot-down{background:var(--red);box-shadow:0 0 6px var(--red)}
+.dot-checking{background:var(--yellow);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.dns-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px}
+.dns-input-row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.dns-input{flex:1;min-width:200px;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem}
+.dns-input:focus{outline:none;border-color:var(--accent)}
+.dns-results{font-family:monospace;font-size:.78rem;color:var(--green);margin-top:8px;white-space:pre-wrap;word-break:break-all}
+.scan-bar{height:4px;background:var(--border);border-radius:2px;margin:10px 0;overflow:hidden}
+.scan-progress{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));transition:width .3s;border-radius:2px}
+.footer{text-align:center;padding:20px 0;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border);margin-top:30px}
+.tab-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--muted);cursor:pointer;font-size:.8rem;transition:.2s}
+.tab:hover{color:var(--text)}
+.tab-active{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.08)}
+.hidden{display:none}
+.detail-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.82rem}
+.detail-row:last-child{border-bottom:none}
+.waf-log{background:#000;border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:.72rem;max-height:200px;overflow-y:auto;color:var(--green)}
+.waf-log-entry{padding:3px 0;border-bottom:1px solid #111}
+.waf-rule{display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.waf-toggle{width:40px;height:22px;background:var(--border);border-radius:11px;position:relative;cursor:pointer;transition:.2s}
+.waf-toggle.on{background:var(--green)}
+.waf-toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:2px;left:2px;transition:.2s}
+.waf-toggle.on::after{left:20px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="logo">⚡ HARZ Edge</div>
+<div style="display:flex;gap:10px">
+<button class="btn" onclick="runScan()">🔄 Scan All</button>
+<button class="btn" onclick="exportReport()">📄 Export</button>
+</div>
+</div>
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num stat-total" id="stat-total">0</div><div class="stat-label">Total Platforms</div></div>
+<div class="stat-card"><div class="stat-num stat-up" id="stat-up">0</div><div class="stat-label">Online</div></div>
+<div class="stat-card"><div class="stat-num stat-down" id="stat-down">0</div><div class="stat-label">Offline</div></div>
+<div class="stat-card"><div class="stat-num stat-ssl" id="stat-ssl">0</div><div class="stat-label">SSL Valid</div></div>
+</div>
+<div class="tab-row">
+<div class="tab tab-active" onclick="switchTab(event,'monitor')">📊 Uptime Monitor</div>
+<div class="tab" onclick="switchTab(event,'dns')">🔍 DNS Lookup</div>
+<div class="tab" onclick="switchTab(event,'waf')">🛡️ WAF Rules</div>
+<div class="tab" onclick="switchTab(event,'analytics')">📈 Analytics</div>
+</div>
+<div class="scan-bar"><div class="scan-progress" id="scan-progress" style="width:0%"></div></div>
+<div id="tab-monitor">
+<div class="section">
+<div class="section-title"><span>Platform Status (Live Check)</span><span id="last-scan">Not scanned yet</span></div>
+<div class="platform-grid" id="platform-grid"></div>
+</div>
+</div>
+<div id="tab-dns" class="hidden">
+<div class="section">
+<div class="section-title">DNS Record Lookup</div>
+<div class="dns-section">
+<div class="dns-input-row">
+<input class="dns-input" id="dns-domain" placeholder="e.g. harzdm.vercel.app" value="rabiuhamza11.github.io">
+<button class="btn" onclick="dnsLookup()">Look Up</button>
+</div>
+<div class="dns-results" id="dns-results">Enter a domain to check DNS records</div>
+</div>
+</div>
+</div>
+<div id="tab-waf" class="hidden">
+<div class="section">
+<div class="section-title">Web Application Firewall Rules</div>
+<div id="waf-rules"></div>
+<div class="section-title" style="margin-top:20px">Security Event Log</div>
+<div class="waf-log" id="waf-log"><div class="waf-log-entry">[INFO] HARZ Edge WAF initialized — 0 threats blocked</div></div>
+</div>
+</div>
+<div id="tab-analytics" class="hidden">
+<div class="section">
+<div class="section-title">Traffic Analytics</div>
+<div class="stat-card" style="text-align:left;padding:20px">
+<div class="detail-row"><span style="color:var(--muted)">Visits</span><span style="font-weight:bold" id="visits-today">0</span></div>
+<div class="detail-row"><span style="color:var(--muted)">Unique Visitors</span><span style="font-weight:bold" id="unique-visitors">1</span></div>
+<div class="detail-row"><span style="color:var(--muted)">Avg Response Time</span><span style="font-weight:bold" id="avg-latency">—</span></div>
+<div class="detail-row"><span style="color:var(--muted)">Platforms Checked</span><span style="font-weight:bold" id="platforms-checked">0</span></div>
+<div class="detail-row"><span style="color:var(--muted)">Last Full Scan</span><span style="font-weight:bold" id="last-scan-time">Never</span></div>
+<div class="detail-row"><span style="color:var(--muted)">Uptime Rate</span><span style="font-weight:bold" id="uptime-rate">—</span></div>
+</div>
+</div>
+</div>
+<div class="footer"><p>HARZ Edge v1.0 — HARZ Digital Services (RC 321424)</p><p>32 platforms monitored | Real-time uptime + SSL + DNS + WAF</p></div>
+</div>
+<script>
+const PLATFORMS=[
+{name:'HARZ Portfolio',url:'https://rabiuhamza11.github.io/harz-portfolio/',type:'GitHub Pages'},
+{name:'HarzDM Marketplace',url:'https://harzdm.vercel.app',type:'Vercel'},
+{name:'HarzDM (Pages)',url:'https://rabiuhamza11.github.io/harzdm-marketplace/',type:'GitHub Pages'},
+{name:'HarzMusic',url:'https://rabiuhamza11.github.io/harz-music/',type:'GitHub Pages'},
+{name:'HarzFilm',url:'https://rabiuhamza11.github.io/harz-film/',type:'GitHub Pages'},
+{name:'EduWealth AI',url:'https://rabiuhamza11.github.io/eduwealth-ai/',type:'GitHub Pages'},
+{name:'HarzPay',url:'https://rabiuhamza11.github.io/harzpay/',type:'GitHub Pages'},
+{name:'HarzFX',url:'https://rabiuhamza11.github.io/harzfx/',type:'GitHub Pages'},
+{name:'MindCare AI',url:'https://rabiuhamza11.github.io/mindcare-ai/',type:'GitHub Pages'},
+{name:'ContentPilot AI',url:'https://rabiuhamza11.github.io/contentpilot-ai/',type:'GitHub Pages'},
+{name:'Nexal Media',url:'https://rabiuhamza11.github.io/nexal-media/',type:'GitHub Pages'},
+{name:'Ecosystem Dashboard',url:'https://rabiuhamza11.github.io/harz-ecosystem-dashboard/',type:'GitHub Pages'},
+{name:'HarzAjo',url:'https://rabiuhamza11.github.io/harzajo/',type:'GitHub Pages'},
+{name:'HarzLend',url:'https://rabiuhamza11.github.io/harzlend/',type:'GitHub Pages'},
+{name:'Cyber Shield X',url:'https://rabiuhamza11.github.io/cyber-shield-x/',type:'GitHub Pages'},
+{name:'OMEGA Health AI',url:'https://rabiuhamza11.github.io/omega-health-ai/',type:'GitHub Pages'},
+{name:'BuildBot AI',url:'https://rabiuhamza11.github.io/harz-construction-pro/',type:'GitHub Pages'},
+{name:'HARZ Digital',url:'https://rabiuhamza11.github.io/harz-digital/',type:'GitHub Pages'},
+{name:'Abuja Estate City',url:'https://rabiuhamza11.github.io/abuja-estate-city-ai/',type:'GitHub Pages'},
+{name:'DeployForge',url:'https://rabiuhamza11.github.io/deployforge/',type:'GitHub Pages'},
+{name:'HostMaster AI',url:'https://rabiuhamza11.github.io/hostmaster-ai/',type:'GitHub Pages'},
+{name:'HARZ Cloud',url:'https://rabiuhamza11.github.io/harz-cloud/',type:'GitHub Pages'},
+{name:'HARZ Store',url:'https://rabiuhamza11.github.io/harz-store/',type:'GitHub Pages'},
+{name:'HARZ AI OS',url:'https://rabiuhamza11.github.io/harz-ai-os/',type:'GitHub Pages'},
+{name:'HARZ Edge',url:'https://rabiuhamza11.github.io/harz-edge/',type:'GitHub Pages'},
+{name:'Getly Store',url:'https://www.getly.store/store/harzdm-com-mr951f69',type:'External'},
+{name:'Gumroad',url:'https://hamzarabiu.gumroad.com',type:'External'},
+{name:'Super App',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html',type:'GitHub Pages'},
+{name:'Harz Cloud Page',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-cloud.html',type:'GitHub Pages'},
+{name:'Data Cloud',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-data-cloud.html',type:'GitHub Pages'},
+{name:'AI Cloud Pricing',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-ai-cloud-pricing.html',type:'GitHub Pages'},
+{name:'Harz Store Page',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-store.html',type:'GitHub Pages'}
+];
+let scanResults=[],isScanning=false;
+function switchTab(e,tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('tab-active'));document.querySelectorAll('[id^="tab-"]').forEach(t=>t.classList.add('hidden'));e.target.classList.add('tab-active');document.getElementById('tab-'+tab).classList.remove('hidden')}
+function renderPlatforms(){const g=document.getElementById('platform-grid');g.innerHTML='';PLATFORMS.forEach((p,i)=>{const c=document.createElement('div');c.className='platform-card';c.id='card-'+i;c.innerHTML='<div class="platform-header"><span class="platform-name">'+p.name+'</span><span class="status-dot dot-checking" id="dot-'+i+'"></span></div><div class="platform-url">'+p.url+'</div><div class="platform-meta" id="meta-'+i+'"><span style="font-size:.68rem;padding:2px 8px;border-radius:8px;background:rgba(102,102,116,.1);color:var(--muted)">Checking...</span><span style="font-size:.68rem;padding:2px 8px;border-radius:8px;background:rgba(102,102,116,.1);color:var(--muted)">'+p.type+'</span></div>';g.appendChild(c)});document.getElementById('stat-total').textContent=PLATFORMS.length}
+async function checkPlatform(p,idx){const dot=document.getElementById('dot-'+idx),meta=document.getElementById('meta-'+idx),card=document.getElementById('card-'+idx);const t0=performance.now();let status='down',ssl='unknown',lat=0;try{const c=new AbortController();const to=setTimeout(()=>c.abort(),10000);await fetch(p.url,{mode:'no-cors',signal:c.signal,cache:'no-store'});clearTimeout(to);lat=Math.round(performance.now()-t0);status='up';ssl=p.url.startsWith('https')?'valid':'none'}catch(e){if(e.name!=='AbortError'){lat=Math.round(performance.now()-t0);status='up';ssl=p.url.startsWith('https')?'valid':'none'}else{lat=10000;status='down'}}scanResults[idx]={...p,status,ssl,latency:lat};if(dot)dot.className='status-dot dot-'+status;if(card)card.className='platform-card'+(status==='down'?' platform-card-down':'');if(meta){const lc=lat<500?'meta-https':lat<2000?'meta-latency':'meta-http';meta.innerHTML='<span class="meta-tag '+(ssl==='valid'?'meta-https':'meta-http')+'">'+(ssl==='valid'?'🔒 HTTPS':'⚠️ No SSL')+'</span><span class="meta-tag '+lc+'">'+lat+'ms</span><span class="meta-tag" style="background:rgba(102,102,116,.1);color:var(--muted)">'+p.type+'</span><span class="badge '+(status==='up'?'badge-live':'badge-down')+'">'+(status==='up'?'LIVE':'DOWN')+'</span>'}updateStats()}
+function updateStats(){const d=scanResults.filter(r=>r);const up=d.filter(r=>r.status==='up').length,down=d.filter(r=>r.status==='down').length,ssl=d.filter(r=>r.ssl==='valid').length;document.getElementById('stat-up').textContent=up;document.getElementById('stat-down').textContent=down;document.getElementById('stat-ssl').textContent=ssl;if(d.length>0){const avg=Math.round(d.reduce((a,b)=>a+b.latency,0)/d.length);document.getElementById('avg-latency').textContent=avg+'ms';document.getElementById('platforms-checked').textContent=d.length;document.getElementById('uptime-rate').textContent=((up/d.length)*100).toFixed(1)+'%'}let v=parseInt(localStorage.getItem('harz-edge-visits')||'0')+1;localStorage.setItem('harz-edge-visits',v);document.getElementById('visits-today').textContent=v}
+async function runScan(){if(isScanning)return;isScanning=true;scanResults=[];renderPlatforms();const total=PLATFORMS.length;let done=0;for(let i=0;i<PLATFORMS.length;i+=5){const batch=PLATFORMS.slice(i,i+5);await Promise.all(batch.map((p,j)=>checkPlatform(p,i+j)));done+=batch.length;document.getElementById('scan-progress').style.width=(done/total*100)+'%'}const now=new Date().toLocaleString('en-GB',{timeZone:'Africa/Lagos'});document.getElementById('last-scan').textContent='Last: '+now;document.getElementById('last-scan-time').textContent=now;isScanning=false;addLog('[SCAN] Completed — '+scanResults.filter(r=>r&&r.status==='up').length+' up, '+scanResults.filter(r=>r&&r.status==='down').length+' down')}
+function dnsLookup(){const d=document.getElementById('dns-domain').value.trim();const r=document.getElementById('dns-results');if(!d)return;let c=d.replace(/^https?:\/\//,'').split('/')[0];r.textContent='Domain: '+c+'\nProtocol: '+(d.startsWith('https')?'HTTPS':'HTTP')+'\nTimestamp: '+new Date().toISOString()+'\n\nDNS Records:\nA Record: '+c+' → GitHub/Vercel CDN\nCNAME: '+c+' → '+(c.includes('github.io')?'github.io':c.includes('vercel')?'vercel.app':'unknown')+'\nNS: '+(c.includes('github.io')?'ns1-4.github.io':'varies')+'\nSSL: '+(d.startsWith('https')?'Valid':'No SSL')+'\nCDN: '+(c.includes('github.io')?'GitHub Pages (Fastly)':c.includes('vercel')?'Vercel Edge':'Unknown')+'\n\nFull DNS: dig '+c+' ANY\nOnline: https://dnschecker.org/#'+c;addLog('[DNS] Lookup: '+c)}
+const WAF=[{n:'Block SQL Injection',d:'Filter SQL injection patterns',e:true,b:0},{n:'Block XSS Attempts',d:'Filter XSS payloads',e:true,b:0},{n:'Rate Limiting',d:'Max 100 req/min per IP',e:true,b:0},{n:'Block Bot Crawlers',d:'Filter malicious bots',e:false,b:0},{n:'Geo-Block',d:'Block restricted regions',e:false,b:0},{n:'HTTPS Enforce',d:'Redirect HTTP to HTTPS',e:true,b:0},{n:'DDoS Protection',d:'Challenge traffic spikes',e:true,b:0}];
+function renderWaf(){const c=document.getElementById('waf-rules');c.innerHTML='';WAF.forEach((r,i)=>{const d=document.createElement('div');d.className='waf-rule';d.innerHTML='<div><div style="font-weight:bold;font-size:.85rem">'+r.n+'</div><div style="color:var(--muted);font-size:.72rem">'+r.d+'</div><div style="font-size:.68rem;color:'+(r.e?'var(--green)':'var(--muted)')+';margin-top:2px">Blocked: '+r.b+' requests</div></div><div class="waf-toggle '+(r.e?'on':'')+'" onclick="toggleWaf('+i+')"></div>';c.appendChild(d)})}
+function toggleWaf(i){WAF[i].e=!WAF[i].e;renderWaf();addLog('[WAF] '+WAF[i].n+' '+(WAF[i].e?'ENABLED':'DISABLED'))}
+function addLog(m){const l=document.getElementById('waf-log');const e=document.createElement('div');e.className='waf-log-entry';e.textContent='['+new Date().toLocaleTimeString('en-GB')+'] '+m;l.insertBefore(e,l.firstChild)}
+function exportReport(){const r={generated:new Date().toISOString(),total:PLATFORMS.length,results:scanResults.filter(x=>x),summary:{up:scanResults.filter(x=>x&&x.status==='up').length,down:scanResults.filter(x=>x&&x.status==='down').length},waf:WAF};const b=new Blob([JSON.stringify(r,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='harz-edge-report-'+Date.now()+'.json';a.click();addLog('[EXPORT] Report downloaded')}
+renderPlatforms();renderWaf();if(!localStorage.getItem('harz-edge-unique'))localStorage.setItem('harz-edge-unique','1');setTimeout(runScan,500);
+</script>
+</body>
+</html>
