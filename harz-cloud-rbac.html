@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Cloud RBAC + SSO</title>
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e293b;--accent:#6366f1;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:16px;max-width:1200px;margin:0 auto}
+h1{font-size:24px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.card h2{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.role-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;transition:.2s}
+.role-card:hover{border-color:var(--accent)}
+.role-card h3{font-size:14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.badge{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-l0{background:#f43f5e20;color:#f43f5e}
+.badge-l1{background:#f59e0b20;color:#f59e0b}
+.badge-l2{background:#6366f120;color:#6366f1}
+.badge-l3{background:#8b5cf620;color:#8b5cf6}
+.badge-l4{background:#64748b20;color:#64748b}
+.perms{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.perm-tag{background:var(--border);padding:2px 6px;border-radius:4px;font-size:10px;color:var(--muted)}
+.sso-btn{display:flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);cursor:pointer;font-size:14px;transition:.2s;width:100%}
+.sso-btn:hover{border-color:var(--accent);background:#6366f110}
+.sso-btn .icon{font-size:20px}
+.input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px;margin-bottom:10px}
+.input:focus{outline:none;border-color:var(--accent)}
+.btn{padding:10px 20px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--accent)}
+.status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:4px;font-size:12px}
+.status-ok{background:var(--green)20;color:var(--green)}
+.status-err{background:var(--red)20;color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase}
+.toggle{width:36px;height:20px;border-radius:10px;background:var(--border);position:relative;cursor:pointer;transition:.2s}
+.toggle.on{background:var(--green)}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.toggle.on::after{left:18px}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.dash-item{padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center}
+.dash-allowed{background:var(--green)10;border-color:var(--green)40;color:var(--green)}
+.dash-denied{background:var(--red)10;border-color:var(--red)40;color:var(--muted);opacity:.5}
+.token-box{font-family:monospace;font-size:11px;word-break:break-all;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--accent2)}
+.tab-bar{display:flex;gap:4px;margin-bottom:16px;overflow-x:auto}
+.tab{padding:8px 16px;border-radius:8px 8px 0 0;font-size:13px;cursor:pointer;white-space:nowrap;border:1px solid transparent}
+.tab.active{background:var(--card);border-color:var(--border);color:var(--accent)}
+.tab:not(.active){color:var(--muted)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.role-select{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.role-pick{padding:6px 14px;border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;transition:.2s}
+.role-pick.active{border-color:var(--accent);background:var(--accent)15;color:var(--accent)}
+.login-info{background:var(--bg);border:1px solid var(--green)40;border-radius:8px;padding:14px;margin-top:12px}
+.login-info .email{font-size:16px;font-weight:600;color:var(--green)}
+.login-info .role{font-size:13px;color:var(--muted);margin-top:4px}
+.muted{color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+
+<h1>🔒 HARZ Cloud RBAC + SSO</h1>
+<p class="sub">Role-Based Access Control • Single Sign-On • Row-Level Security</p>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('login')">🔐 Login / SSO</div>
+  <div class="tab" onclick="switchTab('roles')">👥 Roles</div>
+  <div class="tab" onclick="switchTab('permissions')">🔑 Permissions</div>
+  <div class="tab" onclick="switchTab('rls')">🛡️ Row-Level Security</div>
+  <div class="tab" onclick="switchTab('sessions')">📱 Sessions</div>
+</div>
+
+<!-- LOGIN TAB -->
+<div class="tab-content active" id="tab-login">
+  <div class="card">
+    <h2>🔐 Authentication</h2>
+    <input class="input" id="email" placeholder="Email address" value="rabiu@harz.cloud">
+    <input class="input" id="password" type="password" placeholder="Password (internal auth)">
+    <p class="muted" style="margin-bottom:10px">Select role:</p>
+    <div class="role-select" id="rolePicker"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-primary" onclick="doLogin()">Login</button>
+      <button class="btn btn-outline" onclick="doLogout()">Logout</button>
+    </div>
+    <div id="loginResult"></div>
+  </div>
+
+  <div class="card">
+    <h2>🌐 SSO Providers</h2>
+    <div class="grid" id="ssoProviders"></div>
+    <p class="muted" style="margin-top:12px">SSO allows users to sign in with their existing Google, Microsoft, Apple, or GitHub accounts. No new password needed.</p>
+  </div>
+</div>
+
+<!-- ROLES TAB -->
+<div class="tab-content" id="tab-roles">
+  <div class="card">
+    <h2>👥 Role Hierarchy (11 Roles)</h2>
+    <div class="grid" id="rolesGrid"></div>
+  </div>
+</div>
+
+<!-- PERMISSIONS TAB -->
+<div class="tab-content" id="tab-permissions">
+  <div class="card">
+    <h2>🔑 Permission Matrix</h2>
+    <div style="overflow-x:auto">
+      <table id="permMatrix">
+        <thead><tr id="permHeader"></tr></thead>
+        <tbody id="permBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🖥️ Dashboard Access Control</h2>
+    <p class="muted" style="margin-bottom:12px">Which dashboards each role can access:</p>
+    <div id="dashAccess"></div>
+  </div>
+</div>
+
+<!-- RLS TAB -->
+<div class="tab-content" id="tab-rls">
+  <div class="card">
+    <h2>🛡️ Row-Level Security</h2>
+    <p class="muted" style="margin-bottom:12px">RLS ensures users only see their own records. Admins and owners see all records.</p>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Entity</th><th>Owner/Admin</th><th>Manager</th><th>Teacher</th><th>Student</th><th>Parent</th><th>Agent</th></tr></thead>
+        <tbody>
+          <tr><td>HarzTransaction</td><td>✅ All</td><td>✅ All</td><td>🔒 Own only</td><td>🔒 Own only</td><td>🔒 Own only</td><td>✅ All</td></tr>
+          <tr><td>HarzUser</td><td>✅ All</td><td>✅ All</td><td>🔒 Own only</td><td>🔒 Own only</td><td>🔒 Own only</td><td>🔒 Own only</td></tr>
+          <tr><td>HarzActivity</td><td>✅ All</td><td>✅ All</td><td>🔒 Own only</td><td>🔒 Own only</td><td>🔒 Own only</td><td>✅ All</td></tr>
+          <tr><td>HarzRole</td><td>✅ All</td><td>🔒 No access</td><td>🔒 No access</td><td>🔒 No access</td><td>🔒 No access</td><td>🔒 No access</td></tr>
+          <tr><td>HarzSSOSession</td><td>✅ All</td><td>🔒 Own only</td><td>🔒 Own only</td><td>🔒 Own only</td><td>🔒 Own only</td><td>🔒 Own only</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🧪 Test RLS</h2>
+    <input class="input" id="rlsToken" placeholder="Paste session token" >
+    <select class="input" id="rlsEntity">
+      <option value="HarzTransaction">HarzTransaction</option>
+      <option value="HarzUser">HarzUser</option>
+      <option value="HarzActivity">HarzActivity</option>
+    </select>
+    <button class="btn btn-primary" onclick="testRLS()">Test Access</button>
+    <div id="rlsResult" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- SESSIONS TAB -->
+<div class="tab-content" id="tab-sessions">
+  <div class="card">
+    <h2>📱 Active Sessions</h2>
+    <p class="muted" style="margin-bottom:12px">Track and manage user login sessions</p>
+    <div id="sessionsList">
+      <p class="muted">No active sessions. Login to create a session.</p>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📊 Session Stats</h2>
+    <div class="grid">
+      <div class="role-card">
+        <h3>Active Users <span class="badge badge-l2" id="statActive">0</span></h3>
+        <p class="muted">Currently logged in</p>
+      </div>
+      <div class="role-card">
+        <h3>Total Logins <span class="badge badge-l2" id="statTotal">0</span></h3>
+        <p class="muted">All time</p>
+      </div>
+      <div class="role-card">
+        <h3>SSO Logins <span class="badge badge-l2" id="statSSO">0</span></h3>
+        <p class="muted">Via Google/Microsoft/Apple/GitHub</p>
+      </div>
+      <div class="role-card">
+        <h3>Internal Logins <span class="badge badge-l2" id="statInternal">0</span></h3>
+        <p class="muted">Via HARZ auth</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://solene-5b0577e2.base44.app/functions/harzRBAC';
+let allRoles = [];
+let ssoProviders = [];
+let selectedRole = 'owner';
+let currentToken = null;
+let sessions = [];
+
+async function apiCall(action, extra = {}) {
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, ...extra })
+  });
+  return res.json();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+async function init() {
+  const info = await apiCall('info');
+  allRoles = info.roles || [];
+  ssoProviders = info.ssoProviders || [];
+
+  // Role picker
+  const picker = document.getElementById('rolePicker');
+  picker.innerHTML = allRoles.map(r =>
+    `<div class="role-pick ${r.name === selectedRole ? 'active' : ''}" onclick="selectRole('${r.name}')">${r.name}</div>`
+  ).join('');
+
+  // SSO providers
+  const ssoDiv = document.getElementById('ssoProviders');
+  ssoDiv.innerHTML = ssoProviders.map(p =>
+    `<button class="sso-btn" onclick="ssoLogin('${p.id}')"><span class="icon">${p.icon}</span> Continue with ${p.name}</button>`
+  ).join('');
+
+  // Roles grid
+  const rolesGrid = document.getElementById('rolesGrid');
+  rolesGrid.innerHTML = allRoles.map(r => `
+    <div class="role-card">
+      <h3>${r.name} <span class="badge badge-l${r.level}">L${r.level}</span></h3>
+      <p class="muted">Level ${r.level} ${r.level === 0 ? '(Full Access)' : r.level <= 1 ? '(Admin)' : r.level <= 2 ? '(Manager)' : r.level <= 3 ? '(Staff)' : '(User)'}</p>
+      <div class="perms">${r.permissions.map(p => `<span class="perm-tag">${p}</span>`).join('')}</div>
+    </div>
+  `).join('');
+
+  // Permission matrix
+  const allPerms = ['view_transactions','manage_payments','edit_content','manage_users','view_analytics','deploy_apps','manage_agents','view_own_records','manage_students','view_education'];
+  document.getElementById('permHeader').innerHTML = '<th>Role</th>' + allPerms.map(p => `<th>${p.replace(/_/g,' ')}</th>`).join('');
+  document.getElementById('permBody').innerHTML = allRoles.map(r => {
+    const hasAll = r.permissions.includes('*');
+    return '<tr><td style="font-weight:600">' + r.name + '</td>' + allPerms.map(p => {
+      const has = hasAll || r.permissions.includes(p);
+      return '<td style="color:' + (has ? 'var(--green)' : 'var(--muted)') + '">' + (has ? '✅' : '❌') + '</td>';
+    }).join('') + '</tr>';
+  }).join('');
+
+  // Dashboard access
+  const dashboards = ['super-app','analytics','payments','wallet','agents','education','farm','construction'];
+  const dashDiv = document.getElementById('dashAccess');
+  const roleDefs = {
+    owner: ['all'], admin: ['all'], manager: ['super-app','analytics','payments','education','farm','construction'],
+    teacher: ['super-app','education'], student: ['super-app','education'], parent: ['super-app','education','payments'],
+    agent: ['super-app','agents','analytics'], developer: ['super-app','agents','analytics'],
+    finance: ['super-app','analytics','payments','wallet'], support: ['super-app','analytics'], user: ['super-app']
+  };
+  dashDiv.innerHTML = Object.entries(roleDefs).map(([role, dashes]) => {
+    const hasAll = dashes.includes('all');
+    return '<div style="margin-bottom:12px"><div style="font-weight:600;font-size:13px;margin-bottom:6px">' + role + '</div><div class="dash-grid">' +
+      dashboards.map(d => {
+        const allowed = hasAll || dashes.includes(d);
+        return '<div class="dash-item ' + (allowed ? 'dash-allowed' : 'dash-denied') + '">' + d + '</div>';
+      }).join('') + '</div></div>';
+  }).join('');
+}
+
+function selectRole(role) {
+  selectedRole = role;
+  document.querySelectorAll('.role-pick').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+async function doLogin() {
+  const email = document.getElementById('email').value;
+  const result = await apiCall('login', { email, role: selectedRole, ssoProvider: 'internal' });
+  if (result.success) {
+    currentToken = result.token;
+    localStorage.setItem('harz_token', result.token);
+    localStorage.setItem('harz_role', selectedRole);
+    sessions.push({ email, role: selectedRole, provider: 'internal', time: new Date().toLocaleString(), token: result.token });
+    document.getElementById('loginResult').innerHTML = `
+      <div class="login-info">
+        <div class="email">✅ ${email}</div>
+        <div class="role">Role: ${selectedRole} (Level ${result.rolePermissions.level}) • Expires: ${new Date(result.expiresAt).toLocaleString()}</div>
+        <div style="margin-top:8px"><div class="muted">Session Token:</div><div class="token-box">${result.token}</div></div>
+      </div>`;
+    updateSessions();
+  } else {
+    document.getElementById('loginResult').innerHTML = `<div class="status status-err">❌ ${result.error}</div>`;
+  }
+}
+
+async function ssoLogin(provider) {
+  const email = document.getElementById('email').value || 'user@harz.cloud';
+  const result = await apiCall('login', { email, role: selectedRole, ssoProvider: provider });
+  if (result.success) {
+    currentToken = result.token;
+    sessions.push({ email, role: selectedRole, provider, time: new Date().toLocaleString(), token: result.token });
+    document.getElementById('loginResult').innerHTML = `
+      <div class="login-info">
+        <div class="email">✅ ${email}</div>
+        <div class="role">SSO via ${provider} • Role: ${selectedRole}</div>
+        <div style="margin-top:8px"><div class="muted">Session Token:</div><div class="token-box">${result.token}</div></div>
+      </div>`;
+    updateSessions();
+  }
+}
+
+function doLogout() {
+  currentToken = null;
+  localStorage.removeItem('harz_token');
+  localStorage.removeItem('harz_role');
+  document.getElementById('loginResult').innerHTML = '<div class="status status-ok">✅ Logged out</div>';
+}
+
+async function testRLS() {
+  const token = document.getElementById('rlsToken').value || currentToken;
+  const entity = document.getElementById('rlsEntity').value;
+  const result = await apiCall('rls_query', { token, entity });
+  if (result.success) {
+    document.getElementById('rlsResult').innerHTML = `
+      <div class="login-info">
+        <div class="email">${result.fullAccess ? '✅ Full Access' : '🔒 RLS Active'}</div>
+        <div class="role">Role: ${result.role} • Entity: ${result.entity}</div>
+        <div class="role" style="margin-top:4px">${result.message}</div>
+        <div class="role" style="margin-top:4px">RLS Filter: ${JSON.stringify(result.rlsFilter)}</div>
+      </div>`;
+  } else {
+    document.getElementById('rlsResult').innerHTML = `<div class="status status-err">❌ ${result.error}</div>`;
+  }
+}
+
+function updateSessions() {
+  const list = document.getElementById('sessionsList');
+  if (sessions.length === 0) {
+    list.innerHTML = '<p class="muted">No active sessions.</p>';
+  } else {
+    list.innerHTML = '<table><thead><tr><th>Email</th><th>Role</th><th>Provider</th><th>Time</th><th>Action</th></tr></thead><tbody>' +
+      sessions.map((s, i) => `<tr><td>${s.email}</td><td>${s.role}</td><td>${s.provider}</td><td>${s.time}</td><td><button class="btn btn-outline" style="padding:4px 8px;font-size:11px" onclick="revokeSession(${i})">Revoke</button></td></tr>`).join('') +
+      '</tbody></table>';
+  }
+  document.getElementById('statActive').textContent = sessions.length;
+  document.getElementById('statTotal').textContent = sessions.length;
+  document.getElementById('statSSO').textContent = sessions.filter(s => s.provider !== 'internal').length;
+  document.getElementById('statInternal').textContent = sessions.filter(s => s.provider === 'internal').length;
+}
+
+function revokeSession(i) {
+  sessions.splice(i, 1);
+  updateSessions();
+}
+
+init();
+</script>
+</body>
+</html>
