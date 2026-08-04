@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0e27">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>HARZ Super App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,system-ui,sans-serif}
+:root{--bg:#0a0e27;--card:#141833;--accent:#6c5ce7;--accent2:#00cec9;--text:#eee;--muted:#8892b0;--danger:#e74c3c;--success:#00b894;--radius:12px}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.header{position:sticky;top:0;z-index:100;background:rgba(10,14,39,.95);backdrop-filter:blur(10px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(108,92,231,.2)}
+.logo{font-size:18px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-btns{display:flex;gap:8px}
+.nav-btn{background:var(--card);border:1px solid rgba(108,92,231,.3);color:var(--text);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer}
+.nav-btn.active{background:var(--accent);border-color:var(--accent)}
+.container{max-width:500px;margin:0 auto;padding:16px;padding-bottom:80px}
+.card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.05)}
+.card h3{font-size:14px;margin-bottom:8px;color:var(--accent2)}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stat{background:rgba(255,255,255,.03);border-radius:8px;padding:12px;text-align:center}
+.stat .num{font-size:20px;font-weight:700;color:var(--accent2)}
+.stat .label{font-size:11px;color:var(--muted);margin-top:2px}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.platform{background:rgba(255,255,255,.03);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s}
+.platform:hover{background:rgba(108,92,231,.15)}
+.platform .icon{font-size:24px;margin-bottom:4px}
+.platform .name{font-size:10px;color:var(--muted)}
+.section-title{font-size:13px;color:var(--muted);margin:16px 0 8px;text-transform:uppercase;letter-spacing:1px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,39,.98);backdrop-filter:blur(10px);display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid rgba(108,92,231,.2);max-width:500px;margin:0 auto}
+.nav-item{text-align:center;cursor:pointer;padding:4px 8px}
+.nav-item .ico{font-size:20px}
+.nav-item .txt{font-size:9px;color:var(--muted);margin-top:2px}
+.nav-item.active .ico,.nav-item.active .txt{color:var(--accent2)}
+.page{display:none}
+.page.active{display:block}
+.input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(108,92,231,.3);border-radius:8px;padding:12px;color:var(--text);font-size:14px;margin-bottom:10px}
+.input:focus{border-color:var(--accent);outline:none}
+.btn{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;padding:12px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:active{opacity:.8}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.agent{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px;cursor:pointer}
+.agent .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
+.agent .info{flex:1}
+.agent .name{font-size:13px;font-weight:600}
+.agent .role{font-size:11px;color:var(--muted)}
+.agent .status{width:8px;height:8px;border-radius:50%;background:var(--success)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.badge-live{background:rgba(0,184,148,.2);color:var(--success)}
+.badge-new{background:rgba(108,92,231,.2);color:var(--accent)}
+.list-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px}
+.list-item .title{font-size:13px}
+.list-item .meta{font-size:11px;color:var(--muted)}
+.chat-msg{padding:8px 12px;border-radius:12px;max-width:80%;margin-bottom:6px;font-size:13px}
+.chat-msg.in{background:rgba(255,255,255,.05);align-self:flex-start}
+.chat-msg.out{background:var(--accent);align-self:flex-end;margin-left:auto}
+.chat-input{display:flex;gap:6px;position:fixed;bottom:60px;left:0;right:0;max-width:500px;margin:0 auto;padding:8px;background:rgba(10,14,39,.98)}
+.chat-input .input{flex:1;margin:0}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:.3s}
+.toast.show{opacity:1}
+#loading{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:12px}
+.spinner{width:32px;height:32px;border:3px solid rgba(108,92,231,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ws-status{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.ws-on{background:var(--success)}.ws-off{background:var(--danger)}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo">⚡ HARZ</div>
+<div class="nav-btns">
+<span id="wsDot" class="ws-status ws-off"></span>
+<button class="nav-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+<button class="nav-btn" id="userBtn" onclick="showPage('auth')">Login</button>
+</div>
+</div>
+
+<div id="loading">
+<div class="spinner"></div>
+<div style="color:var(--muted);font-size:13px">Connecting to HARZ Cloud...</div>
+</div>
+
+<div class="container" id="app" style="display:none">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+<div class="card">
+<h3>📊 Ecosystem Overview</h3>
+<div class="stat-grid" id="statsGrid">
+<div class="stat"><div class="num" id="statPlatforms">63+</div><div class="label">Platforms</div></div>
+<div class="stat"><div class="num" id="statProducts">468</div><div class="label">Products</div></div>
+<div class="stat"><div class="num" id="statAgents">7</div><div class="label">AI Agents</div></div>
+<div class="stat"><div class="num" id="statRevenue">₦0</div><div class="label">Revenue</div></div>
+</div>
+</div>
+<div class="section-title">Quick Actions</div>
+<div class="platform-grid">
+<div class="platform" onclick="quickAction('search')"><div class="icon">🔍</div><div class="name">Search</div></div>
+<div class="platform" onclick="quickAction('wallet')"><div class="icon">💳</div><div class="name">Wallet</div></div>
+<div class="platform" onclick="quickAction('upload')"><div class="icon">📤</div><div class="name">Upload</div></div>
+<div class="platform" onclick="quickAction('analytics')"><div class="icon">📈</div><div class="name">Analytics</div></div>
+<div class="platform" onclick="quickAction('agents')"><div class="icon">🤖</div><div class="name">Agents</div></div>
+<div class="platform" onclick="quickAction('settings')"><div class="icon">⚙️</div><div class="name">Settings</div></div>
+</div>
+<div class="section-title">Live Status</div>
+<div class="card" id="liveStatus">
+<div class="list-item"><span class="title">Backend</span><span id="backendStatus" class="badge badge-new">Checking...</span></div>
+<div class="list-item"><span class="title">CDN</span><span id="cdnStatus" class="badge badge-new">Checking...</span></div>
+<div class="list-item"><span class="title">Webhooks</span><span id="webhookStatus" class="badge badge-new">Checking...</span></div>
+</div>
+</div>
+
+<!-- PLATFORMS -->
+<div class="page" id="page-platforms">
+<div class="section-title">Ecosystem Platforms</div>
+<div class="platform-grid" id="platformGrid"></div>
+</div>
+
+<!-- AGENTS -->
+<div class="page" id="page-agents">
+<div class="section-title">AI Agents</div>
+<div id="agentList"></div>
+<div class="section-title">Agent Chat</div>
+<div style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column" id="chatBox">
+<div class="chat-msg in">Hello! I'm Magani. How can I help you today?</div>
+</div>
+<div class="chat-input">
+<input class="input" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendChat()">
+<button class="btn" style="width:auto;padding:12px 16px" onclick="sendChat()">Send</button>
+</div>
+</div>
+
+<!-- WALLET -->
+<div class="page" id="page-wallet">
+<div class="card">
+<h3>💳 HARZ Wallet</h3>
+<div class="stat-grid">
+<div class="stat"><div class="num">₦0</div><div class="label">NGN</div></div>
+<div class="stat"><div class="num">$0</div><div class="label">USD</div></div>
+<div class="stat"><div class="num">0</div><div class="label">GDEG</div></div>
+<div class="stat"><div class="num">0</div><div class="label">USDT</div></div>
+</div>
+</div>
+<div class="section-title">Payment Methods</div>
+<div class="list-item"><span class="title">UBA Transfer</span><span class="meta">2034326424</span></div>
+<div class="list-item"><span class="title">Paystack</span><span class="meta">Card Payment</span></div>
+<div class="list-item"><span class="title">GDEG Token</span><span class="meta">1 = $0.01</span></div>
+<div class="list-item"><span class="title">USDT TRC20</span><span class="meta">Crypto</span></div>
+</div>
+
+<!-- AUTH -->
+<div class="page" id="page-auth">
+<div id="loginForm">
+<div class="card">
+<h3>🔐 Login to HARZ</h3>
+<input class="input" id="loginEmail" placeholder="Email" type="email">
+<input class="input" id="loginPassword" placeholder="Password" type="password">
+<button class="btn" onclick="doLogin()">Login</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="showRegister()">Register</button>
+</div>
+</div>
+<div id="registerForm" style="display:none">
+<div class="card">
+<h3>📝 Create Account</h3>
+<input class="input" id="regName" placeholder="Full Name">
+<input class="input" id="regEmail" placeholder="Email" type="email">
+<input class="input" id="regPassword" placeholder="Password" type="password">
+<button class="btn" onclick="doRegister()">Register</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="showLogin()">Back to Login</button>
+</div>
+</div>
+<div id="profileView" style="display:none">
+<div class="card">
+<h3>👤 Profile</h3>
+<div class="list-item"><span class="title">Name</span><span class="meta" id="profName">—</span></div>
+<div class="list-item"><span class="title">Email</span><span class="meta" id="profEmail">—</span></div>
+<div class="list-item"><span class="title">Role</span><span class="meta" id="profRole">—</span></div>
+<button class="btn btn-outline" style="margin-top:8px" onclick="doLogout()">Logout</button>
+</div>
+<div class="card">
+<h3>🔐 Security</h3>
+<button class="btn" onclick="enable2FA()">Enable 2FA</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="resetPassword()">Reset Password</button>
+</div>
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+<div class="card">
+<h3>⚙️ Settings</h3>
+<div class="list-item"><span class="title">API URL</span><span class="meta" id="apiUrl">—</span></div>
+<div class="list-item"><span class="title">API Key</span><span class="meta">Generate →</span></div>
+<div class="list-item"><span class="title">Theme</span><span class="meta" id="themeName">Dark</span></div>
+<div class="list-item"><span class="title">WebSocket</span><span class="meta" id="wsStatus">Disconnected</span></div>
+</div>
+<div class="section-title">Data</div>
+<div class="card">
+<button class="btn" onclick="exportData()">Export All Data (JSON)</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="testConnection()">Test Connection</button>
+</div>
+<div class="section-title">HARZ Cloud v4.0</div>
+<div class="card" style="text-align:center;color:var(--muted);font-size:12px">
+38 modules | 110+ endpoints<br>Built by Rabiu Hamza Mohammed<br>© HARZ Digital Services
+</div>
+</div>
+
+</div>
+
+<div class="bottom-nav">
+<div class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard"><div class="ico">🏠</div><div class="txt">Home</div></div>
+<div class="nav-item" onclick="showPage('platforms')" id="nav-platforms"><div class="ico">📱</div><div class="txt">Platforms</div></div>
+<div class="nav-item" onclick="showPage('agents')" id="nav-agents"><div class="ico">🤖</div><div class="txt">Agents</div></div>
+<div class="nav-item" onclick="showPage('wallet')" id="nav-wallet"><div class="ico">💳</div><div class="txt">Wallet</div></div>
+<div class="nav-item" onclick="showPage('settings')" id="nav-settings"><div class="ico">⚙️</div><div class="txt">Settings</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// HARZ Cloud API Configuration
+const API_URL = localStorage.getItem('harz_api_url') || 'https://harz-cloud-backend.onrender.com';
+let authToken = localStorage.getItem('harz_token') || null;
+let currentUser = null;
+let ws = null;
+
+// Platforms data
+const PLATFORMS = [
+{n:'HarzDM',u:'https://harzdm.vercel.app',i:'🛒',s:'LIVE'},
+{n:'Abuja Estate',u:'https://abuja-estate-city.vercel.app',i:'🏘️',s:'LIVE'},
+{n:'HARZ Connect',u:'https://harzconnect.vercel.app',i:'💬',s:'LIVE'},
+{n:'EduWealth',u:'https://eduwealth-ai.vercel.app',i:'📚',s:'LIVE'},
+{n:'OMEGA Health',u:'https://omega-health-ai.vercel.app',i:'🏥',s:'LIVE'},
+{n:'HarzMusic',u:'https://harzmusic.vercel.app',i:'🎵',s:'LIVE'},
+{n:'HarzFilm',u:'https://harzfilm.vercel.app',i:'🎬',s:'LIVE'},
+{n:'BuildBot AI',u:'https://buildbot-ai.vercel.app',i:'🏗️',s:'LIVE'},
+{n:'HarzPay',u:'https://harzpay.vercel.app',i:'💳',s:'LIVE'},
+{n:'HarzFX',u:'https://harzfx.vercel.app',i:'📈',s:'LIVE'},
+{n:'Harz Store',u:'https://rabiuhamza11.github.io/harz-portfolio/harz-store.html',i:'🏪',s:'LIVE'},
+{n:'Gumroad',u:'https://hamzarabiu.gumroad.com',i:'🌍',s:'LIVE'},
+{n:'Getly',u:'https://www.getly.store/store/harzdm-com-mr951f69',i:'📦',s:'LIVE'},
+{n:'MindCare',u:'https://mindcare-harz.vercel.app',i:'🧠',s:'LIVE'},
+{n:'CyberShield',u:'https://cybershield-harz.vercel.app',i:'🛡️',s:'LIVE'},
+{n:'Apex Bank',u:'https://apex-bank-harz.vercel.app',i:'🏦',s:'LIVE'},
+{n:'HarzAjo',u:'https://harzajo.vercel.app',i:'🤝',s:'LIVE'},
+{n:'HarzLend',u:'https://harzlend.vercel.app',i:'💰',s:'LIVE'},
+{n:'Oracle AI',u:'https://oracle-harz.vercel.app',i:'🔮',s:'LIVE'},
+{n:'Nexal Ads',u:'https://nexal-harz.vercel.app',i:'📢',s:'LIVE'},
+{n:'Harz Cloud',u:'https://harz-cloud-backend.onrender.com',i:'☁️',s:'NEW'},
+{n:'Harz Identity',u:'https://identity-harz.vercel.app',i:'🪪',s:'LIVE'},
+{n:'Harz IoT',u:'https://iot-harz.vercel.app',i:'📡',s:'LIVE'},
+{n:'Venture Studio',u:'https://venture-harz.vercel.app',i:'🚀',s:'LIVE'}
+];
+
+// AI Agents
+const AGENTS = [
+{n:'Magani',r:'Orchestrator',c:'#6c5ce7',i:'⚡',s:'active'},
+{n:'Hauwa',r:'Marketing & Content',c:'#e84393',i:'✍️',s:'active'},
+{n:'Rabi',r:'Finance & Orders',c:'#00b894',i:'💰',s:'active'},
+{n:'Aisha',r:'Customer Support',c:'#fd79a8',i:'💬',s:'active'},
+{n:'Nuruddeen',r:'Platform Health',c:'#0984e3',i:'🩺',s:'active'},
+{n:'Omega',r:'Producer & Deploy',c:'#fdcb6e',i:'🔧',s:'active'},
+{n:'Danjuma',r:'Security',c:'#e74c3c',i:'🛡️',s:'active'}
+];
+
+// Init
+async function init() {
+document.getElementById('apiUrl').textContent = API_URL;
+renderPlatforms();
+renderAgents();
+checkBackend();
+// Try to restore session
+if (authToken) {
+try {
+const res = await api('/auth/me');
+if (res.user) {
+currentUser = res.user;
+showProfile();
+updateUserBtn();
+}
+} catch(e) { authToken = null; localStorage.removeItem('harz_token'); }
+}
+// Hide loading
+document.getElementById('loading').style.display = 'none';
+document.getElementById('app').style.display = 'block';
+}
+
+// API helper
+async function api(path, method = 'GET', body = null) {
+const opts = {method, headers: {'Content-Type': 'application/json'}};
+if (authToken) opts.headers['x-auth-token'] = authToken;
+if (body) opts.body = JSON.stringify(body);
+const res = await fetch(API_URL + path, opts);
+const data = await res.json();
+if (!res.ok) throw new Error(data.error || 'API Error');
+return data;
+}
+
+// Check backend
+async function checkBackend() {
+try {
+const res = await fetch(API_URL + '/health', {signal: AbortSignal.timeout(5000)});
+const data = await res.json();
+if (data.version) {
+document.getElementById('backendStatus').textContent = 'ONLINE';
+document.getElementById('backendStatus').className = 'badge badge-live';
+document.getElementById('statPlatforms').textContent = data.endpoints || '110+';
+// Check CDN
+try {
+const cdn = await fetch(API_URL + '/cdn/config').then(r => r.json());
+document.getElementById('cdnStatus').textContent = 'ONLINE';
+document.getElementById('cdnStatus').className = 'badge badge-live';
+} catch(e) {}
+// Check webhooks
+try {
+const wh = await fetch(API_URL + '/webhooks/providers').then(r => r.json());
+document.getElementById('webhookStatus').textContent = (wh.count || 16) + ' providers';
+document.getElementById('webhookStatus').className = 'badge badge-live';
+} catch(e) {}
+// Connect WebSocket
+connectWS();
+}
+} catch(e) {
+document.getElementById('backendStatus').textContent = 'OFFLINE';
+document.getElementById('backendStatus').className = 'badge badge-new';
+document.getElementById('backendStatus').style.background = 'rgba(231,76,60,.2)';
+document.getElementById('backendStatus').style.color = '#e74c3c';
+// Still show app — works with local data
+}
+}
+
+// WebSocket
+function connectWS() {
+try {
+const wsUrl = API_URL.replace('https', 'wss').replace('http', 'ws') + '/ws';
+ws = new WebSocket(wsUrl);
+ws.onopen = () => {
+document.getElementById('wsDot').className = 'ws-status ws-on';
+document.getElementById('wsStatus').textContent = 'Connected';
+};
+ws.onclose = () => {
+document.getElementById('wsDot').className = 'ws-status ws-off';
+document.getElementById('wsStatus').textContent = 'Disconnected';
+setTimeout(connectWS, 5000);
+};
+ws.onmessage = (e) => {
+const data = JSON.parse(e.data);
+if (data.type === 'broadcast') showToast(data.message);
+};
+} catch(e) {}
+}
+
+// Render platforms
+function renderPlatforms() {
+const grid = document.getElementById('platformGrid');
+grid.innerHTML = PLATFORMS.map(p => `
+<div class="platform" onclick="window.open('${p.u}','_blank')">
+<div class="icon">${p.i}</div>
+<div class="name">${p.n}</div>
+<span class="badge ${p.s==='LIVE'?'badge-live':'badge-new'}">${p.s}</span>
+</div>`).join('');
+}
+
+// Render agents
+function renderAgents() {
+const list = document.getElementById('agentList');
+list.innerHTML = AGENTS.map(a => `
+<div class="agent" onclick="showPage('agents')">
+<div class="avatar" style="background:${a.c}">${a.i}</div>
+<div class="info">
+<div class="name">${a.n}</div>
+<div class="role">${a.r}</div>
+</div>
+<div class="status"></div>
+</div>`).join('');
+}
+
+// Page navigation
+function showPage(page) {
+document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+document.getElementById('page-' + page).classList.add('active');
+document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+const nav = document.getElementById('nav-' + page);
+if (nav) nav.classList.add('active');
+window.scrollTo(0, 0);
+}
+
+function quickAction(action) {
+const map = {search:'platforms',wallet:'wallet',upload:'settings',analytics:'settings',agents:'agents',settings:'settings'};
+showPage(map[action] || 'dashboard');
+}
+
+// Auth
+function showLogin() {
+document.getElementById('loginForm').style.display = 'block';
+document.getElementById('registerForm').style.display = 'none';
+document.getElementById('profileView').style.display = 'none';
+}
+function showRegister() {
+document.getElementById('loginForm').style.display = 'none';
+document.getElementById('registerForm').style.display = 'block';
+document.getElementById('profileView').style.display = 'none';
+}
+function showProfile() {
+document.getElementById('loginForm').style.display = 'none';
+document.getElementById('registerForm').style.display = 'none';
+document.getElementById('profileView').style.display = 'block';
+document.getElementById('profName').textContent = currentUser?.full_name || '—';
+document.getElementById('profEmail').textContent = currentUser?.email || '—';
+document.getElementById('profRole').textContent = currentUser?.role || 'user';
+}
+
+function updateUserBtn() {
+const btn = document.getElementById('userBtn');
+if (currentUser) {
+btn.textContent = currentUser.full_name?.split(' ')[0] || 'Profile';
+btn.onclick = () => { showPage('auth'); showProfile(); };
+} else {
+btn.textContent = 'Login';
+btn.onclick = () => showPage('auth');
+}
+}
+
+async function doLogin() {
+try {
+const res = await api('/auth/login', 'POST', {
+email: document.getElementById('loginEmail').value,
+password: document.getElementById('loginPassword').value
+});
+authToken = res.token;
+currentUser = res.user;
+localStorage.setItem('harz_token', authToken);
+showProfile();
+updateUserBtn();
+showPage('dashboard');
+showToast('Welcome, ' + currentUser.full_name + '!');
+} catch(e) { showToast('Login failed: ' + e.message); }
+}
+
+async function doRegister() {
+try {
+const res = await api('/auth/register', 'POST', {
+full_name: document.getElementById('regName').value,
+email: document.getElementById('regEmail').value,
+password: document.getElementById('regPassword').value,
+role: 'user'
+});
+authToken = res.token;
+currentUser = res.user;
+localStorage.setItem('harz_token', authToken);
+showProfile();
+updateUserBtn();
+showPage('dashboard');
+showToast('Account created!');
+} catch(e) { showToast('Registration failed: ' + e.message); }
+}
+
+function doLogout() {
+authToken = null;
+currentUser = null;
+localStorage.removeItem('harz_token');
+showLogin();
+updateUserBtn();
+showToast('Logged out');
+}
+
+async function enable2FA() {
+if (!authToken) return showToast('Please login first');
+try {
+const res = await api('/auth/2fa/enable', 'POST');
+showToast('2FA enabled! Save your backup codes.');
+} catch(e) { showToast('2FA failed: ' + e.message); }
+}
+
+async function resetPassword() {
+if (!authToken) return showToast('Please login first');
+try {
+const res = await api('/auth/password-reset/request', 'POST', {email: currentUser.email});
+showToast('Reset code sent to your email');
+} catch(e) { showToast('Reset failed: ' + e.message); }
+}
+
+// Chat
+async function sendChat() {
+const input = document.getElementById('chatInput');
+const msg = input.value.trim();
+if (!msg) return;
+input.value = '';
+const box = document.getElementById('chatBox');
+box.innerHTML += `<div class="chat-msg out">${msg}</div>`;
+box.scrollTop = box.scrollHeight;
+try {
+const res = await api('/agents/delegate', 'POST', {
+name: 'User Query',
+description: msg,
+priority: 'normal'
+});
+box.innerHTML += `<div class="chat-msg in">Task delegated to ${res.task?.assigned_to || 'Magani'}. Processing...</div>`;
+} catch(e) {
+// Fallback — local response
+const responses = {
+hello: 'Hi there! How can I help you with HARZ today?',
+price: 'Check our products at https://hamzarabiu.gumroad.com',
+help: 'I can help with products, orders, payments, and more!',
+default: 'I received your message. When HARZ Cloud is deployed, I will process this fully.'
+};
+const lower = msg.toLowerCase();
+let reply = responses.default;
+if (lower.includes('hello') || lower.includes('hi')) reply = responses.hello;
+else if (lower.includes('price') || lower.includes('cost')) reply = responses.price;
+else if (lower.includes('help')) reply = responses.help;
+box.innerHTML += `<div class="chat-msg in">${reply}</div>`;
+}
+box.scrollTop = box.scrollHeight;
+}
+
+// Export
+async function exportData() {
+try {
+showToast('Exporting...');
+const res = await fetch(API_URL + '/export-all?format=json', {
+headers: authToken ? {'x-auth-token': authToken} : {}
+});
+const data = await res.json();
+const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'harz-export-' + new Date().toISOString().slice(0,10) + '.json';
+a.click();
+showToast('Data exported!');
+} catch(e) { showToast('Export failed — backend offline'); }
+}
+
+async function testConnection() {
+showToast('Testing connection...');
+try {
+const res = await fetch(API_URL + '/health');
+const data = await res.json();
+showToast('Connected! v' + data.version);
+} catch(e) {
+showToast('Backend offline — deploy on Render first');
+}
+}
+
+// Theme
+function toggleTheme() {
+const body = document.body;
+const isDark = body.style.background !== 'white';
+if (isDark) {
+body.style.background = '#f0f0f5';
+body.style.color = '#333';
+document.querySelector('.header').style.background = 'rgba(240,240,245,.95)';
+document.getElementById('themeBtn').textContent = '☀️';
+document.getElementById('themeName').textContent = 'Light';
+} else {
+body.style.background = '';
+body.style.color = '';
+document.querySelector('.header').style.background = '';
+document.getElementById('themeBtn').textContent = '🌙';
+document.getElementById('themeName').textContent = 'Dark';
+}
+}
+
+// Toast
+function showToast(msg) {
+const t = document.getElementById('toast');
+t.textContent = msg;
+t.classList.add('show');
+setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Start
+init();
+</script>
+</body>
+</html>
