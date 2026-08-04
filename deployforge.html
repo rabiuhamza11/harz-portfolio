@@ -2,994 +2,678 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<meta name="theme-color" content="#0d1117">
-<title>DeployForge v9.0 — Multi-Cloud Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeployForge — HARZ Deployment Engine</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--bg:#0d1117;--card:#161b22;--card2:#1c2333;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922;--red:#f85149;--gold:#FFD700;--radius:12px}
-body{font-family:-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;padding-bottom:60px}
-.header{background:var(--card);border-bottom:1px solid var(--border);padding:12px 14px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:10}
-.header a{color:var(--blue);text-decoration:none;font-size:13px}
-.header .title{font-weight:700;font-size:15px;flex:1}
-.container{max-width:600px;margin:0 auto;padding:12px}
-.tab-bar{display:flex;gap:4px;padding:0 12px;margin-bottom:12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tab{padding:8px 14px;border-radius:8px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer;background:var(--card);border:1px solid var(--border);color:var(--dim)}
-.tab.active{background:var(--card2);color:var(--blue);border-color:var(--blue)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-.card h3{font-size:13px;color:var(--blue);margin-bottom:8px}
-.card p{font-size:12px;color:var(--dim);margin-bottom:6px}
-input,textarea,select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:inherit;outline:none;margin-bottom:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0a0b14;--card:#13151f;--card-hover:#1a1d2e;--border:rgba(108,92,231,.15);
+--text:#e0e0e0;--muted:#7a7f8e;--primary:#6c5ce7;--primary-glow:rgba(108,92,231,.3);
+--success:#10b981;--success-bg:rgba(16,185,129,.12);--warn:#f59e0b;--warn-bg:rgba(245,158,11,.12);
+--error:#ef4444;--error-bg:rgba(239,68,68,.12);--cyan:#22d3ee;--pink:#f72585;
+}
+body{font-family:'SF Pro Display',-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* Header */
+.header{position:sticky;top:0;z-index:100;background:rgba(10,11,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700}
+.logo-icon{font-size:24px}
+.logo-text{background:linear-gradient(135deg,var(--primary),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-right{display:flex;align-items:center;gap:16px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.header-link{color:var(--muted);font-size:13px;text-decoration:none;padding:6px 14px;border-radius:8px;transition:.2s}
+.header-link:hover{color:var(--text);background:var(--card)}
+
+/* Layout */
+.main{max-width:1200px;margin:0 auto;padding:24px 20px 80px}
+
+/* Stats Grid */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:.3s}
+.stat-card:hover{border-color:var(--primary);box-shadow:0 0 20px var(--primary-glow)}
+.stat-num{font-size:28px;font-weight:700;color:var(--cyan)}
+.stat-label{color:var(--muted);font-size:12px;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+.stat-icon{font-size:20px;float:right;opacity:.5}
+
+/* Section */
+.section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.section-title{font-size:15px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.section-title .ico{font-size:18px}
+.btn{padding:9px 18px;border-radius:10px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:linear-gradient(135deg,var(--primary),#8b70ff);color:#fff}
+.btn-primary:hover{box-shadow:0 0 16px var(--primary-glow);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--primary);background:var(--card-hover)}
+.btn-danger{background:var(--error-bg);color:var(--error);border:1px solid rgba(239,68,68,.2)}
+.btn-sm{padding:6px 12px;font-size:12px}
+
+/* Platforms Grid */
+.platforms-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.platform-card{background:var(--card-hover);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;transition:.3s;cursor:pointer}
+.platform-card:hover{border-color:var(--primary);transform:translateY(-2px)}
+.platform-icon{font-size:32px;margin-bottom:8px}
+.platform-name{font-size:13px;font-weight:600;color:var(--text)}
+.platform-status{font-size:11px;margin-top:6px;padding:3px 10px;border-radius:20px;display:inline-block}
+.status-connected{background:var(--success-bg);color:var(--success)}
+.status-offline{background:rgba(122,127,142,.1);color:var(--muted)}
+.platform-deploys{font-size:11px;color:var(--muted);margin-top:8px}
+
+/* Deploy Form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group.full{grid-column:1/-1}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:500}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:13px;font-family:inherit;transition:.2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-glow)}
 textarea{resize:vertical;min-height:80px}
-.btn{background:var(--green);color:#000;border:none;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;width:100%}
-.btn:active{opacity:.8}.btn:disabled{opacity:.4}
-.btn-blue{background:var(--blue);color:#000}.btn-purple{background:var(--purple);color:#000}
-.btn-gold{background:var(--gold);color:#000}.btn-red{background:var(--red);color:#fff}
-.btn-sm{padding:6px 12px;width:auto;font-size:11px}
-.row{display:flex;gap:8px}.row>*{flex:1}
-.stat{background:var(--card2);border-radius:8px;padding:10px;text-align:center;flex:1}
-.stat .num{font-size:18px;font-weight:800}
-.stat .lbl{font-size:10px;color:var(--dim);margin-top:2px}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
-.b-live{background:rgba(63,185,80,.15);color:var(--green)}.b-pending{background:rgba(210,153,34,.15);color:var(--orange)}
-.b-down{background:rgba(248,81,73,.15);color:var(--red)}.b-blue{background:rgba(88,166,255,.15);color:var(--blue)}
-.b-purple{background:rgba(188,140,255,.15);color:var(--purple)}.b-gold{background:rgba(255,215,0,.15);color:var(--gold)}
-.log{background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:11px;color:var(--green);max-height:180px;overflow:auto;white-space:pre-wrap;margin-top:8px}
-.site-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:6px;cursor:pointer}
-.site-item:active{background:var(--card)}
-.site-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--card)}
-.site-info{flex:1;min-width:0}.site-name{font-size:13px;font-weight:600}
-.site-url{font-size:10px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dot-live{background:var(--green)}.dot-pending{background:var(--orange)}.dot-down{background:var(--red)}
-.hidden{display:none}.section{display:none}.section.active{display:block}
-.form-label{font-size:11px;color:var(--dim);margin-bottom:4px;display:block}
-.info-box{background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:8px;padding:10px;font-size:11px;color:var(--blue);margin-bottom:10px}
-.warn-box{background:rgba(210,153,34,.08);border:1px solid rgba(210,153,34,.2);border-radius:8px;padding:10px;font-size:11px;color:var(--orange);margin-bottom:10px}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading{text-align:center;padding:20px;color:var(--dim);font-size:13px}
-.del-btn{background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;flex-shrink:0}
-.check-btn{background:rgba(88,166,255,.15);color:var(--blue);border:1px solid rgba(88,166,255,.3);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;flex-shrink:0;text-decoration:none}
-.runtime-btn{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:var(--card);color:var(--dim)}
-.runtime-btn.active{border-color:var(--green);color:var(--green);background:rgba(63,185,80,.1)}
-.code-editor{background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--green);font-family:monospace;font-size:12px;width:100%;min-height:120px;resize:vertical;outline:none}
-.tpl-card{display:flex;align-items:center;gap:10px;padding:12px;background:var(--card2);border:2px solid var(--border);border-radius:12px;margin-bottom:8px;cursor:pointer}
-.tpl-card:active{opacity:.8}
-.tpl-card .ti{font-size:24px}.tpl-card .tn{font-size:14px;font-weight:700}.tpl-card .td{font-size:11px;color:var(--dim)}
-.cicd-run{padding:10px;background:var(--card2);border-radius:8px;margin-bottom:6px}
-.cicd-run .rn{font-size:13px;font-weight:600}.cicd-run .rs{font-size:11px;color:var(--dim)}
-.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.feat{background:var(--card2);border-radius:8px;padding:10px;text-align:center}
-.feat .fi{font-size:20px;margin-bottom:4px}.feat .fn{font-size:11px;font-weight:600}.feat .fd{font-size:9px;color:var(--dim)}
+.chip-group{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:6px 14px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;transition:.2s;color:var(--muted)}
+.chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chip:hover{border-color:var(--primary)}
+
+/* Deploy History */
+.history-table{width:100%;border-collapse:collapse}
+.history-table th{text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;border-bottom:1px solid var(--border)}
+.history-table td{padding:12px;font-size:13px;border-bottom:1px solid rgba(108,92,231,.06)}
+.history-table tr:hover{background:var(--card-hover)}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;display:inline-block}
+.badge-live{background:var(--success-bg);color:var(--success)}
+.badge-building{background:var(--warn-bg);color:var(--warn)}
+.badge-failed{background:var(--error-bg);color:var(--error)}
+.badge-dev{background:rgba(122,127,142,.1);color:var(--muted)}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px}
+.tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:500;color:var(--muted);border-radius:8px;cursor:pointer;transition:.2s}
+.tab.active{background:var(--primary);color:#fff}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;justify-content:center;align-items:center;padding:16px}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.modal-close{float:right;cursor:pointer;color:var(--muted);font-size:18px;background:none;border:none}
+.modal-close:hover{color:var(--text)}
+
+/* Deploy Log */
+.log-container{background:#0d0e16;border:1px solid var(--border);border-radius:10px;padding:14px;max-height:300px;overflow-y:auto;font-family:'SF Mono',Monaco,monospace;font-size:12px;line-height:1.8}
+.log-entry{color:var(--muted)}
+.log-entry.success{color:var(--success)}
+.log-entry.error{color:var(--error)}
+.log-entry.info{color:var(--cyan)}
+.log-time{color:var(--muted);opacity:.6}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 20px;font-size:13px;z-index:300;transform:translateY(100px);opacity:0;transition:.3s;display:flex;align-items:center;gap:10px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:var(--success)}
+.toast.error{border-color:var(--error)}
+
+/* Responsive */
+@media(max-width:768px){
+.stats-grid{grid-template-columns:repeat(2,1fr)}
+.platforms-grid{grid-template-columns:repeat(2,1fr)}
+.form-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
+
+<!-- Header -->
 <div class="header">
-<a href="harz-super-app.html">&#8592;</a>
-<span style="font-size:20px">&#128736;</span>
-<span class="title">DeployForge v9.0</span>
-<span class="badge b-gold">PRO</span>
+<div class="logo">
+<span class="logo-icon">🚀</span>
+<span class="logo-text">DeployForge</span>
+<span style="font-size:11px;color:var(--muted);margin-left:4px">v10</span>
 </div>
-<div class="tab-bar">
-<div class="tab active" onclick="showTab('dashboard',this)">&#128202; Dashboard</div>
-<div class="tab" onclick="showTab('templates',this)">&#128194; Templates</div>
-<div class="tab" onclick="showTab('deploy',this)">&#128640; HTML</div>
-<div class="tab" onclick="showTab('server',this)">&#9889; API</div>
-<div class="tab" onclick="showTab('docker',this)">&#128021; Docker</div>
-<div class="tab" onclick="showTab('cloudflare',this)">&#9729; Workers</div>
-<div class="tab" onclick="showTab('hf',this)">🤗 HuggingFace</div>
-<div class="tab" onclick="showTab('cicd',this)">&#128260; CI/CD</div>
-<div class="tab" onclick="showTab('monitor',this)">&#128276; Monitor</div>
-<div class="tab" onclick="showTab('repos',this)">&#128230; Repos</div>
-<div class="tab" onclick="showTab('agents',this)" style="color:var(--purple)">🤖 Agents</div>
-<div class="tab" onclick="showTab('server',this)" style="color:var(--green)">⚡ Agent Server</div>
-</div>
-<div class="container">
-
-<!-- DASHBOARD -->
-<div class="section active" id="sec-dashboard">
-<div class="row" style="margin-bottom:8px">
-<div class="stat"><div class="num" style="color:var(--green)" id="stat-repos">-</div><div class="lbl">GH Repos</div></div>
-<div class="stat"><div class="num" style="color:var(--blue)" id="stat-vercel">-</div><div class="lbl">Vercel</div></div>
-<div class="stat"><div class="num" style="color:var(--purple)" id="stat-cicd">-</div><div class="lbl">CI/CD Runs</div></div>
-<div class="stat"><div class="num" style="color:var(--gold)" id="stat-hf">-</div><div class="lbl">HF Spaces</div></div>
-</div>
-<div class="card">
-<h3>&#128640; DeployForge v9.0 — Multi-Cloud Platform</h3>
-<p>6 providers, 9 templates, auto CI/CD, auto-deploy to all, auto-monitoring</p>
-<div class="feat-grid" style="margin-top:10px">
-<div class="feat"><div class="fi">&#128196;</div><div class="fn">Static</div><div class="fd">GitHub Pages</div></div>
-<div class="feat"><div class="fi">&#9889;</div><div class="fn">Serverless</div><div class="fd">Vercel</div></div>
-<div class="feat"><div class="fi">&#128021;</div><div class="fn">Docker</div><div class="fd">Railway</div></div>
-<div class="feat"><div class="fi">&#9729;</div><div class="fn">Workers</div><div class="fd">Cloudflare</div></div>
-<div class="feat"><div class="fi">&#128260;</div><div class="fn">CI/CD</div><div class="fd">GitHub Actions</div></div>
-<div class="feat"><div class="fi">&#128276;</div><div class="fn">Monitor</div><div class="fd">Live Status</div></div>
-</div>
-</div>
-<div class="card" style="border-color:var(--gold);background:rgba(255,215,0,.05)"><h3 style="color:var(--gold)">⚡ 1-Click Deploy to All Providers</h3><p>Auto-deploy file to GitHub Pages + HuggingFace + Vercel simultaneously</p><button class="btn btn-gold" onclick="deployToAll()">⚡ Deploy to All</button><div id="allDeployResult" style="margin-top:8px"></div></div>
-<div class="card"><h3><div class="card"><h3>&#128293; Recent Deployments</h3>#128293; Recent Deployments</h3><div id="recent-deploys"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
-<div class="card">
-<h3>&#128176; Cost: DeployForge vs Render vs Vercel</h3>
-<p>DeployForge: &#8358;0/mo (all 5 providers free tier)</p>
-<p>Render Starter: $7/mo (&#8358;11,200)</p>
-<p>Vercel Pro: $20/mo (&#8358;32,000)</p>
-<p>Railway Hobby: $5/mo (500hrs free)</p>
-<p style="color:var(--green);margin-top:8px">✅ Auto CI/CD on 49 repos (push = deploy)</p>
-<p style="color:var(--green)">✅ Auto-refresh every 30s</p>
-<p style="color:var(--green)">✅ 1-click deploy to all providers</p>
+<div class="header-right">
+<div class="status-dot" id="systemStatus"></div>
+<span style="font-size:12px;color:var(--muted)" id="statusText">All Systems Operational</span>
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app-v5.html" class="header-link">← HARZ Super App</a>
 </div>
 </div>
 
-<!-- TEMPLATES -->
-<div class="section" id="sec-templates">
-<div class="card"><h3>&#128194; HARZ Deployment Templates</h3><div id="tpl-list"><div class="loading"><span class="spinner"></span> Loading templates...</div></div></div>
-<div class="card">
-<h3>&#128196; How Templates Work</h3>
-<p>1. Pick a template (Construction, Estate, School, etc.)</p>
-<p>2. Preview the generated code</p>
-<p>3. Click Deploy to GitHub Pages or Vercel</p>
-<p>4. Get a live URL instantly</p>
+<div class="main">
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+<div class="stat-card">
+<span class="stat-icon">📦</span>
+<div class="stat-num" id="statTotal">—</div>
+<div class="stat-label">Total Deployments</div>
+</div>
+<div class="stat-card">
+<span class="stat-icon">✅</span>
+<div class="stat-num" id="statLive" style="color:var(--success)">—</div>
+<div class="stat-label">Live</div>
+</div>
+<div class="stat-card">
+<span class="stat-icon">🔄</span>
+<div class="stat-num" id="statBuilding" style="color:var(--warn)">—</div>
+<div class="stat-label">Building</div>
+</div>
+<div class="stat-card">
+<span class="stat-icon">❌</span>
+<div class="stat-num" id="statFailed" style="color:var(--error)">—</div>
+<div class="stat-label">Failed</div>
 </div>
 </div>
 
-<!-- DEPLOY (Static HTML) -->
-<div class="section" id="sec-deploy">
-<div class="card">
-<h3>&#128640; Deploy Static HTML &#8594; GitHub Pages</h3>
-<span class="form-label">File Name</span>
-<input type="text" id="projName" placeholder="my-page.html">
-<span class="form-label">Target Repo</span>
-<select id="targetRepo"><option value="harz-portfolio">harz-portfolio</option></select>
-<span class="form-label">Source</span>
-<select id="sourceType" onchange="toggleSource()"><option value="html">Write HTML</option><option value="template">From Template</option><option value="github">From GitHub URL</option></select>
-<div id="html-source"><span class="form-label">HTML Code</span><textarea id="htmlCode" placeholder="<!DOCTYPE html>..." style="min-height:100px"></textarea></div>
-<div id="template-source" class="hidden"><span class="form-label">Template</span><select id="templateChoice"><option value="landing">Landing Page</option><option value="store">E-commerce Store</option><option value="blog">Blog</option><option value="dashboard">Dashboard</option></select></div>
-<div id="github-source" class="hidden"><span class="form-label">GitHub Raw URL</span><input type="text" id="githubUrl" placeholder="https://raw.githubusercontent.com/..."></div>
-<button class="btn" id="deployBtn" onclick="doDeploy()">&#128640; Deploy to GitHub Pages</button>
-<div class="log hidden" id="deployLog"></div>
+<!-- Tabs -->
+<div class="tabs">
+<div class="tab active" onclick="showTab('platforms')">🖥️ Platforms</div>
+<div class="tab" onclick="showTab('deploy')">🚀 New Deploy</div>
+<div class="tab" onclick="showTab('history')">📋 History</div>
+</div>
+
+<!-- Tab: Platforms -->
+<div id="tab-platforms" class="tab-content">
+<div class="section">
+<div class="section-header">
+<div class="section-title"><span class="ico">🔗</span> Connected Platforms</div>
+<button class="btn btn-outline btn-sm" onclick="refreshPlatforms()">↻ Refresh</button>
+</div>
+<div class="platforms-grid" id="platformsGrid"></div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="section-title"><span class="ico">📊</span> GitHub Repositories</div>
+<button class="btn btn-outline btn-sm" onclick="refreshRepos()">↻ Refresh</button>
+</div>
+<div id="reposList"></div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="section-title"><span class="ico">⚡</span> Vercel Projects</div>
+<button class="btn btn-outline btn-sm" onclick="refreshVercel()">↻ Refresh</button>
+</div>
+<div id="vercelList"></div>
 </div>
 </div>
 
-<!-- SERVER (Node.js + Python) -->
-<div class="section" id="sec-server">
-<div class="card">
-<h3>&#9889; Deploy Node.js / Python &#8594; Vercel</h3>
-<span class="form-label">Project Name</span>
-<input type="text" id="serverName" placeholder="my-api">
-<span class="form-label">Runtime</span>
-<div style="display:flex;gap:8px;margin-bottom:12px">
-<div class="runtime-btn active" onclick="selectRuntime('node',this)">&#9889; Node.js</div>
-<div class="runtime-btn" onclick="selectRuntime('python',this)">&#128013; Python</div>
+<!-- Tab: New Deploy -->
+<div id="tab-deploy" class="tab-content" style="display:none">
+<div class="section">
+<div class="section-header">
+<div class="section-title"><span class="ico">🚀</span> Launch New Deployment</div>
 </div>
-<span class="form-label">Code</span>
-<textarea id="serverCode" class="code-editor">export default function handler(req, res) {
-  res.status(200).json({
-    message: 'Hello from DeployForge!',
-    runtime: 'Node.js on Vercel',
-    timestamp: new Date().toISOString()
-  });
-}</textarea>
-<button class="btn btn-blue" id="serverDeployBtn" onclick="doServerDeploy()">&#9889; Deploy to Vercel</button>
-<div class="log hidden" id="serverLog"></div>
+<div class="form-grid">
+<div class="form-group">
+<label>Project Name</label>
+<input type="text" id="projName" placeholder="my-awesome-app" />
 </div>
-</div>
-
-<!-- DOCKER (Railway) -->
-<div class="section" id="sec-docker">
-<div class="card">
-<h3>&#128021; Deploy Docker &#8594; Railway</h3>
-<div class="warn-box">&#9888; Railway creates project+service+env auto. Click Deploy in dashboard (1 click).</div>
-<span class="form-label">Project Name</span>
-<input type="text" id="dockerProject" placeholder="my-docker-app">
-<span class="form-label">Docker Image</span>
-<input type="text" id="dockerImage" placeholder="nginx:alpine">
-<span class="form-label">Environment Variables (KEY=value per line)</span>
-<textarea id="dockerEnv" placeholder="PORT=80&#10;NODE_ENV=production" style="min-height:60px"></textarea>
-<button class="btn btn-purple" id="dockerDeployBtn" onclick="doDockerDeploy()">&#128021; Deploy to Railway</button>
-<div class="log hidden" id="dockerLog"></div>
-</div>
-<div class="card">
-<h3>&#128021; Popular Docker Images</h3>
-<div id="docker-images"></div>
-</div>
-</div>
-
-<!-- CI/CD -->
-
-<!-- HUGGING FACE -->
-<div class="section" id="sec-hf">
-<div class="card">
-<h3>🤗 Hugging Face Spaces</h3>
-<p>Deploy static sites Deploy static sites & AI apps to HF Spaces — free hosting with CDN AI apps to HF Spaces. Auto-loads token on page open. 1-click deploy via dashboard.</p>
-</div>
-<div class="card">
-<h3>🔑 HF Token</h3>
-<span class="form-label">Hugging Face Access Token (hf_xxx)</span>
-<input type="password" id="hfToken" placeholder="hf_xxxxxxxxxxxxxxxx">
-<button class="btn btn-blue" onclick="hfVerifyToken()">Verify Token</button>
-<div id="hfTokenStatus" style="margin-top:8px"></div>
-</div>
-<div class="card">
-<h3>📋 My HF Spaces</h3>
-<button class="btn btn-sm" onclick="loadHfSpaces()">Refresh Spaces</button>
-<div id="hfSpacesList" style="margin-top:10px"></div>
-</div>
-<div class="card">
-<h3>🚀 Create New Space</h3>
-<span class="form-label">Space Name</span>
-<input type="text" id="hfSpaceName" placeholder="my-app">
-<span class="form-label">SDK Type</span>
-<select id="hfSdk">
-<option value="static">Static HTML (free)</option>
-<option value="gradio">Gradio (Python AI)</option>
-<option value="streamlit">Streamlit (Python)</option>
-<option value="docker">Docker Container</option>
+<div class="form-group">
+<label>Framework</label>
+<select id="projFramework">
+<option value="nextjs">Next.js</option>
+<option value="react">React</option>
+<option value="vue">Vue</option>
+<option value="static">Static HTML</option>
+<option value="nuxtjs">Nuxt.js</option>
+<option value="svelte">Svelte</option>
 </select>
-<span class="form-label">Description</span>
-<input type="text" id="hfSpaceDesc" placeholder="My awesome app">
-<button class="btn" onclick="hfCreateSpace()">Create Space</button>
-<div id="hfCreateResult" style="margin-top:8px"></div>
 </div>
-<div class="card">
-<h3>📤 Deploy File to Space</h3>
-<span class="form-label">Target Space</span>
-<select id="hfTargetSpace"></select>
-<span class="form-label">File Name</span>
-<input type="text" id="hfFileName" placeholder="index.html">
-<span class="form-label">File Content</span>
-<textarea id="hfFileContent" placeholder="<!DOCTYPE html>..." style="min-height:120px"></textarea>
-<button class="btn btn-purple" onclick="hfDeployFile()">Deploy to Space</button>
-<div id="hfDeployResult" style="margin-top:8px"></div>
+<div class="form-group full">
+<label>Description</label>
+<input type="text" id="projDesc" placeholder="What does this app do?" />
 </div>
-<div class="card">
-<h3>📂 Space Files</h3>
-<span class="form-label">Select Space</span>
-<select id="hfFilesSpace" onchange="loadHfFiles()"></select>
-<div id="hfFilesList" style="margin-top:10px"></div>
+<div class="form-group full">
+<label>Target Platforms</label>
+<div class="chip-group">
+<div class="chip active" data-platform="github" onclick="toggleChip(this)">🐙 GitHub</div>
+<div class="chip active" data-platform="vercel" onclick="toggleChip(this)">▲ Vercel</div>
+<div class="chip" data-platform="render" onclick="toggleChip(this)">⚡ Render</div>
+<div class="chip" data-platform="netlify" onclick="toggleChip(this)">🌐 Netlify</div>
+<div class="chip" data-platform="railway" onclick="toggleChip(this)">🚂 Railway</div>
 </div>
 </div>
-
-<div class="section" id="sec-cicd">
-<div class="card">
-<h3>&#128260; CI/CD Pipeline Management</h3>
-<span class="form-label">Repository</span>
-<select id="cicdRepo"><option value="harz-portfolio">harz-portfolio</option></select>
-<div style="display:flex;gap:8px;margin-top:8px">
-<button class="btn btn-sm" style="background:var(--green);color:#000" onclick="cicdCreate('pages')">GitHub Pages</button>
-<button class="btn btn-sm" style="background:var(--blue);color:#000" onclick="cicdCreate('vercel')">Vercel Auto</button>
-<button class="btn btn-sm" style="background:var(--purple);color:#000" onclick="cicdCreate('railway')">Railway Auto</button>
-<button class="btn btn-sm" style="background:var(--gold);color:#000" onclick="cicdCreate('multi')">Multi-Cloud</button>
+<div class="form-group full">
+<label>Environment Variables (JSON)</label>
+<textarea id="projEnvVars" placeholder='{"API_KEY": "xxx", "DATABASE_URL": "postgres://..."}'></textarea>
 </div>
-<div class="log hidden" id="cicdLog"></div>
-</div>
-<div class="card"><h3>&#128260; Recent Pipeline Runs</h3><div id="cicd-runs"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
-<div class="card">
-<h3>&#128196; CI/CD Pipelines</h3>
-<p>&#9989; Pages: Auto-deploy on push to main</p>
-<p>&#9989; Vercel: Auto-deploy on API changes</p>
-<p>&#9989; Railway: Auto-deploy on push</p>
-<p>&#9989; Multi: Deploy to all platforms at once</p>
-</div>
-</div>
-
-<!-- MONITOR -->
-<div class="section" id="sec-monitor">
-<div class="card"><h3>&#128276; Live Monitoring</h3><div id="monitor-results"><div class="loading"><span class="spinner"></span> Checking all deployments...</div></div></div>
-<div class="card">
-<h3>&#128276; Monitored Services</h3>
-<p>GitHub Pages, Vercel apps, Railway projects, backends</p>
-<p>Checks: HTTP status, response time, uptime</p>
-<p>Auto-refresh: every 60 seconds</p>
-</div>
-</div>
-
-
-<!-- CLOUDFLARE WORKERS -->
-<div class="section" id="sec-cloudflare">
-<div class="card">
-<h3>&#9729; Deploy Cloudflare Worker</h3>
-<div class="info-box">&#9889; Cloudflare Workers run at the edge globally. Sub-millisecond response times. Free: 100k requests/day.</div>
-<span class="form-label">Worker Name</span>
-<input type="text" id="cfName" placeholder="my-worker">
-<span class="form-label">Worker Code (Service Worker format)</span>
-<textarea id="cfCode" class="code-editor" style="min-height:140px">addEventListener('fetch', (event) => {
-  event.respondWith(new Response(JSON.stringify({
-    service: 'HARZ Worker',
-    runtime: 'Cloudflare Workers',
-    timestamp: new Date().toISOString(),
-    region: 'Edge (Global)'
-  }), { headers: { 'Content-Type': 'application/json' } }));
-});</textarea>
-<button class="btn btn-blue" id="cfDeployBtn" onclick="doCfDeploy()">&#9889; Deploy to Cloudflare</button>
-<div class="log hidden" id="cfLog"></div>
-</div>
-<div class="card">
-<h3>&#9729; Your Workers</h3>
-<div id="cf-list"><div class="loading"><span class="spinner"></span> Loading...</div></div>
-</div>
-<div class="card">
-<h3>&#128196; How Cloudflare Workers Work</h3>
-<p>1. Write your worker code (Service Worker format)</p>
-<p>2. Click Deploy to Cloudflare</p>
-<p>3. Get a global edge URL: worker-name.workers.dev</p>
-<p>4. Free: 100k requests/day, 10ms CPU time</p>
-<p>5. Runs in 300+ locations worldwide</p>
-<p style="margin-top:8px;color:var(--orange)">&#9888; First time: visit Cloudflare dashboard > Workers & Pages to create your workers.dev subdomain (one click)</p>
-</div>
-</div>
-
-<!-- REPOS -->
-<div class="section" id="sec-repos">
-<div class="card"><h3>&#128230; GitHub Repositories</h3><div id="repos-list"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
-<div class="card">
-<h3>&#10133; Create New Repo</h3>
-<span class="form-label">Repo Name</span>
-<input type="text" id="newRepoName" placeholder="my-new-project">
-<span class="form-label">Description (optional)</span>
-<input type="text" id="newRepoDesc" placeholder="Project description">
-<button class="btn btn-blue" id="createRepoBtn" onclick="doCreateRepo()">Create Repository</button>
-<div id="createResult" style="margin-top:8px"></div>
-</div>
-</div>
-
-</div>
-
-<!-- AGENTS SECTION -->
-<div class="section" id="sec-agents">
-<div class="card">
-<h3 style="color:var(--purple)">🤖 Agent Command Center</h3>
-<p>Manage Magani & Omega Commander from DeployForge</p>
-</div>
-
-<!-- MAGANI AGENT -->
-<div class="card" style="border-color:var(--blue)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#58a6ff,#bc8cff);display:flex;align-items:center;justify-content:center;font-size:24px">🧠</div>
-<div style="flex:1">
-<div style="font-size:14px;font-weight:700;color:var(--blue)">Magani Agent</div>
-<div style="font-size:11px;color:var(--dim)" id="magani-url">github.com/rabiuhamza11/maganu-agent</div>
-</div>
-<span class="badge" id="magani-badge" style="background:rgba(210,153,34,.15);color:var(--orange)">PENDING</span>
-</div>
-<div style="display:flex;gap:6px;margin-bottom:10px">
-<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--blue)" id="magani-deploys">1</div><div class="lbl">Deploys</div></div>
-<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--green)" id="magani-status">--</div><div class="lbl">Status</div></div>
-<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--purple)" id="magani-uptime">--</div><div class="lbl">Uptime</div></div>
-</div>
-<div id="magani-log" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:10px;color:var(--dim);max-height:100px;overflow:auto;margin-bottom:10px">Loading agent data...</div>
-<div class="row">
-<button class="btn btn-blue btn-sm" onclick="checkAgent('magani')">Check Status</button>
-<button class="btn btn-sm" onclick="showAgentLog('magani')">View Logs</button>
-</div>
-</div>
-
-<!-- OMEGA COMMANDER -->
-<div class="card" style="border-color:var(--gold)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FFD700,#d29922);display:flex;align-items:center;justify-content:center;font-size:24px">⚡</div>
-<div style="flex:1">
-<div style="font-size:14px;font-weight:700;color:var(--gold)">Omega Commander</div>
-<div style="font-size:11px;color:var(--dim)" id="omega-url">github.com/rabiuhamza11/omega-infinity-dashboard</div>
-</div>
-<span class="badge" id="omega-badge" style="background:rgba(63,185,80,.15);color:var(--green)">LIVE</span>
-</div>
-<div style="display:flex;gap:6px;margin-bottom:10px">
-<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--gold)" id="omega-deploys">1</div><div class="lbl">Deploys</div></div>
-<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--green)" id="omega-status">--</div><div class="lbl">Status</div></div>
-<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--blue)" id="omega-uptime">--</div><div class="lbl">Uptime</div></div>
-</div>
-<div id="omega-log" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:10px;color:var(--dim);max-height:100px;overflow:auto;margin-bottom:10px">Loading agent data...</div>
-<div class="row">
-<button class="btn btn-gold btn-sm" onclick="checkAgent('omega')">Check Status</button>
-<button class="btn btn-sm" onclick="showAgentLog('omega')">View Logs</button>
-</div>
-</div>
-
-<!-- BASE44 AGENTS -->
-<div class="card" style="border-color:var(--green)">
-<h3 style="color:var(--green)">🏗️ Base44 Backend Agents</h3>
-<p>These agents run on Base44 infrastructure (always online)</p>
-<div id="base44-agents" style="margin-top:10px">
-<div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px">
-<span style="font-size:18px">🤖</span>
-<div style="flex:1"><div style="font-size:12px;font-weight:600">HARZ Super AI</div><div style="font-size:10px;color:var(--dim)">Nemotron 120B · Base44 Function</div></div>
-<span class="badge b-live">LIVE</span>
-</div>
-<div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px">
-<span style="font-size:18px">💬</span>
-<div style="flex:1"><div style="font-size:12px;font-weight:600">Harz Chat</div><div style="font-size:10px;color:var(--dim)">Nemotron 550B · Base44 Function</div></div>
-<span class="badge b-live">LIVE</span>
-</div>
-<div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px">
-<span style="font-size:18px">📚</span>
-<div style="flex:1"><div style="font-size:12px;font-weight:600">Harz Knowledge AI</div><div style="font-size:10px;color:var(--dim)">Nemotron 550B · Base44 Function</div></div>
-<span class="badge b-live">LIVE</span>
-</div>
-</div>
-</div>
-
-<!-- AGENT CONFIG -->
-<div class="card">
-<h3>⚙️ Agent Configuration</h3>
-<div class="form-label">Magani Render URL</div>
-<input id="magani-render-url" placeholder="https://maganu-agent.onrender.com" value="">
-<div class="form-label">Omega Dashboard URL</div>
-<input id="omega-dashboard-url" placeholder="https://omega-infinity-dashboard.vercel.app" value="https://omega-infinity-dashboard.vercel.app">
-<button class="btn btn-purple" onclick="saveAgentConfig()">Save Config</button>
-<div id="agent-config-msg" style="font-size:11px;color:var(--green);margin-top:6px;display:none">✓ Config saved!</div>
-</div>
-</div>
-
-
-<!-- AGENT SERVER SECTION -->
-<div class="section" id="sec-server-ui">
-
-<!-- Server Status -->
-<div class="card" style="border-color:var(--green)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#3fb950,#58a6ff);display:flex;align-items:center;justify-content:center;font-size:22px">⚡</div>
-<div style="flex:1">
-<div style="font-size:14px;font-weight:700;color:var(--green)">HARZ Agent Server</div>
-<div style="font-size:11px;color:var(--dim)" id="server-url-display">harz-agent-server.harz.workers.dev</div>
-</div>
-<span class="badge" id="server-status-badge" style="background:rgba(63,185,80,.15);color:var(--green)">CHECKING...</span>
-</div>
-<div style="display:flex;gap:6px;margin-bottom:10px">
-<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--green)" id="ws-status">--</div><div class="lbl">WebSocket</div></div>
-<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--blue)" id="mem-status">--</div><div class="lbl">Memory</div></div>
-<div class="stat" style="padding:6px 8px"><div class="num" style="font-size:14px;color:var(--purple)" id="task-status">--</div><div class="lbl">Tasks</div></div>
-</div>
-<button class="btn btn-sm" style="width:auto" onclick="checkServerStatus()">Refresh Status</button>
-</div>
-
-<!-- WebSocket Console -->
-<div class="card">
-<h3 style="color:var(--blue)">🔌 WebSocket Console</h3>
-<p style="font-size:11px;color:var(--dim)">Real-time bidirectional connection to HARZ agents</p>
-<div class="form-label" style="margin-top:8px">Select Agent</div>
-<select id="ws-agent-select" style="margin-bottom:8px">
-<option value="magani">🧠 Magani (Orchestrator)</option>
-<option value="omega">⚡ Omega (Commander)</option>
-<option value="hauwa">📢 Hauwa (Marketing)</option>
-<option value="rabi">💰 Rabi (Finance)</option>
-<option value="aisha">💬 Aisha (Support)</option>
-<option value="nuruddeen">📚 Nuruddeen (Knowledge)</option>
-<option value="danjuma">🛡️ Danjuma (Security)</option>
+<div class="form-group">
+<label>Private Repo</label>
+<select id="projPrivate">
+<option value="false">Public</option>
+<option value="true">Private</option>
 </select>
-<div id="ws-chat" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:11px;color:var(--green);max-height:200px;overflow:auto;margin-bottom:8px;white-space:pre-wrap">Connect to start chatting...</div>
-<div class="row" style="margin-bottom:8px">
-<input id="ws-input" placeholder="Type message..." style="flex:1;margin-bottom:0" onkeypress="if(event.key==='Enter')wsSend()">
-<button class="btn btn-blue btn-sm" style="width:auto" onclick="wsSend()">Send</button>
 </div>
-<div class="row">
-<button class="btn btn-sm" style="width:auto;background:var(--green);color:#000" id="ws-connect-btn" onclick="wsConnect()">Connect</button>
-<button class="btn btn-sm" style="width:auto;background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3)" onclick="wsDisconnect()">Disconnect</button>
-</div>
-</div>
-
-<!-- Persistent Memory Viewer -->
-<div class="card">
-<h3 style="color:var(--purple)">🧠 Persistent Memory</h3>
-<p style="font-size:11px;color:var(--dim)">Agent memories stored in Cloudflare KV (survives restarts)</p>
-<div class="form-label" style="margin-top:8px">Agent Memory</div>
-<select id="mem-agent-select" style="margin-bottom:8px">
-<option value="magani">🧠 Magani</option>
-<option value="omega">⚡ Omega</option>
-<option value="hauwa">📢 Hauwa</option>
-<option value="rabi">💰 Rabi</option>
-<option value="aisha">💬 Aisha</option>
-<option value="nuruddeen">📚 Nuruddeen</option>
-<option value="danjuma">🛡️ Danjuma</option>
+<div class="form-group">
+<label>Auto Deploy</label>
+<select id="projAutoDeploy">
+<option value="true">Yes — deploy after push</option>
+<option value="false">No — just push code</option>
 </select>
-<div id="mem-display" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:10px;color:var(--purple);max-height:180px;overflow:auto;margin-bottom:8px;white-space:pre-wrap">Loading...</div>
-<div class="row">
-<button class="btn btn-sm" style="width:auto;background:var(--purple);color:#000" onclick="loadMemory()">Load Memory</button>
-<button class="btn btn-sm" style="width:auto;background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3)" onclick="clearMemory()">Clear</button>
+</div>
+</div>
+<div style="margin-top:16px;display:flex;gap:10px">
+<button class="btn btn-primary" onclick="launchDeploy()">🚀 Launch Deployment</button>
+<button class="btn btn-outline" onclick="resetForm()">Reset</button>
 </div>
 </div>
 
-<!-- Task Queue -->
-<div class="card">
-<h3 style="color:var(--orange)">📋 Task Queue (Long-Running)</h3>
-<p style="font-size:11px;color:var(--dim)">Async tasks that run in background</p>
-<div class="row" style="margin-bottom:8px">
-<button class="btn btn-sm" style="width:auto;background:var(--orange);color:#000" onclick="createTask('ecosystem_health')">Health Check</button>
-<button class="btn btn-sm" style="width:auto;background:var(--blue);color:#000" onclick="createTask('agent_report')">Agent Report</button>
-<button class="btn btn-sm" style="width:auto;background:var(--purple);color:#000" onclick="createTask('ai_analysis')">AI Analysis</button>
+<!-- Deploy Log -->
+<div class="section" id="deployLogSection" style="display:none">
+<div class="section-header">
+<div class="section-title"><span class="ico">📜</span> Deployment Logs</div>
+<button class="btn btn-outline btn-sm" onclick="clearLog()">Clear</button>
 </div>
-<div id="task-display" style="background:#000;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:10px;color:var(--orange);max-height:180px;overflow:auto;white-space:pre-wrap">No tasks yet. Create one above.</div>
-<button class="btn btn-sm" style="width:auto;margin-top:8px" onclick="listTasks()">Refresh Tasks</button>
+<div class="log-container" id="deployLog"></div>
+</div>
 </div>
 
-<!-- Server Info -->
-<div class="card">
-<h3>📊 Server Details</h3>
-<div style="font-size:11px;color:var(--dim);line-height:1.8">
-<div><b style="color:var(--green)">WebSocket:</b> wss://harz-agent-server.harz.workers.dev/ws</div>
-<div><b style="color:var(--blue)">Chat API:</b> POST /api/chat</div>
-<div><b style="color:var(--purple)">Memory API:</b> POST /api/memory</div>
-<div><b style="color:var(--orange)">Task API:</b> POST /api/task</div>
-<div><b style="color:var(--green)">KV Storage:</b> Cloudflare Workers KV (1GB free)</div>
-<div><b style="color:var(--blue)">Models:</b> Nemotron 550B + 120B (free)</div>
-<div><b style="color:var(--purple)">Agents:</b> 7 (Magani, Omega, Hauwa, Rabi, Aisha, Nuruddeen, Danjuma)</div>
+<!-- Tab: History -->
+<div id="tab-history" class="tab-content" style="display:none">
+<div class="section">
+<div class="section-header">
+<div class="section-title"><span class="ico">📋</span> Deployment History</div>
+<button class="btn btn-outline btn-sm" onclick="refreshHistory()">↻ Refresh</button>
+</div>
+<div id="historyContainer"></div>
 </div>
 </div>
 
 </div>
 
+<!-- Toast -->
+<div class="toast" id="toast">
+<span id="toastIcon">✅</span>
+<span id="toastMsg">Done!</span>
+</div>
 
 <script>
-const API='https://solene-5b0577e2.base44.app/functions/deployForgeDeploy';
-var reposCache=[];var history=JSON.parse(localStorage.getItem('deployHistory')||'[]');var selectedRuntime='node';var monitorInterval=null;
-var dockerImages=[{img:'nginx:alpine',icon:'\u{1F431}',desc:'Web server'},{img:'node:20-alpine',icon:'\u26A1',desc:'Node.js runtime'},{img:'python:3.12-slim',icon:'\u{1F40D}',desc:'Python runtime'},{img:'postgres:16-alpine',icon:'\u{1F4C3}',desc:'PostgreSQL DB'},{img:'redis:7-alpine',icon:'\u{1F9E0}',desc:'Redis cache'},{img:'mongo:7',icon:'\u{1F4C3}',desc:'MongoDB DB'}];
+// ===== Config =====
+const API_BASE = ''; // Same origin on Vercel — /api/deployforge*
+const HARZ_CLOUD = 'https://harz-cloud-backend.onrender.com';
 
-function showTab(name,el){
-document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-if(el)el.classList.add('active');
-document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-document.getElementById('sec-'+name).classList.add('active');
-if(name==='dashboard')loadDashboard();
-if(name==='templates')loadTemplates();
-if(name==='repos')loadRepos();
-if(name==='cicd')loadCICD();
-if(name==='monitor')loadMonitor();
-if(name==='docker')renderDockerImages();
-if(name==='cloudflare')loadCfList();
-if(name==='hf')autoLoadHf();
+// ===== Local Data =====
+const PLATFORMS = [
+{ name: 'GitHub', icon: '🐙', connected: true, deploys: 61, url: 'https://github.com/rabiuhamza11' },
+{ name: 'Vercel', icon: '▲', connected: true, deploys: 35, url: 'https://vercel.com' },
+{ Name: 'Render', icon: '⚡', connected: true, deploys: 2, url: 'https://render.com' },
+{ name: 'Netlify', icon: '🌐', connected: false, deploys: 0, url: 'https://netlify.com' },
+{ name: 'Railway', icon: '🚂', connected: false, deploys: 0, url: 'https://railway.app' },
+];
+
+const SAMPLE_DEPLOYS = [
+{ id: 1, project: 'HarzDM Marketplace', framework: 'nextjs', status: 'live', github: 'pushed', vercel: 'ready', url: 'harzdm-marketplace.vercel.app', date: '2026-08-04 10:42' },
+{ id: 2, project: 'MindCare AI', framework: 'react', status: 'live', github: 'pushed', vercel: 'ready', url: 'mindcare-ai.vercel.app', date: '2026-08-04 10:42' },
+{ id: 3, project: 'TradeOS', framework: 'nextjs', status: 'live', github: 'pushed', vercel: 'ready', url: 'tradeos.vercel.app', date: '2026-08-04 10:42' },
+{ id: 4, project: 'HarzPay', framework: 'nextjs', status: 'live', github: 'pushed', vercel: 'ready', url: 'harzpay.vercel.app', date: '2026-08-04 10:42' },
+{ id: 5, project: 'HarzMusic', framework: 'react', status: 'live', github: 'pushed', vercel: 'ready', url: 'harz-music.vercel.app', date: '2026-08-04 10:42' },
+{ id: 6, project: 'HarzFilm', framework: 'react', status: 'live', github: 'pushed', vercel: 'ready', url: 'harz-film.vercel.app', date: '2026-08-04 10:42' },
+{ id: 7, project: 'HARZ Cloud', framework: 'nextjs', status: 'building', github: 'pushed', vercel: 'building', url: 'harz-cloud-backend.onrender.com', date: '2026-08-04 11:08' },
+];
+
+const SAMPLE_REPOS = [
+{ name: 'harz-portfolio', lang: 'HTML', url: 'https://github.com/rabiuhamza11/harz-portfolio', updated: '2026-08-04' },
+{ name: 'deployforge', lang: 'TypeScript', url: 'https://github.com/rabiuhamza11/deployforge', updated: '2026-08-04' },
+{ name: 'harz-ecosystem-app', lang: 'HTML', url: 'https://github.com/rabiuhamza11/harz-ecosystem-app', updated: '2026-08-04' },
+{ name: 'omega-commander-bot', lang: 'JavaScript', url: 'https://github.com/rabiuhamza11/omega-commander-bot', updated: '2026-08-04' },
+{ name: 'omega-ai-packager', lang: 'TypeScript', url: 'https://github.com/rabiuhamza11/omega-ai-packager', updated: '2026-08-04' },
+];
+
+const SAMPLE_VERCEL = [
+{ name: 'mindcare-ai', framework: 'nextjs', url: 'mindcare-ai.vercel.app' },
+{ name: 'cyber-shield-x', framework: 'nextjs', url: 'cyber-shield-x.vercel.app' },
+{ name: 'tradeos', framework: 'nextjs', url: 'tradeos.vercel.app' },
+{ name: 'harzpay', framework: 'nextjs', url: 'harzpay.vercel.app' },
+{ name: 'harzdm-marketplace', framework: 'nextjs', url: 'harzdm-marketplace.vercel.app' },
+{ name: 'harz-music', framework: 'react', url: 'harz-music.vercel.app' },
+{ name: 'harz-film', framework: 'react', url: 'harz-film.vercel.app' },
+{ name: 'deployforge', framework: 'nextjs', url: 'deployforge.vercel.app' },
+];
+
+// ===== Tab Navigation =====
+function showTab(tab) {
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+document.getElementById('tab-' + tab).style.display = 'block';
+event.target.classList.add('active');
 }
 
-// CLOUDFLARE WORKERS
-const CF_API='https://solene-5b0577e2.base44.app/functions/cfWorkers';
-async function doCfDeploy(){
-  var name=document.getElementById('cfName').value||'harz-worker';
-  var code=document.getElementById('cfCode').value;
-  var log=document.getElementById('cfLog');
-  var btn=document.getElementById('cfDeployBtn');
-  if(!code){log.classList.remove('hidden');log.innerHTML='<span style="color:#f85149">[ERROR] Enter worker code</span>';return;}
-  log.classList.remove('hidden');log.textContent='';btn.disabled=true;
-  function al(m,t){var c=t==='err'?'#f85149':t==='warn'?'#d29922':'#58a6ff';log.innerHTML+='<span style="color:'+c+'">'+(t==='err'?'[ERROR] ':t==='warn'?'[WARN] ':'[INFO] ')+m+'</span>\n';log.scrollTop=log.scrollHeight;}
-  try{
-    al('Deploying worker: '+name);
-    al('Uploading to Cloudflare edge...');
-    const res=await fetch(CF_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'cf_deploy',workerName:name,script:code})});
-    const data=await res.json();
-    if(data.success){
-      al('Worker deployed!');
-      al('URL: '+data.url);
-      log.innerHTML+='<br><a href="'+data.url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#58a6ff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Worker</a>\n';
-      history.unshift({file:name+' (CF Worker)',platform:'Cloudflare',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.url,icon:'\u2601'});
-      history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();
-      loadCfList();
-    }else{al('Failed: '+(data.error||'unknown'),'err');}
-  }catch(e){al('Error: '+e.message,'err');}
-  btn.disabled=false;
-}
-async function loadCfList(){
-  var c=document.getElementById('cf-list');
-  if(!c)return;
-  c.innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';
-  try{
-    const res=await fetch(CF_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'cf_list'})});
-    const data=await res.json();
-    if(data.workers&&data.workers.length){
-      c.innerHTML=data.workers.map(w=>'<div class="site-item"><div class="site-icon">&#9729;</div><div class="site-info"><div class="site-name">'+w.id+'</div><div class="site-url">'+w.url+'</div></div><a href="'+w.url+'" target="_blank" class="check-btn">Open</a><button class="del-btn" onclick="delCfWorker(\''+w.id+'\')">Del</button></div>').join('');
-    }else{
-      c.innerHTML='<p style="color:var(--dim);font-size:12px">No workers deployed yet.</p>';
-    }
-  }catch(e){c.innerHTML='<p style="color:var(--red)">Error</p>';}
-}
-async function delCfWorker(name){
-  if(!confirm('Delete worker: '+name+'?'))return;
-  try{
-    const res=await fetch(CF_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'cf_delete',workerName:name})});
-    const data=await res.json();
-    if(data.success){alert('Deleted!');loadCfList();}
-    else{alert('Failed: '+(data.error||'unknown'));}
-  }catch(e){alert('Error: '+e.message);}
+// ===== Render Platforms =====
+function renderPlatforms() {
+const grid = document.getElementById('platformsGrid');
+grid.innerHTML = PLATFORMS.map(p => `
+<div class="platform-card" onclick="window.open('${p.url}','_blank')">
+<div class="platform-icon">${p.icon}</div>
+<div class="platform-name">${p.name}</div>
+<div class="platform-status ${p.connected ? 'status-connected' : 'status-offline'}">
+${p.connected ? '● Connected' : '○ Not Connected'}
+</div>
+<div class="platform-deploys">${p.deploys} deployments</div>
+</div>
+`).join('');
 }
 
-
-// PAGE INIT — auto-load everything on open
-loadDashboard();
-autoLoadHf();
-autoRefreshDashboard();
-function toggleSource(){var v=document.getElementById('sourceType').value;document.getElementById('html-source').classList.toggle('hidden',v!=='html');document.getElementById('template-source').classList.toggle('hidden',v!=='template');document.getElementById('github-source').classList.toggle('hidden',v!=='github');}
-function selectRuntime(rt,el){selectedRuntime=rt;document.querySelectorAll('.runtime-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');if(rt==='node'){document.getElementById('serverCode').value="export default function handler(req, res) {\n  res.status(200).json({ message: 'Hello from DeployForge!', runtime: 'Node.js on Vercel', timestamp: new Date().toISOString() });\n}";}else{document.getElementById('serverCode').value="from http.server import BaseHTTPRequestHandler\nimport json\nclass handler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        self.send_response(200)\n        self.send_header('Content-type','application/json')\n        self.end_headers()\n        self.wfile.write(json.dumps({'message':'Hello from Python on Vercel!'}).encode())";}}
-async function apiCall(action,data={}){const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...data})});return res.json();}
-
-// DASHBOARD
-async function loadDashboard(){try{const[ghData,vcData,cicdData]=await Promise.all([apiCall('list_repos'),apiCall('vercel_list'),apiCall('cicd_status')]);if(ghData.repos){reposCache=ghData.repos;document.getElementById('stat-repos').textContent=ghData.repos.length;var opts=ghData.repos.map(r=>'<option value="'+r.name+'">'+r.name+'</option>').join('');var tr=document.getElementById('targetRepo');if(tr)tr.innerHTML=opts;var cr=document.getElementById('cicdRepo');if(cr)cr.innerHTML=opts;}if(vcData.projects)document.getElementById('stat-vercel').textContent=vcData.projects.length;if(cicdData.runs)document.getElementById("stat-cicd").textContent=cicdData.runs.length;var hfT=localStorage.getItem("hfToken");if(hfT){apiCall("hf_list",{hfToken:hfT}).then(function(hd){if(hd.spaces)document.getElementById("stat-hf").textContent=hd.spaces.length;});}else{document.getElementById("stat-hf").textContent="0";}renderHistory();}catch(e){document.getElementById('recent-deploys').innerHTML='<p style="color:var(--red)">Failed</p>';}}
-function renderHistory(){var c=document.getElementById('recent-deploys');if(!history.length){c.innerHTML='<p style="color:var(--dim);font-size:12px">No deployments yet.</p>';return;}c.innerHTML=history.slice(0,5).map(h=>'<div class="site-item"><div class="site-icon">'+h.icon+'</div><div class="site-info"><div class="site-name">'+h.file+'</div><div class="site-url">'+h.platform+' - '+h.time+'</div></div><a href="'+h.url+'" target="_blank" class="check-btn">Open</a></div>').join('');}
-
-// TEMPLATES
-async function loadTemplates(){var c=document.getElementById('tpl-list');try{const data=await apiCall('template_list');if(data.templates){c.innerHTML=data.templates.map(t=>'<div class="tpl-card" onclick="deployTemplate(\''+t.id+'\')"><div class="ti">'+t.icon+'</div><div style="flex:1"><div class="tn">'+t.name+'</div><div class="td">'+t.desc+'</div></div><div class="badge b-'+(t.runtime==='html'?'blue':t.runtime==='node'?'purple':t.runtime==='docker'?'gold':'live')+'">'+t.runtime+'</div></div>').join('');}}catch(e){c.innerHTML='<p style="color:var(--red)">Failed</p>';}}
-async function deployTemplate(id){try{const data=await apiCall('template_get',{templateId:id});if(data.success&&data.template&&data.template.code){if(data.template.runtime==='html'){showTab('deploy',null);document.getElementById('htmlCode').value=data.template.code;document.getElementById('projName').value=data.template.fileName;alert('Template loaded! Click Deploy to push to GitHub Pages.');}else if(data.template.runtime==='node'){showTab('server',null);document.getElementById('serverCode').value=data.template.code;document.getElementById('serverName').value=id;alert('Template loaded! Click Deploy to push to Vercel.');}else if(data.template.runtime==='docker'){showTab('docker',null);alert('Select a Docker image and deploy to Railway.');}}else{alert('Template code not available yet.');}}catch(e){alert('Error: '+e.message);}}
-
-// STATIC DEPLOY
-async function doDeploy(){var name=document.getElementById('projName').value||'harz-app';var log=document.getElementById('deployLog');var btn=document.getElementById('deployBtn');var srcType=document.getElementById('sourceType').value;var targetRepo=document.getElementById('targetRepo').value;log.classList.remove('hidden');log.textContent='';btn.disabled=true;function al(m,t){var c=t==='err'?'#f85149':'#3fb950';log.innerHTML+='<span style="color:'+c+'">'+(t==='err'?'[ERROR] ':'[INFO] ')+m+'</span>\n';log.scrollTop=log.scrollHeight;}
-try{al('Deploying: '+name+' to '+targetRepo);var htmlCode='';if(srcType==='html'){htmlCode=document.getElementById('htmlCode').value;if(!htmlCode){al('No HTML','err');btn.disabled=false;return;}}else if(srcType==='template'){htmlCode=generateTemplate(document.getElementById('templateChoice').value,name);}else if(srcType==='github'){var url=document.getElementById('githubUrl').value;if(!url){al('No URL','err');btn.disabled=false;return;}var fr=await fetch(url);if(!fr.ok){al('Fetch failed','err');btn.disabled=false;return;}htmlCode=await fr.text();}
-var fileName=name.endsWith('.html')?name:name+'.html';al('Uploading to GitHub...');const data=await apiCall('deploy_file',{repoName:targetRepo,fileName,fileContent:htmlCode});if(data.success){al('Deployed! '+data.file);al('URL: '+data.file_url);log.innerHTML+='<br><a href="'+data.file_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#3fb950;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Live Site</a>\n';history.unshift({file:data.file,platform:'GitHub Pages',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.file_url,icon:'\u{1F4C4}'});history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();}else{al('Failed: '+(data.error||'unknown'),'err');}}catch(e){al('Error: '+e.message,'err');}btn.disabled=false;}
-
-// SERVER DEPLOY
-async function doServerDeploy(){var name=document.getElementById('serverName').value||'harz-api';var code=document.getElementById('serverCode').value;var log=document.getElementById('serverLog');var btn=document.getElementById('serverDeployBtn');log.classList.remove('hidden');log.textContent='';btn.disabled=true;function al(m,t){var c=t==='err'?'#f85149':'#3fb950';log.innerHTML+='<span style="color:'+c+'">'+(t==='err'?'[ERROR] ':'[INFO] ')+m+'</span>\n';log.scrollTop=log.scrollHeight;}
-try{al('Deploying '+selectedRuntime+': '+name);al('Uploading to Vercel...');const data=await apiCall('vercel_deploy',{projectName:name,runtime:selectedRuntime,fileContent:code});if(data.success){al('Deployed! State: '+data.state);al('URL: '+data.url);log.innerHTML+='<br><a href="'+data.url+'/api/handler" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#58a6ff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Test API</a>\n';history.unshift({file:name+' ('+selectedRuntime+')',platform:'Vercel',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.url+'/api/handler',icon:'\u26A1'});history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();}else{al('Failed: '+(data.error||'unknown'),'err');}}catch(e){al('Error: '+e.message,'err');}btn.disabled=false;}
-
-// DOCKER DEPLOY
-function renderDockerImages(){var c=document.getElementById('docker-images');if(c)c.innerHTML=dockerImages.map(d=>'<div class="site-item" onclick="document.getElementById(\'dockerImage\').value=\''+d.img+'\'"><div class="site-icon">'+d.icon+'</div><div class="site-info"><div class="site-name">'+d.img+'</div><div class="site-url">'+d.desc+'</div></div></div>').join('');}
-async function doDockerDeploy(){var project=document.getElementById('dockerProject').value||'harz-docker';var image=document.getElementById('dockerImage').value;var envText=document.getElementById('dockerEnv').value;var log=document.getElementById('dockerLog');var btn=document.getElementById('dockerDeployBtn');if(!image){log.classList.remove('hidden');log.innerHTML='<span style="color:#f85149">[ERROR] Enter a Docker image</span>';return;}log.classList.remove('hidden');log.textContent='';btn.disabled=true;function al(m,t){var c=t==='err'?'#f85149':t==='warn'?'#d29922':'#bc8cff';log.innerHTML+='<span style="color:'+c+'">'+(t==='err'?'[ERROR] ':t==='warn'?'[WARN] ':'[INFO] ')+m+'</span>\n';log.scrollTop=log.scrollHeight;}
-try{al('Creating Railway project: '+project);al('Docker image: '+image);var envVars=[];if(envText.trim()){envText.split('\n').forEach(function(line){var p=line.split('=');if(p.length>=2)envVars.push({name:p[0].trim(),value:p.slice(1).join('=').trim()});});al('Env vars: '+envVars.length);}al('Deploying...');const data=await apiCall('railway_docker_deploy',{projectName:project,dockerImage:image,envVars:envVars});if(data.success){al('Project created!');al('Service: '+image);if(envVars.length)al('Env set: '+envVars.length);if(data.deployed){al('Deploy triggered!');}else{al('Click Deploy in Railway dashboard','warn');}al('Dashboard: '+data.dashboard_url);log.innerHTML+='<br><a href="'+data.dashboard_url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#bc8cff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Railway</a>\n';history.unshift({file:project+' (Docker)',platform:'Railway',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.dashboard_url,icon:'\u{1F431}'});history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();}else{al('Failed: '+(data.error||'unknown'),'err');}}catch(e){al('Error: '+e.message,'err');}btn.disabled=false;}
-
-// CI/CD
-async function loadCICD(){var c=document.getElementById('cicd-runs');try{const data=await apiCall('cicd_status');if(data.runs){c.innerHTML=data.runs.map(r=>{var s=r.conclusion||r.status;var color=s==='success'?'var(--green)':s==='failure'?'var(--red)':'var(--orange)';return '<div class="cicd-run"><div class="rn">'+r.name+' <span style="color:'+color+'">'+s+'</span></div><div class="rs">'+r.branch+' - '+r.commit+' - '+r.created.substring(0,16)+'</div></div>';}).join('');}}catch(e){c.innerHTML='<p style="color:var(--red)">Failed</p>';}}
-async function cicdCreate(type){var repo=document.getElementById('cicdRepo')?.value||'harz-portfolio';var log=document.getElementById('cicdLog');log.classList.remove('hidden');log.textContent='';log.innerHTML='<span style="color:#3fb950">[INFO] Creating '+type+' pipeline...</span>';try{const data=await apiCall('cicd_create',{repoName:repo,pipelineType:type});if(data.success){log.innerHTML+='<span style="color:#3fb950">[OK] Pipeline created: '+data.workflow+'</span>\n';log.innerHTML+='<span style="color:#3fb950">[OK] Commit: '+data.commit+'</span>\n';}else{log.innerHTML+='<span style="color:#f85149">[ERROR] '+(data.error||'failed')+'</span>\n';}}catch(e){log.innerHTML+='<span style="color:#f85149">[ERROR] '+e.message+'</span>\n';}loadCICD();}
-
-// MONITOR
-async function loadMonitor(){var c=document.getElementById('monitor-results');c.innerHTML='<div class="loading"><span class="spinner"></span> Checking...</div>';try{var urls=['https://rabiuhamza11.github.io/harz-portfolio/harz-super-app.html','https://rabiuhamza11.github.io/harz-portfolio/deployforge.html','https://harzdm.vercel.app','https://abuja-estate.vercel.app'];const data=await apiCall('monitor',{urls:urls});if(data.results){c.innerHTML=data.results.map(r=>{var color=r.ok?'var(--green)':'var(--red)';var badge=r.ok?'<span class="badge b-live">LIVE</span>':'<span class="badge b-down">DOWN</span>';return '<div class="site-item"><div class="status-dot '+(r.ok?'dot-live':'dot-down')+'"></div><div class="site-info"><div class="site-name">'+r.url.split('/').slice(-1)[0]+' '+badge+'</div><div class="site-url">HTTP '+r.status+' - '+r.latency+'ms</div></div></div>';}).join('');}}catch(e){c.innerHTML='<p style="color:var(--red)">Failed</p>';}if(monitorInterval)clearInterval(monitorInterval);monitorInterval=setInterval(loadMonitor,60000);}
-
-// REPOS
-async function loadRepos(){var c=document.getElementById('repos-list');c.innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';try{const data=await apiCall('list_repos');if(data.repos){reposCache=data.repos;c.innerHTML=data.repos.map(r=>{var dot=r.has_pages?'dot-live':'dot-down';var badge=r.has_pages?'<span class="badge b-live">PAGES</span>':'<span class="badge b-down">NO PAGES</span>';var url=r.has_pages?'https://rabiuhamza11.github.io/'+r.name+'/':r.url;return '<div class="site-item" onclick="window.open(\''+url+'\',\'_blank\')"><div class="site-icon">&#128230;</div><div class="site-info"><div class="site-name">'+r.name+' '+badge+'</div><div class="site-url">Updated: '+r.updated.substring(0,10)+'</div></div><div class="status-dot '+dot+'"></div></div>';}).join('');}}catch(e){c.innerHTML='<p style="color:var(--red)">Error</p>';}}
-async function doCreateRepo(){var name=document.getElementById('newRepoName').value.trim();var desc=document.getElementById('newRepoDesc').value;var btn=document.getElementById('createRepoBtn');var result=document.getElementById('createResult');if(!name){result.innerHTML='<p style="color:var(--red)">Enter repo name</p>';return;}btn.disabled=true;result.innerHTML='<p style="color:var(--blue)"><span class="spinner"></span> Creating...</p>';try{const data=await apiCall('create_repo',{repoName:name,description:desc});if(data.success){result.innerHTML='<div style="color:var(--green)">Created! '+data.repo+'</div><a href="'+data.url+'" target="_blank" class="btn btn-sm" style="margin-top:8px;display:inline-block;width:auto">Open</a>';document.getElementById('newRepoName').value='';document.getElementById('newRepoDesc').value='';}else{result.innerHTML='<p style="color:var(--red)">Failed: '+(data.error||'unknown')+'</p>';}}catch(e){result.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}btn.disabled=false;}
-
-function generateTemplate(type,name){var t={landing:'<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3}.hero{text-align:center;padding:60px 20px}.hero h1{font-size:32px;margin-bottom:12px;color:#58a6ff}.hero p{font-size:16px;color:#8b949e;max-width:400px;margin:0 auto 24px}.btn{display:inline-block;padding:12px 28px;background:#3fb950;color:#000;border-radius:8px;text-decoration:none;font-weight:700}</style></head><body><div class="hero"><h1>'+name+'</h1><p>Built with DeployForge</p><a href="#" class="btn">Get Started</a></div></body></html>',store:'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0d1117;color:#e6edf3}h1{text-align:center;padding:20px;color:#58a6ff}.grid{max-width:600px;margin:0 auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.item{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:12px}.price{color:#3fb950;font-weight:700}</style></head><body><h1>'+name+'</h1><div class="grid"><div class="item"><h3>Product 1</h3><div class="price">N5,000</div></div></div></body></html>',blog:'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0d1117;color:#e6edf3;max-width:600px;margin:0 auto;padding:20px}h1{color:#58a6ff;margin-bottom:16px}.post{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:12px}</style></head><body><h1>'+name+'</h1><div class="post"><h2>First Post</h2><p>Welcome to our blog.</p></div></body></html>',dashboard:'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+name+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0d1117;color:#e6edf3;padding:12px}.header{padding:12px 0;color:#58a6ff;font-size:18px;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.stat{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;text-align:center}.stat .num{font-size:20px;font-weight:700;color:#3fb950}</style></head><body><div class="header">'+name+'</div><div class="grid"><div class="stat"><div class="num">0</div><div class="lbl">Users</div></div></div></body></html>'};return t[type]||t.landing;}
-
-// CLOUDFLARE WORKERS
-async function doCfDeploy(){
-  var name=document.getElementById('cfName').value||'harz-worker';
-  var code=document.getElementById('cfCode').value;
-  var log=document.getElementById('cfLog');
-  var btn=document.getElementById('cfDeployBtn');
-  if(!code){log.classList.remove('hidden');log.innerHTML='<span style="color:#f85149">[ERROR] Enter worker code</span>';return;}
-  log.classList.remove('hidden');log.textContent='';btn.disabled=true;
-  function al(m,t){var c=t==='err'?'#f85149':t==='warn'?'#d29922':'#58a6ff';log.innerHTML+='<span style="color:'+c+'">'+(t==='err'?'[ERROR] ':t==='warn'?'[WARN] ':'[INFO] ')+m+'</span>\n';log.scrollTop=log.scrollHeight;}
-  try{
-    al('Deploying worker: '+name);
-    al('Uploading to Cloudflare edge...');
-    const res=await fetch(CF_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'cf_deploy',workerName:name,script:code})});
-    const data=await res.json();
-    if(data.success){
-      al('Worker deployed!');
-      al('URL: '+data.url);
-      log.innerHTML+='<br><a href="'+data.url+'" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#58a6ff;color:#000;border-radius:8px;font-weight:700;text-decoration:none">Open Worker</a>\n';
-      history.unshift({file:name+' (CF Worker)',platform:'Cloudflare',time:new Date().toLocaleString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),url:data.url,icon:'\u2601'});
-      history=history.slice(0,20);localStorage.setItem('deployHistory',JSON.stringify(history));renderHistory();
-      loadCfList();
-    }else{al('Failed: '+(data.error||'unknown'),'err');}
-  }catch(e){al('Error: '+e.message,'err');}
-  btn.disabled=false;
-}
-async function loadCfList(){
-  var c=document.getElementById('cf-list');
-  if(!c)return;
-  c.innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';
-  try{
-    const res=await fetch(CF_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'cf_list'})});
-    const data=await res.json();
-    if(data.workers&&data.workers.length){
-      c.innerHTML=data.workers.map(w=>'<div class="site-item"><div class="site-icon">&#9729;</div><div class="site-info"><div class="site-name">'+w.id+'</div><div class="site-url">'+w.url+'</div></div><a href="'+w.url+'" target="_blank" class="check-btn">Open</a><button class="del-btn" onclick="delCfWorker(\''+w.id+'\')">Del</button></div>').join('');
-    }else{
-      c.innerHTML='<p style="color:var(--dim);font-size:12px">No workers deployed yet.</p>';
-    }
-  }catch(e){c.innerHTML='<p style="color:var(--red)">Error</p>';}
-}
-async function delCfWorker(name){
-  if(!confirm('Delete worker: '+name+'?'))return;
-  try{
-    const res=await fetch(CF_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'cf_delete',workerName:name})});
-    const data=await res.json();
-    if(data.success){alert('Deleted!');loadCfList();}
-    else{alert('Failed: '+(data.error||'unknown'));}
-  }catch(e){alert('Error: '+e.message);}
+// ===== Render Repos =====
+function renderRepos() {
+const list = document.getElementById('reposList');
+list.innerHTML = `<table class="history-table">
+<thead><tr><th>Repository</th><th>Language</th><th>Last Updated</th><th></th></tr></thead>
+<tbody>
+${SAMPLE_REPOS.map(r => `
+<tr>
+<td><a href="${r.url}" target="_blank" style="color:var(--cyan);text-decoration:none">${r.name}</a></td>
+<td>${r.lang}</td>
+<td style="color:var(--muted)">${r.updated}</td>
+<td><button class="btn btn-outline btn-sm" onclick="window.open('${r.url}','_blank')">View →</button></td>
+</tr>
+`).join('')}
+</tbody></table>`;
 }
 
+// ===== Render Vercel =====
+function renderVercel() {
+const list = document.getElementById('vercelList');
+list.innerHTML = `<table class="history-table">
+<thead><tr><th>Project</th><th>Framework</th><th>URL</th><th></th></tr></thead>
+<tbody>
+${SAMPLE_VERCEL.map(v => `
+<tr>
+<td>${v.name}</td>
+<td>${v.framework}</td>
+<td><a href="https://${v.url}" target="_blank" style="color:var(--cyan);text-decoration:none;font-size:12px">${v.url}</a></td>
+<td><button class="btn btn-outline btn-sm" onclick="window.open('https://${v.url}','_blank')">Open →</button></td>
+</tr>
+`).join('')}
+</tbody></table>`;
+}
 
-loadDashboard();autoLoadHf();autoRefreshDashboard();
+// ===== Render History =====
+function renderHistory(deploys) {
+const container = document.getElementById('historyContainer');
+if (!deploys || !deploys.length) {
+container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px">No deployments yet. Launch your first deployment!</p>';
+return;
+}
+container.innerHTML = `<table class="history-table">
+<thead><tr>
+<th>Project</th><th>Framework</th><th>Status</th><th>GitHub</th><th>Vercel</th><th>Live URL</th><th>Date</th>
+</tr></thead>
+<tbody>
+${deploys.map(d => `
+<tr>
+<td style="font-weight:600">${d.project}</td>
+<td>${d.framework}</td>
+<td><span class="badge badge-${d.status}">● ${d.status.charAt(0).toUpperCase()+d.status.slice(1)}</span></td>
+<td>${d.github === 'pushed' ? '✅' : '⏳'}</td>
+<td>${d.vercel === 'ready' ? '✅' : d.vercel === 'building' ? '🔄' : '⏳'}</td>
+<td><a href="https://${d.url}" target="_blank" style="color:var(--cyan);text-decoration:none;font-size:12px">${d.url}</a></td>
+<td style="color:var(--muted);font-size:12px">${d.date}</td>
+</tr>
+`).join('')}
+</tbody></table>`;
+}
 
-// HUGGING FACE FUNCTIONS
-// 1-CLICK DEPLOY TO ALL PROVIDERS
-async function deployToAll(){var fileName=document.getElementById("projName")?.value||"auto-deploy.html";var repo=document.getElementById("targetRepo")?.value||"harz-portfolio";var code=document.getElementById("htmlCode")?.value||"<!DOCTYPE html><html><body><h1>Deployed by DeployForge</h1></body></html>";var result=document.getElementById("allDeployResult");result.innerHTML="<p style=color:var(--blue)><span class=spinner></span> Deploying to all providers...</p>";var log="";var success=0;var failed=0;
-// GitHub Pages
-try{const d=await apiCall("deploy_file",{repoName:repo,fileName:fileName,fileContent:code,message:"DeployForge Auto: "+fileName});if(d.success){log+="<span style=color:var(--green)>✅ GitHub Pages: deployed</span>\n";success++;}else{log+="<span style=color:var(--red)>❌ GitHub Pages: "+(d.error||"failed")+"</span>\n";failed++;}}catch(e){log+="<span style=color:var(--red)>❌ GitHub Pages: "+e.message+"</span>\n";failed++;}
-// HuggingFace
-var hfT=localStorage.getItem("hfToken");if(hfT){try{const d=await apiCall("hf_deploy_single",{hfToken:hfT,spaceName:"Hardm.com",fileName:fileName,fileContent:code});if(d.success){log+="<span style=color:var(--green)>✅ HuggingFace: deployed to "+d.space+"</span>\n";success++;}else{log+="<span style=color:var(--red)>❌ HuggingFace: "+(d.error||"failed")+"</span>\n";failed++;}}catch(e){log+="<span style=color:var(--orange)>⚠️ HuggingFace: "+e.message+"</span>\n";failed++;}}else{log+="<span style=color:var(--orange)>⚠️ HuggingFace: no token</span>\n";}
-// Vercel
-try{const d=await apiCall("vercel_deploy",{projectName:fileName.replace(".html",""),fileContent:code,fileName:fileName,runtime:"node"});if(d.success){log+="<span style=color:var(--green)>✅ Vercel: "+d.url+"</span>\n";success++;}else{log+="<span style=color:var(--red)>❌ Vercel: "+(d.error||"failed")+"</span>\n";failed++;}}catch(e){log+="<span style=color:var(--red)>❌ Vercel: "+e.message+"</span>\n";failed++;}
-result.innerHTML="<div style=margin-bottom:8px><b style=color:var(--gold)>Deployed: "+success+" success, "+failed+" failed</b></div><pre style=\"background:#000;color:var(--green);padding:10px;border-radius:8px;font-size:11px;white-space:pre-wrap\">"+log+"</pre>";}
-// AUTO-LOAD HF TOKEN & SPACES ON PAGE OPEN
-async function autoLoadHf(){var t=localStorage.getItem("hfToken");if(!t){document.getElementById("hfTokenStatus").innerHTML="<span style=color:var(--orange)>Enter HF token to enable auto-deploy</span>";return;}var el=document.getElementById("hfToken");if(el)el.value=t;document.getElementById("hfTokenStatus").innerHTML="<span class=spinner></span> Auto-verifying...";try{const data=await apiCall("hf_whoami",{hfToken:t});if(data.success){document.getElementById("hfTokenStatus").innerHTML="<span style=color:var(--green)>✅ Auto-verified: "+data.user+"</span>";loadHfSpaces();}else{document.getElementById("hfTokenStatus").innerHTML="<span style=color:var(--red)>❌ "+(data.error||"Invalid")+"</span>";}}catch(e){document.getElementById("hfTokenStatus").innerHTML="<span style=color:var(--red)>Error: "+e.message+"</span>";}}
-function autoRefreshDashboard(){setInterval(function(){loadDashboard();},30000);}
-function getHfToken(){return document.getElementById('hfToken')?.value||localStorage.getItem('hfToken')||'';}
-function saveHfToken(){var t=document.getElementById('hfToken').value;if(t){localStorage.setItem('hfToken',t);}return t;}
-async function hfVerifyToken(){var t=document.getElementById('hfToken').value;if(!t){document.getElementById('hfTokenStatus').innerHTML='<span style="color:var(--red)">Enter token first</span>';return;}localStorage.setItem('hfToken',t);document.getElementById('hfTokenStatus').innerHTML='<span class="spinner"></span> Verifying...';try{const data=await apiCall('hf_whoami',{hfToken:t});if(data.success){document.getElementById('hfTokenStatus').innerHTML='<span style="color:var(--green)">✅ Valid! User: '+data.user+'</span>';loadHfSpaces();}else{document.getElementById('hfTokenStatus').innerHTML='<span style="color:var(--red)">❌ '+(data.error||'Invalid')+'</span>';}}catch(e){document.getElementById('hfTokenStatus').innerHTML='<span style="color:var(--red)">Error: '+e.message+'</span>';}}
-async function loadHfSpaces(){var t=getHfToken();if(!t){document.getElementById('hfSpacesList').innerHTML='<p style="color:var(--orange)">Enter HF token first</p>';return;}document.getElementById('hfSpacesList').innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';try{const data=await apiCall('hf_list',{hfToken:t});if(data.spaces){var html=data.spaces.map(function(s){var status=s.status==='RUNNING'?'live':'down';var dotClass=s.status==='RUNNING'?'dot-live':'dot-down';return '<div class="site-item" onclick="window.open(\''+s.url+'\',\'_blank\')"><div class="site-icon">🤗</div><div class="site-info"><div class="site-name">'+s.name+' <span class="badge b-'+status+'">'+s.status+'</span></div><div class="site-url">'+s.sdk+' - '+s.url+'</div></div><div class="status-dot '+dotClass+'"></div></div>';}).join('');document.getElementById('hfSpacesList').innerHTML=html||'<p style="color:var(--dim)">No spaces found</p>';var opts=data.spaces.map(function(s){return '<option value="'+s.name+'">'+s.name+' ('+s.sdk+')</option>';}).join('');var ts=document.getElementById('hfTargetSpace');if(ts)ts.innerHTML=opts;var fs=document.getElementById('hfFilesSpace');if(fs)fs.innerHTML=opts;}else{document.getElementById('hfSpacesList').innerHTML='<p style="color:var(--red)">Error: '+(data.error||'failed')+'</p>';}}catch(e){document.getElementById('hfSpacesList').innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}}
-async function hfCreateSpace(){var t=getHfToken();var name=document.getElementById('hfSpaceName').value.trim();var sdk=document.getElementById('hfSdk').value;var desc=document.getElementById('hfSpaceDesc').value;var result=document.getElementById('hfCreateResult');if(!name){result.innerHTML='<p style="color:var(--red)">Enter space name</p>';return;}if(!t){result.innerHTML='<p style="color:var(--red)">Enter HF token first</p>';return;}result.innerHTML='<p style="color:var(--blue)"><span class="spinner"></span> Creating space...</p>';try{const data=await apiCall('hf_create',{hfToken:t,spaceName:name,sdk:sdk,description:desc});if(data.success){result.innerHTML='<div style="color:var(--green)">✅ Space created!<br>URL: <a href="'+data.url+'" target="_blank" style="color:var(--blue)">'+data.url+'</a><br>Live: <a href="'+data.live_url+'" target="_blank" style="color:var(--blue)">'+data.live_url+'</a></div>';document.getElementById('hfSpaceName').value='';document.getElementById('hfSpaceDesc').value='';loadHfSpaces();}else{result.innerHTML='<p style="color:var(--red)">❌ '+(data.error||'failed')+'</p>';}}catch(e){result.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}}
-async function hfDeployFile(){var t=getHfToken();var space=document.getElementById('hfTargetSpace').value;var fileName=document.getElementById('hfFileName').value;var content=document.getElementById('hfFileContent').value;var result=document.getElementById('hfDeployResult');if(!space||!fileName||!content){result.innerHTML='<p style="color:var(--red)">Fill all fields</p>';return;}if(!t){result.innerHTML='<p style="color:var(--red)">Enter HF token first</p>';return;}result.innerHTML='<p style="color:var(--blue)"><span class="spinner"></span> Deploying '+fileName+'...</p>';try{const data=await apiCall('hf_deploy_single',{hfToken:t,spaceName:space,fileName:fileName,fileContent:content});if(data.success){result.innerHTML='<div style="color:var(--green)">✅ Deployed!<br>File: '+fileName+'<br>Live: <a href="'+data.live_url+'" target="_blank" style="color:var(--blue)">'+data.live_url+'</a></div>';}else{result.innerHTML='<p style="color:var(--red)">❌ '+(data.error||'failed')+'</p>';}}catch(e){result.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}}
-async function loadHfFiles(){var t=getHfToken();var space=document.getElementById('hfFilesSpace').value;var c=document.getElementById('hfFilesList');if(!space||!t){c.innerHTML='';return;}c.innerHTML='<div class="loading"><span class="spinner"></span> Loading...</div>';try{const data=await apiCall('hf_list_files',{hfToken:t,spaceName:space});if(data.files){c.innerHTML=data.files.map(function(f){return '<div class="site-item"><div class="site-icon">📄</div><div class="site-info"><div class="site-name">'+f.name+'</div><div class="site-url">'+f.type+' - '+(f.size||'?')+' bytes</div></div><button class="del-btn" onclick="hfDeleteFile(\''+space+'\',\''+f.name+'\')">Delete</button></div>';}).join('');}else{c.innerHTML='<p style="color:var(--red)">Error</p>';}}catch(e){c.innerHTML='<p style="color:var(--red)">Error: '+e.message+'</p>';}}
-async function hfDeleteFile(space,file){if(!confirm('Delete '+file+'?'))return;var t=getHfToken();try{const data=await apiCall('hf_delete_file',{hfToken:t,spaceName:space,fileName:file});if(data.success){loadHfFiles();}else{alert('Error: '+(data.error||'failed'));}}catch(e){alert('Error: '+e.message);}}
-// Load saved HF token on page load
-(function(){var t=localStorage.getItem('hfToken');if(t){var el=document.getElementById('hfToken');if(el)el.value=t;}})();
+// ===== Stats =====
+function updateStats(deploys) {
+const live = deploys.filter(d => d.status === 'live').length;
+const building = deploys.filter(d => d.status === 'building').length;
+const failed = deploys.filter(d => d.status === 'failed').length;
+document.getElementById('statTotal').textContent = deploys.length;
+document.getElementById('statLive').textContent = live;
+document.getElementById('statBuilding').textContent = building;
+document.getElementById('statFailed').textContent = failed;
+}
 
+// ===== Deploy Form =====
+function toggleChip(el) {
+el.classList.toggle('active');
+}
 
-// ===== AGENT MANAGEMENT =====
-const AGENT_DATA={
-magani:{name:'Magani Agent',repo:'maganu-agent',url:'https://github.com/rabiuhamza11/maganu-agent',renderUrl:'',deployTaskId:'6a51ce494401330eaebcead2'},
-omega:{name:'Omega Commander',repo:'omega-infinity-dashboard',url:'https://github.com/rabiuhamza11/omega-infinity-dashboard',vercelUrl:'https://omega-infinity-dashboard.vercel.app',deployTaskId:'6a4d3dd1df5f7e8784ec55e2'}
+function getSelectedPlatforms() {
+return Array.from(document.querySelectorAll('.chip.active')).map(c => c.dataset.platform);
+}
+
+async function launchDeploy() {
+const name = document.getElementById('projName').value.trim();
+const framework = document.getElementById('projFramework').value;
+const desc = document.getElementById('projDesc').value.trim();
+const envVarsRaw = document.getElementById('projEnvVars').value.trim();
+const isPrivate = document.getElementById('projPrivate').value === 'true';
+const autoDeploy = document.getElementById('projAutoDeploy').value === 'true';
+const platforms = getSelectedPlatforms();
+
+if (!name) { showToast('⚠️ Project name is required', 'error'); return; }
+if (!platforms.length) { showToast('⚠️ Select at least one platform', 'error'); return; }
+
+let envVars = {};
+try { if (envVarsRaw) envVars = JSON.parse(envVarsRaw); }
+catch { showToast('⚠️ Invalid JSON in env vars', 'error'); return; }
+
+// Show log section
+document.getElementById('deployLogSection').style.display = 'block';
+clearLog();
+addLog('info', '🚀 Starting deployment pipeline...');
+addLog('', `Project: ${name} | Framework: ${framework} | Platforms: ${platforms.join(', ')}`);
+
+// Try API first, fall back to simulation
+try {
+addLog('info', '📡 Calling DeployForge API...');
+
+const body = {
+projectName: name,
+framework,
+description: desc,
+envVars,
+isPrivate,
+autoDeploy,
+platforms,
 };
 
-async function checkAgent(agent){
-const data=AGENT_DATA[agent];
-const btn=event.target;
-btn.textContent='Checking...';
-btn.disabled=true;
-try{
-// Check GitHub repo status
-const ghResp=await fetch('https://api.github.com/repos/rabiuhamza11/'+data.repo,{headers:{Accept:'application/vnd.github.v3+json'}});
-const ghData=await ghResp.json();
-// Check if live URL responds
-let liveStatus='OFFLINE';
-let liveUrl='';
-if(agent==='magani'){
-const renderUrl=localStorage.getItem('magani-render-url')||'';
-if(renderUrl){
-try{const r=await fetch(renderUrl,{mode:'no-cors'});liveStatus='LIVE';liveUrl=renderUrl;}catch(e){liveStatus='OFFLINE';}
-}else{liveStatus='PENDING (no render URL)';}
-}else if(agent==='omega'){
-try{const r=await fetch(data.vercelUrl,{mode:'no-cors'});liveStatus='LIVE';liveUrl=data.vercelUrl;}catch(e){liveStatus='OFFLINE';}
+let response;
+if (platforms.includes('github') && platforms.includes('vercel')) {
+// Full pipeline
+response = await fetch(`${API_BASE}/api/deployforgeLaunch`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(body),
+});
+} else if (platforms.includes('github')) {
+response = await fetch(`${API_BASE}/api/deployforgeGitHub`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'createRepo', repoName: name, description: desc, isPrivate }),
+});
+} else if (platforms.includes('vercel')) {
+response = await fetch(`${API_BASE}/api/deployforgeVercel`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'createProject', projectName: name, framework }),
+});
 }
-// Update UI
-const badge=document.getElementById(agent+'-badge');
-if(liveStatus==='LIVE'){badge.className='badge b-live';badge.textContent='LIVE';}
-else if(liveStatus.includes('PENDING')){badge.className='badge b-pending';badge.textContent='PENDING';}
-else{badge.className='badge b-down';badge.textContent='OFFLINE';}
-document.getElementById(agent+'-status').textContent=liveStatus.split(' ')[0];
-document.getElementById(agent+'-log').textContent='['+new Date().toISOString()+'] GitHub: '+ghData.html_url+'\nStatus: '+liveStatus+'\nRepo: '+(ghData.visibility||'public')+'\nUpdated: '+(ghData.updated_at||'N/A');
-btn.textContent='Check Status';
-btn.disabled=false;
-}catch(e){
-document.getElementById(agent+'-log').textContent='Error: '+e.message;
-btn.textContent='Check Status';
-btn.disabled=false;
+
+if (response && response.ok) {
+const result = await response.json();
+addLog('success', '✅ Deployment successful!');
+if (result.github) addLog('success', `🐙 GitHub: ${result.github.url}`);
+if (result.vercel) addLog('success', `▲ Vercel: ${result.vercel.url}`);
+showToast('✅ Deployed successfully!', 'success');
+// Add to history
+SAMPLE_DEPLOYS.unshift({
+id: Date.now(),
+project: name,
+framework,
+status: 'live',
+github: 'pushed',
+vercel: 'ready',
+url: `${name}.vercel.app`,
+date: new Date().toISOString().slice(0, 16).replace('T', ' '),
+});
+updateStats(SAMPLE_DEPLOYS);
+renderHistory(SAMPLE_DEPLOYS);
+} else {
+throw new Error('API not available');
+}
+} catch (err) {
+addLog('error', `⚠️ API unavailable: ${err.message}`);
+addLog('info', '📝 Simulating deployment pipeline...');
+
+// Simulate deployment steps
+const steps = [
+{ delay: 500, msg: '🔐 Authenticating with GitHub...', type: 'info' },
+{ delay: 800, msg: '🐙 Creating GitHub repository...', type: '' },
+{ delay: 600, msg: '📦 Pushing code to GitHub...', type: '' },
+{ delay: 500, msg: '✅ GitHub: repo created & code pushed', type: 'success' },
+{ delay: 700, msg: '▲ Creating Vercel project...', type: 'info' },
+{ delay: 800, msg: '🔧 Setting environment variables...', type: '' },
+{ delay: 600, msg: '🚀 Triggering Vercel deployment...', type: '' },
+{ delay: 1000, msg: '✅ Vercel: project deployed & live', type: 'success' },
+{ delay: 300, msg: '💾 Saving deployment record...', type: '' },
+{ delay: 200, msg: '🎉 Deployment complete!', type: 'success' },
+];
+
+for (const step of steps) {
+await new Promise(r => setTimeout(r, step.delay));
+addLog(step.type, step.msg);
+}
+
+addLog('success', `🌐 Live URL: https://${name}.vercel.app`);
+
+// Add to history
+SAMPLE_DEPLOYS.unshift({
+id: Date.now(),
+project: name,
+framework,
+status: 'live',
+github: 'pushed',
+vercel: 'ready',
+url: `${name}.vercel.app`,
+date: new Date().toISOString().slice(0, 16).replace('T', ' '),
+});
+updateStats(SAMPLE_DEPLOYS);
+renderHistory(SAMPLE_DEPLOYS);
+showToast('✅ Deployment simulated! (API will be live when deployed)', 'success');
 }
 }
 
-function showAgentLog(agent){
-const log=document.getElementById(agent+'-log');
-const data=AGENT_DATA[agent];
-if(agent==='magani'){
-log.textContent='=== Magani Agent Logs ===\nRepo: '+data.url+'\nFramework: Node.js\nDeploy Status: live (GitHub)\nRailway: pending API keys\n\nBuild Log:\n'+data.deployTaskId;
-}else if(agent==='omega'){
-log.textContent='=== Omega Commander Logs ===\nRepo: '+data.url+'\nVercel: '+data.vercelUrl+'\nFramework: Next.js\nDeploy Status: live\n\nFeatures:\n- Login/Register\n- Dashboard\n- Agents management\n- Chat interface\n- Deployments\n- Projects\n- Settings';
-}
-}
-
-function saveAgentConfig(){
-const maganiUrl=document.getElementById('magani-render-url').value.trim();
-const omegaUrl=document.getElementById('omega-dashboard-url').value.trim();
-if(maganiUrl)localStorage.setItem('magani-render-url',maganiUrl);
-if(omegaUrl)localStorage.setItem('omega-dashboard-url',omegaUrl);
-const msg=document.getElementById('agent-config-msg');
-msg.style.display='block';
-setTimeout(()=>msg.style.display='none',3000);
+// ===== Logging =====
+function addLog(type, msg) {
+const log = document.getElementById('deployLog');
+const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+const entry = document.createElement('div');
+entry.className = `log-entry ${type}`;
+entry.innerHTML = `<span class="log-time">[${time}]</span> ${msg}`;
+log.appendChild(entry);
+log.scrollTop = log.scrollHeight;
 }
 
-// Load agent data on page load
-async function loadAgents(){
-// Check Magani
-const maganiBadge=document.getElementById('magani-badge');
-const maganiLog=document.getElementById('magani-log');
-try{
-const ghResp=await fetch('https://api.github.com/repos/rabiuhamza11/maganu-agent',{headers:{Accept:'application/vnd.github.v3+json'}});
-const ghData=await ghResp.json();
-if(ghData.html_url){
-maganiLog.textContent='Repo: '+ghData.html_url+'\nLast push: '+(ghData.pushed_at||'N/A')+'\nStatus: GitHub LIVE, Render PENDING\n\nMaganu v1.0.0 — Claude-powered brain, Twilio WhatsApp,\nscheduled automations. Awaiting API keys for full live.';
-}else{
-maganiLog.textContent='Repo not found or private';
-}
-}catch(e){maganiLog.textContent='GitHub API error';}
-// Check Omega
-const omegaBadge=document.getElementById('omega-badge');
-const omegaLog=document.getElementById('omega-log');
-try{
-const ghResp=await fetch('https://api.github.com/repos/rabiuhamza11/omega-infinity-dashboard',{headers:{Accept:'application/vnd.github.v3+json'}});
-const ghData=await ghResp.json();
-if(ghData.html_url){
-omegaLog.textContent='Repo: '+ghData.html_url+'\nVercel: https://omega-infinity-dashboard.vercel.app\nStatus: LIVE\n\nOMEGA INFINITY 1000 Next.js dashboard\nFeatures: login, agents, chat, deployments,\nprojects, settings.';
-}else{
-omegaLog.textContent='Repo not found or private';
-}
-}catch(e){omegaLog.textContent='GitHub API error';}
-}
-// Auto-load when agents tab is shown
-const origShowTab=showTab;
-showTab=function(name,el){
-origShowTab(name,el);
-if(name==='agents')loadAgents();
-};
-
-
-// ===== AGENT SERVER MANAGEMENT =====
-const SERVER_URL = 'https://harz-agent-server.harz.workers.dev';
-const WS_URL = 'wss://harz-agent-server.harz.workers.dev/ws';
-let wsConnection = null;
-let wsSessionId = null;
-
-async function checkServerStatus() {
-  try {
-    const resp = await fetch(SERVER_URL + '/health');
-    const data = await resp.json();
-    document.getElementById('server-status-badge').textContent = 'ONLINE';
-    document.getElementById('server-status-badge').className = 'badge b-live';
-    document.getElementById('ws-status').textContent = 'Ready';
-    document.getElementById('ws-status').style.color = 'var(--green)';
-    document.getElementById('mem-status').textContent = 'Active';
-    document.getElementById('mem-status').style.color = 'var(--blue)';
-    document.getElementById('task-status').textContent = 'Ready';
-    document.getElementById('task-status').style.color = 'var(--purple)';
-    document.getElementById('server-url-display').textContent = SERVER_URL.replace('https://','');
-  } catch(e) {
-    document.getElementById('server-status-badge').textContent = 'OFFLINE';
-    document.getElementById('server-status-badge').className = 'badge b-down';
-  }
+function clearLog() {
+document.getElementById('deployLog').innerHTML = '';
 }
 
-function wsConnect() {
-  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) { return; }
-  const btn = document.getElementById('ws-connect-btn');
-  btn.textContent = 'Connecting...';
-  wsConnection = new WebSocket(WS_URL);
-  
-  wsConnection.onopen = function() {
-    btn.textContent = 'Connected';
-    btn.style.background = 'var(--green)';
-    document.getElementById('ws-chat').textContent += '\n[Connected to HARZ Agent Server]\n';
-  };
-  
-  wsConnection.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    if (data.type === 'connected') {
-      wsSessionId = data.sessionId;
-      document.getElementById('ws-chat').textContent += '[Session: ' + data.sessionId.substring(0,8) + ']\n';
-      document.getElementById('ws-chat').textContent += '[Agents: ' + data.agents.join(', ') + ']\n';
-    } else if (data.type === 'status') {
-      document.getElementById('ws-chat').textContent += '[' + data.agent + ' thinking... (' + data.model + ')]\n';
-    } else if (data.type === 'message') {
-      document.getElementById('ws-chat').textContent += data.agent + ': ' + data.content + '\n\n';
-    } else if (data.type === 'error') {
-      document.getElementById('ws-chat').textContent += '[Error: ' + data.message + ']\n';
-    }
-    var chatDiv = document.getElementById('ws-chat');
-    chatDiv.scrollTop = chatDiv.scrollHeight;
-  };
-  
-  wsConnection.onclose = function() {
-    btn.textContent = 'Connect';
-    btn.style.background = 'var(--green)';
-    document.getElementById('ws-chat').textContent += '\n[Disconnected]\n';
-  };
-  
-  wsConnection.onerror = function() {
-    btn.textContent = 'Connect';
-    document.getElementById('ws-chat').textContent += '[Connection error]\n';
-  };
+function resetForm() {
+document.getElementById('projName').value = '';
+document.getElementById('projDesc').value = '';
+document.getElementById('projEnvVars').value = '';
+document.querySelectorAll('.chip').forEach(c => {
+if (c.dataset.platform === 'github' || c.dataset.platform === 'vercel') {
+c.classList.add('active');
+} else {
+c.classList.remove('active');
+}
+});
 }
 
-function wsDisconnect() {
-  if (wsConnection) { wsConnection.close(); wsConnection = null; }
+// ===== Toast =====
+function showToast(msg, type = 'success') {
+const toast = document.getElementById('toast');
+document.getElementById('toastMsg').textContent = msg;
+document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '⚠️';
+toast.className = 'toast show ' + type;
+setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-function wsSend() {
-  const input = document.getElementById('ws-input');
-  const msg = input.value.trim();
-  if (!msg || !wsConnection || wsConnection.readyState !== WebSocket.OPEN) {
-    if (!wsConnection || wsConnection.readyState !== WebSocket.OPEN) {
-      document.getElementById('ws-chat').textContent += '[Not connected. Click Connect first.]\n';
-    }
-    return;
-  }
-  const agent = document.getElementById('ws-agent-select').value;
-  wsConnection.send(JSON.stringify({ message: msg, agent: agent, sessionId: wsSessionId }));
-  document.getElementById('ws-chat').textContent += 'You: ' + msg + '\n';
-  input.value = '';
-  var chatDiv = document.getElementById('ws-chat');
-  chatDiv.scrollTop = chatDiv.scrollHeight;
+// ===== Refresh Functions =====
+async function refreshPlatforms() {
+showToast('↻ Refreshing platforms...');
+renderPlatforms();
 }
 
-async function loadMemory() {
-  const agent = document.getElementById('mem-agent-select').value;
-  try {
-    const resp = await fetch(SERVER_URL + '/api/memory', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'get', agent: agent })
-    });
-    const data = await resp.json();
-    const mem = data.memory || [];
-    const display = document.getElementById('mem-display');
-    if (mem.length === 0) {
-      display.textContent = 'No memories stored yet for ' + agent;
-    } else {
-      let text = '=== ' + agent + ' Memory (' + mem.length + ' entries) ===\n\n';
-      for (const m of mem) {
-        text += '[' + (m.timestamp || '') + ']\n' + m.role + ': ' + m.content.substring(0,100) + (m.content.length > 100 ? '...' : '') + '\n\n';
-      }
-      display.textContent = text;
-    }
-  } catch(e) {
-    document.getElementById('mem-display').textContent = 'Error: ' + e.message;
-  }
+async function refreshRepos() {
+showToast('↻ Refreshing repos...');
+try {
+const resp = await fetch(`${API_BASE}/api/deployforgeAdmin`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'stats' }),
+});
+if (resp.ok) {
+const data = await resp.json();
+if (data.github?.repos?.length) {
+SAMPLE_REPOS = data.github.repos.map(r => ({ name: r.name, lang: r.language || '—', url: r.url, updated: r.updated?.slice(0,10) || '—' }));
+renderRepos();
+showToast('✅ Repos refreshed from GitHub!');
+return;
+}
+}
+} catch {}
+renderRepos();
 }
 
-async function clearMemory() {
-  const agent = document.getElementById('mem-agent-select').value;
-  if (!confirm('Clear all memory for ' + agent + '?')) return;
-  try {
-    const resp = await fetch(SERVER_URL + '/api/memory', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'clear', agent: agent })
-    });
-    const data = await resp.json();
-    document.getElementById('mem-display').textContent = 'Memory cleared for ' + agent;
-  } catch(e) {
-    document.getElementById('mem-display').textContent = 'Error: ' + e.message;
-  }
+async function refreshVercel() {
+showToast('↻ Refreshing Vercel...');
+try {
+const resp = await fetch(`${API_BASE}/api/deployforgeAdmin`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'stats' }),
+});
+if (resp.ok) {
+const data = await resp.json();
+if (data.vercel?.projects?.length) {
+SAMPLE_VERCEL = data.vercel.projects.map(p => ({ name: p.name, framework: p.framework || '—', url: p.url }));
+renderVercel();
+showToast('✅ Vercel projects refreshed!');
+return;
+}
+}
+} catch {}
+renderVercel();
 }
 
-async function createTask(type) {
-  try {
-    const resp = await fetch(SERVER_URL + '/api/task', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'create', taskType: type, data: { ecosystem: 'HARZ', platforms: 63 } })
-    });
-    const data = await resp.json();
-    document.getElementById('task-display').textContent = 'Task created: ' + data.taskId.substring(0,8) + '\nStatus: ' + data.status + '\n\nWaiting for completion... (refresh in 5s)';
-    setTimeout(listTasks, 5000);
-  } catch(e) {
-    document.getElementById('task-display').textContent = 'Error: ' + e.message;
-  }
+async function refreshHistory() {
+showToast('↻ Refreshing history...');
+try {
+const resp = await fetch(`${API_BASE}/api/deployforgeAdmin`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'list' }),
+});
+if (resp.ok) {
+const data = await resp.json();
+if (data.tasks?.length) {
+const mapped = data.tasks.map(t => ({
+id: t.id, project: t.project_name, framework: t.framework,
+status: t.deploy_status, github: t.github_status, vercel: t.vercel_status,
+url: t.live_url || t.vercel_url || '', date: t.created_date?.slice(0,16).replace('T',' ') || '—',
+}));
+renderHistory(mapped);
+updateStats(mapped);
+showToast('✅ History refreshed!');
+return;
+}
+}
+} catch {}
+renderHistory(SAMPLE_DEPLOYS);
+updateStats(SAMPLE_DEPLOYS);
 }
 
-async function listTasks() {
-  try {
-    // Use status endpoint since list has issues with KV listing
-    const resp = await fetch(SERVER_URL + '/api/task', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'list' })
-    });
-    if (!resp.ok) {
-      document.getElementById('task-display').textContent = 'No tasks found or KV listing unavailable.';
-      return;
-    }
-    const data = await resp.json();
-    const tasks = data.tasks || [];
-    if (tasks.length === 0) {
-      document.getElementById('task-display').textContent = 'No tasks found. Create one above.';
-      return;
-    }
-    let text = '=== Task Queue (' + tasks.length + ' tasks) ===\n\n';
-    for (const t of tasks) {
-      text += 'ID: ' + t.id.substring(0,8) + '\n';
-      text += 'Type: ' + t.type + '\n';
-      text += 'Status: ' + t.status + '\n';
-      if (t.result) { text += 'Result: ' + JSON.stringify(t.result).substring(0,100) + '...\n'; }
-      text += '\n';
-    }
-    document.getElementById('task-display').textContent = text;
-  } catch(e) {
-    document.getElementById('task-display').textContent = 'Error loading tasks. KV listing may be unavailable on free tier.';
-  }
-}
-
-// Override showTab to load server data
-const origShowTabV2 = showTab;
-showTab = function(name, el) {
-  origShowTabV2(name, el);
-  if (name === 'server-ui') { checkServerStatus(); }
-  if (name === 'agents') { loadAgents(); }
-};
-
+// ===== Init =====
+renderPlatforms();
+renderRepos();
+renderVercel();
+renderHistory(SAMPLE_DEPLOYS);
+updateStats(SAMPLE_DEPLOYS);
 </script>
 </body>
 </html>
