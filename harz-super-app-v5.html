@@ -1359,5 +1359,47 @@ function showToast(msg, isError = false) {
 // ===== START =====
 init();
 </script>
+
+<!-- Platform Detail Modal -->
+<div id="platformModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:300;justify-content:center;align-items:center;padding:16px" onclick="if(event.target===this)closeModal()">
+<div style="background:var(--card);border-radius:16px;padding:20px;max-width:400px;width:100%;border:1px solid rgba(108,92,231,.3)">
+<div style="text-align:center;margin-bottom:16px">
+<div id="modalIcon" style="font-size:48px;margin-bottom:8px"></div>
+<div id="modalName" style="font-size:18px;font-weight:700;color:var(--text)"></div>
+<div id="modalCategory" style="font-size:12px;color:var(--muted);margin-top:4px"></div>
+</div>
+<div id="modalDesc" style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5"></div>
+<div id="modalStatus" style="margin-bottom:16px;text-align:center"></div>
+<button class="btn" id="modalOpenBtn" onclick="" style="margin-bottom:8px">Open Platform</button>
+<button class="btn btn-outline" onclick="closeModal()" style="margin-bottom:0">Close</button>
+</div>
+</div>
+
+<script>
+function showPlatformModal(name) {
+  const p = platformData.find(x => x.name === name);
+  if (!p) return;
+  document.getElementById('modalIcon').textContent = p.icon || '📦';
+  document.getElementById('modalName').textContent = p.name;
+  document.getElementById('modalCategory').textContent = p.category || '';
+  document.getElementById('modalDesc').textContent = p.description || 'No description available';
+  const statusEl = document.getElementById('modalStatus');
+  statusEl.innerHTML = p.status === 'Live' 
+    ? '<span class="badge badge-live">● Live</span>' 
+    : '<span class="badge badge-dev">● Development</span>';
+  const openBtn = document.getElementById('modalOpenBtn');
+  if (p.url) {
+    openBtn.style.display = 'block';
+    openBtn.onclick = () => window.open(p.url, '_blank');
+  } else {
+    openBtn.style.display = 'none';
+  }
+  document.getElementById('platformModal').style.display = 'flex';
+}
+function closeModal() {
+  document.getElementById('platformModal').style.display = 'none';
+}
+</script>
+
 </body>
 </html>
