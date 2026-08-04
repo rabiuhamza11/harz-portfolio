@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Cloud v4.0 — Platform Services</title>
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e293b;--accent:#6366f1;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:16px;max-width:1200px;margin:0 auto}
+h1{font-size:22px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
+.card h2{font-size:15px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px}
+.stat h3{font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.stat .v{font-size:20px;font-weight:700}
+.stat .m{font-size:10px;color:var(--muted);margin-top:2px}
+.g{color:var(--green)} .r{color:var(--red)} .y{color:var(--yellow)} .b{color:var(--blue)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:10px;text-transform:uppercase}
+.badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600}
+.b-info{background:var(--blue)20;color:var(--blue)}
+.b-warn{background:var(--yellow)20;color:var(--yellow)}
+.b-crit{background:var(--red)20;color:var(--red)}
+.b-ok{background:var(--green)20;color:var(--green)}
+.b-fail{background:var(--red)20;color:var(--red)}
+.btn{padding:8px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-p:hover{opacity:.9}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-o:hover{border-color:var(--accent)}
+.tab-bar{display:flex;gap:4px;margin-bottom:14px;overflow-x:auto}
+.tab{padding:8px 14px;border-radius:8px 8px 0 0;font-size:12px;cursor:pointer;white-space:nowrap;border:1px solid transparent}
+.tab.active{background:var(--card);border-color:var(--border);color:var(--accent)}
+.tab:not(.active){color:var(--muted)}
+.tc{display:none}.tc.active{display:block}
+.chan{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+.chan-icon{font-size:24px}.chan-info{flex:1}.chan-info h3{font-size:13px}.chan-info .muted{font-size:11px}
+.bar{height:5px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:3px}
+.bar-f{height:100%;border-radius:3px}
+.muted{color:var(--muted);font-size:11px}
+.member{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:13px;margin-bottom:8px}
+.input:focus{outline:none;border-color:var(--accent)}
+.search-box{display:flex;gap:8px;margin-bottom:12px}
+.search-result{padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:.2s}
+.search-result:hover{border-color:var(--accent)}
+.search-result h3{font-size:13px;margin-bottom:2px}
+.search-result .snippet{font-size:11px;color:var(--muted)}
+.search-result .score{font-size:10px;color:var(--accent)}
+.log-entry{padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.log-entry .log-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.log-entry .log-time{font-size:10px;color:var(--muted)}
+.log-entry .log-detail{font-size:12px;color:var(--text)}
+.bucket-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
+.bucket-card h3{font-size:13px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.bucket-card .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.file-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<h1>⚙️ HARZ Cloud v4.0 — Platform Services</h1>
+<p class="sub">Notifications · Teams · Storage · Search · Audit Log</p>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('notif')">🔔 Notifications</div>
+  <div class="tab" onclick="switchTab('teams')">👥 Teams</div>
+  <div class="tab" onclick="switchTab('storage')">📦 Storage</div>
+  <div class="tab" onclick="switchTab('search')">🔍 Search</div>
+  <div class="tab" onclick="switchTab('audit')">📋 Audit Log</div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="tc active" id="tab-notif">
+  <div class="card"><h2>📊 Overview</h2><div class="grid" id="notifStats"></div></div>
+  <div class="card"><h2>📡 Delivery Channels</h2><div id="channels"></div></div>
+  <div class="card"><h2>📨 Recent Notifications</h2><div id="recentNotif"></div></div>
+  <div class="card"><h2>📋 Templates</h2><div style="overflow-x:auto"><table><thead><tr><th>Name</th><th>Channel</th><th>Trigger</th><th>Subject</th></tr></thead><tbody id="notifTemplates"></tbody></table></div></div>
+  <div class="card"><h2>📢 Broadcast</h2>
+    <input class="input" id="bcastSubject" placeholder="Subject">
+    <input class="input" id="bcastBody" placeholder="Message body">
+    <button class="btn btn-p" onclick="broadcast()">Send to All Channels</button>
+    <div id="bcastResult" style="margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- TEAMS -->
+<div class="tc" id="tab-teams">
+  <div class="card"><h2>📊 Overview</h2><div class="grid" id="teamStats"></div></div>
+  <div class="card"><h2>👥 Team Members</h2><div id="members"></div></div>
+  <div class="card"><h2>🏢 Teams</h2><div class="grid-cards" id="teamsList"></div></div>
+  <div class="card"><h2>🔐 Roles & Permissions</h2><div style="overflow-x:auto"><table><thead><tr><th>Role</th><th>Level</th><th>Members</th><th>Permissions</th></tr></thead><tbody id="rolesList"></tbody></table></div></div>
+  <div class="card"><h2>📝 Recent Activity</h2><div id="teamActivity"></div></div>
+</div>
+
+<!-- STORAGE -->
+<div class="tc" id="tab-storage">
+  <div class="card"><h2>📊 Overview</h2><div class="grid" id="storageStats"></div></div>
+  <div class="card"><h2>🪣 Buckets</h2><div id="buckets"></div></div>
+  <div class="card"><h2>📁 Recent Files</h2><div id="files"></div></div>
+  <div class="card"><h2>🔗 Generate Signed URL</h2>
+    <input class="input" id="signedFileId" placeholder="File ID (e.g. file-002)">
+    <button class="btn btn-p" onclick="getSignedUrl()">Generate</button>
+    <div id="signedResult" style="margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="tc" id="tab-search">
+  <div class="card"><h2>📊 Overview</h2><div class="grid" id="searchStats"></div></div>
+  <div class="card"><h2>🔍 Search</h2>
+    <div class="search-box">
+      <input class="input" id="searchQuery" placeholder="Search across all entities..." style="margin-bottom:0" onkeyup="if(event.key==='Enter')doSearch()">
+      <button class="btn btn-p" onclick="doSearch()">Search</button>
+    </div>
+    <div id="searchResults"></div>
+  </div>
+  <div class="card"><h2>📚 Indexes</h2><div style="overflow-x:auto"><table><thead><tr><th>Entity</th><th>Field</th><th>Type</th><th>Docs</th></tr></thead><tbody id="indexes"></tbody></table></div></div>
+</div>
+
+<!-- AUDIT LOG -->
+<div class="tc" id="tab-audit">
+  <div class="card"><h2>📊 Overview</h2><div class="grid" id="auditStats"></div></div>
+  <div class="card"><h2>📋 Audit Trail</h2>
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <button class="btn btn-o" onclick="filterLogs('all')">All</button>
+      <button class="btn btn-o" onclick="filterLogs('info')">Info</button>
+      <button class="btn btn-o" onclick="filterLogs('warning')">Warning</button>
+      <button class="btn btn-o" onclick="filterLogs('critical')">Critical</button>
+      <button class="btn btn-p" onclick="exportLogs()" style="margin-left:auto">Export</button>
+    </div>
+    <div id="logsList"></div>
+  </div>
+  <div class="card"><h2>🛡️ GDPR Compliance</h2><div id="gdprInfo"></div></div>
+</div>
+
+<script>
+const NTF='https://solene-5b0577e2.base44.app/functions/harzNotifications';
+const TM='https://solene-5b0577e2.base44.app/functions/harzTeams';
+const ST='https://solene-5b0577e2.base44.app/functions/harzStorage';
+const SR='https://solene-5b0577e2.base44.app/functions/harzSearch';
+const AU='https://solene-5b0577e2.base44.app/functions/harzAuditLog';
+
+async function api(url, body) {
+  return (await fetch(url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+}
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+async function init() {
+  const [ni, tm, st, sr, au] = await Promise.all([
+    api(NTF,{action:'info'}), api(TM,{action:'info'}),
+    api(ST,{action:'info'}), api(SR,{action:'info'}),
+    api(AU,{action:'info'})
+  ]);
+  const [ch, nt, rc, ms, ts, rs, ac, bk, fl, idx, lg, gp] = await Promise.all([
+    api(NTF,{action:'channels'}), api(NTF,{action:'templates'}),
+    api(NTF,{action:'recent'}), api(TM,{action:'members'}),
+    api(TM,{action:'teams'}), api(TM,{action:'roles'}),
+    api(TM,{action:'activity'}), api(ST,{action:'buckets'}),
+    api(ST,{action:'files'}), api(SR,{action:'indexes'}),
+    api(AU,{action:'list'}), api(AU,{action:'gdpr'})
+  ]);
+
+  // Notifications
+  document.getElementById('notifStats').innerHTML = [
+    {l:'Channels',v:ni.activeChannels+'/'+ni.channels,c:'b',m:'All active'},
+    {l:'Sent',v:ni.totalSent.toLocaleString(),c:'g',m:'All time'},
+    {l:'Delivered',v:ni.totalDelivered.toLocaleString(),c:'g',m:ni.avgDeliveryRate+' rate'},
+    {l:'Templates',v:ni.templates,c:'y',m:'Event-triggered'}
+  ].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+  document.getElementById('channels').innerHTML = ch.channels.map(c=>`
+    <div class="chan">
+      <div class="chan-icon">${c.icon}</div>
+      <div class="chan-info"><h3>${c.name} <span class="badge ${c.active?'b-ok':'b-fail'}">${c.active?'active':'off'}</span></h3><div class="muted">${c.sent.toLocaleString()} sent · ${c.delivered.toLocaleString()} delivered · ${c.rate} rate</div></div>
+      <div style="width:60px"><div class="bar"><div class="bar-f" style="width:${parseFloat(c.rate)}%;background:var(--green)"></div></div></div>
+    </div>`).join('');
+
+  document.getElementById('recentNotif').innerHTML = rc.notifications.map(n=>`
+    <div class="search-result" onclick="void(0)">
+      <div class="log-head"><span style="font-weight:600;font-size:12px">${n.subject}</span><span class="badge ${n.status==='delivered'?'b-ok':n.status==='read'?'b-info':'b-warn'}">${n.status}</span></div>
+      <div class="muted">to: ${n.recipient} · ${n.channel} · ${n.time}</div>
+    </div>`).join('');
+
+  document.getElementById('notifTemplates').innerHTML = nt.templates.map(t=>`<tr><td style="font-weight:600">${t.name}</td><td>${t.channel}</td><td style="font-family:monospace;font-size:11px">${t.trigger}</td><td>${t.subject}</td></tr>`).join('');
+
+  // Teams
+  document.getElementById('teamStats').innerHTML = [
+    {l:'Teams',v:tm.totalTeams,c:'b',m:'Workspaces'},
+    {l:'Members',v:tm.totalMembers,c:'g',m:'All active'},
+    {l:'Roles',v:tm.totalRoles,c:'y',m:'Permission levels'},
+    {l:'Active',v:tm.activeMembers,c:'g',m:'Online now'}
+  ].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+  document.getElementById('members').innerHTML = ms.members.map(m=>`
+    <div class="member">
+      <div class="avatar" style="background:${m.role==='Owner'?'#ef4444':m.role==='Admin'?'#f59e0b':m.role==='Manager'?'#8b5cf6':'#6366f1'}30">${m.avatar}</div>
+      <div style="flex:1"><div style="font-weight:600;font-size:13px">${m.name}</div><div class="muted">${m.email} · ${m.role}</div></div>
+      <div style="text-align:right"><span class="badge b-ok">${m.status}</span><div class="muted" style="margin-top:2px">${m.lastActive}</div></div>
+    </div>`).join('');
+
+  document.getElementById('teamsList').innerHTML = ts.teams.map(t=>`
+    <div class="bucket-card">
+      <h3 style="color:${t.color}">${t.name} <span class="badge b-ok">${t.role}</span></h3>
+      <div class="muted" style="margin-bottom:4px">${t.description}</div>
+      <div class="meta"><span>${t.members} members</span><span>Created ${t.created}</span></div>
+    </div>`).join('');
+
+  document.getElementById('rolesList').innerHTML = rs.roles.map(r=>`<tr><td style="color:${r.color};font-weight:600">${r.name}</td><td>L${r.level}</td><td>${r.count}</td><td style="font-size:11px">${r.permissions.join(', ')}</td></tr>`).join('');
+
+  document.getElementById('teamActivity').innerHTML = ac.activity.map(a=>`
+    <div class="search-result" onclick="void(0)">
+      <div class="log-head"><span><span style="font-size:16px">${a.icon}</span> <b>${a.user}</b> ${a.action} <span class="muted">${a.target}</span></span><span class="log-time">${a.time}</span></div>
+    </div>`).join('');
+
+  // Storage
+  document.getElementById('storageStats').innerHTML = [
+    {l:'Total Size',v:st.totalSize,c:'b',m:'All buckets'},
+    {l:'Buckets',v:st.totalBuckets,c:'g',m:st.publicBuckets+' public · '+st.privateBuckets+' private'},
+    {l:'Files',v:st.totalFiles.toLocaleString(),c:'y',m:'Stored objects'},
+    {l:'Regions',v:'3',c:'b',m:'Africa, EU, Global'}
+  ].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+  document.getElementById('buckets').innerHTML = bk.buckets.map(b=>`
+    <div class="bucket-card">
+      <h3>${b.name} <span class="badge ${b.type==='public'?'b-info':'b-warn'}">${b.type}</span></h3>
+      <div class="meta"><span>${b.size}</span><span>${b.files.toLocaleString()} files</span><span>${b.region}</span></div>
+    </div>`).join('');
+
+  document.getElementById('files').innerHTML = fl.files.map(f=>`
+    <div class="file-row">
+      <div><div style="font-size:12px;font-weight:600">${f.name}</div><div class="muted">${f.bucket} · ${f.size} · ${f.type}</div></div>
+      <div>${f.signed?'<span class="badge b-warn">private</span>':'<span class="badge b-ok">public</span>'}</div>
+    </div>`).join('');
+
+  // Search
+  document.getElementById('searchStats').innerHTML = [
+    {l:'Indexes',v:sr.totalIndexes,c:'b',m:'Search indexes'},
+    {l:'Documents',v:sr.totalDocs,c:'g',m:'Indexed docs'},
+    {l:'Entities',v:sr.entities,c:'y',m:'Searchable entities'},
+    {l:'Avg Time',v:'12ms',c:'g',m:'Query speed'}
+  ].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+  document.getElementById('indexes').innerHTML = idx.indexes.map(i=>`<tr><td style="font-family:monospace">${i.entity}</td><td>${i.field}</td><td><span class="badge ${i.type==='exact'?'b-info':i.type==='fulltext'?'b-warn':'b-ok'}">${i.type}</span></td><td>${i.docs}</td></tr>`).join('');
+
+  // Audit
+  document.getElementById('auditStats').innerHTML = [
+    {l:'Total Logs',v:au.totalLogs,c:'b',m:'Today'},
+    {l:'Critical',v:au.criticalEvents,c:'r',m:'Need attention'},
+    {l:'Warnings',v:au.warningEvents,c:'y',m:'Monitor'},
+    {l:'Info',v:au.infoEvents,c:'g',m:'Normal activity'},
+    {l:'Retention',v:'365d',c:'b',m:'Days kept'},
+    {l:'GDPR',v:'Ready',c:'g',m:'Compliant'}
+  ].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+  window.allLogs = lg.logs;
+  renderLogs(lg.logs);
+
+  document.getElementById('gdprInfo').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">
+      <div class="stat"><h3>Status</h3><div class="v g">${gp.gdpr.status}</div><div class="m">GDPR compliant</div></div>
+      <div class="stat"><h3>Retention</h3><div class="v">${gp.gdpr.dataRetention}</div><div class="m">Policy active</div></div>
+      <div class="stat"><h3>Encryption</h3><div class="v g">AES-256</div><div class="m">At rest + transit</div></div>
+      <div class="stat"><h3>Right to Access</h3><div class="v g">✓</div><div class="m">Supported</div></div>
+      <div class="stat"><h3>Right to Erasure</h3><div class="v g">✓</div><div class="m">Supported</div></div>
+      <div class="stat"><h3>Portability</h3><div class="v g">✓</div><div class="m">Export available</div></div>
+      <div class="stat"><h3>Last Review</h3><div class="v">${gp.gdpr.lastReview}</div><div class="m">Next: ${gp.gdpr.nextReview}</div></div>
+      <div class="stat"><h3>Consent</h3><div class="v g">✓</div><div class="m">Managed</div></div>
+    </div>`;
+}
+
+function renderLogs(logs) {
+  document.getElementById('logsList').innerHTML = logs.map(l=>`
+    <div class="log-entry" style="border-left:3px solid ${l.severity==='critical'?'var(--red)':l.severity==='warning'?'var(--yellow)':'var(--blue)'}">
+      <div class="log-head">
+        <span><span class="badge b-${l.severity==='critical'?'crit':l.severity==='warning'?'warn':'info'}">${l.severity}</span> <b>${l.userEmail}</b> — ${l.action}</span>
+        <span class="log-time">${l.timestamp.substring(11,19)}Z</span>
+      </div>
+      <div class="log-detail">${l.details}</div>
+      <div class="muted">Resource: ${l.resource} · IP: ${l.ip} · ${l.device} · Result: ${l.result}</div>
+    </div>`).join('');
+}
+
+async function filterLogs(severity) {
+  if (severity === 'all') { renderLogs(window.allLogs); return; }
+  const r = await api(AU, {action:'list', severity});
+  if (r.success) renderLogs(r.logs);
+}
+
+async function exportLogs() {
+  const r = await api(AU, {action:'export', format:'csv'});
+  if (r.success) alert('Export ready! ' + r.totalRecords + ' records. Download: ' + r.downloadUrl);
+}
+
+async function broadcast() {
+  const subject = document.getElementById('bcastSubject').value;
+  const msgBody = document.getElementById('bcastBody').value;
+  if (!subject) { alert('Enter subject'); return; }
+  const r = await api(NTF, {action:'broadcast', subject, body:msgBody});
+  if (r.success) document.getElementById('bcastResult').innerHTML = `<div class="stat" style="border-color:var(--green)"><div class="g" style="font-weight:600">✅ ${r.message}</div><div class="muted" style="margin-top:4px">Broadcast ID: ${r.broadcastId} · Channels: ${r.channels.length}</div></div>`;
+}
+
+async function getSignedUrl() {
+  const fileId = document.getElementById('signedFileId').value;
+  const r = await api(ST, {action:'signed_url', fileId});
+  if (r.success) document.getElementById('signedResult').innerHTML = `<div class="stat" style="border-color:var(--green)"><div class="g" style="font-weight:600">✅ Signed URL generated</div><div style="font-family:monospace;font-size:11px;word-break:break-all;margin-top:6px;color:var(--accent)">${r.signedUrl}</div><div class="muted" style="margin-top:4px">Expires in ${r.expiresIn}s · File: ${r.fileName}</div></div>`;
+  else document.getElementById('signedResult').innerHTML = `<div class="r">❌ ${r.error}</div>`;
+}
+
+async function doSearch() {
+  const q = document.getElementById('searchQuery').value;
+  const r = await api(SR, {action:'search', query:q, limit:10});
+  if (r.success) document.getElementById('searchResults').innerHTML = r.results.map(res=>`
+    <div class="search-result">
+      <div class="log-head"><h3>${res.title}</h3><span class="score">${(res.score*100).toFixed(0)}% match</span></div>
+      <div class="snippet">${res.snippet}</div>
+      <div class="muted" style="margin-top:4px">Type: ${res.type} · Entity: ${res.entity}</div>
+    </div>`).join('') || '<div class="muted">No results found</div>';
+}
+
+init();
+</script>
+</body>
+</html>
