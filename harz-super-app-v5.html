@@ -269,33 +269,334 @@ let backendOnline = false;
 
 // ===== LOCAL FALLBACK DATA (when backend offline) =====
 const LOCAL_PLATFORMS = [
-  {name:'MindCare AI',icon:'🧠',category:'AI',url:'https://mindcare-ai.vercel.app',status:'Live'},
-  {name:'Cyber Shield X',icon:'🛡️',category:'Security',url:'https://cyber-shield-x.vercel.app',status:'Live'},
-  {name:'Omega Health AI',icon:'🏥',category:'Health',url:'https://omega-health-ai.vercel.app',status:'Live'},
-  {name:'HarzDM',icon:'🛒',category:'Marketplace',url:'https://harzdm-marketplace.vercel.app',status:'Live'},
-  {name:'BuildBot AI',icon:'🏗️',category:'Construction',status:'Live'},
-  {name:'Omega Infinity',icon:'🤖',category:'AI',status:'Live'},
-  {name:'TradeOS',icon:'📈',category:'Trading',url:'https://tradeos.vercel.app',status:'Live'},
-  {name:'Omega Content AI',icon:'🎬',category:'Media',url:'https://omega-content-ai.vercel.app',status:'Live'},
-  {name:'Estate City AI',icon:'🏠',category:'Real Estate',url:'https://abuja-estate-city-ai.vercel.app',status:'Live'},
-  {name:'ContentPilot',icon:'📝',category:'Content',status:'Live'},
-  {name:'Nexal Media',icon:'📱',category:'Media',status:'Live'},
-  {name:'Apex Bank',icon:'🏦',category:'Finance',status:'Development'},
-  {name:'HostMaster',icon:'🌐',category:'Hosting',status:'Live'},
-  {name:'Oracle AI',icon:'🔮',category:'AI',status:'Live'},
-  {name:'HarzAjo',icon:'💰',category:'Finance',url:'https://harzajo.vercel.app',status:'Live'},
-  {name:'HarzPay',icon:'💳',category:'Finance',url:'https://harzpay.vercel.app',status:'Live'},
-  {name:'HarzFX',icon:'💱',category:'Finance',url:'https://harzfx.vercel.app',status:'Live'},
-  {name:'HarzLend',icon:'🏦',category:'Finance',url:'https://harzlend.vercel.app',status:'Live'},
-  {name:'HarzMusic',icon:'🎵',category:'Marketplace',status:'Live'},
-  {name:'HarzFilm',icon:'🎥',category:'Marketplace',status:'Live'},
-  {name:'Harz Store',icon:'📦',category:'Marketplace',status:'Live'},
-  {name:'Harz Digital',icon:'📚',category:'Education',status:'Live'},
-  {name:'HarzDomain',icon:'🔗',category:'Hosting',status:'Live'},
-  {name:'DeployForge',icon:'🚀',category:'DevOps',status:'Live'},
-  {name:'GDEG Energy',icon:'⚡',category:'Energy',status:'Live'},
-  {name:'Maganu AI',icon:'🎯',category:'AI',status:'Live'},
-  {name:'Omega Master',icon:'⚙️',category:'AI',status:'Live'}
+  {
+    "name": "MindCare AI",
+    "icon": "🧠",
+    "category": "AI",
+    "url": "https://mindcare-ai.vercel.app",
+    "status": "Live",
+    "description": "Mental health companion with CBT, DBT, mindfulness support"
+  },
+  {
+    "name": "Cyber Shield X",
+    "icon": "🛡️",
+    "category": "Security",
+    "url": "https://cyber-shield-x.vercel.app",
+    "status": "Live",
+    "description": "Cyber defense agent with 37 specialist sub-agents"
+  },
+  {
+    "name": "Omega Health AI",
+    "icon": "🏥",
+    "category": "Health",
+    "url": "https://omega-health-ai.vercel.app",
+    "status": "Live",
+    "description": "Health platform with 18 medical specialists"
+  },
+  {
+    "name": "HarzDM",
+    "icon": "🛒",
+    "category": "Marketplace",
+    "url": "https://harzdm-marketplace.vercel.app",
+    "status": "Live",
+    "description": "Global Digital Marketplace with multi-seller support"
+  },
+  {
+    "name": "BuildBot AI",
+    "icon": "🏗️",
+    "category": "Construction",
+    "url": "https://buildbot-ai-harz.vercel.app",
+    "status": "Live",
+    "description": "AI construction platform"
+  },
+  {
+    "name": "Omega Infinity",
+    "icon": "🤖",
+    "category": "AI",
+    "url": "https://omega-infinity-dashboard.vercel.app",
+    "status": "Live",
+    "description": "Enterprise AI Orchestration Platform with Agent SDK"
+  },
+  {
+    "name": "TradeOS",
+    "icon": "📈",
+    "category": "Trading",
+    "url": "https://tradeos.vercel.app",
+    "status": "Live",
+    "description": "Enterprise AI Trading Platform — Multi-exchange, real-time WebSocket"
+  },
+  {
+    "name": "Omega Content AI",
+    "icon": "🎬",
+    "category": "Media",
+    "url": "https://omega-content-ai.vercel.app",
+    "status": "Live",
+    "description": "Fully autonomous AI content studio"
+  },
+  {
+    "name": "Estate City AI",
+    "icon": "🏠",
+    "category": "Real Estate",
+    "url": "https://abuja-estate-city-ai.vercel.app",
+    "status": "Live",
+    "description": "AI-Powered Smart Real Estate for Abuja, Nigeria"
+  },
+  {
+    "name": "ContentPilot",
+    "icon": "📝",
+    "category": "Media",
+    "url": "https://contentpilot-ai.vercel.app",
+    "status": "Live",
+    "description": "AI Content Agent dashboard for multi-platform social content"
+  },
+  {
+    "name": "Nexal Media",
+    "icon": "📱",
+    "category": "Media",
+    "url": "https://nexal-media.vercel.app",
+    "status": "Live",
+    "description": "Social Media Ad Publishing Platform — Facebook, Instagram, TikTok, YouTube, X, LinkedIn"
+  },
+  {
+    "name": "Apex Bank",
+    "icon": "🏦",
+    "category": "Finance",
+    "url": "https://apex-ai-psi.vercel.app",
+    "status": "Live",
+    "description": "Apex Bank AI — Financial services platform"
+  },
+  {
+    "name": "HostMaster",
+    "icon": "🌐",
+    "category": "Hosting",
+    "url": "https://harzdomain.vercel.app",
+    "status": "Live",
+    "description": "Enterprise Domain Registration, Cloud Hosting & AI Website Builder"
+  },
+  {
+    "name": "Omega Commander",
+    "icon": "🏢",
+    "category": "AI",
+    "url": "https://omega-commander-ai.vercel.app",
+    "status": "Live",
+    "description": "Autonomous enterprise OS with 9 AI agents, approval workflows"
+  },
+  {
+    "name": "HarzAjo",
+    "icon": "💰",
+    "category": "Finance",
+    "url": "https://harzajo.vercel.app",
+    "status": "Live",
+    "description": "Savings and contribution platform"
+  },
+  {
+    "name": "HarzPay",
+    "icon": "💳",
+    "category": "Finance",
+    "url": "https://harzpay.vercel.app",
+    "status": "Live",
+    "description": "Payment processing platform"
+  },
+  {
+    "name": "HarzFX",
+    "icon": "💱",
+    "category": "Finance",
+    "url": "https://harzfx.vercel.app",
+    "status": "Live",
+    "description": "Foreign exchange platform"
+  },
+  {
+    "name": "HarzLend",
+    "icon": "🏦",
+    "category": "Finance",
+    "url": "https://harzlend.vercel.app",
+    "status": "Live",
+    "description": "Lending and credit platform"
+  },
+  {
+    "name": "Maganu AI",
+    "icon": "🎯",
+    "category": "AI",
+    "url": "https://omega-commander-ai.vercel.app",
+    "status": "Live",
+    "description": "Maganu AI — HARZ ecosystem assistant"
+  },
+  {
+    "name": "Omega Master",
+    "icon": "⚙️",
+    "category": "AI",
+    "url": "https://omega-master.vercel.app",
+    "status": "Live",
+    "description": "OMEGA MASTER — Supreme AI Command Hub for the Harz Ecosystem"
+  },
+  {
+    "name": "HarzMusic",
+    "icon": "🎵",
+    "category": "Marketplace",
+    "url": "https://harz-music.vercel.app",
+    "status": "Live",
+    "description": "African Music Marketplace. Buy & sell Afrobeats, Amapiano, Gospel beats"
+  },
+  {
+    "name": "HarzFilm",
+    "icon": "🎥",
+    "category": "Marketplace",
+    "url": "https://harz-film.vercel.app",
+    "status": "Live",
+    "description": "Global Film Marketplace. Buy, rent & stream films worldwide"
+  },
+  {
+    "name": "Harz Store",
+    "icon": "📦",
+    "category": "Marketplace",
+    "url": "https://harz-store.vercel.app",
+    "status": "Live",
+    "description": "Unified digital product marketplace with 468+ products"
+  },
+  {
+    "name": "Harz Digital",
+    "icon": "📚",
+    "category": "Education",
+    "url": "https://harz-digital.vercel.app",
+    "status": "Live",
+    "description": "Learn Trading & Digital Marketing — 18 AI tutors"
+  },
+  {
+    "name": "HarzDomain",
+    "icon": "🔗",
+    "category": "Hosting",
+    "url": "https://harzdomain.vercel.app",
+    "status": "Live",
+    "description": "Retail & Wholesale Domain Platform with Real-time Domain Search"
+  },
+  {
+    "name": "DeployForge",
+    "icon": "🚀",
+    "category": "DevOps",
+    "url": "https://deployforge.vercel.app",
+    "status": "Live",
+    "description": "Multi-platform deployment engine (GitHub, Vercel, Render, Netlify, Railway)"
+  },
+  {
+    "name": "GDEG Energy",
+    "icon": "⚡",
+    "category": "Energy",
+    "url": "https://gdeg.vercel.app",
+    "status": "Live",
+    "description": "Global Decentralized Energy Grid — Blockchain P2P renewable energy trading"
+  },
+  {
+    "name": "HARZ Cloud",
+    "icon": "☁️",
+    "category": "Infrastructure",
+    "url": "https://harz-cloud-backend.onrender.com",
+    "status": "Development",
+    "description": "Independent backend infrastructure on Render + Supabase"
+  },
+  {
+    "name": "HARZ Edge",
+    "icon": "🌐",
+    "category": "Infrastructure",
+    "url": "https://harz-edge.vercel.app",
+    "status": "Development",
+    "description": "DNS, CDN, WAF & Edge Computing Platform"
+  },
+  {
+    "name": "HARZ AI OS",
+    "icon": "🖥️",
+    "category": "AI",
+    "url": "https://harz-ai-os.vercel.app",
+    "status": "Development",
+    "description": "Next-gen unified ecosystem interface"
+  },
+  {
+    "name": "NEXUS Pro",
+    "icon": "🏗️",
+    "category": "Construction",
+    "url": "https://harz-construction-pro.vercel.app",
+    "status": "Live",
+    "description": "HARZ Construction Management System"
+  },
+  {
+    "name": "HARZ Construction",
+    "icon": "🔨",
+    "category": "Construction",
+    "url": "https://harz-construction-nd.vercel.app",
+    "status": "Live",
+    "description": "Construction company website"
+  },
+  {
+    "name": "HARZ Ecosystem Dashboard",
+    "icon": "📊",
+    "category": "Infrastructure",
+    "url": "https://harz-ecosystem-dashboard.vercel.app",
+    "status": "Live",
+    "description": "Unified Command Center for all Harz Ecosystem platforms"
+  },
+  {
+    "name": "HARZ Platform",
+    "icon": "🏢",
+    "category": "Infrastructure",
+    "url": "https://harz-platform.vercel.app",
+    "status": "Live",
+    "description": "Enterprise showcase deployed across 5 platforms"
+  },
+  {
+    "name": "Omega AI Packager",
+    "icon": "📦",
+    "category": "DevOps",
+    "url": "https://github.com/rabiuhamza11/omega-ai-packager",
+    "status": "Live",
+    "description": "Ship AI agent projects: package, deploy anywhere, built-in RAG"
+  },
+  {
+    "name": "HARZ Portfolio",
+    "icon": "📋",
+    "category": "Infrastructure",
+    "url": "https://rabiuhamza11.github.io/harz-portfolio",
+    "status": "Live",
+    "description": "Official Portfolio & Ecosystem Showcase"
+  },
+  {
+    "name": "HARZ Super App",
+    "icon": "⚡",
+    "category": "Infrastructure",
+    "url": "https://rabiuhamza11.github.io/harz-portfolio/harz-super-app-v5.html",
+    "status": "Live",
+    "description": "Unified ecosystem app with 41 platforms, wallet, agents, analytics"
+  },
+  {
+    "name": "HARZ AI Chat",
+    "icon": "💬",
+    "category": "AI",
+    "url": "https://harz-ai-chat.vercel.app",
+    "status": "Development",
+    "description": "Qwen-powered web chat"
+  },
+  {
+    "name": "HARZ Ecosystem App",
+    "icon": "📱",
+    "category": "Infrastructure",
+    "url": "https://github.com/rabiuhamza11/harz-ecosystem-app",
+    "status": "Development",
+    "description": "Flutter mobile app for Harz Ecosystem"
+  },
+  {
+    "name": "Omega Commander Bot",
+    "icon": "🤖",
+    "category": "AI",
+    "url": "https://github.com/rabiuhamza11/omega-commander-bot",
+    "status": "Live",
+    "description": "Standalone Telegram Bot for OMEGA Business Commander"
+  },
+  {
+    "name": "FluxDeploy",
+    "icon": "🔄",
+    "category": "DevOps",
+    "url": "https://github.com/rabiuhamza11/fluxdeploy",
+    "status": "Live",
+    "description": "Multi-platform deployment system — predecessor to DeployForge"
+  }
 ];
 
 const LOCAL_AGENTS = [
