@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HARZ Cloud API Documentation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #00A859;
+      --dark: #011B1B;
+      --light: #F8F9FA;
+      --gray: #666;
+      --border: #E0E0E0;
+      --code-bg: #1e1e1e;
+      --code-text: #d4d4d4;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--light); color: #333; }
+    
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 260px;
+      height: 100vh;
+      background: var(--dark);
+      color: #fff;
+      overflow-y: auto;
+      padding: 1.5rem 1rem;
+    }
+    .sidebar .logo { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .sidebar .logo span { color: var(--primary); }
+    .sidebar .version { font-size: 0.75rem; color: var(--primary); margin-bottom: 1.5rem; }
+    .sidebar h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; margin: 1rem 0 0.5rem; }
+    .sidebar a { display: block; color: #ccc; text-decoration: none; font-size: 0.85rem; padding: 0.3rem 0.5rem; border-radius: 4px; margin-bottom: 2px; }
+    .sidebar a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .sidebar a.active { background: var(--primary); color: #fff; }
+    
+    .main { margin-left: 260px; padding: 2rem; max-width: 900px; }
+    
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 1.8rem; color: var(--dark); }
+    .header p { color: var(--gray); margin-top: 0.5rem; }
+    .base-url {
+      background: var(--dark);
+      color: var(--primary);
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      display: inline-block;
+    }
+    
+    .endpoint { margin-bottom: 2rem; }
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .method {
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      min-width: 60px;
+      text-align: center;
+    }
+    .method.GET { background: #2196F3; }
+    .method.POST { background: var(--primary); }
+    .method.PUT { background: #FF9800; }
+    .method.DELETE { background: #f44336; }
+    .endpoint-path { font-family: monospace; font-size: 0.95rem; font-weight: 600; color: var(--dark); }
+    .endpoint-desc { font-size: 0.85rem; color: var(--gray); margin-bottom: 0.75rem; }
+    
+    .endpoint-body {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .endpoint-section { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+    .endpoint-section:last-child { border-bottom: none; }
+    .endpoint-section h5 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 0.5rem; }
+    
+    .code-block {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .code-block .key { color: #9CDCFE; }
+    .code-block .str { color: #CE9178; }
+    .code-block .comment { color: #6A9955; }
+    
+    .response-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .response-badge.ok { background: #E8F5E9; color: #2E7D32; }
+    .response-badge.err { background: #FFEBEE; color: #C62828; }
+    
+    .category-title {
+      font-size: 1.3rem;
+      color: var(--dark);
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+    }
+    
+    .auth-note {
+      background: #FFF3E0;
+      border-left: 4px solid #FF9800;
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+    .auth-note code { background: rgba(0,0,0,0.05); padding: 1px 4px; border-radius: 2px; }
+    
+    @media (max-width: 768px) {
+      .sidebar { position: relative; width: 100%; height: auto; }
+      .main { margin-left: 0; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">HARZ<span>Cloud</span></div>
+  <div class="version">API v3.6.4</div>
+  
+  <h4>Getting Started</h4>
+  <a href="#intro">Introduction</a>
+  <a href="#auth">Authentication</a>
+  
+  <h4>Core</h4>
+  <a href="#stats">Stats</a>
+  <a href="#platforms">Platforms</a>
+  <a href="#agents">Agents</a>
+  <a href="#wallet">Wallet</a>
+  <a href="#transactions">Transactions</a>
+  
+  <h4>Payments</h4>
+  <a href="#pay-init">Initialize</a>
+  <a href="#pay-verify">Verify</a>
+  <a href="#pay-list">List</a>
+  <a href="#pay-refund">Refund</a>
+  
+  <h4>GitHub</h4>
+  <a href="#repos">Repositories</a>
+  <a href="#issues">Issues</a>
+  <a href="#commits">Commits</a>
+  <a href="#prs">Pull Requests</a>
+  
+  <h4>Channels</h4>
+  <a href="#channels">Channels</a>
+  <a href="#send">Send Message</a>
+  
+  <h4>Infrastructure</h4>
+  <a href="#deployforge">DeployForge</a>
+  <a href="#scheduler">Scheduler</a>
+  <a href="#orchestrator">Orchestrator</a>
+  <a href="#backup">Backup</a>
+  
+  <h4>Security</h4>
+  <a href="#sso">SSO</a>
+  <a href="#2fa">2FA</a>
+  <a href="#keys">API Keys</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  
+  <div class="header" id="intro">
+    <h1>HARZ Cloud API Documentation</h1>
+    <p>The developer platform for Africa. 118 endpoints across 18 service categories.</p>
+    <div class="base-url">https://harz-cloud-backend.vercel.app</div>
+  </div>
+
+  <div class="auth-note" id="auth">
+    <strong>Authentication:</strong> Most endpoints require an auth token. Pass it via the <code>x-auth-token</code> header.<br>
+    Get a token: <code>POST /api/sso/login {"platform":"your-app","userId":"user123"}</code>
+  </div>
+
+  <!-- CORE -->
+  <h2 class="category-title">Core Endpoints</h2>
+
+  <div class="endpoint" id="stats">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/stats</span>
+    </div>
+    <div class="endpoint-desc">Get ecosystem-wide statistics: platforms, repos, agents, revenue.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">{
+  <span class="key">"platforms"</span>: <span class="str">49</span>,
+  <span class="key">"live"</span>: <span class="str">48</span>,
+  <span class="key">"repos"</span>: <span class="str">62</span>,
+  <span class="key">"agents"</span>: <span class="str">7</span>,
+  <span class="key">"revenue"</span>: <span class="str">125000</span>,
+  <span class="key">"wallet_balance"</span>: <span class="str">89000</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="platforms">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/platforms</span>
+    </div>
+    <div class="endpoint-desc">List all 49 platforms in the HARZ ecosystem.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">[
+  {
+    <span class="key">"name"</span>: <span class="str">"HarzPay"</span>,
+    <span class="key">"icon"</span>: <span class="str">"💳"</span>,
+    <span class="key">"category"</span>: <span class="str">"Finance"</span>,
+    <span class="key">"url"</span>: <span class="str">"https://harzpay.vercel.app"</span>,
+    <span class="key">"status"</span>: <span class="str">"Live"</span>,
+    <span class="key">"revenue"</span>: <span class="str">12000</span>
+  },
+  ...
+]</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="platforms-create">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/platforms</span>
+    </div>
+    <div class="endpoint-desc">Add a new platform. <em>Requires auth.</em></div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Request Body</h5>
+        <div class="code-block">{
+  <span class="key">"name"</span>: <span class="str">"NewApp"</span>,
+  <span class="key">"icon"</span>: <span class="str">"🚀"</span>,
+  <span class="key">"category"</span>: <span class="str">"AI"</span>,
+  <span class="key">"url"</span>: <span class="str">"https://newapp.vercel.app"</span>,
+  <span class="key">"description"</span>: <span class="str">"A new HARZ platform"</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="agents">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/agents</span>
+    </div>
+    <div class="endpoint-desc">List all 7 AI agents with their roles and specialties.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">[
+  {
+    <span class="key">"name"</span>: <span class="str">"Magani"</span>,
+    <span class="key">"role"</span>: <span class="str">"Health Agent"</span>,
+    <span class="key">"icon"</span>: <span class="str">"🏥"</span>,
+    <span class="key">"status"</span>: <span class="str">"active"</span>,
+    <span class="key">"success_rate"</span>: <span class="str">98.5</span>,
+    <span class="key">"tasks_completed"</span>: <span class="str">1247</span>
+  },
+  ...
+]</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="wallet">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/wallet</span>
+    </div>
+    <div class="endpoint-desc">Get wallet balances across all currencies.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">{
+  <span class="key">"ngn_balance"</span>: <span class="str">89000</span>,
+  <span class="key">"usd_balance"</span>: <span class="str">450</span>,
+  <span class="key">"gdeg_balance"</span>: <span class="str">0</span>,
+  <span class="key">"usdt_balance"</span>: <span class="str">120</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="wallet-transfer">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/wallet/transfer</span>
+    </div>
+    <div class="endpoint-desc">Transfer funds between currencies. <em>Requires auth.</em></div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Request Body</h5>
+        <div class="code-block">{
+  <span class="key">"from"</span>: <span class="str">"ngn"</span>,
+  <span class="key">"to"</span>: <span class="str">"usd"</span>,
+  <span class="key">"amount"</span>: <span class="str">10000</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="transactions">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/transactions</span>
+    </div>
+    <div class="endpoint-desc">List all transactions with optional filters.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Query Parameters</h5>
+        <div class="code-block">?type=payment&amp;status=completed&amp;limit=50</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENTS -->
+  <h2 class="category-title">Paystack Payments</h2>
+
+  <div class="endpoint" id="pay-init">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/payments/initialize</span>
+    </div>
+    <div class="endpoint-desc">Initialize a Paystack transaction. <em>Requires auth.</em></div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Request Body</h5>
+        <div class="code-block">{
+  <span class="key">"email"</span>: <span class="str">"customer@example.com"</span>,
+  <span class="key">"amount"</span>: <span class="str">5000</span>,      <span class="comment">// in Naira</span>
+  <span class="key">"reference"</span>: <span class="str">"HARZ_12345"</span>,  <span class="comment">// optional</span>
+  <span class="key">"callback_url"</span>: <span class="str">"https://yoursite.com/callback"</span>
+}</div>
+      </div>
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">{
+  <span class="key">"status"</span>: <span class="str">true</span>,
+  <span class="key">"data"</span>: {
+    <span class="key">"authorization_url"</span>: <span class="str">"https://checkout.paystack.com/..."</span>,
+    <span class="key">"reference"</span>: <span class="str">"HARZ_12345"</span>,
+    <span class="key">"access_code"</span>: <span class="str">"..."</span>
+  }
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="pay-verify">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/payments/verify/:reference</span>
+    </div>
+    <div class="endpoint-desc">Verify a Paystack transaction by reference.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">{
+  <span class="key">"status"</span>: <span class="str">true</span>,
+  <span class="key">"data"</span>: {
+    <span class="key">"status"</span>: <span class="str">"success"</span>,
+    <span class="key">"amount"</span>: <span class="str">500000</span>,  <span class="comment">// in kobo</span>
+    <span class="key">"customer"</span>: { <span class="key">"email"</span>: <span class="str">"customer@example.com"</span> }
+  }
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="pay-list">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/payments/list</span>
+    </div>
+    <div class="endpoint-desc">List Paystack transactions. <em>Requires auth.</em></div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Query Parameters</h5>
+        <div class="code-block">?perPage=50&amp;page=1&amp;from=2026-01-01&amp;to=2026-12-31</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="pay-refund">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/payments/refund</span>
+    </div>
+    <div class="endpoint-desc">Refund a Paystack transaction. <em>Requires auth.</em></div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Request Body</h5>
+        <div class="code-block">{
+  <span class="key">"reference"</span>: <span class="str">"HARZ_12345"</span>,
+  <span class="key">"amount"</span>: <span class="str">2500</span>  <span class="comment">// optional, partial refund</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GITHUB -->
+  <h2 class="category-title">GitHub Integration</h2>
+
+  <div class="endpoint" id="repos">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/github/repos</span>
+    </div>
+    <div class="endpoint-desc">List all repositories in the HARZ ecosystem (60+ repos).</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Query Parameters</h5>
+        <div class="code-block">?sort=updated&amp;per_page=100</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="issues">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/github/repos/:repo/issues</span>
+    </div>
+    <div class="endpoint-desc">List issues for a specific repository.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Example</h5>
+        <div class="code-block">/api/github/repos/harz-cloud-backend/issues?state=open</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="commits">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/github/repos/:repo/commits</span>
+    </div>
+    <div class="endpoint-desc">List recent commits for a repository.</div>
+  </div>
+
+  <div class="endpoint" id="prs">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/github/repos/:repo/pulls</span>
+    </div>
+    <div class="endpoint-desc">List pull requests for a repository.</div>
+  </div>
+
+  <!-- CHANNELS -->
+  <h2 class="category-title">Channel System</h2>
+
+  <div class="endpoint" id="channels">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/channels</span>
+    </div>
+    <div class="endpoint-desc">Get status of all messaging channels (WhatsApp, Slack, Telegram, iMessage).</div>
+  </div>
+
+  <div class="endpoint" id="send">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/channels/send</span>
+    </div>
+    <div class="endpoint-desc">Send a message via a channel. <em>Requires auth.</em></div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Request Body</h5>
+        <div class="code-block">{
+  <span class="key">"channel"</span>: <span class="str">"whatsapp"</span>,
+  <span class="key">"to"</span>: <span class="str">"+2348012345678"</span>,
+  <span class="key">"text"</span>: <span class="str">"Hello from HARZ Cloud!"</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="route-test">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/channels/route-test</span>
+    </div>
+    <div class="endpoint-desc">Test agent routing for a message.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Request Body</h5>
+        <div class="code-block">{ <span class="key">"text"</span>: <span class="str">"I have a headache"</span> }</div>
+      </div>
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">{
+  <span class="key">"agent"</span>: <span class="str">"Magani"</span>,
+  <span class="key">"role"</span>: <span class="str">"Health Agent"</span>,
+  <span class="key">"confidence"</span>: <span class="str">0.95</span>,
+  <span class="key">"language"</span>: <span class="str">"en"</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFRASTRUCTURE -->
+  <h2 class="category-title">Infrastructure</h2>
+
+  <div class="endpoint" id="deployforge">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/deployforge</span>
+    </div>
+    <div class="endpoint-desc">Get DeployForge orchestration dashboard data.</div>
+  </div>
+
+  <div class="endpoint" id="scheduler">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/scheduler/tasks</span>
+    </div>
+    <div class="endpoint-desc">List scheduled tasks.</div>
+  </div>
+
+  <div class="endpoint" id="scheduler-create">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/scheduler/tasks</span>
+    </div>
+    <div class="endpoint-desc">Create a scheduled task. <em>Requires auth.</em></div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Request Body</h5>
+        <div class="code-block">{
+  <span class="key">"name"</span>: <span class="str">"Daily Report"</span>,
+  <span class="key">"cron"</span>: <span class="str">"0 9 * * *"</span>,
+  <span class="key">"action"</span>: <span class="str">"send-report"</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="orchestrator">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/orchestrator/tasks</span>
+    </div>
+    <div class="endpoint-desc">Create an orchestrator task for agent delegation. <em>Requires auth.</em></div>
+  </div>
+
+  <div class="endpoint" id="backup">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/backup/run</span>
+    </div>
+    <div class="endpoint-desc">Run a full backup of all entity data. <em>Requires auth.</em></div>
+  </div>
+
+  <!-- SECURITY -->
+  <h2 class="category-title">Security</h2>
+
+  <div class="endpoint" id="sso">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/sso/login</span>
+    </div>
+    <div class="endpoint-desc">Create an SSO session and get JWT token.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Request Body</h5>
+        <div class="code-block">{
+  <span class="key">"platform"</span>: <span class="str">"harzstore"</span>,
+  <span class="key">"userId"</span>: <span class="str">"ahmad"</span>
+}</div>
+      </div>
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">{
+  <span class="key">"access_token"</span>: <span class="str">"eyJhbG..."</span>,
+  <span class="key">"expires_in"</span>: <span class="str">"7d"</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="sso-verify">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/sso/verify</span>
+    </div>
+    <div class="endpoint-desc">Verify an SSO token.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Request Body</h5>
+        <div class="code-block">{ <span class="key">"token"</span>: <span class="str">"eyJhbG..."</span> }</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="2fa">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/2fa/setup</span>
+    </div>
+    <div class="endpoint-desc">Set up 2FA for a user. <em>Requires auth.</em></div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">{
+  <span class="key">"qr_code"</span>: <span class="str">"otpauth://..."</span>,
+  <span class="key">"secret"</span>: <span class="str">"ABCD1234EFGH5678"</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint" id="keys">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/keys</span>
+    </div>
+    <div class="endpoint-desc">List API keys for the authenticated user. <em>Requires auth.</em></div>
+  </div>
+
+  <div class="endpoint" id="keys-create">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/api/keys</span>
+    </div>
+    <div class="endpoint-desc">Create a new API key. <em>Requires auth.</em></div>
+  </div>
+
+  <div class="endpoint" id="keys-revoke">
+    <div class="endpoint-header">
+      <span class="method DELETE">DELETE</span>
+      <span class="endpoint-path">/api/keys/:id</span>
+    </div>
+    <div class="endpoint-desc">Revoke an API key. <em>Requires auth.</em></div>
+  </div>
+
+  <!-- HEALTH -->
+  <h2 class="category-title">Health &amp; Status</h2>
+
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/health</span>
+    </div>
+    <div class="endpoint-desc">Health check endpoint.</div>
+    <div class="endpoint-body">
+      <div class="endpoint-section">
+        <h5>Response</h5>
+        <div class="code-block">{
+  <span class="key">"status"</span>: <span class="str">"operational"</span>,
+  <span class="key">"version"</span>: <span class="str">"3.6.4"</span>,
+  <span class="key">"uptime"</span>: <span class="str">"99.9%"</span>
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/api/endpoints</span>
+    </div>
+    <div class="endpoint-desc">List all 118 API endpoints with categories.</div>
+  </div>
+
+  <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);color:var(--gray);font-size:0.8rem;">
+    HARZ Cloud API v3.6.4 — The developer platform for Africa.<br>
+    118 endpoints across 18 service categories. Powered by Paystack.
+  </div>
+
+</div>
+
+<script>
+// Active link tracking
+const sections = document.querySelectorAll('.endpoint, .header, .auth-note');
+const links = document.querySelectorAll('.sidebar a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  links.forEach(l => {
+    l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+
+</body>
+</html>

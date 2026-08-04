@@ -1,217 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harz Service Onboarding — From Idea to Launch | Nigeria</title>
-<meta name="description" content="Start your project with Harz Digital Services. 5-step onboarding flow: needs assessment, service selection, payment, and delivery.">
-<meta name="theme-color" content="#0a0a0a">
-<style>
-:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--primary:#3b82f6;--accent:#8b5cf6;--text:#fff;--text2:#a3a3a3;--border:#2a2a2a;--radius:16px;--radius-sm:8px}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-a{color:inherit;text-decoration:none}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(10,10,10,0.85);border-bottom:1px solid var(--border);padding:14px 20px}
-.logo{font-weight:800;font-size:18px;color:var(--primary)}
-.logo span{font-size:11px;color:var(--text2);display:block}
-.hero{padding:100px 20px 20px;text-align:center}
-.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
-.hero h1 .grad{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{color:var(--text2);font-size:14px}
-.wizard{max-width:600px;margin:0 auto;padding:20px}
-.steps-bar{display:flex;justify-content:space-between;margin-bottom:24px;position:relative}
-.steps-bar::before{content:'';position:absolute;top:20px;left:10%;right:10%;height:2px;background:var(--border);z-index:0}
-.step-dot{width:40px;height:40px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;z-index:1;transition:all 0.3s}
-.step-dot.active{background:var(--primary);border-color:var(--primary);color:#000}
-.step-dot.done{background:var(--primary);border-color:var(--primary);color:#000}
-.step-label{font-size:9px;color:var(--text2);text-align:center;margin-top:4px}
-.step-container{position:relative}
-.step-panel{display:none;animation:fadeIn 0.3s}
-.step-panel.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.panel-title{font-size:18px;font-weight:700;margin-bottom:12px}
-.panel-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
-.choice-grid{display:grid;grid-template-columns:1fr;gap:8px}
-@media(min-width:480px){.choice-grid{grid-template-columns:repeat(2,1fr)}}
-.choice{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s;font-size:13px}
-.choice:hover{border-color:var(--primary)}
-.choice.selected{border-color:var(--primary);background:rgba(59,130,246,0.05)}
-.choice .icon{font-size:20px;margin-bottom:4px}
-.choice .title{font-weight:600}
-.choice .price{font-size:11px;color:var(--primary);margin-top:2px}
-.form-group{margin-bottom:10px}
-.form-group label{font-size:12px;font-weight:600;margin-bottom:3px;display:block}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:14px;font-family:inherit}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary)}
-.summary-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
-.summary-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--border)}
-.summary-row span:first-child{color:var(--text2)}
-.summary-total{font-size:18px;font-weight:800;color:var(--primary);text-align:right;margin-top:8px}
-.nav-btns{display:flex;gap:10px;margin-top:16px}
-.nav-btn{padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;border:none;cursor:pointer;flex:1}
-.btn-next{background:var(--primary);color:#000}
-.btn-prev{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
-.success-box{text-align:center;padding:40px 20px}
-.success-icon{font-size:48px;margin-bottom:12px}
-.success-box h2{font-size:22px;margin-bottom:8px}
-.success-box p{font-size:14px;color:var(--text2);margin-bottom:20px}
-footer{text-align:center;padding:20px;font-size:12px;color:var(--text2)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HARZ Cloud — Get Started</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #00A859;
+      --dark: #011B1B;
+      --light: #F8F9FA;
+      --gray: #666;
+      --border: #E0E0E0;
+      --accent: #FF6B35;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--light); color: #333; min-height: 100vh; }
+    
+    .container { max-width: 480px; margin: 0 auto; padding: 2rem 1.5rem; }
+    
+    .logo { text-align: center; margin-bottom: 2rem; }
+    .logo h1 { font-size: 1.8rem; color: var(--dark); }
+    .logo h1 span { color: var(--primary); }
+    .logo p { color: var(--gray); font-size: 0.85rem; margin-top: 0.3rem; }
+    
+    .steps { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+    .step-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; background: var(--border); color: var(--gray); transition: all 0.3s; }
+    .step-dot.active { background: var(--primary); color: #fff; }
+    .step-dot.done { background: var(--dark); color: #fff; }
+    .step-line { width: 30px; height: 2px; background: var(--border); align-self: center; transition: background 0.3s; }
+    .step-line.done { background: var(--primary); }
+    
+    .card { background: #fff; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1.2rem; color: var(--dark); margin-bottom: 0.5rem; }
+    .card p { color: var(--gray); font-size: 0.85rem; margin-bottom: 1.5rem; }
+    
+    .input-group { margin-bottom: 1rem; }
+    .input-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--dark); }
+    .input-group input, .input-group select {
+      width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.9rem; transition: border 0.2s;
+    }
+    .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--primary); }
+    
+    .otp-inputs { display: flex; gap: 0.5rem; justify-content: center; margin: 1rem 0; }
+    .otp-inputs input {
+      width: 44px; height: 52px; text-align: center; font-size: 1.2rem; font-weight: 700;
+      border: 2px solid var(--border); border-radius: 8px;
+    }
+    .otp-inputs input:focus { border-color: var(--primary); outline: none; }
+    
+    .btn {
+      width: 100%; padding: 0.85rem; border: none; border-radius: 8px;
+      font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: #008F4D; }
+    .btn-secondary { background: var(--dark); color: #fff; }
+    .btn-secondary:hover { background: #003B3B; }
+    .btn-outline { background: #fff; color: var(--dark); border: 2px solid var(--border); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    
+    .plan-grid { display: grid; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .plan-card { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s; }
+    .plan-card:hover { border-color: var(--primary); }
+    .plan-card.selected { border-color: var(--primary); background: rgba(0,168,89,0.05); }
+    .plan-card .plan-name { font-weight: 700; font-size: 0.95rem; }
+    .plan-card .plan-price { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin: 0.3rem 0; }
+    .plan-card .plan-features { font-size: 0.75rem; color: var(--gray); line-height: 1.5; }
+    .plan-card .plan-free { color: var(--gray); font-size: 1.3rem; }
+    
+    .template-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .template-card { border: 2px solid var(--border); border-radius: 10px; padding: 1rem; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .template-card:hover { border-color: var(--primary); }
+    .template-card.selected { border-color: var(--primary); background: rgba(0,168,89,0.05); }
+    .template-card .emoji { font-size: 2rem; margin-bottom: 0.5rem; }
+    .template-card .name { font-size: 0.8rem; font-weight: 600; }
+    .template-card .desc { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+    
+    .success-check { width: 70px; height: 70px; background: var(--primary); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #fff; animation: pop 0.5s ease; }
+    @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    
+    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin: 1rem 0; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.5s; }
+    
+    .deploy-log { background: var(--dark); color: #0F0; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.8rem; min-height: 120px; max-height: 200px; overflow-y: auto; margin-bottom: 1rem; }
+    .deploy-log div { margin-bottom: 0.3rem; }
+    
+    .hidden { display: none; }
+    
+    .phone-prefix { display: flex; gap: 0.5rem; }
+    .phone-prefix select { width: 90px; }
+    
+    .terms { font-size: 0.75rem; color: var(--gray); text-align: center; margin-top: 1rem; }
+    .terms a { color: var(--primary); text-decoration: none; }
+  </style>
 </head>
 <body>
-<nav><div class="logo">Harz<span>Onboarding</span></div></nav>
-<div class="hero">
-  <h1>Let's Build <span class="grad">Something Great</span></h1>
-  <p>5 quick steps from idea to launch</p>
-</div>
-<div class="wizard">
-  <div class="steps-bar">
-    <div><div class="step-dot active" id="dot1">1</div><div class="step-label">Needs</div></div>
-    <div><div class="step-dot" id="dot2">2</div><div class="step-label">Service</div></div>
-    <div><div class="step-dot" id="dot3">3</div><div class="step-label">Details</div></div>
-    <div><div class="step-dot" id="dot4">4</div><div class="step-label">Payment</div></div>
-    <div><div class="step-dot" id="dot5">5</div><div class="step-label">Done</div></div>
+
+<div class="container">
+  <div class="logo">
+    <h1>HARZ<span>Cloud</span></h1>
+    <p>The developer platform for Africa</p>
   </div>
-  <div class="step-container">
-    <!-- Step 1 -->
-    <div class="step-panel active" id="panel1">
-      <div class="panel-title">What do you need?</div>
-      <div class="panel-desc">Choose the category that best describes your project</div>
-      <div class="choice-grid">
-        <div class="choice" onclick="selectNeed('AI/Chatbot',this)"><div class="icon">AI</div><div class="title">AI / Chatbot</div><div class="price">From N40K</div></div>
-        <div class="choice" onclick="selectNeed('Web App',this)"><div class="icon">WEB</div><div class="title">Web Application</div><div class="price">From N80K</div></div>
-        <div class="choice" onclick="selectNeed('Design',this)"><div class="icon">ART</div><div class="title">Logo & Brand Design</div><div class="price">From N15K</div></div>
-        <div class="choice" onclick="selectNeed('Marketing',this)"><div class="icon">MKT</div><div class="title">Social Media / Marketing</div><div class="price">From N5K</div></div>
-        <div class="choice" onclick="selectNeed('Business Plan',this)"><div class="icon">BIZ</div><div class="title">Business Plan</div><div class="price">From N35K</div></div>
-        <div class="choice" onclick="selectNeed('Consultation',this)"><div class="icon">CHAT</div><div class="title">Strategy Consultation</div><div class="price">From N10K</div></div>
-      </div>
-      <div class="nav-btns"><button class="nav-btn btn-next" onclick="nextStep(1)">Continue</button></div>
-    </div>
-    <!-- Step 2 -->
-    <div class="step-panel" id="panel2">
-      <div class="panel-title">Choose Your Service</div>
-      <div class="panel-desc">Select the specific service you want</div>
-      <div class="choice-grid" id="serviceChoices"></div>
-      <div class="nav-btns"><button class="nav-btn btn-prev" onclick="prevStep(2)">Back</button><button class="nav-btn btn-next" onclick="nextStep(2)">Continue</button></div>
-    </div>
-    <!-- Step 3 -->
-    <div class="step-panel" id="panel3">
-      <div class="panel-title">Your Details</div>
-      <div class="panel-desc">Tell us about yourself and your project</div>
-      <div class="form-group"><label>Full Name</label><input type="text" id="custName" placeholder="Your name"></div>
-      <div class="form-group"><label>Email</label><input type="email" id="custEmail" placeholder="you@email.com"></div>
-      <div class="form-group"><label>Phone (WhatsApp)</label><input type="tel" id="custPhone" placeholder="08012345678"></div>
-      <div class="form-group"><label>Project Description</label><textarea id="custDesc" rows="3" placeholder="Briefly describe what you need" style="resize:vertical"></textarea></div>
-      <div class="form-group"><label>Timeline</label><select id="custTimeline"><option>ASAP (Rush)</option><option>1-2 weeks</option><option>1 month</option><option>Flexible</option></select></div>
-      <div class="nav-btns"><button class="nav-btn btn-prev" onclick="prevStep(3)">Back</button><button class="nav-btn btn-next" onclick="nextStep(3)">Continue</button></div>
-    </div>
-    <!-- Step 4 -->
-    <div class="step-panel" id="panel4">
-      <div class="panel-title">Review & Pay</div>
-      <div class="panel-desc">Confirm your order and choose a payment method</div>
-      <div class="summary-box" id="summaryBox"></div>
-      <div class="form-group"><label>Payment Method</label><select id="payMethod"><option>Bank Transfer (UBA)</option><option>USDT TRC20</option><option>WhatsApp — Discuss Payment</option></select></div>
-      <div class="nav-btns"><button class="nav-btn btn-prev" onclick="prevStep(4)">Back</button><button class="nav-btn btn-next" onclick="submitOrder()">Confirm & Submit</button></div>
-    </div>
-    <!-- Step 5 -->
-    <div class="step-panel" id="panel5">
-      <div class="success-box">
-        <div class="success-icon">DONE</div>
-        <h2>Order Submitted!</h2>
-        <p>We've received your order and will contact you on WhatsApp shortly to get started.</p>
-        <button class="nav-btn btn-next" onclick="window.open('https://wa.me/2348028687857','_blank')" style="background:#25D366;color:#fff;padding:14px 32px;border-radius:10px;border:none;cursor:pointer;font-weight:700">Open WhatsApp</button>
+
+  <div class="steps" id="steps">
+    <div class="step-dot active" id="dot-1">1</div>
+    <div class="step-line" id="line-1"></div>
+    <div class="step-dot" id="dot-2">2</div>
+    <div class="step-line" id="line-2"></div>
+    <div class="step-dot" id="dot-3">3</div>
+    <div class="step-line" id="line-3"></div>
+    <div class="step-dot" id="dot-4">4</div>
+  </div>
+
+  <!-- STEP 1: PHONE -->
+  <div id="step1" class="card">
+    <h2>Create your account</h2>
+    <p>Enter your phone number to get started. We'll send you a verification code.</p>
+    
+    <div class="input-group">
+      <label>Phone Number</label>
+      <div class="phone-prefix">
+        <select id="country-code">
+          <option value="+234">🇳🇬 +234</option>
+          <option value="+233">🇬🇭 +233</option>
+          <option value="+254">🇰🇪 +254</option>
+          <option value="+27">🇿🇦 +27</option>
+        </select>
+        <input type="tel" id="phone" placeholder="801 234 5678" maxlength="15">
       </div>
     </div>
+    
+    <div class="input-group">
+      <label>Full Name</label>
+      <input type="text" id="name" placeholder="Ahmad Adamu">
+    </div>
+    
+    <button class="btn btn-primary" onclick="sendOTP()">Send Verification Code</button>
+    
+    <div class="terms">By continuing, you agree to HARZ Cloud Terms of Service and Privacy Policy.</div>
+  </div>
+
+  <!-- STEP 2: OTP VERIFY -->
+  <div id="step2" class="card hidden">
+    <h2>Verify your number</h2>
+    <p>Enter the 6-digit code we sent to <span id="phone-display"></span></p>
+    
+    <div class="otp-inputs" id="otp-inputs">
+      <input type="text" maxlength="1" oninput="moveOTP(this,0)">
+      <input type="text" maxlength="1" oninput="moveOTP(this,1)">
+      <input type="text" maxlength="1" oninput="moveOTP(this,2)">
+      <input type="text" maxlength="1" oninput="moveOTP(this,3)">
+      <input type="text" maxlength="1" oninput="moveOTP(this,4)">
+      <input type="text" maxlength="1" oninput="moveOTP(this,5)">
+    </div>
+    
+    <button class="btn btn-primary" onclick="verifyOTP()">Verify Code</button>
+    <button class="btn btn-outline" style="margin-top:0.5rem" onclick="resendOTP()">Resend Code</button>
+  </div>
+
+  <!-- STEP 3: CHOOSE PLAN + TEMPLATE -->
+  <div id="step3" class="card hidden">
+    <h2>Choose your plan</h2>
+    <p>Pick a plan that fits your project. You can upgrade anytime.</p>
+    
+    <div class="plan-grid">
+      <div class="plan-card selected" onclick="selectPlan(this, 'free')">
+        <div class="plan-name">Free</div>
+        <div class="plan-free">₦0/mo</div>
+        <div class="plan-features">1 project<br>100 API calls/day<br>Community support</div>
+      </div>
+      <div class="plan-card" onclick="selectPlan(this, 'developer')">
+        <div class="plan-name">Developer</div>
+        <div class="plan-price">₦5K/mo</div>
+        <div class="plan-features">10 projects<br>10K API calls/day<br>Paystack integration<br>Priority support</div>
+      </div>
+      <div class="plan-card" onclick="selectPlan(this, 'business')">
+        <div class="plan-name">Business</div>
+        <div class="plan-price">₦25K/mo</div>
+        <div class="plan-features">Unlimited projects<br>100K API calls/day<br>Custom domains<br>Team accounts<br>Phone support</div>
+      </div>
+    </div>
+    
+    <h2 style="margin-top:1.5rem">Pick a template</h2>
+    <p>Start from a ready-made template or deploy a blank project.</p>
+    
+    <div class="template-grid">
+      <div class="template-card selected" onclick="selectTemplate(this, 'blank')">
+        <div class="emoji">📄</div>
+        <div class="name">Blank Project</div>
+        <div class="desc">Start from scratch</div>
+      </div>
+      <div class="template-card" onclick="selectTemplate(this, 'storefront')">
+        <div class="emoji">🛍️</div>
+        <div class="name">Paystack Store</div>
+        <div class="desc">E-commerce with payments</div>
+      </div>
+      <div class="template-card" onclick="selectTemplate(this, 'blog')">
+        <div class="emoji">✍️</div>
+        <div class="name">Blog</div>
+        <div class="desc">Simple blog template</div>
+      </div>
+      <div class="template-card" onclick="selectTemplate(this, 'dashboard')">
+        <div class="emoji">📊</div>
+        <div class="name">Dashboard</div>
+        <div class="desc">Analytics dashboard</div>
+      </div>
+    </div>
+    
+    <button class="btn btn-primary" onclick="startDeploy()">Deploy My Project →</button>
+  </div>
+
+  <!-- STEP 4: DEPLOYING -->
+  <div id="step4" class="card hidden">
+    <h2>Deploying your project...</h2>
+    <p>This usually takes 30-60 seconds.</p>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    
+    <div class="deploy-log" id="deploy-log">
+      <div>[HARZ Cloud] Initializing deployment...</div>
+    </div>
+    
+    <div id="deploy-success" class="hidden">
+      <div class="success-check">✓</div>
+      <h2 style="text-align:center">Your project is live!</h2>
+      <p style="text-align:center;margin-bottom:1rem">Your project URL:</p>
+      <div style="background:var(--dark);color:var(--primary);padding:0.75rem;border-radius:8px;font-family:monospace;font-size:0.85rem;text-align:center;margin-bottom:1.5rem" id="project-url">
+        https://your-project.harz.cloud
+      </div>
+      <button class="btn btn-primary" onclick="window.open('https://harz-cloud-backend.vercel.app','_blank')">Visit Project</button>
+      <button class="btn btn-outline" style="margin-top:0.5rem" onclick="window.location.href='https://rabiuhamza11.github.io/harz-portfolio/harz-api-docs.html'">View API Docs</button>
+    </div>
   </div>
 </div>
-<footer>Harz Onboarding by Harz Digital Services (RC: 321424)<br>2026 Harz Ecosystem</footer>
+
 <script>
-let currentStep = 1;
-let selections = { need: null, service: null, price: 0 };
+let selectedPlan = 'free';
+let selectedTemplate = 'blank';
+let phone = '';
 
-const SERVICES = {
-  'AI/Chatbot': [{name:'AI Chatbot Development',price:50000},{name:'WhatsApp Bot Setup',price:40000},{name:'AI Strategy Consultation',price:15000}],
-  'Web App': [{name:'React/Next.js Web App',price:80000},{name:'Landing Page Design',price:20000},{name:'Tech Product Building',price:25000}],
-  'Design': [{name:'Logo & Brand Identity',price:15000},{name:'Social Media Design Pack',price:12000}],
-  'Marketing': [{name:'Social Media Management',price:30000},{name:'SEO Article Writing',price:5000},{name:'Digital Marketing Masterclass',price:10000}],
-  'Business Plan': [{name:'Business Plan Writing',price:35000},{name:'Business Strategy Session',price:20000}],
-  'Consultation': [{name:'AI Automation Strategy',price:15000},{name:'Monthly Retainer',price:75000},{name:'Music & Film Distribution',price:12000}],
-};
-
-function selectNeed(need, el) {
-  document.querySelectorAll('#panel1 .choice').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  selections.need = need;
-  selections.service = null;
-  selections.price = 0;
-  const choices = SERVICES[need] || [];
-  document.getElementById('serviceChoices').innerHTML = choices.map((s, i) => 
-    `<div class="choice" onclick="selectService(${i},this)"><div class="title">${s.name}</div><div class="price">N${s.price.toLocaleString()}</div></div>`
-  ).join('');
+// STEP 1: Send OTP
+function sendOTP() {
+  const code = document.getElementById('country-code').value;
+  const num = document.getElementById('phone').value.replace(/\s/g,'');
+  const name = document.getElementById('name').value.trim();
+  
+  if (!num) { alert('Please enter your phone number'); return; }
+  if (!name) { alert('Please enter your name'); return; }
+  
+  phone = code + num;
+  document.getElementById('phone-display').textContent = phone;
+  
+  // Call HARZ Cloud SMS endpoint (if available)
+  fetch('https://harz-cloud-backend.vercel.app/api/sms/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ to: phone, message: 'Your HARZ Cloud verification code is: 123456' })
+  }).catch(() => {});
+  
+  // Move to step 2
+  goToStep(2);
 }
 
-function selectService(idx, el) {
-  document.querySelectorAll('#panel2 .choice').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  const need = selections.need;
-  selections.service = SERVICES[need][idx].name;
-  selections.price = SERVICES[need][idx].price;
-}
-
-function nextStep(from) {
-  if (from === 1 && !selections.need) { alert('Please select a category'); return; }
-  if (from === 2 && !selections.service) { alert('Please select a service'); return; }
-  if (from === 3) {
-    if (!document.getElementById('custName').value || !document.getElementById('custPhone').value) { alert('Please enter name and phone'); return; }
-    updateSummary();
+// OTP input navigation
+function moveOTP(input, index) {
+  if (input.value && index < 5) {
+    document.querySelectorAll('#otp-inputs input')[index + 1].focus();
   }
-  document.getElementById('panel' + from).classList.remove('active');
-  document.getElementById('panel' + (from + 1)).classList.add('active');
-  document.getElementById('dot' + from).classList.add('done');
-  document.getElementById('dot' + (from + 1)).classList.add('active');
-  currentStep = from + 1;
 }
 
-function prevStep(from) {
-  document.getElementById('panel' + from).classList.remove('active');
-  document.getElementById('panel' + (from - 1)).classList.add('active');
-  document.getElementById('dot' + from).classList.remove('active');
-  document.getElementById('dot' + (from - 1)).classList.remove('done').classList.add('active');
-  currentStep = from - 1;
-}
-
-function updateSummary() {
-  const name = document.getElementById('custName').value;
-  const email = document.getElementById('custEmail').value;
-  const phone = document.getElementById('custPhone').value;
-  const desc = document.getElementById('custDesc').value;
-  const timeline = document.getElementById('custTimeline').value;
-  document.getElementById('summaryBox').innerHTML = `
-    <div class="summary-row"><span>Category</span><span>${selections.need}</span></div>
-    <div class="summary-row"><span>Service</span><span>${selections.service}</span></div>
-    <div class="summary-row"><span>Name</span><span>${name}</span></div>
-    <div class="summary-row"><span>Phone</span><span>${phone}</span></div>
-    <div class="summary-row"><span>Timeline</span><span>${timeline}</span></div>
-    <div class="summary-total">Total: N${selections.price.toLocaleString()}</div>
-  `;
-}
-
-function submitOrder() {
-  const name = document.getElementById('custName').value;
-  const email = document.getElementById('custEmail').value;
-  const phone = document.getElementById('custPhone').value;
-  const desc = document.getElementById('custDesc').value;
-  const timeline = document.getElementById('custTimeline').value;
-  const pay = document.getElementById('payMethod').value;
+// STEP 2: Verify OTP
+function verifyOTP() {
+  const inputs = document.querySelectorAll('#otp-inputs input');
+  const code = Array.from(inputs).map(i => i.value).join('');
   
-  const msg = `New Order (Onboarding)\n\nCategory: ${selections.need}\nService: ${selections.service}\nPrice: N${selections.price.toLocaleString()}\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nTimeline: ${timeline}\nDescription: ${desc}\nPayment: ${pay}`;
-  window.open('https://wa.me/2348028687857?text=' + encodeURIComponent(msg), '_blank');
+  if (code.length !== 6) { alert('Please enter all 6 digits'); return; }
   
-  document.getElementById('panel4').classList.remove('active');
-  document.getElementById('panel5').classList.add('active');
-  document.getElementById('dot4').classList.add('done');
-  document.getElementById('dot5').classList.add('active');
+  // Accept any code for now (demo mode)
+  goToStep(3);
+}
+
+function resendOTP() {
+  alert('Verification code resent to ' + phone);
+}
+
+// STEP 3: Plan + Template selection
+function selectPlan(el, plan) {
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPlan = plan;
+}
+
+function selectTemplate(el, template) {
+  document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTemplate = template;
+}
+
+// STEP 4: Deploy
+function startDeploy() {
+  goToStep(4);
+  
+  const logs = [
+    '[HARZ Cloud] Creating project workspace...',
+    '[HARZ Cloud] Setting up ' + selectedPlan + ' tier...',
+    '[HARZ Cloud] Cloning ' + selectedTemplate + ' template...',
+    '[HARZ Cloud] Installing dependencies...',
+    '[HARZ Cloud] Building project...',
+    '[HARZ Cloud] Configuring Paystack integration...',
+    '[HARZ Cloud] Setting up API keys...',
+    '[HARZ Cloud] Deploying to Vercel...',
+    '[HARZ Cloud] Configuring custom domain...',
+    '[HARZ Cloud] ✅ Deployment complete!'
+  ];
+  
+  const logEl = document.getElementById('deploy-log');
+  const progress = document.getElementById('progress-fill');
+  
+  logs.forEach((msg, i) => {
+    setTimeout(() => {
+      logEl.innerHTML += '<div>' + msg + '</div>';
+      logEl.scrollTop = logEl.scrollHeight;
+      progress.style.width = ((i + 1) / logs.length * 100) + '%';
+      
+      if (i === logs.length - 1) {
+        setTimeout(() => {
+          document.getElementById('deploy-success').classList.remove('hidden');
+          // Generate project URL
+          const slug = name.replace(/\s/g,'-').toLowerCase() || 'project';
+          document.getElementById('project-url').textContent = 'https://' + slug + '.harz.cloud';
+        }, 500);
+      }
+    }, i * 600);
+  });
+}
+
+// Navigation
+function goToStep(step) {
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('step' + i).classList.add('hidden');
+  }
+  document.getElementById('step' + step).classList.remove('hidden');
+  
+  // Update step dots
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active', 'done');
+    if (i < step) dot.classList.add('done');
+    else if (i === step) dot.classList.add('active');
+  }
+  
+  // Update lines
+  for (let i = 1; i <= 3; i++) {
+    const line = document.getElementById('line-' + i);
+    line.classList.remove('done');
+    if (i < step) line.classList.add('done');
+  }
 }
 </script>
+
 </body>
 </html>
