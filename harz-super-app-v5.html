@@ -163,6 +163,14 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 </div>
 </div>
 
+
+<!-- PRODUCTS -->
+<div class="page" id="page-products">
+<input class="search-bar" id="productSearch" placeholder="🔍 Search products..." oninput="filterProducts()">
+<div class="section-title">Harz Store (<span id="productCount">0</span>)</div>
+<div id="productList"></div>
+</div>
+
 <!-- ANALYTICS -->
 <div class="page" id="page-analytics">
 <div class="card">
@@ -252,6 +260,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 <div class="nav-item" id="nav-platforms" onclick="showPage('platforms')"><div class="ico">📱</div><div class="txt">Platforms</div></div>
 <div class="nav-item" id="nav-agents" onclick="showPage('agents')"><div class="ico">🤖</div><div class="txt">Agents</div></div>
 <div class="nav-item" id="nav-wallet" onclick="showPage('wallet')"><div class="ico">💳</div><div class="txt">Wallet</div></div>
+<div class="nav-item" id="nav-store" onclick="showPage('products')"><div class="ico">🛍️</div><div class="txt">Store</div></div>
 <div class="nav-item" id="nav-settings" onclick="showPage('settings')"><div class="ico">⚙️</div><div class="txt">Settings</div></div>
 </div>
 
@@ -609,13 +618,47 @@ const LOCAL_AGENTS = [
   {name:'Magani',role:'Ecosystem Assistant',icon:'🤖',status:'active',success_rate:97.2,tasks_completed:5800,platform:'Harz Ecosystem',description:'Main HARZ ecosystem assistant'}
 ];
 
+
+const LOCAL_PRODUCTS = [
+  {name:'MindCare Premium',description:'1-on-1 AI therapy sessions with CBT & DBT',price:5000,currency:'NGN',category:'AI Service',platform:'MindCare AI',status:'Active'},
+  {name:'Cyber Shield Pro',description:'Advanced threat detection & 24/7 monitoring',price:15000,currency:'NGN',category:'Security',platform:'Cyber Shield X',status:'Active'},
+  {name:'Health Consultation',description:'AI health checkup with 18 specialists',price:3000,currency:'NGN',category:'Health',platform:'Omega Health AI',status:'Active'},
+  {name:'HarzDM Seller Pack',description:'Premium seller dashboard & analytics',price:7500,currency:'NGN',category:'Marketplace',platform:'HarzDM',status:'Active'},
+  {name:'BuildBot Plan',description:'AI construction management with cost estimator',price:20000,currency:'NGN',category:'Construction',platform:'BuildBot AI',status:'Active'},
+  {name:'TradeOS Pro',description:'Real-time multi-exchange trading with AI signals',price:25000,currency:'NGN',category:'Trading',platform:'TradeOS',status:'Active'},
+  {name:'ContentPilot Studio',description:'Multi-platform social content automation',price:10000,currency:'NGN',category:'Media',platform:'ContentPilot',status:'Active'},
+  {name:'Nexal Ad Campaign',description:'Social ads across 6 platforms with Paystack',price:8000,currency:'NGN',category:'Media',platform:'Nexal Media',status:'Active'},
+  {name:'Estate City Listing',description:'Premium property listing with AI estimator',price:5000,currency:'NGN',category:'Real Estate',platform:'Estate City AI',status:'Active'},
+  {name:'HarzAjo Premium',description:'Advanced savings & contribution tracking',price:2000,currency:'NGN',category:'Finance',platform:'HarzAjo',status:'Active'},
+  {name:'HarzPay Business',description:'Payment processing with low fees',price:12000,currency:'NGN',category:'Finance',platform:'HarzPay',status:'Active'},
+  {name:'HarzFX Pro',description:'Real-time FX rates & currency exchange',price:3500,currency:'NGN',category:'Finance',platform:'HarzFX',status:'Active'},
+  {name:'HarzMusic Beat License',description:'Exclusive Afrobeats & Amapiano beats',price:1500,currency:'NGN',category:'Music',platform:'HarzMusic',status:'Active'},
+  {name:'HarzFilm Rental',description:'HD film rental — Nollywood, Bollywood, K-Drama',price:500,currency:'NGN',category:'Film',platform:'HarzFilm',status:'Active'},
+  {name:'Harz Digital Course',description:'Trading & Digital Marketing (18 modules)',price:15000,currency:'NGN',category:'Education',platform:'Harz Digital',status:'Active'},
+  {name:'HarzDomain Premium',description:'Domain + free SSL & DNS management',price:2500,currency:'NGN',category:'Hosting',platform:'HarzDomain',status:'Active'},
+  {name:'DeployForge Pro',description:'Multi-platform deployment engine',price:10000,currency:'NGN',category:'DevOps',platform:'DeployForge',status:'Active'},
+  {name:'GDEG Energy Credits',description:'Blockchain P2P renewable energy credits',price:100,currency:'USD',category:'Energy',platform:'GDEG Energy',status:'Active'},
+  {name:'Omega Commander',description:'Enterprise OS with 9 AI agents',price:50000,currency:'NGN',category:'AI',platform:'Omega Commander',status:'Active'},
+  {name:'HarzLend Credit',description:'AI loan approval & credit scoring',price:0,currency:'NGN',category:'Finance',platform:'HarzLend',status:'Active'}
+];
+
+const LOCAL_TRANSACTIONS = [
+  {amount:5000,currency:'NGN',type:'Purchase',status:'Completed',description:'MindCare Premium',platform:'MindCare AI',reference:'TXN-001'},
+  {amount:15000,currency:'NGN',type:'Purchase',status:'Completed',description:'Cyber Shield Pro',platform:'Cyber Shield X',reference:'TXN-002'},
+  {amount:25000,currency:'NGN',type:'Purchase',status:'Completed',description:'TradeOS Pro',platform:'TradeOS',reference:'TXN-003'},
+  {amount:500,currency:'NGN',type:'Purchase',status:'Completed',description:'HarzFilm rental',platform:'HarzFilm',reference:'TXN-004'},
+  {amount:1500,currency:'NGN',type:'Purchase',status:'Completed',description:'HarzMusic beat license',platform:'HarzMusic',reference:'TXN-005'},
+  {amount:10000,currency:'NGN',type:'Purchase',status:'Pending',description:'DeployForge Pro',platform:'DeployForge',reference:'TXN-006'},
+  {amount:2500,currency:'NGN',type:'Purchase',status:'Completed',description:'HarzDomain registration',platform:'HarzDomain',reference:'TXN-007'}
+];
+
 const LOCAL_WALLET = {
-  ngn_balance:0, usd_balance:0, gdeg_balance:0, usdt_balance:0,
+  ngn_balance:125000, usd_balance:350, gdeg_balance:5000, usdt_balance:120,
   payment_methods:[
     {type:'UBA Transfer',details:'2034326424',is_active:true},
     {type:'Paystack',details:'Card Payment',is_active:true},
     {type:'GDEG Token',details:'1 = $0.01',is_active:true},
-    {type:'USDT TRC20',details:'Crypto',is_active:true}
+    {type:'USDT TRC20',details:'TX...abc123',is_active:true}
   ]
 };
 
@@ -1102,6 +1145,59 @@ function saveApiUrl() {
     setTimeout(() => location.reload(), 1000);
   }
 }
+
+
+// ===== PRODUCTS =====
+let productData = LOCAL_PRODUCTS;
+let transactionData = LOCAL_TRANSACTIONS;
+
+function renderProducts(products) {
+  document.getElementById('productCount').textContent = products.length;
+  const list = document.getElementById('productList');
+  list.innerHTML = products.map(p => `
+    <div class="list-item" style="flex-direction:column;align-items:flex-start;cursor:pointer" onclick="buyProduct('${p.name}')">
+      <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+        <span class="title">${p.name}</span>
+        <span style="color:var(--accent2);font-weight:700;font-size:13px">${p.currency === 'USD' ? '$' : '₦'}${(p.price || 0).toLocaleString()}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;width:100%;margin-top:4px">
+        <span class="meta">${p.description}</span>
+        <span class="badge badge-live">${p.platform}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterProducts() {
+  const q = document.getElementById('productSearch').value.toLowerCase();
+  renderProducts(productData.filter(p => 
+    p.name.toLowerCase().includes(q) || 
+    (p.category || '').toLowerCase().includes(q) ||
+    (p.platform || '').toLowerCase().includes(q)
+  ));
+}
+
+function buyProduct(name) {
+  showToast('🛒 ' + name + ' — Checkout coming soon!');
+}
+
+// Render products on page load
+setTimeout(() => { renderProducts(productData); renderTxns(transactionData); }, 1500);
+
+function renderTxns(txns) {
+  const list = document.getElementById('transactionList');
+  if (!txns || txns.length === 0) {
+    list.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No transactions yet</span></div>';
+  } else {
+    list.innerHTML = txns.map(t => `
+      <div class="list-item">
+        <span class="title">${t.description || t.type}</span>
+        <span class="meta">${t.currency} ${(t.amount || 0).toLocaleString()} • ${t.status}</span>
+      </div>
+    `).join('');
+  }
+}
+
 
 // ===== THEME =====
 function toggleTheme() {
