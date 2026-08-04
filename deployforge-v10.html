@@ -182,6 +182,9 @@ textarea{resize:vertical;min-height:60px}
 </div>
 </div>
 <script>
+const HARZ_CLOUD_API = 'https://harz-cloud-backend.onrender.com';
+const DEPLOYFORGE_API = 'https://harz-cloud-backend.onrender.com/deployforge';
+const API_KEY = 'harz_cloud_live_321424';
 function showTab(n,el){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('sec-'+n).classList.add('active');if(el)el.classList.add('active')}
 function log(el,msg){el.innerHTML+=msg+'\n';el.scrollTop=el.scrollHeight}
 function doLaunch(){const n=document.getElementById('launch-name').value.trim();if(!n){alert('Enter project name');return}const r=document.getElementById('launch-result'),l=document.getElementById('launch-log');r.style.display='block';l.innerHTML='';log(l,'[1/4] GitHub repo: '+n+'...');setTimeout(()=>log(l,'[2/4] GitHub Pages...'),500);setTimeout(()=>log(l,'[3/4] Vercel...'),1000);setTimeout(()=>log(l,'[4/4] Render...'),1500);setTimeout(()=>{log(l,'\nDONE!\nGitHub: https://rabiuhamza11.github.io/'+n+'/\nVercel: https://'+n+'.vercel.app\nRender: https://'+n+'.onrender.com')},2000)}
