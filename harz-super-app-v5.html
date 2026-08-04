@@ -812,7 +812,7 @@ function renderAll() {
 function renderPlatforms(platforms) {
   document.getElementById('platformCount').textContent = platforms.length;
   document.getElementById('platformGrid').innerHTML = platforms.map(p => `
-    <div class="platform" onclick="${p.url ? `window.open('${p.url}','_blank')` : `showToast('${p.name} — coming soon')`}">
+    <div class="platform" onclick="showPlatformModal('${p.name}')">
       <div class="icon">${p.icon || '📦'}</div>
       <div class="name">${p.name}</div>
       <span class="badge ${p.status === 'Live' ? 'badge-live' : 'badge-dev'}">${p.status}</span>
