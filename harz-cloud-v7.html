@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Cloud v7.0 — Advanced Platform</title>
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e293b;--accent:#6366f1;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:12px;max-width:1200px;margin:0 auto}
+h1{font-size:20px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.card h2{font-size:14px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px}
+.stat h3{font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.stat .v{font-size:18px;font-weight:700}.stat .m{font-size:9px;color:var(--muted);margin-top:2px}
+.g{color:var(--green)}.r{color:var(--red)}.y{color:var(--yellow)}.b{color:var(--blue)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:9px;text-transform:uppercase}
+.badge{padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600}
+.b-ok{background:var(--green)20;color:var(--green)}.b-warn{background:var(--yellow)20;color:var(--yellow)}.b-info{background:var(--blue)20;color:var(--blue)}.b-crit{background:var(--red)20;color:var(--red)}
+.btn{padding:7px 12px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.btn-p:hover{opacity:.9}
+.nav-bar{display:flex;gap:3px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px}
+.nav-item{padding:7px 12px;border-radius:8px;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid transparent;transition:.15s}
+.nav-item.active{background:var(--card);border-color:var(--border);color:var(--accent)}
+.nav-item:not(.active){color:var(--muted)}
+.tc{display:none}.tc.active{display:block}
+.row{display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.muted{color:var(--muted);font-size:10px}
+.bar{height:4px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:2px}.bar-f{height:100%;border-radius:3px}
+.input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:12px;margin-bottom:6px}
+.input:focus{outline:none;border-color:var(--accent)}
+.mc{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:.2s}
+.mc:hover{border-color:var(--accent);transform:translateY(-2px)}
+.mc h3{font-size:13px;margin-bottom:4px}.mc .stats{font-size:10px;color:var(--muted);line-height:1.5}.mc .icon{font-size:24px;float:right}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+</style>
+</head>
+<body>
+<h1>🚀 HARZ Cloud v7.0 — Advanced Platform</h1>
+<p class="sub">15 new modules · 61 total backends · All operational</p>
+
+<div class="nav-bar" id="navBar">
+  <div class="nav-item active" onclick="show('overview',this)">🏠 Overview</div>
+  <div class="nav-item" onclick="show('predict',this)">🔮 Predictions</div>
+  <div class="nav-item" onclick="show('vector',this)">🧠 Vector DB</div>
+  <div class="nav-item" onclick="show('registry',this)">📦 Model Registry</div>
+  <div class="nav-item" onclick="show('pipeline',this)">🔄 Data Pipeline</div>
+  <div class="nav-item" onclick="show('push',this)">🔔 Push Notif</div>
+  <div class="nav-item" onclick="show('sms',this)">📱 SMS Gateway</div>
+  <div class="nav-item" onclick="show('video',this)">🎥 Video Conf</div>
+  <div class="nav-item" onclick="show('msg',this)">💬 Messaging</div>
+  <div class="nav-item" onclick="show('pm',this)">📋 Projects</div>
+  <div class="nav-item" onclick="show('inv',this)">📦 Inventory</div>
+  <div class="nav-item" onclick="show('invoice',this)">🧾 Invoices</div>
+  <div class="nav-item" onclick="show('sub',this)">💳 Subscriptions</div>
+  <div class="nav-item" onclick="show('gql',this)">⚡ GraphQL</div>
+  <div class="nav-item" onclick="show('rl',this)">🚦 Rate Limit</div>
+  <div class="nav-item" onclick="show('log',this)">📜 Logs</div>
+</div>
+
+<div class="tc active" id="tab-overview"><div class="card"><h2>📊 v7.0 Module Overview</h2><div class="overview-grid" id="ovGrid"></div></div><div class="card"><h2>⚡ Backend Status (61 Functions)</h2><div id="bkStatus"></div></div></div>
+<div class="tc" id="tab-predict"><div class="card"><h2>📊 Stats</h2><div class="grid" id="prStats"></div></div><div class="card"><h2>🔮 Active Predictions</h2><div id="prList"></div></div><div class="card"><h2>🤖 AI Models</h2><div id="prModels"></div></div></div>
+<div class="tc" id="tab-vector"><div class="card"><h2>📊 Stats</h2><div class="grid" id="vdStats"></div></div><div class="card"><h2>📚 Collections</h2><div id="vdCollections"></div></div><div class="card"><h2>🔍 Recent Searches</h2><div id="vdSearches"></div></div><div class="card"><h2>🔎 Semantic Search</h2><input class="input" id="vdQuery" placeholder="Search..."><button class="btn btn-p" onclick="vdSearch()">Search</button><div id="vdResult" style="margin-top:8px"></div></div></div>
+<div class="tc" id="tab-registry"><div class="card"><h2>📊 Stats</h2><div class="grid" id="rgStats"></div></div><div class="card"><h2>📦 Models</h2><div id="rgModels"></div></div><div class="card"><h2>🧪 A/B Tests</h2><div id="rgTests"></div></div></div>
+<div class="tc" id="tab-pipeline"><div class="card"><h2>📊 Stats</h2><div class="grid" id="dpStats"></div></div><div class="card"><h2>🔄 Pipelines</h2><div id="dpPipelines"></div></div><div class="card"><h2>📊 Data Lineage</h2><div id="dpLineage"></div></div></div>
+<div class="tc" id="tab-push"><div class="card"><h2>📊 Stats</h2><div class="grid" id="pnStats"></div></div><div class="card"><h2>🔔 Campaigns</h2><div id="pnCampaigns"></div></div><div class="card"><h2>👥 Segments</h2><div id="pnSegments"></div></div></div>
+<div class="tc" id="tab-sms"><div class="card"><h2>📊 Stats</h2><div class="grid" id="smStats"></div></div><div class="card"><h2>📱 Recent Messages</h2><div id="smMessages"></div></div></div>
+<div class="tc" id="tab-video"><div class="card"><h2>📊 Stats</h2><div class="grid" id="vcStats"></div></div><div class="card"><h2>🎥 Meetings</h2><div id="vcMeetings"></div></div><div class="card"><h2>🏠 Rooms</h2><div id="vcRooms"></div></div></div>
+<div class="tc" id="tab-msg"><div class="card"><h2>📊 Stats</h2><div class="grid" id="mgStats"></div></div><div class="card"><h2>💬 Channels</h2><div id="mgChannels"></div></div><div class="card"><h2>📨 Direct Messages</h2><div id="mgDMs"></div></div></div>
+<div class="tc" id="tab-pm"><div class="card"><h2>📊 Stats</h2><div class="grid" id="pmStats"></div></div><div class="card"><h2>📋 Projects</h2><div id="pmProjects"></div></div><div class="card"><h2>✅ Tasks</h2><div id="pmTasks"></div></div></div>
+<div class="tc" id="tab-inv"><div class="card"><h2>📊 Stats</h2><div class="grid" id="ivStats"></div></div><div class="card"><h2>📦 Items</h2><div id="ivItems"></div></div><div class="card"><h2>🚚 Suppliers</h2><div id="ivSuppliers"></div></div></div>
+<div class="tc" id="tab-invoice"><div class="card"><h2>📊 Stats</h2><div class="grid" id="inStats"></div></div><div class="card"><h2>🧾 Invoices</h2><div id="inInvoices"></div></div><div class="card"><h2>⏰ Reminders</h2><div id="inReminders"></div></div></div>
+<div class="tc" id="tab-sub"><div class="card"><h2>📊 Stats</h2><div class="grid" id="suStats"></div></div><div class="card"><h2>💳 Plans</h2><div id="suPlans"></div></div><div class="card"><h2>📋 Subscriptions</h2><div id="suSubscriptions"></div></div><div class="card"><h2>💸 Dunning</h2><div id="suDunning"></div></div></div>
+<div class="tc" id="tab-gql"><div class="card"><h2>📊 Stats</h2><div class="grid" id="gqStats"></div></div><div class="card"><h2>⚡ GraphQL Query</h2><input class="input" id="gqQuery" placeholder="{ listTransactions { id amount status } }"><button class="btn btn-p" onclick="gqlRun()">Execute</button><div id="gqResult" style="margin-top:8px"></div></div><div class="card"><h2>📐 Schema</h2><div id="gqSchema"></div></div></div>
+<div class="tc" id="tab-rl"><div class="card"><h2>📊 Stats</h2><div class="grid" id="rlStats"></div></div><div class="card"><h2>🚦 Rules</h2><div id="rlRules"></div></div><div class="card"><h2>⚙️ Algorithms</h2><div id="rlAlgos"></div></div><div class="card"><h2>⚠️ Violations</h2><div id="rlViolations"></div></div></div>
+<div class="tc" id="tab-log"><div class="card"><h2>📊 Stats</h2><div class="grid" id="lgStats"></div></div><div class="card"><h2>📜 Recent Logs</h2><div id="lgLogs"></div></div><div class="card"><h2>🔔 Alert Rules</h2><div id="lgAlerts"></div></div></div>
+
+<script>
+const A7 = {
+  pr:'https://solene-5b0577e2.base44.app/functions/harzPredictions', vd:'https://solene-5b0577e2.base44.app/functions/harzVectorDB', rg:'https://solene-5b0577e2.base44.app/functions/harzModelRegistry', dp:'https://solene-5b0577e2.base44.app/functions/harzDataPipeline', pn:'https://solene-5b0577e2.base44.app/functions/harzPushNotif', sm:'https://solene-5b0577e2.base44.app/functions/harzSMSGateway', vc:'https://solene-5b0577e2.base44.app/functions/harzVideoConf', mg:'https://solene-5b0577e2.base44.app/functions/harzMessaging', pm:'https://solene-5b0577e2.base44.app/functions/harzProjectMgmt', iv:'https://solene-5b0577e2.base44.app/functions/harzInventory', in:'https://solene-5b0577e2.base44.app/functions/harzInvoices', su:'https://solene-5b0577e2.base44.app/functions/harzSubscriptions', gq:'https://solene-5b0577e2.base44.app/functions/harzGraphQL', rl:'https://solene-5b0577e2.base44.app/functions/harzRateLimit', lg:'https://solene-5b0577e2.base44.app/functions/harzLogAggregator'
+};
+async function api(u,b){return(await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b||{action:'info'})})).json();}
+function show(t,el){document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+t).classList.add('active');}
+const S=(arr)=>arr.map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+async function init(){
+  const I=await Promise.all(Object.values(A7).map(u=>api(u)));
+  const D=await Promise.all([
+    api(A7.pr,{action:'predictions'}),api(A7.pr,{action:'models'}),
+    api(A7.vd,{action:'collections'}),api(A7.vd,{action:'searches'}),
+    api(A7.rg,{action:'models'}),api(A7.rg,{action:'ab_tests'}),
+    api(A7.dp,{action:'pipelines'}),api(A7.dp,{action:'lineage'}),
+    api(A7.pn,{action:'campaigns'}),api(A7.pn,{action:'segments'}),
+    api(A7.sm,{action:'messages'}),
+    api(A7.vc,{action:'meetings'}),api(A7.vc,{action:'rooms'}),
+    api(A7.mg,{action:'channels'}),api(A7.mg,{action:'dms'}),
+    api(A7.pm,{action:'projects'}),api(A7.pm,{action:'tasks'}),
+    api(A7.iv,{action:'items'}),api(A7.iv,{action:'suppliers'}),
+    api(A7.in,{action:'invoices'}),api(A7.in,{action:'reminders'}),
+    api(A7.su,{action:'plans'}),api(A7.su,{action:'subscriptions'}),api(A7.su,{action:'dunning'}),
+    api(A7.gq,{action:'schema'}),api(A7.gq,{action:'stats'}),
+    api(A7.rl,{action:'rules'}),api(A7.rl,{action:'algorithms'}),api(A7.rl,{action:'violations'}),
+    api(A7.lg,{action:'logs'}),api(A7.lg,{action:'alerts'})
+  ]);
+  const [prL,prM,vdC,vdS,rgM,rgT,dpP,dpL,pnC,pnS,smM,vcM,vcR,mgC,mgD,pmP,pmT,ivI,ivS,inI,inR,suP,suS,suD,gqS,gqSt,rlR,rlA,rlV,lgL,lgA]=D;
+
+  const mods=[
+    {i:'🔮',n:'AI Predictions',s:`${I[0].totalModels} models · ${I[0].avgAccuracy} accuracy · Revenue, churn, demand`,t:'predict'},
+    {i:'🧠',n:'Vector DB',s:`${I[1].totalCollections} collections · ${I[1].totalVectors.toLocaleString()} vectors · ${I[1].totalSize}`,t:'vector'},
+    {i:'📦',n:'Model Registry',s:`${I[2].totalModels} models · ${I[2].productionModels} prod · $${I[2].totalCost}`,t:'registry'},
+    {i:'🔄',n:'Data Pipeline',s:`${I[3].totalPipelines} pipelines · ${I[3].totalRecords.toLocaleString()} records`,t:'pipeline'},
+    {i:'🔔',n:'Push Notif',s:`${I[4].totalSent.toLocaleString()} sent · ${I[4].totalSegments} segments · ${I[4].totalSubscribers.toLocaleString()} subs`,t:'push'},
+    {i:'📱',n:'SMS Gateway',s:`${I[5].totalSent.toLocaleString()} sent · ${I[5].deliveryRate} delivery · ${I[5].totalCost}`,t:'sms'},
+    {i:'🎥',n:'Video Conf',s:`${I[6].upcomingMeetings} upcoming · ${I[6].liveMeetings} live · ${I[6].totalRooms} rooms`,t:'video'},
+    {i:'💬',n:'Messaging',s:`${I[7].totalChannels} channels · ${I[7].totalDMs} DMs · ${I[7].totalMessages.toLocaleString()} msgs`,t:'msg'},
+    {i:'📋',n:'Projects',s:`${I[8].activeProjects} active · ${I[8].totalTasks} tasks · ${I[8].totalTime}`,t:'pm'},
+    {i:'📦',n:'Inventory',s:`${I[9].totalItems} items · ${I[9].reorderAlerts} reorder · ${I[9].outOfStock} out`,t:'inv'},
+    {i:'🧾',n:'Invoices',s:`${I[10].paid} paid · ${I[10].pending} pending · ${I[10].overdue} overdue`,t:'invoice'},
+    {i:'💳',n:'Subscriptions',s:`${I[11].totalPlans} plans · $${I[11].totalMRR} MRR · ${I[11].totalSubscribers.toLocaleString()} subs`,t:'sub'},
+    {i:'⚡',n:'GraphQL',s:`${I[12].queries} queries · ${I[12].mutations} mutations · ${I[12].avgLatency} avg`,t:'gql'},
+    {i:'🚦',n:'Rate Limit',s:`${I[13].totalRules} rules · ${I[13].throttled.toLocaleString()} throttled · ${I[13].algorithms} algos`,t:'rl'},
+    {i:'📜',n:'Logs',s:`${I[14].totalLogs.toLocaleString()} logs · ${I[14].totalSources} sources · ${I[14].storageUsed}`,t:'log'}
+  ];
+  document.getElementById('ovGrid').innerHTML=mods.map((m,i)=>`<div class="mc" onclick="document.querySelectorAll('.nav-item')[${i+1}].click()"><span class="icon">${m.i}</span><h3>${m.n}</h3><div class="stats">${m.s}</div></div>`).join('');
+
+  const allBk=['harzTemplates','harzBilling','harzCDN','harzRBAC','harzPayments','harzPaystack','buildBot','agentBuilder','deployForgeDeploy','harzNotifications','harzTeams','harzStorage','harzSearch','harzAuditLog','cfWorkers','harzAgentTraining','harzI18n','harzWebhooks','harzStripe','harzAPIGateway','harzMonitor','harzFeatureFlags','harzDBManager','harzCRM','harzEmailCampaigns','harzCodeGen','harzCMS','harzChatWidget','harzPayRouter','harzMobileBuilder','harzDocEditor','harzAnalytics','harzSecurity','harzBackupDR','harzWorkflowEngine','harzSEO','harzAffiliate','harzHelpDesk','harzFeedback','harzImageStudio','harzVideoGen','harzTranslation','harzSentiment','harzIntegrationHub','harzEventSystem','harzAdminConsole','harzPredictions','harzVectorDB','harzModelRegistry','harzDataPipeline','harzPushNotif','harzSMSGateway','harzVideoConf','harzMessaging','harzProjectMgmt','harzInventory','harzInvoices','harzSubscriptions','harzGraphQL','harzRateLimit','harzLogAggregator'];
+  const results=await Promise.all(allBk.map(fn=>fetch('https://solene-5b0577e2.base44.app/functions/'+fn,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'info'})}).then(r=>r.status).catch(()=>0)));
+  document.getElementById('bkStatus').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px">${allBk.map((fn,i)=>`<div class="row" style="margin:0;padding:4px 8px"><span class="badge ${results[i]===200?'b-ok':'b-crit'}">${results[i]===200?'200':'ERR'}</span><span style="font-family:monospace;font-size:10px;flex:1">${fn}</span></div>`).join('')}</div>`;
+
+  // Predictions
+  document.getElementById('prStats').innerHTML=S([{l:'Predictions',v:I[0].totalPredictions,c:'b',m:'Active'},{l:'Models',v:I[0].totalModels,c:'g',m:'Production'},{l:'Accuracy',v:I[0].avgAccuracy,c:'g',m:'Average'},{l:'Types',v:'3',c:'y',m:'Revenue, churn, demand'}]);
+  document.getElementById('prList').innerHTML=prL.predictions.map(p=>`<div class="row" style="border-left:3px solid ${p.trend==='up'?'var(--green)':'var(--red)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${p.title} <span style="font-size:10px">${p.trend==='up'?'📈':'📉'}</span></div><div class="muted">Now: ${p.current} → Predicted: <span style="color:var(--accent)">${p.predicted}</span> · Confidence: ${p.confidence}</div><div class="muted">Factors: ${p.factors.join(', ')}</div></div><span class="badge b-info">${p.type}</span></div>`).join('');
+  document.getElementById('prModels').innerHTML=prM.models.map(m=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${m.name} <span class="badge b-ok">${m.status}</span></div><div class="muted">${m.algorithm} · Accuracy: ${m.accuracy} · v${m.version} · ${m.dataPoints.toLocaleString()} points</div></div></div>`).join('');
+
+  // Vector DB
+  document.getElementById('vdStats').innerHTML=S([{l:'Collections',v:I[1].totalCollections,c:'b',m:'Vector stores'},{l:'Vectors',v:I[1].totalVectors.toLocaleString(),c:'g',m:'Embeddings'},{l:'Size',v:I[1].totalSize,c:'y',m:'Storage'},{l:'Indexes',v:I[1].indexTypes.length,c:'b',m:'HNSW, IVF, Flat'}]);
+  document.getElementById('vdCollections').innerHTML=vdC.collections.map(c=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.name}</div><div class="muted">${c.vectors.toLocaleString()} vectors · ${c.dimensions}d · ${c.size} · Index: ${c.index}</div></div><span class="badge b-ok">${c.lastUpdate}</span></div>`).join('');
+  document.getElementById('vdSearches').innerHTML=vdS.searches.map(s=>`<div class="row"><div style="flex:1"><div style="font-size:12px">"${s.query}"</div><div class="muted">${s.collection} · ${s.results} results · Top: ${s.topScore} · ${s.time}</div></div></div>`).join('');
+
+  // Model Registry
+  document.getElementById('rgStats').innerHTML=S([{l:'Models',v:I[2].totalModels,c:'b',m:I[2].productionModels+' production'},{l:'Requests',v:I[2].totalRequests.toLocaleString(),c:'g',m:'Total'},{l:'Cost',v:I[2].totalCost,c:'y',m:'This month'},{l:'A/B Tests',v:I[2].abTests,c:'b',m:'Running'}]);
+  document.getElementById('rgModels').innerHTML=rgM.models.map(m=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${m.name} <span class="badge ${m.status==='production'?'b-ok':'b-warn'}">${m.status}</span></div><div class="muted">${m.provider} · v${m.version} · ${m.accuracy} · ${m.latency} · ${m.requests.toLocaleString()} reqs · ${m.cost}</div></div></div>`).join('');
+  document.getElementById('rgTests').innerHTML=rgT.tests.map(t=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${t.modelA} vs ${t.modelB}</div><div class="muted">Metric: ${t.metric} · Split: ${t.split} · Winner: <span style="color:var(--green)">${t.winner}</span> · ${t.confidence}</div></div></div>`).join('');
+
+  // Pipeline
+  document.getElementById('dpStats').innerHTML=S([{l:'Pipelines',v:I[3].totalPipelines,c:'b',m:I[3].activePipelines+' active'},{l:'Records',v:I[3].totalRecords.toLocaleString(),c:'g',m:'Processed'},{l:'Stream',v:I[3].streamPipelines,c:'b',m:'Real-time'},{l:'Batch',v:I[3].batchPipelines,c:'y',m:'Scheduled'},{l:'Lineage',v:I[3].lineageEntities,c:'g',m:'Tracked'}]);
+  document.getElementById('dpPipelines').innerHTML=dpP.pipelines.map(p=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${p.name} <span class="badge b-info">${p.type}</span></div><div class="muted">${p.source} → ${p.target} · ${p.schedule} · ${p.records.toLocaleString()} records · ${p.steps.join(' → ')}</div></div><span class="badge b-ok">${p.status}</span></div>`).join('');
+  document.getElementById('dpLineage').innerHTML=dpL.lineage.map(l=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${l.entity}</div><div class="muted">Upstream: ${l.upstream.join(', ')} → Downstream: ${l.downstream.join(', ')} · Quality: ${l.quality}</div></div></div>`).join('');
+
+  // Push
+  document.getElementById('pnStats').innerHTML=S([{l:'Campaigns',v:I[4].totalCampaigns,c:'b',m:I[4].sentCampaigns+' sent'},{l:'Sent',v:I[4].totalSent.toLocaleString(),c:'g',m:'Notifications'},{l:'Segments',v:I[4].totalSegments,c:'y',m:'Audiences'},{l:'Subscribers',v:I[4].totalSubscribers.toLocaleString(),c:'b',m:'Total'}]);
+  document.getElementById('pnCampaigns').innerHTML=pnC.campaigns.map(c=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.title}</div><div class="muted">${c.channel} · ${c.audience} · ${c.sent.toLocaleString()} sent · ${c.clickRate} CTR</div></div><span class="badge ${c.status==='sent'?'b-ok':'b-warn'}">${c.status}</span></div>`).join('');
+  document.getElementById('pnSegments').innerHTML=pnS.segments.map(s=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${s.name}</div><div class="muted">${s.criteria} · ${s.count.toLocaleString()} users · ${s.type}</div></div></div>`).join('');
+
+  // SMS
+  document.getElementById('smStats').innerHTML=S([{l:'Sent',v:I[5].totalSent.toLocaleString(),c:'g',m:'Total'},{l:'Delivery',v:I[5].deliveryRate,c:'g',m:'Success rate'},{l:'Cost',v:I[5].totalCost,c:'y',m:'Total spent'},{l:'Countries',v:'6',c:'b',m:'Supported'}]);
+  document.getElementById('smMessages').innerHTML=smM.messages.map(m=>`<div class="row" style="border-left:3px solid ${m.type==='otp'?'var(--blue)':m.type==='bulk'?'var(--accent)':'var(--green)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${m.to} · <span class="badge b-info">${m.type}</span></div><div class="muted">${m.message.substring(0,60)}${m.message.length>60?'...':''} · ${m.cost}</div></div><span class="badge b-ok">${m.status}</span></div>`).join('');
+
+  // Video
+  document.getElementById('vcStats').innerHTML=S([{l:'Meetings',v:I[6].totalMeetings,c:'b',m:'Total'},{l:'Upcoming',v:I[6].upcomingMeetings,c:'y',m:'Scheduled'},{l:'Live',v:I[6].liveMeetings,c:'r',m:'In session'},{l:'Rooms',v:I[6].totalRooms,c:'g',m:'Available'}]);
+  document.getElementById('vcMeetings').innerHTML=vcM.meetings.map(m=>`<div class="row" style="border-left:3px solid ${m.status==='live'?'var(--red)':m.status==='upcoming'?'var(--yellow)':'var(--green)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${m.title} ${m.recording?'🔴':''}</div><div class="muted">${m.host} · ${m.participants} participants · ${m.startTime} · ${m.duration}</div></div><span class="badge ${m.status==='live'?'b-crit':m.status==='upcoming'?'b-warn':'b-ok'}">${m.status}</span></div>`).join('');
+  document.getElementById('vcRooms').innerHTML=vcR.rooms.map(r=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${r.name}</div><div class="muted">Capacity: ${r.capacity} · ${r.meetings} meetings · Screen: ${r.screenShare?'✓':'✗'} · Rec: ${r.recording?'✓':'✗'} · WB: ${r.whiteboard?'✓':'✗'}</div></div><span class="badge b-ok">${r.status}</span></div>`).join('');
+
+  // Messaging
+  document.getElementById('mgStats').innerHTML=S([{l:'Channels',v:I[7].totalChannels,c:'b',m:'Team'},{l:'DMs',v:I[7].totalDMs,c:'g',m:'Direct'},{l:'Messages',v:I[7].totalMessages.toLocaleString(),c:'y',m:'Total'},{l:'Unread',v:I[7].unreadCount,c:'r',m:'Pending'},{l:'Users',v:I[7].totalUsers,c:'b',m:'Team'}]);
+  document.getElementById('mgChannels').innerHTML=mgC.channels.map(c=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">#${c.name}</div><div class="muted">${c.description} · ${c.members} members · ${c.messages.toLocaleString()} msgs · ${c.lastMessage}</div></div></div>`).join('');
+  document.getElementById('mgDMs').innerHTML=mgD.dms.map(d=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${d.user} ${d.unread>0?`<span class="badge b-crit">${d.unread}</span>`:''}</div><div class="muted">"${d.lastMessage}" · ${d.time}</div></div></div>`).join('');
+
+  // PM
+  document.getElementById('pmStats').innerHTML=S([{l:'Projects',v:I[8].totalProjects,c:'b',m:I[8].activeProjects+' active'},{l:'Tasks',v:I[8].totalTasks,c:'g',m:I[8].completedTasks+' done'},{l:'Time',v:I[8].totalTime,c:'y',m:'Tracked'},{l:'Team',v:I[8].teamMembers,c:'b',m:'Members'}]);
+  document.getElementById('pmProjects').innerHTML=pmP.projects.map(p=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${p.name} <span class="badge ${p.status==='completed'?'b-ok':p.status==='in_progress'?'b-warn':'b-info'}">${p.status}</span></div><div class="muted">${p.completed}/${p.tasks} tasks · ${p.progress}% · Due: ${p.due} · Team: ${p.team.join(', ')}</div></div><div style="width:50px"><div class="bar"><div class="bar-f" style="width:${p.progress}%;background:var(--accent)"></div></div></div></div>`).join('');
+  document.getElementById('pmTasks').innerHTML=pmT.tasks.map(t=>`<div class="row" style="border-left:3px solid ${t.status==='done'?'var(--green)':t.status==='in_progress'?'var(--yellow)':'var(--muted)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${t.title}</div><div class="muted">${t.project} · ${t.assignee} · ${t.priority} · Due: ${t.due} · ${t.timeSpent}</div></div><span class="badge ${t.status==='done'?'b-ok':t.status==='in_progress'?'b-warn':'b-info'}">${t.status}</span></div>`).join('');
+
+  // Inventory
+  document.getElementById('ivStats').innerHTML=S([{l:'Items',v:I[9].totalItems,c:'b',m:'Total'},{l:'In Stock',v:I[9].inStock,c:'g',m:'Available'},{l:'Reorder',v:I[9].reorderAlerts,c:'y',m:'Alerts'},{l:'Out',v:I[9].outOfStock,c:'r',m:'Empty'},{l:'Value',v:I[9].inventoryValue,c:'g',m:'Total'},{l:'Suppliers',v:I[9].totalSuppliers,c:'b',m:'Active'}]);
+  document.getElementById('ivItems').innerHTML=ivI.items.map(i=>`<div class="row" style="border-left:3px solid ${i.status==='in_stock'?'var(--green)':i.status==='reorder'?'var(--yellow)':'var(--red)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${i.name} <span style="font-family:monospace;font-size:9px;color:var(--accent)">${i.sku}</span></div><div class="muted">${i.category} · ${i.stock}/${i.reorder} ${i.unit} · ${i.cost} · Supplier: ${i.supplier}</div></div><span class="badge ${i.status==='in_stock'?'b-ok':i.status==='reorder'?'b-warn':'b-crit'}">${i.status.replace('_',' ')}</span></div>`).join('');
+  document.getElementById('ivSuppliers').innerHTML=ivS.suppliers.map(s=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${s.name}</div><div class="muted">${s.category} · ${s.items} items · ⭐${s.rating} · Last: ${s.lastOrder}</div></div></div>`).join('');
+
+  // Invoices
+  document.getElementById('inStats').innerHTML=S([{l:'Invoices',v:I[10].totalInvoices,c:'b',m:'Total'},{l:'Paid',v:I[10].paid,c:'g',m:'Completed'},{l:'Pending',v:I[10].pending,c:'y',m:'Waiting'},{l:'Overdue',v:I[10].overdue,c:'r',m:'Late'},{l:'Revenue',v:I[10].totalRevenue,c:'g',m:'Collected'},{l:'Outstanding',v:I[10].outstanding,c:'y',m:'Pending'}]);
+  document.getElementById('inInvoices').innerHTML=inI.invoices.map(i=>`<div class="row" style="border-left:3px solid ${i.status==='paid'?'var(--green)':i.status==='pending'?'var(--yellow)':i.status==='overdue'?'var(--red)':'var(--muted)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${i.number} · ${i.client}</div><div class="muted">${i.items[0].desc} · ${i.amount} · Due: ${i.due||'N/A'}</div></div><span class="badge ${i.status==='paid'?'b-ok':i.status==='overdue'?'b-crit':'b-warn'}">${i.status}</span></div>`).join('');
+  document.getElementById('inReminders').innerHTML=inR.reminders.map(r=>`<div class="row" style="border-left:3px solid ${r.type==='overdue'?'var(--red)':'var(--yellow)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${r.invoice} · ${r.client}</div><div class="muted">${r.amount} · ${r.days} days · Type: ${r.type} · Sent: ${r.sent?'✓':'✗'}</div></div></div>`).join('');
+
+  // Subscriptions
+  document.getElementById('suStats').innerHTML=S([{l:'Plans',v:I[11].totalPlans,c:'b',m:'Tiers'},{l:'Subscribers',v:I[11].totalSubscribers.toLocaleString(),c:'g',m:'Total'},{l:'MRR',v:'$'+I[11].totalMRR,c:'g',m:'Monthly'},{l:'Active',v:I[11].activeSubscriptions,c:'b',m:'Subscriptions'},{l:'Past Due',v:I[11].pastDue,c:'r',m:'Failed'},{l:'Dunning',v:I[11].dunningActive,c:'y',m:'Retrying'}]);
+  document.getElementById('suPlans').innerHTML=suP.plans.map(p=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${p.name} — ${p.price}/${p.billing}</div><div class="muted">${p.subscribers.toLocaleString()} subscribers · MRR: ${p.mrr} · ${p.features}</div></div><span class="badge b-ok">${p.status}</span></div>`).join('');
+  document.getElementById('suSubscriptions').innerHTML=suS.subscriptions.map(s=>`<div class="row" style="border-left:3px solid ${s.status==='active'?'var(--green)':s.status==='past_due'?'var(--red)':'var(--muted)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${s.customer} · ${s.plan} (${s.price})</div><div class="muted">${s.billing} · ${s.paymentMethod} · Next: ${s.nextBilling} · Auto: ${s.autoRenew?'✓':'✗'}</div></div><span class="badge ${s.status==='active'?'b-ok':'b-crit'}">${s.status}</span></div>`).join('');
+  document.getElementById('suDunning').innerHTML=suD.dunning.map(d=>`<div class="row" style="border-left:3px solid ${d.status==='retrying'?'var(--yellow)':'var(--red)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${d.customer} · ${d.amount}</div><div class="muted">Attempt ${d.attempt} · ${d.method} · Last: ${d.lastAttempt} · Next: ${d.nextAttempt||'Cancelled'} · Email: ${d.emailSent?'✓':'✗'} · SMS: ${d.smsSent?'✓':'✗'}</div></div><span class="badge ${d.status==='retrying'?'b-warn':'b-crit'}">${d.status}</span></div>`).join('');
+
+  // GraphQL
+  document.getElementById('gqStats').innerHTML=S([{l:'Queries',v:I[12].queries,c:'b',m:'Available'},{l:'Mutations',v:I[12].mutations,c:'g',m:'Available'},{l:'Subscriptions',v:I[12].subscriptions,c:'y',m:'Real-time'},{l:'Latency',v:I[12].avgLatency,c:'g',m:'Average'},{l:'Cache Hit',v:I[12].cacheHit,c:'g',m:'Rate'},{l:'Requests',v:(I[12].totalRequests).toLocaleString(),c:'b',m:'Total'}]);
+  document.getElementById('gqSchema').innerHTML=`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">Queries</div><div class="muted">${gqS.schema.queries.join(', ')}</div></div></div><div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">Mutations</div><div class="muted">${gqS.schema.mutations.join(', ')}</div></div></div><div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">Subscriptions</div><div class="muted">${gqS.schema.subscriptions.join(', ')}</div></div></div>`;
+
+  // Rate Limit
+  document.getElementById('rlStats').innerHTML=S([{l:'Rules',v:I[13].totalRules,c:'b',m:I[13].activeRules+' active'},{l:'Requests',v:I[13].totalRequests.toLocaleString(),c:'g',m:'Total'},{l:'Throttled',v:I[13].throttled.toLocaleString(),c:'y',m:'Limited'},{l:'Blocked',v:I[13].blocked.toLocaleString(),c:'r',m:'Rejected'},{l:'Algorithms',v:I[13].algorithms,c:'b',m:'Active'},{l:'Violations',v:I[13].totalViolations,c:'r',m:'Total'}]);
+  document.getElementById('rlRules').innerHTML=rlR.rules.map(r=>`<div class="row" style="border-left:3px solid ${r.status==='active'?'var(--green)':r.status==='throttled'?'var(--yellow)':'var(--muted)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${r.scope}: ${r.target}</div><div class="muted">${r.route} · ${r.limit}/${r.window} · ${r.algorithm} · ${r.current}/${r.limit} used · ${r.violations} violations</div></div><span class="badge ${r.status==='active'?'b-ok':'b-warn'}">${r.status}</span></div>`).join('');
+  document.getElementById('rlAlgos').innerHTML=rlA.algorithms.map(a=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${a.name} <span class="badge ${a.active?'b-ok':'b-warn'}">${a.active?'active':'off'}</span></div><div class="muted">${a.desc}</div></div></div>`).join('');
+  document.getElementById('rlViolations').innerHTML=rlV.violations.map(v=>`<div class="row" style="border-left:3px solid var(--red)"><div style="flex:1"><div style="font-weight:600;font-size:12px">${v.ip} · ${v.route}</div><div class="muted">${v.attempts} attempts · ${v.action} · ${v.time} · ${v.resolved}</div></div></div>`).join('');
+
+  // Logs
+  document.getElementById('lgStats').innerHTML=S([{l:'Logs',v:I[14].totalLogs.toLocaleString(),c:'b',m:'Total'},{l:'Sources',v:I[14].totalSources,c:'g',m:'Backends'},{l:'Errors',v:I[14].errorCount,c:'r',m:'Critical'},{l:'Warnings',v:I[14].warnCount,c:'y',m:'Alerts'},{l:'Info',v:I[14].infoCount.toLocaleString(),c:'b',m:'Informational'},{l:'Storage',v:I[14].storageUsed,c:'g',m:'Used'}]);
+  document.getElementById('lgLogs').innerHTML=lgL.logs.map(l=>`<div class="row" style="border-left:3px solid ${l.level==='error'?'var(--red)':l.level==='warn'?'var(--yellow)':l.level==='info'?'var(--blue)':'var(--muted)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px"><span class="badge ${l.level==='error'?'b-crit':l.level==='warn'?'b-warn':'b-info'}">${l.level}</span> ${l.source}</div><div class="muted">${l.message} · ${l.timestamp}</div></div></div>`).join('');
+  document.getElementById('lgAlerts').innerHTML=lgA.alerts.map(a=>`<div class="row" style="border-left:3px solid ${a.severity==='high'?'var(--red)':a.severity==='medium'?'var(--yellow)':'var(--blue)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${a.condition}</div><div class="muted">${a.source} · Triggered ${a.triggered}x · Last: ${a.lastTriggered} · Notify: ${a.notification}</div></div><span class="badge ${a.status==='active'?'b-warn':'b-ok'}">${a.status}</span></div>`).join('');
+}
+
+async function vdSearch(){const q=document.getElementById('vdQuery').value;if(!q){alert('Enter query');return;}const r=await api(A7.vd,{action:'search',query:q});if(r.success)document.getElementById('vdResult').innerHTML=`<div class="stat" style="border-color:var(--green)"><div class="g" style="font-weight:600">✅ ${r.results.length} results in ${r.time}</div>${r.results.map(rr=>`<div class="muted" style="margin-top:4px">${rr.score} — "${rr.content.substring(0,50)}..."</div>`).join('')}</div>`;}
+async function gqlRun(){const q=document.getElementById('gqQuery').value;if(!q){alert('Enter a GraphQL query');return;}const r=await api(A7.gq,{action:'query',query:q});if(r.success)document.getElementById('gqResult').innerHTML=`<div class="stat" style="border-color:var(--green)"><div class="g" style="font-weight:600">✅ Query executed in ${r.time} ${r.cached?'(cached)':''}</div><pre style="font-size:10px;margin-top:4px;white-space:pre-wrap">${JSON.stringify(r.data,null,2)}</pre></div>`;}
+init();
+</script>
+</body>
+</html>
