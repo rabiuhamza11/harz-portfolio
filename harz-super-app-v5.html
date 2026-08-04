@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>HARZ Super App v5.0</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,system-ui,-sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,system-ui,sans-serif}
 :root{--bg:#0a0e27;--card:#141833;--accent:#6c5ce7;--accent2:#00cec9;--text:#eee;--muted:#8892b0;--danger:#e74c3c;--success:#00b894;--radius:12px}
-[data-theme="light"]{--bg:#f0f0f5;--card:#fff;--text:#333;--muted:#666;--accent:#6c5ce7;--accent2:#0984e3}
+[data-theme="light"]{--bg:#f0f0f5;--card:#fff;--text:#333;--muted:#666}
 body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:.3s}
 .header{position:sticky;top:0;z-index:100;background:rgba(10,14,39,.95);backdrop-filter:blur(10px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(108,92,231,.2)}
 [data-theme="light"] .header{background:rgba(255,255,255,.95)}
@@ -59,36 +59,34 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
 .badge-live{background:rgba(0,184,148,.2);color:var(--success)}
 .badge-dev{background:rgba(108,92,231,.2);color:var(--accent)}
+.badge-offline{background:rgba(231,76,60,.2);color:var(--danger)}
 .list-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px}
 [data-theme="light"] .list-item{background:rgba(0,0,0,.03)}
 .list-item .title{font-size:13px}
 .list-item .meta{font-size:11px;color:var(--muted)}
-.chat-msg{padding:8px 12px;border-radius:12px;max-width:80%;margin-bottom:6px;font-size:13px}
+.chat-msg{padding:8px 12px;border-radius:12px;max-width:80%;margin-bottom:6px;font-size:13px;word-wrap:break-word}
 .chat-msg.in{background:rgba(255,255,255,.05);align-self:flex-start}
 [data-theme="light"] .chat-msg.in{background:rgba(0,0,0,.05)}
 .chat-msg.out{background:var(--accent);align-self:flex-end;margin-left:auto;color:#fff}
-.chat-box{max-height:300px;overflow-y:auto;display:flex;flex-direction:column}
+.chat-box{max-height:300px;overflow-y:auto;display:flex;flex-direction:column;margin-bottom:60px}
 .chat-input{display:flex;gap:6px;position:fixed;bottom:60px;left:0;right:0;max-width:500px;margin:0 auto;padding:8px;background:rgba(10,14,39,.98)}
 [data-theme="light"] .chat-input{background:rgba(255,255,255,.98)}
 .chat-input .input{flex:1;margin:0}
-.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:.3s;white-space:nowrap}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:.3s;white-space:nowrap;max-width:90%}
 .toast.show{opacity:1}
+.toast.error{background:var(--danger)}
 #loading{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:12px}
 .spinner{width:32px;height:32px;border:3px solid rgba(108,92,231,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .search-bar{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(108,92,231,.3);border-radius:20px;padding:8px 14px;color:var(--text);font-size:13px;margin-bottom:12px}
 [data-theme="light"] .search-bar{background:rgba(0,0,0,.05)}
-.progress-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:4px}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px}
-.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:12px;color:var(--muted)}
-.fee-row span:last-child{color:var(--text)}
 </style>
 </head>
 <body>
 <div class="header">
 <div class="logo">⚡ HARZ</div>
 <div class="nav-btns">
-<span id="wsDot" class="ws-status ws-on" title="API Status"></span>
+<span id="wsDot" class="ws-status ws-off" title="API Status"></span>
 <button class="nav-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
 <button class="nav-btn" id="userBtn" onclick="showPage('profile')">Login</button>
 </div>
@@ -96,7 +94,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 
 <div id="loading">
 <div class="spinner"></div>
-<div style="color:var(--muted);font-size:13px">Connecting to HARZ Base44 Backend...</div>
+<div style="color:var(--muted);font-size:13px">Connecting to HARZ Cloud...</div>
 </div>
 
 <div class="container" id="app" style="display:none">
@@ -118,7 +116,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 </div>
 <div class="section-title">Live Status</div>
 <div class="card">
-<div class="list-item"><span class="title">Backend (Base44)</span><span id="backendStatus" class="badge badge-live">Online</span></div>
+<div class="list-item"><span class="title">Backend</span><span id="backendStatus" class="badge badge-offline">Checking...</span></div>
 <div class="list-item"><span class="title">Platforms Live</span><span id="liveCount" class="meta">—</span></div>
 <div class="list-item"><span class="title">Active Agents</span><span id="agentCount" class="meta">—</span></div>
 <div class="list-item"><span class="title">Avg Success Rate</span><span id="successRate" class="meta">—</span></div>
@@ -136,7 +134,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 <div class="page" id="page-agents">
 <div class="section-title">AI Agents (<span id="agentListCount">0</span>)</div>
 <div id="agentList"></div>
-<div class="section-title">Agent Chat — Powered by Base44</div>
+<div class="section-title">Agent Chat</div>
 <div class="chat-box" id="chatBox">
 <div class="chat-msg in">👋 Hello! I'm Magani, your HARZ ecosystem assistant. How can I help you today?</div>
 </div>
@@ -226,9 +224,14 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 <div class="card">
 <h3>⚙️ Settings</h3>
 <div class="list-item"><span class="title">Theme</span><span class="meta" id="themeName">Dark</span></div>
-<div class="list-item"><span class="title">Backend</span><span class="meta">Base44 Cloud</span></div>
-<div class="list-item"><span class="title">API</span><span class="meta" style="font-size:10px;max-width:200px;overflow:hidden;text-overflow:ellipsis">elio-4718941d.base44.app</span></div>
+<div class="list-item"><span class="title">Backend</span><span class="meta">HARZ Cloud</span></div>
+<div class="list-item"><span class="title">API URL</span><span class="meta" style="font-size:10px;max-width:200px;overflow:hidden;text-overflow:ellipsis" id="apiUrlDisplay">harz-cloud-backend.onrender.com</span></div>
 <div class="list-item"><span class="title">Version</span><span class="meta">v5.0.0</span></div>
+</div>
+<div class="section-title">Backend Configuration</div>
+<div class="card">
+<input class="input" id="customApiUrl" placeholder="Custom API URL (optional)" style="font-size:12px">
+<button class="btn btn-outline" onclick="saveApiUrl()">Save API URL</button>
 </div>
 <div class="section-title">Connection Test</div>
 <button class="btn" onclick="testConnection()">Test Backend Connection</button>
@@ -237,7 +240,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 <div class="list-item"><span class="title">Platforms</span><span class="meta" id="settingsPlatforms">—</span></div>
 <div class="list-item"><span class="title">AI Agents</span><span class="meta" id="settingsAgents">—</span></div>
 <div class="list-item"><span class="title">Built by</span><span class="meta">Rabiu Hamza Mohammed</span></div>
-<div class="list-item"><span class="title">Powered by</span><span class="meta">Base44 + HARZ Cloud</span></div>
+<div class="list-item"><span class="title">Powered by</span><span class="meta">HARZ Cloud</span></div>
 </div>
 </div>
 
@@ -255,99 +258,212 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== CONFIG =====
-const API_URL = 'https://elio-4718941d.base44.app/functions/harzEcosystemApi';
+// ===== CONFIG — HARZ Cloud Backend =====
+let API_URL = localStorage.getItem('harz_api_url') || 'https://harz-cloud-backend.onrender.com';
+let authToken = localStorage.getItem('harz_token') || null;
 let currentUser = JSON.parse(localStorage.getItem('harz_user') || 'null');
 let platformData = [];
 let agentData = [];
 let walletData = null;
-let analyticsData = null;
+let backendOnline = false;
 
-// ===== API =====
-async function api(action, extra = {}) {
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({action, ...extra})
-    });
-    const data = await res.json();
-    if (!data.success) throw new Error(data.error || 'API Error');
-    return data;
-  } catch(e) {
-    console.error('API Error:', e);
-    throw e;
-  }
+// ===== LOCAL FALLBACK DATA (when backend offline) =====
+const LOCAL_PLATFORMS = [
+  {name:'MindCare AI',icon:'🧠',category:'AI',url:'https://mindcare-ai.vercel.app',status:'Live'},
+  {name:'Cyber Shield X',icon:'🛡️',category:'Security',url:'https://cyber-shield-x.vercel.app',status:'Live'},
+  {name:'Omega Health AI',icon:'🏥',category:'Health',url:'https://omega-health-ai.vercel.app',status:'Live'},
+  {name:'HarzDM',icon:'🛒',category:'Marketplace',url:'https://harzdm-marketplace.vercel.app',status:'Live'},
+  {name:'BuildBot AI',icon:'🏗️',category:'Construction',status:'Live'},
+  {name:'Omega Infinity',icon:'🤖',category:'AI',status:'Live'},
+  {name:'TradeOS',icon:'📈',category:'Trading',url:'https://tradeos.vercel.app',status:'Live'},
+  {name:'Omega Content AI',icon:'🎬',category:'Media',url:'https://omega-content-ai.vercel.app',status:'Live'},
+  {name:'Estate City AI',icon:'🏠',category:'Real Estate',url:'https://abuja-estate-city-ai.vercel.app',status:'Live'},
+  {name:'ContentPilot',icon:'📝',category:'Content',status:'Live'},
+  {name:'Nexal Media',icon:'📱',category:'Media',status:'Live'},
+  {name:'Apex Bank',icon:'🏦',category:'Finance',status:'Development'},
+  {name:'HostMaster',icon:'🌐',category:'Hosting',status:'Live'},
+  {name:'Oracle AI',icon:'🔮',category:'AI',status:'Live'},
+  {name:'HarzAjo',icon:'💰',category:'Finance',url:'https://harzajo.vercel.app',status:'Live'},
+  {name:'HarzPay',icon:'💳',category:'Finance',url:'https://harzpay.vercel.app',status:'Live'},
+  {name:'HarzFX',icon:'💱',category:'Finance',url:'https://harzfx.vercel.app',status:'Live'},
+  {name:'HarzLend',icon:'🏦',category:'Finance',url:'https://harzlend.vercel.app',status:'Live'},
+  {name:'HarzMusic',icon:'🎵',category:'Marketplace',status:'Live'},
+  {name:'HarzFilm',icon:'🎥',category:'Marketplace',status:'Live'},
+  {name:'Harz Store',icon:'📦',category:'Marketplace',status:'Live'},
+  {name:'Harz Digital',icon:'📚',category:'Education',status:'Live'},
+  {name:'HarzDomain',icon:'🔗',category:'Hosting',status:'Live'},
+  {name:'DeployForge',icon:'🚀',category:'DevOps',status:'Live'},
+  {name:'GDEG Energy',icon:'⚡',category:'Energy',status:'Live'},
+  {name:'Maganu AI',icon:'🎯',category:'AI',status:'Live'},
+  {name:'Omega Master',icon:'⚙️',category:'AI',status:'Live'}
+];
+
+const LOCAL_AGENTS = [
+  {name:'MindCare Agent',role:'Mental Health Assistant',icon:'🧠',status:'active',success_rate:95.9,tasks_completed:1240,platform:'MindCare AI',description:'Mental health companion with CBT, DBT, mindfulness'},
+  {name:'CyberShield Agent',role:'Security Monitor',icon:'🛡️',status:'active',success_rate:95.8,tasks_completed:3400,platform:'Cyber Shield X',description:'Cyber defense with 37 specialist sub-agents'},
+  {name:'Health Agent',role:'Health Advisor',icon:'🏥',status:'active',success_rate:94.2,tasks_completed:890,platform:'Omega Health AI',description:'Health platform with 18 medical specialists'},
+  {name:'Omega Commander',role:'Enterprise Manager',icon:'🏢',status:'active',success_rate:96.1,tasks_completed:2100,platform:'Omega Infinity',description:'Autonomous enterprise OS'},
+  {name:'Content Agent',role:'Content Producer',icon:'🎬',status:'active',success_rate:93.5,tasks_completed:560,platform:'Omega Content AI',description:'AI content production'},
+  {name:'EduWealth Agent',role:'Education Tutor',icon:'📚',status:'active',success_rate:94.8,tasks_completed:750,platform:'Harz Digital',description:'Education platform with 18 AI tutors'},
+  {name:'Magani',role:'Ecosystem Assistant',icon:'🤖',status:'active',success_rate:97.2,tasks_completed:5800,platform:'Harz Ecosystem',description:'Main HARZ ecosystem assistant'}
+];
+
+const LOCAL_WALLET = {
+  ngn_balance:0, usd_balance:0, gdeg_balance:0, usdt_balance:0,
+  payment_methods:[
+    {type:'UBA Transfer',details:'2034326424',is_active:true},
+    {type:'Paystack',details:'Card Payment',is_active:true},
+    {type:'GDEG Token',details:'1 = $0.01',is_active:true},
+    {type:'USDT TRC20',details:'Crypto',is_active:true}
+  ]
+};
+
+// ===== API CALLS — HARZ Cloud =====
+async function apiCall(endpoint, method='GET', body=null) {
+  const url = API_URL + endpoint;
+  const headers = {'Content-Type': 'application/json'};
+  if (authToken) headers['x-auth-token'] = authToken;
+  
+  const res = await fetch(url, {
+    method, headers,
+    body: body ? JSON.stringify(body) : null,
+    signal: AbortSignal.timeout(8000)
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
 }
 
-// ===== TRACK ANALYTICS =====
-async function track(event_type, platform = '', metadata = {}) {
-  try { await api('track', {event_type, platform, metadata}); } catch(e) {}
+async function checkBackend() {
+  try {
+    const res = await fetch(API_URL + '/health', {signal: AbortSignal.timeout(8000)});
+    backendOnline = res.ok;
+    document.getElementById('wsDot').className = 'ws-status ' + (backendOnline ? 'ws-on' : 'ws-off');
+    document.getElementById('backendStatus').className = 'badge ' + (backendOnline ? 'badge-live' : 'badge-offline');
+    document.getElementById('backendStatus').textContent = backendOnline ? 'Online' : 'Offline';
+    return backendOnline;
+  } catch(e) {
+    backendOnline = false;
+    document.getElementById('wsDot').className = 'ws-status ws-off';
+    document.getElementById('backendStatus').className = 'badge badge-offline';
+    document.getElementById('backendStatus').textContent = 'Offline';
+    return false;
+  }
 }
 
 // ===== INIT =====
 async function init() {
-  try {
-    // Load all data in parallel
-    const [statsRes, platformsRes, agentsRes, walletRes] = await Promise.all([
-      api('stats'),
-      api('platforms'),
-      api('agents'),
-      api('wallet')
-    ]);
-    
-    // Render stats
-    const s = statsRes.stats;
-    document.getElementById('statsGrid').innerHTML = `
-      <div class="stat"><div class="num">${s.platforms}</div><div class="label">Platforms</div></div>
-      <div class="stat"><div class="num">${s.livePlatforms}</div><div class="label">Live</div></div>
-      <div class="stat"><div class="num">${s.agents}</div><div class="label">AI Agents</div></div>
-      <div class="stat"><div class="num">${s.avgSuccessRate}%</div><div class="label">Success</div></div>
-    `;
-    document.getElementById('liveCount').textContent = s.livePlatforms + ' / ' + s.platforms;
-    document.getElementById('agentCount').textContent = s.activeAgents + ' active';
-    document.getElementById('successRate').textContent = s.avgSuccessRate + '%';
-    document.getElementById('settingsPlatforms').textContent = s.platforms;
-    document.getElementById('settingsAgents').textContent = s.agents;
-    
-    // Render platforms
-    platformData = platformsRes.platforms;
-    renderPlatforms(platformData);
-    
-    // Render agents
-    agentData = agentsRes.agents;
-    renderAgents(agentData);
-    
-    // Render wallet
-    walletData = walletRes.wallet;
-    renderWallet(walletData);
-    
-    // Track page view
-    track('page_view', 'super-app');
-    
-    // Show app
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    
-    // Update user button
-    updateUserBtn();
-    
-    // Load analytics
-    loadAnalytics();
-    
-    // Load transactions
-    loadTransactions();
-    
-  } catch(e) {
-    document.getElementById('loading').innerHTML = `<div style="color:var(--danger);font-size:13px;text-align:center;padding:20px">⚠️ Cannot connect to Base44 backend.<br><br>${e.message}</div>`;
+  document.getElementById('apiUrlDisplay').textContent = API_URL.replace('https://','');
+  
+  const online = await checkBackend();
+  
+  if (online) {
+    // Try loading from HARZ Cloud backend
+    try {
+      await loadFromBackend();
+    } catch(e) {
+      console.error('Backend error:', e);
+      showToast('Backend error — using local data', true);
+      useLocalData();
+    }
+  } else {
+    // Use local fallback data
+    useLocalData();
   }
+  
+  // Show app
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  updateUserBtn();
+}
+
+async function loadFromBackend() {
+  // Load stats
+  try {
+    const health = await apiCall('/health');
+    document.getElementById('settingsPlatforms').textContent = '27';
+    document.getElementById('settingsAgents').textContent = '7';
+  } catch(e) {}
+  
+  // Try to load platforms from backend
+  try {
+    const data = await apiCall('/platforms');
+    if (data.platforms && data.platforms.length > 0) {
+      platformData = data.platforms;
+    } else {
+      platformData = LOCAL_PLATFORMS;
+    }
+  } catch(e) {
+    platformData = LOCAL_PLATFORMS;
+  }
+  
+  // Try to load agents from backend
+  try {
+    const data = await apiCall('/agents');
+    if (data.agents && data.agents.length > 0) {
+      agentData = data.agents;
+    } else {
+      agentData = LOCAL_AGENTS;
+    }
+  } catch(e) {
+    agentData = LOCAL_AGENTS;
+  }
+  
+  // Try wallet from backend
+  try {
+    const data = await apiCall('/wallet');
+    walletData = data.wallet || data;
+  } catch(e) {
+    walletData = LOCAL_WALLET;
+  }
+  
+  // Try transactions from backend
+  try {
+    const data = await apiCall('/transactions');
+    renderTransactions(data.transactions || []);
+  } catch(e) {
+    renderTransactions([]);
+  }
+  
+  renderAll();
+}
+
+function useLocalData() {
+  platformData = LOCAL_PLATFORMS;
+  agentData = LOCAL_AGENTS;
+  walletData = LOCAL_WALLET;
+  renderAll();
+  renderTransactions([]);
+}
+
+function renderAll() {
+  // Stats
+  const liveCount = platformData.filter(p => p.status === 'Live').length;
+  const activeAgents = agentData.filter(a => a.status === 'active').length;
+  const avgSuccess = agentData.length > 0 
+    ? Math.round(agentData.reduce((s, a) => s + (a.success_rate || 0), 0) / agentData.length * 10) / 10 
+    : 0;
+  
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat"><div class="num">${platformData.length}</div><div class="label">Platforms</div></div>
+    <div class="stat"><div class="num">${liveCount}</div><div class="label">Live</div></div>
+    <div class="stat"><div class="num">${agentData.length}</div><div class="label">AI Agents</div></div>
+    <div class="stat"><div class="num">${avgSuccess}%</div><div class="label">Success</div></div>
+  `;
+  document.getElementById('liveCount').textContent = liveCount + ' / ' + platformData.length;
+  document.getElementById('agentCount').textContent = activeAgents + ' active';
+  document.getElementById('successRate').textContent = avgSuccess + '%';
+  document.getElementById('settingsPlatforms').textContent = platformData.length;
+  document.getElementById('settingsAgents').textContent = agentData.length;
+  
+  renderPlatforms(platformData);
+  renderAgents(agentData);
+  renderWallet(walletData);
 }
 
 // ===== RENDER =====
 function renderPlatforms(platforms) {
   document.getElementById('platformCount').textContent = platforms.length;
-  const grid = document.getElementById('platformGrid');
-  grid.innerHTML = platforms.map(p => `
+  document.getElementById('platformGrid').innerHTML = platforms.map(p => `
     <div class="platform" onclick="${p.url ? `window.open('${p.url}','_blank')` : `showToast('${p.name} — coming soon')`}">
       <div class="icon">${p.icon || '📦'}</div>
       <div class="name">${p.name}</div>
@@ -358,8 +474,7 @@ function renderPlatforms(platforms) {
 
 function renderAgents(agents) {
   document.getElementById('agentListCount').textContent = agents.length;
-  const list = document.getElementById('agentList');
-  list.innerHTML = agents.map(a => `
+  document.getElementById('agentList').innerHTML = agents.map(a => `
     <div class="agent" onclick="openAgentChat('${a.name}')">
       <div class="avatar">${a.icon || '🤖'}</div>
       <div class="info">
@@ -384,58 +499,25 @@ function renderWallet(w) {
   const pm = document.getElementById('paymentMethods');
   if (w.payment_methods) {
     pm.innerHTML = w.payment_methods.map(m => `
-      <div class="list-item">
-        <span class="title">${m.type}</span>
-        <span class="meta">${m.details}</span>
-      </div>
+      <div class="list-item"><span class="title">${m.type}</span><span class="meta">${m.details}</span></div>
     `).join('');
+  } else {
+    pm.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No payment methods</span></div>';
   }
 }
 
-async function loadAnalytics() {
-  try {
-    const res = await api('analytics');
-    const a = res.analytics;
-    document.getElementById('totalEvents').textContent = a.total;
-    document.getElementById('totalPlatforms').textContent = platformData.length;
-    
-    const types = a.byType || {};
-    const typeLabels = {
-      page_view: '👁️ Page Views', click: '🖱️ Clicks', purchase: '💳 Purchases',
-      login: '🔐 Logins', logout: '🚪 Logouts', search: '🔍 Searches',
-      upload: '📤 Uploads', chat: '💬 Chats', error: '⚠️ Errors'
-    };
-    const container = document.getElementById('eventsByType');
-    const keys = Object.keys(types);
-    if (keys.length === 0) {
-      container.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No events tracked yet</span></div>';
-    } else {
-      container.innerHTML = keys.map(k => `
-        <div class="list-item">
-          <span class="title">${typeLabels[k] || k}</span>
-          <span class="meta">${types[k]} events</span>
-        </div>
-      `).join('');
-    }
-  } catch(e) {}
-}
-
-async function loadTransactions() {
-  try {
-    const res = await api('transactions');
-    const txns = res.transactions || [];
-    const list = document.getElementById('transactionList');
-    if (txns.length === 0) {
-      list.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No transactions yet</span></div>';
-    } else {
-      list.innerHTML = txns.slice(0, 10).map(t => `
-        <div class="list-item">
-          <span class="title">${t.type || 'Transaction'}</span>
-          <span class="meta">${t.currency || ''} ${(t.amount || 0).toLocaleString()} • ${t.status || ''}</span>
-        </div>
-      `).join('');
-    }
-  } catch(e) {}
+function renderTransactions(txns) {
+  const list = document.getElementById('transactionList');
+  if (!txns || txns.length === 0) {
+    list.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No transactions yet</span></div>';
+  } else {
+    list.innerHTML = txns.slice(0, 10).map(t => `
+      <div class="list-item">
+        <span class="title">${t.type || t.description || 'Transaction'}</span>
+        <span class="meta">${t.currency || ''} ${(t.amount || 0).toLocaleString()} • ${t.status || ''}</span>
+      </div>
+    `).join('');
+  }
 }
 
 // ===== NAVIGATION =====
@@ -447,10 +529,10 @@ function showPage(page) {
   const nav = document.getElementById('nav-' + page);
   if (nav) nav.classList.add('active');
   window.scrollTo(0, 0);
-  track('click', page);
-  
-  if (page === 'profile' && currentUser) {
-    showProfile();
+  if (page === 'profile' && currentUser) showProfile();
+  // Track analytics
+  if (backendOnline) {
+    apiCall('/analytics/track', 'POST', {event_type:'page_view', platform:page}).catch(()=>{});
   }
 }
 
@@ -462,14 +544,12 @@ function quickAction(action) {
 // ===== SEARCH =====
 function filterPlatforms() {
   const q = document.getElementById('platformSearch').value.toLowerCase();
-  const filtered = platformData.filter(p => 
-    p.name.toLowerCase().includes(q) || 
-    (p.category || '').toLowerCase().includes(q)
-  );
-  renderPlatforms(filtered);
+  renderPlatforms(platformData.filter(p => 
+    p.name.toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q)
+  ));
 }
 
-// ===== AUTH (Client-side demo — real auth via Base44) =====
+// ===== AUTH — HARZ Cloud =====
 function showLogin() {
   document.getElementById('loginSection').style.display = 'block';
   document.getElementById('registerSection').style.display = 'none';
@@ -488,7 +568,7 @@ function showProfile() {
   document.getElementById('profName').textContent = currentUser.full_name || '—';
   document.getElementById('profEmail').textContent = currentUser.email || '—';
   document.getElementById('profRole').textContent = currentUser.role || 'user';
-  document.getElementById('twoFAStatus').textContent = currentUser.two_factor ? 'Enabled ✅' : 'Disabled';
+  document.getElementById('twoFAStatus').textContent = currentUser.two_factor_enabled ? 'Enabled ✅' : 'Disabled';
 }
 
 function updateUserBtn() {
@@ -500,55 +580,106 @@ function updateUserBtn() {
   }
 }
 
-function doLogin() {
+async function doLogin() {
   const email = document.getElementById('loginEmail').value;
   const pass = document.getElementById('loginPassword').value;
-  if (!email || !pass) return showToast('Please enter email and password');
-  // Demo: store locally. Real auth via Base44 User entity
-  currentUser = {email, full_name: email.split('@')[0], role: 'user', two_factor: false};
-  localStorage.setItem('harz_user', JSON.stringify(currentUser));
-  showProfile();
-  updateUserBtn();
-  track('login');
-  showToast('Welcome back, ' + currentUser.full_name + '!');
+  if (!email || !pass) return showToast('Please enter email and password', true);
+  
+  if (backendOnline) {
+    try {
+      const res = await apiCall('/auth/login', 'POST', {email, password: pass});
+      authToken = res.token;
+      currentUser = res.user;
+      localStorage.setItem('harz_token', authToken);
+      localStorage.setItem('harz_user', JSON.stringify(currentUser));
+      showProfile();
+      updateUserBtn();
+      showToast('Welcome back, ' + currentUser.full_name + '!');
+    } catch(e) {
+      showToast('Login failed: ' + e.message, true);
+    }
+  } else {
+    // Offline mode — local auth
+    currentUser = {email, full_name: email.split('@')[0], role: 'user', two_factor_enabled: false};
+    localStorage.setItem('harz_user', JSON.stringify(currentUser));
+    showProfile();
+    updateUserBtn();
+    showToast('Offline login — backend offline');
+  }
 }
 
-function doRegister() {
+async function doRegister() {
   const name = document.getElementById('regName').value;
   const email = document.getElementById('regEmail').value;
   const pass = document.getElementById('regPassword').value;
-  if (!name || !email || !pass) return showToast('Please fill all fields');
-  currentUser = {email, full_name: name, role: 'user', two_factor: false};
-  localStorage.setItem('harz_user', JSON.stringify(currentUser));
-  showProfile();
-  updateUserBtn();
-  track('login', '', {type: 'register'});
-  showToast('Account created! Welcome to HARZ 🎉');
+  if (!name || !email || !pass) return showToast('Please fill all fields', true);
+  
+  if (backendOnline) {
+    try {
+      const res = await apiCall('/auth/register', 'POST', {full_name: name, email, password: pass, role: 'user'});
+      authToken = res.token;
+      currentUser = res.user;
+      localStorage.setItem('harz_token', authToken);
+      localStorage.setItem('harz_user', JSON.stringify(currentUser));
+      showProfile();
+      updateUserBtn();
+      showToast('Account created! Welcome 🎉');
+    } catch(e) {
+      showToast('Registration failed: ' + e.message, true);
+    }
+  } else {
+    currentUser = {email, full_name: name, role: 'user', two_factor_enabled: false};
+    localStorage.setItem('harz_user', JSON.stringify(currentUser));
+    showProfile();
+    updateUserBtn();
+    showToast('Offline account created');
+  }
 }
 
 function doLogout() {
+  if (backendOnline) {
+    apiCall('/auth/logout', 'POST').catch(()=>{});
+  }
+  authToken = null;
   currentUser = null;
+  localStorage.removeItem('harz_token');
   localStorage.removeItem('harz_user');
   showLogin();
   updateUserBtn();
-  track('logout');
   showToast('Logged out');
 }
 
-function toggle2FA() {
-  if (!currentUser) return showToast('Please login first');
-  currentUser.two_factor = !currentUser.two_factor;
-  localStorage.setItem('harz_user', JSON.stringify(currentUser));
-  document.getElementById('twoFAStatus').textContent = currentUser.two_factor ? 'Enabled ✅' : 'Disabled';
-  showToast(currentUser.two_factor ? '2FA enabled!' : '2FA disabled');
+async function toggle2FA() {
+  if (!currentUser) return showToast('Please login first', true);
+  if (backendOnline) {
+    try {
+      await apiCall('/auth/2fa/enable', 'POST');
+      currentUser.two_factor_enabled = true;
+      localStorage.setItem('harz_user', JSON.stringify(currentUser));
+      document.getElementById('twoFAStatus').textContent = 'Enabled ✅';
+      showToast('2FA enabled!');
+    } catch(e) { showToast('2FA failed: ' + e.message, true); }
+  } else {
+    currentUser.two_factor_enabled = !currentUser.two_factor_enabled;
+    localStorage.setItem('harz_user', JSON.stringify(currentUser));
+    document.getElementById('twoFAStatus').textContent = currentUser.two_factor_enabled ? 'Enabled ✅' : 'Disabled';
+    showToast(currentUser.two_factor_enabled ? '2FA enabled (offline)' : '2FA disabled');
+  }
 }
 
-function resetPassword() {
-  if (!currentUser) return showToast('Please login first');
-  showToast('Password reset link sent to ' + currentUser.email);
+async function resetPassword() {
+  if (!currentUser) return showToast('Please login first', true);
+  if (backendOnline) {
+    try {
+      await apiCall('/auth/password-reset/request', 'POST', {email: currentUser.email});
+      showToast('Reset code sent to your email');
+    } catch(e) { showToast('Reset failed: ' + e.message, true); }
+  } else {
+    showToast('Backend offline — cannot reset');
+  }
 }
 
-// ===== CHAT =====
+// ===== CHAT — HARZ Cloud Agent Delegation =====
 async function sendChat() {
   const input = document.getElementById('chatInput');
   const msg = input.value.trim();
@@ -557,50 +688,55 @@ async function sendChat() {
   const box = document.getElementById('chatBox');
   box.innerHTML += `<div class="chat-msg out">${msg}</div>`;
   box.scrollTop = box.scrollHeight;
-  track('chat');
   
-  // Show typing indicator
   const typingId = 'typing-' + Date.now();
   box.innerHTML += `<div class="chat-msg in" id="${typingId}">⏳ Processing...</div>`;
   box.scrollTop = box.scrollHeight;
   
-  try {
-    // Use Base44 superagent API for real AI responses
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({action: 'stats'})
-    });
-    const data = await res.json();
-    
-    document.getElementById(typingId).remove();
-    
-    // Generate contextual response based on the ecosystem data
-    const lower = msg.toLowerCase();
-    let reply = '';
-    
-    if (lower.includes('platform') || lower.includes('apps')) {
-      reply = `HARZ Ecosystem has ${data.stats?.platforms || platformData.length} platforms, ${data.stats?.livePlatforms || 0} are live. Top platforms: MindCare AI, Cyber Shield X, Omega Health AI, HarzPay, HarzStore.`;
-    } else if (lower.includes('agent') || lower.includes('ai')) {
-      reply = `We have ${data.stats?.agents || agentData.length} AI agents with ${data.stats?.avgSuccessRate || 95}% average success rate. Agents: MindCare, CyberShield, Health, Omega Commander, Content, EduWealth, and Magani.`;
-    } else if (lower.includes('wallet') || lower.includes('pay') || lower.includes('money')) {
-      reply = `Your HARZ Wallet supports NGN, USD, GDEG, and USDT. Payment methods: UBA Transfer, Paystack, GDEG Token, and USDT TRC20. Use the Wallet tab to check balances.`;
-    } else if (lower.includes('hello') || lower.includes('hi') || lower.includes('sannu')) {
-      reply = `👋 Hello! I'm Magani, your HARZ ecosystem assistant. I can help with platforms, agents, wallet, analytics, and more. What do you need?`;
-    } else if (lower.includes('help') || lower.includes('tade')) {
-      reply = `I can help you with: 📱 Platforms info, 🤖 AI agents, 💳 Wallet & payments, 📈 Analytics, 🔐 Account settings. Just ask!`;
-    } else if (lower.includes('product') || lower.includes('store') || lower.includes('buy')) {
-      reply = `HARZ Store has ${data.stats?.products || 0} products. Visit HarzDM marketplace or HarzStore to browse digital products.`;
-    } else {
-      reply = `I received your message: "${msg}". I'm connected to the HARZ Base44 backend with ${data.stats?.platforms || 0} platforms and ${data.stats?.agents || 0} AI agents. Ask me about platforms, agents, wallet, or analytics!`;
+  if (backendOnline) {
+    try {
+      const res = await apiCall('/agents/delegate', 'POST', {
+        name: 'User Query',
+        description: msg,
+        priority: 'normal'
+      });
+      document.getElementById(typingId)?.remove();
+      const reply = res.task?.result || res.response || res.message || 
+        `Task delegated to ${res.task?.assigned_to || 'Magani'}. Processing...`;
+      box.innerHTML += `<div class="chat-msg in">${reply}</div>`;
+    } catch(e) {
+      document.getElementById(typingId)?.remove();
+      // Fallback response
+      const reply = generateReply(msg);
+      box.innerHTML += `<div class="chat-msg in">${reply}</div>`;
     }
-    
-    box.innerHTML += `<div class="chat-msg in">${reply}</div>`;
-  } catch(e) {
-    document.getElementById(typingId)?.remove();
-    box.innerHTML += `<div class="chat-msg in">⚠️ Backend connection issue. Your message: "${msg}" was received but I couldn't process it fully.</div>`;
+  } else {
+    // Offline — generate contextual response
+    setTimeout(() => {
+      document.getElementById(typingId)?.remove();
+      const reply = generateReply(msg);
+      box.innerHTML += `<div class="chat-msg in">${reply}</div>`;
+      box.scrollTop = box.scrollHeight;
+    }, 800);
   }
   box.scrollTop = box.scrollHeight;
+}
+
+function generateReply(msg) {
+  const lower = msg.toLowerCase();
+  if (lower.includes('platform') || lower.includes('apps')) {
+    return `HARZ Ecosystem has ${platformData.length} platforms, ${platformData.filter(p=>p.status==='Live').length} are live. Check the Platforms tab!`;
+  } else if (lower.includes('agent') || lower.includes('ai')) {
+    return `We have ${agentData.length} AI agents with ${Math.round(agentData.reduce((s,a)=>s+(a.success_rate||0),0)/agentData.length*10)/10}% avg success rate.`;
+  } else if (lower.includes('wallet') || lower.includes('pay') || lower.includes('money')) {
+    return `Your HARZ Wallet supports NGN, USD, GDEG, and USDT. Check the Wallet tab!`;
+  } else if (lower.includes('hello') || lower.includes('hi') || lower.includes('sannu')) {
+    return `👋 Hello! I'm Magani. I can help with platforms, agents, wallet, and more!`;
+  } else if (lower.includes('help') || lower.includes('tade')) {
+    return `I can help: 📱 Platforms, 🤖 AI Agents, 💳 Wallet, 📈 Analytics, 🔐 Settings. Just ask!`;
+  } else {
+    return `I received: "${msg}". Connect HARZ Cloud backend for full AI processing.`;
+  }
 }
 
 function openAgentChat(name) {
@@ -611,33 +747,58 @@ function openAgentChat(name) {
 
 // ===== EXPORT =====
 async function exportData() {
-  try {
-    showToast('Exporting data...');
-    const data = {
-      user: currentUser,
-      platforms: platformData,
-      agents: agentData,
-      wallet: walletData,
-      exportDate: new Date().toISOString()
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'harz-export-' + new Date().toISOString().slice(0,10) + '.json';
-    a.click();
-    showToast('Data exported! 📄');
-  } catch(e) { showToast('Export failed'); }
+  showToast('Exporting...');
+  if (backendOnline && authToken) {
+    try {
+      const res = await fetch(API_URL + '/export-all?format=json', {
+        headers: {'x-auth-token': authToken}
+      });
+      const data = await res.json();
+      downloadJSON(data, 'harz-export');
+      showToast('Data exported! 📄');
+      return;
+    } catch(e) {}
+  }
+  // Fallback — export local data
+  const data = {user: currentUser, platforms: platformData, agents: agentData, wallet: walletData, exportDate: new Date().toISOString()};
+  downloadJSON(data, 'harz-export');
+  showToast('Local data exported! 📄');
+}
+
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename + '-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
 }
 
 // ===== CONNECTION TEST =====
 async function testConnection() {
-  showToast('Testing Base44 backend...');
-  try {
-    const res = await api('stats');
-    showToast('✅ Connected! ' + res.stats.platforms + ' platforms, ' + res.stats.agents + ' agents');
-  } catch(e) {
-    showToast('❌ Backend offline: ' + e.message);
+  showToast('Testing HARZ Cloud...');
+  const online = await checkBackend();
+  if (online) {
+    try {
+      const health = await apiCall('/health');
+      showToast('✅ Connected! v' + (health.version || '1.0'));
+    } catch(e) {
+      showToast('✅ Backend is online!');
+    }
+  } else {
+    showToast('❌ Backend offline — deploy on Render', true);
+  }
+}
+
+// ===== API URL CONFIG =====
+function saveApiUrl() {
+  const url = document.getElementById('customApiUrl').value.trim();
+  if (url) {
+    API_URL = url.startsWith('http') ? url : 'https://' + url;
+    localStorage.setItem('harz_api_url', API_URL);
+    document.getElementById('apiUrlDisplay').textContent = API_URL.replace('https://','');
+    showToast('API URL saved! Reloading...');
+    setTimeout(() => location.reload(), 1000);
   }
 }
 
@@ -657,16 +818,14 @@ function toggleTheme() {
     localStorage.setItem('harz_theme', 'dark');
   }
 }
-
-// Restore theme
 if (localStorage.getItem('harz_theme') === 'light') toggleTheme();
 
 // ===== TOAST =====
-function showToast(msg) {
+function showToast(msg, isError = false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3000);
 }
 
 // ===== START =====
