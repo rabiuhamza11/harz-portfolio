@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzGit — Code Hosting Platform | HARZ Ecosystem</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --bg-hover: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-muted: #7d8590;
+  --accent: #2f81f7;
+  --green: #3fb950;
+  --red: #f85149;
+  --yellow: #d29922;
+  --purple: #a371f7;
+  --orange: #db6d28;
+  --radius: 8px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+.logo { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; color: var(--text); }
+.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--purple)); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.search-bar { flex: 1; max-width: 500px; position: relative; }
+.search-bar input { width: 100%; padding: 8px 12px 8px 36px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 14px; outline: none; }
+.search-bar input:focus { border-color: var(--accent); }
+.search-bar::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; opacity: 0.6; }
+.header-actions { display: flex; gap: 12px; align-items: center; }
+.btn { padding: 6px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); transition: 0.15s; text-decoration: none; }
+.btn:hover { background: var(--bg-hover); border-color: var(--accent); text-decoration: none; }
+.btn-primary { background: var(--green); color: #fff; border: none; }
+.btn-primary:hover { background: #2ea043; }
+.container { display: flex; max-width: 1400px; margin: 0 auto; padding: 24px; gap: 24px; }
+.sidebar { width: 280px; flex-shrink: 0; }
+.main-content { flex: 1; min-width: 0; }
+.sidebar-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+.sidebar-section h3 { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; }
+.stat-row .label { color: var(--text-muted); }
+.stat-row .value { font-weight: 600; color: var(--text); }
+.lang-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 12px; }
+.lang-segment { height: 100%; }
+.lang-item { display: flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 12px; color: var(--text-muted); }
+.lang-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.lang-pct { margin-left: auto; font-weight: 600; color: var(--text); }
+.filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-chip { padding: 4px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); transition: 0.15s; }
+.filter-chip:hover { border-color: var(--accent); color: var(--text); }
+.filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.repo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+.repo-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: 0.15s; cursor: pointer; }
+.repo-card:hover { border-color: var(--accent); background: var(--bg-hover); }
+.repo-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.repo-icon { font-size: 20px; }
+.repo-name { font-size: 15px; font-weight: 600; color: var(--accent); }
+.repo-visibility { font-size: 11px; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); color: var(--text-muted); margin-left: auto; }
+.repo-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.repo-footer { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
+.repo-meta { display: flex; align-items: center; gap: 4px; }
+.lang-badge { display: flex; align-items: center; gap: 4px; }
+.lang-badge .dot { width: 10px; height: 10px; border-radius: 50%; }
+.repo-topics { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+.topic { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: var(--accent); color: #fff; opacity: 0.8; }
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 200; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; }
+.modal-overlay.active { display: flex; }
+.modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 700px; padding: 24px; position: relative; }
+.modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+.modal-close:hover { color: var(--text); }
+.modal h2 { font-size: 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.modal .repo-url { font-size: 13px; color: var(--accent); margin-bottom: 16px; word-break: break-all; }
+.modal .repo-full-desc { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 20px; padding: 12px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); }
+.modal-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.modal-stat { text-align: center; padding: 12px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); }
+.modal-stat .num { font-size: 18px; font-weight: 700; }
+.modal-stat .lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
+.modal-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.loading { text-align: center; padding: 60px; color: var(--text-muted); font-size: 14px; }
+.spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { text-align: center; padding: 40px; color: var(--text-muted); }
+.empty h3 { font-size: 16px; margin-bottom: 8px; }
+@media (max-width: 900px) { .container { flex-direction: column; padding: 16px; } .sidebar { width: 100%; } .repo-grid { grid-template-columns: 1fr; } .modal-stats { grid-template-columns: repeat(2, 1fr); } .search-bar { max-width: 200px; } }
+.footer { text-align: center; padding: 24px; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 40px; }
+.footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo"><div class="logo-icon">⚡</div> HarzGit</div>
+  <div class="search-bar"><input type="text" id="searchInput" placeholder="Search repositories..." oninput="filterRepos()"></div>
+  <div class="header-actions">
+    <button class="btn" onclick="syncRepos()">🔄 Sync</button>
+    <a href="https://github.com/new" target="_blank" class="btn btn-primary">+ New Repo</a>
+  </div>
+</div>
+<div class="container">
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <h3>Ecosystem Stats</h3>
+      <div class="stat-row"><span class="label">Total Repos</span><span class="value" id="statRepos">—</span></div>
+      <div class="stat-row"><span class="label">Public</span><span class="value" id="statPublic">—</span></div>
+      <div class="stat-row"><span class="label">Private</span><span class="value" id="statPrivate">—</span></div>
+      <div class="stat-row"><span class="label">Stars</span><span class="value" id="statStars">—</span></div>
+      <div class="stat-row"><span class="label">Forks</span><span class="value" id="statForks">—</span></div>
+      <div class="stat-row"><span class="label">Open Issues</span><span class="value" id="statIssues">—</span></div>
+    </div>
+    <div class="sidebar-section">
+      <h3>Languages</h3>
+      <div class="lang-bar" id="langBar"></div>
+      <div id="langList"></div>
+    </div>
+    <div class="sidebar-section">
+      <h3>HARZ Ecosystem</h3>
+      <div class="stat-row"><span class="label">Platforms</span><span class="value">56</span></div>
+      <div class="stat-row"><span class="label">AI Agents</span><span class="value">7</span></div>
+      <div class="stat-row"><span class="label">Products</span><span class="value">20</span></div>
+      <div class="stat-row"><span class="label">Success Rate</span><span class="value">95.4%</span></div>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="filters" id="filters">
+      <div class="filter-chip active" data-filter="all" onclick="setFilter('all')">All</div>
+      <div class="filter-chip" data-filter="public" onclick="setFilter('public')">Public</div>
+      <div class="filter-chip" data-filter="private" onclick="setFilter('private')">Private</div>
+      <div class="filter-chip" data-filter="Active" onclick="setFilter('Active')">Active</div>
+      <div class="filter-chip" data-filter="Archived" onclick="setFilter('Archived')">Archived</div>
+    </div>
+    <div id="repoContainer"><div class="loading"><div class="spinner"></div>Loading repositories from GitHub...</div></div>
+  </div>
+</div>
+<div class="modal-overlay" id="repoModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2 id="modalTitle"></h2>
+    <div class="repo-url" id="modalUrl"></div>
+    <div class="repo-full-desc" id="modalDesc"></div>
+    <div class="modal-stats" id="modalStats"></div>
+    <div class="repo-topics" id="modalTopics"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+<div class="footer">HarzGit v1.0 — Part of the <a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app-v5.html">HARZ Ecosystem</a> | Powered by <a href="https://github.com/rabiuhamza11">GitHub API</a> & <a href="https://base44.com">Base44</a></div>
+<script>
+const LANG_COLORS={'JavaScript':'#f1e05a','TypeScript':'#3178c6','HTML':'#e34c26','CSS':'#563d7c','Python':'#3572A5','Dart':'#00B4AB','Java':'#b07219','Shell':'#89e051','Text':'#6e7681','Other':'#6e7681','Vue':'#41b883','SCSS':'#c6538c','Makefile':'#427819'};
+let allRepos=[],currentFilter='all',searchTerm='';
+async function loadRepos(){
+  try{
+    const res=await fetch('https://api.github.com/users/rabiuhamza11/repos?per_page=100&sort=updated',{headers:{'Accept':'application/vnd.github.v3+json'},signal:AbortSignal.timeout(15000)});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const repos=await res.json();
+    allRepos=repos.map(r=>({github_id:r.id,name:r.name,description:r.description||'',github_url:r.html_url,is_private:r.private,owner:r.owner?.login||'rabiuhamza11',language:r.language||'Text',stars:r.stargazers_count||0,forks:r.forks_count||0,open_issues:r.open_issues_count||0,default_branch:r.default_branch||'main',size:r.size||0,visibility:r.private?'private':'public',last_commit_date:r.pushed_at||r.updated_at,topics:r.topics||[],status:r.archived?'Archived':'Active'}));
+    const totalStars=allRepos.reduce((s,r)=>s+(r.stars||0),0);
+    const totalForks=allRepos.reduce((s,r)=>s+(r.forks||0),0);
+    const totalIssues=allRepos.reduce((s,r)=>s+(r.open_issues||0),0);
+    const languages={};
+    allRepos.forEach(r=>{const l=r.language||'Other';languages[l]=(languages[l]||0)+1;});
+    updateStats({totalRepos:allRepos.length,totalStars,totalForks,totalIssues,languages,publicCount:allRepos.filter(r=>!r.is_private).length,privateCount:allRepos.filter(r=>r.is_private).length});
+    renderRepos();
+  }catch(error){
+    document.getElementById('repoContainer').innerHTML='<div class="empty"><h3>Could not load repositories</h3><p>'+error.message+'</p></div>';
+  }
+}
+function updateStats(stats){
+  if(!stats) return;
+  document.getElementById('statRepos').textContent=stats.totalRepos||0;
+  document.getElementById('statPublic').textContent=stats.publicCount||0;
+  document.getElementById('statPrivate').textContent=stats.privateCount||0;
+  document.getElementById('statStars').textContent=stats.totalStars||0;
+  document.getElementById('statForks').textContent=stats.totalForks||0;
+  document.getElementById('statIssues').textContent=stats.totalIssues||0;
+  const langs=stats.languages||{};
+  const total=Object.values(langs).reduce((a,b)=>a+b,0);
+  if(total>0){
+    const sorted=Object.entries(langs).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    let bar='',list='';
+    sorted.forEach(([lang,count])=>{const pct=(count/total*100).toFixed(1);const color=LANG_COLORS[lang]||LANG_COLORS['Other'];bar+='<div class="lang-segment" style="width:'+pct+'%;background:'+color+'" title="'+lang+': '+pct+'%"></div>';list+='<div class="lang-item"><span class="lang-dot" style="background:'+color+'"></span>'+lang+'<span class="lang-pct">'+pct+'%</span></div>';});
+    document.getElementById('langBar').innerHTML=bar;
+    document.getElementById('langList').innerHTML=list;
+  }
+}
+function setFilter(filter){currentFilter=filter;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));document.querySelector('[data-filter="'+filter+'"]').classList.add('active');renderRepos();}
+function filterRepos(){searchTerm=document.getElementById('searchInput').value.toLowerCase();renderRepos();}
+function renderRepos(){
+  let filtered=allRepos;
+  if(currentFilter==='public')filtered=filtered.filter(r=>!r.is_private);
+  else if(currentFilter==='private')filtered=filtered.filter(r=>r.is_private);
+  else if(currentFilter==='Active')filtered=filtered.filter(r=>r.status==='Active');
+  else if(currentFilter==='Archived')filtered=filtered.filter(r=>r.status==='Archived');
+  if(searchTerm){filtered=filtered.filter(r=>r.name.toLowerCase().includes(searchTerm)||(r.description||'').toLowerCase().includes(searchTerm)||(r.topics||[]).some(t=>t.toLowerCase().includes(searchTerm)));}
+  if(filtered.length===0){document.getElementById('repoContainer').innerHTML='<div class="empty"><h3>No repositories found</h3><p>Try a different search or filter</p></div>';return;}
+  let html='<div class="repo-grid">';
+  filtered.forEach(repo=>{
+    const color=LANG_COLORS[repo.language]||LANG_COLORS['Other'];
+    const updatedDate=repo.last_commit_date?new Date(repo.last_commit_date).toLocaleDateString('en',{month:'short',day:'numeric'}):'—';
+    const topics=(repo.topics||[]).slice(0,3).map(t=>'<span class="topic">'+t+'</span>').join('');
+    html+='<div class="repo-card" onclick="showRepoDetail(\''+repo.name+'\')"><div class="repo-header"><span class="repo-icon">📦</span><span class="repo-name">'+repo.name+'</span><span class="repo-visibility">'+repo.visibility+'</span></div><div class="repo-desc">'+(repo.description||'No description')+'</div>'+(topics?'<div class="repo-topics">'+topics+'</div>':'')+'<div class="repo-footer"><span class="lang-badge"><span class="dot" style="background:'+color+'"></span>'+repo.language+'</span><span class="repo-meta">⭐ '+repo.stars+'</span><span class="repo-meta">🍴 '+repo.forks+'</span><span class="repo-meta">Updated '+updatedDate+'</span></div></div>';
+  });
+  html+='</div>';
+  document.getElementById('repoContainer').innerHTML=html;
+}
+function showRepoDetail(name){
+  const repo=allRepos.find(r=>r.name===name);
+  if(!repo) return;
+  document.getElementById('modalTitle').innerHTML='<span>📦</span> '+repo.owner+'/'+repo.name;
+  document.getElementById('modalUrl').textContent=repo.github_url;
+  document.getElementById('modalDesc').textContent=repo.description||'No description provided';
+  const color=LANG_COLORS[repo.language]||LANG_COLORS['Other'];
+  document.getElementById('modalStats').innerHTML='<div class="modal-stat"><div class="num" style="color:'+color+'">'+repo.language+'</div><div class="lbl">Language</div></div><div class="modal-stat"><div class="num">⭐ '+repo.stars+'</div><div class="lbl">Stars</div></div><div class="modal-stat"><div class="num">🍴 '+repo.forks+'</div><div class="lbl">Forks</div></div><div class="modal-stat"><div class="num">⚠️ '+repo.open_issues+'</div><div class="lbl">Issues</div></div>';
+  const topics=(repo.topics||[]).map(t=>'<span class="topic">'+t+'</span>').join('');
+  document.getElementById('modalTopics').innerHTML=topics;
+  document.getElementById('modalActions').innerHTML='<a href="'+repo.github_url+'" target="_blank" class="btn btn-primary">View on GitHub →</a><a href="'+repo.github_url+'/issues" target="_blank" class="btn">Issues ('+repo.open_issues+')</a><a href="'+repo.github_url+'/pulls" target="_blank" class="btn">Pull Requests</a><a href="'+repo.github_url+'/actions" target="_blank" class="btn">Actions</a>';
+  document.getElementById('repoModal').classList.add('active');
+}
+function closeModal(){document.getElementById('repoModal').classList.remove('active');}
+document.addEventListener('click',(e)=>{if(e.target.classList.contains('modal-overlay'))closeModal();});
+async function syncRepos(){document.getElementById('repoContainer').innerHTML='<div class="loading"><div class="spinner"></div>Syncing repositories from GitHub...</div>';await loadRepos();}
+loadRepos();
+</script>
+</body>
+</html>
