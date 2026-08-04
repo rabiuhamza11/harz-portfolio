@@ -5,89 +5,107 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HarzGit — Code Hosting Platform | HARZ Ecosystem</title>
 <style>
-:root {
-  --bg: #0d1117;
-  --bg-card: #161b22;
-  --bg-hover: #1c2128;
-  --border: #30363d;
-  --text: #e6edf3;
-  --text-muted: #7d8590;
-  --accent: #2f81f7;
-  --green: #3fb950;
-  --red: #f85149;
-  --yellow: #d29922;
-  --purple: #a371f7;
-  --orange: #db6d28;
-  --radius: 8px;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-.header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
-.logo { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; color: var(--text); }
-.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--purple)); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-.search-bar { flex: 1; max-width: 500px; position: relative; }
-.search-bar input { width: 100%; padding: 8px 12px 8px 36px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 14px; outline: none; }
-.search-bar input:focus { border-color: var(--accent); }
-.search-bar::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; opacity: 0.6; }
-.header-actions { display: flex; gap: 12px; align-items: center; }
-.btn { padding: 6px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); transition: 0.15s; text-decoration: none; }
-.btn:hover { background: var(--bg-hover); border-color: var(--accent); text-decoration: none; }
-.btn-primary { background: var(--green); color: #fff; border: none; }
-.btn-primary:hover { background: #2ea043; }
-.container { display: flex; max-width: 1400px; margin: 0 auto; padding: 24px; gap: 24px; }
-.sidebar { width: 280px; flex-shrink: 0; }
-.main-content { flex: 1; min-width: 0; }
-.sidebar-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
-.sidebar-section h3 { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; }
-.stat-row .label { color: var(--text-muted); }
-.stat-row .value { font-weight: 600; color: var(--text); }
-.lang-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 12px; }
-.lang-segment { height: 100%; }
-.lang-item { display: flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 12px; color: var(--text-muted); }
-.lang-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.lang-pct { margin-left: auto; font-weight: 600; color: var(--text); }
-.filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-.filter-chip { padding: 4px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); transition: 0.15s; }
-.filter-chip:hover { border-color: var(--accent); color: var(--text); }
-.filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-.repo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
-.repo-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: 0.15s; cursor: pointer; }
-.repo-card:hover { border-color: var(--accent); background: var(--bg-hover); }
-.repo-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.repo-icon { font-size: 20px; }
-.repo-name { font-size: 15px; font-weight: 600; color: var(--accent); }
-.repo-visibility { font-size: 11px; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); color: var(--text-muted); margin-left: auto; }
-.repo-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.repo-footer { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
-.repo-meta { display: flex; align-items: center; gap: 4px; }
-.lang-badge { display: flex; align-items: center; gap: 4px; }
-.lang-badge .dot { width: 10px; height: 10px; border-radius: 50%; }
-.repo-topics { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
-.topic { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: var(--accent); color: #fff; opacity: 0.8; }
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 200; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; }
-.modal-overlay.active { display: flex; }
-.modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 700px; padding: 24px; position: relative; }
-.modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
-.modal-close:hover { color: var(--text); }
-.modal h2 { font-size: 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-.modal .repo-url { font-size: 13px; color: var(--accent); margin-bottom: 16px; word-break: break-all; }
-.modal .repo-full-desc { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 20px; padding: 12px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); }
-.modal-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-.modal-stat { text-align: center; padding: 12px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); }
-.modal-stat .num { font-size: 18px; font-weight: 700; }
-.modal-stat .lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
-.modal-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.loading { text-align: center; padding: 60px; color: var(--text-muted); font-size: 14px; }
-.spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.empty { text-align: center; padding: 40px; color: var(--text-muted); }
-.empty h3 { font-size: 16px; margin-bottom: 8px; }
-@media (max-width: 900px) { .container { flex-direction: column; padding: 16px; } .sidebar { width: 100%; } .repo-grid { grid-template-columns: 1fr; } .modal-stats { grid-template-columns: repeat(2, 1fr); } .search-bar { max-width: 200px; } }
-.footer { text-align: center; padding: 24px; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 40px; }
-.footer a { color: var(--accent); }
+:root{--bg:#0d1117;--bg-card:#161b22;--bg-hover:#1c2128;--border:#30363d;--text:#e6edf3;--text-muted:#7d8590;--accent:#2f81f7;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#a371f7;--orange:#db6d28;--radius:8px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.header{background:var(--bg-card);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:700;color:var(--text);}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--purple));border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.search-bar{flex:1;max-width:500px;position:relative;}
+.search-bar input{width:100%;padding:8px 12px 8px 36px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:14px;outline:none;}
+.search-bar input:focus{border-color:var(--accent);}
+.search-bar::before{content:'\1F50D';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;opacity:0.6;}
+.header-actions{display:flex;gap:12px;align-items:center;}
+.btn{padding:6px 14px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg-card);color:var(--text);transition:0.15s;text-decoration:none;display:inline-block;}
+.btn:hover{background:var(--bg-hover);border-color:var(--accent);text-decoration:none;}
+.btn-primary{background:var(--green);color:#fff;border:none;}
+.btn-primary:hover{background:#2ea043;}
+.btn-danger{background:var(--red);color:#fff;border:none;}
+.btn-danger:hover{background:#da3633;}
+.container{display:flex;max-width:1400px;margin:0 auto;padding:24px;gap:24px;}
+.sidebar{width:280px;flex-shrink:0;}
+.main-content{flex:1;min-width:0;}
+.sidebar-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.sidebar-section h3{font-size:14px;color:var(--text-muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px;}
+.stat-row .label{color:var(--text-muted);}
+.stat-row .value{font-weight:600;color:var(--text);}
+.lang-bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin-bottom:12px;}
+.lang-segment{height:100%;}
+.lang-item{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;color:var(--text-muted);}
+.lang-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.lang-pct{margin-left:auto;font-weight:600;color:var(--text);}
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.filter-chip{padding:4px 12px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);transition:0.15s;}
+.filter-chip:hover{border-color:var(--accent);color:var(--text);}
+.filter-chip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.repo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;}
+.repo-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:0.15s;cursor:pointer;}
+.repo-card:hover{border-color:var(--accent);background:var(--bg-hover);}
+.repo-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.repo-icon{font-size:20px;}
+.repo-name{font-size:15px;font-weight:600;color:var(--accent);}
+.repo-visibility{font-size:11px;padding:2px 6px;border-radius:4px;border:1px solid var(--border);color:var(--text-muted);margin-left:auto;}
+.repo-desc{font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.repo-footer{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--text-muted);flex-wrap:wrap;}
+.repo-meta{display:flex;align-items:center;gap:4px;}
+.lang-badge{display:flex;align-items:center;gap:4px;}
+.lang-badge .dot{width:10px;height:10px;border-radius:50%;}
+.repo-topics{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
+.topic{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--accent);color:#fff;opacity:0.8;}
+.issue-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:10px;background:rgba(248,81,73,0.15);color:var(--red);font-size:11px;font-weight:600;}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:200;justify-content:center;align-items:flex-start;padding:40px 20px;overflow-y:auto;}
+.modal-overlay.active{display:flex;}
+.modal{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;width:100%;max-width:800px;padding:24px;position:relative;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:24px;cursor:pointer;}
+.modal-close:hover{color:var(--text);}
+.modal h2{font-size:20px;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.modal .repo-url{font-size:13px;color:var(--accent);margin-bottom:16px;word-break:break-all;}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.tab{padding:10px 20px;font-size:14px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:0.15s;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--text);border-bottom-color:var(--accent);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.repo-full-desc{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:20px;padding:12px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);}
+.modal-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.modal-stat{text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);}
+.modal-stat .num{font-size:18px;font-weight:700;}
+.modal-stat .lbl{font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-top:4px;}
+.modal-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.issue-list{display:flex;flex-direction:column;gap:8px;}
+.issue-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;gap:12px;align-items:flex-start;}
+.issue-item:hover{border-color:var(--accent);}
+.issue-icon{font-size:18px;flex-shrink:0;margin-top:2px;}
+.issue-content{flex:1;min-width:0;}
+.issue-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.issue-title .issue-num{color:var(--text-muted);font-weight:400;font-size:13px;}
+.issue-meta{font-size:12px;color:var(--text-muted);}
+.issue-labels{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
+.issue-label{font-size:11px;padding:2px 8px;border-radius:20px;color:#fff;font-weight:500;}
+.issue-state-badge{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600;}
+.issue-state-badge.open{background:rgba(63,185,80,0.15);color:var(--green);}
+.issue-state-badge.closed{background:rgba(210,153,34,0.15);color:var(--yellow);}
+.new-issue-form{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.new-issue-form input,.new-issue-form textarea{width:100%;padding:10px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:14px;outline:none;font-family:inherit;margin-bottom:10px;}
+.new-issue-form input:focus,.new-issue-form textarea:focus{border-color:var(--accent);}
+.new-issue-form textarea{min-height:100px;resize:vertical;}
+.form-actions{display:flex;gap:8px;align-items:center;}
+.form-status{font-size:13px;color:var(--text-muted);}
+.form-status.success{color:var(--green);}
+.form-status.error{color:var(--red);}
+.loading-inline{text-align:center;padding:30px;color:var(--text-muted);font-size:13px;}
+.spinner-sm{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading{text-align:center;padding:60px;color:var(--text-muted);font-size:14px;}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;}
+.empty{text-align:center;padding:40px;color:var(--text-muted);}
+.empty h3{font-size:16px;margin-bottom:8px;}
+@media(max-width:900px){.container{flex-direction:column;padding:16px;}.sidebar{width:100%;}.repo-grid{grid-template-columns:1fr;}.modal-stats{grid-template-columns:repeat(2,1fr);}.search-bar{max-width:200px;}}
+.footer{text-align:center;padding:24px;color:var(--text-muted);font-size:12px;border-top:1px solid var(--border);margin-top:40px;}
+.footer a{color:var(--accent);}
 </style>
 </head>
 <body>
@@ -139,16 +157,43 @@ a:hover { text-decoration: underline; }
     <button class="modal-close" onclick="closeModal()">×</button>
     <h2 id="modalTitle"></h2>
     <div class="repo-url" id="modalUrl"></div>
-    <div class="repo-full-desc" id="modalDesc"></div>
-    <div class="modal-stats" id="modalStats"></div>
-    <div class="repo-topics" id="modalTopics"></div>
-    <div class="modal-actions" id="modalActions"></div>
+    <div class="tabs">
+      <div class="tab active" data-tab="overview" onclick="switchTab('overview')">📋 Overview</div>
+      <div class="tab" data-tab="issues" onclick="switchTab('issues')">⚠️ Issues <span id="issueCount" style="color:var(--text-muted);font-size:12px;"></span></div>
+      <div class="tab" data-tab="newissue" onclick="switchTab('newissue')">➕ New Issue</div>
+    </div>
+    <div class="tab-content active" id="tabOverview">
+      <div class="repo-full-desc" id="modalDesc"></div>
+      <div class="modal-stats" id="modalStats"></div>
+      <div class="repo-topics" id="modalTopics"></div>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+    <div class="tab-content" id="tabIssues">
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button class="btn" id="btnOpen" onclick="loadIssues('open')" style="border-color:var(--green);">Open Issues</button>
+        <button class="btn" id="btnClosed" onclick="loadIssues('closed')">Closed Issues</button>
+        <button class="btn" id="btnAll" onclick="loadIssues('all')">All</button>
+      </div>
+      <div id="issueListContainer"><div class="loading-inline"><div class="spinner-sm"></div>Click a tab to load issues...</div></div>
+    </div>
+    <div class="tab-content" id="tabNewIssue">
+      <div class="new-issue-form">
+        <input type="text" id="issueTitle" placeholder="Issue title..." style="margin-bottom:10px;">
+        <textarea id="issueBody" placeholder="Describe the issue in detail..."></textarea>
+        <input type="text" id="issueLabels" placeholder="Labels (comma-separated, e.g. bug,enhancement,help wanted)" style="margin-bottom:10px;">
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="createIssue()">Submit Issue</button>
+          <span class="form-status" id="issueFormStatus"></span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div class="footer">HarzGit v1.0 — Part of the <a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app-v5.html">HARZ Ecosystem</a> | Powered by <a href="https://github.com/rabiuhamza11">GitHub API</a> & <a href="https://base44.com">Base44</a></div>
+<div class="footer">HarzGit v1.1 — Part of the <a href="https://rabiuhamza11.github.io/harz-portfolio/harz-super-app-v5.html">HARZ Ecosystem</a> | Powered by <a href="https://github.com/rabiuhamza11">GitHub API</a> & <a href="https://base44.com">Base44</a></div>
 <script>
 const LANG_COLORS={'JavaScript':'#f1e05a','TypeScript':'#3178c6','HTML':'#e34c26','CSS':'#563d7c','Python':'#3572A5','Dart':'#00B4AB','Java':'#b07219','Shell':'#89e051','Text':'#6e7681','Other':'#6e7681','Vue':'#41b883','SCSS':'#c6538c','Makefile':'#427819'};
-let allRepos=[],currentFilter='all',searchTerm='';
+let allRepos=[],currentFilter='all',searchTerm='',currentRepo=null,issuesLoaded=false;
+const LABEL_COLORS={'bug':'#d73a4a','enhancement':'#a2eeef','help wanted':'#008672','documentation':'#0075ca','question':'#d876e3','good first issue':'#7057ff','wontfix':'#ffffff','duplicate':'#cfd3d7','invalid':'#e4e669'};
 async function loadRepos(){
   try{
     const res=await fetch('https://api.github.com/users/rabiuhamza11/repos?per_page=100&sort=updated',{headers:{'Accept':'application/vnd.github.v3+json'},signal:AbortSignal.timeout(15000)});
@@ -199,7 +244,8 @@ function renderRepos(){
     const color=LANG_COLORS[repo.language]||LANG_COLORS['Other'];
     const updatedDate=repo.last_commit_date?new Date(repo.last_commit_date).toLocaleDateString('en',{month:'short',day:'numeric'}):'—';
     const topics=(repo.topics||[]).slice(0,3).map(t=>'<span class="topic">'+t+'</span>').join('');
-    html+='<div class="repo-card" onclick="showRepoDetail(\''+repo.name+'\')"><div class="repo-header"><span class="repo-icon">📦</span><span class="repo-name">'+repo.name+'</span><span class="repo-visibility">'+repo.visibility+'</span></div><div class="repo-desc">'+(repo.description||'No description')+'</div>'+(topics?'<div class="repo-topics">'+topics+'</div>':'')+'<div class="repo-footer"><span class="lang-badge"><span class="dot" style="background:'+color+'"></span>'+repo.language+'</span><span class="repo-meta">⭐ '+repo.stars+'</span><span class="repo-meta">🍴 '+repo.forks+'</span><span class="repo-meta">Updated '+updatedDate+'</span></div></div>';
+    const issueBadge=repo.open_issues>0?'<span class="issue-badge">⚠️ '+repo.open_issues+'</span>':'';
+    html+='<div class="repo-card" onclick="showRepoDetail(\''+repo.name+'\')"><div class="repo-header"><span class="repo-icon">📦</span><span class="repo-name">'+repo.name+'</span><span class="repo-visibility">'+repo.visibility+'</span></div><div class="repo-desc">'+(repo.description||'No description')+'</div>'+(topics?'<div class="repo-topics">'+topics+'</div>':'')+'<div class="repo-footer"><span class="lang-badge"><span class="dot" style="background:'+color+'"></span>'+repo.language+'</span><span class="repo-meta">⭐ '+repo.stars+'</span><span class="repo-meta">🍴 '+repo.forks+'</span>'+issueBadge+'<span class="repo-meta">Updated '+updatedDate+'</span></div></div>';
   });
   html+='</div>';
   document.getElementById('repoContainer').innerHTML=html;
@@ -207,17 +253,105 @@ function renderRepos(){
 function showRepoDetail(name){
   const repo=allRepos.find(r=>r.name===name);
   if(!repo) return;
+  currentRepo=repo;
+  issuesLoaded=false;
   document.getElementById('modalTitle').innerHTML='<span>📦</span> '+repo.owner+'/'+repo.name;
   document.getElementById('modalUrl').textContent=repo.github_url;
   document.getElementById('modalDesc').textContent=repo.description||'No description provided';
+  document.getElementById('issueCount').textContent=repo.open_issues>0?'('+repo.open_issues+')':'';
   const color=LANG_COLORS[repo.language]||LANG_COLORS['Other'];
   document.getElementById('modalStats').innerHTML='<div class="modal-stat"><div class="num" style="color:'+color+'">'+repo.language+'</div><div class="lbl">Language</div></div><div class="modal-stat"><div class="num">⭐ '+repo.stars+'</div><div class="lbl">Stars</div></div><div class="modal-stat"><div class="num">🍴 '+repo.forks+'</div><div class="lbl">Forks</div></div><div class="modal-stat"><div class="num">⚠️ '+repo.open_issues+'</div><div class="lbl">Issues</div></div>';
   const topics=(repo.topics||[]).map(t=>'<span class="topic">'+t+'</span>').join('');
   document.getElementById('modalTopics').innerHTML=topics;
   document.getElementById('modalActions').innerHTML='<a href="'+repo.github_url+'" target="_blank" class="btn btn-primary">View on GitHub →</a><a href="'+repo.github_url+'/issues" target="_blank" class="btn">Issues ('+repo.open_issues+')</a><a href="'+repo.github_url+'/pulls" target="_blank" class="btn">Pull Requests</a><a href="'+repo.github_url+'/actions" target="_blank" class="btn">Actions</a>';
+  document.getElementById('issueListContainer').innerHTML='<div class="loading-inline">Click "Open Issues" or "Closed Issues" to load...</div>';
+  document.getElementById('issueFormStatus').textContent='';
+  document.getElementById('issueTitle').value='';
+  document.getElementById('issueBody').value='';
+  document.getElementById('issueLabels').value='';
+  switchTab('overview');
   document.getElementById('repoModal').classList.add('active');
 }
-function closeModal(){document.getElementById('repoModal').classList.remove('active');}
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector('[data-tab="'+tab+'"]').classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+  if(tab==='issues'&&!issuesLoaded){loadIssues('open');}
+}
+function getLabelColor(label){
+  return LABEL_COLORS[label.toLowerCase()]||'#6e7681';
+}
+async function loadIssues(state){
+  if(!currentRepo) return;
+  document.getElementById('btnOpen').style.borderColor=state==='open'?'var(--green)':'var(--border)';
+  document.getElementById('btnClosed').style.borderColor=state==='closed'?'var(--yellow)':'var(--border)';
+  document.getElementById('btnAll').style.borderColor=state==='all'?'var(--accent)':'var(--border)';
+  document.getElementById('issueListContainer').innerHTML='<div class="loading-inline"><div class="spinner-sm"></div>Loading issues...</div>';
+  try{
+    const res=await fetch('https://api.github.com/repos/rabiuhamza11/'+currentRepo.name+'/issues?state='+state+'&per_page=50&sort=created&direction=desc',{headers:{'Accept':'application/vnd.github.v3+json'},signal:AbortSignal.timeout(15000)});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const issues=await res.json();
+    const filtered=issues.filter(i=>!i.pull_request);
+    if(filtered.length===0){
+      document.getElementById('issueListContainer').innerHTML='<div class="empty"><h3>No '+state+' issues</h3><p>This repository has no '+state+' issues.</p></div>';
+      issuesLoaded=true;
+      return;
+    }
+    let html='<div class="issue-list">';
+    filtered.forEach(i=>{
+      const labels=(i.labels||[]).map(l=>'<span class="issue-label" style="background:#'+(l.color||'6e7681')+'">'+l.name+'</span>').join('');
+      const stateBadge='<span class="issue-state-badge '+i.state+'">'+(i.state==='open'?'🟢 Open':'✅ Closed')+'</span>';
+      const dateStr=new Date(i.created_at).toLocaleDateString('en',{month:'short',day:'numeric',year:'numeric'});
+      html+='<div class="issue-item"><span class="issue-icon">'+(i.state==='open'?'🔴':'🟣')+'</span><div class="issue-content"><div class="issue-title">'+stateBadge+' '+i.title+' <span class="issue-num">#'+i.number+'</span></div><div class="issue-meta">By <strong>'+i.user.login+'</strong> on '+dateStr+' · 💬 '+(i.comments||0)+' comments</div>'+(labels?'<div class="issue-labels">'+labels+'</div>':'')+'<div style="margin-top:6px;"><a href="'+i.html_url+'" target="_blank" style="font-size:12px;">View on GitHub →</a></div></div></div>';
+    });
+    html+='</div>';
+    document.getElementById('issueListContainer').innerHTML=html;
+    issuesLoaded=true;
+  }catch(error){
+    document.getElementById('issueListContainer').innerHTML='<div class="empty"><h3>Could not load issues</h3><p>'+error.message+'</p></div>';
+  }
+}
+async function createIssue(){
+  if(!currentRepo){return;}
+  const title=document.getElementById('issueTitle').value.trim();
+  const body=document.getElementById('issueBody').value.trim();
+  const labelsStr=document.getElementById('issueLabels').value.trim();
+  if(!title){
+    document.getElementById('issueFormStatus').textContent='⚠️ Title is required';
+    document.getElementById('issueFormStatus').className='form-status error';
+    return;
+  }
+  const labels=labelsStr?labelsStr.split(',').map(l=>l.trim()).filter(l=>l):[];
+  document.getElementById('issueFormStatus').textContent='Creating issue...';
+  document.getElementById('issueFormStatus').className='form-status';
+  try{
+    const res=await fetch('https://api.github.com/repos/rabiuhamza11/'+currentRepo.name+'/issues',{
+      method:'POST',
+      headers:{'Accept':'application/vnd.github.v3+json','Content-Type':'application/json','Authorization':'token '+GITHUB_TOKEN},
+      body:JSON.stringify({title,body,labels}),
+      signal:AbortSignal.timeout(15000),
+    });
+    if(!res.ok){
+      const err=await res.text();
+      throw new Error('GitHub API: '+res.status+' — '+(res.status===401?'Authentication required (GITHUB_TOKEN needed)':err));
+    }
+    const issue=await res.json();
+    document.getElementById('issueFormStatus').textContent='✅ Issue #'+issue.number+' created!';
+    document.getElementById('issueFormStatus').className='form-status success';
+    document.getElementById('issueTitle').value='';
+    document.getElementById('issueBody').value='';
+    document.getElementById('issueLabels').value='';
+    currentRepo.open_issues++;
+    document.getElementById('issueCount').textContent='('+currentRepo.open_issues+')';
+    const stats=document.getElementById('modalStats');
+    stats.children[3].innerHTML='<div class="num">⚠️ '+currentRepo.open_issues+'</div><div class="lbl">Issues</div>';
+  }catch(error){
+    document.getElementById('issueFormStatus').textContent='⚠️ '+error.message;
+    document.getElementById('issueFormStatus').className='form-status error';
+  }
+}
+function closeModal(){document.getElementById('repoModal').classList.remove('active');currentRepo=null;}
 document.addEventListener('click',(e)=>{if(e.target.classList.contains('modal-overlay'))closeModal();});
 async function syncRepos(){document.getElementById('repoContainer').innerHTML='<div class="loading"><div class="spinner"></div>Syncing repositories from GitHub...</div>';await loadRepos();}
 loadRepos();
