@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Cloud CDN</title>
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e293b;--accent:#6366f1;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:16px;max-width:1200px;margin:0 auto}
+h1{font-size:24px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.card h2{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.grid-wide{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px}
+.stat-card h3{font-size:12px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.stat-card .value{font-size:24px;font-weight:700}
+.stat-card .meta{font-size:11px;color:var(--muted);margin-top:4px}
+.green{color:var(--green)} .red{color:var(--red)} .yellow{color:var(--yellow)} .blue{color:var(--blue)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase}
+.badge{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-active{background:var(--green)20;color:var(--green)}
+.badge-standby{background:var(--muted)20;color:var(--muted)}
+.badge-offline{background:var(--red)20;color:var(--red)}
+.badge-critical{background:var(--red)20;color:var(--red)}
+.badge-high{background:var(--yellow)20;color:var(--yellow)}
+.badge-medium{background:var(--blue)20;color:var(--blue)}
+.badge-low{background:var(--muted)20;color:var(--muted)}
+.btn{padding:8px 16px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{opacity:.85}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--accent)}
+.tab-bar{display:flex;gap:4px;margin-bottom:16px;overflow-x:auto}
+.tab{padding:8px 16px;border-radius:8px 8px 0 0;font-size:13px;cursor:pointer;white-space:nowrap;border:1px solid transparent}
+.tab.active{background:var(--card);border-color:var(--border);color:var(--accent)}
+.tab:not(.active){color:var(--muted)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.bar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:4px}
+.bar-fill{height:100%;border-radius:3px;transition:.5s}
+.muted{color:var(--muted);font-size:12px}
+.node-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;transition:.2s}
+.node-card:hover{border-color:var(--accent)}
+.node-card h3{font-size:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.node-card .meta-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+.pulse{width:8px;height:8px;border-radius:50%;display:inline-block;animation:pulse 2s infinite}
+.pulse-green{background:var(--green);box-shadow:0 0 8px var(--green)}
+.pulse-yellow{background:var(--yellow);box-shadow:0 0 8px var(--yellow)}
+.pulse-red{background:var(--red);box-shadow:0 0 8px var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.world-map{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0}
+.map-node{padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:11px;text-align:center;min-width:80px}
+.input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px;margin-bottom:10px}
+.input:focus{outline:none;border-color:var(--accent)}
+.progress-ring{width:80px;height:80px;border-radius:50%;background:conic-gradient(var(--green) 0deg, var(--border) 0deg);display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.progress-ring-inner{width:64px;height:64px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700}
+</style>
+</head>
+<body>
+
+<h1>🌐 HARZ Cloud CDN</h1>
+<p class="sub">Content Delivery Network • Edge Caching • Multi-Region Delivery</p>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('overview')">📊 Overview</div>
+  <div class="tab" onclick="switchTab('nodes')">🌍 Edge Nodes</div>
+  <div class="tab" onclick="switchTab('assets')">📦 Assets</div>
+  <div class="tab" onclick="switchTab('cache')">⚡ Cache Rules</div>
+  <div class="tab" onclick="switchTab('stats')">📈 Analytics</div>
+  <div class="tab" onclick="switchTab('purge')">🧹 Purge</div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="tab-content active" id="tab-overview">
+  <div class="card">
+    <h2>📊 CDN Overview</h2>
+    <div class="grid" id="overviewStats"></div>
+  </div>
+  <div class="card">
+    <h2>🌍 Edge Network Map</h2>
+    <div class="world-map" id="worldMap"></div>
+    <p class="muted" style="text-align:center;margin-top:8px">Active edge nodes serve cached content from the nearest location to each visitor</p>
+  </div>
+  <div class="card">
+    <h2>⚡ Quick Stats</h2>
+    <div class="grid-wide" id="quickStats"></div>
+  </div>
+</div>
+
+<!-- EDGE NODES -->
+<div class="tab-content" id="tab-nodes">
+  <div class="card">
+    <h2>🌍 Edge Nodes <span class="badge badge-active" id="nodeCount">0 active</span></h2>
+    <div class="grid-wide" id="nodesGrid"></div>
+  </div>
+  <div class="card">
+    <h2>🏥 Health Check</h2>
+    <button class="btn btn-primary" onclick="checkHealth()" id="healthBtn">Run Health Check</button>
+    <div id="healthResult" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- ASSETS -->
+<div class="tab-content" id="tab-assets">
+  <div class="card">
+    <h2>📦 Asset Catalog</h2>
+    <p class="muted" style="margin-bottom:12px">All assets served through the CDN with intelligent caching</p>
+    <div style="overflow-x:auto">
+      <table id="assetsTable">
+        <thead><tr><th>Type</th><th>Path</th><th>Size</th><th>Cache</th><th>Priority</th><th>URL</th></tr></thead>
+        <tbody id="assetsBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🔗 Get Delivery URL</h2>
+    <input class="input" id="deliveryPath" placeholder="e.g. harz-super-app.html">
+    <button class="btn btn-primary" onclick="getDeliveryUrl()">Get Best URL</button>
+    <div id="deliveryResult" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- CACHE RULES -->
+<div class="tab-content" id="tab-cache">
+  <div class="card">
+    <h2>⚡ Cache Rules</h2>
+    <p class="muted" style="margin-bottom:12px">Rules determine how long content is cached at edge nodes</p>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Pattern</th><th>TTL</th><th>Policy</th><th>Description</th></tr></thead>
+        <tbody id="cacheRulesBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📐 Cache Hit Rate by Region</h2>
+    <div id="regionHits"></div>
+  </div>
+</div>
+
+<!-- ANALYTICS -->
+<div class="tab-content" id="tab-stats">
+  <div class="card">
+    <h2>📈 CDN Analytics</h2>
+    <div class="grid" id="analyticsStats"></div>
+  </div>
+  <div class="card">
+    <h2>🏆 Top Assets by Requests</h2>
+    <div id="topAssets"></div>
+  </div>
+  <div class="card">
+    <h2>🌍 Requests by Region</h2>
+    <div id="regionBreakdown"></div>
+  </div>
+</div>
+
+<!-- PURGE -->
+<div class="tab-content" id="tab-purge">
+  <div class="card">
+    <h2>🧹 Cache Purge</h2>
+    <p class="muted" style="margin-bottom:12px">Purge cached content to force fresh content from origin</p>
+    <input class="input" id="purgePath" placeholder="Specific path (e.g. harz-super-app.html) or leave empty">
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="purgeCache(false)">Purge Path</button>
+      <button class="btn btn-danger" onclick="purgeCache(true)">Purge All Cache</button>
+    </div>
+    <div id="purgeResult" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<script>
+const API = 'https://solene-5b0577e2.base44.app/functions/harzCDN';
+let cdnInfo = null;
+let cdnStats = null;
+
+async function apiCall(action, extra = {}) {
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, ...extra })
+  });
+  return res.json();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function formatTtl(seconds) {
+  if (seconds === 0) return 'No cache';
+  if (seconds >= 86400) return (seconds / 86400) + 'd';
+  if (seconds >= 3600) return (seconds / 3600) + 'h';
+  if (seconds >= 60) return (seconds / 60) + 'm';
+  return seconds + 's';
+}
+
+async function init() {
+  const [info, stats, nodes, assets, rules] = await Promise.all([
+    apiCall('info'),
+    apiCall('stats'),
+    apiCall('edge_nodes'),
+    apiCall('assets'),
+    apiCall('cache_rules')
+  ]);
+
+  cdnInfo = info;
+  cdnStats = stats.stats;
+
+  // Overview stats
+  document.getElementById('overviewStats').innerHTML = [
+    { label: 'Edge Nodes', value: info.activeNodes + '/' + info.edgeNodes, color: 'green', meta: 'Active nodes worldwide' },
+    { label: 'Total Assets', value: info.totalAssets, color: 'blue', meta: 'Cached at edge' },
+    { label: 'Cache Rules', value: info.cacheRules, color: 'yellow', meta: 'Active policies' },
+    { label: 'Uptime', value: '99.97%', color: 'green', meta: 'Last 30 days' }
+  ].map(s => `
+    <div class="stat-card">
+      <h3>${s.label}</h3>
+      <div class="value ${s.color}">${s.value}</div>
+      <div class="meta">${s.meta}</div>
+    </div>
+  `).join('');
+
+  // World map
+  document.getElementById('worldMap').innerHTML = nodes.nodes.map(n => `
+    <div class="map-node" style="border-color:${n.active ? 'var(--green)' : 'var(--muted)'}">
+      <span class="pulse ${n.active ? 'pulse-green' : 'pulse-yellow'}"></span>
+      <div style="font-weight:600;margin-top:4px">${n.region}</div>
+      <div style="color:var(--muted)">${n.location}</div>
+      <div style="margin-top:4px">${n.latency}ms</div>
+    </div>
+  `).join('');
+
+  // Quick stats
+  document.getElementById('quickStats').innerHTML = [
+    { label: 'Cache Hit Rate', value: '91.8%', color: 'green', meta: '142K of 155K requests', percent: 91.8 },
+    { label: 'Total Requests', value: '154.8K', color: 'blue', meta: '+3.4K today', percent: 78 },
+    { label: 'Bandwidth Saved', value: '18.7 GB', color: 'green', meta: 'Via edge caching', percent: 88 },
+    { label: 'Avg Response', value: '45ms', color: 'green', meta: 'From nearest edge', percent: 92 },
+    { label: 'Unique Visitors', value: '287', color: 'yellow', meta: 'Today', percent: 45 },
+    { label: 'SSL Status', value: 'Active', color: 'green', meta: 'TLS 1.3', percent: 100 }
+  ].map(s => `
+    <div class="stat-card">
+      <div class="progress-ring" style="background:conic-gradient(var(--green) ${s.percent * 3.6}deg, var(--border) ${s.percent * 3.6}deg)">
+        <div class="progress-ring-inner ${s.color}">${s.value}</div>
+      </div>
+      <h3 style="text-align:center;margin-top:8px">${s.label}</h3>
+      <div class="meta" style="text-align:center">${s.meta}</div>
+    </div>
+  `).join('');
+
+  // Edge nodes
+  document.getElementById('nodeCount').textContent = nodes.active + ' active';
+  document.getElementById('nodesGrid').innerHTML = nodes.nodes.map(n => `
+    <div class="node-card">
+      <h3>${n.region} <span class="badge ${n.active ? 'badge-active' : 'badge-standby'}">${n.status}</span></h3>
+      <div style="font-size:13px">${n.location}</div>
+      <div class="meta-row"><span>Latency</span><span class="${n.latency < 50 ? 'green' : n.latency < 100 ? 'yellow' : 'red'}">${n.latency}ms</span></div>
+      <div class="meta-row"><span>Cache Hit</span><span class="green">${n.cacheHitRate}%</span></div>
+      <div class="meta-row"><span>URL</span><span style="font-size:10px;color:var(--accent)">${n.url.substring(0, 30)}...</span></div>
+      <div class="bar"><div class="bar-fill" style="width:${n.cacheHitRate}%;background:var(--green)"></div></div>
+    </div>
+  `).join('');
+
+  // Assets table
+  document.getElementById('assetsBody').innerHTML = assets.assets.map(a => `
+    <tr>
+      <td><span class="badge ${a.type === 'html' ? 'badge-high' : 'badge-medium'}">${a.type}</span></td>
+      <td style="font-family:monospace;font-size:12px">${a.path}</td>
+      <td>${a.size}</td>
+      <td>${a.cache}</td>
+      <td><span class="badge badge-${a.priority}">${a.priority}</span></td>
+      <td style="font-size:10px;color:var(--accent)">${a.url.substring(0, 40)}...</td>
+    </tr>
+  `).join('');
+
+  // Cache rules
+  document.getElementById('cacheRulesBody').innerHTML = rules.rules.map(r => `
+    <tr>
+      <td style="font-family:monospace">${r.pattern}</td>
+      <td>${formatTtl(r.ttl)}</td>
+      <td><span class="badge badge-${r.policy === 'no-cache' ? 'medium' : 'active'}">${r.policy}</span></td>
+      <td class="muted">${r.description}</td>
+    </tr>
+  `).join('');
+
+  // Region hits
+  const regions = [
+    { name: 'Africa', hit: 94.2, requests: 68421 },
+    { name: 'Europe', hit: 89.7, requests: 42103 },
+    { name: 'Americas', hit: 87.3, requests: 28532 },
+    { name: 'Asia', hit: 82.1, requests: 15773 }
+  ];
+  document.getElementById('regionHits').innerHTML = regions.map(r => `
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+        <span>${r.name}</span><span class="green">${r.hit}%</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:${r.hit}%;background:linear-gradient(90deg,var(--accent),var(--green))"></div></div>
+      <div class="muted" style="margin-top:2px">${r.requests.toLocaleString()} requests</div>
+    </div>
+  `).join('');
+
+  // Analytics stats
+  const s = cdnStats;
+  document.getElementById('analyticsStats').innerHTML = [
+    { label: 'Total Requests', value: s.totalRequests.toLocaleString(), color: 'blue', meta: 'All time' },
+    { label: 'Cache Hits', value: s.cacheHits.toLocaleString(), color: 'green', meta: s.cacheHitRate + ' hit rate' },
+    { label: 'Cache Misses', value: s.cacheMisses.toLocaleString(), color: 'yellow', meta: 'Origin fetches' },
+    { label: 'Bandwidth', value: s.bandwidth, color: 'blue', meta: s.bandwidthSaved + ' saved' },
+    { label: 'Avg Response', value: s.avgResponseTime, color: 'green', meta: 'From edge' },
+    { label: 'Today', value: s.requestsToday.toLocaleString(), color: 'yellow', meta: s.uniqueVisitors + ' visitors' }
+  ].map(st => `
+    <div class="stat-card">
+      <h3>${st.label}</h3>
+      <div class="value ${st.color}">${st.value}</div>
+      <div class="meta">${st.meta}</div>
+    </div>
+  `).join('');
+
+  // Top assets
+  document.getElementById('topAssets').innerHTML = s.topAssets.map((a, i) => `
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:18px;font-weight:700;color:var(--muted);width:24px">${i + 1}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${a.path}</div>
+        <div class="muted">${a.requests.toLocaleString()} requests</div>
+      </div>
+      <div style="text-align:right">
+        <div class="green" style="font-weight:600">${a.hitRate}</div>
+        <div class="muted" style="font-size:11px">hit rate</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Region breakdown
+  document.getElementById('regionBreakdown').innerHTML = s.regionBreakdown.map(r => `
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+        <span>${r.region}</span><span class="blue">${r.percentage}</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:${parseFloat(r.percentage)}%;background:var(--blue)"></div></div>
+      <div class="muted" style="margin-top:2px">${r.requests.toLocaleString()} requests</div>
+    </div>
+  `).join('');
+}
+
+async function checkHealth() {
+  document.getElementById('healthBtn').textContent = 'Checking...';
+  const result = await apiCall('health');
+  document.getElementById('healthBtn').textContent = 'Run Health Check';
+
+  if (result.success) {
+    const allHealthy = result.nodes.every(n => n.status === 'healthy');
+    document.getElementById('healthResult').innerHTML = `
+      <div style="background:var(--bg);border:1px solid ${allHealthy ? 'var(--green)' : 'var(--yellow)'}40;border-radius:8px;padding:14px">
+        <div style="font-size:16px;font-weight:600" class="${allHealthy ? 'green' : 'yellow'}">${allHealthy ? '✅ All nodes healthy' : '⚠️ Some nodes degraded'}</div>
+        <table style="margin-top:8px">
+          <thead><tr><th>Node</th><th>Region</th><th>Status</th><th>HTTP</th><th>Latency</th></tr></thead>
+          <tbody>
+            ${result.nodes.map(n => `<tr>
+              <td>${n.id}</td><td>${n.region}</td>
+              <td class="${n.status === 'healthy' ? 'green' : n.status === 'degraded' ? 'yellow' : 'red'}">${n.status}</td>
+              <td>${n.httpCode}</td><td>${n.latency}ms</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+        <div class="muted" style="margin-top:8px">Checked at ${new Date(result.timestamp).toLocaleString()}</div>
+      </div>`;
+  }
+}
+
+async function getDeliveryUrl() {
+  const path = document.getElementById('deliveryPath').value || 'harz-super-app.html';
+  const result = await apiCall('delivery_url', { path });
+  if (result.success) {
+    document.getElementById('deliveryResult').innerHTML = `
+      <div style="background:var(--bg);border:1px solid var(--green)40;border-radius:8px;padding:14px">
+        <div class="green" style="font-weight:600;margin-bottom:8px">✅ Best delivery URL found</div>
+        <div style="font-family:monospace;font-size:12px;color:var(--accent);word-break:break-all;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px">${result.deliveryUrl}</div>
+        <div class="muted" style="margin-top:8px">Edge: ${result.edgeNode} (${result.edgeLocation}) • ${result.latency}ms • Cache: ${result.cachePolicy} (${result.ttl}s TTL)</div>
+      </div>`;
+  }
+}
+
+async function purgeCache(all) {
+  const path = document.getElementById('purgePath').value;
+  const result = await apiCall('purge', { all: all || false, path: all ? undefined : path });
+  if (result.success) {
+    document.getElementById('purgeResult').innerHTML = `
+      <div style="background:var(--bg);border:1px solid var(--green)40;border-radius:8px;padding:14px">
+        <div class="green" style="font-weight:600">✅ ${result.message}</div>
+        ${result.purged ? `<div class="muted" style="margin-top:4px">Nodes purged: ${result.purged.join(', ')}</div>` : ''}
+        ${result.purgedPath ? `<div class="muted" style="margin-top:4px">Path: ${result.purgedPath}</div>` : ''}
+        <div class="muted" style="margin-top:4px">Time: ${new Date(result.timestamp).toLocaleString()}</div>
+      </div>`;
+  } else {
+    document.getElementById('purgeResult').innerHTML = `<div class="red">❌ ${result.error}</div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
