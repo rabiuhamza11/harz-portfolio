@@ -176,14 +176,18 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 <div class="card">
 <h3>📈 Analytics Dashboard</h3>
 <div class="stat-grid">
-<div class="stat"><div class="num" id="totalEvents">0</div><div class="label">Total Events</div></div>
+<div class="stat"><div class="num" id="totalRevenue">₦0</div><div class="label">Revenue</div></div>
+<div class="stat"><div class="num" id="totalProducts">0</div><div class="label">Products</div></div>
+<div class="stat"><div class="num" id="totalTxns">0</div><div class="label">Transactions</div></div>
 <div class="stat"><div class="num" id="totalPlatforms">0</div><div class="label">Platforms</div></div>
 </div>
 </div>
-<div class="section-title">Events by Type</div>
-<div class="card" id="eventsByType">
-<div class="list-item"><span class="title" style="color:var(--muted)">Loading...</span></div>
-</div>
+<div class="section-title">Revenue by Platform</div>
+<div class="card" id="revenueByPlatform"></div>
+<div class="section-title">Platform Categories</div>
+<div class="card" id="categoryBreakdown"></div>
+<div class="section-title">Transaction History</div>
+<div class="card" id="txnHistory"></div>
 </div>
 
 <!-- PROFILE -->
@@ -873,7 +877,7 @@ function showPage(page) {
   const nav = document.getElementById('nav-' + page);
   if (nav) nav.classList.add('active');
   window.scrollTo(0, 0);
-  if (page === 'profile' && currentUser) showProfile();
+  if (page === 'profile' && currentUser) showProfile(); if (page === 'analytics') renderAnalytics();
   // Track analytics
   if (backendOnline) {
     apiCall('/analytics/track', 'POST', {event_type:'page_view', platform:page}).catch(()=>{});
@@ -1182,7 +1186,7 @@ function buyProduct(name) {
 }
 
 // Render products on page load
-setTimeout(() => { renderProducts(productData); renderTxns(transactionData); }, 1500);
+setTimeout(() => { renderProducts(productData); renderTxns(transactionData); renderAnalytics(); }, 1500);
 
 function renderTxns(txns) {
   const list = document.getElementById('transactionList');
@@ -1196,6 +1200,133 @@ function renderTxns(txns) {
       </div>
     `).join('');
   }
+}
+
+
+
+// ===== ANALYTICS =====
+function renderAnalytics() {
+  // Revenue
+  const revenue = transactionData.filter(t => t.status === 'Completed').reduce((s, t) => s + (t.amount || 0), 0);
+  document.getElementById('totalRevenue').textContent = '₦' + revenue.toLocaleString();
+  document.getElementById('totalProducts').textContent = productData.length;
+  document.getElementById('totalTxns').textContent = transactionData.length;
+  document.getElementById('totalPlatforms').textContent = platformData.length;
+  
+  // Revenue by platform
+  const revByPlatform = {};
+  transactionData.filter(t => t.status === 'Completed').forEach(t => {
+    const p = t.platform || 'Unknown';
+    revByPlatform[p] = (revByPlatform[p] || 0) + (t.amount || 0);
+  });
+  const revSorted = Object.entries(revByPlatform).sort((a,b) => b[1] - a[1]);
+  const maxRev = revSorted.length > 0 ? revSorted[0][1] : 1;
+  document.getElementById('revenueByPlatform').innerHTML = revSorted.length > 0 
+    ? revSorted.map(([p, r]) => `
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:2px">
+          <span>${p}</span><span style="color:var(--accent2);font-weight:600">₦${r.toLocaleString()}</span>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${(r/maxRev*100)}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px"></div>
+        </div>
+      </div>
+    `).join('')
+    : '<div class="list-item"><span class="title" style="color:var(--muted)">No revenue data</span></div>';
+  
+  // Category breakdown
+  const cats = {};
+  platformData.forEach(p => { cats[p.category] = (cats[p.category] || 0) + 1; });
+  const catSorted = Object.entries(cats).sort((a,b) => b[1] - a[1]);
+  document.getElementById('categoryBreakdown').innerHTML = catSorted.map(([c, n]) => 
+    `<div class="list-item"><span class="title">${c}</span><span class="meta">${n} platforms</span></div>`
+  ).join('');
+  
+  // Transaction history
+  document.getElementById('txnHistory').innerHTML = transactionData.map(t => `
+    <div class="list-item">
+      <div>
+        <span class="title">${t.description || t.type}</span>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${t.platform} • ${t.reference || ''}</div>
+      </div>
+      <div style="text-align:right">
+        <span style="font-weight:600;color:${t.status === 'Completed' ? 'var(--success)' : 'var(--accent)'}">${t.currency} ${(t.amount||0).toLocaleString()}</span>
+        <div style="font-size:10px;color:var(--muted)">${t.status}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// 4. Platform detail view
+function showPlatformDetail(name) {
+  const p = platformData.find(x => x.name === name);
+  if (!p) return;
+  const statusClass = p.status === 'Live' ? 'badge-live' : 'badge-dev';
+  showToast(`${p.icon || '📦'} ${p.name} — ${p.status}`);
+  if (p.url) {
+    setTimeout(() => window.open(p.url, '_blank'), 500);
+  }
+}
+
+// 5. Better agent chat
+const AGENT_RESPONSES = {
+  'MindCare Agent': (msg) => {
+    if (msg.match(/stress|anxiety|sad|depress/i)) return 'I understand. Try this: 4-7-8 breathing — inhale 4s, hold 7s, exhale 8s. Would you like a full CBT exercise?';
+    if (msg.match(/sleep|insomnia/i)) return 'Sleep tip: No screens 1hr before bed, keep room cool (18-20°C), try progressive muscle relaxation.';
+    return 'I am MindCare Agent. I can help with stress, anxiety, sleep, mood tracking, and CBT exercises. What is on your mind?';
+  },
+  'CyberShield Agent': (msg) => {
+    if (msg.match(/hack|attack|breach|secur/i)) return 'Active threat detected. Deploying 37 sub-agents. Recommendation: Enable 2FA, rotate API keys, audit access logs immediately.';
+    if (msg.match(/password|2fa|auth/i)) return 'Security best practices: Use 16+ char passwords, enable 2FA everywhere, use a password manager, never reuse passwords.';
+    return 'I am CyberShield Agent. I monitor threats across all HARZ platforms with 37 specialist sub-agents. Current status: All clear.';
+  },
+  'Health Agent': (msg) => {
+    if (msg.match(/pain|sick|fever|symptom/i)) return 'Please describe your symptoms in detail. I can analyze with 18 medical specialists. Note: For emergencies, call 112 or visit a hospital immediately.';
+    if (msg.match(/diet|nutrition|food|eat/i)) return 'Nutrition tip: Focus on whole foods — vegetables, lean protein, whole grains. Drink 2-3L water daily. Would you like a personalized meal plan?';
+    return 'I am Health Agent. I have 18 medical specialists for symptom checking, nutrition, fitness, and mental wellness. How can I help your health today?';
+  },
+  'Omega Commander': (msg) => {
+    if (msg.match(/deploy|launch|release/i)) return 'Deployment pipeline ready. DeployForge can push to GitHub, Vercel, Render, Netlify, or Railway. Which platform?';
+    if (msg.match(/report|analytics|stats/i)) return `Current stats: 41 platforms, 36 live, 7 agents active, 95.4% success rate, ₦49,500 revenue.`;
+    return 'I am Omega Commander. I manage enterprise operations with 9 AI agents. I can deploy, analyze, approve workflows, and manage the ecosystem.';
+  },
+  'Content Agent': (msg) => {
+    if (msg.match(/video|youtube|tiktok/i)) return 'Content suggestion: Create short-form videos (15-30s) for TikTok/Reels. Post 3x daily. Use trending audio. I can generate scripts and edit schedules.';
+    if (msg.match(/blog|article|write/i)) return 'I can generate SEO-optimized blog posts, social captions, and ad copy. What topic?';
+    return 'I am Content Agent. I manage content production across YouTube, TikTok, Instagram, Facebook, X, and LinkedIn. What content do you need?';
+  },
+  'EduWealth Agent': (msg) => {
+    if (msg.match(/trade|stock|invest/i)) return 'Trading lesson: Start with paper trading, learn risk management (1-2% rule), understand technical analysis basics (support, resistance, trends).';
+    if (msg.match(/market|digital|seo/i)) return 'Digital marketing: Focus on content marketing + SEO. Create valuable content, optimize for keywords, build backlinks. Consistency is key.';
+    return 'I am EduWealth Agent. I teach trading and digital marketing with 18 AI tutors. What would you like to learn?';
+  },
+  'Magani': (msg) => {
+    const lower = msg.toLowerCase();
+    if (lower.match(/platform|apps|ecosystem/)) return `HARZ Ecosystem has ${platformData.length} platforms — ${platformData.filter(p=>p.status==='Live').length} live. Categories: AI, Finance, Health, Construction, Media, Trading, and more. Check the Platforms tab!`;
+    if (lower.match(/agent|ai/)) return `We have ${agentData.length} AI agents with ${Math.round(agentData.reduce((s,a)=>s+(a.success_rate||0),0)/agentData.length*10)/10}% avg success rate. Tap any agent above to learn more.`;
+    if (lower.match(/wallet|pay|money|balance/)) return `Your HARZ Wallet: ₦125,000 / $350 / 5,000 GDEG / 120 USDT. Payment methods: UBA Transfer, Paystack, GDEG Token, USDT TRC20.`;
+    if (lower.match(/product|store|shop|buy/)) return `Harz Store has ${productData.length} products from all platforms. Prices range from ₦500 to ₦50,000. Check the Store tab!`;
+    if (lower.match(/revenue|income|earn/)) return `Total revenue: ₦49,500 from 6 completed transactions. Top platform: TradeOS (₦25,000).`;
+    if (lower.match(/hello|hi|sannu|ya/)) return '👋 Sannu! I am Magani, your HARZ ecosystem assistant. I can help with platforms, agents, wallet, products, and analytics!';
+    if (lower.match(/help|tade|gada/)) return 'I can help with: 📱 Platforms, 🤖 AI Agents, 💳 Wallet, 🛍️ Store, 📈 Analytics, 🔐 Settings. Just ask!';
+    return `I received: "${msg}". I can help with platforms, agents, wallet, products, analytics, and more. Try asking about the HARZ ecosystem!`;
+  }
+};
+
+let currentAgent = 'Magani';
+
+function openAgentChat(name) {
+  currentAgent = name;
+  showPage('agents');
+  const box = document.getElementById('chatBox');
+  box.innerHTML = `<div class="chat-msg in">👋 I am ${name}. How can I help you today?</div>`;
+  showToast('Chatting with ' + name);
+  document.getElementById('chatInput').focus();
+}
+
+function generateReply(msg) {
+  const responder = AGENT_RESPONSES[currentAgent] || AGENT_RESPONSES['Magani'];
+  return responder(msg);
 }
 
 
