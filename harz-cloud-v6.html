@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Cloud v6.0 — Enterprise Console</title>
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e293b;--accent:#6366f1;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:12px;max-width:1200px;margin:0 auto}
+h1{font-size:20px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.card h2{font-size:14px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px}
+.stat h3{font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.stat .v{font-size:18px;font-weight:700}.stat .m{font-size:9px;color:var(--muted);margin-top:2px}
+.g{color:var(--green)}.r{color:var(--red)}.y{color:var(--yellow)}.b{color:var(--blue)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:9px;text-transform:uppercase}
+.badge{padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600}
+.b-ok{background:var(--green)20;color:var(--green)}.b-warn{background:var(--yellow)20;color:var(--yellow)}.b-info{background:var(--blue)20;color:var(--blue)}.b-crit{background:var(--red)20;color:var(--red)}
+.btn{padding:7px 12px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.btn-p:hover{opacity:.9}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-o:hover{border-color:var(--accent)}
+.nav-bar{display:flex;gap:3px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px}
+.nav-item{padding:7px 12px;border-radius:8px;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid transparent;transition:.15s}
+.nav-item.active{background:var(--card);border-color:var(--border);color:var(--accent)}
+.nav-item:not(.active){color:var(--muted)}
+.tc{display:none}.tc.active{display:block}
+.row{display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.muted{color:var(--muted);font-size:10px}
+.bar{height:4px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:2px}.bar-f{height:100%;border-radius:3px}
+.input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:12px;margin-bottom:6px}
+.input:focus{outline:none;border-color:var(--accent)}
+.mc{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:.2s}
+.mc:hover{border-color:var(--accent);transform:translateY(-2px)}
+.mc h3{font-size:13px;margin-bottom:4px}.mc .stats{font-size:10px;color:var(--muted);line-height:1.5}.mc .icon{font-size:24px;float:right}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+</style>
+</head>
+<body>
+<h1>🚀 HARZ Cloud v6.0 — Enterprise Console</h1>
+<p class="sub">15 new modules · 46 total backends · All operational</p>
+
+<div class="nav-bar" id="navBar">
+  <div class="nav-item active" onclick="show('overview',this)">🏠 Overview</div>
+  <div class="nav-item" onclick="show('analytics',this)">📊 Analytics</div>
+  <div class="nav-item" onclick="show('security',this)">🛡️ Security</div>
+  <div class="nav-item" onclick="show('backup',this)">💾 Backup DR</div>
+  <div class="nav-item" onclick="show('workflow',this)">⚙️ Workflows</div>
+  <div class="nav-item" onclick="show('seo',this)">🔍 SEO</div>
+  <div class="nav-item" onclick="show('affiliate',this)">🤝 Affiliate</div>
+  <div class="nav-item" onclick="show('helpdesk',this)">🎫 Help Desk</div>
+  <div class="nav-item" onclick="show('feedback',this)">📋 Feedback</div>
+  <div class="nav-item" onclick="show('image',this)">🎨 Image AI</div>
+  <div class="nav-item" onclick="show('video',this)">🎬 Video AI</div>
+  <div class="nav-item" onclick="show('translation',this)">🌍 Translation</div>
+  <div class="nav-item" onclick="show('sentiment',this)">💬 Sentiment</div>
+  <div class="nav-item" onclick="show('integration',this)">🔌 Integration</div>
+  <div class="nav-item" onclick="show('events',this)">📡 Events</div>
+  <div class="nav-item" onclick="show('admin',this)">🔧 Admin</div>
+</div>
+
+<div class="tc active" id="tab-overview"><div class="card"><h2>📊 v6.0 Module Overview</h2><div class="overview-grid" id="ovGrid"></div></div><div class="card"><h2>⚡ Backend Status (46 Functions)</h2><div id="bkStatus"></div></div></div>
+<div class="tc" id="tab-analytics"><div class="card"><h2>📊 Stats</h2><div class="grid" id="anStats"></div></div><div class="card"><h2>📈 Funnels</h2><div id="anFunnels"></div></div><div class="card"><h2>👥 Cohort Retention</h2><div id="anCohorts"></div></div><div class="card"><h2>📊 Real-time Metrics</h2><div id="anMetrics"></div></div></div>
+<div class="tc" id="tab-security"><div class="card"><h2>📊 Stats</h2><div class="grid" id="secStats"></div></div><div class="card"><h2>🧱 WAF Rules</h2><div id="secWaf"></div></div><div class="card"><h2>🔍 Vulnerabilities</h2><div id="secVulns"></div></div><div class="card"><h2>🚨 Threats</h2><div id="secThreats"></div></div></div>
+<div class="tc" id="tab-backup"><div class="card"><h2>📊 Stats</h2><div class="grid" id="bkStats"></div></div><div class="card"><h2>📸 Snapshots</h2><div id="bkSnaps"></div></div><div class="card"><h2>🌍 Regions</h2><div id="bkRegions"></div></div><div class="card"><h2>📋 Policies</h2><div id="bkPolicies"></div></div></div>
+<div class="tc" id="tab-workflow"><div class="card"><h2>📊 Stats</h2><div class="grid" id="wfStats"></div></div><div class="card"><h2>⚙️ Active Workflows</h2><div id="wfList"></div></div><div class="card"><h2>📋 Templates</h2><div class="grid-cards" id="wfTemplates"></div></div></div>
+<div class="tc" id="tab-seo"><div class="card"><h2>📊 Stats</h2><div class="grid" id="seoStats"></div></div><div class="card"><h2>🔑 Keyword Rankings</h2><div id="seoKeywords"></div></div><div class="card"><h2>📄 Page SEO Scores</h2><div id="seoPages"></div></div></div>
+<div class="tc" id="tab-affiliate"><div class="card"><h2>📊 Stats</h2><div class="grid" id="afStats"></div></div><div class="card"><h2>🤝 Affiliates</h2><div id="afList"></div></div><div class="card"><h2>💰 Commission Rates</h2><div id="afRates"></div></div></div>
+<div class="tc" id="tab-helpdesk"><div class="card"><h2>📊 Stats</h2><div class="grid" id="hdStats"></div></div><div class="card"><h2>🎫 Tickets</h2><div id="hdTickets"></div></div><div class="card"><h2>📚 Knowledge Base</h2><div id="hdKb"></div></div></div>
+<div class="tc" id="tab-feedback"><div class="card"><h2>📊 Stats</h2><div class="grid" id="fbStats"></div></div><div class="card"><h2>📋 Surveys</h2><div id="fbSurveys"></div></div><div class="card"><h2>💬 Recent Feedback</h2><div id="fbList"></div></div></div>
+<div class="tc" id="tab-image"><div class="card"><h2>📊 Stats</h2><div class="grid" id="imStats"></div></div><div class="card"><h2>🎨 Generate Image</h2><input class="input" id="imPrompt" placeholder="Describe the image..."><button class="btn btn-p" onclick="genImage()">Generate</button><div id="imResult" style="margin-top:8px"></div></div><div class="card"><h2>📜 History</h2><div id="imHistory"></div></div></div>
+<div class="tc" id="tab-video"><div class="card"><h2>📊 Stats</h2><div class="grid" id="viStats"></div></div><div class="card"><h2>🎬 Generate Video</h2><input class="input" id="viPrompt" placeholder="Describe the video..."><button class="btn btn-p" onclick="genVideo()">Generate</button><div id="viResult" style="margin-top:8px"></div></div><div class="card"><h2>📜 History</h2><div id="viHistory"></div></div><div class="card"><h2>🎤 AI Voices</h2><div id="viVoices"></div></div></div>
+<div class="tc" id="tab-translation"><div class="card"><h2>📊 Stats</h2><div class="grid" id="trStats"></div></div><div class="card"><h2>🌍 Translate</h2><input class="input" id="trText" placeholder="Enter text to translate..."><div style="display:flex;gap:6px;margin-bottom:6px"><input class="input" id="trSource" placeholder="From (English)" style="margin-bottom:0;flex:1"><input class="input" id="trTarget" placeholder="To (Hausa)" style="margin-bottom:0;flex:1"></div><button class="btn btn-p" onclick="doTranslate()">Translate</button><div id="trResult" style="margin-top:8px"></div></div><div class="card"><h2>📄 Document Translations</h2><div id="trDocs"></div></div></div>
+<div class="tc" id="tab-sentiment"><div class="card"><h2>📊 Stats</h2><div class="grid" id="smStats"></div></div><div class="card"><h2>💬 Recent Analyses</h2><div id="smAnalyses"></div></div><div class="card"><h2>📊 Brand Mentions by Platform</h2><div id="smMentions"></div></div></div>
+<div class="tc" id="tab-integration"><div class="card"><h2>📊 Stats</h2><div class="grid" id="igStats"></div></div><div class="card"><h2>🔌 Connectors</h2><div id="igConnectors"></div></div><div class="card"><h2>🔄 Sync Jobs</h2><div id="igSync"></div></div></div>
+<div class="tc" id="tab-events"><div class="card"><h2>📊 Stats</h2><div class="grid" id="evStats"></div></div><div class="card"><h2>📡 Topics</h2><div id="evTopics"></div></div><div class="card"><h2>🔔 Subscriptions</h2><div id="evSubs"></div></div></div>
+<div class="tc" id="tab-admin"><div class="card"><h2>📊 System Health</h2><div class="grid" id="adStats"></div></div><div class="card"><h2>⚙️ Configuration</h2><div id="adConfig"></div></div><div class="card"><h2>👤 Impersonation Log</h2><div id="adImpersonation"></div></div><div class="card"><h2>🔄 Bulk Operations</h2><div id="adBulk"></div></div></div>
+
+<script>
+const A6 = {
+  an:'https://solene-5b0577e2.base44.app/functions/harzAnalytics', sec:'https://solene-5b0577e2.base44.app/functions/harzSecurity', bk:'https://solene-5b0577e2.base44.app/functions/harzBackupDR', wf:'https://solene-5b0577e2.base44.app/functions/harzWorkflowEngine', seo:'https://solene-5b0577e2.base44.app/functions/harzSEO', af:'https://solene-5b0577e2.base44.app/functions/harzAffiliate', hd:'https://solene-5b0577e2.base44.app/functions/harzHelpDesk', fb:'https://solene-5b0577e2.base44.app/functions/harzFeedback', im:'https://solene-5b0577e2.base44.app/functions/harzImageStudio', vi:'https://solene-5b0577e2.base44.app/functions/harzVideoGen', tr:'https://solene-5b0577e2.base44.app/functions/harzTranslation', sm:'https://solene-5b0577e2.base44.app/functions/harzSentiment', ig:'https://solene-5b0577e2.base44.app/functions/harzIntegrationHub', ev:'https://solene-5b0577e2.base44.app/functions/harzEventSystem', ad:'https://solene-5b0577e2.base44.app/functions/harzAdminConsole'
+};
+async function api(u,b){return(await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b||{action:'info'})})).json();}
+function show(t,el){document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+t).classList.add('active');}
+const S=(arr)=>arr.map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+async function init(){
+  const I=await Promise.all(Object.values(A6).map(u=>api(u)));
+  const D=await Promise.all([
+    api(A6.an,{action:'funnels'}),api(A6.an,{action:'cohorts'}),api(A6.an,{action:'metrics'}),
+    api(A6.sec,{action:'waf'}),api(A6.sec,{action:'vulnerabilities'}),api(A6.sec,{action:'threats'}),
+    api(A6.bk,{action:'snapshots'}),api(A6.bk,{action:'regions'}),api(A6.bk,{action:'policies'}),
+    api(A6.wf,{action:'workflows'}),api(A6.wf,{action:'templates'}),
+    api(A6.seo,{action:'keywords'}),api(A6.seo,{action:'pages'}),
+    api(A6.af,{action:'affiliates'}),api(A6.af,{action:'rates'}),
+    api(A6.hd,{action:'tickets'}),api(A6.hd,{action:'knowledge_base'}),
+    api(A6.fb,{action:'surveys'}),api(A6.fb,{action:'feedback'}),
+    api(A6.im,{action:'history'}),api(A6.vi,{action:'history'}),api(A6.vi,{action:'voices'}),
+    api(A6.tr,{action:'history'}),api(A6.tr,{action:'documents'}),
+    api(A6.sm,{action:'analyses'}),api(A6.sm,{action:'mentions'}),
+    api(A6.ig,{action:'connectors'}),api(A6.ig,{action:'sync_jobs'}),
+    api(A6.ev,{action:'topics'}),api(A6.ev,{action:'subscriptions'}),
+    api(A6.ad,{action:'config'}),api(A6.ad,{action:'impersonations'}),api(A6.ad,{action:'bulk_ops'}),api(A6.ad,{action:'health'})
+  ]);
+  const [anF,anC,anM,secW,secV,secT,bkS,bkR,bkP,wfL,wfT,seoK,seoP,afL,afR,hdT,hdK,fbS,fbL,imH,viH,viV,trH,trD,smA,smM,igC,igS,evT,evS,adC,adI,adB,adH]=D;
+
+  const mods=[
+    {i:'📊',n:'Analytics',s:`${I[0].dau.toLocaleString()} DAU · ${I[0].mau.toLocaleString()} MAU · ${I[0].totalFunnels} funnels`,t:'analytics'},
+    {i:'🛡️',n:'Security',s:`Score ${I[1].securityScore} · ${I[1].totalBlocked.toLocaleString()} blocked · DDoS protected`,t:'security'},
+    {i:'💾',n:'Backup DR',s:`${I[2].totalSnapshots} snapshots · ${I[2].totalSize} · RPO ${I[2].rpo}`,t:'backup'},
+    {i:'⚙️',n:'Workflows',s:`${I[3].totalWorkflows} workflows · ${I[3].totalRuns.toLocaleString()} runs · ${I[3].avgSuccessRate}`,t:'workflow'},
+    {i:'🔍',n:'SEO',s:`${I[4].totalKeywords} keywords · Avg rank #${I[4].avgRank} · Score ${I[4].avgScore}`,t:'seo'},
+    {i:'🤝',n:'Affiliate',s:`${I[5].totalAffiliates} affiliates · ${I[5].totalCommission} earned`,t:'affiliate'},
+    {i:'🎫',n:'Help Desk',s:`${I[6].openTickets} open · ${I[6].resolved} resolved · ${I[6].satisfaction} CSAT`,t:'helpdesk'},
+    {i:'📋',n:'Feedback',s:`NPS ${I[7].npsScore} · ${I[7].avgRating}★ avg · ${I[7].totalResponses} responses`,t:'feedback'},
+    {i:'🎨',n:'Image AI',s:`${I[8].totalGenerated} images · Generate, edit, upscale, bg remove`,t:'image'},
+    {i:'🎬',n:'Video AI',s:`${I[9].completed} videos · ${I[9].processing} processing · ${I[9].voices} voices`,t:'video'},
+    {i:'🌍',n:'Translation',s:`${I[10].totalTranslations} translations · ${I[10].avgAccuracy} accuracy · ${I[10].avgTime}`,t:'translation'},
+    {i:'💬',n:'Sentiment',s:`${I[11].totalMentions.toLocaleString()} mentions · ${I[11].overallSentiment}`,t:'sentiment'},
+    {i:'🔌',n:'Integration',s:`${I[12].connected}/${I[12].totalConnectors} connected · ${I[12].totalRecords.toLocaleString()} records`,t:'integration'},
+    {i:'📡',n:'Events',s:`${I[13].totalTopics} topics · ${I[13].totalMessages.toLocaleString()} messages`,t:'events'},
+    {i:'🔧',n:'Admin',s:`${I[14].systemStatus} · ${I[14].configKeys} config keys · ${I[14].bulkOperations} bulk ops`,t:'admin'}
+  ];
+  document.getElementById('ovGrid').innerHTML=mods.map((m,i)=>`<div class="mc" onclick="document.querySelectorAll('.nav-item')[${i+1}].click()"><span class="icon">${m.i}</span><h3>${m.n}</h3><div class="stats">${m.s}</div></div>`).join('');
+
+  const allBk=['harzTemplates','harzBilling','harzCDN','harzRBAC','harzPayments','harzPaystack','buildBot','agentBuilder','deployForgeDeploy','harzNotifications','harzTeams','harzStorage','harzSearch','harzAuditLog','cfWorkers','harzAgentTraining','harzI18n','harzWebhooks','harzStripe','harzAPIGateway','harzMonitor','harzFeatureFlags','harzDBManager','harzCRM','harzEmailCampaigns','harzCodeGen','harzCMS','harzChatWidget','harzPayRouter','harzMobileBuilder','harzDocEditor','harzAnalytics','harzSecurity','harzBackupDR','harzWorkflowEngine','harzSEO','harzAffiliate','harzHelpDesk','harzFeedback','harzImageStudio','harzVideoGen','harzTranslation','harzSentiment','harzIntegrationHub','harzEventSystem','harzAdminConsole'];
+  const results=await Promise.all(allBk.map(fn=>fetch('https://solene-5b0577e2.base44.app/functions/'+fn,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'info'})}).then(r=>r.status).catch(()=>0)));
+  document.getElementById('bkStatus').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px">${allBk.map((fn,i)=>`<div class="row" style="margin:0;padding:4px 8px"><span class="badge ${results[i]===200?'b-ok':'b-crit'}">${results[i]===200?'200':'ERR'}</span><span style="font-family:monospace;font-size:10px;flex:1">${fn}</span></div>`).join('')}</div>`;
+
+  // Analytics
+  document.getElementById('anStats').innerHTML=S([{l:'DAU',v:I[0].dau.toLocaleString(),c:'b',m:'Daily active'},{l:'MAU',v:I[0].mau.toLocaleString(),c:'g',m:'Monthly active'},{l:'Session',v:I[0].avgSession,c:'y',m:'Avg duration'},{l:'Funnels',v:I[0].totalFunnels,c:'b',m:'Tracked'},{l:'Cohorts',v:I[0].totalCohorts,c:'g',m:'Retention'},{l:'Metrics',v:I[0].totalMetrics,c:'y',m:'Real-time'}]);
+  document.getElementById('anFunnels').innerHTML=anF.funnels.map(f=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${f.name}</div><div class="muted">${f.steps.map((s,i)=>`${s}:${f.conversion[i]}`).join(' → ')}</div></div></div>`).join('');
+  document.getElementById('anCohorts').innerHTML=anC.cohorts.map(c=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.cohort}</div><div class="muted">Size: ${c.size} · W1: ${c.week1} → W4: ${c.week4} · Retention: ${c.retention}</div></div></div>`).join('');
+  document.getElementById('anMetrics').innerHTML=anM.metrics.map(m=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${m.name}</div><div class="muted">${m.value} · ${m.change} · ${m.trend==='up'?'📈':'📉'}</div></div></div>`).join('');
+
+  // Security
+  document.getElementById('secStats').innerHTML=S([{l:'Score',v:I[1].securityScore,c:'g',m:'Grade A'},{l:'Blocked',v:I[1].totalBlocked.toLocaleString(),c:'r',m:'Attacks'},{l:'Vulns',v:I[1].vulnerabilities,c:'y',m:I[1].resolvedVulns+' resolved'},{l:'Threats',v:I[1].activeThreats,c:'r',m:'Active'},{l:'WAF',v:I[1].activeRules+'/'+I[1].wafRules,c:'b',m:'Rules active'},{l:'DDoS',v:'ON',c:'g',m:'Protected'}]);
+  document.getElementById('secWaf').innerHTML=secW.rules.map(r=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${r.name} <span class="badge ${r.enabled?'b-ok':'b-warn'}">${r.enabled?'on':'off'}</span></div><div class="muted">Type: ${r.type} · Severity: ${r.severity} · Blocked: ${r.blocked.toLocaleString()}</div></div></div>`).join('');
+  document.getElementById('secVulns').innerHTML=secV.vulnerabilities.map(v=>`<div class="row" style="border-left:3px solid ${v.severity==='critical'?'var(--red)':v.severity==='medium'?'var(--yellow)':'var(--blue)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${v.target} · ${v.type}</div><div class="muted">${v.description}</div></div><span class="badge ${v.status==='resolved'?'b-ok':'b-warn'}">${v.status}</span></div>`).join('');
+  document.getElementById('secThreats').innerHTML=secT.threats.map(t=>`<div class="row" style="border-left:3px solid var(--red)"><div style="flex:1"><div style="font-weight:600;font-size:12px">${t.ip} · ${t.type}</div><div class="muted">${t.attempts} attempts · ${t.country} · ${t.action} · ${t.lastSeen}</div></div><span class="badge b-crit">blocked</span></div>`).join('');
+
+  // Backup
+  document.getElementById('bkStats').innerHTML=S([{l:'Snapshots',v:I[2].totalSnapshots,c:'b',m:'Total'},{l:'Size',v:I[2].totalSize,c:'g',m:'All snapshots'},{l:'Regions',v:I[2].activeRegions+'/'+I[2].regions,c:'b',m:'Active'},{l:'RPO',v:I[2].rpo,c:'g',m:'Recovery point'},{l:'RTO',v:I[2].rto,c:'g',m:'Recovery time'},{l:'Policies',v:I[2].enabledPolicies,c:'y',m:'Active'}]);
+  document.getElementById('bkSnaps').innerHTML=bkS.snapshots.map(s=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${s.date} at ${s.time}</div><div class="muted">${s.size} · ${s.entities} entities · ${s.region} · ${s.type}</div></div><span class="badge b-ok">${s.status}</span></div>`).join('');
+  document.getElementById('bkRegions').innerHTML=bkR.regions.map(r=>`<div class="row" style="border-left:3px solid ${r.status==='active'?'var(--green)':r.status==='standby'?'var(--yellow)':'var(--muted)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${r.name}</div><div class="muted">${r.storage} · ${r.snapshots} snapshots · ${r.latency}</div></div><span class="badge ${r.status==='active'?'b-ok':'b-warn'}">${r.status}</span></div>`).join('');
+  document.getElementById('bkPolicies').innerHTML=bkP.policies.map(p=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${p.name} <span class="badge ${p.enabled?'b-ok':'b-warn'}">${p.enabled?'on':'off'}</span></div><div class="muted">Cron: ${p.schedule} · Retain: ${p.retention}d · Type: ${p.type}</div></div></div>`).join('');
+
+  // Workflow
+  document.getElementById('wfStats').innerHTML=S([{l:'Workflows',v:I[3].totalWorkflows,c:'b',m:I[3].activeWorkflows+' active'},{l:'Runs',v:I[3].totalRuns.toLocaleString(),c:'g',m:'Total'},{l:'Success',v:I[3].avgSuccessRate,c:'g',m:'Average'},{l:'Templates',v:I[3].templates,c:'y',m:'Pre-built'}]);
+  document.getElementById('wfList').innerHTML=wfL.workflows.map(w=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${w.name}</div><div class="muted">Trigger: ${w.trigger} · ${w.steps} steps · ${w.runs.toLocaleString()} runs · ${w.successRate}</div></div><span class="badge b-ok">${w.status}</span></div>`).join('');
+  document.getElementById('wfTemplates').innerHTML=wfT.templates.map(t=>`<div class="mc" onclick="void(0)"><span class="icon">${t.icon}</span><h3>${t.name}</h3><div class="stats">${t.steps.length} steps: ${t.steps.join(' → ')}<br>Category: ${t.category}</div></div>`).join('');
+
+  // SEO
+  document.getElementById('seoStats').innerHTML=S([{l:'Keywords',v:I[4].totalKeywords,c:'b',m:'Tracked'},{l:'Avg Rank',v:'#'+I[4].avgRank,c:'g',m:'Position'},{l:'Top 3',v:I[4].topKeywords,c:'g',m:'Keywords'},{l:'Avg Score',v:I[4].avgScore,c:'y',m:'Pages'},{l:'Pages',v:I[4].totalPages,c:'b',m:'Analyzed'},{l:'Sitemaps',v:I[4].sitemaps,c:'y',m:'Managed'}]);
+  document.getElementById('seoKeywords').innerHTML=seoK.keywords.map(k=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${k.keyword} <span style="color:${k.rank<=3?'var(--green)':k.rank<=10?'var(--yellow)':'var(--red)'}">#${k.rank}</span></div><div class="muted">Vol: ${k.volume.toLocaleString()} · ${k.difficulty} · ${k.trend==='up'?'📈':'📉'} ${k.change}</div></div></div>`).join('');
+  document.getElementById('seoPages').innerHTML=seoP.pages.map(p=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${p.url}</div><div class="muted">Score: ${p.score} · Issues: ${p.issues} · Title:${p.title} Meta:${p.meta} Schema:${p.schema}</div></div><div style="width:40px"><div class="bar"><div class="bar-f" style="width:${p.score}%;background:${p.score>85?'var(--green)':p.score>70?'var(--yellow)':'var(--red)'}"></div></div></div></div>`).join('');
+
+  // Affiliate
+  document.getElementById('afStats').innerHTML=S([{l:'Affiliates',v:I[5].totalAffiliates,c:'b',m:I[5].activeAffiliates+' active'},{l:'Clicks',v:I[5].totalClicks.toLocaleString(),c:'g',m:'Total'},{l:'Conversions',v:I[5].totalConversions,c:'y',m:'Sales'},{l:'Commission',v:I[5].totalCommission,c:'g',m:'Earned'}]);
+  document.getElementById('afList').innerHTML=afL.affiliates.map(a=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${a.name} · <span style="font-family:monospace;color:var(--accent)">${a.code}</span></div><div class="muted">${a.clicks} clicks · ${a.signups} signups · ${a.conversions} sales · ${a.commission} earned</div></div><span class="badge ${a.status==='active'?'b-ok':'b-warn'}">${a.status}</span></div>`).join('');
+  document.getElementById('afRates').innerHTML=afR.rates.map(r=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${r.product}</div><div class="muted">Rate: ${r.rate} · Avg: ${r.avgValue} · Commission: ${r.commission}</div></div></div>`).join('');
+
+  // Help Desk
+  document.getElementById('hdStats').innerHTML=S([{l:'Tickets',v:I[6].totalTickets,c:'b',m:I[6].openTickets+' open'},{l:'In Progress',v:I[6].inProgress,c:'y',m:'Being worked'},{l:'Resolved',v:I[6].resolved,c:'g',m:'Closed'},{l:'Avg Time',v:I[6].avgResolutionTime,c:'b',m:'Resolution'},{l:'CSAT',v:I[6].satisfaction,c:'g',m:'Satisfaction'},{l:'KB Articles',v:I[6].kbArticles,c:'y',m:'Published'}]);
+  document.getElementById('hdTickets').innerHTML=hdT.tickets.map(t=>`<div class="row" style="border-left:3px solid ${t.priority==='urgent'?'var(--red)':t.priority==='high'?'var(--yellow)':'var(--blue)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${t.subject} <span class="badge ${t.status==='open'?'b-warn':t.status==='in_progress'?'b-info':'b-ok'}">${t.status}</span></div><div class="muted">${t.user} · ${t.channel} · Assigned: ${t.assignedTo} · SLA: ${t.sla} · ${t.messages} msgs</div></div></div>`).join('');
+  document.getElementById('hdKb').innerHTML=hdK.articles.map(a=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${a.title}</div><div class="muted">${a.category} · ${a.views} views · ${a.helpful} helpful · Updated ${a.lastUpdated}</div></div></div>`).join('');
+
+  // Feedback
+  document.getElementById('fbStats').innerHTML=S([{l:'Surveys',v:I[7].totalSurveys,c:'b',m:I[7].activeSurveys+' active'},{l:'Responses',v:I[7].totalResponses.toLocaleString(),c:'g',m:'Total'},{l:'NPS',v:I[7].npsScore,c:'g',m:'Net promoter'},{l:'Avg Rating',v:I[7].avgRating+'★',c:'y',m:'Satisfaction'}]);
+  document.getElementById('fbSurveys').innerHTML=fbS.surveys.map(s=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${s.name} <span class="badge b-info">${s.type}</span></div><div class="muted">${s.question}</div><div class="muted">${s.responses} responses${s.avgScore?' · Avg: '+s.avgScore:''}</div></div><span class="badge b-ok">${s.status}</span></div>`).join('');
+  document.getElementById('fbList').innerHTML=fbL.feedback.map(f=>`<div class="row" style="border-left:3px solid ${f.sentiment==='positive'?'var(--green)':f.sentiment==='negative'?'var(--red)':'var(--blue)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${f.user} · ${f.rating}★</div><div class="muted">"${f.comment}" · ${f.page} · ${f.date}</div></div><span class="badge ${f.sentiment==='positive'?'b-ok':f.sentiment==='negative'?'b-crit':'b-info'}">${f.sentiment}</span></div>`).join('');
+
+  // Image
+  document.getElementById('imStats').innerHTML=S([{l:'Generated',v:I[8].totalGenerated,c:'b',m:'Images'},{l:'Completed',v:I[8].completed,c:'g',m:'Done'},{l:'Features',v:'4',c:'y',m:'Generate, edit, bg, upscale'}]);
+  document.getElementById('imHistory').innerHTML=imH.jobs.map(j=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${j.type}</div><div class="muted">${j.prompt.substring(0,60)}... · ${j.size} · ${j.time}</div></div><span class="badge b-ok">${j.status}</span></div>`).join('');
+
+  // Video
+  document.getElementById('viStats').innerHTML=S([{l:'Videos',v:I[9].totalVideos,c:'b',m:I[9].completed+' done'},{l:'Processing',v:I[9].processing,c:'y',m:'In progress'},{l:'Voices',v:I[9].voices,c:'g',m:'AI voices'}]);
+  document.getElementById('viHistory').innerHTML=viH.videos.map(v=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${v.prompt.substring(0,50)}...</div><div class="muted">${v.duration} · ${v.resolution} · Voice: ${v.voiceover?'✓':'✗'} · Subs: ${v.subtitles?'✓':'✗'}</div></div><span class="badge ${v.status==='completed'?'b-ok':'b-warn'}">${v.status}</span></div>`).join('');
+  document.getElementById('viVoices').innerHTML=viV.voices.map(v=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${v.name}</div><div class="muted">${v.accent} · ${v.gender} · ${v.language}</div></div><span class="badge b-info">voice</span></div>`).join('');
+
+  // Translation
+  document.getElementById('trStats').innerHTML=S([{l:'Translations',v:I[10].totalTranslations,c:'b',m:'Total'},{l:'Documents',v:I[10].totalDocuments,c:'g',m:'Translated'},{l:'Accuracy',v:I[10].avgAccuracy,c:'g',m:'Average'},{l:'Speed',v:I[10].avgTime,c:'y',m:'Per request'},{l:'Lang Pairs',v:I[10].languagePairs,c:'b',m:'Supported'},{l:'Requests',v:I[10].totalRequests.toLocaleString(),c:'g',m:'Total'}]);
+  document.getElementById('trDocs').innerHTML=trD.documents.map(d=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${d.name}</div><div class="muted">${d.sourceLang} → ${d.targetLang} · ${d.words.toLocaleString()} words · ${d.accuracy||'Processing...'}</div></div><span class="badge ${d.status==='completed'?'b-ok':'b-warn'}">${d.status}</span></div>`).join('');
+
+  // Sentiment
+  document.getElementById('smStats').innerHTML=S([{l:'Analyses',v:I[11].totalAnalyses,c:'b',m:'Total'},{l:'Mentions',v:I[11].totalMentions.toLocaleString(),c:'g',m:'Brand'},{l:'Sentiment',v:I[11].overallSentiment,c:'g',m:'Overall'},{l:'Confidence',v:I[11].avgConfidence,c:'y',m:'Average'}]);
+  document.getElementById('smAnalyses').innerHTML=smA.analyses.map(a=>`<div class="row" style="border-left:3px solid ${a.sentiment==='positive'?'var(--green)':a.sentiment==='negative'?'var(--red)':'var(--blue)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${a.source}: "${a.text.substring(0,50)}..."</div><div class="muted">Score: ${a.score} · Confidence: ${a.confidence} · Keywords: ${a.keywords.join(', ')}</div></div><span class="badge ${a.sentiment==='positive'?'b-ok':a.sentiment==='negative'?'b-crit':'b-info'}">${a.sentiment}</span></div>`).join('');
+  document.getElementById('smMentions').innerHTML=smM.mentions.map(m=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${m.platform}</div><div class="muted">${m.mentions.toLocaleString()} mentions · +${m.positive} / -${m.negative} / ${m.neutral} neutral</div></div><div style="width:60px"><div class="bar"><div class="bar-f" style="width:${m.sentimentScore}%;background:var(--green)"></div></div><div class="muted" style="text-align:right">${m.sentimentScore}%</div></div></div>`).join('');
+
+  // Integration
+  document.getElementById('igStats').innerHTML=S([{l:'Connectors',v:I[12].connected+'/'+I[12].totalConnectors,c:'b',m:'Connected'},{l:'Categories',v:I[12].categories,c:'y',m:'Available'},{l:'Records',v:I[12].totalRecords.toLocaleString(),c:'g',m:'Synced'},{l:'Available',v:I[12].available,c:'y',m:'To connect'}]);
+  document.getElementById('igConnectors').innerHTML=igC.connectors.map(c=>`<div class="row" style="border-left:3px solid ${c.status==='connected'?'var(--green)':'var(--muted)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.name}</div><div class="muted">${c.category} · ${c.records.toLocaleString()} records · Last sync: ${c.lastSync||'Never'}</div></div><span class="badge ${c.status==='connected'?'b-ok':'b-warn'}">${c.status}</span></div>`).join('');
+  document.getElementById('igSync').innerHTML=igS.jobs.map(j=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${j.connector} — ${j.direction}</div><div class="muted">${j.records} records · ${j.time||'Running...'} · ${j.date}</div></div><span class="badge ${j.status==='completed'?'b-ok':'b-warn'}">${j.status}</span></div>`).join('');
+
+  // Events
+  document.getElementById('evStats').innerHTML=S([{l:'Topics',v:I[13].totalTopics,c:'b',m:'Active'},{l:'Subscriptions',v:I[13].totalSubscriptions,c:'g',m:'Total'},{l:'Messages',v:I[13].totalMessages.toLocaleString(),c:'y',m:'Published'},{l:'Delivered',v:I[13].totalDelivered.toLocaleString(),c:'g',m:'Subscribers'}]);
+  document.getElementById('evTopics').innerHTML=evT.topics.map(t=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px" style="font-family:monospace">${t.name}</div><div class="muted">${t.subscribers} subs · ${t.messages.toLocaleString()} msgs · ${t.throughput} · Retain: ${t.retention}</div></div><span class="badge b-ok">${t.status}</span></div>`).join('');
+  document.getElementById('evSubs').innerHTML=evS.subscriptions.map(s=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${s.subscriber} → ${s.topic}</div><div class="muted">${s.delivered.toLocaleString()} delivered · ${s.failed} failed · ${s.lastDelivery}</div></div><span class="badge b-ok">${s.status}</span></div>`).join('');
+
+  // Admin
+  document.getElementById('adStats').innerHTML=S([{l:'Status',v:adH.health.status,c:'g',m:'System'},{l:'Uptime',v:adH.health.uptime,c:'g',m:'30-day'},{l:'Backends',v:adH.health.backends,c:'b',m:'Functions'},{l:'Modules',v:adH.health.modules,c:'y',m:'Active'},{l:'Assets',v:adH.health.totalAssets.toLocaleString(),c:'b',m:'Total'},{l:'CPU',v:adH.health.cpuUsage,c:'g',m:'Usage'}]);
+  document.getElementById('adConfig').innerHTML=adC.config.map(c=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.key}</div><div class="muted">${c.category} · Type: ${c.type}${c.unit?' · Unit: '+c.unit:''}</div></div><div style="font-family:monospace;font-size:11px;color:var(--accent)">${c.value}</div></div>`).join('');
+  document.getElementById('adImpersonation').innerHTML=adI.impersonations.map(i=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${i.admin} → ${i.target}</div><div class="muted">Reason: ${i.reason} · ${i.startedAt} · ${i.duration}</div></div><span class="badge b-ok">${i.status}</span></div>`).join('');
+  document.getElementById('adBulk').innerHTML=adB.operations.map(o=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${o.name}</div><div class="muted">${o.target} · ${o.records} records · ${o.action} · ${o.date}</div></div><span class="badge b-ok">${o.status}</span></div>`).join('');
+}
+
+async function genImage(){const p=document.getElementById('imPrompt').value;if(!p){alert('Enter prompt');return;}const r=await api(A6.im,{action:'generate',prompt:p});if(r.success)document.getElementById('imResult').innerHTML=`<div class="stat" style="border-color:var(--green)"><div class="g" style="font-weight:600">✅ ${r.message}</div><div class="muted" style="margin-top:4px">ID: ${r.jobId} · Size: ${r.size} · Est: ${r.estimatedTime}</div></div>`;}
+async function genVideo(){const p=document.getElementById('viPrompt').value;if(!p){alert('Enter prompt');return;}const r=await api(A6.vi,{action:'generate',prompt:p});if(r.success)document.getElementById('viResult').innerHTML=`<div class="stat" style="border-color:var(--green)"><div class="g" style="font-weight:600">✅ ${r.message}</div><div class="muted" style="margin-top:4px">ID: ${r.videoId} · Duration: ${r.duration} · Est: ${r.estimatedTime}</div></div>`;}
+async function doTranslate(){const t=document.getElementById('trText').value;const s=document.getElementById('trSource').value||'English';const tg=document.getElementById('trTarget').value||'Hausa';if(!t){alert('Enter text');return;}const r=await api(A6.tr,{action:'translate',text:t,sourceLang:s,targetLang:tg});if(r.success)document.getElementById('trResult').innerHTML=`<div class="stat" style="border-color:var(--green)"><div class="g" style="font-weight:600">✅ ${r.translatedText}</div><div class="muted" style="margin-top:4px">${r.sourceLang} → ${r.targetLang} · Accuracy: ${r.accuracy} · ${r.time}</div></div>`;}
+init();
+</script>
+</body>
+</html>
