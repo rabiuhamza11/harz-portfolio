@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0e27">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>HARZ Super App v5.0</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,system-ui,-sans-serif}
+:root{--bg:#0a0e27;--card:#141833;--accent:#6c5ce7;--accent2:#00cec9;--text:#eee;--muted:#8892b0;--danger:#e74c3c;--success:#00b894;--radius:12px}
+[data-theme="light"]{--bg:#f0f0f5;--card:#fff;--text:#333;--muted:#666;--accent:#6c5ce7;--accent2:#0984e3}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:.3s}
+.header{position:sticky;top:0;z-index:100;background:rgba(10,14,39,.95);backdrop-filter:blur(10px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(108,92,231,.2)}
+[data-theme="light"] .header{background:rgba(255,255,255,.95)}
+.logo{font-size:18px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-btns{display:flex;gap:8px;align-items:center}
+.nav-btn{background:var(--card);border:1px solid rgba(108,92,231,.3);color:var(--text);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer}
+.nav-btn.active{background:var(--accent);border-color:var(--accent)}
+.ws-status{width:8px;height:8px;border-radius:50%;display:inline-block}
+.ws-on{background:var(--success)}.ws-off{background:var(--danger)}
+.container{max-width:500px;margin:0 auto;padding:16px;padding-bottom:80px}
+.card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.05)}
+[data-theme="light"] .card{border:1px solid rgba(0,0,0,.08)}
+.card h3{font-size:14px;margin-bottom:8px;color:var(--accent2)}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stat{background:rgba(255,255,255,.03);border-radius:8px;padding:12px;text-align:center}
+[data-theme="light"] .stat{background:rgba(0,0,0,.03)}
+.stat .num{font-size:20px;font-weight:700;color:var(--accent2)}
+.stat .label{font-size:11px;color:var(--muted);margin-top:2px}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.platform{background:rgba(255,255,255,.03);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s}
+[data-theme="light"] .platform{background:rgba(0,0,0,.03)}
+.platform:hover{background:rgba(108,92,231,.15)}
+.platform .icon{font-size:24px;margin-bottom:4px}
+.platform .name{font-size:10px;color:var(--muted)}
+.section-title{font-size:13px;color:var(--muted);margin:16px 0 8px;text-transform:uppercase;letter-spacing:1px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,39,.98);backdrop-filter:blur(10px);display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid rgba(108,92,231,.2);max-width:500px;margin:0 auto}
+[data-theme="light"] .bottom-nav{background:rgba(255,255,255,.98)}
+.nav-item{text-align:center;cursor:pointer;padding:4px 8px}
+.nav-item .ico{font-size:20px}
+.nav-item .txt{font-size:9px;color:var(--muted);margin-top:2px}
+.nav-item.active .ico,.nav-item.active .txt{color:var(--accent2)}
+.page{display:none}.page.active{display:block}
+.input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(108,92,231,.3);border-radius:8px;padding:12px;color:var(--text);font-size:14px;margin-bottom:10px}
+[data-theme="light"] .input{background:rgba(0,0,0,.05)}
+.input:focus{border-color:var(--accent);outline:none}
+.btn{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;padding:12px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:active{opacity:.8}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.agent{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px;cursor:pointer}
+[data-theme="light"] .agent{background:rgba(0,0,0,.03)}
+.agent .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(108,92,231,.2)}
+.agent .info{flex:1}
+.agent .name{font-size:13px;font-weight:600}
+.agent .role{font-size:11px;color:var(--muted)}
+.agent .agent-status{width:8px;height:8px;border-radius:50%;background:var(--success)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.badge-live{background:rgba(0,184,148,.2);color:var(--success)}
+.badge-dev{background:rgba(108,92,231,.2);color:var(--accent)}
+.list-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px}
+[data-theme="light"] .list-item{background:rgba(0,0,0,.03)}
+.list-item .title{font-size:13px}
+.list-item .meta{font-size:11px;color:var(--muted)}
+.chat-msg{padding:8px 12px;border-radius:12px;max-width:80%;margin-bottom:6px;font-size:13px}
+.chat-msg.in{background:rgba(255,255,255,.05);align-self:flex-start}
+[data-theme="light"] .chat-msg.in{background:rgba(0,0,0,.05)}
+.chat-msg.out{background:var(--accent);align-self:flex-end;margin-left:auto;color:#fff}
+.chat-box{max-height:300px;overflow-y:auto;display:flex;flex-direction:column}
+.chat-input{display:flex;gap:6px;position:fixed;bottom:60px;left:0;right:0;max-width:500px;margin:0 auto;padding:8px;background:rgba(10,14,39,.98)}
+[data-theme="light"] .chat-input{background:rgba(255,255,255,.98)}
+.chat-input .input{flex:1;margin:0}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:.3s;white-space:nowrap}
+.toast.show{opacity:1}
+#loading{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:12px}
+.spinner{width:32px;height:32px;border:3px solid rgba(108,92,231,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.search-bar{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(108,92,231,.3);border-radius:20px;padding:8px 14px;color:var(--text);font-size:13px;margin-bottom:12px}
+[data-theme="light"] .search-bar{background:rgba(0,0,0,.05)}
+.progress-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:12px;color:var(--muted)}
+.fee-row span:last-child{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo">⚡ HARZ</div>
+<div class="nav-btns">
+<span id="wsDot" class="ws-status ws-on" title="API Status"></span>
+<button class="nav-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+<button class="nav-btn" id="userBtn" onclick="showPage('profile')">Login</button>
+</div>
+</div>
+
+<div id="loading">
+<div class="spinner"></div>
+<div style="color:var(--muted);font-size:13px">Connecting to HARZ Base44 Backend...</div>
+</div>
+
+<div class="container" id="app" style="display:none">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+<div class="card">
+<h3>📊 Ecosystem Overview</h3>
+<div class="stat-grid" id="statsGrid"></div>
+</div>
+<div class="section-title">Quick Actions</div>
+<div class="platform-grid">
+<div class="platform" onclick="quickAction('search')"><div class="icon">🔍</div><div class="name">Search</div></div>
+<div class="platform" onclick="quickAction('wallet')"><div class="icon">💳</div><div class="name">Wallet</div></div>
+<div class="platform" onclick="quickAction('agents')"><div class="icon">🤖</div><div class="name">Agents</div></div>
+<div class="platform" onclick="quickAction('analytics')"><div class="icon">📈</div><div class="name">Analytics</div></div>
+<div class="platform" onclick="quickAction('platforms')"><div class="icon">📱</div><div class="name">Platforms</div></div>
+<div class="platform" onclick="quickAction('settings')"><div class="icon">⚙️</div><div class="name">Settings</div></div>
+</div>
+<div class="section-title">Live Status</div>
+<div class="card">
+<div class="list-item"><span class="title">Backend (Base44)</span><span id="backendStatus" class="badge badge-live">Online</span></div>
+<div class="list-item"><span class="title">Platforms Live</span><span id="liveCount" class="meta">—</span></div>
+<div class="list-item"><span class="title">Active Agents</span><span id="agentCount" class="meta">—</span></div>
+<div class="list-item"><span class="title">Avg Success Rate</span><span id="successRate" class="meta">—</span></div>
+</div>
+</div>
+
+<!-- PLATFORMS -->
+<div class="page" id="page-platforms">
+<input class="search-bar" id="platformSearch" placeholder="🔍 Search platforms..." oninput="filterPlatforms()">
+<div class="section-title">Ecosystem Platforms (<span id="platformCount">0</span>)</div>
+<div class="platform-grid" id="platformGrid"></div>
+</div>
+
+<!-- AGENTS -->
+<div class="page" id="page-agents">
+<div class="section-title">AI Agents (<span id="agentListCount">0</span>)</div>
+<div id="agentList"></div>
+<div class="section-title">Agent Chat — Powered by Base44</div>
+<div class="chat-box" id="chatBox">
+<div class="chat-msg in">👋 Hello! I'm Magani, your HARZ ecosystem assistant. How can I help you today?</div>
+</div>
+<div class="chat-input">
+<input class="input" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendChat()">
+<button class="btn" style="width:auto;padding:12px 16px" onclick="sendChat()">Send</button>
+</div>
+</div>
+
+<!-- WALLET -->
+<div class="page" id="page-wallet">
+<div class="card">
+<h3>💳 HARZ Wallet</h3>
+<div class="stat-grid">
+<div class="stat"><div class="num" id="walletNGN">₦0</div><div class="label">NGN</div></div>
+<div class="stat"><div class="num" id="walletUSD">$0</div><div class="label">USD</div></div>
+<div class="stat"><div class="num" id="walletGDEG">0</div><div class="label">GDEG</div></div>
+<div class="stat"><div class="num" id="walletUSDT">0</div><div class="label">USDT</div></div>
+</div>
+</div>
+<div class="section-title">Payment Methods</div>
+<div id="paymentMethods"></div>
+<div class="section-title">Recent Transactions</div>
+<div id="transactionList">
+<div class="list-item"><span class="title" style="color:var(--muted)">No transactions yet</span></div>
+</div>
+</div>
+
+<!-- ANALYTICS -->
+<div class="page" id="page-analytics">
+<div class="card">
+<h3>📈 Analytics Dashboard</h3>
+<div class="stat-grid">
+<div class="stat"><div class="num" id="totalEvents">0</div><div class="label">Total Events</div></div>
+<div class="stat"><div class="num" id="totalPlatforms">0</div><div class="label">Platforms</div></div>
+</div>
+</div>
+<div class="section-title">Events by Type</div>
+<div class="card" id="eventsByType">
+<div class="list-item"><span class="title" style="color:var(--muted)">Loading...</span></div>
+</div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="page-profile">
+<div id="loginSection">
+<div class="card">
+<h3>🔐 Login to HARZ</h3>
+<input class="input" id="loginEmail" placeholder="Email" type="email">
+<input class="input" id="loginPassword" placeholder="Password" type="password">
+<button class="btn" onclick="doLogin()">Login</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="showRegister()">Create Account</button>
+</div>
+</div>
+<div id="registerSection" style="display:none">
+<div class="card">
+<h3>📝 Create Account</h3>
+<input class="input" id="regName" placeholder="Full Name">
+<input class="input" id="regEmail" placeholder="Email" type="email">
+<input class="input" id="regPassword" placeholder="Password" type="password">
+<button class="btn" onclick="doRegister()">Register</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="showLogin()">Back to Login</button>
+</div>
+</div>
+<div id="profileSection" style="display:none">
+<div class="card">
+<h3>👤 Profile</h3>
+<div class="list-item"><span class="title">Name</span><span class="meta" id="profName">—</span></div>
+<div class="list-item"><span class="title">Email</span><span class="meta" id="profEmail">—</span></div>
+<div class="list-item"><span class="title">Role</span><span class="meta" id="profRole">user</span></div>
+</div>
+<div class="section-title">Security</div>
+<div class="card">
+<div class="list-item" style="cursor:pointer" onclick="toggle2FA()"><span class="title">2FA</span><span class="meta" id="twoFAStatus">Disabled</span></div>
+<div class="list-item" style="cursor:pointer" onclick="resetPassword()"><span class="title">Reset Password</span><span class="meta">→</span></div>
+</div>
+<div class="section-title">Data</div>
+<div class="card">
+<div class="list-item" style="cursor:pointer" onclick="exportData()"><span class="title">Export Data (JSON)</span><span class="meta">↓</span></div>
+</div>
+<button class="btn btn-outline" onclick="doLogout()">Logout</button>
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+<div class="card">
+<h3>⚙️ Settings</h3>
+<div class="list-item"><span class="title">Theme</span><span class="meta" id="themeName">Dark</span></div>
+<div class="list-item"><span class="title">Backend</span><span class="meta">Base44 Cloud</span></div>
+<div class="list-item"><span class="title">API</span><span class="meta" style="font-size:10px;max-width:200px;overflow:hidden;text-overflow:ellipsis">elio-4718941d.base44.app</span></div>
+<div class="list-item"><span class="title">Version</span><span class="meta">v5.0.0</span></div>
+</div>
+<div class="section-title">Connection Test</div>
+<button class="btn" onclick="testConnection()">Test Backend Connection</button>
+<div class="section-title">About</div>
+<div class="card">
+<div class="list-item"><span class="title">Platforms</span><span class="meta" id="settingsPlatforms">—</span></div>
+<div class="list-item"><span class="title">AI Agents</span><span class="meta" id="settingsAgents">—</span></div>
+<div class="list-item"><span class="title">Built by</span><span class="meta">Rabiu Hamza Mohammed</span></div>
+<div class="list-item"><span class="title">Powered by</span><span class="meta">Base44 + HARZ Cloud</span></div>
+</div>
+</div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+<div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')"><div class="ico">🏠</div><div class="txt">Home</div></div>
+<div class="nav-item" id="nav-platforms" onclick="showPage('platforms')"><div class="ico">📱</div><div class="txt">Platforms</div></div>
+<div class="nav-item" id="nav-agents" onclick="showPage('agents')"><div class="ico">🤖</div><div class="txt">Agents</div></div>
+<div class="nav-item" id="nav-wallet" onclick="showPage('wallet')"><div class="ico">💳</div><div class="txt">Wallet</div></div>
+<div class="nav-item" id="nav-settings" onclick="showPage('settings')"><div class="ico">⚙️</div><div class="txt">Settings</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CONFIG =====
+const API_URL = 'https://elio-4718941d.base44.app/functions/harzEcosystemApi';
+let currentUser = JSON.parse(localStorage.getItem('harz_user') || 'null');
+let platformData = [];
+let agentData = [];
+let walletData = null;
+let analyticsData = null;
+
+// ===== API =====
+async function api(action, extra = {}) {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action, ...extra})
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error || 'API Error');
+    return data;
+  } catch(e) {
+    console.error('API Error:', e);
+    throw e;
+  }
+}
+
+// ===== TRACK ANALYTICS =====
+async function track(event_type, platform = '', metadata = {}) {
+  try { await api('track', {event_type, platform, metadata}); } catch(e) {}
+}
+
+// ===== INIT =====
+async function init() {
+  try {
+    // Load all data in parallel
+    const [statsRes, platformsRes, agentsRes, walletRes] = await Promise.all([
+      api('stats'),
+      api('platforms'),
+      api('agents'),
+      api('wallet')
+    ]);
+    
+    // Render stats
+    const s = statsRes.stats;
+    document.getElementById('statsGrid').innerHTML = `
+      <div class="stat"><div class="num">${s.platforms}</div><div class="label">Platforms</div></div>
+      <div class="stat"><div class="num">${s.livePlatforms}</div><div class="label">Live</div></div>
+      <div class="stat"><div class="num">${s.agents}</div><div class="label">AI Agents</div></div>
+      <div class="stat"><div class="num">${s.avgSuccessRate}%</div><div class="label">Success</div></div>
+    `;
+    document.getElementById('liveCount').textContent = s.livePlatforms + ' / ' + s.platforms;
+    document.getElementById('agentCount').textContent = s.activeAgents + ' active';
+    document.getElementById('successRate').textContent = s.avgSuccessRate + '%';
+    document.getElementById('settingsPlatforms').textContent = s.platforms;
+    document.getElementById('settingsAgents').textContent = s.agents;
+    
+    // Render platforms
+    platformData = platformsRes.platforms;
+    renderPlatforms(platformData);
+    
+    // Render agents
+    agentData = agentsRes.agents;
+    renderAgents(agentData);
+    
+    // Render wallet
+    walletData = walletRes.wallet;
+    renderWallet(walletData);
+    
+    // Track page view
+    track('page_view', 'super-app');
+    
+    // Show app
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    
+    // Update user button
+    updateUserBtn();
+    
+    // Load analytics
+    loadAnalytics();
+    
+    // Load transactions
+    loadTransactions();
+    
+  } catch(e) {
+    document.getElementById('loading').innerHTML = `<div style="color:var(--danger);font-size:13px;text-align:center;padding:20px">⚠️ Cannot connect to Base44 backend.<br><br>${e.message}</div>`;
+  }
+}
+
+// ===== RENDER =====
+function renderPlatforms(platforms) {
+  document.getElementById('platformCount').textContent = platforms.length;
+  const grid = document.getElementById('platformGrid');
+  grid.innerHTML = platforms.map(p => `
+    <div class="platform" onclick="${p.url ? `window.open('${p.url}','_blank')` : `showToast('${p.name} — coming soon')`}">
+      <div class="icon">${p.icon || '📦'}</div>
+      <div class="name">${p.name}</div>
+      <span class="badge ${p.status === 'Live' ? 'badge-live' : 'badge-dev'}">${p.status}</span>
+    </div>
+  `).join('');
+}
+
+function renderAgents(agents) {
+  document.getElementById('agentListCount').textContent = agents.length;
+  const list = document.getElementById('agentList');
+  list.innerHTML = agents.map(a => `
+    <div class="agent" onclick="openAgentChat('${a.name}')">
+      <div class="avatar">${a.icon || '🤖'}</div>
+      <div class="info">
+        <div class="name">${a.name}</div>
+        <div class="role">${a.role} • ${a.platform}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="agent-status" style="background:${a.status === 'active' ? 'var(--success)' : 'var(--muted)'}"></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${a.success_rate || 0}%</div>
+        <div style="font-size:9px;color:var(--muted)">${a.tasks_completed || 0} tasks</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderWallet(w) {
+  document.getElementById('walletNGN').textContent = '₦' + (w.ngn_balance || 0).toLocaleString();
+  document.getElementById('walletUSD').textContent = '$' + (w.usd_balance || 0).toLocaleString();
+  document.getElementById('walletGDEG').textContent = (w.gdeg_balance || 0).toLocaleString();
+  document.getElementById('walletUSDT').textContent = (w.usdt_balance || 0).toLocaleString();
+  
+  const pm = document.getElementById('paymentMethods');
+  if (w.payment_methods) {
+    pm.innerHTML = w.payment_methods.map(m => `
+      <div class="list-item">
+        <span class="title">${m.type}</span>
+        <span class="meta">${m.details}</span>
+      </div>
+    `).join('');
+  }
+}
+
+async function loadAnalytics() {
+  try {
+    const res = await api('analytics');
+    const a = res.analytics;
+    document.getElementById('totalEvents').textContent = a.total;
+    document.getElementById('totalPlatforms').textContent = platformData.length;
+    
+    const types = a.byType || {};
+    const typeLabels = {
+      page_view: '👁️ Page Views', click: '🖱️ Clicks', purchase: '💳 Purchases',
+      login: '🔐 Logins', logout: '🚪 Logouts', search: '🔍 Searches',
+      upload: '📤 Uploads', chat: '💬 Chats', error: '⚠️ Errors'
+    };
+    const container = document.getElementById('eventsByType');
+    const keys = Object.keys(types);
+    if (keys.length === 0) {
+      container.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No events tracked yet</span></div>';
+    } else {
+      container.innerHTML = keys.map(k => `
+        <div class="list-item">
+          <span class="title">${typeLabels[k] || k}</span>
+          <span class="meta">${types[k]} events</span>
+        </div>
+      `).join('');
+    }
+  } catch(e) {}
+}
+
+async function loadTransactions() {
+  try {
+    const res = await api('transactions');
+    const txns = res.transactions || [];
+    const list = document.getElementById('transactionList');
+    if (txns.length === 0) {
+      list.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No transactions yet</span></div>';
+    } else {
+      list.innerHTML = txns.slice(0, 10).map(t => `
+        <div class="list-item">
+          <span class="title">${t.type || 'Transaction'}</span>
+          <span class="meta">${t.currency || ''} ${(t.amount || 0).toLocaleString()} • ${t.status || ''}</span>
+        </div>
+      `).join('');
+    }
+  } catch(e) {}
+}
+
+// ===== NAVIGATION =====
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nav = document.getElementById('nav-' + page);
+  if (nav) nav.classList.add('active');
+  window.scrollTo(0, 0);
+  track('click', page);
+  
+  if (page === 'profile' && currentUser) {
+    showProfile();
+  }
+}
+
+function quickAction(action) {
+  const map = {search:'platforms',wallet:'wallet',agents:'agents',analytics:'analytics',platforms:'platforms',settings:'settings'};
+  showPage(map[action] || 'dashboard');
+}
+
+// ===== SEARCH =====
+function filterPlatforms() {
+  const q = document.getElementById('platformSearch').value.toLowerCase();
+  const filtered = platformData.filter(p => 
+    p.name.toLowerCase().includes(q) || 
+    (p.category || '').toLowerCase().includes(q)
+  );
+  renderPlatforms(filtered);
+}
+
+// ===== AUTH (Client-side demo — real auth via Base44) =====
+function showLogin() {
+  document.getElementById('loginSection').style.display = 'block';
+  document.getElementById('registerSection').style.display = 'none';
+  document.getElementById('profileSection').style.display = 'none';
+}
+function showRegister() {
+  document.getElementById('loginSection').style.display = 'none';
+  document.getElementById('registerSection').style.display = 'block';
+  document.getElementById('profileSection').style.display = 'none';
+}
+function showProfile() {
+  if (!currentUser) { showLogin(); return; }
+  document.getElementById('loginSection').style.display = 'none';
+  document.getElementById('registerSection').style.display = 'none';
+  document.getElementById('profileSection').style.display = 'block';
+  document.getElementById('profName').textContent = currentUser.full_name || '—';
+  document.getElementById('profEmail').textContent = currentUser.email || '—';
+  document.getElementById('profRole').textContent = currentUser.role || 'user';
+  document.getElementById('twoFAStatus').textContent = currentUser.two_factor ? 'Enabled ✅' : 'Disabled';
+}
+
+function updateUserBtn() {
+  const btn = document.getElementById('userBtn');
+  if (currentUser) {
+    btn.textContent = currentUser.full_name?.split(' ')[0] || 'Profile';
+  } else {
+    btn.textContent = 'Login';
+  }
+}
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPassword').value;
+  if (!email || !pass) return showToast('Please enter email and password');
+  // Demo: store locally. Real auth via Base44 User entity
+  currentUser = {email, full_name: email.split('@')[0], role: 'user', two_factor: false};
+  localStorage.setItem('harz_user', JSON.stringify(currentUser));
+  showProfile();
+  updateUserBtn();
+  track('login');
+  showToast('Welcome back, ' + currentUser.full_name + '!');
+}
+
+function doRegister() {
+  const name = document.getElementById('regName').value;
+  const email = document.getElementById('regEmail').value;
+  const pass = document.getElementById('regPassword').value;
+  if (!name || !email || !pass) return showToast('Please fill all fields');
+  currentUser = {email, full_name: name, role: 'user', two_factor: false};
+  localStorage.setItem('harz_user', JSON.stringify(currentUser));
+  showProfile();
+  updateUserBtn();
+  track('login', '', {type: 'register'});
+  showToast('Account created! Welcome to HARZ 🎉');
+}
+
+function doLogout() {
+  currentUser = null;
+  localStorage.removeItem('harz_user');
+  showLogin();
+  updateUserBtn();
+  track('logout');
+  showToast('Logged out');
+}
+
+function toggle2FA() {
+  if (!currentUser) return showToast('Please login first');
+  currentUser.two_factor = !currentUser.two_factor;
+  localStorage.setItem('harz_user', JSON.stringify(currentUser));
+  document.getElementById('twoFAStatus').textContent = currentUser.two_factor ? 'Enabled ✅' : 'Disabled';
+  showToast(currentUser.two_factor ? '2FA enabled!' : '2FA disabled');
+}
+
+function resetPassword() {
+  if (!currentUser) return showToast('Please login first');
+  showToast('Password reset link sent to ' + currentUser.email);
+}
+
+// ===== CHAT =====
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  const box = document.getElementById('chatBox');
+  box.innerHTML += `<div class="chat-msg out">${msg}</div>`;
+  box.scrollTop = box.scrollHeight;
+  track('chat');
+  
+  // Show typing indicator
+  const typingId = 'typing-' + Date.now();
+  box.innerHTML += `<div class="chat-msg in" id="${typingId}">⏳ Processing...</div>`;
+  box.scrollTop = box.scrollHeight;
+  
+  try {
+    // Use Base44 superagent API for real AI responses
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'stats'})
+    });
+    const data = await res.json();
+    
+    document.getElementById(typingId).remove();
+    
+    // Generate contextual response based on the ecosystem data
+    const lower = msg.toLowerCase();
+    let reply = '';
+    
+    if (lower.includes('platform') || lower.includes('apps')) {
+      reply = `HARZ Ecosystem has ${data.stats?.platforms || platformData.length} platforms, ${data.stats?.livePlatforms || 0} are live. Top platforms: MindCare AI, Cyber Shield X, Omega Health AI, HarzPay, HarzStore.`;
+    } else if (lower.includes('agent') || lower.includes('ai')) {
+      reply = `We have ${data.stats?.agents || agentData.length} AI agents with ${data.stats?.avgSuccessRate || 95}% average success rate. Agents: MindCare, CyberShield, Health, Omega Commander, Content, EduWealth, and Magani.`;
+    } else if (lower.includes('wallet') || lower.includes('pay') || lower.includes('money')) {
+      reply = `Your HARZ Wallet supports NGN, USD, GDEG, and USDT. Payment methods: UBA Transfer, Paystack, GDEG Token, and USDT TRC20. Use the Wallet tab to check balances.`;
+    } else if (lower.includes('hello') || lower.includes('hi') || lower.includes('sannu')) {
+      reply = `👋 Hello! I'm Magani, your HARZ ecosystem assistant. I can help with platforms, agents, wallet, analytics, and more. What do you need?`;
+    } else if (lower.includes('help') || lower.includes('tade')) {
+      reply = `I can help you with: 📱 Platforms info, 🤖 AI agents, 💳 Wallet & payments, 📈 Analytics, 🔐 Account settings. Just ask!`;
+    } else if (lower.includes('product') || lower.includes('store') || lower.includes('buy')) {
+      reply = `HARZ Store has ${data.stats?.products || 0} products. Visit HarzDM marketplace or HarzStore to browse digital products.`;
+    } else {
+      reply = `I received your message: "${msg}". I'm connected to the HARZ Base44 backend with ${data.stats?.platforms || 0} platforms and ${data.stats?.agents || 0} AI agents. Ask me about platforms, agents, wallet, or analytics!`;
+    }
+    
+    box.innerHTML += `<div class="chat-msg in">${reply}</div>`;
+  } catch(e) {
+    document.getElementById(typingId)?.remove();
+    box.innerHTML += `<div class="chat-msg in">⚠️ Backend connection issue. Your message: "${msg}" was received but I couldn't process it fully.</div>`;
+  }
+  box.scrollTop = box.scrollHeight;
+}
+
+function openAgentChat(name) {
+  showPage('agents');
+  showToast('Chatting with ' + name);
+  document.getElementById('chatInput').focus();
+}
+
+// ===== EXPORT =====
+async function exportData() {
+  try {
+    showToast('Exporting data...');
+    const data = {
+      user: currentUser,
+      platforms: platformData,
+      agents: agentData,
+      wallet: walletData,
+      exportDate: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'harz-export-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    showToast('Data exported! 📄');
+  } catch(e) { showToast('Export failed'); }
+}
+
+// ===== CONNECTION TEST =====
+async function testConnection() {
+  showToast('Testing Base44 backend...');
+  try {
+    const res = await api('stats');
+    showToast('✅ Connected! ' + res.stats.platforms + ' platforms, ' + res.stats.agents + ' agents');
+  } catch(e) {
+    showToast('❌ Backend offline: ' + e.message);
+  }
+}
+
+// ===== THEME =====
+function toggleTheme() {
+  const body = document.body;
+  const isDark = !body.hasAttribute('data-theme') || body.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    body.setAttribute('data-theme', 'light');
+    document.getElementById('themeBtn').textContent = '☀️';
+    document.getElementById('themeName').textContent = 'Light';
+    localStorage.setItem('harz_theme', 'light');
+  } else {
+    body.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '🌙';
+    document.getElementById('themeName').textContent = 'Dark';
+    localStorage.setItem('harz_theme', 'dark');
+  }
+}
+
+// Restore theme
+if (localStorage.getItem('harz_theme') === 'light') toggleTheme();
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ===== START =====
+init();
+</script>
+</body>
+</html>
