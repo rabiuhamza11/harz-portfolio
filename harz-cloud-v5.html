@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Cloud v5.0 — Advanced Console</title>
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e293b;--accent:#6366f1;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:12px;max-width:1200px;margin:0 auto}
+h1{font-size:20px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.card h2{font-size:14px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px}
+.stat h3{font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.stat .v{font-size:18px;font-weight:700}.stat .m{font-size:9px;color:var(--muted);margin-top:2px}
+.g{color:var(--green)}.r{color:var(--red)}.y{color:var(--yellow)}.b{color:var(--blue)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:9px;text-transform:uppercase}
+.badge{padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600}
+.b-ok{background:var(--green)20;color:var(--green)}.b-warn{background:var(--yellow)20;color:var(--yellow)}.b-info{background:var(--blue)20;color:var(--blue)}.b-crit{background:var(--red)20;color:var(--red)}
+.btn{padding:7px 12px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.btn-p:hover{opacity:.9}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-o:hover{border-color:var(--accent)}
+.nav-bar{display:flex;gap:3px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px}
+.nav-item{padding:7px 12px;border-radius:8px;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid transparent;transition:.15s}
+.nav-item.active{background:var(--card);border-color:var(--border);color:var(--accent)}
+.nav-item:not(.active){color:var(--muted)}
+.tc{display:none}.tc.active{display:block}
+.row{display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.muted{color:var(--muted);font-size:10px}
+.bar{height:4px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:2px}.bar-f{height:100%;border-radius:3px}
+.input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:12px;margin-bottom:6px}
+.input:focus{outline:none;border-color:var(--accent)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:11px;overflow-x:auto;line-height:1.6}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.mc{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:.2s}
+.mc:hover{border-color:var(--accent);transform:translateY(-2px)}
+.mc h3{font-size:13px;margin-bottom:4px}.mc .stats{font-size:10px;color:var(--muted);line-height:1.5}.mc .icon{font-size:24px;float:right}
+</style>
+</head>
+<body>
+
+<h1>🚀 HARZ Cloud v5.0 — Advanced Console</h1>
+<p class="sub">12 new modules · 31 total backends · All operational</p>
+
+<div class="nav-bar" id="navBar">
+  <div class="nav-item active" onclick="show('overview',this)">🏠 Overview</div>
+  <div class="nav-item" onclick="show('gateway',this)">🚪 API Gateway</div>
+  <div class="nav-item" onclick="show('monitor',this)">📊 Monitoring</div>
+  <div class="nav-item" onclick="show('flags',this)">🏁 Feature Flags</div>
+  <div class="nav-item" onclick="show('db',this)">🗄️ Database</div>
+  <div class="nav-item" onclick="show('crm',this)">🎯 CRM</div>
+  <div class="nav-item" onclick="show('email',this)">📧 Email</div>
+  <div class="nav-item" onclick="show('codegen',this)">🤖 Code Gen</div>
+  <div class="nav-item" onclick="show('cms',this)">📝 CMS</div>
+  <div class="nav-item" onclick="show('chat',this)">💬 Chat Widget</div>
+  <div class="nav-item" onclick="show('payrouter',this)">💳 Pay Router</div>
+  <div class="nav-item" onclick="show('mobile',this)">📱 Mobile</div>
+  <div class="nav-item" onclick="show('docs',this)">📄 Docs</div>
+</div>
+
+<div class="tc active" id="tab-overview">
+  <div class="card"><h2>📊 v5.0 Module Overview</h2><div class="overview-grid" id="ovGrid"></div></div>
+  <div class="card"><h2>⚡ Backend Status (31 Functions)</h2><div id="bkStatus"></div></div>
+</div>
+
+<div class="tc" id="tab-gateway"><div class="card"><h2>📊 Stats</h2><div class="grid" id="gwStats"></div></div><div class="card"><h2>🔑 API Keys</h2><div id="gwKeys"></div></div><div class="card"><h2>📡 Routes</h2><div style="overflow-x:auto"><table><thead><tr><th>Path</th><th>Method</th><th>Target</th><th>Rate Limit</th><th>Auth</th></tr></thead><tbody id="gwRoutes"></tbody></table></div></div><div class="card"><h2>⏱️ Rate Limits by Tier</h2><div id="gwLimits"></div></div></div>
+<div class="tc" id="tab-monitor"><div class="card"><h2>📊 Stats</h2><div class="grid" id="mnStats"></div></div><div class="card"><h2>🟢 Services</h2><div id="mnServices"></div></div><div class="card"><h2>⚠️ Incidents</h2><div id="mnIncidents"></div></div><div class="card"><h2>🔔 Alerts</h2><div id="mnAlerts"></div></div><div class="card"><h2>📋 SLA Compliance</h2><div style="overflow-x:auto"><table><thead><tr><th>Service</th><th>Target</th><th>Actual</th><th>Status</th></tr></thead><tbody id="mnSla"></tbody></table></div></div></div>
+<div class="tc" id="tab-flags"><div class="card"><h2>📊 Stats</h2><div class="grid" id="ffStats"></div></div><div class="card"><h2>🏁 Feature Flags</h2><div id="ffFlags"></div></div><div class="card"><h2>🧪 A/B Experiments</h2><div style="overflow-x:auto"><table><thead><tr><th>Name</th><th>Status</th><th>Participants</th><th>Control</th><th>Experiment</th><th>Uplift</th></tr></thead><tbody id="ffExps"></tbody></table></div></div></div>
+<div class="tc" id="tab-db"><div class="card"><h2>📊 Stats</h2><div class="grid" id="dbStats"></div></div><div class="card"><h2>📋 Entities</h2><div style="overflow-x:auto"><table><thead><tr><th>Entity</th><th>Records</th><th>Fields</th><th>Indexes</th><th>Size</th><th>Status</th></tr></thead><tbody id="dbEntities"></tbody></table></div></div><div class="card"><h2>🔄 Migrations</h2><div id="dbMigrations"></div></div><div class="card"><h2>💾 Backups</h2><div id="dbBackups"></div></div></div>
+<div class="tc" id="tab-crm"><div class="card"><h2>📊 Stats</h2><div class="grid" id="crmStats"></div></div><div class="card"><h2>🎯 Sales Pipeline</h2><div id="crmPipeline"></div></div><div class="card"><h2>👥 Leads</h2><div id="crmLeads"></div></div><div class="card"><h2>👤 Customers</h2><div id="crmCustomers"></div></div></div>
+<div class="tc" id="tab-email"><div class="card"><h2>📊 Stats</h2><div class="grid" id="emStats"></div></div><div class="card"><h2>📮 Campaigns</h2><div id="emCampaigns"></div></div><div class="card"><h2>👥 Subscribers</h2><div id="emSubs"></div></div></div>
+<div class="tc" id="tab-codegen"><div class="card"><h2>📊 Stats</h2><div class="grid" id="cgStats"></div></div><div class="card"><h2>📝 Generate from Prompt</h2><input class="input" id="cgPrompt" placeholder="Describe what you want to build..."><button class="btn btn-p" onclick="generateCode()">Generate</button><div id="cgResult" style="margin-top:8px"></div></div><div class="card"><h2>📜 History</h2><div id="cgHistory"></div></div><div class="card"><h2>🏗️ Template Types</h2><div class="grid-cards" id="cgTemplates"></div></div></div>
+<div class="tc" id="tab-cms"><div class="card"><h2>📊 Stats</h2><div class="grid" id="cmStats"></div></div><div class="card"><h2>📄 Pages</h2><div style="overflow-x:auto"><table><thead><tr><th>Title</th><th>Type</th><th>Views</th><th>Status</th><th>Updated</th></tr></thead><tbody id="cmPages"></tbody></table></div></div><div class="card"><h2>✍️ Blog Posts</h2><div id="cmBlog"></div></div><div class="card"><h2>🖼️ Media Library</h2><div id="cmMedia"></div></div></div>
+<div class="tc" id="tab-chat"><div class="card"><h2>📊 Stats</h2><div class="grid" id="chStats"></div></div><div class="card"><h2>💬 Widgets</h2><div id="chWidgets"></div></div><div class="card"><h2>📋 Chat History</h2><div id="chHistory"></div></div></div>
+<div class="tc" id="tab-payrouter"><div class="card"><h2>📊 Stats</h2><div class="grid" id="prStats"></div></div><div class="card"><h2>💳 Payment Providers</h2><div id="prProviders"></div></div><div class="card"><h2>🔀 Routing Rules</h2><div id="prRules"></div></div><div class="card"><h2>🧪 Test Routing</h2><input class="input" id="prCurrency" placeholder="Currency (NGN, USD, USDT)"><input class="input" id="prAmount" placeholder="Amount" type="number"><button class="btn btn-p" onclick="testRoute()">Route</button><div id="prResult" style="margin-top:8px"></div></div></div>
+<div class="tc" id="tab-mobile"><div class="card"><h2>📊 Stats</h2><div class="grid" id="mbStats"></div></div><div class="card"><h2>📱 App Templates</h2><div class="grid-cards" id="mbTemplates"></div></div><div class="card"><h2>🔨 Builds</h2><div id="mbBuilds"></div></div></div>
+<div class="tc" id="tab-docs"><div class="card"><h2>📊 Stats</h2><div class="grid" id="dcStats"></div></div><div class="card"><h2>📄 Documents</h2><div id="dcDocs"></div></div><div class="card"><h2>👥 Active Collaborators</h2><div id="dcCollab"></div></div><div class="card"><h2>🔄 Version History</h2><div id="dcVersions"></div></div></div>
+
+<script>
+const A5 = {
+  gw: 'https://solene-5b0577e2.base44.app/functions/harzAPIGateway',
+  mn: 'https://solene-5b0577e2.base44.app/functions/harzMonitor',
+  ff: 'https://solene-5b0577e2.base44.app/functions/harzFeatureFlags',
+  db: 'https://solene-5b0577e2.base44.app/functions/harzDBManager',
+  crm: 'https://solene-5b0577e2.base44.app/functions/harzCRM',
+  em: 'https://solene-5b0577e2.base44.app/functions/harzEmailCampaigns',
+  cg: 'https://solene-5b0577e2.base44.app/functions/harzCodeGen',
+  cm: 'https://solene-5b0577e2.base44.app/functions/harzCMS',
+  ch: 'https://solene-5b0577e2.base44.app/functions/harzChatWidget',
+  pr: 'https://solene-5b0577e2.base44.app/functions/harzPayRouter',
+  mb: 'https://solene-5b0577e2.base44.app/functions/harzMobileBuilder',
+  dc: 'https://solene-5b0577e2.base44.app/functions/harzDocEditor'
+};
+async function api(u,b){return(await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b||{action:'info'})})).json();}
+function show(t,el){document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+t).classList.add('active');}
+const S=(arr)=>arr.map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+async function init(){
+  const I=await Promise.all(Object.values(A5).map(u=>api(u)));
+  const D=await Promise.all([
+    api(A5.gw,{action:'keys'}),api(A5.gw,{action:'routes'}),api(A5.gw,{action:'rate_limits'}),
+    api(A5.mn,{action:'services'}),api(A5.mn,{action:'incidents'}),api(A5.mn,{action:'alerts'}),api(A5.mn,{action:'sla'}),
+    api(A5.ff,{action:'flags'}),api(A5.ff,{action:'experiments'}),
+    api(A5.db,{action:'entities'}),api(A5.db,{action:'migrations'}),api(A5.db,{action:'backups'}),
+    api(A5.crm,{action:'leads'}),api(A5.crm,{action:'pipeline'}),api(A5.crm,{action:'customers'}),
+    api(A5.em,{action:'campaigns'}),api(A5.em,{action:'subscribers'}),
+    api(A5.cg,{action:'history'}),api(A5.cg,{action:'templates'}),
+    api(A5.cm,{action:'pages'}),api(A5.cm,{action:'blog'}),api(A5.cm,{action:'media'}),
+    api(A5.ch,{action:'widgets'}),api(A5.ch,{action:'history'}),
+    api(A5.pr,{action:'providers'}),api(A5.pr,{action:'rules'}),
+    api(A5.mb,{action:'templates'}),api(A5.mb,{action:'builds'}),
+    api(A5.dc,{action:'documents'}),api(A5.dc,{action:'collaborators'}),api(A5.dc,{action:'versions'})
+  ]);
+  const [gwK,gwR,gwL,mnS,mnI,mnA,mnSL,ffF,ffE,dbE,dbM,dbB,crmL,crmP,crmC,emC,emS,cgH,cgT,cmP,cmB,cmM,chW,chH,prP,prR,mbT,mbB,dcD,dcC,dcV]=D;
+
+  // Overview
+  const mods=[
+    {i:'🚪',n:'API Gateway',s:`${I[0].totalKeys} keys · ${I[0].totalRoutes} routes · ${I[0].totalRequests.toLocaleString()} reqs`,t:'gateway'},
+    {i:'📊',n:'Monitoring',s:`${I[1].servicesUp}/${I[1].totalServices} up · ${I[1].overallUptime} uptime`,t:'monitor'},
+    {i:'🏁',n:'Feature Flags',s:`${I[2].enabledFlags}/${I[2].totalFlags} enabled · ${I[2].runningExperiments} A/B tests`,t:'flags'},
+    {i:'🗄️',n:'Database',s:`${I[3].totalEntities} entities · ${I[3].totalRecords} records · ${I[3].totalBackups} backups`,t:'db'},
+    {i:'🎯',n:'CRM',s:`${I[4].totalLeads} leads · ${I[4].totalCustomers} customers · ${I[4].conversionRate} conv`,t:'crm'},
+    {i:'📧',n:'Email',s:`${I[5].totalCampaigns} campaigns · ${I[5].totalSubscribers.toLocaleString()} subs · ${I[5].avgOpenRate} open`,t:'email'},
+    {i:'🤖',n:'Code Gen',s:`${I[6].totalGenerated} generated · ${I[6].totalLines} lines · ${I[6].avgTime}`,t:'codegen'},
+    {i:'📝',n:'CMS',s:`${I[7].totalPages} pages · ${I[7].totalBlogPosts} posts · ${I[7].totalMedia} media`,t:'cms'},
+    {i:'💬',n:'Chat Widget',s:`${I[8].totalWidgets} widgets · ${I[8].totalConversations} chats · ${I[8].avgSatisfaction} sat`,t:'chat'},
+    {i:'💳',n:'Pay Router',s:`${I[9].totalProviders} providers · ${I[9].totalTransactions.toLocaleString()} txns · ${I[9].avgSuccessRate}`,t:'payrouter'},
+    {i:'📱',n:'Mobile',s:`${I[10].totalTemplates} templates · ${I[10].completedBuilds} builds · ${I[10].avgBuildTime}`,t:'mobile'},
+    {i:'📄',n:'Docs',s:`${I[11].totalDocuments} docs · ${I[11].totalWords.toLocaleString()} words · ${I[11].totalCollaborators} active`,t:'docs'}
+  ];
+  document.getElementById('ovGrid').innerHTML=mods.map((m,i)=>`<div class="mc" onclick="document.querySelectorAll('.nav-item')[${i+1}].click()"><span class="icon">${m.i}</span><h3>${m.n}</h3><div class="stats">${m.s}</div></div>`).join('');
+
+  // Backend status
+  const allBk=['harzTemplates','harzBilling','harzCDN','harzRBAC','harzPayments','harzPaystack','buildBot','agentBuilder','deployForgeDeploy','harzNotifications','harzTeams','harzStorage','harzSearch','harzAuditLog','cfWorkers','harzAgentTraining','harzI18n','harzWebhooks','harzStripe','harzAPIGateway','harzMonitor','harzFeatureFlags','harzDBManager','harzCRM','harzEmailCampaigns','harzCodeGen','harzCMS','harzChatWidget','harzPayRouter','harzMobileBuilder','harzDocEditor'];
+  const results=await Promise.all(allBk.map(fn=>fetch('https://solene-5b0577e2.base44.app/functions/'+fn,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'info'})}).then(r=>r.status).catch(()=>0)));
+  document.getElementById('bkStatus').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px">${allBk.map((fn,i)=>`<div class="row" style="margin:0;padding:4px 8px"><span class="badge ${results[i]===200?'b-ok':'b-crit'}">${results[i]===200?'200':'ERR'}</span><span style="font-family:monospace;font-size:10px;flex:1">${fn}</span></div>`).join('')}</div>`;
+
+  // Gateway
+  document.getElementById('gwStats').innerHTML=S([{l:'Keys',v:I[0].totalKeys,c:'b',m:I[0].activeKeys+' active'},{l:'Routes',v:I[0].totalRoutes,c:'g',m:'Configured'},{l:'Requests',v:I[0].totalRequests.toLocaleString(),c:'y',m:'Total'},{l:'Latency',v:I[0].avgLatency,c:'g',m:'Average'}]);
+  document.getElementById('gwKeys').innerHTML=gwK.keys.map(k=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${k.name}</div><div class="muted">${k.key} · ${k.scopes.join(', ')} · ${k.rateLimit}/hr</div></div><div style="text-align:right"><span class="badge b-ok">${k.status}</span><div class="muted">${k.usage} used</div></div></div>`).join('');
+  document.getElementById('gwRoutes').innerHTML=gwR.routes.map(r=>`<tr><td style="font-family:monospace;font-size:10px;color:var(--accent)">${r.path}</td><td><span class="badge b-info">${r.method}</span></td><td>${r.target}</td><td>${r.rateLimit}/hr</td><td>${r.auth?'✓':'✗'}</td></tr>`).join('');
+  document.getElementById('gwLimits').innerHTML=gwL.limits.map(l=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${l.tier}</div><div class="muted">${l.limit}/${l.window} · ${l.current} used · ${l.remaining} remaining</div></div><div style="width:60px"><div class="bar"><div class="bar-f" style="width:${l.current/l.limit*100}%;background:${l.current/l.limit>0.8?'var(--red)':'var(--green)'}"></div></div></div></div>`).join('');
+
+  // Monitor
+  document.getElementById('mnStats').innerHTML=S([{l:'Services',v:I[1].servicesUp+'/'+I[1].totalServices,c:'g',m:'All up'},{l:'Uptime',v:I[1].overallUptime,c:'g',m:'30-day avg'},{l:'Latency',v:I[1].avgLatency,c:'b',m:'Average'},{l:'Incidents',v:I[1].activeIncidents,c:'y',m:'Active'},{l:'Alerts',v:I[1].activeAlerts,c:'y',m:'Active'},{l:'SLA',v:I[1].slaCompliance,c:'g',m:'Compliant'}]);
+  document.getElementById('mnServices').innerHTML=mnS.services.map(s=>`<div class="row" style="border-left:3px solid ${s.status==='up'?'var(--green)':'var(--red)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${s.name}</div><div class="muted">${s.url}</div></div><div style="text-align:right"><span class="badge b-ok">${s.status}</span><div class="muted">${s.uptime} · ${s.latency}</div></div></div>`).join('');
+  document.getElementById('mnIncidents').innerHTML=mnI.incidents.map(i=>`<div class="row" style="border-left:3px solid ${i.severity==='low'?'var(--blue)':i.severity==='medium'?'var(--yellow)':'var(--red)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${i.title}</div><div class="muted">${i.service} · ${i.duration} · ${i.impact}</div></div><span class="badge ${i.status==='resolved'?'b-ok':'b-warn'}">${i.status}</span></div>`).join('');
+  document.getElementById('mnAlerts').innerHTML=mnA.alerts.map(a=>`<div class="row" style="border-left:3px solid ${a.severity==='critical'?'var(--red)':a.severity==='warning'?'var(--yellow)':'var(--blue)'}"><div style="flex:1"><div style="font-size:12px">${a.message}</div><div class="muted">${a.triggeredAt} · ${a.autoResolved?'Auto-resolved':'Active'}</div></div><span class="badge ${a.active?'b-warn':'b-ok'}">${a.active?'active':'resolved'}</span></div>`).join('');
+  document.getElementById('mnSla').innerHTML=mnSL.sla.map(s=>`<tr><td style="font-weight:600">${s.service}</td><td>${s.target}</td><td class="${s.status==='exceeding'?'g':'b'}">${s.actual}</td><td><span class="badge ${s.status==='exceeding'?'b-ok':'b-info'}">${s.status}</span></td></tr>`).join('');
+
+  // Flags
+  document.getElementById('ffStats').innerHTML=S([{l:'Flags',v:I[2].totalFlags,c:'b',m:I[2].enabledFlags+' enabled'},{l:'Experiments',v:I[2].totalExperiments,c:'g',m:I[2].runningExperiments+' running'},{l:'Enabled',v:I[2].enabledFlags,c:'g',m:'Active'},{l:'Disabled',v:I[2].totalFlags-I[2].enabledFlags,c:'r',m:'Inactive'}]);
+  document.getElementById('ffFlags').innerHTML=ffF.flags.map(f=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${f.name} <span class="badge ${f.enabled?'b-ok':'b-warn'}">${f.enabled?'ON':'OFF'}</span></div><div class="muted">${f.description} · ${f.environments.join(', ')}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:600">${f.rollout}%</div><div class="muted">${f.users.toLocaleString()} users</div></div><div style="width:50px"><div class="bar"><div class="bar-f" style="width:${f.rollout}%;background:var(--accent)"></div></div></div></div>`).join('');
+  document.getElementById('ffExps').innerHTML=ffE.experiments.map(e=>`<tr><td style="font-weight:600">${e.name}</td><td><span class="badge ${e.status==='running'?'b-ok':e.status==='paused'?'b-warn':'b-info'}">${e.status}</span></td><td>${e.participants.toLocaleString()}</td><td>${e.conversionControl}</td><td>${e.conversionExperiment}</td><td class="${e.uplift.startsWith('+')?'g':'muted'}" style="font-weight:600">${e.uplift}</td></tr>`).join('');
+
+  // DB
+  document.getElementById('dbStats').innerHTML=S([{l:'Entities',v:I[3].totalEntities,c:'b',m:'Tables'},{l:'Records',v:I[3].totalRecords,c:'g',m:'Total rows'},{l:'Migrations',v:I[3].appliedMigrations+'/'+I[3].appliedMigrations+I[3].pendingMigrations,c:'y',m:I[3].pendingMigrations+' pending'},{l:'Backups',v:I[3].totalBackups,c:'g',m:I[3].autoBackupSchedule}]);
+  document.getElementById('dbEntities').innerHTML=dbE.entities.map(e=>`<tr><td style="font-family:monospace;font-weight:600">${e.name}</td><td>${e.records}</td><td>${e.fields}</td><td>${e.indexes}</td><td>${e.size}</td><td><span class="badge b-ok">${e.status}</span></td></tr>`).join('');
+  document.getElementById('dbMigrations').innerHTML=dbM.migrations.map(m=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${m.name} <span class="badge ${m.status==='applied'?'b-ok':'b-warn'}">${m.status}</span></div><div class="muted">${m.entity} · ${m.description}</div></div><div class="muted">${m.appliedAt||'Pending'}</div></div>`).join('');
+  document.getElementById('dbBackups').innerHTML=dbB.backups.map(b=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${b.date} at ${b.time}</div><div class="muted">${b.size} · ${b.entities} entities · ${b.type}</div></div><span class="badge b-ok">${b.status}</span></div>`).join('');
+
+  // CRM
+  document.getElementById('crmStats').innerHTML=S([{l:'Leads',v:I[4].totalLeads,c:'b',m:'In pipeline'},{l:'Customers',v:I[4].totalCustomers,c:'g',m:'Active'},{l:'Won',v:I[4].wonDeals,c:'g',m:'Deals closed'},{l:'Pipeline',v:I[4].pipelineValue,c:'y',m:'Total value'},{l:'Conv. Rate',v:I[4].conversionRate,c:'b',m:'Win rate'}]);
+  document.getElementById('crmPipeline').innerHTML=crmP.pipeline.map(p=>`<div class="row" style="border-left:3px solid ${p.color}"><div style="flex:1"><div style="font-weight:600;font-size:12px;text-transform:capitalize">${p.stage}</div><div class="muted">${p.count} deals · ${p.value}</div></div></div>`).join('');
+  document.getElementById('crmLeads').innerHTML=crmL.leads.map(l=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${l.name}</div><div class="muted">${l.email} · ${l.source} · ${l.value}</div></div><div style="text-align:right"><span class="badge ${l.stage==='won'?'b-ok':l.stage==='lost'?'b-crit':'b-info'}">${l.stage}</span><div class="muted">${l.assignedTo}</div></div></div>`).join('');
+  document.getElementById('crmCustomers').innerHTML=crmC.customers.map(c=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.name}</div><div class="muted">${c.email} · ${c.type} · ${c.orders} orders</div></div><div style="text-align:right"><div style="font-weight:600;font-size:12px">${c.totalValue}</div><span class="badge ${c.status==='active'?'b-ok':'b-warn'}">${c.status}</span></div></div>`).join('');
+
+  // Email
+  document.getElementById('emStats').innerHTML=S([{l:'Campaigns',v:I[5].totalCampaigns,c:'b',m:I[5].sentCampaigns+' sent'},{l:'Emails Sent',v:I[5].totalEmailsSent.toLocaleString(),c:'g',m:'All time'},{l:'Open Rate',v:I[5].avgOpenRate,c:'g',m:'Average'},{l:'Click Rate',v:I[5].avgClickRate,c:'y',m:'Average'},{l:'Subscribers',v:I[5].totalSubscribers.toLocaleString(),c:'b',m:'Total list'}]);
+  document.getElementById('emCampaigns').innerHTML=emC.campaigns.map(c=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.name}</div><div class="muted">${c.subject} · ${c.date||'Draft'}</div></div><div style="text-align:right"><span class="badge ${c.status==='sent'?'b-ok':c.status==='scheduled'?'b-warn':'b-info'}">${c.status}</span>${c.sent>0?`<div class="muted">${c.openRate} open · ${c.clickRate} click</div>`:''}</div></div>`).join('');
+  document.getElementById('emSubs').innerHTML=`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">Total Subscribers</div></div><div class="g" style="font-weight:600">${emS.subscribers.total.toLocaleString()}</div></div>`+emS.subscribers.segments.map(s=>`<div class="row"><div style="flex:1">${s.name}</div><div class="muted">${s.count.toLocaleString()}</div></div>`).join('');
+
+  // Code Gen
+  document.getElementById('cgStats').innerHTML=S([{l:'Generated',v:I[6].totalGenerated,c:'b',m:'Apps built'},{l:'Lines',v:I[6].totalLines.toLocaleString(),c:'g',m:'Code lines'},{l:'Avg Time',v:I[6].avgTime,c:'y',m:'Per generation'},{l:'Templates',v:I[6].templates,c:'b',m:'Types'}]);
+  document.getElementById('cgHistory').innerHTML=cgH.generated.map(g=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${g.output}</div><div class="muted">${g.prompt.substring(0,60)}...</div></div><div style="text-align:right"><span class="badge b-ok">${g.status}</span><div class="muted">${g.lines} lines · ${g.time}</div></div></div>`).join('');
+  document.getElementById('cgTemplates').innerHTML=cgT.templates.map(t=>`<div class="mc" onclick="void(0)"><span class="icon">${t.icon}</span><h3>${t.name}</h3><div class="stats">${t.desc}<br>${t.framework}<br>${t.complexity}</div></div>`).join('');
+
+  // CMS
+  document.getElementById('cmStats').innerHTML=S([{l:'Pages',v:I[7].totalPages,c:'b',m:I[7].publishedPages+' published'},{l:'Blog Posts',v:I[7].totalBlogPosts,c:'g',m:I[7].publishedPosts+' published'},{l:'Media',v:I[7].totalMedia,c:'y',m:'Files'},{l:'Views',v:I[7].totalViews.toLocaleString(),c:'g',m:'Total'}]);
+  document.getElementById('cmPages').innerHTML=cmP.pages.map(p=>`<tr><td style="font-weight:600">${p.title}</td><td>${p.type}</td><td>${p.views.toLocaleString()}</td><td><span class="badge b-ok">${p.status}</span></td><td>${p.lastUpdated}</td></tr>`).join('');
+  document.getElementById('cmBlog').innerHTML=cmB.posts.map(p=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${p.title}</div><div class="muted">${p.author} · ${p.date||'Draft'} · ${p.views.toLocaleString()} views</div></div><span class="badge ${p.status==='published'?'b-ok':'b-warn'}">${p.status}</span></div>`).join('');
+  document.getElementById('cmMedia').innerHTML=cmM.media.map(m=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${m.name}</div><div class="muted">${m.type} · ${m.size} · ${m.uploaded}</div></div><span class="badge b-info">${m.type}</span></div>`).join('');
+
+  // Chat
+  document.getElementById('chStats').innerHTML=S([{l:'Widgets',v:I[8].totalWidgets,c:'b',m:I[8].activeWidgets+' active'},{l:'Messages',v:I[8].totalMessages.toLocaleString(),c:'g',m:'Total'},{l:'Conversations',v:I[8].totalConversations.toLocaleString(),c:'y',m:'Total'},{l:'Satisfaction',v:I[8].avgSatisfaction,c:'g',m:'Avg rating'},{l:'Resp. Time',v:I[8].avgResponseTime,c:'b',m:'Average'}]);
+  document.getElementById('chWidgets").innerHTML=chW.widgets.map(w=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${w.name}</div><div class="muted">${w.domain} · Agent: ${w.agent}</div><div style="font-family:monospace;font-size:9px;margin-top:2px;word-break:break-all;color:var(--accent)">${w.embedCode}</div></div><div style="text-align:right"><span class="badge b-ok">${w.status}</span><div class="muted">${w.messages.toLocaleString()} msgs</div><div class="muted">${w.satisfaction} sat</div></div></div>`).join('');
+  document.getElementById('chHistory').innerHTML=chH.chats.map(c=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.widget}</div><div class="muted">${c.visitor} · ${c.messages} msgs · "${c.lastMessage}"</div></div><div style="text-align:right"><span class="badge ${c.status==='active'?'b-warn':'b-ok'}">${c.status}</span><div class="muted">${c.startedAt}</div></div></div>`).join('');
+
+  // Pay Router
+  document.getElementById('prStats').innerHTML=S([{l:'Providers',v:I[9].totalProviders,c:'b',m:I[9].activeProviders+' active'},{l:'Transactions',v:I[9].totalTransactions.toLocaleString(),c:'g',m:'Routed'},{l:'Success Rate',v:I[9].avgSuccessRate,c:'g',m:'Average'},{l:'Rules',v:I[9].routingRules,c:'y',m:'Routing rules'}]);
+  document.getElementById('prProviders').innerHTML=prP.providers.map(p=>`<div class="row" style="border-left:3px solid ${p.active?'var(--green)':'var(--muted)'}"><div style="flex:1"><div style="font-weight:600;font-size:12px">${p.name}</div><div class="muted">${p.currency} · ${p.fee} fee · ${p.successRate} success · ${p.avgTime}</div></div><div style="text-align:right"><span class="badge ${p.active?'b-ok':'b-warn'}">${p.active?'active':'off'}</span><div class="muted">${p.transactions.toLocaleString()} txns</div><div class="muted">${p.volume}</div></div></div>`).join('');
+  document.getElementById('prRules').innerHTML=prR.rules.map(r=>`<div class="row"><div style="flex:1"><div style="font-family:monospace;font-size:10px;color:var(--accent)">${r.condition}</div><div class="muted">→ ${r.provider} · Priority ${r.priority} · ${r.hits} hits ${r.note?'· '+r.note:''}</div></div><span class="badge ${r.enabled?'b-ok':'b-warn'}">${r.enabled?'on':'off'}</span></div>`).join('');
+
+  // Mobile
+  document.getElementById('mbStats').innerHTML=S([{l:'Templates',v:I[10].totalTemplates,c:'b',m:'App types'},{l:'Builds',v:I[10].totalBuilds,c:'g',m:I[10].completedBuilds+' done'},{l:'Downloads',v:I[10].totalDownloads.toLocaleString(),c:'y',m:'Total'},{l:'Build Time',v:I[10].avgBuildTime,c:'g',m:'Average'}]);
+  document.getElementById('mbTemplates').innerHTML=mbT.templates.map(t=>`<div class="mc" onclick="void(0)"><span class="icon">${t.icon}</span><h3>${t.name}</h3><div class="stats">${t.desc}<br>${t.framework}<br>⭐ ${t.rating} · ${t.downloads.toLocaleString()} ↓</div></div>`).join('');
+  document.getElementById('mbBuilds').innerHTML=mbB.builds.map(b=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${b.appName}</div><div class="muted">${b.template} · ${b.platform} · v${b.version}</div></div><div style="text-align:right"><span class="badge ${b.status==='completed'?'b-ok':'b-warn'}">${b.status}</span>${b.size?`<div class="muted">${b.size}</div>`:''}</div></div>`).join('');
+
+  // Docs
+  document.getElementById('dcStats').innerHTML=S([{l:'Documents',v:I[11].totalDocuments,c:'b',m:'Total'},{l:'Collaborators',v:I[11].totalCollaborators,c:'g',m:'Active now'},{l:'Versions',v:I[11].totalVersions,c:'y',m:'Total saved'},{l:'Words',v:I[11].totalWords.toLocaleString(),c:'b',m:'Written'}]);
+  document.getElementById('dcDocs').innerHTML=dcD.documents.map(d=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${d.name}</div><div class="muted">${d.type} · ${d.collaborators} collaborators · v${d.version} · ${d.words.toLocaleString()} words</div></div><div class="muted">${d.lastEdited}</div></div>`).join('');
+  document.getElementById('dcCollab').innerHTML=dcC.collaborators.map(c=>`<div class="row"><div style="width:28px;height:28px;border-radius:50%;background:${c.color}30;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${c.color}">${c.user.charAt(0)}</div><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.user}</div><div class="muted">${c.active?'Editing · '+c.cursor:'Offline'}</div></div><span class="badge ${c.active?'b-ok':'b-warn'}">${c.active?'active':'offline'}</span></div>`).join('');
+  document.getElementById('dcVersions').innerHTML=dcV.versions.map(v=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">v${v.version} — ${v.changes}</div><div class="muted">${v.author} · ${v.time}</div></div></div>`).join('');
+}
+
+async function generateCode(){const p=document.getElementById('cgPrompt').value;if(!p){alert('Enter a prompt');return;}const r=await api(A5.cg,{action:'generate',prompt:p});if(r.success)document.getElementById('cgResult').innerHTML=`<div class="stat" style="border-color:var(--green)"><div class="g" style="font-weight:600">✅ ${r.message}</div><div class="muted" style="margin-top:4px">ID: ${r.genId} · Type: ${r.type} · Est: ${r.estimatedTime}</div></div>`;}
+async function testRoute(){const cur=document.getElementById('prCurrency').value;const amt=parseInt(document.getElementById('prAmount').value)||0;if(!cur){alert('Enter currency');return;}const r=await api(A5.pr,{action:'route',currency:cur,amount:amt});if(r.success)document.getElementById('prResult').innerHTML=`<div class="stat" style="border-color:var(--green)"><div class="g" style="font-weight:600">✅ ${r.message}</div><div class="muted" style="margin-top:4px">Provider: ${r.routedTo} · Fee: ${r.fee} · Time: ${r.estimatedTime}</div></div>`;}
+init();
+</script>
+</body>
+</html>
