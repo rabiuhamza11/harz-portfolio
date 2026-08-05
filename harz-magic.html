@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harz Magic — AI-Powered Tools for Africa</title>
+<meta name="description" content="Harz Magic — AI image generation, chat, translation, code assistant, and more. Powered by HARZ AI Hub.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--surface:#161616;--surface2:#1e1e1e;--border:#2a2a2a;--text:#e8e8e8;--muted:#888;--primary:#ff6b35;--primary2:#ff8c5a;--accent:#4ecdc4;--purple:#9b59b6;--green:#2ecc71;--yellow:#f1c40f;--blue:#3498db}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.logo{font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav{display:flex;gap:16px}
+.nav a{color:var(--muted);font-size:0.9rem;font-weight:500}
+.nav a:hover{color:var(--primary);text-decoration:none}
+.hero{text-align:center;padding:80px 24px 60px;background:radial-gradient(ellipse at center,rgba(155,89,182,0.1),transparent 70%)}
+.hero h1{font-size:3rem;font-weight:800;margin-bottom:16px}
+.hero h1 .gradient{background:linear-gradient(135deg,var(--primary),var(--purple),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 32px}
+.hero-tags{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px}
+.hero-tags span{font-size:0.85rem;padding:6px 16px;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--muted)}
+.container{max-width:1000px;margin:0 auto;padding:0 24px}
+.section{padding:40px 0}
+.section-title{font-size:1.5rem;font-weight:700;margin-bottom:24px;text-align:center}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;transition:0.2s;cursor:pointer;position:relative;overflow:hidden}
+.tool-card:hover{border-color:var(--primary);transform:translateY(-3px)}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent))}
+.tool-card .icon{font-size:2.5rem;margin-bottom:12px}
+.tool-card .name{font-weight:700;font-size:1.1rem;margin-bottom:6px}
+.tool-card .desc{color:var(--muted);font-size:0.9rem;margin-bottom:12px}
+.tool-card .tag{display:inline-block;font-size:0.7rem;padding:2px 8px;border-radius:4px;background:var(--surface2);color:var(--accent);font-weight:600;text-transform:uppercase}
+.tool-card .status{position:absolute;top:12px;right:12px;font-size:0.7rem;padding:2px 8px;border-radius:4px}
+.status-live{background:rgba(46,204,113,0.15);color:var(--green)}
+.status-beta{background:rgba(241,196,15,0.15);color:var(--yellow)}
+.status-soon{background:rgba(136,136,136,0.15);color:var(--muted)}
+.models-section{background:var(--surface);border-radius:16px;padding:24px;margin-bottom:24px}
+.models-section h3{font-size:1.1rem;margin-bottom:12px;color:var(--accent)}
+.model-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.model-row:last-child{border-bottom:none}
+.model-row .name{font-weight:600;font-size:0.9rem}
+.model-row .type{font-size:0.8rem;color:var(--muted)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:24px 0}
+.stat-box{background:var(--surface);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border)}
+.stat-box .num{font-size:1.8rem;font-weight:800;color:var(--primary)}
+.stat-box .label{font-size:0.75rem;color:var(--muted);text-transform:uppercase}
+.cta{text-align:center;padding:40px 24px}
+.btn{display:inline-block;padding:12px 32px;border-radius:24px;font-weight:600;font-size:1rem;cursor:pointer;border:none;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.footer{text-align:center;padding:40px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+@media(max-width:768px){.hero h1{font-size:2rem}.nav{display:none}.tools-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div class="logo">Harz Magic</div>
+<nav class="nav">
+<a href="#tools">Tools</a>
+<a href="#models">Models</a>
+<a href="https://harz-cloud-backend.onrender.com/ai-hub.html" target="_blank">AI Hub</a>
+<a href="https://rabiuhamza11.github.io/harz-cloud/">Super App</a>
+</nav>
+</div>
+
+<div class="hero">
+<h1>The <span class="gradient">Magic</span> of AI<br>for Africa</h1>
+<p>AI-powered tools that speak Hausa, English, and Pidgin. Chat, translate, generate images, write code — all powered by HARZ AI Hub.</p>
+<div class="hero-tags">
+<span>Llama 3.1</span>
+<span>Qwen 2.5</span>
+<span>Mistral 7B</span>
+<span>Whisper</span>
+<span>Stable Diffusion</span>
+<span>Hausa Support</span>
+</div>
+</div>
+
+<div class="container">
+<div class="stats-row">
+<div class="stat-box"><div class="num">9</div><div class="label">AI Models</div></div>
+<div class="stat-box"><div class="num">7</div><div class="label">Languages</div></div>
+<div class="stat-box"><div class="num">5</div><div class="label">Datasets</div></div>
+<div class="stat-box"><div class="num">4</div><div class="label">AI Spaces</div></div>
+</div>
+
+<div class="section" id="tools">
+<div class="section-title">AI Magic Tools</div>
+<div class="tools-grid">
+
+<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
+<div class="status status-live">Live</div>
+<div class="icon">💬</div>
+<div class="name">AI Chat</div>
+<div class="desc">Chat with HARZ AI in Hausa, English, or Pidgin. Powered by Llama 3.1 8B.</div>
+<span class="tag">Text Generation</span>
+</div>
+
+<div class="tool-card" onclick="window.open('https://rabiuhamza11.github.io/harz-ai-os/')">
+<div class="status status-live">Live</div>
+<div class="icon">🤖</div>
+<div class="name">HARZ AI OS</div>
+<div class="desc">Full AI assistant interface with agent chat and smart responses.</div>
+<span class="tag">Assistant</span>
+</div>
+
+<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
+<div class="status status-live">Live</div>
+<div class="icon">🌐</div>
+<div class="name">Hausa Translator</div>
+<div class="desc">Translate between English and Hausa instantly. Built for the Nigerian market.</div>
+<span class="tag">Translation</span>
+</div>
+
+<div class="tool-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-studio.html')">
+<div class="status status-beta">Beta</div>
+<div class="icon">🎨</div>
+<div class="name">Image Studio</div>
+<div class="desc">Generate images from text prompts using Stable Diffusion XL.</div>
+<span class="tag">Image Generation</span>
+</div>
+
+<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
+<div class="status status-soon">Soon</div>
+<div class="icon">🎤</div>
+<div class="name">Speech to Text</div>
+<div class="desc">Transcribe Hausa and English audio to text in real-time with Whisper.</div>
+<span class="tag">Speech</span>
+</div>
+
+<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
+<div class="status status-live">Live</div>
+<div class="icon">💻</div>
+<div class="name">Code Assistant</div>
+<div class="desc">Generate code, debug, and autocomplete in 40+ programming languages.</div>
+<span class="tag">Code</span>
+</div>
+
+<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
+<div class="status status-live">Live</div>
+<div class="icon">📐</div>
+<div class="name">Embeddings</div>
+<div class="desc">Semantic search and document matching in 7 African languages.</div>
+<span class="tag">Embeddings</span>
+</div>
+
+<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
+<div class="status status-live">Live</div>
+<div class="icon">🧠</div>
+<div class="name">DeepSeek R1</div>
+<div class="desc">Advanced reasoning model for math, analysis, and complex problems.</div>
+<span class="tag">Reasoning</span>
+</div>
+
+</div>
+</div>
+
+<div class="section" id="models">
+<div class="section-title">Available Models</div>
+<div class="models-section">
+<h3>Large Language Models</h3>
+<div class="model-row"><span class="name">HARZ Llama 3.1 8B</span><span class="type">Chat | 128K context | Featured</span></div>
+<div class="model-row"><span class="name">HARZ Qwen 2.5 7B</span><span class="type">Multilingual | 32K context | Featured</span></div>
+<div class="model-row"><span class="name">HARZ Mistral 7B</span><span class="type">Creative | 32K context</span></div>
+<div class="model-row"><span class="name">HARZ DeepSeek R1</span><span class="type">Reasoning | 64K context</span></div>
+<div class="model-row"><span class="name">HARZ Code Assistant</span><span class="type">Code | 32K context</span></div>
+</div>
+<div class="models-section">
+<h3>Specialized Models</h3>
+<div class="model-row"><span class="name">HARZ Hausa Translator</span><span class="type">EN to HA translation | Featured</span></div>
+<div class="model-row"><span class="name">HARZ Embeddings</span><span class="type">7 languages | Semantic search | Featured</span></div>
+<div class="model-row"><span class="name">HARZ Image Generator</span><span class="type">Stable Diffusion XL | Featured</span></div>
+<div class="model-row"><span class="name">HARZ Whisper</span><span class="type">Speech-to-text | 96 languages | Featured</span></div>
+</div>
+</div>
+
+<div class="cta">
+<h2 style="margin-bottom:16px">Try the magic now</h2>
+<p style="color:var(--muted);margin-bottom:24px">Chat with HARZ AI in Hausa or English — free during beta.</p>
+<a href="https://harz-cloud-backend.onrender.com/ai-hub.html" class="btn btn-primary" target="_blank">Open AI Playground →</a>
+<a href="https://harz-cloud-backend.onrender.com/ai-hub" class="btn btn-ghost" style="margin-left:8px" target="_blank">API Docs</a>
+</div>
+
+</div>
+
+<div class="footer">
+<p>Harz Magic — AI-Powered Tools for Africa</p>
+<p style="margin-top:8px">Powered by <a href="https://harz-cloud-backend.onrender.com/ai-hub">HARZ AI Hub</a> + Hugging Face + HARZ Cloud</p>
+<p style="margin-top:8px">2026 HARZ Digital Services — Built by Rabiu Hamza Mohammed</p>
+</div>
+
+</body>
+</html>
