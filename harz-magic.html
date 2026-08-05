@@ -3,194 +3,344 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harz Magic — AI-Powered Tools for Africa</title>
-<meta name="description" content="Harz Magic — AI image generation, chat, translation, code assistant, and more. Powered by HARZ AI Hub.">
+<title>Harz Magic — Deploy, Host & Manage Code | African DevOps Platform</title>
+<meta name="description" content="Harz Magic — The African alternative to Render, Vercel, Railway & GitHub. Deploy apps, host repos, manage projects with Hausa AI support.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0a;--surface:#161616;--surface2:#1e1e1e;--border:#2a2a2a;--text:#e8e8e8;--muted:#888;--primary:#ff6b35;--primary2:#ff8c5a;--accent:#4ecdc4;--purple:#9b59b6;--green:#2ecc71;--yellow:#f1c40f;--blue:#3498db}
+:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--border:#2a2a2a;--text:#e8e8e8;--muted:#888;--primary:#ff6b35;--primary2:#ff8c5a;--accent:#4ecdc4;--purple:#9b59b6;--green:#2ecc71;--yellow:#f1c40f;--blue:#3498db;--red:#e74c3c}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
 a{color:var(--primary);text-decoration:none}
 a:hover{text-decoration:underline}
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
-.logo{font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav{display:flex;gap:16px}
-.nav a{color:var(--muted);font-size:0.9rem;font-weight:500}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.logo{font-size:1.3rem;font-weight:800;display:flex;align-items:center;gap:8px}
+.logo .magic{background:linear-gradient(135deg,var(--primary),var(--purple),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav{display:flex;gap:20px;align-items:center}
+.nav a{color:var(--muted);font-size:0.85rem;font-weight:500}
 .nav a:hover{color:var(--primary);text-decoration:none}
-.hero{text-align:center;padding:80px 24px 60px;background:radial-gradient(ellipse at center,rgba(155,89,182,0.1),transparent 70%)}
-.hero h1{font-size:3rem;font-weight:800;margin-bottom:16px}
+.nav .btn{background:var(--primary);color:#fff;padding:6px 16px;border-radius:20px;font-weight:600}
+
+.hero{padding:80px 24px 60px;text-align:center;background:radial-gradient(ellipse at center top,rgba(255,107,53,0.08),transparent 60%)}
+.hero h1{font-size:2.8rem;font-weight:800;margin-bottom:16px;line-height:1.2}
 .hero h1 .gradient{background:linear-gradient(135deg,var(--primary),var(--purple),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 32px}
-.hero-tags{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px}
-.hero-tags span{font-size:0.85rem;padding:6px 16px;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--muted)}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:650px;margin:0 auto 28px}
+.hero .compare{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:20px}
+.hero .compare span{font-size:0.8rem;padding:4px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--border);color:var(--muted)}
+.hero .compare .alt{text-decoration:line-through;opacity:0.5}
+
 .container{max-width:1000px;margin:0 auto;padding:0 24px}
-.section{padding:40px 0}
+.section{padding:48px 0}
 .section-title{font-size:1.5rem;font-weight:700;margin-bottom:24px;text-align:center}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;transition:0.2s;cursor:pointer;position:relative;overflow:hidden}
-.tool-card:hover{border-color:var(--primary);transform:translateY(-3px)}
-.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent))}
-.tool-card .icon{font-size:2.5rem;margin-bottom:12px}
-.tool-card .name{font-weight:700;font-size:1.1rem;margin-bottom:6px}
-.tool-card .desc{color:var(--muted);font-size:0.9rem;margin-bottom:12px}
-.tool-card .tag{display:inline-block;font-size:0.7rem;padding:2px 8px;border-radius:4px;background:var(--surface2);color:var(--accent);font-weight:600;text-transform:uppercase}
-.tool-card .status{position:absolute;top:12px;right:12px;font-size:0.7rem;padding:2px 8px;border-radius:4px}
-.status-live{background:rgba(46,204,113,0.15);color:var(--green)}
-.status-beta{background:rgba(241,196,15,0.15);color:var(--yellow)}
-.status-soon{background:rgba(136,136,136,0.15);color:var(--muted)}
-.models-section{background:var(--surface);border-radius:16px;padding:24px;margin-bottom:24px}
-.models-section h3{font-size:1.1rem;margin-bottom:12px;color:var(--accent)}
-.model-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
-.model-row:last-child{border-bottom:none}
-.model-row .name{font-weight:600;font-size:0.9rem}
-.model-row .type{font-size:0.8rem;color:var(--muted)}
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:24px 0}
-.stat-box{background:var(--surface);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border)}
-.stat-box .num{font-size:1.8rem;font-weight:800;color:var(--primary)}
-.stat-box .label{font-size:0.75rem;color:var(--muted);text-transform:uppercase}
-.cta{text-align:center;padding:40px 24px}
+
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.feature{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;transition:0.2s;position:relative;overflow:hidden}
+.feature:hover{border-color:var(--primary);transform:translateY(-3px)}
+.feature::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.feature.deploy::before{background:linear-gradient(90deg,var(--primary),var(--yellow))}
+.feature.host::before{background:linear-gradient(90deg,var(--accent),var(--blue))}
+.feature.git::before{background:linear-gradient(90deg,var(--purple),var(--primary))}
+.feature.ai::before{background:linear-gradient(90deg,var(--green),var(--accent))}
+.feature .icon{font-size:2rem;margin-bottom:10px}
+.feature .name{font-weight:700;font-size:1.05rem;margin-bottom:6px}
+.feature .desc{color:var(--muted);font-size:0.85rem;margin-bottom:10px}
+.feature ul{list-style:none;font-size:0.8rem;color:var(--muted)}
+.feature ul li{padding:3px 0;padding-left:16px;position:relative}
+.feature ul li::before{content:'✓';position:absolute;left:0;color:var(--green)}
+
+.providers{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:24px 0}
+.provider{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:center;min-width:120px}
+.provider .name{font-weight:600;font-size:0.9rem}
+.provider .type{font-size:0.7rem;color:var(--muted);margin-top:2px}
+.provider .free{font-size:0.7rem;color:var(--green);font-weight:600}
+
+.code-block{background:#0d0d0d;border:1px solid var(--border);border-radius:12px;padding:20px;font-family:'Courier New',monospace;font-size:0.85rem;overflow-x:auto;margin:20px 0}
+.code-block .cmd{color:var(--accent)}
+.code-block .flag{color:var(--yellow)}
+.code-block .str{color:var(--green)}
+.code-block .comment{color:var(--muted)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:24px 0}
+.stat{background:var(--surface);border-radius:12px;padding:18px;text-align:center;border:1px solid var(--border)}
+.stat .num{font-size:2rem;font-weight:800}
+.stat .label{font-size:0.75rem;color:var(--muted);text-transform:uppercase}
+
+.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:24px 0}
+.plan{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;transition:0.2s}
+.plan:hover{border-color:var(--primary)}
+.plan.featured{border-color:var(--primary);position:relative}
+.plan.featured::after{content:'Popular';position:absolute;top:-10px;right:-10px;background:var(--primary);color:#fff;font-size:0.7rem;padding:3px 10px;border-radius:12px;font-weight:600}
+.plan .tier{font-weight:700;font-size:1.1rem;margin-bottom:4px}
+.plan .price{font-size:2rem;font-weight:800;margin:8px 0}
+.plan .price .per{font-size:0.8rem;color:var(--muted);font-weight:400}
+.plan ul{list-style:none;text-align:left;font-size:0.8rem;color:var(--muted);margin-top:12px}
+.plan ul li{padding:4px 0;padding-left:18px;position:relative}
+.plan ul li::before{content:'✓';position:absolute;left:0;color:var(--green)}
+
+.cta{text-align:center;padding:48px 24px}
 .btn{display:inline-block;padding:12px 32px;border-radius:24px;font-weight:600;font-size:1rem;cursor:pointer;border:none;text-decoration:none}
 .btn-primary{background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff}
 .btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
-.footer{text-align:center;padding:40px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
-@media(max-width:768px){.hero h1{font-size:2rem}.nav{display:none}.tools-grid{grid-template-columns:1fr}}
+
+.footer{text-align:center;padding:32px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+
+@media(max-width:768px){.hero h1{font-size:1.8rem}.nav{display:none}.features,.pricing{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 
 <div class="header">
-<div class="logo">Harz Magic</div>
+<div class="logo">⚡ <span class="magic">Harz Magic</span></div>
 <nav class="nav">
-<a href="#tools">Tools</a>
-<a href="#models">Models</a>
-<a href="https://harz-cloud-backend.onrender.com/ai-hub.html" target="_blank">AI Hub</a>
-<a href="https://rabiuhamza11.github.io/harz-cloud/">Super App</a>
+<a href="#deploy">Deploy</a>
+<a href="#repos">Repos</a>
+<a href="#ai">AI</a>
+<a href="#pricing">Pricing</a>
+<a href="https://harz-cloud-backend.onrender.com/deployforge/providers" class="btn" target="_blank">Get Started</a>
 </nav>
 </div>
 
 <div class="hero">
-<h1>The <span class="gradient">Magic</span> of AI<br>for Africa</h1>
-<p>AI-powered tools that speak Hausa, English, and Pidgin. Chat, translate, generate images, write code — all powered by HARZ AI Hub.</p>
-<div class="hero-tags">
-<span>Llama 3.1</span>
-<span>Qwen 2.5</span>
-<span>Mistral 7B</span>
-<span>Whisper</span>
-<span>Stable Diffusion</span>
-<span>Hausa Support</span>
+<h1>Deploy, Host & Manage Code<br>— <span class="gradient">The African Way</span></h1>
+<p>One platform to deploy apps, host repositories, and manage projects. Like Render + Vercel + Railway + GitHub — but built for African developers, with Hausa AI and Paystack native.</p>
+<div class="compare">
+<span class="alt">Render</span>
+<span class="alt">Vercel</span>
+<span class="alt">Railway</span>
+<span class="alt">GitHub</span>
+<span style="border-color:var(--primary);color:var(--primary)">→ Harz Magic</span>
 </div>
 </div>
 
 <div class="container">
-<div class="stats-row">
-<div class="stat-box"><div class="num">9</div><div class="label">AI Models</div></div>
-<div class="stat-box"><div class="num">7</div><div class="label">Languages</div></div>
-<div class="stat-box"><div class="num">5</div><div class="label">Datasets</div></div>
-<div class="stat-box"><div class="num">4</div><div class="label">AI Spaces</div></div>
+<div class="stats">
+<div class="stat"><div class="num" style="color:var(--primary)">8</div><div class="label">Deploy Targets</div></div>
+<div class="stat"><div class="num" style="color:var(--accent)">163</div><div class="label">API Endpoints</div></div>
+<div class="stat"><div class="num" style="color:var(--purple)">62</div><div class="label">Repos Managed</div></div>
+<div class="stat"><div class="num" style="color:var(--green)">9</div><div class="label">AI Models</div></div>
+<div class="stat"><div class="num" style="color:var(--yellow)">7</div><div class="label">Languages</div></div>
 </div>
 
-<div class="section" id="tools">
-<div class="section-title">AI Magic Tools</div>
-<div class="tools-grid">
+<div class="section" id="deploy">
+<div class="section-title">Deploy Anywhere — One Click</div>
+<p style="text-align:center;color:var(--muted);max-width:500px;margin:0 auto 24px">Connect your GitHub repo and deploy to 8 providers with a single click. Auto-build, auto-deploy, auto-scale.</p>
+<div class="providers">
+<div class="provider"><div class="name">Render</div><div class="type">Fullstack</div><div class="free">Free tier</div></div>
+<div class="provider"><div class="name">Vercel</div><div class="type">Serverless</div><div class="free">Free tier</div></div>
+<div class="provider"><div class="name">Railway</div><div class="type">Fullstack</div><div class="free">Free tier</div></div>
+<div class="provider"><div class="name">GitHub Pages</div><div class="type">Static</div><div class="free">Free</div></div>
+<div class="provider"><div class="name">Netlify</div><div class="type">Static</div><div class="free">Free tier</div></div>
+<div class="provider"><div class="name">Cloudflare</div><div class="type">Edge/Workers</div><div class="free">Free tier</div></div>
+<div class="provider"><div class="name">HuggingFace</div><div class="type">ML Spaces</div><div class="free">Free</div></div>
+<div class="provider"><div class="name">Supabase</div><div class="type">Database</div><div class="free">Free tier</div></div>
+</div>
+<div class="code-block">
+<span class="comment"># Deploy your app in one command</span>
+<span class="cmd">curl</span> -X POST https://harz-cloud-backend.onrender.com/deployforge/launch \
+  -H <span class="str">"x-api-key: YOUR_KEY"</span> \
+  -d <span class="str">'{"repo":"rabiuhamza11/harz-cloud","provider":"render","autoDeploy":true}'</span>
 
-<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
-<div class="status status-live">Live</div>
-<div class="icon">💬</div>
-<div class="name">AI Chat</div>
-<div class="desc">Chat with HARZ AI in Hausa, English, or Pidgin. Powered by Llama 3.1 8B.</div>
-<span class="tag">Text Generation</span>
+<span class="comment"># Check deployment status</span>
+<span class="cmd">curl</span> https://harz-cloud-backend.onrender.com/deployforge/render/status/srv-abc123 \
+  -H <span class="str">"x-api-key: YOUR_KEY"</span>
+</div>
 </div>
 
-<div class="tool-card" onclick="window.open('https://rabiuhamza11.github.io/harz-ai-os/')">
-<div class="status status-live">Live</div>
-<div class="icon">🤖</div>
-<div class="name">HARZ AI OS</div>
-<div class="desc">Full AI assistant interface with agent chat and smart responses.</div>
-<span class="tag">Assistant</span>
+<div class="section" id="repos">
+<div class="section-title">Repository Management — Like GitHub, but African</div>
+<div class="features">
+<div class="feature git">
+<div class="icon">📦</div>
+<div class="name">Repo Dashboard</div>
+<div class="desc">View all 62+ repos in one place. Stars, forks, issues, commits, PRs — all synced.</div>
+<ul>
+<li>GitHub API integration</li>
+<li>Branch & commit tracking</li>
+<li>Issue & PR management</li>
+<li>Deploy status per repo</li>
+</ul>
+</div>
+<div class="feature git">
+<div class="icon">🔀</div>
+<div class="name">Pull Requests</div>
+<div class="desc">Review, merge, and track PRs across all your repos from one interface.</div>
+<ul>
+<li>Auto-merge rules</li>
+<li>Conflict detection</li>
+<li>Review assignments</li>
+<li>Deploy on merge</li>
+</ul>
+</div>
+<div class="feature git">
+<div class="icon">⚠️</div>
+<div class="name">Issue Tracking</div>
+<div class="desc">Bug tracking, feature requests, milestones — integrated with your repos.</div>
+<ul>
+<li>Labels & priorities</li>
+<li>Auto-assign agents</li>
+<li>Sprint planning</li>
+<li>GitHub sync</li>
+</ul>
+</div>
+</div>
 </div>
 
-<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
-<div class="status status-live">Live</div>
+<div class="section" id="hosting">
+<div class="section-title">Hosting & Infrastructure</div>
+<div class="features">
+<div class="feature host">
+<div class="icon">☁️</div>
+<div class="name">Web Services</div>
+<div class="desc">Deploy Node.js, Python, Go, Rust apps. Auto-scale on Render & Vercel.</div>
+<ul>
+<li>Auto HTTPS / SSL</li>
+<li>Custom domains</li>
+<li>Environment variables</li>
+<li>Zero-downtime deploys</li>
+</ul>
+</div>
+<div class="feature host">
+<div class="icon">⚡</div>
+<div class="name">Serverless Functions</div>
+<div class="desc">Deploy API endpoints as serverless functions on Vercel or Cloudflare Workers.</div>
+<ul>
+<li>Edge deployment</li>
+<li>Auto-scaling</li>
+<li>Cron jobs</li>
+<li>KV cache support</li>
+</ul>
+</div>
+<div class="feature host">
+<div class="icon">🗄️</div>
+<div class="name">Database Hosting</div>
+<div class="desc">PostgreSQL, MongoDB, Redis — managed databases on Supabase & Render.</div>
+<ul>
+<li>Auto backups</li>
+<li>Connection pooling</li>
+<li>Row-level security</li>
+<li>Real-time sync</li>
+</ul>
+</div>
+<div class="feature host">
 <div class="icon">🌐</div>
-<div class="name">Hausa Translator</div>
-<div class="desc">Translate between English and Hausa instantly. Built for the Nigerian market.</div>
-<span class="tag">Translation</span>
+<div class="name">CDN & Edge</div>
+<div class="desc">Cloudflare edge network for fast content delivery across Africa.</div>
+<ul>
+<li>KV cache storage</li>
+<li>Image optimization</li>
+<li>R2 object storage (100GB)</li>
+<li>Purge & prewarm</li>
+</ul>
+</div>
+</div>
 </div>
 
-<div class="tool-card" onclick="window.open('https://rabiuhamza11.github.io/harz-portfolio/harz-ai-studio.html')">
-<div class="status status-beta">Beta</div>
-<div class="icon">🎨</div>
-<div class="name">Image Studio</div>
-<div class="desc">Generate images from text prompts using Stable Diffusion XL.</div>
-<span class="tag">Image Generation</span>
+<div class="section" id="ai">
+<div class="section-title">Hausa AI Built In</div>
+<div class="features">
+<div class="feature ai">
+<div class="icon">🤖</div>
+<div class="name">AI Deploy Assistant</div>
+<div class="desc">Chat in Hausa or English to deploy apps, debug errors, and manage infrastructure.</div>
+<ul>
+<li>Llama 3.1 8B</li>
+<li>Hausa translation</li>
+<li>Code generation</li>
+<li>Error debugging</li>
+</ul>
 </div>
-
-<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
-<div class="status status-soon">Soon</div>
-<div class="icon">🎤</div>
-<div class="name">Speech to Text</div>
-<div class="desc">Transcribe Hausa and English audio to text in real-time with Whisper.</div>
-<span class="tag">Speech</span>
-</div>
-
-<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
-<div class="status status-live">Live</div>
-<div class="icon">💻</div>
-<div class="name">Code Assistant</div>
-<div class="desc">Generate code, debug, and autocomplete in 40+ programming languages.</div>
-<span class="tag">Code</span>
-</div>
-
-<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
-<div class="status status-live">Live</div>
-<div class="icon">📐</div>
-<div class="name">Embeddings</div>
-<div class="desc">Semantic search and document matching in 7 African languages.</div>
-<span class="tag">Embeddings</span>
-</div>
-
-<div class="tool-card" onclick="window.open('https://harz-cloud-backend.onrender.com/ai-hub.html')">
-<div class="status status-live">Live</div>
+<div class="feature ai">
 <div class="icon">🧠</div>
-<div class="name">DeepSeek R1</div>
-<div class="desc">Advanced reasoning model for math, analysis, and complex problems.</div>
-<span class="tag">Reasoning</span>
+<div class="name">AI Hub — 9 Models</div>
+<div class="desc">Access 9 AI models through one API. Text, code, embeddings, images.</div>
+<ul>
+<li>Mistral 7B</li>
+<li>Qwen 2.5 7B</li>
+<li>DeepSeek R1</li>
+<li>Whisper speech-to-text</li>
+</ul>
+</div>
+<div class="feature ai">
+<div class="icon">✨</div>
+<div class="name">Auto-Optimize</div>
+<div class="desc">AI analyzes your code and suggests performance improvements before deploy.</div>
+<ul>
+<li>Bundle analysis</li>
+<li>Security scanning</li>
+<li>Dependency audit</li>
+<li>SEO suggestions</li>
+</ul>
+</div>
+</div>
 </div>
 
+<div class="section" id="pricing">
+<div class="section-title">Pricing — Naira Friendly</div>
+<div class="pricing">
+<div class="plan">
+<div class="tier">Free</div>
+<div class="price">₦0<span class="per">/month</span></div>
+<ul>
+<li>3 deployments</li>
+<li>GitHub Pages hosting</li>
+<li>Community support</li>
+<li>Basic AI (50 calls/day)</li>
+<li>1 team member</li>
+</ul>
 </div>
+<div class="plan featured">
+<div class="tier">Developer</div>
+<div class="price">₦5K<span class="per">/month</span></div>
+<ul>
+<li>Unlimited deployments</li>
+<li>Render + Vercel hosting</li>
+<li>Custom domains</li>
+<li>AI Hub (1000 calls/day)</li>
+<li>5 team members</li>
+<li>Paystack integration</li>
+</ul>
 </div>
-
-<div class="section" id="models">
-<div class="section-title">Available Models</div>
-<div class="models-section">
-<h3>Large Language Models</h3>
-<div class="model-row"><span class="name">HARZ Llama 3.1 8B</span><span class="type">Chat | 128K context | Featured</span></div>
-<div class="model-row"><span class="name">HARZ Qwen 2.5 7B</span><span class="type">Multilingual | 32K context | Featured</span></div>
-<div class="model-row"><span class="name">HARZ Mistral 7B</span><span class="type">Creative | 32K context</span></div>
-<div class="model-row"><span class="name">HARZ DeepSeek R1</span><span class="type">Reasoning | 64K context</span></div>
-<div class="model-row"><span class="name">HARZ Code Assistant</span><span class="type">Code | 32K context</span></div>
+<div class="plan">
+<div class="tier">Business</div>
+<div class="price">₦25K<span class="per">/month</span></div>
+<ul>
+<li>Everything in Developer</li>
+<li>Cloudflare edge + R2</li>
+<li>Unlimited AI calls</li>
+<li>20 team members</li>
+<li>Priority support</li>
+<li>SSO + RBAC</li>
+<li>Analytics dashboard</li>
+</ul>
 </div>
-<div class="models-section">
-<h3>Specialized Models</h3>
-<div class="model-row"><span class="name">HARZ Hausa Translator</span><span class="type">EN to HA translation | Featured</span></div>
-<div class="model-row"><span class="name">HARZ Embeddings</span><span class="type">7 languages | Semantic search | Featured</span></div>
-<div class="model-row"><span class="name">HARZ Image Generator</span><span class="type">Stable Diffusion XL | Featured</span></div>
-<div class="model-row"><span class="name">HARZ Whisper</span><span class="type">Speech-to-text | 96 languages | Featured</span></div>
+<div class="plan">
+<div class="tier">Enterprise</div>
+<div class="price">Custom</div>
+<ul>
+<li>Dedicated infrastructure</li>
+<li>On-prem option</li>
+<li>SLA guarantee</li>
+<li>Custom AI training</li>
+<li>Unlimited everything</li>
+<li>Hausa support included</li>
+</ul>
+</div>
 </div>
 </div>
 
 <div class="cta">
-<h2 style="margin-bottom:16px">Try the magic now</h2>
-<p style="color:var(--muted);margin-bottom:24px">Chat with HARZ AI in Hausa or English — free during beta.</p>
-<a href="https://harz-cloud-backend.onrender.com/ai-hub.html" class="btn btn-primary" target="_blank">Open AI Playground →</a>
-<a href="https://harz-cloud-backend.onrender.com/ai-hub" class="btn btn-ghost" style="margin-left:8px" target="_blank">API Docs</a>
+<h2 style="margin-bottom:12px">Ready to deploy the African way?</h2>
+<p style="color:var(--muted);margin-bottom:24px">Join 64+ platforms already running on HARZ Cloud infrastructure.</p>
+<a href="https://harz-cloud-backend.onrender.com/deployforge/providers" class="btn btn-primary" target="_blank">Start Deploying →</a>
+<a href="https://rabiuhamza11.github.io/harz-cloud/" class="btn btn-ghost" style="margin-left:8px">Super App</a>
+<a href="https://rabiuhamza11.github.io/deployforge/" class="btn btn-ghost" style="margin-left:8px">DeployForge</a>
 </div>
 
 </div>
 
 <div class="footer">
-<p>Harz Magic — AI-Powered Tools for Africa</p>
-<p style="margin-top:8px">Powered by <a href="https://harz-cloud-backend.onrender.com/ai-hub">HARZ AI Hub</a> + Hugging Face + HARZ Cloud</p>
-<p style="margin-top:8px">2026 HARZ Digital Services — Built by Rabiu Hamza Mohammed</p>
+<p>Harz Magic — Deploy, Host & Manage Code | The African DevOps Platform</p>
+<p style="margin-top:6px">8 deploy targets · 163 API endpoints · 62 repos · 9 AI models · 7 languages</p>
+<p style="margin-top:6px">Powered by HARZ Cloud + DeployForge + AI Hub · Built by Rabiu Hamza Mohammed · 2026</p>
 </div>
 
 </body>
