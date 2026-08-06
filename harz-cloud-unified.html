@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Cloud v4.0 — Unified Console</title>
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e293b;--accent:#6366f1;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:12px;max-width:1200px;margin:0 auto}
+h1{font-size:20px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.card h2{font-size:14px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px}
+.stat h3{font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.stat .v{font-size:18px;font-weight:700}.stat .m{font-size:9px;color:var(--muted);margin-top:2px}
+.g{color:var(--green)}.r{color:var(--red)}.y{color:var(--yellow)}.b{color:var(--blue)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:9px;text-transform:uppercase}
+.badge{padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600}
+.b-ok{background:var(--green)20;color:var(--green)}.b-warn{background:var(--yellow)20;color:var(--yellow)}.b-info{background:var(--blue)20;color:var(--blue)}.b-crit{background:var(--red)20;color:var(--red)}.b-free{background:var(--muted)20;color:var(--muted)}.b-prem{background:var(--accent)20;color:var(--accent)}.b-train{background:var(--accent)20;color:var(--accent)}
+.btn{padding:7px 12px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.btn-p:hover{opacity:.9}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-o:hover{border-color:var(--accent)}
+.nav-bar{display:flex;gap:3px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px}
+.nav-item{padding:7px 12px;border-radius:8px;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid transparent;transition:.15s}
+.nav-item.active{background:var(--card);border-color:var(--border);color:var(--accent)}
+.nav-item:not(.active){color:var(--muted)}
+.nav-item:hover{color:var(--text)}
+.tc{display:none}.tc.active{display:block}
+.bar{height:4px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:2px}.bar-f{height:100%;border-radius:3px}
+.muted{color:var(--muted);font-size:10px}
+.row{display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:12px;margin-bottom:6px}
+.input:focus{outline:none;border-color:var(--accent)}
+.tmpl{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;transition:.2s;cursor:pointer}
+.tmpl:hover{border-color:var(--accent);transform:translateY(-2px)}
+.tmpl h3{font-size:13px;display:flex;justify-content:space-between;align-items:start;margin-bottom:3px}
+.tmpl .desc{font-size:11px;color:var(--muted);margin-bottom:6px;line-height:1.4}
+.tmpl .meta{display:flex;justify-content:space-between;align-items:center;font-size:10px}
+.tmpl .tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.tag{background:var(--border);padding:1px 5px;border-radius:3px;font-size:8px;color:var(--muted)}
+.plan-c{background:var(--bg);border:2px solid var(--border);border-radius:12px;padding:14px;text-align:center;transition:.2s;position:relative}
+.plan-c.popular{border-color:var(--accent)}
+.plan-c h3{font-size:15px;margin-bottom:3px}
+.plan-c .price{font-size:24px;font-weight:700;margin:6px 0}
+.plan-c .price small{font-size:12px;font-weight:400;color:var(--muted)}
+.plan-c ul{list-style:none;text-align:left;margin:8px 0;padding:0}
+.plan-c li{font-size:11px;padding:2px 0;padding-left:16px;position:relative}
+.plan-c li::before{content:'✓';position:absolute;left:0;color:var(--green)}
+.plan-c .btn{width:100%;margin-top:6px}
+.cat-pill{padding:5px 10px;border:1px solid var(--border);border-radius:16px;font-size:10px;cursor:pointer;transition:.2s;white-space:nowrap}
+.cat-pill.active{border-color:var(--accent);background:var(--accent)15;color:var(--accent)}
+.cat-pill:hover{border-color:var(--accent)}
+.lang-c{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.wh-c{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px}
+.wh-c h3{font-size:12px;display:flex;justify-content:space-between;margin-bottom:3px}
+.wh-c .meta{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:11px;overflow-x:auto;line-height:1.6}
+.code-block .kw{color:var(--accent)}.code-block .str{color:var(--green)}.code-block .cmt{color:var(--muted)}.code-block .fn{color:var(--yellow)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;max-width:450px;width:100%;max-height:80vh;overflow-y:auto}
+.modal h2{margin-bottom:10px;font-size:16px}
+.modal .close{float:right;cursor:pointer;font-size:20px;color:var(--muted)}
+.search-bar{display:flex;gap:6px;margin-bottom:8px}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.module-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:.2s}
+.module-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.module-card h3{font-size:13px;margin-bottom:4px}
+.module-card .stats{font-size:10px;color:var(--muted);line-height:1.5}
+.module-card .icon{font-size:24px;float:right}
+</style>
+</head>
+<body>
+
+<h1>🚀 HARZ Cloud v4.0 — Unified Console</h1>
+<p class="sub">All 13 modules in one dashboard · 19 backends operational</p>
+
+<div class="nav-bar" id="navBar">
+  <div class="nav-item active" onclick="show('overview',this)">🏠 Overview</div>
+  <div class="nav-item" onclick="show('marketplace',this)">🏪 Marketplace</div>
+  <div class="nav-item" onclick="show('billing',this)">💳 Billing</div>
+  <div class="nav-item" onclick="show('notifications',this)">🔔 Notifications</div>
+  <div class="nav-item" onclick="show('teams',this)">👥 Teams</div>
+  <div class="nav-item" onclick="show('storage',this)">📦 Storage</div>
+  <div class="nav-item" onclick="show('search',this)">🔍 Search</div>
+  <div class="nav-item" onclick="show('audit',this)">📋 Audit</div>
+  <div class="nav-item" onclick="show('training',this)">🎓 Training</div>
+  <div class="nav-item" onclick="show('agents',this)">🤖 Agents</div>
+  <div class="nav-item" onclick="show('i18n',this)">🌍 Languages</div>
+  <div class="nav-item" onclick="show('webhooks',this)">🔗 Webhooks</div>
+  <div class="nav-item" onclick="show('sdk',this)">📦 SDK</div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="tc active" id="tab-overview">
+  <div class="card">
+    <h2>📊 HARZ Cloud v4.0 — System Overview</h2>
+    <div class="overview-grid" id="overviewGrid"></div>
+  </div>
+  <div class="card">
+    <h2>⚡ Backend Status (19 Functions)</h2>
+    <div id="backendStatus"></div>
+  </div>
+</div>
+
+<!-- MARKETPLACE -->
+<div class="tc" id="tab-marketplace">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="mktStats"></div></div>
+  <div class="card"><h2>🔍 Templates</h2>
+    <div class="search-bar"><input class="input" id="tmplSearch" placeholder="Search templates..." onkeyup="filterTmpl()" style="margin-bottom:0"><button class="btn btn-o" onclick="filterTmpl()">Search</button></div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px" id="catPills"></div>
+    <div class="grid-cards" id="tmplGrid"></div>
+  </div>
+</div>
+
+<!-- BILLING -->
+<div class="tc" id="tab-billing">
+  <div class="card"><h2>📊 Overview</h2><div class="grid" id="billStats"></div></div>
+  <div class="card"><h2>📋 Plans</h2><div class="grid-cards" id="plansGrid"></div></div>
+  <div class="card"><h2>🧾 Invoices</h2><div style="overflow-x:auto"><table><thead><tr><th>Number</th><th>User</th><th>Plan</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div>
+  <div class="card"><h2>📈 Usage</h2><div id="usageList"></div></div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="tc" id="tab-notifications">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="ntfStats"></div></div>
+  <div class="card"><h2>📡 Channels</h2><div id="channels"></div></div>
+  <div class="card"><h2>📨 Recent</h2><div id="recentNtf"></div></div>
+</div>
+
+<!-- TEAMS -->
+<div class="tc" id="tab-teams">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="teamStats"></div></div>
+  <div class="card"><h2>👥 Members</h2><div id="members"></div></div>
+  <div class="card"><h2>🏢 Teams</h2><div class="grid-cards" id="teamsList"></div></div>
+  <div class="card"><h2>📝 Activity</h2><div id="teamActivity"></div></div>
+</div>
+
+<!-- STORAGE -->
+<div class="tc" id="tab-storage">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="stStats"></div></div>
+  <div class="card"><h2>🪣 Buckets</h2><div id="buckets"></div></div>
+  <div class="card"><h2>📁 Files</h2><div id="files"></div></div>
+</div>
+
+<!-- SEARCH -->
+<div class="tc" id="tab-search">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="srStats"></div></div>
+  <div class="card"><h2>🔍 Search</h2>
+    <div class="search-bar"><input class="input" id="srQuery" placeholder="Search across all entities..." onkeyup="if(event.key==='Enter')doSearch()" style="margin-bottom:0"><button class="btn btn-p" onclick="doSearch()">Search</button></div>
+    <div id="srResults"></div>
+  </div>
+</div>
+
+<!-- AUDIT -->
+<div class="tc" id="tab-audit">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="auStats"></div></div>
+  <div class="card"><h2>📋 Trail</h2>
+    <div style="display:flex;gap:5px;margin-bottom:8px">
+      <button class="btn btn-o" onclick="filterLogs('all')">All</button>
+      <button class="btn btn-o" onclick="filterLogs('info')">Info</button>
+      <button class="btn btn-o" onclick="filterLogs('warning')">Warning</button>
+      <button class="btn btn-o" onclick="filterLogs('critical')">Critical</button>
+    </div>
+    <div id="logsList"></div>
+  </div>
+  <div class="card"><h2>🛡️ GDPR</h2><div id="gdprInfo"></div></div>
+</div>
+
+<!-- TRAINING -->
+<div class="tc" id="tab-training">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="trStats"></div></div>
+  <div class="card"><h2>🤖 Agents</h2><div id="trAgents"></div></div>
+  <div class="card"><h2>🧠 Models</h2><div style="overflow-x:auto"><table><thead><tr><th>Model</th><th>Provider</th><th>Context</th><th>Cost</th></tr></thead><tbody id="trModels"></tbody></table></div></div>
+</div>
+
+<!-- AGENT MARKETPLACE -->
+<div class="tc" id="tab-agents">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="agStats"></div></div>
+  <div class="card"><h2>🏪 Community Agents</h2><div class="grid-cards" id="agMarket"></div></div>
+</div>
+
+<!-- I18N -->
+<div class="tc" id="tab-i18n">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="i18nStats"></div></div>
+  <div class="card"><h2>🌍 Languages</h2><div class="grid-cards" id="langList"></div></div>
+</div>
+
+<!-- WEBHOOKS -->
+<div class="tc" id="tab-webhooks">
+  <div class="card"><h2>📊 Stats</h2><div class="grid" id="whStats"></div></div>
+  <div class="card"><h2>🔗 Webhooks</h2><div id="whList"></div></div>
+  <div class="card"><h2>📡 Events</h2><div style="overflow-x:auto"><table><thead><tr><th>Event</th><th>Description</th><th>Triggered</th></tr></thead><tbody id="whEvents"></tbody></table></div></div>
+</div>
+
+<!-- SDK -->
+<div class="tc" id="tab-sdk">
+  <div class="card"><h2>📦 npm @harz/sdk</h2>
+    <div class="code-block"><span class="cmt">// Install</span>
+<span class="kw">npm</span> install @harz/sdk
+
+<span class="cmt">// Usage</span>
+<span class="kw">import</span> { HarzClient } <span class="kw">from</span> <span class="str">'@harz/sdk'</span>;
+<span class="kw">const</span> harz = <span class="kw">new</span> <span class="fn">HarzClient</span>({ apiKey: <span class="str">'your-key'</span> });
+<span class="kw">const</span> platforms = <span class="kw">await</span> harz.<span class="fn">list</span>();</div>
+  </div>
+  <div class="card"><h2>🐍 Python harz-sdk</h2>
+    <div class="code-block"><span class="cmt"># Install</span>
+pip install harz-sdk
+
+<span class="cmt"># Usage</span>
+<span class="kw">from</span> harz <span class="kw">import</span> HarzClient
+harz = <span class="fn">HarzClient</span>(api_key=<span class="str">'your-key'</span>)
+result = harz.<span class="fn">deploy</span>(template_id=<span class="str">'tmpl-001'</span>)</div>
+  </div>
+  <div class="card"><h2>⌨️ CLI Commands</h2>
+    <div style="overflow-x:auto"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+      <tr><td><code>harz init</code></td><td>Initialize project</td></tr>
+      <tr><td><code>harz create</code></td><td>Create from template</td></tr>
+      <tr><td><code>harz deploy</code></td><td>Deploy to cloud</td></tr>
+      <tr><td><code>harz health</code></td><td>Health check</td></tr>
+      <tr><td><code>harz list</code></td><td>List platforms</td></tr>
+      <tr><td><code>harz analytics</code></td><td>View analytics</td></tr>
+      <tr><td><code>harz logs</code></td><td>Audit logs</td></tr>
+      <tr><td><code>harz agents</code></td><td>List AI agents</td></tr>
+      <tr><td><code>harz search</code></td><td>Search entities</td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
+
+<script>
+const APIS = {
+  tpl: 'https://solene-5b0577e2.base44.app/functions/harzTemplates',
+  bil: 'https://solene-5b0577e2.base44.app/functions/harzBilling',
+  ntf: 'https://solene-5b0577e2.base44.app/functions/harzNotifications',
+  tm: 'https://solene-5b0577e2.base44.app/functions/harzTeams',
+  st: 'https://solene-5b0577e2.base44.app/functions/harzStorage',
+  sr: 'https://solene-5b0577e2.base44.app/functions/harzSearch',
+  au: 'https://solene-5b0577e2.base44.app/functions/harzAuditLog',
+  at: 'https://solene-5b0577e2.base44.app/functions/harzAgentTraining',
+  i18: 'https://solene-5b0577e2.base44.app/functions/harzI18n',
+  wh: 'https://solene-5b0577e2.base44.app/functions/harzWebhooks'
+};
+async function api(url, body) { return (await fetch(url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{action:'info'})})).json(); }
+function show(tab, el) { document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active')); el.classList.add('active'); document.getElementById('tab-'+tab).classList.add('active'); }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+let allTmpl = [], allCats = [], selectedCat = 'all', allLogs = [];
+
+async function init() {
+  const [ti, bi, ni, tmi, si, sri, ai, ati, ii, wi] = await Promise.all(Object.entries(APIS).map(([k,v]) => api(v, {action:'info'})));
+  const [tpls, cats, plans, subs, invs, usage, chs, rcnt, mems, tms, act, bkts, fls, idxs, logs, gdpr, ags, msets, mdls, mkts, langs, missing, whs, evs, wlogs] = await Promise.all([
+    api(APIS.tpl, {action:'list_templates'}), api(APIS.tpl, {action:'categories'}),
+    api(APIS.bil, {action:'plans'}), api(APIS.bil, {action:'subscriptions'}),
+    api(APIS.bil, {action:'invoices'}), api(APIS.bil, {action:'usage'}),
+    api(APIS.ntf, {action:'channels'}), api(APIS.ntf, {action:'recent'}),
+    api(APIS.tm, {action:'members'}), api(APIS.tm, {action:'teams'}),
+    api(APIS.tm, {action:'activity'}), api(APIS.st, {action:'buckets'}),
+    api(APIS.st, {action:'files'}), api(APIS.sr, {action:'indexes'}),
+    api(APIS.au, {action:'list'}), api(APIS.au, {action:'gdpr'}),
+    api(APIS.at, {action:'agents'}), api(APIS.at, {action:'training_sets'}),
+    api(APIS.at, {action:'models'}), api(APIS.at, {action:'marketplace'}),
+    api(APIS.i18, {action:'languages'}), api(APIS.i18, {action:'missing'}),
+    api(APIS.wh, {action:'webhooks'}), api(APIS.wh, {action:'events'}),
+    api(APIS.wh, {action:'logs'})
+  ]);
+
+  allTmpl = tpls.templates; allCats = cats.categories; allLogs = logs.logs;
+
+  // OVERVIEW
+  const modules = [
+    {i:'🏪',n:'Marketplace',s:`${ti.totalTemplates} templates · ${ti.totalDownloads.toLocaleString()} downloads`,t:'marketplace'},
+    {i:'💳',n:'Billing',s:`${bi.activeSubscriptions} subs · ${bi.totalRevenue} MRR`,t:'billing'},
+    {i:'🔔',n:'Notifications',s:`${ni.channels} channels · ${ni.avgDeliveryRate} rate`,t:'notifications'},
+    {i:'👥',n:'Teams',s:`${tmi.totalMembers} members · ${tmi.totalTeams} teams`,t:'teams'},
+    {i:'📦',n:'Storage',s:`${si.totalBuckets} buckets · ${si.totalSize}`,t:'storage'},
+    {i:'🔍',n:'Search',s:`${sri.totalIndexes} indexes · ${sri.totalDocs} docs`,t:'search'},
+    {i:'📋',n:'Audit Log',s:`${ai.totalLogs} entries · GDPR ${ai.gdprReady?'✓':'✗'}`,t:'audit'},
+    {i:'🎓',n:'Training',s:`${ati.totalAgents} agents · ${ati.avgAccuracy} accuracy`,t:'training'},
+    {i:'🤖',n:'Agent Market',s:`${mkts.total} agents · ${mkts.free} free`,t:'agents'},
+    {i:'🌍',n:'Languages',s:`${ii.activeLanguages} active · ${ii.avgCoverage} coverage`,t:'i18n'},
+    {i:'🔗',n:'Webhooks',s:`${wi.totalWebhooks} hooks · ${wi.avgSuccessRate} success`,t:'webhooks'},
+    {i:'📦',n:'SDK & CLI',s:'npm + Python + CLI tool',t:'sdk'}
+  ];
+  document.getElementById('overviewGrid').innerHTML = modules.map(m=>`<div class="module-card" onclick="document.querySelectorAll('.nav-item')[${modules.indexOf(m)+1}].click()"><span class="icon">${m.i}</span><h3>${m.n}</h3><div class="stats">${m.s}</div></div>`).join('');
+
+  // BACKEND STATUS
+  const bkList = ['harzTemplates','harzBilling','harzCDN','harzRBAC','harzPayments','harzPaystack','buildBot','agentBuilder','deployForgeDeploy','harzNotifications','harzTeams','harzStorage','harzSearch','harzAuditLog','cfWorkers','harzAgentTraining','harzI18n','harzWebhooks','harzStripe'];
+  const results = await Promise.all(bkList.map(fn => fetch('https://solene-5b0577e2.base44.app/functions/'+fn, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'info'})}).then(r=>r.status).catch(()=>0)));
+  document.getElementById('backendStatus').innerHTML = bkList.map((fn,i)=>`<div class="row" style="margin-bottom:4px;padding:6px"><span class="badge ${results[i]===200?'b-ok':'b-crit'}">${results[i]===200?'200':'ERR'}</span><span style="font-family:monospace;font-size:11px;flex:1">${fn}</span></div>`).join('');
+
+  // MARKETPLACE
+  document.getElementById('mktStats').innerHTML = [{l:'Templates',v:ti.totalTemplates,c:'b',m:ti.freeTemplates+' free'},{l:'Downloads',v:ti.totalDownloads.toLocaleString(),c:'g',m:'All time'},{l:'Revenue',v:'$'+ti.revenue.toLocaleString(),c:'y',m:'Premium'},{l:'Categories',v:ti.categories,c:'b',m:'By industry'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  document.getElementById('catPills').innerHTML = `<div class="cat-pill active" onclick="setCat('all',this)">All (${allTmpl.length})</div>` + allCats.map(c=>`<div class="cat-pill" onclick="setCat('${c.id}',this)">${c.icon} ${c.name}</div>`).join('');
+  renderTmpl();
+
+  // BILLING
+  document.getElementById('billStats').innerHTML = [{l:'MRR',v:bi.monthlyRevenue,c:'g',m:'Monthly'},{l:'ARR',v:'$'+(parseInt(bi.monthlyRevenue.replace('$',''))*12).toLocaleString(),c:'g',m:'Annual'},{l:'Subs',v:bi.activeSubscriptions,c:'b',m:'Active'},{l:'Invoices',v:bi.paidInvoices+' paid',c:'y',m:bi.pendingInvoices+' pending'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  document.getElementById('plansGrid').innerHTML = plans.plans.map(p=>`<div class="plan-c ${p.popular?'popular':''}" ${p.popular?'style="border-color:var(--accent)"':''}>${p.popular?'<div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:1px 10px;border-radius:8px;font-size:9px;font-weight:600">POPULAR</div>':''}<h3>${p.name}</h3><div class="price" style="color:${p.color}">$${p.price}${p.price>0?'<small>/mo</small>':'<small>forever</small>'}</div><ul>${p.features.slice(0,6).map(f=>`<li>${f}</li>`).join('')}</ul><button class="btn ${p.popular?'btn-p':'btn-o'}" onclick="subscribe('${p.id}','${p.name}',${p.price})">${p.price===0?'Start Free':'Subscribe'}</button></div>`).join('');
+  document.getElementById('invoicesBody').innerHTML = invs.invoices.map(i=>`<tr><td style="font-family:monospace;font-size:10px">${i.number}</td><td>${i.userEmail.split('@')[0]}</td><td>${i.planName}</td><td class="${i.status==='paid'?'g':'y'}" style="font-weight:600">$${i.amount}</td><td><span class="badge ${i.status==='paid'?'b-ok':'b-warn'}">${i.status}</span></td><td>${i.status==='pending'?`<button class="btn btn-o" style="padding:3px 6px;font-size:9px" onclick="payInv('${i.id}')">Pay</button>`:'—'}</td></tr>`).join('');
+  document.getElementById('usageList').innerHTML = usage.usage.map(u=>{const p=u.apiCallsLimit>0?(u.apiCalls/u.apiCallsLimit*100):0;return `<div style="margin-bottom:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><b>${u.userEmail}</b><span class="muted">${u.plan} · ${u.period}</span></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"><div><div class="muted">API</div><div style="font-size:11px;font-weight:600">${u.apiCalls.toLocaleString()}/${u.apiCallsLimit===-1?'∞':u.apiCallsLimit.toLocaleString()}</div><div class="bar"><div class="bar-f" style="width:${Math.min(p,100)}%;background:${p>80?'var(--red)':'var(--green)'}"></div></div></div><div><div class="muted">Storage</div><div style="font-size:11px;font-weight:600">${u.storage}/${u.storageLimit}</div></div><div><div class="muted">Projects</div><div style="font-size:11px;font-weight:600">${u.projects}/${u.projectsLimit===-1?'∞':u.projectsLimit}</div></div><div><div class="muted">Agents</div><div style="font-size:11px;font-weight:600">${u.agents}/${u.agentsLimit===-1?'∞':u.agentsLimit}</div></div></div></div>`}).join('');
+
+  // NOTIFICATIONS
+  document.getElementById('ntfStats').innerHTML = [{l:'Channels',v:ni.activeChannels+'/'+ni.channels,c:'b',m:'All active'},{l:'Sent',v:ni.totalSent.toLocaleString(),c:'g',m:'All time'},{l:'Delivered',v:ni.totalDelivered.toLocaleString(),c:'g',m:ni.avgDeliveryRate},{l:'Templates',v:ni.templates,c:'y',m:'Triggers'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  document.getElementById('channels').innerHTML = chs.channels.map(c=>`<div class="row"><span style="font-size:20px">${c.icon}</span><div style="flex:1"><div style="font-weight:600;font-size:12px">${c.name}</div><div class="muted">${c.sent.toLocaleString()} sent · ${c.rate}</div></div><div style="width:50px"><div class="bar"><div class="bar-f" style="width:${parseFloat(c.rate)}%;background:var(--green)"></div></div></div></div>`).join('');
+  document.getElementById('recentNtf').innerHTML = rcnt.notifications.map(n=>`<div class="row" style="font-size:11px"><div style="flex:1"><b>${n.subject}</b><div class="muted">to: ${n.recipient} · ${n.channel} · ${n.time}</div></div><span class="badge ${n.status==='delivered'?'b-ok':'b-info'}">${n.status}</span></div>`).join('');
+
+  // TEAMS
+  document.getElementById('teamStats').innerHTML = [{l:'Teams',v:tmi.totalTeams,c:'b',m:'Workspaces'},{l:'Members',v:tmi.totalMembers,c:'g',m:'Active'},{l:'Roles',v:tmi.totalRoles,c:'y',m:'Levels'},{l:'Online',v:tmi.activeMembers,c:'g',m:'Now'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  document.getElementById('members').innerHTML = mems.members.map(m=>`<div class="row"><div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;background:${m.role==='Owner'?'#ef4444':m.role==='Admin'?'#f59e0b':'#6366f1'}30">${m.avatar}</div><div style="flex:1"><div style="font-weight:600;font-size:12px">${m.name}</div><div class="muted">${m.email} · ${m.role}</div></div><span class="badge b-ok">${m.status}</span></div>`).join('');
+  document.getElementById('teamsList').innerHTML = tms.teams.map(t=>`<div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px"><h3 style="color:${t.color};font-size:13px">${t.name} <span class="badge b-ok">${t.role}</span></h3><div class="muted" style="margin-bottom:4px">${t.description}</div><div class="muted">${t.members} members · ${t.created}</div></div>`).join('');
+  document.getElementById('teamActivity').innerHTML = act.activity.map(a=>`<div class="row" style="font-size:11px"><span style="font-size:14px">${a.icon}</span><div style="flex:1"><b>${a.user}</b> ${a.action} <span class="muted">${a.target}</span></div><span class="muted">${a.time}</span></div>`).join('');
+
+  // STORAGE
+  document.getElementById('stStats').innerHTML = [{l:'Size',v:si.totalSize,c:'b',m:'All buckets'},{l:'Buckets',v:si.totalBuckets,c:'g',m:si.publicBuckets+' pub'},{l:'Files',v:si.totalFiles.toLocaleString(),c:'y',m:'Objects'},{l:'Regions',v:'3',c:'b',m:'Multi-region'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  document.getElementById('buckets').innerHTML = bkts.buckets.map(b=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${b.name}</div><div class="muted">${b.size} · ${b.files.toLocaleString()} files · ${b.region}</div></div><span class="badge ${b.type==='public'?'b-info':'b-warn'}">${b.type}</span></div>`).join('');
+  document.getElementById('files').innerHTML = fls.files.map(f=>`<div class="row" style="font-size:11px"><div style="flex:1"><div style="font-weight:600">${f.name}</div><div class="muted">${f.bucket} · ${f.size} · ${f.type}</div></div>${f.signed?'<span class="badge b-warn">private</span>':'<span class="badge b-ok">public</span>'}</div>`).join('');
+
+  // SEARCH
+  document.getElementById('srStats').innerHTML = [{l:'Indexes',v:sri.totalIndexes,c:'b',m:'Search'},{l:'Docs',v:sri.totalDocs,c:'g',m:'Indexed'},{l:'Entities',v:sri.entities,c:'y',m:'Searchable'},{l:'Speed',v:'12ms',c:'g',m:'Avg query'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+  // AUDIT
+  document.getElementById('auStats').innerHTML = [{l:'Logs',v:ai.totalLogs,c:'b',m:'Today'},{l:'Critical',v:ai.criticalEvents,c:'r',m:'Alerts'},{l:'Warnings',v:ai.warningEvents,c:'y',m:'Monitor'},{l:'Retention',v:'365d',c:'g',m:'GDPR ✓'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  renderLogs(allLogs);
+  document.getElementById('gdprInfo').innerHTML = `<div class="grid">${[{l:'Status',v:'Compliant',c:'g'},{l:'Encryption',v:'AES-256',c:'g'},{l:'Retention',v:'365 days',c:'b'},{l:'Right to Access',v:'✓',c:'g'},{l:'Right to Erasure',v:'✓',c:'g'},{l:'Portability',v:'✓',c:'g'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div></div>`).join('')}</div>`;
+
+  // TRAINING
+  document.getElementById('trStats').innerHTML = [{l:'Agents',v:ati.totalAgents,c:'b',m:ati.trainedAgents+' trained'},{l:'Accuracy',v:ati.avgAccuracy,c:'g',m:'Average'},{l:'Examples',v:ati.totalExamples.toLocaleString(),c:'y',m:'Data points'},{l:'Models',v:ati.models,c:'b',m:'AI models'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  document.getElementById('trAgents').innerHTML = ags.agents.map(a=>`<div class="row"><div style="flex:1"><div style="font-weight:600;font-size:12px">${a.name}</div><div class="muted">${a.role} · ${a.model}</div></div><div style="text-align:right"><span class="badge ${a.status==='trained'?'b-ok':'b-train'}">${a.status}</span><div style="font-size:11px;font-weight:600;margin-top:2px">${a.accuracy}%</div></div><div style="width:40px"><div class="bar"><div class="bar-f" style="width:${a.accuracy}%;background:${a.accuracy>90?'var(--green)':a.accuracy>80?'var(--yellow)':'var(--red)'}"></div></div></div></div>`).join('');
+  document.getElementById('trModels').innerHTML = mdls.models.map(m=>`<tr><td style="font-weight:600">${m.name}</td><td>${m.provider}</td><td>${m.context}</td><td>${m.cost}</td></tr>`).join('');
+
+  // AGENT MARKETPLACE
+  document.getElementById('agStats').innerHTML = [{l:'Agents',v:mkts.total,c:'b',m:mkts.free+' free'},{l:'Downloads',v:mkts.agents.reduce((s,a)=>s+a.downloads,0).toLocaleString(),c:'g',m:'All'},{l:'Avg Rating',v:(mkts.agents.reduce((s,a)=>s+a.rating,0)/mkts.agents.length).toFixed(1)+'⭐',c:'y',m:'Community'},{l:'Categories',v:[...new Set(mkts.agents.map(a=>a.category))].length,c:'b',m:'Types'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  document.getElementById('agMarket').innerHTML = mkts.agents.map(a=>`<div class="tmpl" onclick="void(0)"><h3>${a.name} ${a.price===0?'<span class="badge b-free">FREE</span>':'<span class="badge b-prem">$'+a.price+'</span>'}</h3><div class="desc">${a.desc}</div><div class="meta"><span class="muted">⭐ ${a.rating} · ${a.downloads.toLocaleString()} ↓</span></div><div class="tags">${a.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`).join('');
+
+  // I18N
+  document.getElementById('i18nStats').innerHTML = [{l:'Languages',v:ii.totalLanguages,c:'b',m:ii.activeLanguages+' active'},{l:'Translations',v:ii.totalTranslations.toLocaleString(),c:'g',m:'Entries'},{l:'Coverage',v:ii.avgCoverage,c:'g',m:'Active'},{l:'Pending',v:ii.totalLanguages-ii.activeLanguages,c:'y',m:'Not ready'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  document.getElementById('langList').innerHTML = langs.languages.map(l=>`<div class="lang-c" style="${l.active?'':'opacity:0.5'}"><div style="font-size:28px">${l.flag}</div><div style="font-weight:600;font-size:12px">${l.nativeName}</div><div class="muted">${l.name}</div><div style="margin-top:4px"><span class="badge ${l.active?'b-ok':'b-warn'}">${l.active?'active':'pending'}</span></div><div class="muted" style="margin-top:3px">${l.translations} keys · ${l.coverage}</div></div>`).join('');
+
+  // WEBHOOKS
+  document.getElementById('whStats').innerHTML = [{l:'Webhooks',v:wi.totalWebhooks,c:'b',m:wi.activeWebhooks+' active'},{l:'Deliveries',v:wi.totalDeliveries.toLocaleString(),c:'g',m:'All time'},{l:'Success',v:wi.avgSuccessRate,c:'g',m:'Delivery'},{l:'Events',v:wi.totalEvents,c:'y',m:'Triggers'}].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+  document.getElementById('whList').innerHTML = whs.webhooks.map(w=>`<div class="wh-c"><h3>${w.name} <span class="badge b-ok">${w.status}</span></h3><div class="meta"><span>${w.events.join(', ')}</span><span>${w.deliveries.toLocaleString()} · ${w.successRate}</span></div></div>`).join('');
+  document.getElementById('whEvents').innerHTML = evs.events.map(e=>`<tr><td style="font-family:monospace;font-size:10px;color:var(--accent)">${e.name}</td><td>${e.description}</td><td>${e.triggered.toLocaleString()}</td></tr>`).join('');
+}
+
+function renderTmpl(list) { list = list || allTmpl; document.getElementById('tmplGrid').innerHTML = list.map(t=>`<div class="tmpl" onclick="showTmpl('${t.id}')"><h3>${t.name} ${t.premium?'<span class="badge b-prem">PRO</span>':'<span class="badge b-free">FREE</span>'}</h3><div class="desc">${t.desc}</div><div class="meta"><span style="font-weight:700;font-size:13px;color:${t.premium?'var(--yellow)':'var(--green)'}">${t.price===0?'Free':'$'+t.price}</span><span class="muted">⭐ ${t.rating} · ${t.downloads.toLocaleString()} ↓</span></div><div class="tags">${t.tags.slice(0,4).map(tag=>`<span class="tag">${tag}</span>`).join('')}</div></div>`).join(''); }
+function setCat(cat, el) { selectedCat = cat; document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); filterTmpl(); }
+function filterTmpl() { const q = document.getElementById('tmplSearch').value.toLowerCase(); let f = allTmpl; if(selectedCat!=='all') f=f.filter(t=>t.category===selectedCat); if(q) f=f.filter(t=>t.name.toLowerCase().includes(q)||t.desc.toLowerCase().includes(q)||t.tags.some(tg=>tg.includes(q))); renderTmpl(f); }
+async function showTmpl(id) { const r = await api(APIS.tpl, {action:'get_template', id}); if(!r.success) return; const t = r.template; document.getElementById('modalContent').innerHTML = `<span class="close" onclick="closeModal()">×</span><h2>${t.name}</h2><p class="muted" style="margin-bottom:8px">${t.desc}</p><div style="margin-bottom:8px"><b style="font-size:18px;color:${t.premium?'var(--yellow)':'var(--green)'}">${t.price===0?'Free':'$'+t.price}</b> <span class="muted">by ${t.author}</span></div><ul style="margin-bottom:10px">${t.features.map(f=>`<li style="font-size:12px;padding:2px 0">${f}</li>`).join('')}</ul><div style="display:flex;gap:6px"><button class="btn btn-p" onclick="deployTmpl('${t.id}','${t.name}')">Deploy</button><button class="btn btn-o" onclick="forkTmpl('${t.id}','${t.name}')">Fork</button><button class="btn btn-o" onclick="window.open('${t.preview}','_blank')">Preview</button></div>`; document.getElementById('modalOverlay').classList.add('active'); }
+async function deployTmpl(id, name) { const r = await api(APIS.tpl, {action:'deploy', id, appName:name+' App'}); if(r.success) { document.getElementById('modalContent').innerHTML = `<span class="close" onclick="closeModal()">×</span><h2>✅ Deployed!</h2><p style="margin:8px 0">${r.message}</p><p class="muted">ID: ${r.deployId}</p><button class="btn btn-p" onclick="window.open('${r.url}','_blank')">Open App</button>`; } }
+async function forkTmpl(id, name) { const r = await api(APIS.tpl, {action:'fork', id, newName:name+' (Fork)'}); if(r.success) { document.getElementById('modalContent').innerHTML = `<span class="close" onclick="closeModal()">×</span><h2>🍴 Forked!</h2><p style="margin:8px 0">${r.message}</p><button class="btn btn-p" onclick="closeModal()">Done</button>`; } }
+async function subscribe(pid, pn, price) { if(price===0){alert('Free plan activated!');return;} const r = await api(APIS.bil, {action:'subscribe', userEmail:'rabiu@harz.cloud', planId:pid, method:'stripe'}); if(r.success) { document.getElementById('modalContent').innerHTML = `<span class="close" onclick="closeModal()">×</span><h2>✅ Subscribed!</h2><p style="margin:8px 0">${r.message}</p><p class="muted">${r.plan} · $${r.amount}/mo</p><button class="btn btn-p" onclick="closeModal()">Done</button>`; document.getElementById('modalOverlay').classList.add('active'); } }
+async function payInv(id) { const r = await api(APIS.bil, {action:'pay_invoice', id, method:'stripe'}); if(r.success) { alert('Paid! Receipt: '+r.receiptNumber); init(); } }
+function renderLogs(logs) { document.getElementById('logsList').innerHTML = logs.map(l=>`<div class="row" style="border-left:3px solid ${l.severity==='critical'?'var(--red)':l.severity==='warning'?'var(--yellow)':'var(--blue)'};font-size:11px"><div style="flex:1"><span class="badge ${l.severity==='critical'?'b-crit':l.severity==='warning'?'b-warn':'b-info'}">${l.severity}</span> <b>${l.userEmail}</b> — ${l.action}<div class="muted" style="margin-top:2px">${l.details}</div><div class="muted">${l.ip} · ${l.device} · ${l.result}</div></div><span class="muted">${l.timestamp.substring(11,19)}</span></div>`).join(''); }
+async function filterLogs(sev) { if(sev==='all'){renderLogs(allLogs);return;} const r = await api(APIS.au, {action:'list', severity:sev}); if(r.success) renderLogs(r.logs); }
+async function doSearch() { const q = document.getElementById('srQuery').value; const r = await api(APIS.sr, {action:'search', query:q, limit:10}); document.getElementById('srResults').innerHTML = r.success ? (r.results.length ? r.results.map(res=>`<div class="row" style="font-size:11px"><div style="flex:1"><b>${res.title}</b><div class="muted">${res.snippet}</div><div class="muted" style="margin-top:2px">${res.type} · ${res.entity}</div></div><span class="badge b-info">${(res.score*100).toFixed(0)}%</span></div>`).join('') : '<div class="muted">No results</div>') : ''; }
+init();
+</script>
+</body>
+</html>

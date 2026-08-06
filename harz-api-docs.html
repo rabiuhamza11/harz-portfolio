@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Cloud API — Documentation</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#00A859;--dark:#0A0E27;--dark2:#111633;--border:#1E2645;--gray:#8B92A8;--white:#fff;--blue:#4C7DFF;--purple:#9B5CFF;--danger:#FF3B5C;--warning:#FFB800}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--dark);color:var(--white)}
+.app{display:flex;min-height:100vh}
+.sidebar{width:260px;background:var(--dark2);border-right:1px solid var(--border);position:fixed;height:100vh;overflow-y:auto;padding:1rem 0}
+.sidebar-header{padding:0 1.25rem 1rem;border-bottom:1px solid var(--border);margin-bottom:1rem;font-weight:800;font-size:1rem}
+.sidebar-header span{color:var(--primary)}
+.nav-section{padding:.5rem 0}
+.nav-section-title{font-size:.65rem;text-transform:uppercase;color:var(--gray);padding:.5rem 1.25rem;letter-spacing:.5px}
+.nav-item{padding:.5rem 1.25rem .5rem 2rem;font-size:.78rem;cursor:pointer;color:var(--gray);transition:all .15s;border-left:2px solid transparent}
+.nav-item:hover{color:var(--white);background:rgba(255,255,255,.03)}
+.nav-item.active{color:var(--primary);border-left-color:var(--primary)}
+.main{flex:1;margin-left:260px;padding:2rem;max-width:900px}
+.endpoint{background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem;transition:all .15s}
+.endpoint:hover{border-color:var(--primary)}
+.endpoint-method{display:inline-block;padding:.2rem .5rem;border-radius:6px;font-size:.7rem;font-weight:700;margin-right:.5rem}
+.method-get{background:rgba(76,125,255,.15);color:var(--blue)}
+.method-post{background:rgba(0,168,89,.15);color:var(--primary)}
+.method-put{background:rgba(255,184,0,.15);color:var(--warning)}
+.method-delete{background:rgba(255,59,92,.15);color:var(--danger)}
+.endpoint-path{font-family:monospace;font-size:.85rem;font-weight:600}
+.endpoint-desc{font-size:.75rem;color:var(--gray);margin-top:.3rem}
+.endpoint-auth{font-size:.65rem;padding:.15rem .4rem;border-radius:4px;background:rgba(155,92,255,.15);color:var(--purple);margin-left:.5rem}
+.section-title{font-size:1.2rem;font-weight:800;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem}
+.section-title .count{font-size:.75rem;color:var(--gray);font-weight:400}
+.module-card{margin-bottom:2rem}
+.module-header{display:flex;align-items:center;gap:.5rem;font-size:1rem;font-weight:700;margin-bottom:.75rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.module-icon{font-size:1.3rem}
+.hero{background:linear-gradient(135deg,var(--dark) 0%,var(--dark2) 100%);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem;text-align:center}
+.hero h1{font-size:2rem;font-weight:800;margin-bottom:.5rem}
+.hero h1 span{color:var(--primary)}
+.hero p{color:var(--gray);font-size:.9rem;max-width:600px;margin:0 auto}
+.hero .stats{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+.hero .stat{text-align:center}
+.hero .stat .num{font-size:1.8rem;font-weight:800;color:var(--primary)}
+.hero .stat .lbl{font-size:.7rem;color:var(--gray);text-transform:uppercase}
+.code-block{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:1rem;font-family:monospace;font-size:.8rem;overflow-x:auto;margin:1rem 0;color:#a5b3d4}
+.code-block .key{color:var(--purple)}
+.code-block .str{color:var(--primary)}
+.code-block .comment{color:var(--gray)}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="sidebar">
+<div class="sidebar-header">⚡ HARZ<span>Cloud</span> API</div>
+<div class="nav-section"><div class="nav-section-title">Getting Started</div>
+<div class="nav-item active" onclick="scrollTo('intro')">Introduction</div>
+<div class="nav-item" onclick="scrollTo('auth')">Authentication</div>
+<div class="nav-item" onclick="scrollTo('baseurl')">Base URL</div>
+</div>
+<div class="nav-section"><div class="nav-section-title">Core API (v5.0)</div>
+<div class="nav-item" onclick="scrollTo('auth-rbac')">RBAC & RLS</div>
+<div class="nav-item" onclick="scrollTo('sso')">SSO</div>
+<div class="nav-item" onclick="scrollTo('push')">Push Notifications</div>
+<div class="nav-item" onclick="scrollTo('webhooks')">Webhooks</div>
+<div class="nav-item" onclick="scrollTo('agents')">AI Agents</div>
+<div class="nav-item" onclick="scrollTo('memory')">Memory</div>
+<div class="nav-item" onclick="scrollTo('analytics')">Analytics</div>
+<div class="nav-item" onclick="scrollTo('storage')">Storage & CDN</div>
+<div class="nav-item" onclick="scrollTo('deployforge')">DeployForge</div>
+</div>
+<div class="nav-section"><div class="nav-section-title">v20.0 New Modules</div>
+<div class="nav-item" onclick="scrollTo('templates')">Templates</div>
+<div class="nav-item" onclick="scrollTo('billing')">Billing</div>
+<div class="nav-item" onclick="scrollTo('teams')">Teams</div>
+<div class="nav-item" onclick="scrollTo('i18n')">i18n</div>
+<div class="nav-item" onclick="scrollTo('marketplace')">Agent Marketplace</div>
+<div class="nav-item" onclick="scrollTo('domains')">Domains</div>
+<div class="nav-item" onclick="scrollTo('security')">Security Scanner</div>
+</div>
+</div>
+
+<div class="main">
+<div class="hero" id="intro">
+<h1>HARZ <span>Cloud</span> API</h1>
+<p>Developer platform for Africa — 292 endpoints across 40+ modules. Authentication, payments, AI agents, storage, deployment, and more.</p>
+<div class="stats">
+<div class="stat"><div class="num">292</div><div class="lbl">Endpoints</div></div>
+<div class="stat"><div class="num">40+</div><div class="lbl">Modules</div></div>
+<div class="stat"><div class="num">8</div><div class="lbl">Deploy Targets</div></div>
+<div class="stat"><div class="num">16</div><div class="lbl">Webhook Providers</div></div>
+<div class="stat"><div class="num">12</div><div class="lbl">Languages</div></div>
+</div>
+</div>
+
+<div id="auth" class="module-card">
+<div class="section-title">🔐 Authentication <span class="count">— API Key or JWT</span></div>
+<div class="code-block"><span class="comment"># API Key (header)</span>
+<span class="key">x-api-key</span>: harz_cloud_live_321424
+
+<span class="comment"># JWT Token (Authorization header)</span>
+<span class="key">Authorization</span>: Bearer &lt;token&gt;
+
+<span class="comment"># Get a JWT token by signing up:</span>
+POST /auth/signup
+{
+  <span class="key">"email"</span>: <span class="str">"user@example.com"</span>,
+  <span class="key">"password"</span>: <span class="str">"your-password"</span>,
+  <span class="key">"name"</span>: <span class="str">"Your Name"</span>
+}</div>
+</div>
+
+<div id="baseurl" class="module-card">
+<div class="section-title">🌐 Base URLs <span class="count">— 2 backends</span></div>
+<div class="code-block"><span class="comment"># Primary (Render) — v5.0.0</span>
+https://harz-cloud-backend.onrender.com
+
+<span class="comment"># Secondary (Vercel) — v3.6.0</span>
+https://harz-cloud-backend.vercel.app
+
+<span class="comment"># Health check</span>
+GET /health → { status, version, uptime, features }</div>
+</div>
+
+<div id="auth-rbac" class="module-card">
+<div class="section-title">🛡️ RBAC & RLS <span class="count">— Role-Based Access Control</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/auth/signup</span><div class="endpoint-desc">Create a new user account</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/auth/login</span><div class="endpoint-desc">Login and get JWT token</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/rbac/roles</span><span class="endpoint-desc">List all roles (owner, admin, user, guest)</span><span class="endpoint-auth">Auth</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/rbac/my-permissions</span><div class="endpoint-desc">Get your permissions</div><span class="endpoint-auth">Auth</span></div>
+<div class="endpoint"><span class="endpoint-method method-put">PUT</span><span class="endpoint-path">/rbac/user-role</span><div class="endpoint-desc">Update user role (admin only)</div><span class="endpoint-auth">Admin</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/api/:entity</span><div class="endpoint-desc">List records (with RLS filtering)</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/api/:entity</span><div class="endpoint-desc">Create a record</div><span class="endpoint-auth">Auth</span></div>
+<div class="endpoint"><span class="endpoint-method method-put">PUT</span><span class="endpoint-path">/api/:entity/:id</span><div class="endpoint-desc">Update a record</div><span class="endpoint-auth">Auth</span></div>
+<div class="endpoint"><span class="endpoint-method method-delete">DELETE</span><span class="endpoint-path">/api/:entity/:id</span><div class="endpoint-desc">Delete a record</div><span class="endpoint-auth">Auth</span></div>
+</div>
+
+<div id="sso" class="module-card">
+<div class="section-title">🔑 SSO <span class="count">— Single Sign-On</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/sso/login</span><div class="endpoint-desc">Get SSO login page</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/sso/authenticate</span><div class="endpoint-desc">Authenticate with platform credentials</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/sso/verify</span><div class="endpoint-desc">Verify SSO token</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/sso/refresh</span><div class="endpoint-desc">Refresh SSO session</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/sso/platforms</span><div class="endpoint-desc">List SSO-enabled platforms</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/sso/login-url/:platformId</span><div class="endpoint-desc">Get platform login URL</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/sso/logout</span><div class="endpoint-desc">Logout current session</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/sso/logout-all</span><div class="endpoint-desc">Logout all sessions</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/sso/sessions</span><div class="endpoint-desc">List active sessions</div></div>
+</div>
+
+<div id="push" class="module-card">
+<div class="section-title">🔔 Push Notifications <span class="count">— Web Push API</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/push/vapid-key</span><div class="endpoint-desc">Get VAPID public key</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/push/subscribe</span><div class="endpoint-desc">Subscribe to push notifications</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/push/send</span><div class="endpoint-desc">Send notification to a user</div><span class="endpoint-auth">Auth</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/push/broadcast</span><div class="endpoint-desc">Broadcast to all subscribers</div><span class="endpoint-auth">Admin</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/push/platform</span><div class="endpoint-desc">Send to a specific platform's users</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/push/templates</span><div class="endpoint-desc">List notification templates</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/push/my-devices</span><div class="endpoint-desc">List your subscribed devices</div></div>
+</div>
+
+<div id="webhooks" class="module-card">
+<div class="section-title">🪝 Webhooks <span class="count">— 16 providers + 8 extended</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/webhooks/providers</span><div class="endpoint-desc">List all webhook providers</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/webhooks/register</span><div class="endpoint-desc">Register a webhook endpoint</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/webhooks/:provider</span><div class="endpoint-desc">Receive webhook from a provider</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/webhooks/google</span><div class="endpoint-desc">Google webhook handler</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/webhooks/slack</span><div class="endpoint-desc">Slack webhook handler</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/webhooks/stripe</span><div class="endpoint-desc">Stripe payment webhook</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/webhooks/discord</span><div class="endpoint-desc">Discord webhook handler</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/webhooks/telegram</span><div class="endpoint-desc">Telegram bot webhook</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/webhooks/all-providers</span><div class="endpoint-desc">List all 24 providers</div></div>
+</div>
+
+<div id="agents" class="module-card">
+<div class="section-title">🤖 AI Agents <span class="count">— Orchestration & Delegation</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/agents/list</span><div class="endpoint-desc">List all AI agents</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/agents/status/all</span><div class="endpoint-desc">Get status of all agents</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/agents/delegate</span><div class="endpoint-desc">Delegate a task to an agent</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/agents/auto-route</span><div class="endpoint-desc">Auto-route task to best agent</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/agents/pipeline</span><div class="endpoint-desc">Create a multi-agent pipeline</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/agents/broadcast</span><div class="endpoint-desc">Broadcast message to all agents</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/agents/tasks</span><div class="endpoint-desc">List all agent tasks</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/agents/tasks/:id/execute</span><div class="endpoint-desc">Execute a specific task</div></div>
+</div>
+
+<div id="memory" class="module-card">
+<div class="section-title">🧠 Memory System <span class="count">— Persistent agent memory</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/memory/store</span><div class="endpoint-desc">Store a memory</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/memory/retrieve</span><div class="endpoint-desc">Retrieve memories</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/memory/fact</span><div class="endpoint-desc">Store a fact</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/memory/preference</span><div class="endpoint-desc">Store a preference</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/memory/instruction</span><div class="endpoint-desc">Store an instruction</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/memory/search</span><div class="endpoint-desc">Search memories</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/memory/stats</span><div class="endpoint-desc">Get memory statistics</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/memory/consolidate</span><div class="endpoint-desc">Consolidate memories</div></div>
+</div>
+
+<div id="analytics" class="module-card">
+<div class="section-title">📊 Analytics <span class="count">— Event tracking & insights</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/analytics/track</span><div class="endpoint-desc">Track a custom event</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/analytics/pageview</span><div class="endpoint-desc">Track a page view</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/analytics/purchase</span><div class="endpoint-desc">Track a purchase</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/analytics/summary</span><div class="endpoint-desc">Get analytics summary</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/analytics/active-users</span><div class="endpoint-desc">Get active users count</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/analytics/funnel</span><div class="endpoint-desc">Create a funnel analysis</div></div>
+</div>
+
+<div id="storage" class="module-card">
+<div class="section-title">📁 Storage & CDN <span class="count">— File storage with CDN delivery</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/storage/upload</span><div class="endpoint-desc">Upload a file (up to 100MB)</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/storage/upload-batch</span><div class="endpoint-desc">Upload multiple files</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/storage/sign-url</span><div class="endpoint-desc">Generate a signed URL</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/storage/list</span><div class="endpoint-desc">List all files</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/cdn/:filename</span><div class="endpoint-desc">Serve file via CDN</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/cdn/optimize/:filename/:width/:quality?</span><div class="endpoint-desc">Get optimized image</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/cdn/stats</span><div class="endpoint-desc">Get CDN statistics</div></div>
+</div>
+
+<div id="deployforge" class="module-card">
+<div class="section-title">🚀 DeployForge <span class="count">— One-click deploy to 8 providers</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/deployforge/health</span><div class="endpoint-desc">DeployForge health check</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/deployforge/providers</span><div class="endpoint-desc">List all deploy providers</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/deployforge/deploy/render</span><div class="endpoint-desc">Deploy to Render</div><span class="endpoint-auth">Auth</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/deployforge/deploy/supabase</span><div class="endpoint-desc">Deploy to Supabase</div><span class="endpoint-auth">Auth</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/deployforge/deploy/all</span><div class="endpoint-desc">Deploy to all providers</div><span class="endpoint-auth">Admin</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/deployforge/launch</span><div class="endpoint-desc">Launch new project</div><span class="endpoint-auth">Auth</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/deployforge/migrate</span><div class="endpoint-desc">Migrate between providers</div><span class="endpoint-auth">Admin</span></div>
+</div>
+
+<div id="templates" class="module-card">
+<div class="section-title">📐 Templates Marketplace <span class="count">— v20.0 new</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/templates</span><div class="endpoint-desc">List all templates</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/templates/:id</span><div class="endpoint-desc">Get a specific template</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/templates/deploy/:id</span><div class="endpoint-desc">Deploy a template</div></div>
+</div>
+
+<div id="billing" class="module-card">
+<div class="section-title">💳 Billing Engine <span class="count">— v20.0 new</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/billing/plans</span><div class="endpoint-desc">List billing plans (Free, Developer, Business, Enterprise)</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/billing/subscribe</span><div class="endpoint-desc">Subscribe to a plan</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/billing/invoices</span><div class="endpoint-desc">List invoices</div></div>
+</div>
+
+<div id="teams" class="module-card">
+<div class="section-title">👥 Teams <span class="count">— v20.0 new</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/teams/create</span><div class="endpoint-desc">Create a team</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/teams/:id/members</span><div class="endpoint-desc">List team members</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/teams/:id/invite</span><div class="endpoint-desc">Invite a member</div></div>
+</div>
+
+<div id="i18n" class="module-card">
+<div class="section-title">🌍 i18n <span class="count">— 12 languages including Hausa</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/i18n/languages</span><div class="endpoint-desc">List supported languages</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/i18n/:lang/strings</span><div class="endpoint-desc">Get strings for a language</div></div>
+</div>
+
+<div id="marketplace" class="module-card">
+<div class="section-title">🏪 Agent Marketplace <span class="count">— v20.0 new</span></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/marketplace/agents</span><div class="endpoint-desc">Browse agents in marketplace</div></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/marketplace/publish</span><div class="endpoint-desc">Publish your agent to marketplace</div></div>
+</div>
+
+<div id="domains" class="module-card">
+<div class="section-title">🌐 Domains <span class="count">— Custom domain management</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/domains/add</span><div class="endpoint-desc">Add a custom domain</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/domains/list</span><div class="endpoint-desc">List configured domains</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/domains/:id/verify</span><div class="endpoint-desc">Verify domain DNS</div></div>
+</div>
+
+<div id="security" class="module-card">
+<div class="section-title">🛡️ Security Scanner <span class="count">— v20.0 new</span></div>
+<div class="endpoint"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/security/scan</span><div class="endpoint-desc">Run security scan on a URL</div></div>
+<div class="endpoint"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/security/report/:id</span><div class="endpoint-desc">Get security report</div></div>
+</div>
+
+<div style="margin-top:2rem;padding:1.5rem;background:var(--dark2);border:1px solid var(--border);border-radius:16px;text-align:center">
+<p style="font-size:.85rem;color:var(--gray)">HARZ Cloud API v20.0 · 292 endpoints · 40+ modules</p>
+<p style="font-size:.75rem;color:var(--gray);margin-top:.5rem">Owner: Rabiu Hamza Mohammed · hamzarabiu390@gmail.com</p>
+<p style="margin-top:1rem">
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-status.html" style="color:var(--primary);text-decoration:none;font-size:.8rem">System Status</a> · 
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-admin-dashboard.html" style="color:var(--primary);text-decoration:none;font-size:.8rem">Admin Dashboard</a> · 
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harzgit.html" style="color:var(--primary);text-decoration:none;font-size:.8rem">HarzGit</a>
+</p>
+</div>
+</div>
+</div>
+
+<script>
+function scrollTo(id){
+document.getElementById(id).scrollIntoView({behavior:'smooth'});
+document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

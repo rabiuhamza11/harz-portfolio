@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HarzPay Onboarding — Get Started</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #00A859;
+      --primary-dark: #008F4D;
+      --dark: #0A0E27;
+      --dark2: #111633;
+      --light: #F8F9FA;
+      --gray: #8B92A8;
+      --border: #1E2645;
+      --white: #FFFFFF;
+      --danger: #FF3B5C;
+      --warning: #FFB800;
+      --blue: #4C7DFF;
+      --purple: #9B5CFF;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--dark); color: var(--white); }
+    .app { max-width: 460px; margin: 0 auto; min-height: 100vh; background: var(--dark); position: relative; overflow: hidden; }
+    
+    /* Progress bar */
+    .progress-bar { position: fixed; top: 0; left: 0; right: 0; height: 4px; background: var(--border); z-index: 200; max-width: 460px; margin: 0 auto; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #00C975); transition: width 0.4s ease; width: 0%; }
+    
+    .screen { display: none; padding: 2rem 1.5rem; min-height: 100vh; flex-direction: column; justify-content: center; animation: fadeIn 0.4s ease; }
+    .screen.active { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .logo { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+    .logo-icon { width: 56px; height: 56px; background: var(--primary); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+    .logo-text { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+    .logo-text span { color: var(--primary); }
+    
+    .hero-icon { font-size: 4rem; text-align: center; margin-bottom: 1.5rem; }
+    .hero-title { font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 0.75rem; line-height: 1.3; }
+    .hero-subtitle { font-size: 0.9rem; color: var(--gray); text-align: center; margin-bottom: 2rem; line-height: 1.5; }
+    
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 2rem; }
+    .feature-card { background: var(--dark2); border-radius: 14px; padding: 1rem; border: 1px solid var(--border); text-align: center; }
+    .feature-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .feature-title { font-size: 0.8rem; font-weight: 700; }
+    .feature-desc { font-size: 0.65rem; color: var(--gray); margin-top: 0.2rem; }
+    
+    .input-group { margin-bottom: 1rem; }
+    .input-label { font-size: 0.75rem; font-weight: 600; color: var(--gray); margin-bottom: 0.4rem; display: block; }
+    .input-field { width: 100%; padding: 0.95rem; background: var(--dark2); border: 1px solid var(--border); border-radius: 14px; color: var(--white); font-size: 1rem; transition: border 0.2s; }
+    .input-field:focus { outline: none; border-color: var(--primary); }
+    
+    .phone-input { display: flex; align-items: center; background: var(--dark2); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .phone-prefix { padding: 0 0.85rem; color: var(--gray); font-size: 1rem; border-right: 1px solid var(--border); }
+    .phone-input input { flex: 1; border: none; background: transparent; color: var(--white); padding: 0.95rem; font-size: 1rem; }
+    .phone-input input:focus { outline: none; }
+    
+    .btn { width: 100%; padding: 1rem; border: none; border-radius: 14px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--primary); color: var(--white); }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: var(--dark2); color: var(--white); border: 1px solid var(--border); }
+    .btn:disabled { opacity: 0.5; }
+    
+    .btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; }
+    
+    .otp-grid { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem; }
+    .otp-box { width: 50px; height: 60px; background: var(--dark2); border: 2px solid var(--border); border-radius: 12px; text-align: center; font-size: 1.5rem; font-weight: 700; color: var(--white); }
+    .otp-box:focus { outline: none; border-color: var(--primary); }
+    .otp-box.filled { border-color: var(--primary); }
+    
+    .currency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .currency-card { background: var(--dark2); border: 2px solid var(--border); border-radius: 14px; padding: 1.25rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .currency-card:hover { border-color: var(--primary); }
+    .currency-card.selected { border-color: var(--primary); background: rgba(0,168,89,0.1); }
+    .currency-flag { font-size: 2rem; margin-bottom: 0.5rem; }
+    .currency-name { font-size: 0.85rem; font-weight: 700; }
+    .currency-code { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+    
+    .method-list { margin-bottom: 1.5rem; }
+    .method-item { display: flex; align-items: center; padding: 1rem; background: var(--dark2); border: 2px solid var(--border); border-radius: 14px; margin-bottom: 0.75rem; cursor: pointer; transition: all 0.2s; }
+    .method-item:hover { border-color: var(--primary); }
+    .method-item.selected { border-color: var(--primary); background: rgba(0,168,89,0.1); }
+    .method-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-right: 1rem; flex-shrink: 0; }
+    .method-info { flex: 1; }
+    .method-name { font-size: 0.9rem; font-weight: 600; }
+    .method-desc { font-size: 0.7rem; color: var(--gray); }
+    .method-check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .method-item.selected .method-check { background: var(--primary); border-color: var(--primary); color: var(--white); font-size: 0.8rem; }
+    
+    .success-icon { width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem; animation: pop 0.5s ease; }
+    @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    
+    .step-dots { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+    .step-dot.active { background: var(--primary); width: 24px; border-radius: 4px; }
+    
+    .skip-link { text-align: center; margin-top: 1rem; }
+    .skip-link a { color: var(--gray); font-size: 0.85rem; text-decoration: none; }
+    
+    .benefits { margin-bottom: 2rem; }
+    .benefit-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+    .benefit-check { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; color: var(--white); }
+    .benefit-text { font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  
+  <!-- Screen 1: Welcome -->
+  <div class="screen active" id="screen-1">
+    <div class="logo">
+      <div class="logo-icon">💳</div>
+      <div class="logo-text">Harz<span>Pay</span></div>
+    </div>
+    <div class="hero-icon">🚀</div>
+    <div class="hero-title">Payments made simple for Africa</div>
+    <div class="hero-subtitle">Send money, pay merchants, and manage your wallet in Naira, Dollars, and Crypto — all in one app.</div>
+    <div class="feature-grid">
+      <div class="feature-card"><div class="feature-icon">💸</div><div class="feature-title">Low Fees</div><div class="feature-desc">1.5% per transaction</div></div>
+      <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-title">Secure</div><div class="feature-desc">Paystack powered</div></div>
+      <div class="feature-card"><div class="feature-icon">🌍</div><div class="feature-title">Multi-Currency</div><div class="feature-desc">NGN, USD, USDT</div></div>
+      <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Instant</div><div class="feature-desc">Real-time transfers</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="goToScreen(2)">Get Started</button>
+    <div class="skip-link"><a onclick="goToScreen(6)">I already have an account</a></div>
+  </div>
+  
+  <!-- Screen 2: Phone Number -->
+  <div class="screen" id="screen-2">
+    <div class="step-dots" id="dots-2"></div>
+    <div class="hero-icon">📱</div>
+    <div class="hero-title">What's your phone number?</div>
+    <div class="hero-subtitle">We'll send you a verification code to confirm it's you.</div>
+    <div class="input-group">
+      <label class="input-label">Phone Number</label>
+      <div class="phone-input">
+        <span class="phone-prefix">🇳🇬 +234</span>
+        <input type="tel" id="phone-number" placeholder="802 868 7857" maxlength="11">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="sendOTP()">Send Verification Code</button>
+    <div class="skip-link"><a onclick="goToScreen(3)">Use email instead</a></div>
+  </div>
+  
+  <!-- Screen 3: Email -->
+  <div class="screen" id="screen-3">
+    <div class="step-dots" id="dots-3"></div>
+    <div class="hero-icon">📧</div>
+    <div class="hero-title">What's your email?</div>
+    <div class="hero-subtitle">We'll use this to send you receipts and account updates.</div>
+    <div class="input-group">
+      <label class="input-label">Email Address</label>
+      <input type="email" class="input-field" id="email" placeholder="your@email.com" value="hamzarabiu390@gmail.com">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Full Name</label>
+      <input type="text" class="input-field" id="full-name" placeholder="Ahmad Adamu" value="Ahmad Adamu">
+    </div>
+    <button class="btn btn-primary" onclick="goToScreen(4)">Continue</button>
+    <div class="skip-link"><a onclick="goToScreen(2)">Use phone instead</a></div>
+  </div>
+  
+  <!-- Screen 4: OTP Verification -->
+  <div class="screen" id="screen-4">
+    <div class="step-dots" id="dots-4"></div>
+    <div class="hero-icon">🔐</div>
+    <div class="hero-title">Enter verification code</div>
+    <div class="hero-subtitle">We sent a 4-digit code to your phone. Enter it below.</div>
+    <div class="otp-grid">
+      <input type="text" class="otp-box" maxlength="1" id="otp-1" oninput="moveOTP(1)">
+      <input type="text" class="otp-box" maxlength="1" id="otp-2" oninput="moveOTP(2)">
+      <input type="text" class="otp-box" maxlength="1" id="otp-3" oninput="moveOTP(3)">
+      <input type="text" class="otp-box" maxlength="1" id="otp-4" oninput="moveOTP(4)">
+    </div>
+    <button class="btn btn-primary" onclick="verifyOTP()">Verify</button>
+    <div class="skip-link"><a onclick="autoVerify()">Use demo code (1234)</a></div>
+    <div class="skip-link"><a onclick="goToScreen(5)">Skip verification</a></div>
+  </div>
+  
+  <!-- Screen 5: Choose Currency -->
+  <div class="screen" id="screen-5">
+    <div class="step-dots" id="dots-5"></div>
+    <div class="hero-icon">💰</div>
+    <div class="hero-title">Choose your main currency</div>
+    <div class="hero-subtitle">You can always add more currencies later.</div>
+    <div class="currency-grid">
+      <div class="currency-card selected" onclick="selectCurrency(this)" data-cur="NGN">
+        <div class="currency-flag">🇳🇬</div><div class="currency-name">Naira</div><div class="currency-code">NGN</div>
+      </div>
+      <div class="currency-card" onclick="selectCurrency(this)" data-cur="USD">
+        <div class="currency-flag">🇺🇸</div><div class="currency-name">Dollar</div><div class="currency-code">USD</div>
+      </div>
+      <div class="currency-card" onclick="selectCurrency(this)" data-cur="USDT">
+        <div class="currency-flag">₮</div><div class="currency-name">Tether</div><div class="currency-code">USDT</div>
+      </div>
+      <div class="currency-card" onclick="selectCurrency(this)" data-cur="GDEG">
+        <div class="currency-flag">⚡</div><div class="currency-name">GDEG</div><div class="currency-code">Energy Token</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="goToScreen(6)">Continue</button>
+  </div>
+  
+  <!-- Screen 6: Payment Method -->
+  <div class="screen" id="screen-6">
+    <div class="step-dots" id="dots-6"></div>
+    <div class="hero-icon">💳</div>
+    <div class="hero-title">Add a payment method</div>
+    <div class="hero-subtitle">Add a card or bank account to fund your wallet.</div>
+    <div class="method-list">
+      <div class="method-item selected" onclick="selectMethod(this)" data-method="paystack">
+        <div class="method-icon">💳</div>
+        <div class="method-info"><div class="method-name">Debit/Credit Card</div><div class="method-desc">Via Paystack — instant</div></div>
+        <div class="method-check">✓</div>
+      </div>
+      <div class="method-item" onclick="selectMethod(this)" data-method="bank">
+        <div class="method-icon">🏦</div>
+        <div class="method-info"><div class="method-name">Bank Transfer</div><div class="method-desc">UBA — 2034326424</div></div>
+        <div class="method-check">✓</div>
+      </div>
+      <div class="method-item" onclick="selectMethod(this)" data-method="crypto">
+        <div class="method-icon">₮</div>
+        <div class="method-info"><div class="method-name">Crypto (USDT)</div><div class="method-desc">TRC20 network</div></div>
+        <div class="method-check">✓</div>
+      </div>
+      <div class="method-item" onclick="selectMethod(this)" data-method="skip">
+        <div class="method-icon">⏭️</div>
+        <div class="method-info"><div class="method-name">Skip for now</div><div class="method-desc">Add later in settings</div></div>
+        <div class="method-check">✓</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="goToScreen(7)">Continue</button>
+  </div>
+  
+  <!-- Screen 7: Add Money -->
+  <div class="screen" id="screen-7">
+    <div class="step-dots" id="dots-7"></div>
+    <div class="hero-icon">💵</div>
+    <div class="hero-title">Add money to your wallet</div>
+    <div class="hero-subtitle">Start with a small amount to test your wallet. You can add more anytime.</div>
+    <div class="input-group">
+      <label class="input-label">Amount to Add</label>
+      <div class="phone-input">
+        <span class="phone-prefix">₦</span>
+        <input type="number" id="initial-amount" placeholder="5000" value="5000">
+      </div>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-bottom:1rem">
+      <button class="btn btn-secondary" style="padding:0.5rem;font-size:0.8rem" onclick="setAmount(1000)">₦1K</button>
+      <button class="btn btn-secondary" style="padding:0.5rem;font-size:0.8rem" onclick="setAmount(5000)">₦5K</button>
+      <button class="btn btn-secondary" style="padding:0.5rem;font-size:0.8rem" onclick="setAmount(10000)">₦10K</button>
+      <button class="btn btn-secondary" style="padding:0.5rem;font-size:0.8rem" onclick="setAmount(50000)">₦50K</button>
+    </div>
+    <button class="btn btn-primary" onclick="goToScreen(8)">Add Money via Paystack</button>
+    <div class="skip-link"><a onclick="goToScreen(8)">Skip — I'll add later</a></div>
+  </div>
+  
+  <!-- Screen 8: Success -->
+  <div class="screen" id="screen-8">
+    <div class="success-icon">✓</div>
+    <div class="hero-title">You're all set! 🎉</div>
+    <div class="hero-subtitle">Your HarzPay wallet is ready. Start sending money, paying merchants, and managing your finances.</div>
+    <div class="benefits">
+      <div class="benefit-row"><div class="benefit-check">✓</div><div class="benefit-text">Multi-currency wallet activated</div></div>
+      <div class="benefit-row"><div class="benefit-check">✓</div><div class="benefit-text">Paystack payments enabled</div></div>
+      <div class="benefit-row"><div class="benefit-check">✓</div><div class="benefit-text">Bank transfer available (UBA)</div></div>
+      <div class="benefit-row"><div class="benefit-check">✓</div><div class="benefit-text">Crypto support (USDT TRC20)</div></div>
+      <div class="benefit-row"><div class="benefit-check">✓</div><div class="benefit-text">Instant notifications</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="finishOnboarding()">Open HarzPay Wallet</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://elio-4718941d.base44.app/functions/harzpayApi';
+let currentScreen = 1;
+let userData = { phone: '', email: 'hamzarabiu390@gmail.com', name: 'Ahmad Adamu', currency: 'NGN', method: 'paystack' };
+const TOTAL_STEPS = 8;
+
+function goToScreen(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + n).classList.add('active');
+  currentScreen = n;
+  updateProgress(n);
+  updateDots(n);
+  window.scrollTo(0, 0);
+}
+
+function updateProgress(n) {
+  const pct = (n / TOTAL_STEPS) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function updateDots(n) {
+  const dotsContainer = document.getElementById('dots-' + n);
+  if (!dotsContainer) return;
+  const step = n - 1;
+  let html = '';
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    html += `<div class="step-dot ${i === step ? 'active' : ''}"></div>`;
+  }
+  dotsContainer.innerHTML = html;
+}
+
+function sendOTP() {
+  const phone = document.getElementById('phone-number').value;
+  if (!phone || phone.length < 10) { alert('Enter a valid phone number'); return; }
+  userData.phone = '+234' + phone.replace(/^0/, '');
+  alert('Verification code sent to ' + userData.phone + '\n\nUse 1234 for demo');
+  goToScreen(4);
+}
+
+function moveOTP(n) {
+  const input = document.getElementById('otp-' + n);
+  input.classList.add('filled');
+  if (n < 4 && input.value) document.getElementById('otp-' + (n + 1)).focus();
+}
+
+function verifyOTP() {
+  const code = ['otp-1','otp-2','otp-3','otp-4'].map(id => document.getElementById(id).value).join('');
+  if (code === '1234' || code.length === 4) {
+    goToScreen(5);
+  } else {
+    alert('Invalid code. Use 1234 for demo.');
+  }
+}
+
+function autoVerify() {
+  ['1','2','3','4'].forEach((d,i) => document.getElementById('otp-' + (i+1)).value = d);
+  verifyOTP();
+}
+
+function selectCurrency(el) {
+  document.querySelectorAll('.currency-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  userData.currency = el.dataset.cur;
+}
+
+function selectMethod(el) {
+  document.querySelectorAll('.method-item').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  userData.method = el.dataset.method;
+}
+
+function setAmount(amt) { document.getElementById('initial-amount').value = amt; }
+
+async function finishOnboarding() {
+  // Save user profile to Base44
+  try {
+    await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: parseInt(document.getElementById('initial-amount')?.value || 0),
+        currency: userData.currency,
+        type: 'Deposit',
+        status: 'Completed',
+        description: 'Wallet funding via onboarding',
+        recipient: 'Self',
+        reference: 'HARZPAY_ONBOARD_' + Date.now(),
+        platform: 'HarzPay'
+      })
+    });
+  } catch(e) { console.log('Transaction save failed'); }
+  
+  // Redirect to main HarzPay app
+  window.location.href = 'https://rabiuhamza11.github.io/harz-portfolio/harzpay.html';
+}
+
+// Initialize dots for screen 1
+updateProgress(1);
+</script>
+</body>
+</html>

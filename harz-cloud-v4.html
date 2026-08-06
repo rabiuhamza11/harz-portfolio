@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Cloud v4.0 — Marketplace & Billing</title>
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e293b;--accent:#6366f1;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:16px;max-width:1200px;margin:0 auto}
+h1{font-size:22px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
+.card h2{font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px}
+.stat h3{font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.stat .v{font-size:20px;font-weight:700}
+.stat .m{font-size:10px;color:var(--muted);margin-top:2px}
+.g{color:var(--green)} .r{color:var(--red)} .y{color:var(--yellow)} .b{color:var(--blue)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:10px;text-transform:uppercase}
+.badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600}
+.b-active{background:var(--green)20;color:var(--green)}
+.b-pending{background:var(--yellow)20;color:var(--yellow)}
+.b-paid{background:var(--green)20;color:var(--green)}
+.b-free{background:var(--muted)20;color:var(--muted)}
+.b-premium{background:var(--accent)20;color:var(--accent)}
+.b-popular{background:var(--yellow)20;color:var(--yellow)}
+.btn{padding:8px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-p:hover{opacity:.9}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-o:hover{border-color:var(--accent)}
+.btn-g{background:var(--green);color:#fff}
+.btn-r{background:var(--red);color:#fff}
+.tab-bar{display:flex;gap:4px;margin-bottom:14px;overflow-x:auto}
+.tab{padding:8px 14px;border-radius:8px 8px 0 0;font-size:12px;cursor:pointer;white-space:nowrap;border:1px solid transparent}
+.tab.active{background:var(--card);border-color:var(--border);color:var(--accent)}
+.tab:not(.active){color:var(--muted)}
+.tc{display:none}
+.tc.active{display:block}
+.tmpl-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;transition:.2s;cursor:pointer}
+.tmpl-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.tmpl-card h3{font-size:14px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:start}
+.tmpl-card .desc{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4}
+.tmpl-card .meta{display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.tmpl-card .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tag{background:var(--border);padding:2px 6px;border-radius:3px;font-size:9px;color:var(--muted)}
+.price-tag{font-weight:700;font-size:15px}
+.price-free{color:var(--green)}
+.price-premium{color:var(--yellow)}
+.cat-pill{padding:6px 12px;border:1px solid var(--border);border-radius:16px;font-size:11px;cursor:pointer;transition:.2s;white-space:nowrap}
+.cat-pill.active{border-color:var(--accent);background:var(--accent)15;color:var(--accent)}
+.cat-pill:hover{border-color:var(--accent)}
+.input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:13px;margin-bottom:8px}
+.input:focus{outline:none;border-color:var(--accent)}
+.search-bar{display:flex;gap:8px;margin-bottom:12px}
+.search-bar .input{margin-bottom:0}
+.plan-card{background:var(--bg);border:2px solid var(--border);border-radius:12px;padding:16px;text-align:center;transition:.2s;position:relative}
+.plan-card.popular{border-color:var(--accent)}
+.plan-card h3{font-size:16px;margin-bottom:4px}
+.plan-card .price{font-size:28px;font-weight:700;margin:8px 0}
+.plan-card .price small{font-size:13px;font-weight:400;color:var(--muted)}
+.plan-card ul{list-style:none;text-align:left;margin:12px 0;padding:0}
+.plan-card li{font-size:12px;padding:3px 0;padding-left:20px;position:relative}
+.plan-card li::before{content:'✓';position:absolute;left:0;color:var(--green)}
+.plan-card li.no::before{content:'✗';color:var(--muted)}
+.plan-card .btn{width:100%;margin-top:8px}
+.muted{color:var(--muted);font-size:11px}
+.bar{height:5px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:3px}
+.bar-f{height:100%;border-radius:3px}
+.inv-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto}
+.modal h2{margin-bottom:12px;font-size:18px}
+.modal .close{float:right;cursor:pointer;font-size:20px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<h1>🚀 HARZ Cloud v4.0 — Marketplace & Billing</h1>
+<p class="sub">Templates Marketplace + Billing Engine</p>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('marketplace')">🏪 Marketplace</div>
+  <div class="tab" onclick="switchTab('billing')">💳 Billing</div>
+  <div class="tab" onclick="switchTab('revenue')">💰 Revenue</div>
+</div>
+
+<!-- MARKETPLACE -->
+<div class="tc active" id="tab-marketplace">
+  <div class="card">
+    <h2>📊 Marketplace Stats</h2>
+    <div class="grid" id="mktStats"></div>
+  </div>
+  <div class="card">
+    <h2>🔍 Browse Templates</h2>
+    <div class="search-bar">
+      <input class="input" id="tmplSearch" placeholder="Search templates..." onkeyup="filterTemplates()">
+      <button class="btn btn-o" onclick="filterTemplates()">Search</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px" id="catPills"></div>
+    <div class="grid-cards" id="tmplGrid"></div>
+  </div>
+</div>
+
+<!-- BILLING -->
+<div class="tc" id="tab-billing">
+  <div class="card">
+    <h2>📊 Billing Overview</h2>
+    <div class="grid" id="billStats"></div>
+  </div>
+  <div class="card">
+    <h2>📋 Subscription Plans</h2>
+    <div class="grid-cards" id="plansGrid"></div>
+  </div>
+  <div class="card">
+    <h2>👥 Active Subscriptions</h2>
+    <div id="subsList"></div>
+  </div>
+  <div class="card">
+    <h2>🧾 Invoices</h2>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Number</th><th>User</th><th>Plan</th><th>Amount</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody id="invoicesBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📈 Usage Tracking</h2>
+    <div id="usageList"></div>
+  </div>
+</div>
+
+<!-- REVENUE -->
+<div class="tc" id="tab-revenue">
+  <div class="card">
+    <h2>💰 Revenue Analytics</h2>
+    <div class="grid" id="revStats"></div>
+  </div>
+  <div class="card">
+    <h2>📊 Revenue by Plan</h2>
+    <div id="revByPlan"></div>
+  </div>
+  <div class="card">
+    <h2>📈 Monthly Trend</h2>
+    <div id="monthlyTrend"></div>
+  </div>
+  <div class="card">
+    <h2>🏆 Top Templates</h2>
+    <div id="topTemplates"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const TPL_API = 'https://solene-5b0577e2.base44.app/functions/harzTemplates';
+const BIL_API = 'https://solene-5b0577e2.base44.app/functions/harzBilling';
+let allTemplates = [];
+let allCategories = [];
+let selectedCategory = 'all';
+
+async function api(url, body) {
+  const res = await fetch(url, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  return res.json();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tc').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+async function init() {
+  const [tplInfo, billInfo, cats, templates, plans, subs, invoices, usage, rev] = await Promise.all([
+    api(TPL_API, {action:'info'}),
+    api(BIL_API, {action:'info'}),
+    api(TPL_API, {action:'categories'}),
+    api(TPL_API, {action:'list_templates'}),
+    api(BIL_API, {action:'plans'}),
+    api(BIL_API, {action:'subscriptions'}),
+    api(BIL_API, {action:'invoices'}),
+    api(BIL_API, {action:'usage'}),
+    api(BIL_API, {action:'revenue'})
+  ]);
+
+  allTemplates = templates.templates;
+  allCategories = cats.categories;
+
+  // Marketplace stats
+  document.getElementById('mktStats').innerHTML = [
+    {l:'Templates',v:tplInfo.totalTemplates,c:'b',m:tplInfo.freeTemplates+' free + '+tplInfo.premiumTemplates+' premium'},
+    {l:'Downloads',v:tplInfo.totalDownloads.toLocaleString(),c:'g',m:'All time'},
+    {l:'Revenue',v:'$'+tplInfo.revenue.toLocaleString(),c:'y',m:'From premium templates'},
+    {l:'Categories',v:tplInfo.categories,c:'b',m:'Organized by industry'}
+  ].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+  // Category pills
+  document.getElementById('catPills').innerHTML = '<div class="cat-pill active" onclick="setCategory(\'all\')">All ('+allTemplates.length+')</div>' +
+    allCategories.map(c => `<div class="cat-pill" onclick="setCategory('${c.id}')">${c.icon} ${c.name}</div>`).join('');
+
+  // Templates grid
+  renderTemplates();
+
+  // Billing stats
+  document.getElementById('billStats').innerHTML = [
+    {l:'MRR',v:billInfo.monthlyRevenue,c:'g',m:'Monthly recurring'},
+    {l:'ARR',v:'$'+(parseInt(billInfo.monthlyRevenue.replace('$',''))*12).toLocaleString(),c:'g',m:'Annual projected'},
+    {l:'Active Subs',v:billInfo.activeSubscriptions,c:'b',m:'Paying users'},
+    {l:'Paid Invoices',v:billInfo.paidInvoices,c:'g',m:billInfo.pendingInvoices+' pending'}
+  ].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+  // Plans
+  document.getElementById('plansGrid').innerHTML = plans.plans.map(p => `
+    <div class="plan-card ${p.popular?'popular':''}" ${p.popular?'style="border-color:var(--accent)"':''}>
+      ${p.popular?'<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:2px 12px;border-radius:10px;font-size:10px;font-weight:600">MOST POPULAR</div>':''}
+      <h3>${p.name}</h3>
+      <div class="price" style="color:${p.color}">$${p.price}${p.price>0?'<small>/'+p.interval+'</small>':'<small>forever</small>'}</div>
+      <ul>${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+      <button class="btn ${p.popular?'btn-p':'btn-o'}" onclick="subscribe('${p.id}','${p.name}',${p.price})">${p.price===0?'Start Free':'Subscribe'}</button>
+    </div>
+  `).join('');
+
+  // Subscriptions
+  document.getElementById('subsList').innerHTML = subs.subscriptions.length ? subs.subscriptions.map(s => `
+    <div class="inv-row">
+      <div><div style="font-weight:600;font-size:13px">${s.userEmail}</div><div class="muted">${s.plan} • Started ${s.startedAt}</div></div>
+      <div style="text-align:right"><div class="g" style="font-weight:600">$${s.amount}/mo</div><span class="badge ${s.status==='active'?'b-active':'b-pending'}">${s.status}</span></div>
+    </div>
+  `).join('') : '<p class="muted">No subscriptions found.</p>';
+
+  // Invoices
+  document.getElementById('invoicesBody').innerHTML = invoices.invoices.map(inv => `
+    <tr>
+      <td style="font-family:monospace;font-size:11px">${inv.number}</td>
+      <td>${inv.userEmail.split('@')[0]}</td>
+      <td>${inv.planName}</td>
+      <td class="${inv.status==='paid'?'g':'y'}" style="font-weight:600">$${inv.amount}</td>
+      <td><span class="badge ${inv.status==='paid'?'b-paid':'b-pending'}">${inv.status}</span></td>
+      <td style="font-size:11px">${inv.date}</td>
+      <td>${inv.status==='pending'?`<button class="btn btn-g" style="padding:4px 8px;font-size:10px" onclick="payInvoice('${inv.id}')">Pay</button>`:'<span class="muted">—</span>'}</td>
+    </tr>
+  `).join('');
+
+  // Usage
+  document.getElementById('usageList').innerHTML = usage.usage.map(u => {
+    const apiPct = u.apiCallsLimit > 0 ? (u.apiCalls / u.apiCallsLimit * 100) : 0;
+    return `
+    <div style="margin-bottom:14px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+        <div><span style="font-weight:600">${u.userEmail}</span> <span class="muted">• ${u.plan} • ${u.period}</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        <div><div class="muted">API Calls</div><div style="font-size:13px;font-weight:600">${u.apiCalls.toLocaleString()} / ${u.apiCallsLimit===-1?'∞':u.apiCallsLimit.toLocaleString()}</div><div class="bar"><div class="bar-f" style="width:${Math.min(apiPct,100)}%;background:${apiPct>80?'var(--red)':'var(--green)'}"></div></div></div>
+        <div><div class="muted">Storage</div><div style="font-size:13px;font-weight:600">${u.storage} / ${u.storageLimit}</div></div>
+        <div><div class="muted">Projects</div><div style="font-size:13px;font-weight:600">${u.projects} / ${u.projectsLimit===-1?'∞':u.projectsLimit}</div></div>
+        <div><div class="muted">AI Agents</div><div style="font-size:13px;font-weight:600">${u.agents} / ${u.agentsLimit===-1?'∞':u.agentsLimit}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Revenue stats
+  const r = rev.revenue;
+  document.getElementById('revStats').innerHTML = [
+    {l:'Total Revenue',v:r.totalRevenue,c:'g',m:r.paidInvoices+' paid invoices'},
+    {l:'Pending',v:r.pendingRevenue,c:'y',m:r.pendingInvoices+' pending'},
+    {l:'MRR',v:r.mrr,c:'g',m:'Monthly recurring'},
+    {l:'ARR',v:r.arr,c:'g',m:'Annual projected'},
+    {l:'Avg/User',v:r.avgRevenuePerUser,c:'b',m:'ARPU'},
+    {l:'Total Invoices',v:r.totalInvoices,c:'b',m:r.paidInvoices+' paid + '+r.pendingInvoices+' pending'}
+  ].map(s=>`<div class="stat"><h3>${s.l}</h3><div class="v ${s.c}">${s.v}</div><div class="m">${s.m}</div></div>`).join('');
+
+  // Revenue by plan
+  document.getElementById('revByPlan').innerHTML = r.revenueByPlan.map(p => `
+    <div class="inv-row">
+      <div><span style="font-weight:600">${p.plan}</span> <span class="muted">${p.subscribers} subscriber(s)</span></div>
+      <div class="g" style="font-weight:600">${p.revenue}/mo</div>
+    </div>
+  `).join('');
+
+  // Monthly trend
+  document.getElementById('monthlyTrend').innerHTML = r.monthlyTrend.map(m => `
+    <div class="inv-row">
+      <div style="font-weight:600">${m.month}</div>
+      <div style="text-align:right"><span class="g" style="font-weight:600">${m.revenue}</span> <span class="muted">${m.invoices} invoices</span></div>
+    </div>
+  `).join('');
+
+  // Top templates
+  const tmplStats = await api(TPL_API, {action:'stats'});
+  document.getElementById('topTemplates').innerHTML = tmplStats.stats.topTemplates.map((t,i) => `
+    <div class="inv-row">
+      <div><span style="font-size:16px;font-weight:700;color:var(--muted)">${i+1}.</span> <span style="font-weight:600">${t.name}</span></div>
+      <div style="text-align:right"><div style="font-weight:600">${t.downloads.toLocaleString()} downloads</div><div class="muted">${t.revenue}</div></div>
+    </div>
+  `).join('');
+}
+
+function setCategory(cat) {
+  selectedCategory = cat;
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  filterTemplates();
+}
+
+function filterTemplates() {
+  const search = document.getElementById('tmplSearch').value.toLowerCase();
+  let filtered = allTemplates;
+  if (selectedCategory !== 'all') filtered = filtered.filter(t => t.category === selectedCategory);
+  if (search) filtered = filtered.filter(t => t.name.toLowerCase().includes(search) || t.desc.toLowerCase().includes(search) || t.tags.some(tag => tag.includes(search)));
+  renderTemplates(filtered);
+}
+
+function renderTemplates(templates) {
+  const list = templates || allTemplates;
+  document.getElementById('tmplGrid').innerHTML = list.map(t => `
+    <div class="tmpl-card" onclick="showTemplate('${t.id}')">
+      <h3>${t.name} ${t.premium?'<span class="badge b-premium">PRO</span>':'<span class="badge b-free">FREE</span>'}</h3>
+      <div class="desc">${t.desc}</div>
+      <div class="meta">
+        <span class="price-tag ${t.premium?'price-premium':'price-free'}">${t.price===0?'Free':'$'+t.price}</span>
+        <span class="muted">⭐ ${t.rating} • ${t.downloads.toLocaleString()} ↓</span>
+      </div>
+      <div class="tags">${t.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+async function showTemplate(id) {
+  const res = await api(TPL_API, {action:'get_template', id});
+  if (!res.success) return;
+  const t = res.template;
+  document.getElementById('modalContent').innerHTML = `
+    <span class="close" onclick="closeModal()">×</span>
+    <h2>${t.name}</h2>
+    <p class="muted" style="margin-bottom:12px">${t.desc}</p>
+    <div style="margin-bottom:12px"><span class="price-tag ${t.premium?'price-premium':'price-free'}" style="font-size:20px">${t.price===0?'Free':'$'+t.price}</span> <span class="muted">by ${t.author}</span></div>
+    <div style="margin-bottom:12px"><strong>Features:</strong><ul style="margin-top:6px">${t.features.map(f=>`<li style="font-size:13px;padding:2px 0">${f}</li>`).join('')}</ul></div>
+    <div style="margin-bottom:12px"><span class="muted">⭐ ${t.rating} • ${t.downloads.toLocaleString()} downloads</span></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-p" onclick="deployTemplate('${t.id}','${t.name}')">Deploy</button>
+      <button class="btn btn-o" onclick="forkTemplate('${t.id}','${t.name}')">Fork</button>
+      <button class="btn btn-o" onclick="window.open('${t.preview}','_blank')">Preview</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+async function deployTemplate(id, name) {
+  const res = await api(TPL_API, {action:'deploy', id, appName: name+' App'});
+  if (res.success) {
+    document.getElementById('modalContent').innerHTML = `
+      <span class="close" onclick="closeModal()">×</span>
+      <h2>✅ Deployed!</h2>
+      <p style="margin:12px 0">${res.message}</p>
+      <p class="muted">Deploy ID: ${res.deployId}</p>
+      <p class="muted">App Name: ${res.appName}</p>
+      <button class="btn btn-p" onclick="window.open('${res.url}','_blank')">Open App</button>
+      <button class="btn btn-o" onclick="closeModal()">Close</button>
+    `;
+  }
+}
+
+async function forkTemplate(id, name) {
+  const res = await api(TPL_API, {action:'fork', id, newName: name+' (Fork)'});
+  if (res.success) {
+    document.getElementById('modalContent').innerHTML = `
+      <span class="close" onclick="closeModal()">×</span>
+      <h2>🍴 Forked!</h2>
+      <p style="margin:12px 0">${res.message}</p>
+      <p class="muted">Fork ID: ${res.forkId}</p>
+      <p class="muted">New Name: ${res.newName}</p>
+      <button class="btn btn-p" onclick="closeModal()">Continue</button>
+    `;
+  }
+}
+
+async function subscribe(planId, planName, price) {
+  if (price === 0) {
+    alert('Free plan activated!');
+    return;
+  }
+  const res = await api(BIL_API, {action:'subscribe', userEmail:'rabiu@harz.cloud', planId, method:'stripe'});
+  if (res.success) {
+    document.getElementById('modalContent').innerHTML = `
+      <span class="close" onclick="closeModal()">×</span>
+      <h2>✅ Subscribed!</h2>
+      <p style="margin:12px 0">${res.message}</p>
+      <p class="muted">Plan: ${res.plan} • $${res.amount}/mo</p>
+      <p class="muted">Period ends: ${new Date(res.currentPeriodEnd).toLocaleDateString()}</p>
+      <p class="muted">Subscription ID: ${res.subscriptionId}</p>
+      <button class="btn btn-p" onclick="closeModal()">Done</button>
+    `;
+    document.getElementById('modalOverlay').classList.add('active');
+  }
+}
+
+async function payInvoice(id) {
+  const res = await api(BIL_API, {action:'pay_invoice', id, method:'stripe'});
+  if (res.success) {
+    alert('Invoice paid! Receipt: ' + res.receiptNumber);
+    init();
+  }
+}
+
+init();
+</script>
+</body>
+</html>

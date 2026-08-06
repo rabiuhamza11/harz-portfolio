@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HarzStore — Paystack Storefront Template</title>
+  <meta name="description" content="A Paystack-powered storefront template for African developers. Deploy in 60 seconds.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #00A859;
+      --dark: #011B1B;
+      --light: #F8F9FA;
+      --accent: #FF6B35;
+      --text: #333;
+      --gray: #888;
+      --border: #E0E0E0;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--light); color: var(--text); }
+    
+    /* NAVBAR */
+    .navbar {
+      background: var(--dark);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    .navbar .logo { color: #fff; font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
+    .navbar .logo span { color: var(--primary); }
+    .navbar .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .navbar .nav-links a { color: #fff; text-decoration: none; font-size: 0.9rem; opacity: 0.85; }
+    .navbar .nav-links a:hover { opacity: 1; }
+    .cart-badge {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-left: 4px;
+    }
+    
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--dark) 0%, #003B3B 100%);
+      color: #fff;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .hero p { font-size: 1rem; opacity: 0.85; margin-bottom: 1.5rem; }
+    .hero .paystack-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0, 168, 89, 0.15);
+      border: 1px solid var(--primary);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+    .hero .paystack-badge::before { content: "✓"; color: var(--primary); font-weight: 700; }
+    
+    /* PRODUCTS GRID */
+    .products {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .products h2 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--dark); }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .product-image {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    .product-info { padding: 1rem; }
+    .product-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .product-desc { font-size: 0.8rem; color: var(--gray); margin-bottom: 0.5rem; }
+    .product-price { font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; }
+    .product-price .currency { font-size: 0.8rem; color: var(--gray); }
+    .btn-add {
+      width: 100%;
+      padding: 0.6rem;
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-add:hover { background: var(--primary); }
+    
+    /* CART SIDEBAR */
+    .cart-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 200;
+    }
+    .cart-overlay.active { display: block; }
+    .cart-sidebar {
+      position: fixed;
+      top: 0; right: 0;
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      background: #fff;
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-sidebar.active { transform: translateX(0); }
+    .cart-header {
+      padding: 1rem 1.5rem;
+      background: var(--dark);
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-header h3 { font-size: 1.1rem; }
+    .cart-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-size: 0.9rem; font-weight: 500; }
+    .cart-item-price { font-size: 0.85rem; color: var(--primary); font-weight: 600; }
+    .cart-item-qty {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+    }
+    .qty-btn {
+      width: 26px; height: 26px;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-btn:hover { background: var(--light); }
+    .cart-item-remove {
+      color: #dc3545;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .cart-empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--gray);
+    }
+    .cart-empty .emoji { font-size: 3rem; margin-bottom: 1rem; }
+    .cart-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .cart-total .amount { color: var(--primary); }
+    .btn-checkout {
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-checkout:hover { background: #008F4D; }
+    .btn-checkout:disabled { background: var(--gray); cursor: not-allowed; }
+    
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      z-index: 300;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+    
+    /* PAYMENT MODAL */
+    .payment-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+    }
+    .payment-modal.active { display: flex; }
+    .payment-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    .payment-box .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid var(--border);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .payment-box h3 { margin-bottom: 0.5rem; }
+    .payment-box p { color: var(--gray); font-size: 0.9rem; }
+    .payment-success { display: none; }
+    .payment-success .checkmark {
+      width: 60px; height: 60px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 2rem;
+      color: #fff;
+    }
+    
+    /* DEPLOY BANNER */
+    .deploy-banner {
+      background: linear-gradient(90deg, #00A859, #00C073);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+    .deploy-banner a { color: #fff; text-decoration: underline; font-weight: 600; }
+    
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .navbar { padding: 0.75rem 1rem; }
+      .navbar .nav-links a { display: none; }
+      .navbar .nav-links a:last-child { display: flex; align-items: center; }
+      .hero { padding: 2rem 1rem; }
+      .hero h1 { font-size: 1.5rem; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .product-image { height: 120px; font-size: 2rem; }
+      .product-info { padding: 0.6rem; }
+      .product-name { font-size: 0.85rem; }
+      .product-price { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- DEPLOY BANNER -->
+<div class="deploy-banner">
+  This is a HARZ Cloud template. Fork on GitHub and deploy in 60 seconds.
+  <a href="https://github.com/rabiuhamza11/harz-portfolio">Get started →</a>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">Harz<span>Store</span></div>
+  <div class="nav-links">
+    <a href="#products">Shop</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <a href="#" id="cart-link">Cart <span class="cart-badge" id="cart-count">0</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>African Products, Paystack Payments</h1>
+  <p>Buy and sell with local payment methods. No Stripe needed.</p>
+  <div class="paystack-badge">Powered by Paystack</div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <h2>Featured Products</h2>
+  <div class="product-grid" id="product-grid"></div>
+</section>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cart-overlay"></div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cart-sidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="cart-close" id="cart-close">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total</span>
+      <span class="amount" id="cart-total">₦0</span>
+    </div>
+    <button class="btn-checkout" id="btn-checkout" disabled>
+      Pay with Paystack →
+    </button>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="payment-modal" id="payment-modal">
+  <div class="payment-box" id="payment-box">
+    <div class="spinner" id="payment-spinner"></div>
+    <h3 id="payment-status">Initializing payment...</h3>
+    <p id="payment-message">Redirecting to Paystack</p>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CONFIG =====
+const HARZ_CLOUD_API = 'https://harz-cloud-backend.vercel.app';
+const PAYSTACK_PUBLIC_KEY = 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Replace with your key
+
+// ===== SAMPLE PRODUCTS =====
+const PRODUCTS = [
+  { id: 1, name: 'Ankara Print Dress', desc: 'Handmade African print dress', price: 15000, emoji: '👗' },
+  { id: 2, name: 'Leather Sandals', desc: 'Genuine Nigerian leather', price: 8000, emoji: '👡' },
+  { id: 3, name: 'Adire Fabric', desc: 'Traditional tie-dye textile, 6 yards', price: 12000, emoji: '🧵' },
+  { id: 4, name: 'Beaded Jewelry Set', desc: 'Handcrafted beads, necklace + earrings', price: 5000, emoji: '📿' },
+  { id: 5, name: 'Kente Scarf', desc: 'Authentic Ghanaian kente weave', price: 7000, emoji: '🧣' },
+  { id: 6, name: 'Wooden Sculpture', desc: 'Hand-carved African art piece', price: 25000, emoji: '🪵' },
+  { id: 7, name: 'Shea Butter (500g)', desc: 'Pure unrefined Nigerian shea butter', price: 3000, emoji: '🧴' },
+  { id: 8, name: 'Hausa Cap (Hula)', desc: 'Traditional embroidered cap', price: 4500, emoji: '🎩' }
+];
+
+// ===== CART STATE =====
+let cart = [];
+
+// ===== FORMAT NAIRA =====
+function formatNaira(amount) {
+  return '₦' + amount.toLocaleString('en-NG');
+}
+
+// ===== RENDER PRODUCTS =====
+function renderProducts() {
+  const grid = document.getElementById('product-grid');
+  grid.innerHTML = PRODUCTS.map(p => `
+    <div class="product-card">
+      <div class="product-image">${p.emoji}</div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-price">${formatNaira(p.price)}</div>
+        <button class="btn-add" onclick="addToCart(${p.id})">Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== ADD TO CART =====
+function addToCart(id) {
+  const product = PRODUCTS.find(p => p.id === id);
+  if (!product) return;
+  
+  const existing = cart.find(item => item.id === id);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ ...product, qty: 1 });
+  }
+  
+  updateCart();
+  showToast(`${product.name} added to cart`);
+}
+
+// ===== REMOVE FROM CART =====
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  updateCart();
+}
+
+// ===== UPDATE QTY =====
+function updateQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) {
+    removeFromCart(id);
+  } else {
+    updateCart();
+  }
+}
+
+// ===== UPDATE CART UI =====
+function updateCart() {
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  
+  document.getElementById('cart-count').textContent = count;
+  document.getElementById('cart-total').textContent = formatNaira(total);
+  
+  const checkoutBtn = document.getElementById('btn-checkout');
+  checkoutBtn.disabled = cart.length === 0;
+  
+  const itemsEl = document.getElementById('cart-items');
+  if (cart.length === 0) {
+    itemsEl.innerHTML = `
+      <div class="cart-empty">
+        <div class="emoji">🛒</div>
+        <p>Your cart is empty</p>
+      </div>
+    `;
+  } else {
+    itemsEl.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">${formatNaira(item.price)} each</div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="updateQty(${item.id}, -1)">−</button>
+            <span>${item.qty}</span>
+            <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+          </div>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart(${item.id})">Remove</button>
+      </div>
+    `).join('');
+  }
+}
+
+// ===== CART TOGGLE =====
+function openCart() {
+  document.getElementById('cart-overlay').classList.add('active');
+  document.getElementById('cart-sidebar').classList.add('active');
+}
+
+function closeCart() {
+  document.getElementById('cart-overlay').classList.remove('active');
+  document.getElementById('cart-sidebar').classList.remove('active');
+}
+
+document.getElementById('cart-link').addEventListener('click', (e) => {
+  e.preventDefault();
+  openCart();
+});
+document.getElementById('cart-close').addEventListener('click', closeCart);
+document.getElementById('cart-overlay').addEventListener('click', closeCart);
+
+// ===== TOAST =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ===== PAYSTACK CHECKOUT =====
+async function checkout() {
+  if (cart.length === 0) return;
+  
+  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const email = prompt('Enter your email for receipt:');
+  if (!email) return;
+  
+  // Show payment modal
+  const modal = document.getElementById('payment-modal');
+  const box = document.getElementById('payment-box');
+  document.getElementById('payment-spinner').style.display = 'block';
+  document.getElementById('payment-status').textContent = 'Initializing payment...';
+  document.getElementById('payment-message').textContent = 'Redirecting to Paystack';
+  modal.classList.add('active');
+  
+  try {
+    // Try HARZ Cloud API first
+    const response = await fetch(`${HARZ_CLOUD_API}/api/payments/initialize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        amount: total,  // in kobo handled by backend
+        reference: 'HARZ_' + Date.now(),
+        callback_url: window.location.origin + window.location.pathname
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.authorization_url) {
+        // Redirect to Paystack
+        window.location.href = data.data.authorization_url;
+        return;
+      }
+    }
+    
+    // Fallback: Use Paystack inline popup
+    payWithPaystackInline(email, total);
+    
+  } catch (err) {
+    console.error('API error:', err);
+    // Fallback: Use Paystack inline popup
+    payWithPaystackInline(email, total);
+  }
+}
+
+// ===== PAYSTACK INLINE (FALLBACK) =====
+function payWithPaystackInline(email, amount) {
+  if (typeof PaystackPop === 'undefined') {
+    // Load Paystack inline script
+    const script = document.createElement('script');
+    script.src = 'https://js.paystack.co/v1/inline.min.js';
+    script.onload = () => {
+      openPaystackPopup(email, amount);
+    };
+    document.head.appendChild(script);
+  } else {
+    openPaystackPopup(email, amount);
+  }
+}
+
+function openPaystackPopup(email, amount) {
+  const handler = PaystackPop.setup({
+    key: PAYSTACK_PUBLIC_KEY,
+    email: email,
+    amount: amount * 100, // Convert to kobo
+    currency: 'NGN',
+    ref: 'HARZ_' + Date.now(),
+    callback: function(response) {
+      showPaymentSuccess(response.reference);
+    },
+    onClose: function() {
+      document.getElementById('payment-modal').classList.remove('active');
+    }
+  });
+  handler.openIframe();
+}
+
+// ===== PAYMENT SUCCESS =====
+function showPaymentSuccess(reference) {
+  const box = document.getElementById('payment-box');
+  box.innerHTML = `
+    <div class="payment-success" style="display:block">
+      <div class="checkmark">✓</div>
+      <h3>Payment Successful!</h3>
+      <p>Reference: ${reference}</p>
+      <p style="margin-top:0.5rem">Thank you for your purchase!</p>
+      <button class="btn-checkout" style="margin-top:1.5rem" onclick="closePaymentModal()">Continue Shopping</button>
+    </div>
+  `;
+  
+  // Clear cart
+  cart = [];
+  updateCart();
+}
+
+function closePaymentModal() {
+  document.getElementById('payment-modal').classList.remove('active');
+  // Reset payment box
+  document.getElementById('payment-box').innerHTML = `
+    <div class="spinner" id="payment-spinner"></div>
+    <h3 id="payment-status">Initializing payment...</h3>
+    <p id="payment-message">Redirecting to Paystack</p>
+  `;
+}
+
+// ===== CHECKOUT BUTTON =====
+document.getElementById('btn-checkout').addEventListener('click', checkout);
+
+// ===== INIT =====
+renderProducts();
+updateCart();
+</script>
+
+</body>
+</html>

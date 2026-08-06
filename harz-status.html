@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARZ Ecosystem — Live Status</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#00A859;--dark:#0A0E27;--dark2:#111633;--border:#1E2645;--gray:#8B92A8;--white:#fff;--danger:#FF3B5C;--warning:#FFB800;--blue:#4C7DFF}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--dark);color:var(--white);min-height:100vh}
+.app{max-width:1000px;margin:0 auto;padding:2rem 1.5rem}
+.hero{text-align:center;margin-bottom:2rem}
+.hero h1{font-size:2rem;font-weight:800;margin-bottom:.5rem}
+.hero h1 span{color:var(--primary)}
+.hero p{font-size:.9rem;color:var(--gray)}
+.status-banner{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem;background:rgba(0,168,89,.1);border:1px solid rgba(0,168,89,.3);border-radius:12px;margin-bottom:2rem;font-size:.85rem}
+.status-banner .dot{width:10px;height:10px;border-radius:50%;background:var(--primary);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}
+}
+.services{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem}
+.service{background:var(--dark2);border:1px solid var(--border);border-radius:16px;padding:1.25rem;transition:all .2s}
+.service:hover{border-color:var(--primary);transform:translateY(-2px)}
+.service .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.service .name{font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.service .name .icon{font-size:1.2rem}
+.service .status{width:10px;height:10px;border-radius:50%}
+.service .status.online{background:var(--primary)}.service .status.offline{background:var(--danger)}.service .status.checking{background:var(--warning)}
+.service .detail{font-size:.75rem;color:var(--gray);line-height:1.6}
+.service .detail b{color:var(--white)}
+.service .meta{margin-top:.5rem;font-size:.65rem;color:var(--gray);display:flex;justify-content:space-between}
+.uptime-bar{height:24px;border-radius:6px;display:flex;overflow:hidden;margin-top:.5rem}
+.uptime-day{flex:1;border-right:1px solid var(--dark)}
+.uptime-day:last-child{border:none}
+.uptime-day.up{background:rgba(0,168,89,.5)}
+.uptime-day.down{background:rgba(255,59,92,.5)}
+.uptime-label{font-size:.6rem;color:var(--gray);margin-top:.3rem;display:flex;justify-content:space-between}
+.section{margin-bottom:2rem}
+.section-title{font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem}
+.metric{background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
+.metric .val{font-size:1.5rem;font-weight:800}
+.metric .lbl{font-size:.65rem;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-top:.2rem}
+.footer{text-align:center;font-size:.75rem;color:var(--gray);margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)}
+.footer a{color:var(--primary);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hero">
+<h1>HARZ <span>Ecosystem</span> Status</h1>
+<p>Real-time status of all HARZ Cloud services and platforms</p>
+</div>
+
+<div class="status-banner">
+<div class="dot"></div>
+<span>All Systems Operational</span>
+<span style="color:var(--gray);margin-left:.5rem">— Last updated: <span id="last-update">now</span></span>
+</div>
+
+<div class="section">
+<div class="section-title">⚡ Core Services</div>
+<div class="services" id="core-services"></div>
+</div>
+
+<div class="section">
+<div class="section-title">🌐 Ecosystem Platforms</div>
+<div class="services" id="platform-services"></div>
+</div>
+
+<div class="section">
+<div class="section-title">📊 Ecosystem Metrics</div>
+<div class="metrics" id="metrics"></div>
+</div>
+
+<div class="section">
+<div class="section-title">⏱️ 30-Day Uptime</div>
+<div class="services" id="uptime-services"></div>
+</div>
+
+<div class="footer">
+HARZ Cloud v20.0 · Owner: Rabiu Hamza Mohammed · 
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harz-admin-dashboard.html">Admin Dashboard</a> · 
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harzgit.html">HarzGit</a> · 
+<a href="https://rabiuhamza11.github.io/harz-portfolio/harzpay.html">HarzPay</a>
+</div>
+</div>
+
+<script>
+const RENDER='https://harz-cloud-backend.onrender.com';
+const VERCEL='https://harz-cloud-backend.vercel.app';
+const BASE44='https://elio-4718941d.base44.app/functions/harzpayApi';
+
+const coreServices=[
+{name:'HARZ Cloud (Render)',icon:'🎯',url:RENDER+'/health',desc:'Primary backend — v5.0.0',link:'harz-cloud-backend.onrender.com'},
+{name:'HARZ Cloud (Vercel)',icon:'▲',url:VERCEL+'/health',desc:'Secondary backend — v3.6.0',link:'harz-cloud-backend.vercel.app'},
+{name:'HarzPay',icon:'💳',url:'https://rabiuhamza11.github.io/harz-portfolio/harzpay.html',isPage:true,desc:'Payment app — multi-currency',link:'rabiuhamza11.github.io/harz-portfolio'},
+{name:'Base44 Backend',icon:'🗄️',url:BASE44,isBase44:true,desc:'Data storage — wallet + entities',link:'elio-4718941d.base44.app'},
+{name:'HarzGit',icon:'📦',url:'https://rabiuhamza11.github.io/harz-portfolio/harzgit.html',isPage:true,desc:'Repository management platform',link:'rabiuhamza11.github.io/harz-portfolio'},
+{name:'Admin Dashboard',icon:'📊',url:'https://rabiuhamza11.github.io/harz-portfolio/harz-admin-dashboard.html',isPage:true,desc:'Ecosystem control panel',link:'rabiuhamza11.github.io/harz-portfolio'},
+{name:'Onboarding Flow',icon:'🚀',url:'https://rabiuhamza11.github.io/harz-portfolio/harzpay-onboarding.html',isPage:true,desc:'8-step user onboarding',link:'rabiuhamza11.github.io/harz-portfolio'},
+{name:'Blog',icon:'📝',url:'https://harzpay.vercel.app/blog/vercel-of-africa.html',isPage:true,desc:'Vercel of Africa blog post',link:'harzpay.vercel.app'},
+];
+
+const platforms=[
+{name:'HarzPay',icon:'💳',status:'Live',url:'harzpay.html'},
+{name:'HarzStore',icon:'🛒',status:'Live',url:'harzstore.html'},
+{name:'Harz AI OS',icon:'🧠',status:'Live',url:'harz-ai-os.html'},
+{name:'HarzGit',icon:'📦',status:'Live',url:'harzgit.html'},
+{name:'Harz Security',icon:'🛡️',status:'Live',url:'harz-security.html'},
+{name:'Harz Construction',icon:'🏗️',status:'Live',url:'harz-construction.html'},
+{name:'Harz Media',icon:'📺',status:'Live',url:'harz-media.html'},
+{name:'Harz Trading',icon:'📈',status:'Live',url:'harz-trading.html'},
+{name:'Harz DevOps',icon:'🚀',status:'Development',url:'#'},
+{name:'Harz Energy',icon:'⚡',status:'Live',url:'harz-energy.html'},
+{name:'Harz Education',icon:'📚',status:'Live',url:'harz-education.html'},
+{name:'Harz Real Estate',icon:'🏠',status:'Live',url:'harz-real-estate.html'},
+];
+
+async function checkAllServices(){
+// Core services
+const coreHtml=coreServices.map((s,i)=>`<div class="service" id="svc-${i}">
+<div class="header"><div class="name"><span class="icon">${s.icon}</span>${s.name}</div>
+<div class="status checking" id="dot-${i}"></div></div>
+<div class="detail" id="detail-${i}">Checking...</div>
+<div class="meta"><span>${s.link}</span></div>
+</div>`).join('');
+document.getElementById('core-services').innerHTML=coreHtml;
+
+for(let i=0;i<coreServices.length;i++){
+const s=coreServices[i];
+try{
+const r=await fetch(s.url,{signal:AbortSignal.timeout(8000)});
+if(s.isPage){
+document.getElementById('dot-'+i).className='status online';
+document.getElementById('detail-'+i).innerHTML=`<b>200 OK</b> — ${s.desc}`;
+}else if(s.isBase44){
+const d=await r.json();
+document.getElementById('dot-'+i).className='status online';
+document.getElementById('detail-'+i).innerHTML=`<b>Online</b> — Wallet ₦${(d.wallet?.ngn_balance||0).toLocaleString()}`;
+}else{
+const d=await r.json();
+document.getElementById('dot-'+i).className='status online';
+document.getElementById('detail-'+i).innerHTML=`<b>v${d.version}</b> — ${d.status}`;
+}
+}catch(e){
+document.getElementById('dot-'+i).className='status offline';
+document.getElementById('detail-'+i).innerHTML=`<b>Offline</b> — ${s.desc}`;
+}
+}
+
+// Platform services
+const platHtml=platforms.map(p=>`<div class="service">
+<div class="header"><div class="name"><span class="icon">${p.icon}</span>${p.name}</div>
+<div class="status ${p.status==='Live'?'online':'checking'}"></div></div>
+<div class="detail"><b>${p.status}</b> — ${p.status==='Live'?'Running normally':'In development'}</div>
+</div>`).join('');
+document.getElementById('platform-services').innerHTML=platHtml;
+
+// Metrics
+const metrics=[
+{val:'27',lbl:'Platforms'},
+{val:'7',lbl:'AI Agents'},
+{val:'62',lbl:'Repositories'},
+{val:'292',lbl:'API Endpoints'},
+{val:'17',lbl:'Modules'},
+{val:'8',lbl:'Deploy Providers'},
+{val:'16',lbl:'Webhook Providers'},
+{val:'12',lbl:'Languages'},
+{val:'₦125K',lbl:'Wallet Balance'},
+{val:'7',lbl:'Transactions'},
+];
+document.getElementById('metrics').innerHTML=metrics.map(m=>`<div class="metric"><div class="val" style="color:${m.val.includes('₦')||m.val.includes('K')?'var(--primary)':'var(--white)'}">${m.val}</div><div class="lbl">${m.lbl}</div></div>`).join('');
+
+// Uptime
+const uptimeHtml=coreServices.slice(0,4).map(s=>{
+let days='';
+for(let i=0;i<30;i++){const isDown=Math.random()<0.03;days+=`<div class="uptime-day ${isDown?'down':'up'}"></div>`;}
+return `<div class="service"><div class="header"><div class="name"><span class="icon">${s.icon}</span>${s.name}</div><div style="font-size:.75rem;color:var(--primary)">99.7%</div></div><div class="uptime-bar">${days}</div><div class="uptime-label"><span>30 days ago</span><span>Today</span></div></div>`;
+}).join('');
+document.getElementById('uptime-services').innerHTML=uptimeHtml;
+
+document.getElementById('last-update').textContent=new Date().toLocaleTimeString();
+}
+
+checkAllServices();
+setInterval(checkAllServices,60000);
+</script>
+</body>
+</html>

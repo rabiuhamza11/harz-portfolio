@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzPay — Bills, Airtime & Payments</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+body{background:#0a0e1a;color:#fff}
+.header{background:linear-gradient(135deg,#6366f1,#4f46e5);padding:20px;text-align:center;position:sticky;top:0;z-index:100}
+.header h1{font-size:24px}
+.header p{font-size:13px;opacity:0.8;margin-top:4px}
+.container{max-width:600px;margin:0 auto;padding:16px}
+.card{background:#1a1f2e;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid #2a2f3e}
+.card h2{font-size:18px;margin-bottom:12px;color:#818cf8}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.cat-item{background:#0a0e1a;border-radius:12px;padding:16px 8px;text-align:center;cursor:pointer;border:2px solid #2a2f3e;transition:all .2s}
+.cat-item.active{border-color:#6366f1;background:#312e81}
+.cat-item .icon{font-size:28px}
+.cat-item .name{font-size:11px;margin-top:4px;color:#cbd5e1}
+.provider-btn{display:block;width:100%;padding:14px;background:#0a0e1a;border:1px solid #2a2f3e;border-radius:10px;color:#fff;font-size:14px;margin-bottom:8px;cursor:pointer;text-align:left;transition:all .2s}
+.provider-btn:hover{border-color:#6366f1}
+.provider-btn.selected{border-color:#6366f1;background:#312e81}
+.input{width:100%;padding:12px;background:#0a0e1a;border:1px solid #2a2f3e;border-radius:10px;color:#fff;font-size:14px;margin-bottom:10px}
+.input:focus{border-color:#6366f1;outline:none}
+.label{font-size:13px;color:#8892a6;margin-bottom:4px}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:12px;transition:all .2s}
+.btn:active{transform:scale(0.98)}
+.btn-green{background:linear-gradient(135deg,#00A859,#008F4D)}
+.btn-orange{background:linear-gradient(135deg,#FF6B35,#e55a25)}
+.plan-btn{padding:10px;background:#0a0e1a;border:1px solid #2a2f3e;border-radius:8px;color:#fff;font-size:13px;cursor:pointer;margin-bottom:6px;width:100%;text-align:left;transition:all .2s}
+.plan-btn:hover{border-color:#6366f1}
+.plan-btn.selected{border-color:#6366f1;background:#312e81}
+.discount{background:#1a8a5e;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:bold;margin-left:6px}
+.tab-bar{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:12px;background:#1a1f2e;border:2px solid #2a2f3e;border-radius:12px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
+.tab.active{border-color:#6366f1;background:#312e81;color:#818cf8}
+.pay-option{display:flex;align-items:center;gap:12px;padding:14px;background:#0a0e1a;border:1px solid #2a2f3e;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.pay-option:hover{border-color:#6366f1}
+.pay-option.selected{border-color:#6366f1;background:#312e81}
+.pay-option .icon{font-size:24px}
+.pay-option .info{flex:1}
+.pay-option .name{font-size:14px;font-weight:600}
+.pay-option .detail{font-size:12px;color:#8892a6;margin-top:2px}
+.result-box{background:#0a0e1a;border-radius:12px;padding:16px;margin-top:12px;font-size:13px;color:#cbd5e1;line-height:1.6}
+.result-box .ref{color:#818cf8;font-weight:bold}
+.success-icon{font-size:48px;text-align:center;margin-bottom:12px}
+.pending-icon{font-size:48px;text-align:center;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>⚡ HarzPay</h1>
+<p>Bills, Airtime, Data, Cable TV — Powered by HARZ Cloud</p>
+</div>
+<div class="container">
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+<div class="tab active" id="tab-bills" onclick="switchTab('bills')">📱 Bills</div>
+<div class="tab" id="tab-fund" onclick="switchTab('fund')">💰 Fund Wallet</div>
+<div class="tab" id="tab-history" onclick="switchTab('history')">📋 History</div>
+</div>
+
+<!-- BILLS TAB -->
+<div id="bills-tab">
+<div class="card">
+<h2>What do you want to pay?</h2>
+<div class="cat-grid" id="categories"></div>
+</div>
+<div id="provider-section" style="display:none">
+<div class="card">
+<h2 id="provider-title">Select Provider</h2>
+<div id="providers"></div>
+</div>
+</div>
+<div id="form-section" style="display:none">
+<div class="card">
+<h2 id="form-title">Payment Details</h2>
+<div id="plans-section" style="display:none">
+<div class="label">Select Plan</div>
+<div id="plans"></div>
+</div>
+<div id="amount-section">
+<div class="label">Amount (₦)</div>
+<input class="input" id="amount" type="number" placeholder="1000">
+</div>
+<div id="meter-section" style="display:none">
+<div class="label">Meter Number / Smartcard Number</div>
+<input class="input" id="meter" placeholder="Enter meter number">
+</div>
+<div class="label">Phone Number</div>
+<input class="input" id="phone" placeholder="08012345678">
+<div class="label">Your Name</div>
+<input class="input" id="name" placeholder="Your name">
+<div class="label">Email (for receipt)</div>
+<input class="input" id="email" placeholder="you@email.com">
+<div id="discount-info" style="display:none;margin-top:8px;padding:8px;background:#1a8a5e;border-radius:8px;font-size:13px"></div>
+<button class="btn" onclick="payBill()">Pay Now →</button>
+</div>
+</div>
+</div>
+
+<!-- FUND WALLET TAB -->
+<div id="fund-tab" style="display:none">
+<div class="card">
+<h2>Fund Your Wallet</h2>
+<p style="color:#8892a6;font-size:13px;margin-bottom:16px">Choose a payment method to add funds to your HarzPay wallet.</p>
+<div id="payment-options"></div>
+</div>
+<div id="fund-form" style="display:none">
+<div class="card">
+<h2 id="fund-method-title">Enter Amount</h2>
+<div class="label">Amount (₦)</div>
+<input class="input" id="fund-amount" type="number" placeholder="1000">
+<div class="label">Email</div>
+<input class="input" id="fund-email" placeholder="you@email.com">
+<button class="btn btn-green" onclick="processFund()">Continue →</button>
+</div>
+</div>
+<div id="fund-result" style="display:none"></div>
+</div>
+
+<!-- HISTORY TAB -->
+<div id="history-tab" style="display:none">
+<div class="card">
+<h2>Transaction History</h2>
+<div id="history-list">
+<p style="color:#8892a6;font-size:13px;text-align:center;padding:20px">Loading transactions...</p>
+</div>
+</div>
+</div>
+
+<!-- RESULT SECTION -->
+<div id="result-section" style="display:none">
+<div class="card" style="text-align:center">
+<div id="result-icon" class="success-icon">✅</div>
+<h2 id="result-title">Payment Successful!</h2>
+<div class="result-box" id="result-details"></div>
+<div id="payment-options-result" style="margin-top:16px"></div>
+</div>
+</div>
+
+</div>
+
+<script>
+const API='https://harz-cloud-backend.vercel.app/api';
+const CATS=[
+{id:'airtime',icon:'📱',name:'Airtime'},
+{id:'data',icon:'📶',name:'Data'},
+{id:'electricity',icon:'⚡',name:'Electricity'},
+{id:'cable_tv',icon:'📺',name:'Cable TV'},
+{id:'internet',icon:'🌐',name:'Internet'},
+{id:'water',icon:'💧',name:'Water'}
+];
+let selectedCat='',selectedProvider=null,providers=[],selectedPlan=null;
+
+// TABS
+function switchTab(tab){
+['bills','fund','history'].forEach(t=>{
+document.getElementById(t+'-tab').style.display=t===tab?'block':'none';
+document.getElementById('tab-'+t).classList.toggle('active',t===tab);
+});
+document.getElementById('result-section').style.display='none';
+if(tab==='fund')loadPaymentOptions();
+if(tab==='history')loadHistory();
+}
+
+// BILLS
+function init(){
+document.getElementById('categories').innerHTML=CATS.map(c=>
+`<div class="cat-item" onclick="selectCat('${c.id}',this)"><div class="icon">${c.icon}</div><div class="name">${c.name}</div></div>`
+).join('');
+}
+
+async function selectCat(cat,el){
+selectedCat=cat;selectedProvider=null;selectedPlan=null;
+document.querySelectorAll('.cat-item').forEach(e=>e.classList.remove('active'));
+el.classList.add('active');
+document.getElementById('provider-section').style.display='block';
+document.getElementById('form-section').style.display='none';
+document.getElementById('result-section').style.display='none';
+document.getElementById('provider-title').textContent='Select '+CATS.find(c=>c.id==cat).name+' Provider';
+try{
+const r=await fetch(`${API}/harzpay/bills/${cat}`);
+const d=await r.json();
+providers=d.providers||[];
+document.getElementById('providers').innerHTML=providers.map(p=>
+`<button class="provider-btn" onclick="selectProvider('${p.id}',this)">${p.provider_name}${p.discount_percent>0?`<span class="discount">-${p.discount_percent}%</span>`:''}</button>`
+).join('');
+}catch(e){document.getElementById('providers').innerHTML='<p style="color:#8892a6">No providers found.</p>'}
+}
+
+function selectProvider(pid,el){
+selectedProvider=providers.find(p=>p.id==pid);
+document.querySelectorAll('.provider-btn').forEach(e=>e.classList.remove('selected'));
+el.classList.add('selected');
+document.getElementById('form-section').style.display='block';
+document.getElementById('form-title').textContent=selectedProvider.provider_name;
+const hasPlans=selectedProvider.plans&&selectedProvider.plans.length>0;
+document.getElementById('plans-section').style.display=hasPlans?'block':'none';
+document.getElementById('amount-section').style.display=hasPlans?'none':'block';
+document.getElementById('meter-section').style.display=(selectedCat=='electricity'||selectedCat=='cable_tv')?'block':'none';
+if(hasPlans){
+document.getElementById('plans').innerHTML=selectedProvider.plans.map((p,i)=>
+`<button class="plan-btn" onclick="selectPlan(${i},this)">${p}</button>`
+).join('');
+}
+if(selectedProvider.discount_percent>0){
+document.getElementById('discount-info').style.display='block';
+document.getElementById('discount-info').textContent='🎉 You save '+selectedProvider.discount_percent+'% on this provider!';
+}else{document.getElementById('discount-info').style.display='none'}
+}
+
+function selectPlan(i,el){
+selectedPlan=selectedProvider.plans[i];
+document.querySelectorAll('.plan-btn').forEach(e=>e.classList.remove('selected'));
+el.classList.add('selected');
+}
+
+async function payBill(){
+const amount=selectedPlan?Number(selectedPlan.split(':')[0]):Number(document.getElementById('amount').value);
+if(!amount){alert('Please enter amount');return}
+const phone=document.getElementById('phone').value;
+if(!phone){alert('Enter phone number');return}
+const name=document.getElementById('name').value;
+const email=document.getElementById('email').value;
+const meter=document.getElementById('meter').value;
+
+try{
+const r=await fetch(`${API}/harzpay/bills/pay`,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({bill_type:selectedCat,provider_id:selectedProvider.id,amount,phone,name,email,meter})
+});
+const d=await r.json();
+
+if(d.success){
+document.getElementById('form-section').style.display='none';
+document.getElementById('provider-section').style.display='none';
+document.getElementById('result-section').style.display='block';
+
+const t=d.transaction;
+const discountText=t.discount>0?`<br>Discount: ₦${t.discount}<br>You Pay: ₦${t.final_amount}`:'';
+
+document.getElementById('result-details').innerHTML=
+`Reference: <span class="ref">${t.reference}</span><br>`+
+`Provider: ${t.provider}<br>`+
+`Amount: ₦${amount.toLocaleString()}`+discountText+`<br>`+
+`Phone: ${phone}${meter?'<br>Meter: '+meter:''}<br>`+
+`Status: <b>${t.status}</b>`;
+
+// Show payment options
+const opts=d.payment_options;
+let payHTML='<div class="result-box"><strong>Pay via:</strong><br>';
+if(opts.paystack){
+payHTML+=`<button class="btn btn-green" style="margin-top:8px" onclick="window.location.href='${opts.paystack}'">💳 Pay with Card (Paystack)</button>`;
+}
+if(opts.bank){
+payHTML+=`<div style="margin-top:8px">🏦 Bank Transfer<br>${opts.bank.bank_name}<br>${opts.bank.account_name}<br><strong>${opts.bank.account_number}</strong></div>`;
+}
+if(opts.usdt){
+payHTML+=`<div style="margin-top:8px">💰 USDT (${opts.usdt.network})<br><strong>${opts.usdt.wallet}</strong></div>`;
+}
+if(opts.ussd){
+payHTML+=`<div style="margin-top:8px">📱 USSD<br><code>${opts.ussd}</code></div>`;
+}
+if(opts.whatsapp){
+payHTML+=`<div style="margin-top:8px">💬 WhatsApp: ${opts.whatsapp}</div>`;
+}
+payHTML+='</div>';
+document.getElementById('payment-options-result').innerHTML=payHTML;
+
+// If Paystack redirect available
+if(opts.paystack){
+document.getElementById('result-title').textContent='Complete Payment';
+document.getElementById('result-icon').className='pending-icon';
+document.getElementById('result-icon').textContent='⏳';
+}else{
+document.getElementById('result-title').textContent='Order Created — Pay to Confirm';
+document.getElementById('result-icon').className='pending-icon';
+document.getElementById('result-icon').textContent='⏳';
+}
+}else{
+alert('Payment failed: '+(d.error||'Unknown error'));
+}
+}catch(e){alert('Error: '+e.message)}
+}
+
+// FUND WALLET
+async function loadPaymentOptions(){
+try{
+const r=await fetch(`${API}/harzpay/options`);
+const d=await r.json();
+let html='';
+if(d.bank_transfer){
+html+=`<div class="pay-option" onclick="selectFundMethod('bank',this)">
+<div class="icon">🏦</div><div class="info"><div class="name">Bank Transfer</div>
+<div class="detail">${d.bank_transfer.bank_name} — ${d.bank_transfer.account_number}</div></div></div>`;
+}
+if(d.usdt){
+html+=`<div class="pay-option" onclick="selectFundMethod('usdt',this)">
+<div class="icon">💰</div><div class="info"><div class="name">USDT (${d.usdt.network})</div>
+<div class="detail">${d.usdt.wallet.substring(0,12)}...${d.usdt.wallet.substring(-6)}</div></div></div>`;
+}
+if(d.ussd){
+html+=`<div class="pay-option" onclick="selectFundMethod('ussd',this)">
+<div class="icon">📱</div><div class="info"><div class="name">USSD</div>
+<div class="detail">${d.ussd}</div></div></div>`;
+}
+html+=`<div class="pay-option" onclick="selectFundMethod('paystack',this)">
+<div class="icon">💳</div><div class="info"><div class="name">Card (Paystack)</div>
+<div class="detail">Visa, Verve, Mastercard</div></div></div>`;
+html+=`<div class="pay-option" onclick="selectFundMethod('whatsapp',this)">
+<div class="icon">💬</div><div class="info"><div class="name">WhatsApp</div>
+<div class="detail">${d.whatsapp}</div></div></div>`;
+document.getElementById('payment-options').innerHTML=html;
+}catch(e){
+document.getElementById('payment-options').innerHTML='<p style="color:#8892a6">Could not load payment options.</p>';
+}
+}
+
+function selectFundMethod(method,el){
+document.querySelectorAll('.pay-option').forEach(e=>e.classList.remove('selected'));
+el.classList.add('selected');
+document.getElementById('fund-form').style.display='block';
+document.getElementById('fund-result').style.display='none';
+
+const titles={bank:'Bank Transfer',usdt:'USDT Payment',ussd:'USSD Code',paystack:'Card Payment',whatsapp:'WhatsApp Payment'};
+document.getElementById('fund-method-title').textContent=titles[method]||'Enter Amount';
+document.getElementById('fund-form').dataset.method=method;
+}
+
+async function processFund(){
+const amount=Number(document.getElementById('fund-amount').value);
+const email=document.getElementById('fund-email').value;
+if(!amount){alert('Enter amount');return}
+const method=document.getElementById('fund-form').dataset.method;
+
+try{
+// Generate reference
+const r=await fetch(`${API}/harzpay/reference`,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({amount})
+});
+const d=await r.json();
+
+let resultHTML=`<div class="card"><div class="pending-icon">⏳</div><h2>Payment Reference Created</h2>`;
+resultHTML+=`<div class="result-box">Reference: <span class="ref">${d.reference}</span><br>Amount: ₦${amount.toLocaleString()}`;
+
+if(method==='bank'||method==='ussd'){
+resultHTML+=`<br><br>🏦 ${d.bank.bank_name}<br>${d.bank.account_name}<br><strong>${d.bank.account_number}</strong>`;
+if(method==='ussd')resultHTML+=`<br><br>📱 Dial: <code>${d.ussd}</code>`;
+}
+if(method==='usdt'){
+resultHTML+=`<br><br>💰 Send USDT (${d.usdt.network})<br><strong>${d.usdt.wallet}</strong>`;
+}
+if(method==='paystack'){
+resultHTML+=`<br><br>💳 Redirecting to Paystack...`;
+}
+if(method==='whatsapp'){
+resultHTML+=`<br><br>💬 Message us on WhatsApp: ${d.whatsapp}`;
+}
+resultHTML+=`</div>`;
+
+// If Paystack, try to initialize
+if(method==='paystack'&&email){
+try{
+const pr=await fetch(`${API}/payments/initialize`,{
+method:'POST',
+headers:{'Content-Type':'application/json','x-auth-token':localStorage.getItem('harzpay_token')||''},
+body:JSON.stringify({email,amount,reference:d.reference,callback_url:window.location.origin})
+});
+const pd=await pr.json();
+if(pd.data&&pd.data.authorization_url){
+window.location.href=pd.data.authorization_url;
+return;
+}
+}catch(e){}
+}
+
+resultHTML+=`<button class="btn btn-green" style="margin-top:12px" onclick="copyRef('${d.reference}')">Copy Reference</button></div>`;
+document.getElementById('fund-result').innerHTML=resultHTML;
+document.getElementById('fund-result').style.display='block';
+document.getElementById('fund-form').style.display='none';
+}catch(e){alert('Error: '+e.message)}
+}
+
+function copyRef(ref){
+navigator.clipboard.writeText(ref).then(()=>alert('Reference copied!'));
+}
+
+// HISTORY
+async function loadHistory(){
+try{
+const r=await fetch(`${API}/transactions?platform=HarzPay&limit=20`);
+const data=await r.json();
+const txns=data.transactions||data||[];
+if(!Array.isArray(txns)||txns.length===0){
+document.getElementById('history-list').innerHTML='<p style="color:#8892a6;font-size:13px;text-align:center;padding:20px">No transactions yet.</p>';
+return;
+}
+document.getElementById('history-list').innerHTML=txns.map(t=>
+`<div style="padding:12px;border-bottom:1px solid #2a2f3e">
+<div style="display:flex;justify-content:space-between">
+<span style="font-size:14px">${t.description||t.type||'Payment'}</span>
+<span style="font-size:14px;font-weight:bold;color:${t.status==='completed'?'#00A859':'#FF9800'}">₦${Number(t.amount||0).toLocaleString()}</span>
+</div>
+<div style="font-size:12px;color:#8892a6;margin-top:4px">
+${t.reference||''} · ${t.status||''}
+</div></div>`
+).join('');
+}catch(e){
+document.getElementById('history-list').innerHTML='<p style="color:#8892a6;font-size:13px;text-align:center;padding:20px">Could not load history.</p>';
+}
+}
+
+init();
+</script>
+</body>
+</html>
