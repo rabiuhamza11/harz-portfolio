@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Production Freeze — Countdown to Aug 31</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.c{max-width:1000px;margin:0 auto}
+h1{text-align:center;font-size:2rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{text-align:center;color:#94a3b8;margin-bottom:24px}
+.countdown{text-align:center;background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid #334155;border-radius:16px;padding:32px;margin-bottom:24px}
+.countdown-num{font-size:4rem;font-weight:bold;color:#60a5fa;line-height:1}
+.countdown-label{color:#94a3b8;margin-top:8px;font-size:1rem}
+.countdown-date{color:#64748b;margin-top:4px;font-size:.85rem}
+.progress-bar{width:100%;height:8px;background:#334155;border-radius:4px;margin-top:16px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#22c55e);border-radius:4px;transition:.5s}
+.section{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.section h2{font-size:1.2rem;color:#60a5fa;margin-bottom:16px}
+.item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #334155}
+.item:last-child{border:0}
+.check{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px}
+.check-done{background:#052e16;color:#4ade80}
+.check-pending{background:#3b2f0e;color:#fbbf24}
+.check-blocked{background:#450a0a;color:#f87171}
+.item-content{flex:1}
+.item-title{font-weight:600;font-size:.95rem}
+.item-desc{color:#94a3b8;font-size:.85rem;margin-top:4px}
+.item-status{font-size:.75rem;padding:2px 8px;border-radius:4px;margin-top:6px;display:inline-block}
+.status-done{background:#052e16;color:#4ade80}
+.status-pending{background:#3b2f0e;color:#fbbf24}
+.status-blocked{background:#450a0a;color:#f87171}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;text-align:center}
+.stat-num{font-size:2rem;font-weight:bold}
+.stat-label{font-size:.75rem;color:#94a3b8;margin-top:4px;text-transform:uppercase;letter-spacing:.05em}
+.green{color:#4ade80}.yellow{color:#fbbf24}.red{color:#f87171}.blue{color:#60a5fa}
+.note{background:#0c4a6e;border:1px solid #0e7490;border-radius:8px;padding:16px;margin-bottom:20px;font-size:.9rem;color:#38bdf8}
+</style>
+</head>
+<body>
+<div class="c">
+<h1>HARZ Production Freeze</h1>
+<p class="sub">Final checklist — all production must conclude by August 31, 2026</p>
+
+<div class="countdown">
+<div class="countdown-num" id="daysLeft">--</div>
+<div class="countdown-label">days remaining</div>
+<div class="countdown-date">Target: August 31, 2026</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<div class="note">Items marked yellow need your action (API keys, dashboard config). Items marked red are blocked on external dependencies. Green items are complete.</div>
+
+<div class="section">
+<h2>Infrastructure (Cloudflare)</h2>
+<div id="infra"></div>
+</div>
+
+<div class="section">
+<h2>API & Security (HARZ Cloud API v23.1)</h2>
+<div id="api"></div>
+</div>
+
+<div class="section">
+<h2>Payments</h2>
+<div id="payments"></div>
+</div>
+
+<div class="section">
+<h2>Ecosystem & Pages</h2>
+<div id="ecosystem"></div>
+</div>
+
+<div class="section">
+<h2>External Integrations</h2>
+<div id="integrations"></div>
+</div>
+
+</div>
+<script>
+const items = {
+  infra: [
+    {title:"Cloudflare Workers (2 active)", desc:"magani-agent v10.0 + harz-cloud-api v23.1", status:"done"},
+    {title:"Cloudflare Pages (2 projects)", desc:"harz-cloud (678 files) + harz-portfolio mirror", status:"done"},
+    {title:"D1 Database (2 databases)", desc:"HARZ_DB + MAGANU_DB — operational", status:"done"},
+    {title:"KV Namespaces (8 active)", desc:"Rate limit, entities, auth, memory, file storage, automations, ws sessions, cloud KV", status:"done"},
+    {title:"Cloudflare Workers Paid Plan", desc:"Needed for cron triggers, Workers AI, R2. Currently on free plan (5/5 crons used).", status:"pending", action:"Upgrade at dash.cloudflare.com > Workers & Pages > Plan"},
+    {title:"R2 Storage", desc:"Not enabled. Needed for file uploads, backups, media storage.", status:"pending", action:"Enable at dash.cloudflare.com > R2 Object Storage"},
+    {title:"DNS: harz.linkpc.net", desc:"Still points to GitHub Pages IP (185.199.108.153). Needs CNAME to harz-cloud.pages.dev.", status:"blocked", action:"Update at dnsexit.com or provide new DNSExit API key"},
+    {title:"Delete old Render instance", desc:"Magani v7.9.3 still running on Render. Already migrated to Cloudflare.", status:"pending", action:"Delete at render.com > dashboard > magani"},
+    {title:"Disable GitHub Pages", desc:"rabiuhamza11.github.io still serving old content. All traffic moved to Cloudflare Pages.", status:"pending", action:"Settings > Pages > Source: None"},
+  ],
+  api: [
+    {title:"Rate Limiting", desc:"60 req/min, 1000 req/hour per IP — KV-based with auto-cleanup", status:"done"},
+    {title:"Error Tracking", desc:"7-day retention, daily counters, error IDs for debugging", status:"done"},
+    {title:"2FA/TOTP Authentication", desc:"QR code setup, TOTP verify, login flow integration", status:"done"},
+    {title:"30+ API Endpoints", desc:"Health, info, status, SMS, email, 2FA, OAuth, push, orders, payments, analytics, CRM, agents, auth, entities, memory, webhooks, deployforge, bridge, manager", status:"done"},
+    {title:"Google Analytics", desc:"Tag added to pages but needs real GA4 property ID (G-XXXXXXXXXX placeholder).", status:"pending", action:"Create GA4 at analytics.google.com, replace G-XXXXXXXXXX"},
+    {title:"SMS Gateway (Termii)", desc:"Code ready: /sms/send, /sms/otp/send, /sms/otp/verify. Needs API key.", status:"pending", action:"Get free key at termii.com, set as TERMII_API_KEY secret"},
+    {title:"Email Service (Resend)", desc:"Code ready: /email/send, /email/receipt with 3 templates. Needs API key.", status:"pending", action:"Get free key at resend.com (3000/mo free), set as RESEND_API_KEY secret"},
+    {title:"OAuth2 Login", desc:"Code ready for Google, GitHub, Facebook. Needs client IDs.", status:"pending", action:"Create OAuth apps, set OAUTH_GOOGLE_CLIENT_ID etc as secrets"},
+    {title:"Push Notifications", desc:"Code ready: /push/subscribe, /push/send. Needs VAPID keys.", status:"pending", action:"Generate VAPID keys, set as VAPID_PUBLIC_KEY + VAPID_PRIVATE_KEY secrets"},
+  ],
+  payments: [
+    {title:"Paystack (LIVE)", desc:"NGN payments, card checkout, verification — fully operational", status:"done"},
+    {title:"Grey US Bank Account", desc:"Lead Bank, 210753267775, Hamza Rabiu — integrated on all 5 payment pages", status:"done"},
+    {title:"UBA Bank Transfer", desc:"Account 2034326424, Rabiu Hamza Mohammed — live on all payment pages", status:"done"},
+    {title:"USDT TRC20 (NowPayments)", desc:"Crypto payments via NowPayments — live", status:"done"},
+    {title:"GDEG Token", desc:"Fixed at ₦15 for exchange and P2P — live", status:"done"},
+    {title:"Stripe Removed", desc:"Discontinued — Nigerian businesses not supported. All references purged.", status:"done"},
+    {title:"NowPayments Payout Config", desc:"Grey US bank needs to be set as payout address in NowPayments dashboard.", status:"pending", action:"Login at nowpayments.io > Settings > Payout Wallet"},
+    {title:"Flutterwave", desc:"Not integrated. Optional — Paystack covers Nigerian market.", status:"pending", action:"Optional — skip if not needed before Aug 31"},
+  ],
+  ecosystem: [
+    {title:"678 HTML pages deployed", desc:"All live on harz-cloud.pages.dev, synced to GitHub", status:"done"},
+    {title:"98 platforms operational", desc:"Super app, AI cloud, store, school, farm, construction, ads, etc.", status:"done"},
+    {title:"535 utility tools", desc:"Calculators, generators, converters, dev tools — all live", status:"done"},
+    {title:"Analytics Dashboard", desc:"Live data viz: revenue charts, payment pie, API status, orders table", status:"done"},
+    {title:"Security Center", desc:"2FA, OAuth, SMS, Email, Push — all UI built and deployed", status:"done"},
+    {title:"English-only standardization", desc:"All Hausa removed, all interfaces in English", status:"done"},
+    {title:"PWA offline mode", desc:"Service worker + manifest for offline access on mobile", status:"done"},
+    {title:"Magani Agent v10.0", desc:"21 tools, 9 executive agents, KV memory, HARZ Pay lifecycle — live", status:"done"},
+  ],
+  integrations: [
+    {title:"Telegram Bot (@Rabiuhamzabot)", desc:"Webhook pointing to Cloudflare Workers — operational", status:"done"},
+    {title:"WhatsApp Webhook", desc:"Endpoint ready at /webhooks/whatsapp — needs Meta app verification", status:"pending", action:"Configure at developers.facebook.com > WhatsApp > Webhooks"},
+    {title:"Health Monitor Workflow", desc:"Every 30 min via Base44 workflow — checks Cloudflare infra", status:"done"},
+    {title:"Payment Notifier", desc:"WhatsApp notification on successful transactions — operational", status:"done"},
+  ],
+};
+
+function renderItems(containerId, itemList) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = itemList.map(item => {
+    const icon = item.status === "done" ? "✓" : item.status === "pending" ? "⏳" : "✗";
+    const cls = item.status === "done" ? "check-done" : item.status === "pending" ? "check-pending" : "check-blocked";
+    const statCls = item.status === "done" ? "status-done" : item.status === "pending" ? "status-pending" : "status-blocked";
+    const statText = item.status === "done" ? "COMPLETE" : item.status === "pending" ? "NEEDS ACTION" : "BLOCKED";
+    return `<div class="item"><div class="check ${cls}">${icon}</div><div class="item-content"><div class="item-title">${item.title}</div><div class="item-desc">${item.desc}</div>${item.action ? `<div class="item-desc" style="color:#60a5fa;margin-top:4px">→ ${item.action}</div>` : ""}<span class="item-status ${statCls}">${statText}</span></div></div>`;
+  }).join("");
+}
+
+function updateCountdown() {
+  const target = new Date("2026-08-31T23:59:59");
+  const now = new Date();
+  const diff = Math.ceil((target - now) / 86400000);
+  document.getElementById("daysLeft").textContent = diff;
+  
+  // Progress: started Aug 1, ends Aug 31
+  const start = new Date("2026-08-01");
+  const total = (target - start) / 86400000;
+  const elapsed = (now - start) / 86400000;
+  const pct = Math.min((elapsed / total) * 100, 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+function renderStats() {
+  let done = 0, pending = 0, blocked = 0;
+  Object.values(items).forEach(list => list.forEach(item => {
+    if (item.status === "done") done++;
+    else if (item.status === "pending") pending++;
+    else blocked++;
+  }));
+  const total = done + pending + blocked;
+  document.getElementById("stats").innerHTML = `
+    <div class="stat"><div class="stat-num green">${done}</div><div class="stat-label">Complete</div></div>
+    <div class="stat"><div class="stat-num yellow">${pending}</div><div class="stat-label">Needs Action</div></div>
+    <div class="stat"><div class="stat-num red">${blocked}</div><div class="stat-label">Blocked</div></div>
+    <div class="stat"><div class="stat-num blue">${Math.round(done/total*100)}%</div><div class="stat-label">Done</div></div>
+  `;
+}
+
+renderItems("infra", items.infra);
+renderItems("api", items.api);
+renderItems("payments", items.payments);
+renderItems("ecosystem", items.ecosystem);
+renderItems("integrations", items.integrations);
+renderStats();
+updateCountdown();
+setInterval(updateCountdown, 60000);
+</script>
+</body>
+</html>
