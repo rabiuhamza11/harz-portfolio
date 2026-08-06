@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Cloud Admin — Ecosystem Control Center</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.c{max-width:1100px;margin:0 auto}
+h1{font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.sub{color:#94a3b8;margin-bottom:20px;font-size:.85rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:20px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px}
+.card h3{font-size:.95rem;color:#60a5fa;margin-bottom:10px}
+.stat{font-size:1.8rem;font-weight:bold}
+.stat-label{font-size:.75rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.section{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:16px}
+.section h2{font-size:1.1rem;color:#60a5fa;margin-bottom:14px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #334155;font-size:.9rem}
+.row:last-child{border:0}
+.row a{color:#60a5fa;text-decoration:none}
+.row a:hover{text-decoration:underline}
+.badge{font-size:.7rem;padding:2px 8px;border-radius:4px;font-weight:600;text-transform:uppercase}
+.b-green{background:#052e16;color:#4ade80}
+.b-yellow{background:#3b2f0e;color:#fbbf24}
+.b-red{background:#450a0a;color:#f87171}
+.b-blue{background:#0c4a6e;color:#38bdf8}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.quick-link{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px;text-align:center;text-decoration:none;color:#94a3b8;font-size:.8rem;transition:.2s}
+.quick-link:hover{border-color:#3b82f6;color:#60a5fa}
+.quick-link .icon{font-size:1.5rem;display:block;margin-bottom:4px}
+.btn{display:inline-block;padding:8px 16px;border-radius:8px;border:none;font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:none;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff}
+.btn-outline{background:transparent;border:1px solid #334155;color:#94a3b8}
+.btn:hover{opacity:.85}
+.progress{width:100%;height:6px;background:#334155;border-radius:3px;margin-top:8px;overflow:hidden}
+.progress-fill{height:100%;background:#22c55e;border-radius:3px;transition:.5s}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;color:#94a3b8;padding:8px;border-bottom:1px solid #334155;font-weight:600;font-size:.75rem;text-transform:uppercase}
+td{padding:8px;border-bottom:1px solid #334155}
+td a{color:#60a5fa;text-decoration:none}
+.fw{font-weight:600}
+.mono{font-family:monospace;font-size:.8rem;color:#4ade80}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;margin-right:6px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+<div class="c">
+<h1>HARZ Cloud Admin</h1>
+<p class="sub">Ecosystem Control Center — <span class="live-dot"></span>Live</p>
+
+<div class="grid">
+<div class="card"><h3>Total Assets</h3><div class="stat" id="totalAssets">678</div><div class="stat-label">Pages + Tools</div></div>
+<div class="card"><h3>Platforms</h3><div class="stat" id="platforms">98</div><div class="stat-label">Live Platforms</div></div>
+<div class="card"><h3>API Version</h3><div class="stat" id="apiVer">v23.1</div><div class="stat-label">Cloud API</div></div>
+<div class="card"><h3>Uptime</h3><div class="stat" style="color:#4ade80">100%</div><div class="stat-label">Cloudflare Edge</div></div>
+</div>
+
+<div class="quick-grid">
+<a class="quick-link" href="/harz-super-app"><span class="icon">🏠</span>Super App</a>
+<a class="quick-link" href="/harz-toolkit"><span class="icon">🛠️</span>Toolkit</a>
+<a class="quick-link" href="/harz-analytics-dashboard"><span class="icon">📊</span>Analytics</a>
+<a class="quick-link" href="/harz-security-center"><span class="icon">🔒</span>Security</a>
+<a class="quick-link" href="/harz-pay-live"><span class="icon">💳</span>Payments</a>
+<a class="quick-link" href="/harz-production-freeze"><span class="icon">⏰</span>Freeze</a>
+<a class="quick-link" href="/harz-status"><span class="icon">📡</span>Status</a>
+<a class="quick-link" href="/harz-api-docs"><span class="icon">📚</span>API Docs</a>
+</div>
+
+<div class="section">
+<h2>Infrastructure</h2>
+<div class="row"><span>Cloudflare Pages</span><span><span class="badge b-green">2 projects</span> <span class="badge b-green">87 files</span></span></div>
+<div class="row"><span>Cloudflare Workers</span><span><span class="badge b-green">2 active</span> <span class="badge b-blue">v23.1</span></span></div>
+<div class="row"><span>D1 Database</span><span><span class="badge b-green">2 databases</span></span></div>
+<div class="row"><span>KV Namespaces</span><span><span class="badge b-green">8 active</span></span></div>
+<div class="row"><span>Cloudflare Plan</span><span><span class="badge b-yellow">Free (5/5 crons)</span></span></div>
+<div class="row"><span>R2 Storage</span><span><span class="badge b-yellow">Not enabled</span></span></div>
+<div class="row"><span>Custom Domain</span><span><span class="badge b-red">harz.linkpc.net pending</span></span></div>
+</div>
+
+<div class="section">
+<h2>API Services Status</h2>
+<div id="apiServices"></div>
+</div>
+
+<div class="section">
+<h2>Payment Systems</h2>
+<div class="row"><span>Paystack (LIVE)</span><span class="badge b-green">Operational</span></div>
+<div class="row"><span>Grey US Bank (Lead Bank)</span><span class="badge b-green">210753267775</span></div>
+<div class="row"><span>UBA Bank Transfer</span><span class="badge b-green">2034326424</span></div>
+<div class="row"><span>USDT TRC20 (NowPayments)</span><span class="badge b-green">Live</span></div>
+<div class="row"><span>GDEG Token</span><span class="badge b-green">₦15 fixed</span></div>
+<div class="row"><span>Stripe</span><span class="badge b-red">Removed</span></div>
+<div class="row"><span>NowPayments Payout</span><span class="badge b-yellow">Pending config</span></div>
+</div>
+
+<div class="section">
+<h2>Security & Integrations</h2>
+<div class="row"><span>Rate Limiting</span><span class="badge b-green">60/min · 1000/hr</span></div>
+<div class="row"><span>Error Tracking</span><span class="badge b-green">7-day retention</span></div>
+<div class="row"><span>2FA/TOTP</span><span class="badge b-green">Active</span></div>
+<div class="row"><span>SMS (Termii)</span><span class="badge b-yellow">Needs API key</span></div>
+<div class="row"><span>Email (Resend)</span><span class="badge b-yellow">Needs API key</span></div>
+<div class="row"><span>OAuth2</span><span class="badge b-yellow">Needs client IDs</span></div>
+<div class="row"><span>Push Notifications</span><span class="badge b-yellow">Needs VAPID keys</span></div>
+<div class="row"><span>Telegram Bot</span><span class="badge b-green">@Rabiuhamzabot</span></div>
+<div class="row"><span>WhatsApp Webhook</span><span class="badge b-yellow">Needs Meta verification</span></div>
+</div>
+
+<div class="section">
+<h2>Production Freeze Countdown</h2>
+<div class="row"><span>Target Date</span><span class="fw">August 31, 2026</span></div>
+<div class="row"><span>Days Remaining</span><span class="fw" id="daysLeft" style="font-size:1.2rem;color:#60a5fa">25</span></div>
+<div class="row"><span>Items Complete</span><span class="fw"><span style="color:#4ade80">22</span> / 32</span></div>
+<div class="progress"><div class="progress-fill" style="width:69%"></div></div>
+<div style="margin-top:12px">
+<a class="btn btn-primary" href="/harz-production-freeze">View Full Checklist</a>
+<a class="btn btn-outline" href="/harz-status">System Status</a>
+</div>
+</div>
+
+<div class="section">
+<h2>Recent Deployments</h2>
+<table>
+<thead><tr><th>Page</th><th>Status</th><th>URL</th></tr></thead>
+<tbody>
+<tr><td class="fw">Security Center</td><td><span class="badge b-green">Live</span></td><td><a href="/harz-security-center">/harz-security-center</a></td></tr>
+<tr><td class="fw">Production Freeze</td><td><span class="badge b-green">Live</span></td><td><a href="/harz-production-freeze">/harz-production-freeze</a></td></tr>
+<tr><td class="fw">Public Status</td><td><span class="badge b-green">Live</span></td><td><a href="/harz-status">/harz-status</a></td></tr>
+<tr><td class="fw">API Docs</td><td><span class="badge b-green">Live</span></td><td><a href="/harz-api-docs">/harz-api-docs</a></td></tr>
+<tr><td class="fw">Analytics Dashboard</td><td><span class="badge b-green">Live</span></td><td><a href="/harz-analytics-dashboard">/harz-analytics-dashboard</a></td></tr>
+<tr><td class="fw">Cloud API v23.1</td><td><span class="badge b-green">Live</span></td><td class="mono">harz-cloud-api.harz.workers.dev</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="section">
+<h2>Quick Actions</h2>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<a class="btn btn-primary" href="/harz-super-app">Open Super App</a>
+<a class="btn btn-outline" href="https://harz-cloud-api.harz.workers.dev/health">API Health</a>
+<a class="btn btn-outline" href="https://harz-cloud-api.harz.workers.dev/rate-limit-stats">Rate Limits</a>
+<a class="btn btn-outline" href="https://harz-cloud-api.harz.workers.dev/errors">Error Log</a>
+<a class="btn btn-outline" href="https://harz-cloud-api.harz.workers.dev/manager/health-check">Infra Check</a>
+</div>
+</div>
+
+</div>
+<script>
+const API="https://harz-cloud-api.harz.workers.dev";
+async function load(){
+try{
+const h=await fetch(`${API}/health`).then(r=>r.json());
+const s=await fetch(`${API}/status`).then(r=>r.json());
+const m=await fetch(`${API}/manager/health-check`).then(r=>r.json()).catch(()=>({}));
+const e=await fetch(`${API}/errors`).then(r=>r.json()).catch(()=>({}));
+
+// API services
+const services=[
+["API Gateway", h.status, "b-green"],
+["Workers AI", s.agents ? `${s.agents} agents` : "active", "b-green"],
+["D1 Database", h.services?.d1 || "operational", "b-green"],
+["KV Storage", h.services?.kv || "operational", "b-green"],
+["Rate Limiter", h.services?.rateLimit || "active", "b-green"],
+["2FA Service", h.services?.twofa || "active", "b-green"],
+["SMS Gateway", h.services?.sms || "pending_key", "b-yellow"],
+["Email Service", h.services?.email || "pending_key", "b-yellow"],
+["Push Service", h.services?.push || "pending_key", "b-yellow"],
+["Errors Today", (e.errorStats?.today||0) + " errors", (e.errorStats?.today||0)===0 ? "b-green" : "b-red"],
+];
+document.getElementById("apiServices").innerHTML = services.map(([name,status,cls])=>
+`<div class="row"><span>${name}</span><span class="badge ${cls}">${status}</span></div>`
+).join("");
+
+// Update version
+if(h.version) document.getElementById("apiVer").textContent = "v" + h.version;
+
+// Countdown
+const target = new Date("2026-08-31T23:59:59");
+const days = Math.ceil((target - new Date()) / 86400000);
+document.getElementById("daysLeft").textContent = days;
+
+}catch(e){console.error("Failed to load:",e);}
+}
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>
