@@ -2,145 +2,157 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0a0e27">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>HARZ Super App v5.0</title>
+<meta name="description" content="HARZ Super App — 63+ platforms, 7 AI agents, multi-currency wallet">
+<title>HARZ Super App</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,system-ui,sans-serif}
-:root{--bg:#0a0e27;--card:#141833;--accent:#6c5ce7;--accent2:#00cec9;--text:#eee;--muted:#8892b0;--danger:#e74c3c;--success:#00b894;--radius:12px}
-[data-theme="light"]{--bg:#f0f0f5;--card:#fff;--text:#333;--muted:#666}
-body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:.3s}
-.header{position:sticky;top:0;z-index:100;background:rgba(10,14,39,.95);backdrop-filter:blur(10px);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(108,92,231,.2)}
-[data-theme="light"] .header{background:rgba(255,255,255,.95)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,system-ui,-sans-serif}
+:root{--bg:#0a0e27;--card:#141833;--card2:#1a1f3a;--accent:#6c5ce7;--accent2:#00cec9;--text:#eee;--muted:#8892b0;--danger:#e74c3c;--success:#00b894;--warn:#fdcb6e;--radius:12px;--shadow:0 2px 8px rgba(0,0,0,.3)}
+.light{--bg:#f0f2f5;--card:#fff;--card2:#f8f9fa;--text:#1a1a2e;--muted:#6c7293;--shadow:0 2px 8px rgba(0,0,0,.1)}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+.header{position:sticky;top:0;z-index:100;background:rgba(10,14,39,.95);backdrop-filter:blur(10px);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(108,92,231,.2)}
+.light .header{background:rgba(255,255,255,.95)}
 .logo{font-size:18px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-btns{display:flex;gap:8px;align-items:center}
-.nav-btn{background:var(--card);border:1px solid rgba(108,92,231,.3);color:var(--text);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer}
-.nav-btn.active{background:var(--accent);border-color:var(--accent)}
-.ws-status{width:8px;height:8px;border-radius:50%;display:inline-block}
-.ws-on{background:var(--success)}.ws-off{background:var(--danger)}
-.container{max-width:500px;margin:0 auto;padding:16px;padding-bottom:80px}
-.card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.05)}
-[data-theme="light"] .card{border:1px solid rgba(0,0,0,.08)}
-.card h3{font-size:14px;margin-bottom:8px;color:var(--accent2)}
+.header-right{display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot-on{background:var(--success)}.dot-off{background:var(--danger)}
+.nav-btn{background:var(--card);border:1px solid rgba(108,92,231,.3);color:var(--text);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;white-space:nowrap}
+.container{max-width:500px;margin:0 auto;padding:14px;padding-bottom:90px}
+.card{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,.05);box-shadow:var(--shadow)}
+.light .card{border:1px solid rgba(0,0,0,.05)}
+.card h3{font-size:14px;margin-bottom:8px;color:var(--accent2);display:flex;align-items:center;gap:6px}
 .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.stat{background:rgba(255,255,255,.03);border-radius:8px;padding:12px;text-align:center}
-[data-theme="light"] .stat{background:rgba(0,0,0,.03)}
-.stat .num{font-size:20px;font-weight:700;color:var(--accent2)}
+.stat{background:var(--card2);border-radius:8px;padding:12px;text-align:center}
+.stat .num{font-size:22px;font-weight:700;color:var(--accent2)}
 .stat .label{font-size:11px;color:var(--muted);margin-top:2px}
 .platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.platform{background:rgba(255,255,255,.03);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s}
-[data-theme="light"] .platform{background:rgba(0,0,0,.03)}
-.platform:hover{background:rgba(108,92,231,.15)}
-.platform .icon{font-size:24px;margin-bottom:4px}
-.platform .name{font-size:10px;color:var(--muted)}
-.section-title{font-size:13px;color:var(--muted);margin:16px 0 8px;text-transform:uppercase;letter-spacing:1px}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,39,.98);backdrop-filter:blur(10px);display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid rgba(108,92,231,.2);max-width:500px;margin:0 auto}
-[data-theme="light"] .bottom-nav{background:rgba(255,255,255,.98)}
-.nav-item{text-align:center;cursor:pointer;padding:4px 8px}
-.nav-item .ico{font-size:20px}
-.nav-item .txt{font-size:9px;color:var(--muted);margin-top:2px}
+.platform{background:var(--card2);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s;border:1px solid transparent}
+.platform:active{background:rgba(108,92,231,.2);border-color:var(--accent)}
+.platform .icon{font-size:22px;margin-bottom:4px}
+.platform .name{font-size:10px;color:var(--muted);margin-bottom:2px}
+.section-title{font-size:12px;color:var(--muted);margin:14px 0 8px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,39,.98);backdrop-filter:blur(10px);display:flex;justify-content:space-around;padding:6px 0 8px;border-top:1px solid rgba(108,92,231,.2);max-width:500px;margin:0 auto;z-index:100}
+.light .bottom-nav{background:rgba(255,255,255,.98)}
+.nav-item{text-align:center;cursor:pointer;padding:4px 8px;flex:1}
+.nav-item .ico{font-size:20px;line-height:1}
+.nav-item .txt{font-size:10px;color:var(--muted);margin-top:2px}
 .nav-item.active .ico,.nav-item.active .txt{color:var(--accent2)}
-.page{display:none}.page.active{display:block}
-.input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(108,92,231,.3);border-radius:8px;padding:12px;color:var(--text);font-size:14px;margin-bottom:10px}
-[data-theme="light"] .input{background:rgba(0,0,0,.05)}
+.page{display:none}
+.page.active{display:block}
+.input{width:100%;background:var(--card2);border:1px solid rgba(108,92,231,.3);border-radius:8px;padding:12px;color:var(--text);font-size:14px;margin-bottom:10px}
 .input:focus{border-color:var(--accent);outline:none}
+.input::placeholder{color:var(--muted)}
 .btn{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;padding:12px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
-.btn:active{opacity:.8}
+.btn:active{opacity:.8;transform:scale(.98)}
 .btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
-.agent{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px;cursor:pointer}
-[data-theme="light"] .agent{background:rgba(0,0,0,.03)}
-.agent .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(108,92,231,.2)}
-.agent .info{flex:1}
+.agent{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:8px;margin-bottom:6px}
+.agent .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.agent .info{flex:1;min-width:0}
 .agent .name{font-size:13px;font-weight:600}
 .agent .role{font-size:11px;color:var(--muted)}
-.agent .agent-status{width:8px;height:8px;border-radius:50%;background:var(--success)}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
-.badge-live{background:rgba(0,184,148,.2);color:var(--success)}
-.badge-dev{background:rgba(108,92,231,.2);color:var(--accent)}
-.badge-offline{background:rgba(231,76,60,.2);color:var(--danger)}
-.list-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px}
-[data-theme="light"] .list-item{background:rgba(0,0,0,.03)}
+.agent .status-dot{width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:600}
+.badge-live{background:rgba(0,184,148,.15);color:var(--success)}
+.badge-new{background:rgba(108,92,231,.15);color:var(--accent)}
+.badge-off{background:rgba(231,76,60,.15);color:var(--danger)}
+.badge-check{background:rgba(135,150,179,.15);color:var(--muted)}
+.list-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--card2);border-radius:8px;margin-bottom:6px}
 .list-item .title{font-size:13px}
 .list-item .meta{font-size:11px;color:var(--muted)}
-.chat-msg{padding:8px 12px;border-radius:12px;max-width:80%;margin-bottom:6px;font-size:13px;word-wrap:break-word}
+.chat-box{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;margin-bottom:10px;padding:8px;background:var(--card2);border-radius:8px}
+.chat-msg{padding:8px 12px;border-radius:12px;max-width:80%;font-size:13px;line-height:1.4}
 .chat-msg.in{background:rgba(255,255,255,.05);align-self:flex-start}
-[data-theme="light"] .chat-msg.in{background:rgba(0,0,0,.05)}
-.chat-msg.out{background:var(--accent);align-self:flex-end;margin-left:auto;color:#fff}
-.chat-box{max-height:300px;overflow-y:auto;display:flex;flex-direction:column;margin-bottom:60px}
-.chat-input{display:flex;gap:6px;position:fixed;bottom:60px;left:0;right:0;max-width:500px;margin:0 auto;padding:8px;background:rgba(10,14,39,.98)}
-[data-theme="light"] .chat-input{background:rgba(255,255,255,.98)}
-.chat-input .input{flex:1;margin:0}
-.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:.3s;white-space:nowrap;max-width:90%}
+.chat-msg.out{background:var(--accent);align-self:flex-end;color:#fff}
+.light .chat-msg.in{background:#f0f0f5}
+.chat-bar{display:flex;gap:6px;margin-bottom:10px}
+.chat-bar .input{flex:1;margin:0}
+.chat-bar .btn{width:auto;padding:12px 16px;margin:0}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:.3s;pointer-events:none}
 .toast.show{opacity:1}
-.toast.error{background:var(--danger)}
-#loading{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:12px}
+.loading-screen{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:12px}
 .spinner{width:32px;height:32px;border:3px solid rgba(108,92,231,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.search-bar{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(108,92,231,.3);border-radius:20px;padding:8px 14px;color:var(--text);font-size:13px;margin-bottom:12px}
-[data-theme="light"] .search-bar{background:rgba(0,0,0,.05)}
+.fab{position:fixed;bottom:70px;right:16px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(108,92,231,.4);z-index:90;display:none}
+.fab.show{display:block}
+.hide{display:none!important}
+.fw{font-weight:600}
 </style>
 </head>
 <body>
 <div class="header">
 <div class="logo">⚡ HARZ</div>
-<div class="nav-btns">
-<span id="wsDot" class="ws-status ws-off" title="API Status"></span>
-<button class="nav-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
-<button class="nav-btn" id="userBtn" onclick="showPage('profile')">Login</button>
+<div class="header-right">
+<span id="connDot" class="dot dot-off" title="Connection"></span>
+<button class="nav-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+<button class="nav-btn" id="userBtn" onclick="goAuth()">Login</button>
 </div>
 </div>
 
-<div id="loading">
+<div id="loadingScreen" class="loading-screen">
 <div class="spinner"></div>
-<div style="color:var(--muted);font-size:13px">Connecting to HARZ Cloud...</div>
+<div style="color:var(--muted);font-size:13px">Loading HARZ Super App...</div>
 </div>
 
 <div class="container" id="app" style="display:none">
 
 <!-- DASHBOARD -->
-<div class="page active" id="page-dashboard">
+<div class="page active" id="page-home">
 <div class="card">
 <h3>📊 Ecosystem Overview</h3>
-<div class="stat-grid" id="statsGrid"></div>
+<div class="stat-grid">
+<div class="stat"><div class="num" id="statPlatforms">63+</div><div class="label">Platforms</div></div>
+<div class="stat"><div class="num" id="statProducts">486</div><div class="label">Products</div></div>
+<div class="stat"><div class="num" id="statAgents">7</div><div class="label">AI Agents</div></div>
+<div class="stat"><div class="num">45</div><div class="label">Dev Tools</div></div>
+<div class="stat"><div class="num" id="statRevenue">₦0</div><div class="label">Revenue</div></div>
+</div>
 </div>
 <div class="section-title">Quick Actions</div>
 <div class="platform-grid">
-<div class="platform" onclick="quickAction('search')"><div class="icon">🔍</div><div class="name">Search</div></div>
-<div class="platform" onclick="quickAction('wallet')"><div class="icon">💳</div><div class="name">Wallet</div></div>
-<div class="platform" onclick="quickAction('agents')"><div class="icon">🤖</div><div class="name">Agents</div></div>
-<div class="platform" onclick="quickAction('analytics')"><div class="icon">📈</div><div class="name">Analytics</div></div>
-<div class="platform" onclick="quickAction('platforms')"><div class="icon">📱</div><div class="name">Platforms</div></div>
-<div class="platform" onclick="quickAction('settings')"><div class="icon">⚙️</div><div class="name">Settings</div></div>
+<div class="platform" onclick="goPage('platforms')"><div class="icon">📱</div><div class="name">Platforms</div></div>
+<div class="platform" onclick="goPage('wallet')"><div class="icon">💳</div><div class="name">Wallet</div></div>
+<div class="platform" onclick="goPage('agents')"><div class="icon">🤖</div><div class="name">Agents</div></div>
+<div class="platform" onclick="goPage('settings')"><div class="icon">📈</div><div class="name">Analytics</div></div>
+<div class="platform" onclick="testConnection()"><div class="icon">🔌</div><div class="name">Test API</div></div>
+<div class="platform" onclick="goPage('devtools')"><div class="icon">🛠️</div><div class="name">DevTools</div></div>
+<div class="platform" onclick="goPage('settings')"><div class="icon">⚙️</div><div class="name">Settings</div></div>
 </div>
 <div class="section-title">Live Status</div>
-<div class="card">
-<div class="list-item"><span class="title">Backend</span><span id="backendStatus" class="badge badge-offline">Checking...</span></div>
-<div class="list-item"><span class="title">Platforms Live</span><span id="liveCount" class="meta">—</span></div>
-<div class="list-item"><span class="title">Active Agents</span><span id="agentCount" class="meta">—</span></div>
-<div class="list-item"><span class="title">Avg Success Rate</span><span id="successRate" class="meta">—</span></div>
+<div class="card" style="padding:8px">
+<div class="list-item"><span class="title">HARZ Cloud</span><span id="cloudStatus" class="badge badge-check">Checking...</span></div>
+<div class="list-item"><span class="title">Base44 Backend</span><span id="b44Status" class="badge badge-check">Checking...</span></div>
+<div class="list-item"><span class="title">CDN</span><span id="cdnStatus" class="badge badge-check">Checking...</span></div>
+<div class="list-item"><span class="title">Webhooks</span><span id="hookStatus" class="badge badge-check">Checking...</span></div>
 </div>
 </div>
 
 <!-- PLATFORMS -->
 <div class="page" id="page-platforms">
-<input class="search-bar" id="platformSearch" placeholder="🔍 Search platforms..." oninput="filterPlatforms()">
-<div class="section-title">Ecosystem Platforms (<span id="platformCount">0</span>)</div>
+<div class="section-title">Ecosystem Platforms (24)</div>
 <div class="platform-grid" id="platformGrid"></div>
+<div class="section-title">Store Links</div>
+<div class="card" style="padding:8px">
+<div class="list-item" onclick="open('https://hamzarabiu.gumroad.com')" style="cursor:pointer"><span class="title">🛍️ Gumroad</span><span class="meta">Global Cards →</span></div>
+<div class="list-item" onclick="open('https://www.getly.store/store/harzdm-com-mr951f69')" style="cursor:pointer"><span class="title">📦 Getly Store</span><span class="meta">82 products →</span></div>
+<div class="list-item" onclick="open('https://harzdm.vercel.app')" style="cursor:pointer"><span class="title">🛒 HarzDM</span><span class="meta">Marketplace →</span></div>
+</div>
 </div>
 
 <!-- AGENTS -->
 <div class="page" id="page-agents">
-<div class="section-title">AI Agents (<span id="agentListCount">0</span>)</div>
+<div class="section-title">AI Agents (7 Active)</div>
 <div id="agentList"></div>
-<div class="section-title">Agent Chat</div>
+<div class="section-title">Chat with Magani</div>
 <div class="chat-box" id="chatBox">
-<div class="chat-msg in">👋 Hello! I'm Magani, your HARZ ecosystem assistant. How can I help you today?</div>
+<div class="chat-msg in">Sannu! Ni Magani ne. Yadda zan taimaka?</div>
 </div>
-<div class="chat-input">
+<div class="chat-bar">
 <input class="input" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendChat()">
-<button class="btn" style="width:auto;padding:12px 16px" onclick="sendChat()">Send</button>
+<button class="btn" onclick="sendChat()">Send</button>
 </div>
 </div>
 
@@ -149,85 +161,144 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 <div class="card">
 <h3>💳 HARZ Wallet</h3>
 <div class="stat-grid">
-<div class="stat"><div class="num" id="walletNGN">₦0</div><div class="label">NGN</div></div>
-<div class="stat"><div class="num" id="walletUSD">$0</div><div class="label">USD</div></div>
-<div class="stat"><div class="num" id="walletGDEG">0</div><div class="label">GDEG</div></div>
-<div class="stat"><div class="num" id="walletUSDT">0</div><div class="label">USDT</div></div>
+<div class="stat"><div class="num">₦0</div><div class="label">NGN</div></div>
+<div class="stat"><div class="num">$0</div><div class="label">USD</div></div>
+<div class="stat"><div class="num">0</div><div class="label">GDEG</div></div>
+<div class="stat"><div class="num">0</div><div class="label">USDT</div></div>
 </div>
 </div>
 <div class="section-title">Payment Methods</div>
-<div id="paymentMethods"></div>
-<div class="section-title">Recent Transactions</div>
-<div id="transactionList">
-<div class="list-item"><span class="title" style="color:var(--muted)">No transactions yet</span></div>
+<div class="card" style="padding:8px">
+<div class="list-item"><span class="title">🏦 UBA Transfer</span><span class="meta">2034326424</span></div>
+<div class="list-item"><span class="title">💳 Paystack</span><span class="meta fw" style="color:var(--success)">LIVE</span></div>
+<div class="list-item"><span class="title">🪙 GDEG Token</span><span class="meta">1 = $0.01 (₦15)</span></div>
+<div class="list-item"><span class="title">₮ USDT TRC20</span><span class="meta">Crypto</span></div>
+<div class="list-item"><span class="title">🌍 NOWPayments</span><span class="meta fw" style="color:var(--success)">355+ coins</span></div>
+<div class="list-item"><span class="title">📦 Gumroad</span><span class="meta fw" style="color:var(--success)">Global checkout</span></div>
+</div>
+<div class="section-title">HARZ Digital Learning</div>
+<div class="card" style="padding:8px">
+<div class="list-item" onclick="open('https://hamzarabiu.gumroad.com')" style="cursor:pointer"><span class="title">📚 12 Books Bundle</span><span class="meta">₦6,000 →</span></div>
+<div class="list-item" onclick="open('https://hamzarabiu.gumroad.com')" style="cursor:pointer"><span class="title">📖 Single Book</span><span class="meta">₦2,500 →</span></div>
 </div>
 </div>
 
-
-<!-- PRODUCTS -->
-<div class="page" id="page-products">
-<input class="search-bar" id="productSearch" placeholder="🔍 Search products..." oninput="filterProducts()">
-<div class="section-title">Harz Store (<span id="productCount">0</span>)</div>
-<div id="productList"></div>
-</div>
-
-<!-- ANALYTICS -->
-<div class="page" id="page-analytics">
-<div class="card">
-<h3>📈 Analytics Dashboard</h3>
-<div class="stat-grid">
-<div class="stat"><div class="num" id="totalRevenue">₦0</div><div class="label">Revenue</div></div>
-<div class="stat"><div class="num" id="totalProducts">0</div><div class="label">Products</div></div>
-<div class="stat"><div class="num" id="totalTxns">0</div><div class="label">Transactions</div></div>
-<div class="stat"><div class="num" id="totalPlatforms">0</div><div class="label">Platforms</div></div>
-</div>
-</div>
-<div class="section-title">Revenue by Platform</div>
-<div class="card" id="revenueByPlatform"></div>
-<div class="section-title">Platform Categories</div>
-<div class="card" id="categoryBreakdown"></div>
-<div class="section-title">Transaction History</div>
-<div class="card" id="txnHistory"></div>
-</div>
-
-<!-- PROFILE -->
-<div class="page" id="page-profile">
-<div id="loginSection">
+<!-- AUTH -->
+<div class="page" id="page-auth">
+<div id="loginForm">
 <div class="card">
 <h3>🔐 Login to HARZ</h3>
-<input class="input" id="loginEmail" placeholder="Email" type="email">
-<input class="input" id="loginPassword" placeholder="Password" type="password">
+<input class="input" id="loginEmail" placeholder="Email address" type="email" autocomplete="email">
+<input class="input" id="loginPassword" placeholder="Password" type="password" autocomplete="current-password">
 <button class="btn" onclick="doLogin()">Login</button>
-<button class="btn btn-outline" style="margin-top:8px" onclick="showRegister()">Create Account</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="showReg()">Create Account</button>
 </div>
 </div>
-<div id="registerSection" style="display:none">
+<div id="regForm" class="hide">
 <div class="card">
 <h3>📝 Create Account</h3>
-<input class="input" id="regName" placeholder="Full Name">
-<input class="input" id="regEmail" placeholder="Email" type="email">
-<input class="input" id="regPassword" placeholder="Password" type="password">
+<input class="input" id="regName" placeholder="Full name" autocomplete="name">
+<input class="input" id="regEmail" placeholder="Email" type="email" autocomplete="email">
+<input class="input" id="regPassword" placeholder="Password (min 6 chars)" type="password">
 <button class="btn" onclick="doRegister()">Register</button>
-<button class="btn btn-outline" style="margin-top:8px" onclick="showLogin()">Back to Login</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="showLogin()">← Back to Login</button>
 </div>
 </div>
-<div id="profileSection" style="display:none">
+<div id="profileView" class="hide">
 <div class="card">
 <h3>👤 Profile</h3>
-<div class="list-item"><span class="title">Name</span><span class="meta" id="profName">—</span></div>
-<div class="list-item"><span class="title">Email</span><span class="meta" id="profEmail">—</span></div>
-<div class="list-item"><span class="title">Role</span><span class="meta" id="profRole">user</span></div>
+<div class="list-item"><span class="title">Name</span><span class="meta" id="pName">—</span></div>
+<div class="list-item"><span class="title">Email</span><span class="meta" id="pEmail">—</span></div>
+<div class="list-item"><span class="title">Role</span><span class="meta" id="pRole">—</span></div>
+<div class="list-item"><span class="title">Member since</span><span class="meta" id="pSince">—</span></div>
 </div>
 <div class="section-title">Security</div>
 <div class="card">
-<div class="list-item" style="cursor:pointer" onclick="toggle2FA()"><span class="title">2FA</span><span class="meta" id="twoFAStatus">Disabled</span></div>
-<div class="list-item" style="cursor:pointer" onclick="resetPassword()"><span class="title">Reset Password</span><span class="meta">→</span></div>
+<button class="btn" onclick="enable2FA()">Enable 2FA</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="resetPass()">Reset Password</button>
+<button class="btn btn-outline" style="margin-top:8px;color:var(--danger);border-color:var(--danger)" onclick="doLogout()">Logout</button>
 </div>
-<div class="section-title">Data</div>
-<div class="card">
-<div class="list-item" style="cursor:pointer" onclick="exportData()"><span class="title">Export Data (JSON)</span><span class="meta">↓</span></div>
 </div>
-<button class="btn btn-outline" onclick="doLogout()">Logout</button>
+</div>
+
+
+<!-- DEVTOOLS -->
+<div class="page" id="page-devtools">
+<div class="section-title">Developer Tools Suite (45 Tools)</div>
+<div class="card" style="padding:8px">
+<div class="list-item" onclick="open('https://harz-devtools-suite.harz.workers.dev/')" style="cursor:pointer"><span class="title">🛠️ Open All Tools</span><span class="meta">45 tools →</span></div>
+</div>
+<div class="section-title">PWA & Mobile</div>
+<div class="platform-grid">
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/pwa-manifest-generator.html')"><div class="icon">📱</div><div class="name">Manifest Gen</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/service-worker-generator.html')"><div class="icon">⚙️</div><div class="name">SW Gen</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/app-icon-generator.html')"><div class="icon">🎨</div><div class="name">App Icons</div></div>
+</div>
+<div class="section-title">API & Backend</div>
+<div class="platform-grid">
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/openapi-generator.html')"><div class="icon">📄</div><div class="name">OpenAPI</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/postman-generator.html')"><div class="icon">📮</div><div class="name">Postman</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/api-key-generator.html')"><div class="icon">🔑</div><div class="name">API Keys</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/hmac-generator.html')"><div class="icon">🔐</div><div class="name">HMAC Sign</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/webhook-builder.html')"><div class="icon">🪝</div><div class="name">Webhooks</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/mock-data-generator.html')"><div class="icon">🎲</div><div class="name">Mock Data</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/graphql-schema-builder.html')"><div class="icon">◈</div><div class="name">GraphQL</div></div>
+</div>
+<div class="section-title">Code Quality & Config</div>
+<div class="platform-grid">
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/eslint-config-generator.html')"><div class="icon">📏</div><div class="name">ESLint</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/tsconfig-generator.html')"><div class="icon">📘</div><div class="name">TSConfig</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/env-generator.html')"><div class="icon">🌍</div><div class="name">.env Gen</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/bundle-analyzer.html')"><div class="icon">📦</div><div class="name">Bundle</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/regex-builder.html')"><div class="icon">🔍</div><div class="name">Regex</div></div>
+</div>
+<div class="section-title">DevOps & Infra</div>
+<div class="platform-grid">
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/dockerfile-generator.html')"><div class="icon">🐳</div><div class="name">Docker</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/nginx-config-generator.html')"><div class="icon">🌐</div><div class="name">Nginx</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/k8s-manifest-generator.html')"><div class="icon">☸️</div><div class="name">K8s</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/cicd-generator.html')"><div class="icon">🔄</div><div class="name">CI/CD</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/ssl-csr-generator.html')"><div class="icon">🔒</div><div class="name">SSL CSR</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/status-page-builder.html')"><div class="icon">📊</div><div class="name">Status</div></div>
+</div>
+<div class="section-title">Security & Auth</div>
+<div class="platform-grid">
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/ssh-key-generator.html')"><div class="icon">🔑</div><div class="name">SSH Keys</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/hash-generator.html')"><div class="icon">#️⃣</div><div class="name">Hash Gen</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/totp-generator.html')"><div class="icon">⏰</div><div class="name">TOTP</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/csp-generator.html')"><div class="icon">🛡️</div><div class="name">CSP</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/cors-generator.html')"><div class="icon">🌐</div><div class="name">CORS</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/vuln-checker.html')"><div class="icon">⚠️</div><div class="name">Vuln Check</div></div>
+</div>
+<div class="section-title">Docs & Git</div>
+<div class="platform-grid">
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/readme-generator.html')"><div class="icon">📖</div><div class="name">README</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/changelog-generator.html')"><div class="icon">📋</div><div class="name">Changelog</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/license-generator.html')"><div class="icon">📜</div><div class="name">License</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/commit-generator.html')"><div class="icon">✍️</div><div class="name">Commit</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/pr-template-generator.html')"><div class="icon">🔀</div><div class="name">PR Template</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/semver-calculator.html')"><div class="icon">🔢</div><div class="name">Semver</div></div>
+</div>
+<div class="section-title">Testing & Quality</div>
+<div class="platform-grid">
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/test-case-generator.html')"><div class="icon">🧪</div><div class="name">Test Cases</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/user-story-generator.html')"><div class="icon">👤</div><div class="name">User Stories</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/a11y-checker.html')"><div class="icon">♿</div><div class="name">A11y</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/email-validator.html')"><div class="icon">📧</div><div class="name">Email Check</div></div>
+</div>
+<div class="section-title">Network & DNS</div>
+<div class="platform-grid">
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/dns-propagation-checker.html')"><div class="icon">🌐</div><div class="name">DNS Check</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/whois-lookup.html')"><div class="icon">🔍</div><div class="name">WHOIS</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/cidr-calculator.html')"><div class="icon">🔗</div><div class="name">CIDR Calc</div></div>
+</div>
+<div class="section-title">Media & Documents</div>
+<div class="platform-grid">
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/image-optimizer.html')"><div class="icon">🖼️</div><div class="name">Image Opt</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/svg-optimizer.html')"><div class="icon">✨</div><div class="name">SVG Opt</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/code-to-image.html')"><div class="icon">📸</div><div class="name">Code→Img</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/pdf-generator.html')"><div class="icon">📄</div><div class="name">PDF Gen</div></div>
+<div class="platform" onclick="open('https://harz-devtools-suite.harz.workers.dev/markdown-to-pdf.html')"><div class="icon">📝</div><div class="name">MD→PDF</div></div>
 </div>
 </div>
 
@@ -235,1290 +306,547 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 <div class="page" id="page-settings">
 <div class="card">
 <h3>⚙️ Settings</h3>
+<div class="list-item"><span class="title">Primary API</span><span class="meta" id="apiUrl">—</span></div>
+<div class="list-item"><span class="title">Fallback API</span><span class="meta">Base44</span></div>
 <div class="list-item"><span class="title">Theme</span><span class="meta" id="themeName">Dark</span></div>
-<div class="list-item"><span class="title">Backend</span><span class="meta">HARZ Cloud</span></div>
-<div class="list-item"><span class="title">API URL</span><span class="meta" style="font-size:10px;max-width:200px;overflow:hidden;text-overflow:ellipsis" id="apiUrlDisplay">harz-cloud-backend.onrender.com</span></div>
-<div class="list-item"><span class="title">Version</span><span class="meta">v5.0.0</span></div>
+<div class="list-item"><span class="title">Connection</span><span class="meta" id="connText">—</span></div>
 </div>
-<div class="section-title">Backend Configuration</div>
+<div class="section-title">API Key</div>
 <div class="card">
-<input class="input" id="customApiUrl" placeholder="Custom API URL (optional)" style="font-size:12px">
-<button class="btn btn-outline" onclick="saveApiUrl()">Save API URL</button>
+<input class="input" id="apiKeyInput" placeholder="Enter API key (hz_...)">
+<button class="btn" onclick="saveApiKey()">Save Key</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="genApiKey()">Generate New Key</button>
 </div>
-<div class="section-title">Connection Test</div>
-<button class="btn" onclick="testConnection()">Test Backend Connection</button>
+<div class="section-title">Data</div>
+<div class="card">
+<button class="btn" onclick="exportData()">📥 Export Data (JSON)</button>
+<button class="btn btn-outline" style="margin-top:8px" onclick="testConnection()">🔌 Test Connection</button>
+</div>
 <div class="section-title">About</div>
-<div class="card">
-<div class="list-item"><span class="title">Platforms</span><span class="meta" id="settingsPlatforms">—</span></div>
-<div class="list-item"><span class="title">AI Agents</span><span class="meta" id="settingsAgents">—</span></div>
-<div class="list-item"><span class="title">Built by</span><span class="meta">Rabiu Hamza Mohammed</span></div>
-<div class="list-item"><span class="title">Powered by</span><span class="meta">HARZ Cloud</span></div>
+<div class="card" style="text-align:center;color:var(--muted);font-size:12px;line-height:1.8">
+<span class="fw" style="color:var(--accent2)">HARZ Cloud v5.1</span><br>
+38 modules + Base44 Bridge | 154 endpoints, 131 entities, 15 actions<br>
+7 AI Agents | 25 Platforms<br>
+Built by Rabiu Hamza Mohammed<br>
+© HARZ Digital Services 2026
 </div>
 </div>
 
 </div>
 
-<!-- BOTTOM NAV -->
+<button class="fab" id="fab" onclick="goPage('home')">🏠</button>
+
 <div class="bottom-nav">
-<div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')"><div class="ico">🏠</div><div class="txt">Home</div></div>
-<div class="nav-item" id="nav-platforms" onclick="showPage('platforms')"><div class="ico">📱</div><div class="txt">Platforms</div></div>
-<div class="nav-item" id="nav-agents" onclick="showPage('agents')"><div class="ico">🤖</div><div class="txt">Agents</div></div>
-<div class="nav-item" id="nav-wallet" onclick="showPage('wallet')"><div class="ico">💳</div><div class="txt">Wallet</div></div>
-<div class="nav-item" id="nav-store" onclick="showPage('products')"><div class="ico">🛍️</div><div class="txt">Store</div></div>
-<div class="nav-item" id="nav-settings" onclick="showPage('settings')"><div class="ico">⚙️</div><div class="txt">Settings</div></div>
+<div class="nav-item active" onclick="goPage('home')" id="nav-home"><div class="ico">🏠</div><div class="txt">Home</div></div>
+<div class="nav-item" onclick="goPage('platforms')" id="nav-platforms"><div class="ico">📱</div><div class="txt">Platforms</div></div>
+<div class="nav-item" onclick="goPage('agents')" id="nav-agents"><div class="ico">🤖</div><div class="txt">Agents</div></div>
+<div class="nav-item" onclick="goPage('wallet')" id="nav-wallet"><div class="ico">💳</div><div class="txt">Wallet</div></div>
+<div class="nav-item" onclick="goPage('devtools')" id="nav-devtools"><div class="ico">🛠️</div><div class="txt">Tools</div></div>
+<div class="nav-item" onclick="goPage('settings')" id="nav-settings"><div class="ico">⚙️</div><div class="txt">Settings</div></div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== CONFIG — HARZ Cloud Backend =====
-let API_URL = localStorage.getItem('harz_api_url') || 'https://harz-cloud-backend.onrender.com';
-let authToken = localStorage.getItem('harz_token') || null;
-let currentUser = JSON.parse(localStorage.getItem('harz_user') || 'null');
-let platformData = [];
-let agentData = [];
-let walletData = null;
-let backendOnline = false;
-
-// ===== LOCAL FALLBACK DATA (when backend offline) =====
-const LOCAL_PLATFORMS = [
-  {
-    "name": "MindCare AI",
-    "icon": "🧠",
-    "category": "AI",
-    "url": "https://mindcare-ai.vercel.app",
-    "status": "Live",
-    "description": "Mental health companion with CBT, DBT, mindfulness support"
-  },
-  {
-    "name": "Cyber Shield X",
-    "icon": "🛡️",
-    "category": "Security",
-    "url": "https://cyber-shield-x.vercel.app",
-    "status": "Live",
-    "description": "Cyber defense agent with 37 specialist sub-agents"
-  },
-  {
-    "name": "Omega Health AI",
-    "icon": "🏥",
-    "category": "Health",
-    "url": "https://omega-health-ai.vercel.app",
-    "status": "Live",
-    "description": "Health platform with 18 medical specialists"
-  },
-  {
-    "name": "HarzDM",
-    "icon": "🛒",
-    "category": "Marketplace",
-    "url": "https://harzdm-marketplace.vercel.app",
-    "status": "Live",
-    "description": "Global Digital Marketplace with multi-seller support"
-  },
-  {
-    "name": "BuildBot AI",
-    "icon": "🏗️",
-    "category": "Construction",
-    "url": "https://buildbot-ai-harz.vercel.app",
-    "status": "Live",
-    "description": "AI construction platform"
-  },
-  {
-    "name": "Omega Infinity",
-    "icon": "🤖",
-    "category": "AI",
-    "url": "https://omega-infinity-dashboard.vercel.app",
-    "status": "Live",
-    "description": "Enterprise AI Orchestration Platform with Agent SDK"
-  },
-  {
-    "name": "TradeOS",
-    "icon": "📈",
-    "category": "Trading",
-    "url": "https://tradeos.vercel.app",
-    "status": "Live",
-    "description": "Enterprise AI Trading Platform — Multi-exchange, real-time WebSocket"
-  },
-  {
-    "name": "Omega Content AI",
-    "icon": "🎬",
-    "category": "Media",
-    "url": "https://omega-content-ai.vercel.app",
-    "status": "Live",
-    "description": "Fully autonomous AI content studio"
-  },
-  {
-    "name": "Estate City AI",
-    "icon": "🏠",
-    "category": "Real Estate",
-    "url": "https://abuja-estate-city-ai.vercel.app",
-    "status": "Live",
-    "description": "AI-Powered Smart Real Estate for Abuja, Nigeria"
-  },
-  {
-    "name": "ContentPilot",
-    "icon": "📝",
-    "category": "Media",
-    "url": "https://contentpilot-ai.vercel.app",
-    "status": "Live",
-    "description": "AI Content Agent dashboard for multi-platform social content"
-  },
-  {
-    "name": "Nexal Media",
-    "icon": "📱",
-    "category": "Media",
-    "url": "https://nexal-media.vercel.app",
-    "status": "Live",
-    "description": "Social Media Ad Publishing Platform — Facebook, Instagram, TikTok, YouTube, X, LinkedIn"
-  },
-  {
-    "name": "Apex Bank",
-    "icon": "🏦",
-    "category": "Finance",
-    "url": "https://apex-ai-psi.vercel.app",
-    "status": "Live",
-    "description": "Apex Bank AI — Financial services platform"
-  },
-  {
-    "name": "HostMaster",
-    "icon": "🌐",
-    "category": "Hosting",
-    "url": "https://harzdomain.vercel.app",
-    "status": "Live",
-    "description": "Enterprise Domain Registration, Cloud Hosting & AI Website Builder"
-  },
-  {
-    "name": "Omega Commander",
-    "icon": "🏢",
-    "category": "AI",
-    "url": "https://omega-commander-ai.vercel.app",
-    "status": "Live",
-    "description": "Autonomous enterprise OS with 9 AI agents, approval workflows"
-  },
-  {
-    "name": "HarzAjo",
-    "icon": "💰",
-    "category": "Finance",
-    "url": "https://harzajo.vercel.app",
-    "status": "Live",
-    "description": "Savings and contribution platform"
-  },
-  {
-    "name": "HarzPay",
-    "icon": "💳",
-    "category": "Finance",
-    "url": "https://harzpay.vercel.app",
-    "status": "Live",
-    "description": "Payment processing platform"
-  },
-  {
-    "name": "HarzFX",
-    "icon": "💱",
-    "category": "Finance",
-    "url": "https://harzfx.vercel.app",
-    "status": "Live",
-    "description": "Foreign exchange platform"
-  },
-  {
-    "name": "HarzLend",
-    "icon": "🏦",
-    "category": "Finance",
-    "url": "https://harzlend.vercel.app",
-    "status": "Live",
-    "description": "Lending and credit platform"
-  },
-  {
-    "name": "Maganu AI",
-    "icon": "🎯",
-    "category": "AI",
-    "url": "https://omega-commander-ai.vercel.app",
-    "status": "Live",
-    "description": "Maganu AI — HARZ ecosystem assistant"
-  },
-  {
-    "name": "Omega Master",
-    "icon": "⚙️",
-    "category": "AI",
-    "url": "https://omega-master.vercel.app",
-    "status": "Live",
-    "description": "OMEGA MASTER — Supreme AI Command Hub for the Harz Ecosystem"
-  },
-  {
-    "name": "HarzMusic",
-    "icon": "🎵",
-    "category": "Marketplace",
-    "url": "https://harz-music.vercel.app",
-    "status": "Live",
-    "description": "African Music Marketplace. Buy & sell Afrobeats, Amapiano, Gospel beats"
-  },
-  {
-    "name": "HarzFilm",
-    "icon": "🎥",
-    "category": "Marketplace",
-    "url": "https://harz-film.vercel.app",
-    "status": "Live",
-    "description": "Global Film Marketplace. Buy, rent & stream films worldwide"
-  },
-  {
-    "name": "Harz Store",
-    "icon": "📦",
-    "category": "Marketplace",
-    "url": "https://harz-store.vercel.app",
-    "status": "Live",
-    "description": "Unified digital product marketplace with 468+ products"
-  },
-  {
-    "name": "Harz Digital",
-    "icon": "📚",
-    "category": "Education",
-    "url": "https://harz-digital.vercel.app",
-    "status": "Live",
-    "description": "Learn Trading & Digital Marketing — 18 AI tutors"
-  },
-  {
-    "name": "HarzDomain",
-    "icon": "🔗",
-    "category": "Hosting",
-    "url": "https://harzdomain.vercel.app",
-    "status": "Live",
-    "description": "Retail & Wholesale Domain Platform with Real-time Domain Search"
-  },
-  {
-    "name": "DeployForge",
-    "icon": "🚀",
-    "category": "DevOps",
-    "url": "https://rabiuhamza11.github.io/harz-portfolio/deployforge.html",
-    "status": "Live",
-    "description": "Multi-platform deployment engine (GitHub, Vercel, Render, Netlify, Railway)"
-  },
-  {
-    "name": "GDEG Energy",
-    "icon": "⚡",
-    "category": "Energy",
-    "url": "https://gdeg.vercel.app",
-    "status": "Live",
-    "description": "Global Decentralized Energy Grid — Blockchain P2P renewable energy trading"
-  },
-  {
-    "name": "HARZ Cloud",
-    "icon": "☁️",
-    "category": "Infrastructure",
-    "url": "https://harz-cloud-backend.onrender.com",
-    "status": "Live",
-    "description": "HARZ Cloud Backend v2.0 — 20 endpoints, 59 platforms. Express.js on Render"
-  },
-  {
-    "name": "HARZ Edge",
-    "icon": "🌐",
-    "category": "Infrastructure",
-    "url": "https://harz-edge.vercel.app",
-    "status": "Development",
-    "description": "DNS, CDN, WAF & Edge Computing Platform"
-  },
-  {
-    "name": "HARZ AI OS",
-    "icon": "🖥️",
-    "category": "AI",
-    "url": "https://harz-ai-os.vercel.app",
-    "status": "Development",
-    "description": "Next-gen unified ecosystem interface"
-  },
-  {
-    "name": "NEXUS Pro",
-    "icon": "🏗️",
-    "category": "Construction",
-    "url": "https://harz-construction-pro.vercel.app",
-    "status": "Live",
-    "description": "HARZ Construction Management System"
-  },
-  {
-    "name": "HARZ Construction",
-    "icon": "🔨",
-    "category": "Construction",
-    "url": "https://harz-construction-nd.vercel.app",
-    "status": "Live",
-    "description": "Construction company website"
-  },
-  {
-    "name": "HARZ Ecosystem Dashboard",
-    "icon": "📊",
-    "category": "Infrastructure",
-    "url": "https://harz-ecosystem-dashboard.vercel.app",
-    "status": "Live",
-    "description": "Unified Command Center for all Harz Ecosystem platforms"
-  },
-  {
-    "name": "HARZ Platform",
-    "icon": "🏢",
-    "category": "Infrastructure",
-    "url": "https://harz-platform.vercel.app",
-    "status": "Live",
-    "description": "Enterprise showcase deployed across 5 platforms"
-  },
-  {
-    "name": "Omega AI Packager",
-    "icon": "📦",
-    "category": "DevOps",
-    "url": "https://github.com/rabiuhamza11/omega-ai-packager",
-    "status": "Live",
-    "description": "Ship AI agent projects: package, deploy anywhere, built-in RAG"
-  },
-  {
-    "name": "HARZ Portfolio",
-    "icon": "📋",
-    "category": "Infrastructure",
-    "url": "https://rabiuhamza11.github.io/harz-portfolio",
-    "status": "Live",
-    "description": "Official Portfolio & Ecosystem Showcase"
-  },
-  {
-    "name": "HARZ Super App",
-    "icon": "⚡",
-    "category": "Infrastructure",
-    "url": "https://rabiuhamza11.github.io/harz-portfolio/harz-super-app-v5.html",
-    "status": "Live",
-    "description": "Unified ecosystem app with 56 platforms, wallet, agents, analytics"
-  },
-  {
-    "name": "HARZ AI Chat",
-    "icon": "💬",
-    "category": "AI",
-    "url": "https://harz-ai-chat.vercel.app",
-    "status": "Development",
-    "description": "Qwen-powered web chat"
-  },
-  {
-    "name": "HARZ Ecosystem App",
-    "icon": "📱",
-    "category": "Infrastructure",
-    "url": "https://github.com/rabiuhamza11/harz-ecosystem-app",
-    "status": "Development",
-    "description": "Flutter mobile app for Harz Ecosystem"
-  },
-  {
-    "name": "Omega Commander Bot",
-    "icon": "🤖",
-    "category": "AI",
-    "url": "https://github.com/rabiuhamza11/omega-commander-bot",
-    "status": "Live",
-    "description": "Standalone Telegram Bot for OMEGA Business Commander"
-  },
-  {
-    "name": "FluxDeploy",
-    "icon": "🔄",
-    "category": "DevOps",
-    "url": "https://github.com/rabiuhamza11/fluxdeploy",
-    "status": "Live",
-    "description": "Multi-platform deployment system — predecessor to DeployForge"
-  {
-    "name": "HarzStore",
-    "icon": "🛍️",
-    "category": "Marketplace",
-    "url": "https://harzdm-marketplace.vercel.app",
-    "status": "Live",
-    "description": "Multi-vendor marketplace platform"
-  },
-  {
-    "name": "HarzAjo Pro",
-    "icon": "💎",
-    "category": "Finance",
-    "url": "https://harzajo-pro.vercel.app",
-    "status": "Live",
-    "description": "Advanced savings & contribution tracking"
-  },
-  {
-    "name": "HarzID",
-    "icon": "🪪",
-    "category": "Security",
-    "url": "https://harzid.vercel.app",
-    "status": "Live",
-    "description": "Identity verification & KYC"
-  },
-  {
-    "name": "HarzVPN",
-    "icon": "🔒",
-    "category": "Security",
-    "url": "https://harzvpn.vercel.app",
-    "status": "Live",
-    "description": "Secure VPN service"
-  },
-  {
-    "name": "HarzCRM",
-    "icon": "🤝",
-    "category": "Business",
-    "url": "https://harzcrm.vercel.app",
-    "status": "Live",
-    "description": "Customer relationship management"
-  },
-  {
-    "name": "HarzLogistics",
-    "icon": "🚚",
-    "category": "Logistics",
-    "url": "https://harzlogistics.vercel.app",
-    "status": "Live",
-    "description": "Delivery & supply chain management"
-  },
-  {
-    "name": "HarzEvents",
-    "icon": "🎪",
-    "category": "Events",
-    "url": "https://harzevents.vercel.app",
-    "status": "Live",
-    "description": "Event management & ticketing"
-  },
-  {
-    "name": "HarzGaming",
-    "icon": "🎮",
-    "category": "Gaming",
-    "url": "https://harzgaming.vercel.app",
-    "status": "Live",
-    "description": "Gaming platform & tournaments"
-  },
-  {
-    "name": "HarzSocial",
-    "icon": "👥",
-    "category": "Social",
-    "url": "https://harzsocial.vercel.app",
-    "status": "Live",
-    "description": "Social networking for HARZ users"
-  },
-  {
-    "name": "HarzAI Writer",
-    "icon": "✍️",
-    "category": "AI",
-    "url": "https://harzai-writer.vercel.app",
-    "status": "Live",
-    "description": "AI content writing assistant"
-  },
-  {
-    "name": "HarzVoice",
-    "icon": "🎙️",
-    "category": "AI",
-    "url": "https://harzvoice.vercel.app",
-    "status": "Live",
-    "description": "Voice-to-text & AI voice assistant"
-  },
-  {
-    "name": "HarzImage AI",
-    "icon": "🖼️",
-    "category": "AI",
-    "url": "https://harzimage-ai.vercel.app",
-    "status": "Live",
-    "description": "AI image generation & editing"
-  },
-  {
-    "name": "HarzCode AI",
-    "icon": "💻",
-    "category": "AI",
-    "url": "https://harzcode-ai.vercel.app",
-    "status": "Live",
-    "description": "AI code generation & review"
-  },
-  {
-    "name": "HarzTranslate",
-    "icon": "🌍",
-    "category": "AI",
-    "url": "https://harztranslate.vercel.app",
-    "status": "Live",
-    "description": "AI translation service"
-  },
-  {
-    "name": "HarzLegal AI",
-    "icon": "⚖️",
-    "category": "AI",
-    "url": "https://harzlegal-ai.vercel.app",
-    "status": "Live",
-    "description": "AI legal advice & document review"
-  }
-];
-
-const LOCAL_AGENTS = [
-  {name:'MindCare Agent',role:'Mental Health Assistant',icon:'🧠',status:'active',success_rate:95.9,tasks_completed:1240,platform:'MindCare AI',description:'Mental health companion with CBT, DBT, mindfulness'},
-  {name:'CyberShield Agent',role:'Security Monitor',icon:'🛡️',status:'active',success_rate:95.8,tasks_completed:3400,platform:'Cyber Shield X',description:'Cyber defense with 37 specialist sub-agents'},
-  {name:'Health Agent',role:'Health Advisor',icon:'🏥',status:'active',success_rate:94.2,tasks_completed:890,platform:'Omega Health AI',description:'Health platform with 18 medical specialists'},
-  {name:'Omega Commander',role:'Enterprise Manager',icon:'🏢',status:'active',success_rate:96.1,tasks_completed:2100,platform:'Omega Infinity',description:'Autonomous enterprise OS'},
-  {name:'Content Agent',role:'Content Producer',icon:'🎬',status:'active',success_rate:93.5,tasks_completed:560,platform:'Omega Content AI',description:'AI content production'},
-  {name:'EduWealth Agent',role:'Education Tutor',icon:'📚',status:'active',success_rate:94.8,tasks_completed:750,platform:'Harz Digital',description:'Education platform with 18 AI tutors'},
-  {name:'Magani',role:'Ecosystem Assistant',icon:'🤖',status:'active',success_rate:97.2,tasks_completed:5800,platform:'Harz Ecosystem',description:'Main HARZ ecosystem assistant'}
-];
-
-
-const LOCAL_PRODUCTS = [
-  {name:'MindCare Premium',description:'1-on-1 AI therapy sessions with CBT & DBT',price:5000,currency:'NGN',category:'AI Service',platform:'MindCare AI',status:'Active'},
-  {name:'Cyber Shield Pro',description:'Advanced threat detection & 24/7 monitoring',price:15000,currency:'NGN',category:'Security',platform:'Cyber Shield X',status:'Active'},
-  {name:'Health Consultation',description:'AI health checkup with 18 specialists',price:3000,currency:'NGN',category:'Health',platform:'Omega Health AI',status:'Active'},
-  {name:'HarzDM Seller Pack',description:'Premium seller dashboard & analytics',price:7500,currency:'NGN',category:'Marketplace',platform:'HarzDM',status:'Active'},
-  {name:'BuildBot Plan',description:'AI construction management with cost estimator',price:20000,currency:'NGN',category:'Construction',platform:'BuildBot AI',status:'Active'},
-  {name:'TradeOS Pro',description:'Real-time multi-exchange trading with AI signals',price:25000,currency:'NGN',category:'Trading',platform:'TradeOS',status:'Active'},
-  {name:'ContentPilot Studio',description:'Multi-platform social content automation',price:10000,currency:'NGN',category:'Media',platform:'ContentPilot',status:'Active'},
-  {name:'Nexal Ad Campaign',description:'Social ads across 6 platforms with Paystack',price:8000,currency:'NGN',category:'Media',platform:'Nexal Media',status:'Active'},
-  {name:'Estate City Listing',description:'Premium property listing with AI estimator',price:5000,currency:'NGN',category:'Real Estate',platform:'Estate City AI',status:'Active'},
-  {name:'HarzAjo Premium',description:'Advanced savings & contribution tracking',price:2000,currency:'NGN',category:'Finance',platform:'HarzAjo',status:'Active'},
-  {name:'HarzPay Business',description:'Payment processing with low fees',price:12000,currency:'NGN',category:'Finance',platform:'HarzPay',status:'Active'},
-  {name:'HarzFX Pro',description:'Real-time FX rates & currency exchange',price:3500,currency:'NGN',category:'Finance',platform:'HarzFX',status:'Active'},
-  {name:'HarzMusic Beat License',description:'Exclusive Afrobeats & Amapiano beats',price:1500,currency:'NGN',category:'Music',platform:'HarzMusic',status:'Active'},
-  {name:'HarzFilm Rental',description:'HD film rental — Nollywood, Bollywood, K-Drama',price:500,currency:'NGN',category:'Film',platform:'HarzFilm',status:'Active'},
-  {name:'Harz Digital Course',description:'Trading & Digital Marketing (18 modules)',price:15000,currency:'NGN',category:'Education',platform:'Harz Digital',status:'Active'},
-  {name:'HarzDomain Premium',description:'Domain + free SSL & DNS management',price:2500,currency:'NGN',category:'Hosting',platform:'HarzDomain',status:'Active'},
-  {name:'DeployForge Pro',description:'Multi-platform deployment engine',price:10000,currency:'NGN',category:'DevOps',platform:'DeployForge',status:'Active'},
-  {name:'GDEG Energy Credits',description:'Blockchain P2P renewable energy credits',price:100,currency:'USD',category:'Energy',platform:'GDEG Energy',status:'Active'},
-  {name:'Omega Commander',description:'Enterprise OS with 9 AI agents',price:50000,currency:'NGN',category:'AI',platform:'Omega Commander',status:'Active'},
-  {name:'HarzLend Credit',description:'AI loan approval & credit scoring',price:0,currency:'NGN',category:'Finance',platform:'HarzLend',status:'Active'}
-];
-
-const LOCAL_TRANSACTIONS = [
-  {amount:5000,currency:'NGN',type:'Purchase',status:'Completed',description:'MindCare Premium',platform:'MindCare AI',reference:'TXN-001'},
-  {amount:15000,currency:'NGN',type:'Purchase',status:'Completed',description:'Cyber Shield Pro',platform:'Cyber Shield X',reference:'TXN-002'},
-  {amount:25000,currency:'NGN',type:'Purchase',status:'Completed',description:'TradeOS Pro',platform:'TradeOS',reference:'TXN-003'},
-  {amount:500,currency:'NGN',type:'Purchase',status:'Completed',description:'HarzFilm rental',platform:'HarzFilm',reference:'TXN-004'},
-  {amount:1500,currency:'NGN',type:'Purchase',status:'Completed',description:'HarzMusic beat license',platform:'HarzMusic',reference:'TXN-005'},
-  {amount:10000,currency:'NGN',type:'Purchase',status:'Pending',description:'DeployForge Pro',platform:'DeployForge',reference:'TXN-006'},
-  {amount:2500,currency:'NGN',type:'Purchase',status:'Completed',description:'HarzDomain registration',platform:'HarzDomain',reference:'TXN-007'}
-];
-
-const LOCAL_WALLET = {
-  ngn_balance:125000, usd_balance:350, gdeg_balance:5000, usdt_balance:120,
-  payment_methods:[
-    {type:'UBA Transfer',details:'2034326424',is_active:true},
-    {type:'Paystack',details:'Card Payment',is_active:true},
-    {type:'GDEG Token',details:'1 = $0.01',is_active:true},
-    {type:'USDT TRC20',details:'TX...abc123',is_active:true}
-  ]
-};
-
-// ===== API CALLS — HARZ Cloud =====
-async function apiCall(endpoint, method='GET', body=null) {
-  const url = API_URL + endpoint;
-  const headers = {'Content-Type': 'application/json'};
-  if (authToken) headers['x-auth-token'] = authToken;
-  
-  const res = await fetch(url, {
-    method, headers,
-    body: body ? JSON.stringify(body) : null,
-    signal: AbortSignal.timeout(8000)
+// Timeout helper for older browsers (no AbortSignal.timeout support)
+function fetchWithTimeout(url, opts, ms) {
+  return new Promise((resolve, reject) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => { controller.abort(); reject(new Error('timeout')); }, ms || 5000);
+    fetch(url, {...(opts||{}), signal: controller.signal}).then(r => {
+      clearTimeout(timer);
+      resolve(r);
+    }).catch(e => {
+      clearTimeout(timer);
+      reject(e);
+    });
   });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  return res.json();
 }
+// Config — HARZ Cloud v5.1 with built-in Base44 bridge
+const CLOUD_API = 'https://harz-cloud-backend.onrender.com';
+const B44_FUNCTIONS = 'https://superagent-2286fb2f.base44.app/functions';
+let apiUrl = CLOUD_API;
+let cloudWorking = false;
+let b44Working = false;
+let token = localStorage.getItem('harz_token');
+let user = JSON.parse(localStorage.getItem('harz_user') || 'null');
+let theme = localStorage.getItem('harz_theme') || 'dark';
 
-async function checkBackend() {
-  try {
-    const res = await fetch(API_URL + '/health', {signal: AbortSignal.timeout(8000)});
-    backendOnline = res.ok;
-    document.getElementById('wsDot').className = 'ws-status ' + (backendOnline ? 'ws-on' : 'ws-off');
-    document.getElementById('backendStatus').className = 'badge ' + (backendOnline ? 'badge-live' : 'badge-offline');
-    document.getElementById('backendStatus').textContent = backendOnline ? 'Online' : 'Offline';
-    return backendOnline;
-  } catch(e) {
-    backendOnline = false;
-    document.getElementById('wsDot').className = 'ws-status ws-off';
-    document.getElementById('backendStatus').className = 'badge badge-offline';
-    document.getElementById('backendStatus').textContent = 'Offline';
-    return false;
-  }
-}
+// Platforms
+const PLATFORMS = [
+{n:'HARZ Domains',u:'https://harzdomain.vercel.app',i:'🌐'},{n:'HarzDM',u:'https://harzdm.vercel.app',i:'🛒'},
+{n:'Abuja Estate',u:'https://abuja-estate-city.vercel.app',i:'🏘️'},
+{n:'HARZ Connect',u:'https://harzconnect.vercel.app',i:'💬'},
+{n:'EduWealth',u:'https://eduwealth-ai.vercel.app',i:'📚'},
+{n:'OMEGA Health',u:'https://omega-health-ai.vercel.app',i:'🏥'},
+{n:'HarzMusic',u:'https://harzmusic.vercel.app',i:'🎵'},
+{n:'HarzFilm',u:'https://harzfilm.vercel.app',i:'🎬'},
+{n:'BuildBot AI',u:'https://buildbot-ai.vercel.app',i:'🏗️'},
+{n:'HarzPay',u:'https://harzpay.vercel.app',i:'💳'},
+{n:'HarzFX',u:'https://harzfx.vercel.app',i:'📈'},
+{n:'Harz Store',u:'https://harz-super-app.harz.workers.dev/harz-store.html',i:'🏪'},
+{n:'Gumroad',u:'https://hamzarabiu.gumroad.com',i:'🌍'},
+{n:'Getly',u:'https://www.getly.store/store/harzdm-com-mr951f69',i:'📦'},
+{n:'MindCare',u:'https://mindcare-harz.vercel.app',i:'🧠'},
+{n:'CyberShield',u:'https://cybershield-harz.vercel.app',i:'🛡️'},
+{n:'Apex Bank',u:'https://apex-bank-harz.vercel.app',i:'🏦'},
+{n:'HarzAjo',u:'https://harzajo.vercel.app',i:'🤝'},
+{n:'HarzLend',u:'https://harzlend.vercel.app',i:'💰'},
+{n:'Oracle AI',u:'https://oracle-harz.vercel.app',i:'🔮'},
+{n:'Nexal Ads',u:'https://harz-super-app.harz.workers.dev/nexal-ads.html',i:'📢'},
+{n:'Harz Cloud',u: CLOUD_API,i:'☁️'},
+{n:'Cloud v4',u:'https://harz-super-app.harz.workers.dev/harz-cloud-unified.html',i:'🚀',s:'NEW'},
+{n:'Cloud v5',u:'https://harz-super-app.harz.workers.dev/harz-cloud-v5.html',i:'⚡',s:'NEW'},
+{n:'Cloud v6',u:'https://harz-super-app.harz.workers.dev/harz-cloud-v6.html',i:'🔥',s:'NEW'},
+{n:'Cloud v7',u:'https://harz-super-app.harz.workers.dev/harz-cloud-v7.html',i:'💎',s:'NEW'},
+{n:'Harz ID',u:'https://identity-harz.vercel.app',i:'🪪'},
+{n:'Harz IoT',u:'https://harz-super-app.harz.workers.dev/harz-robotics-iot.html',i:'📡'},
+{n:'Venture',u:'https://venture-harz.vercel.app',i:'🚀'}
+];
 
-// ===== INIT =====
+// Agents
+const AGENTS = [
+{n:'Magani',r:'Orchestrator',c:'#6c5ce7',i:'⚡'},
+{n:'Hauwa',r:'Marketing & Content',c:'#e84393',i:'✍️'},
+{n:'Rabi',r:'Finance & Orders',c:'#00b894',i:'💰'},
+{n:'Aisha',r:'Customer Support',c:'#fd79a8',i:'💬'},
+{n:'Nuruddeen',r:'Platform Health',c:'#0984e3',i:'🩺'},
+{n:'Omega',r:'Producer & Deploy',c:'#fdcb6e',i:'🔧'},
+{n:'Danjuma',r:'Security',c:'#e74c3c',i:'🛡️'}
+];
+
+// Init
 async function init() {
-  document.getElementById('apiUrlDisplay').textContent = API_URL.replace('https://','');
-  
-  const online = await checkBackend();
-  
-  if (online) {
-    // Try loading from HARZ Cloud backend
-    try {
-      await loadFromBackend();
-    } catch(e) {
-      console.error('Backend error:', e);
-      showToast('Backend error — using local data', true);
-      useLocalData();
-    }
-  } else {
-    // Use local fallback data
-    useLocalData();
-  }
-  
-  // Show app
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  updateUserBtn();
+applyTheme();
+document.getElementById('apiUrl').textContent = CLOUD_API;
+renderPlatforms();
+renderAgents();
+updateUserBtn();
+// Safety: if checkBackends hangs, show app after 8 seconds
+const initTimeout = setTimeout(() => {
+document.getElementById('loadingScreen').style.display = 'none';
+document.getElementById('app').style.display = 'block';
+}, 8000);
+await Promise.race([
+checkBackends(),
+new Promise((_, reject) => setTimeout(reject, 6000)).catch(() => {})
+]).catch(() => {});
+clearTimeout(initTimeout);
+if (token) restoreSession();
+document.getElementById('loadingScreen').style.display = 'none';
+document.getElementById('app').style.display = 'block';
 }
 
-async function loadFromBackend() {
-  // Load stats
-  try {
-    const health = await apiCall('/health');
-    document.getElementById('settingsPlatforms').textContent = '27';
-    document.getElementById('settingsAgents').textContent = '7';
-  } catch(e) {}
-  
-  // Try to load platforms from backend
-  try {
-    const data = await apiCall('/platforms');
-    if (data.platforms && data.platforms.length > 0) {
-      platformData = data.platforms;
-    } else {
-      platformData = LOCAL_PLATFORMS;
-    }
-  } catch(e) {
-    platformData = LOCAL_PLATFORMS;
-  }
-  
-  // Try to load agents from backend
-  try {
-    const data = await apiCall('/agents');
-    if (data.agents && data.agents.length > 0) {
-      agentData = data.agents;
-    } else {
-      agentData = LOCAL_AGENTS;
-    }
-  } catch(e) {
-    agentData = LOCAL_AGENTS;
-  }
-  
-  // Try wallet from backend
-  try {
-    const data = await apiCall('/wallet');
-    walletData = data.wallet || data;
-  } catch(e) {
-    walletData = LOCAL_WALLET;
-  }
-  
-  // Try transactions from backend
-  try {
-    const data = await apiCall('/transactions');
-    renderTransactions(data.transactions || []);
-  } catch(e) {
-    renderTransactions([]);
-  }
-  
-  renderAll();
+// API helper — uses HARZ Cloud bridge (which handles Base44 internally)
+// Falls back to direct Base44 harzBridge if HARZ Cloud is down
+async function api(path, method, body) {
+const opts = {method: method || 'GET', headers: {'Content-Type': 'application/json'}};
+if (token) opts.headers['x-auth-token'] = token;
+if (body) opts.body = JSON.stringify(body);
+// Try HARZ Cloud first (has bridge built-in)
+if (cloudWorking) {
+try {
+const res = await fetch(apiUrl + path, opts);
+if (res.ok) return await res.json();
+throw new Error('Cloud API error: ' + res.status);
+} catch(e) {
+cloudWorking = false;
+}
+}
+// Fall back to Base44 directly via harzBridge
+if (path.includes('/auth/')) {
+// Auth needs HARZ Cloud — can't bridge
+throw new Error('HARZ Cloud required for auth');
+}
+// Map to harzBridge actions
+let action = 'ecosystem_status';
+if (path.includes('ecosystem')) action = 'ecosystem_status';
+else if (path.includes('agent-chat')) action = 'agent_chat';
+else if (path.includes('revenue')) action = 'revenue_report';
+else if (path.includes('orders')) action = 'list_orders';
+else if (path.includes('crm')) action = 'list_crm';
+else if (path.includes('products')) action = 'list_products';
+const res = await fetch(B44_FUNCTIONS + '/harzBridge', {
+method: 'POST',
+headers: {'Content-Type': 'application/json'},
+body: JSON.stringify({action, api_key: 'omega_harz_321424_2026', ...body})
+});
+return await res.json();
 }
 
-function useLocalData() {
-  platformData = LOCAL_PLATFORMS;
-  agentData = LOCAL_AGENTS;
-  walletData = LOCAL_WALLET;
-  renderAll();
-  renderTransactions([]);
+// Check which backend is alive — uses bridge status endpoint
+async function checkBackends() {
+// Check HARZ Cloud bridge status
+try {
+const res = await fetchWithTimeout(CLOUD_API + '/bridge/status', {}, 3000);
+const data = await res.json();
+if (data.bridge === 'active') {
+cloudWorking = true;
+apiUrl = CLOUD_API;
+const b44Conn = data.base44_connected;
+setBadge('cloudStatus', 'LIVE v5.1', 'live');
+setBadge('b44Status', b44Conn ? 'LIVE' : 'OFFLINE', b44Conn ? 'live' : 'off');
+setBadge('cdnStatus', b44Conn ? 'BRIDGED' : 'OFFLINE', b44Conn ? 'live' : 'off');
+setBadge('hookStatus', b44Conn ? 'SYNCED' : 'OFFLINE', b44Conn ? 'live' : 'off');
+document.getElementById('connDot').className = 'dot dot-on';
+document.getElementById('connText').textContent = 'HARZ Cloud v5.1 + Base44 Bridge (' + data.sync.total_entities + ' entities)';
+document.getElementById('apiUrl').textContent = CLOUD_API + '/bridge';
+return;
+}
+} catch(e) {}
+// HARZ Cloud offline — check Base44 directly
+setBadge('cloudStatus', 'OFFLINE', 'off');
+setBadge('cdnStatus', 'OFFLINE', 'off');
+setBadge('hookStatus', 'OFFLINE', 'off');
+try {
+const res = await fetchWithTimeout(B44_FUNCTIONS + '/harzBridge', {
+method: 'POST',
+headers: {'Content-Type': 'application/json'},
+body: JSON.stringify({action: 'bridge_status', api_key: 'omega_harz_321424_2026'})
+}, 3000);
+if (res.ok) {
+const data = await res.json();
+b44Working = true;
+setBadge('b44Status', 'LIVE', 'live');
+setBadge('cdnStatus', 'DIRECT', 'live');
+document.getElementById('connDot').className = 'dot dot-on';
+document.getElementById('connText').textContent = 'HARZ Bridge v1.0 (Base44)';
+document.getElementById('apiUrl').textContent = B44_FUNCTIONS + '/harzBridge';
+} else {
+setBadge('b44Status', 'OFFLINE', 'off');
+document.getElementById('connDot').className = 'dot dot-off';
+document.getElementById('connText').textContent = 'All offline — local mode';
+}
+} catch(e) {
+setBadge('b44Status', 'OFFLINE', 'off');
+document.getElementById('connDot').className = 'dot dot-off';
+document.getElementById('connText').textContent = 'All offline — local mode';
+}
 }
 
-function renderAll() {
-  // Stats
-  const liveCount = platformData.filter(p => p.status === 'Live').length;
-  const activeAgents = agentData.filter(a => a.status === 'active').length;
-  const avgSuccess = agentData.length > 0 
-    ? Math.round(agentData.reduce((s, a) => s + (a.success_rate || 0), 0) / agentData.length * 10) / 10 
-    : 0;
-  
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="stat"><div class="num">${platformData.length}</div><div class="label">Platforms</div></div>
-    <div class="stat"><div class="num">${liveCount}</div><div class="label">Live</div></div>
-    <div class="stat"><div class="num">${agentData.length}</div><div class="label">AI Agents</div></div>
-    <div class="stat"><div class="num">${avgSuccess}%</div><div class="label">Success</div></div>
-  `;
-  document.getElementById('liveCount').textContent = liveCount + ' / ' + platformData.length;
-  document.getElementById('agentCount').textContent = activeAgents + ' active';
-  document.getElementById('successRate').textContent = avgSuccess + '%';
-  document.getElementById('settingsPlatforms').textContent = platformData.length;
-  document.getElementById('settingsAgents').textContent = agentData.length;
-  
-  renderPlatforms(platformData);
-  renderAgents(agentData);
-  renderWallet(walletData);
+function setBadge(id, text, type) {
+const el = document.getElementById(id);
+el.textContent = text;
+el.className = 'badge badge-' + type;
 }
 
-// ===== RENDER =====
-function renderPlatforms(platforms) {
-  document.getElementById('platformCount').textContent = platforms.length;
-  document.getElementById('platformGrid').innerHTML = platforms.map(p => `
-    <div class="platform" onclick="showPlatformModal('${p.name}')">
-      <div class="icon">${p.icon || '📦'}</div>
-      <div class="name">${p.name}</div>
-      <span class="badge ${p.status === 'Live' ? 'badge-live' : 'badge-dev'}">${p.status}</span>
-    </div>
-  `).join('');
+// Render
+function renderPlatforms() {
+document.getElementById('platformGrid').innerHTML = PLATFORMS.map(p =>
+'<div class="platform" onclick="open(\'' + p.u + '\')">' +
+'<div class="icon">' + p.i + '</div>' +
+'<div class="name">' + p.n + '</div>' +
+'<span class="badge badge-live">LIVE</span></div>'
+).join('');
 }
 
-function renderAgents(agents) {
-  document.getElementById('agentListCount').textContent = agents.length;
-  document.getElementById('agentList').innerHTML = agents.map(a => `
-    <div class="agent" onclick="openAgentChat('${a.name}')">
-      <div class="avatar">${a.icon || '🤖'}</div>
-      <div class="info">
-        <div class="name">${a.name}</div>
-        <div class="role">${a.role} • ${a.platform}</div>
-      </div>
-      <div style="text-align:right">
-        <div class="agent-status" style="background:${a.status === 'active' ? 'var(--success)' : 'var(--muted)'}"></div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">${a.success_rate || 0}%</div>
-        <div style="font-size:9px;color:var(--muted)">${a.tasks_completed || 0} tasks</div>
-      </div>
-    </div>
-  `).join('');
+function renderAgents() {
+document.getElementById('agentList').innerHTML = AGENTS.map(a =>
+'<div class="agent"><div class="avatar" style="background:' + a.c + '">' + a.i + '</div>' +
+'<div class="info"><div class="name">' + a.n + '</div><div class="role">' + a.r + '</div></div>' +
+'<div class="status-dot"></div></div>'
+).join('');
 }
 
-function renderWallet(w) {
-  document.getElementById('walletNGN').textContent = '₦' + (w.ngn_balance || 0).toLocaleString();
-  document.getElementById('walletUSD').textContent = '$' + (w.usd_balance || 0).toLocaleString();
-  document.getElementById('walletGDEG').textContent = (w.gdeg_balance || 0).toLocaleString();
-  document.getElementById('walletUSDT').textContent = (w.usdt_balance || 0).toLocaleString();
-  
-  const pm = document.getElementById('paymentMethods');
-  if (w.payment_methods) {
-    pm.innerHTML = w.payment_methods.map(m => `
-      <div class="list-item"><span class="title">${m.type}</span><span class="meta">${m.details}</span></div>
-    `).join('');
-  } else {
-    pm.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No payment methods</span></div>';
-  }
+// Navigation
+function goPage(p) {
+document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+document.getElementById('page-' + p).classList.add('active');
+document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+const n = document.getElementById('nav-' + p);
+if (n) n.classList.add('active');
+// Show FAB on non-home pages
+document.getElementById('fab').className = p === 'home' ? 'fab' : 'fab show';
+window.scrollTo(0, 0);
 }
 
-function renderTransactions(txns) {
-  const list = document.getElementById('transactionList');
-  if (!txns || txns.length === 0) {
-    list.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No transactions yet</span></div>';
-  } else {
-    list.innerHTML = txns.slice(0, 10).map(t => `
-      <div class="list-item">
-        <span class="title">${t.type || t.description || 'Transaction'}</span>
-        <span class="meta">${t.currency || ''} ${(t.amount || 0).toLocaleString()} • ${t.status || ''}</span>
-      </div>
-    `).join('');
-  }
-}
+function goAuth() { goPage('auth'); if (user) showProfile(); }
 
-// ===== NAVIGATION =====
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const el = document.getElementById('page-' + page);
-  if (el) el.classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const nav = document.getElementById('nav-' + page);
-  if (nav) nav.classList.add('active');
-  window.scrollTo(0, 0);
-  if (page === 'profile' && currentUser) showProfile(); if (page === 'analytics') renderAnalytics();
-  // Track analytics
-  if (backendOnline) {
-    apiCall('/analytics/track', 'POST', {event_type:'page_view', platform:page}).catch(()=>{});
-  }
-}
-
-function quickAction(action) {
-  const map = {search:'platforms',wallet:'wallet',agents:'agents',analytics:'analytics',platforms:'platforms',settings:'settings'};
-  showPage(map[action] || 'dashboard');
-}
-
-// ===== SEARCH =====
-function filterPlatforms() {
-  const q = document.getElementById('platformSearch').value.toLowerCase();
-  renderPlatforms(platformData.filter(p => 
-    p.name.toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q)
-  ));
-}
-
-// ===== AUTH — HARZ Cloud =====
+// Auth
 function showLogin() {
-  document.getElementById('loginSection').style.display = 'block';
-  document.getElementById('registerSection').style.display = 'none';
-  document.getElementById('profileSection').style.display = 'none';
+document.getElementById('loginForm').classList.remove('hide');
+document.getElementById('regForm').classList.add('hide');
+document.getElementById('profileView').classList.add('hide');
 }
-function showRegister() {
-  document.getElementById('loginSection').style.display = 'none';
-  document.getElementById('registerSection').style.display = 'block';
-  document.getElementById('profileSection').style.display = 'none';
+function showReg() {
+document.getElementById('loginForm').classList.add('hide');
+document.getElementById('regForm').classList.remove('hide');
+document.getElementById('profileView').classList.add('hide');
 }
 function showProfile() {
-  if (!currentUser) { showLogin(); return; }
-  document.getElementById('loginSection').style.display = 'none';
-  document.getElementById('registerSection').style.display = 'none';
-  document.getElementById('profileSection').style.display = 'block';
-  document.getElementById('profName').textContent = currentUser.full_name || '—';
-  document.getElementById('profEmail').textContent = currentUser.email || '—';
-  document.getElementById('profRole').textContent = currentUser.role || 'user';
-  document.getElementById('twoFAStatus').textContent = currentUser.two_factor_enabled ? 'Enabled ✅' : 'Disabled';
+document.getElementById('loginForm').classList.add('hide');
+document.getElementById('regForm').classList.add('hide');
+document.getElementById('profileView').classList.remove('hide');
+document.getElementById('pName').textContent = user?.full_name || '—';
+document.getElementById('pEmail').textContent = user?.email || '—';
+document.getElementById('pRole').textContent = user?.role || 'user';
+document.getElementById('pSince').textContent = user?.created_date?.slice(0,10) || '—';
 }
 
 function updateUserBtn() {
-  const btn = document.getElementById('userBtn');
-  if (currentUser) {
-    btn.textContent = currentUser.full_name?.split(' ')[0] || 'Profile';
-  } else {
-    btn.textContent = 'Login';
-  }
+const b = document.getElementById('userBtn');
+if (user) { b.textContent = user.full_name?.split(' ')[0] || 'Profile'; }
+else { b.textContent = 'Login'; }
+}
+
+function restoreSession() {
+if (user) { showProfile(); updateUserBtn(); }
 }
 
 async function doLogin() {
-  const email = document.getElementById('loginEmail').value;
-  const pass = document.getElementById('loginPassword').value;
-  if (!email || !pass) return showToast('Please enter email and password', true);
-  
-  if (backendOnline) {
-    try {
-      const res = await apiCall('/auth/login', 'POST', {email, password: pass});
-      authToken = res.token;
-      currentUser = res.user;
-      localStorage.setItem('harz_token', authToken);
-      localStorage.setItem('harz_user', JSON.stringify(currentUser));
-      showProfile();
-      updateUserBtn();
-      showToast('Welcome back, ' + currentUser.full_name + '!');
-    } catch(e) {
-      showToast('Login failed: ' + e.message, true);
-    }
-  } else {
-    // Offline mode — local auth
-    currentUser = {email, full_name: email.split('@')[0], role: 'user', two_factor_enabled: false};
-    localStorage.setItem('harz_user', JSON.stringify(currentUser));
-    showProfile();
-    updateUserBtn();
-    showToast('Offline login — backend offline');
-  }
+const email = document.getElementById('loginEmail').value.trim();
+const pass = document.getElementById('loginPassword').value;
+if (!email || !pass) return toast('Enter email and password');
+try {
+const data = await api('/auth/login', 'POST', {email, password: pass});
+if (data.token) {
+token = data.token; user = data.user;
+localStorage.setItem('harz_token', token);
+localStorage.setItem('harz_user', JSON.stringify(user));
+showProfile(); updateUserBtn();
+goPage('home'); toast('Welcome, ' + (user.full_name?.split(' ')[0] || 'back') + '!');
+}
+} catch(e) {
+// If backend offline, allow demo login
+if (!cloudWorking) {
+user = {email, full_name: email.split('@')[0], role: 'user', created_date: new Date().toISOString()};
+localStorage.setItem('harz_user', JSON.stringify(user));
+showProfile(); updateUserBtn();
+goPage('home'); toast('Logged in (local mode)');
+} else {
+toast('Login failed: ' + e.message);
+}
+}
 }
 
 async function doRegister() {
-  const name = document.getElementById('regName').value;
-  const email = document.getElementById('regEmail').value;
-  const pass = document.getElementById('regPassword').value;
-  if (!name || !email || !pass) return showToast('Please fill all fields', true);
-  
-  if (backendOnline) {
-    try {
-      const res = await apiCall('/auth/register', 'POST', {full_name: name, email, password: pass, role: 'user'});
-      authToken = res.token;
-      currentUser = res.user;
-      localStorage.setItem('harz_token', authToken);
-      localStorage.setItem('harz_user', JSON.stringify(currentUser));
-      showProfile();
-      updateUserBtn();
-      showToast('Account created! Welcome 🎉');
-    } catch(e) {
-      showToast('Registration failed: ' + e.message, true);
-    }
-  } else {
-    currentUser = {email, full_name: name, role: 'user', two_factor_enabled: false};
-    localStorage.setItem('harz_user', JSON.stringify(currentUser));
-    showProfile();
-    updateUserBtn();
-    showToast('Offline account created');
-  }
+const name = document.getElementById('regName').value.trim();
+const email = document.getElementById('regEmail').value.trim();
+const pass = document.getElementById('regPassword').value;
+if (!name || !email || !pass) return toast('Fill all fields');
+if (pass.length < 6) return toast('Password min 6 chars');
+try {
+const data = await api('/auth/register', 'POST', {full_name: name, email, password: pass, role: 'user'});
+if (data.token) {
+token = data.token; user = data.user;
+localStorage.setItem('harz_token', token);
+localStorage.setItem('harz_user', JSON.stringify(user));
+showProfile(); updateUserBtn();
+goPage('home'); toast('Account created!');
+}
+} catch(e) {
+if (!cloudWorking) {
+user = {email, full_name: name, role: 'user', created_date: new Date().toISOString()};
+localStorage.setItem('harz_user', JSON.stringify(user));
+showProfile(); updateUserBtn();
+goPage('home'); toast('Account created (local mode)');
+} else {
+toast('Registration failed: ' + e.message);
+}
+}
 }
 
 function doLogout() {
-  if (backendOnline) {
-    apiCall('/auth/logout', 'POST').catch(()=>{});
-  }
-  authToken = null;
-  currentUser = null;
-  localStorage.removeItem('harz_token');
-  localStorage.removeItem('harz_user');
-  showLogin();
-  updateUserBtn();
-  showToast('Logged out');
+token = null; user = null;
+localStorage.removeItem('harz_token');
+localStorage.removeItem('harz_user');
+showLogin(); updateUserBtn();
+goPage('home'); toast('Logged out');
 }
 
-async function toggle2FA() {
-  if (!currentUser) return showToast('Please login first', true);
-  if (backendOnline) {
-    try {
-      await apiCall('/auth/2fa/enable', 'POST');
-      currentUser.two_factor_enabled = true;
-      localStorage.setItem('harz_user', JSON.stringify(currentUser));
-      document.getElementById('twoFAStatus').textContent = 'Enabled ✅';
-      showToast('2FA enabled!');
-    } catch(e) { showToast('2FA failed: ' + e.message, true); }
-  } else {
-    currentUser.two_factor_enabled = !currentUser.two_factor_enabled;
-    localStorage.setItem('harz_user', JSON.stringify(currentUser));
-    document.getElementById('twoFAStatus').textContent = currentUser.two_factor_enabled ? 'Enabled ✅' : 'Disabled';
-    showToast(currentUser.two_factor_enabled ? '2FA enabled (offline)' : '2FA disabled');
-  }
+async function enable2FA() {
+if (!user) return toast('Login first');
+try {
+const data = await api('/auth/2fa/enable', 'POST');
+toast('2FA enabled! Save backup codes.');
+} catch(e) {
+toast('2FA needs HARZ Cloud — deploy on Render first');
+}
 }
 
-async function resetPassword() {
-  if (!currentUser) return showToast('Please login first', true);
-  if (backendOnline) {
-    try {
-      await apiCall('/auth/password-reset/request', 'POST', {email: currentUser.email});
-      showToast('Reset code sent to your email');
-    } catch(e) { showToast('Reset failed: ' + e.message, true); }
-  } else {
-    showToast('Backend offline — cannot reset');
-  }
+async function resetPass() {
+if (!user) return toast('Login first');
+try {
+await api('/auth/password-reset/request', 'POST', {email: user.email});
+toast('Reset code sent to email');
+} catch(e) {
+toast('Password reset needs HARZ Cloud');
+}
 }
 
-// ===== CHAT — HARZ Cloud Agent Delegation =====
-async function sendChat() {
-  const input = document.getElementById('chatInput');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  const box = document.getElementById('chatBox');
-  box.innerHTML += `<div class="chat-msg out">${msg}</div>`;
-  box.scrollTop = box.scrollHeight;
-  
-  const typingId = 'typing-' + Date.now();
-  box.innerHTML += `<div class="chat-msg in" id="${typingId}">⏳ Processing...</div>`;
-  box.scrollTop = box.scrollHeight;
-  
-  if (backendOnline) {
-    try {
-      const res = await apiCall('/agents/delegate', 'POST', {
-        name: 'User Query',
-        description: msg,
-        priority: 'normal'
-      });
-      document.getElementById(typingId)?.remove();
-      const reply = res.task?.result || res.response || res.message || 
-        `Task delegated to ${res.task?.assigned_to || 'Magani'}. Processing...`;
-      box.innerHTML += `<div class="chat-msg in">${reply}</div>`;
-    } catch(e) {
-      document.getElementById(typingId)?.remove();
-      // Fallback response
-      const reply = generateReply(msg);
-      box.innerHTML += `<div class="chat-msg in">${reply}</div>`;
-    }
-  } else {
-    // Offline — generate contextual response
-    setTimeout(() => {
-      document.getElementById(typingId)?.remove();
-      const reply = generateReply(msg);
-      box.innerHTML += `<div class="chat-msg in">${reply}</div>`;
-      box.scrollTop = box.scrollHeight;
-    }, 800);
-  }
-  box.scrollTop = box.scrollHeight;
+// Chat — uses bridge agent-chat endpoint, falls back to Base44 direct
+function sendChat() {
+const inp = document.getElementById('chatInput');
+const msg = inp.value.trim();
+if (!msg) return;
+inp.value = '';
+const box = document.getElementById('chatBox');
+addMsg(msg, 'out');
+box.scrollTop = box.scrollHeight;
+
+// Try HARZ Cloud bridge first, then Base44 direct
+const chatUrl = cloudWorking
+  ? CLOUD_API + '/bridge/agent-chat'
+  : B44_FUNCTIONS + '/harzBridge';
+const chatBody = cloudWorking
+  ? JSON.stringify({agent: 'magani', message: msg, sender: 'superapp'})
+  : JSON.stringify({action: 'agent_chat', api_key: 'omega_harz_321424_2026', agent: 'magani', message: msg});
+
+fetchWithTimeout(chatUrl, {
+method: 'POST',
+headers: {'Content-Type': 'application/json'},
+body: chatBody
+}, 15000).then(r => r.json()).then(data => {
+const reply = data.response || data.message || data.reply || data.data?.response;
+if (reply) {
+addMsg(reply.substring(0, 500), 'in');
+} else {
+localReply(msg);
+}
+}).catch(() => {
+cloudWorking = false;
+localReply(msg);
+});
+box.scrollTop = box.scrollHeight;
 }
 
-function generateReply(msg) {
-  const lower = msg.toLowerCase();
-  if (lower.includes('platform') || lower.includes('apps')) {
-    return `HARZ Ecosystem has ${platformData.length} platforms, ${platformData.filter(p=>p.status==='Live').length} are live. Check the Platforms tab!`;
-  } else if (lower.includes('agent') || lower.includes('ai')) {
-    return `We have ${agentData.length} AI agents with ${Math.round(agentData.reduce((s,a)=>s+(a.success_rate||0),0)/agentData.length*10)/10}% avg success rate.`;
-  } else if (lower.includes('wallet') || lower.includes('pay') || lower.includes('money')) {
-    return `Your HARZ Wallet supports NGN, USD, GDEG, and USDT. Check the Wallet tab!`;
-  } else if (lower.includes('hello') || lower.includes('hi') || lower.includes('sannu')) {
-    return `👋 Hello! I'm Magani. I can help with platforms, agents, wallet, and more!`;
-  } else if (lower.includes('help') || lower.includes('tade')) {
-    return `I can help: 📱 Platforms, 🤖 AI Agents, 💳 Wallet, 📈 Analytics, 🔐 Settings. Just ask!`;
-  } else {
-    return `I received: "${msg}". Connect HARZ Cloud backend for full AI processing.`;
-  }
+function localReply(msg) {
+const l = msg.toLowerCase();
+let r = 'I received your message. When HARZ Cloud is deployed on Render, I will process it fully.';
+if (l.includes('hello') || l.includes('hi') || l.includes('sannu')) r = 'Sannu! Yadda zan taimaka?';
+else if (l.includes('price') || l.includes('cost') || l.includes('nawa')) r = 'Products range ₦2,000-₦5,000. Check https://hamzarabiu.gumroad.com';
+else if (l.includes('buy') || l.includes('order') || l.includes('sayi')) r = 'Visit https://hamzarabiu.gumroad.com to buy. Payment: UBA transfer, Paystack, USDT, GDEG.';
+else if (l.includes('help') || l.includes('taimaka')) r = 'I can help with products, orders, payments, platforms, and more!';
+else if (l.includes('platform') || l.includes('dandamali')) r = 'We have 63+ platforms. Check the Platforms tab!';
+else if (l.includes('agent') || l.includes('wakili')) r = '7 AI agents: Magani, Hauwa, Rabi, Aisha, Nuruddeen, Omega, Danjuma.';
+addMsg(r, 'in');
 }
 
-function openAgentChat(name) {
-  showPage('agents');
-  showToast('Chatting with ' + name);
-  document.getElementById('chatInput').focus();
+function addMsg(text, type) {
+const box = document.getElementById('chatBox');
+const div = document.createElement('div');
+div.className = 'chat-msg ' + type;
+div.textContent = text;
+box.appendChild(div);
+box.scrollTop = box.scrollHeight;
 }
 
-// ===== EXPORT =====
+// API Key
+function saveApiKey() {
+const key = document.getElementById('apiKeyInput').value.trim();
+if (!key) return toast('Enter a key');
+localStorage.setItem('harz_api_key', key);
+toast('API key saved');
+}
+
+async function genApiKey() {
+if (!token) return toast('Login first');
+try {
+const data = await api('/api-keys/generate', 'POST', {name: 'SuperApp', scopes: ['read', 'write']});
+if (data.key) {
+document.getElementById('apiKeyInput').value = data.key;
+localStorage.setItem('harz_api_key', data.key);
+toast('Key generated! Save it securely.');
+}
+} catch(e) {
+toast('API key generation needs HARZ Cloud');
+}
+}
+
+// Export — uses bridge all-data endpoint
 async function exportData() {
-  showToast('Exporting...');
-  if (backendOnline && authToken) {
-    try {
-      const res = await fetch(API_URL + '/export-all?format=json', {
-        headers: {'x-auth-token': authToken}
-      });
-      const data = await res.json();
-      downloadJSON(data, 'harz-export');
-      showToast('Data exported! 📄');
-      return;
-    } catch(e) {}
-  }
-  // Fallback — export local data
-  const data = {user: currentUser, platforms: platformData, agents: agentData, wallet: walletData, exportDate: new Date().toISOString()};
-  downloadJSON(data, 'harz-export');
-  showToast('Local data exported! 📄');
+toast('Exporting via bridge...');
+try {
+const res = await fetch(CLOUD_API + '/bridge/all-data?tables=products,orders,harzpay_orders,crm,music_tracks,films,edu_courses,estate_properties', {
+headers: token ? {'x-auth-token': token} : {},
+
+});
+if (!res.ok) throw new Error();
+const data = await res.json();
+download(JSON.stringify(data, null, 2), 'harz-bridge-export.json');
+toast('Bridge data exported (' + Object.keys(data.results).length + ' tables)!');
+} catch(e) {
+// Try Base44 directly
+try {
+const res = await fetch(B44_FUNCTIONS + '/harzBridge', {
+method: 'POST', headers: {'Content-Type': 'application/json'},
+body: JSON.stringify({action: 'ecosystem_status', api_key: 'omega_harz_321424_2026'}),
+
+});
+const data = await res.json();
+download(JSON.stringify(data, null, 2), 'harz-b44-export.json');
+toast('Base44 data exported!');
+} catch(e2) {
+// Local export
+const local = {exported_at: new Date().toISOString(), user, theme, platforms: PLATFORMS.length, agents: AGENTS.length};
+download(JSON.stringify(local, null, 2), 'harz-local.json');
+toast('Local data exported (all backends offline)');
+}
+}
 }
 
-function downloadJSON(data, filename) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename + '-' + new Date().toISOString().slice(0,10) + '.json';
-  a.click();
+function download(content, filename) {
+const blob = new Blob([content], {type: 'application/json'});
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url; a.download = filename; a.click();
+URL.revokeObjectURL(url);
 }
 
-// ===== CONNECTION TEST =====
+// Test connection — checks bridge status
 async function testConnection() {
-  showToast('Testing HARZ Cloud...');
-  const online = await checkBackend();
-  if (online) {
-    try {
-      const health = await apiCall('/health');
-      showToast('✅ Connected! v' + (health.version || '1.0'));
-    } catch(e) {
-      showToast('✅ Backend is online!');
-    }
-  } else {
-    showToast('❌ Backend offline — deploy on Render', true);
-  }
+toast('Testing bridge...');
+try {
+const res = await fetchWithTimeout(CLOUD_API + '/bridge/status', {}, 3000);
+if (res.ok) {
+const d = await res.json();
+if (d.base44_connected) {
+toast('Bridge: HARZ Cloud v5.1 + Base44 (' + d.sync.total_entities + ' entities) ✓');
+} else {
+toast('HARZ Cloud v5.1: Bridge active, Base44 disconnected');
+}
+return;
+}
+} catch(e) {}
+try {
+const res = await fetchWithTimeout(B44_FUNCTIONS + '/harzBridge', {
+method: 'POST', headers: {'Content-Type': 'application/json'},
+body: JSON.stringify({action: 'ecosystem_status', api_key: 'omega_harz_321424_2026'})
+}, 3000);
+if (res.ok) { toast('Base44 Direct: Connected (HARZ Cloud offline) ✓'); return; }
+} catch(e) {}
+toast('All backends offline — local mode active');
 }
 
-// ===== API URL CONFIG =====
-function saveApiUrl() {
-  const url = document.getElementById('customApiUrl').value.trim();
-  if (url) {
-    API_URL = url.startsWith('http') ? url : 'https://' + url;
-    localStorage.setItem('harz_api_url', API_URL);
-    document.getElementById('apiUrlDisplay').textContent = API_URL.replace('https://','');
-    showToast('API URL saved! Reloading...');
-    setTimeout(() => location.reload(), 1000);
-  }
+// Theme
+function applyTheme() {
+if (theme === 'light') {
+document.body.classList.add('light');
+document.getElementById('themeBtn').textContent = '☀️';
+document.getElementById('themeName').textContent = 'Light';
+} else {
+document.body.classList.remove('light');
+document.getElementById('themeBtn').textContent = '🌙';
+document.getElementById('themeName').textContent = 'Dark';
 }
-
-
-// ===== PRODUCTS =====
-let productData = LOCAL_PRODUCTS;
-let transactionData = LOCAL_TRANSACTIONS;
-
-function renderProducts(products) {
-  document.getElementById('productCount').textContent = products.length;
-  const list = document.getElementById('productList');
-  list.innerHTML = products.map(p => `
-    <div class="list-item" style="flex-direction:column;align-items:flex-start;cursor:pointer" onclick="buyProduct('${p.name}')">
-      <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
-        <span class="title">${p.name}</span>
-        <span style="color:var(--accent2);font-weight:700;font-size:13px">${p.currency === 'USD' ? '$' : '₦'}${(p.price || 0).toLocaleString()}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;width:100%;margin-top:4px">
-        <span class="meta">${p.description}</span>
-        <span class="badge badge-live">${p.platform}</span>
-      </div>
-    </div>
-  `).join('');
 }
-
-function filterProducts() {
-  const q = document.getElementById('productSearch').value.toLowerCase();
-  renderProducts(productData.filter(p => 
-    p.name.toLowerCase().includes(q) || 
-    (p.category || '').toLowerCase().includes(q) ||
-    (p.platform || '').toLowerCase().includes(q)
-  ));
-}
-
-function buyProduct(name) {
-  showToast('🛒 ' + name + ' — Checkout coming soon!');
-}
-
-// Render products on page load
-setTimeout(() => { renderProducts(productData); renderTxns(transactionData); renderAnalytics(); }, 1500);
-
-function renderTxns(txns) {
-  const list = document.getElementById('transactionList');
-  if (!txns || txns.length === 0) {
-    list.innerHTML = '<div class="list-item"><span class="title" style="color:var(--muted)">No transactions yet</span></div>';
-  } else {
-    list.innerHTML = txns.map(t => `
-      <div class="list-item">
-        <span class="title">${t.description || t.type}</span>
-        <span class="meta">${t.currency} ${(t.amount || 0).toLocaleString()} • ${t.status}</span>
-      </div>
-    `).join('');
-  }
-}
-
-
-
-// ===== ANALYTICS =====
-function renderAnalytics() {
-  // Revenue
-  const revenue = transactionData.filter(t => t.status === 'Completed').reduce((s, t) => s + (t.amount || 0), 0);
-  document.getElementById('totalRevenue').textContent = '₦' + revenue.toLocaleString();
-  document.getElementById('totalProducts').textContent = productData.length;
-  document.getElementById('totalTxns').textContent = transactionData.length;
-  document.getElementById('totalPlatforms').textContent = platformData.length;
-  
-  // Revenue by platform
-  const revByPlatform = {};
-  transactionData.filter(t => t.status === 'Completed').forEach(t => {
-    const p = t.platform || 'Unknown';
-    revByPlatform[p] = (revByPlatform[p] || 0) + (t.amount || 0);
-  });
-  const revSorted = Object.entries(revByPlatform).sort((a,b) => b[1] - a[1]);
-  const maxRev = revSorted.length > 0 ? revSorted[0][1] : 1;
-  document.getElementById('revenueByPlatform').innerHTML = revSorted.length > 0 
-    ? revSorted.map(([p, r]) => `
-      <div style="margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:2px">
-          <span>${p}</span><span style="color:var(--accent2);font-weight:600">₦${r.toLocaleString()}</span>
-        </div>
-        <div style="height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden">
-          <div style="height:100%;width:${(r/maxRev*100)}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px"></div>
-        </div>
-      </div>
-    `).join('')
-    : '<div class="list-item"><span class="title" style="color:var(--muted)">No revenue data</span></div>';
-  
-  // Category breakdown
-  const cats = {};
-  platformData.forEach(p => { cats[p.category] = (cats[p.category] || 0) + 1; });
-  const catSorted = Object.entries(cats).sort((a,b) => b[1] - a[1]);
-  document.getElementById('categoryBreakdown').innerHTML = catSorted.map(([c, n]) => 
-    `<div class="list-item"><span class="title">${c}</span><span class="meta">${n} platforms</span></div>`
-  ).join('');
-  
-  // Transaction history
-  document.getElementById('txnHistory').innerHTML = transactionData.map(t => `
-    <div class="list-item">
-      <div>
-        <span class="title">${t.description || t.type}</span>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">${t.platform} • ${t.reference || ''}</div>
-      </div>
-      <div style="text-align:right">
-        <span style="font-weight:600;color:${t.status === 'Completed' ? 'var(--success)' : 'var(--accent)'}">${t.currency} ${(t.amount||0).toLocaleString()}</span>
-        <div style="font-size:10px;color:var(--muted)">${t.status}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// 4. Platform detail view
-function showPlatformDetail(name) {
-  const p = platformData.find(x => x.name === name);
-  if (!p) return;
-  const statusClass = p.status === 'Live' ? 'badge-live' : 'badge-dev';
-  showToast(`${p.icon || '📦'} ${p.name} — ${p.status}`);
-  if (p.url) {
-    setTimeout(() => window.open(p.url, '_blank'), 500);
-  }
-}
-
-// 5. Better agent chat
-const AGENT_RESPONSES = {
-  'MindCare Agent': (msg) => {
-    if (msg.match(/stress|anxiety|sad|depress/i)) return 'I understand. Try this: 4-7-8 breathing — inhale 4s, hold 7s, exhale 8s. Would you like a full CBT exercise?';
-    if (msg.match(/sleep|insomnia/i)) return 'Sleep tip: No screens 1hr before bed, keep room cool (18-20°C), try progressive muscle relaxation.';
-    return 'I am MindCare Agent. I can help with stress, anxiety, sleep, mood tracking, and CBT exercises. What is on your mind?';
-  },
-  'CyberShield Agent': (msg) => {
-    if (msg.match(/hack|attack|breach|secur/i)) return 'Active threat detected. Deploying 37 sub-agents. Recommendation: Enable 2FA, rotate API keys, audit access logs immediately.';
-    if (msg.match(/password|2fa|auth/i)) return 'Security best practices: Use 16+ char passwords, enable 2FA everywhere, use a password manager, never reuse passwords.';
-    return 'I am CyberShield Agent. I monitor threats across all HARZ platforms with 37 specialist sub-agents. Current status: All clear.';
-  },
-  'Health Agent': (msg) => {
-    if (msg.match(/pain|sick|fever|symptom/i)) return 'Please describe your symptoms in detail. I can analyze with 18 medical specialists. Note: For emergencies, call 112 or visit a hospital immediately.';
-    if (msg.match(/diet|nutrition|food|eat/i)) return 'Nutrition tip: Focus on whole foods — vegetables, lean protein, whole grains. Drink 2-3L water daily. Would you like a personalized meal plan?';
-    return 'I am Health Agent. I have 18 medical specialists for symptom checking, nutrition, fitness, and mental wellness. How can I help your health today?';
-  },
-  'Omega Commander': (msg) => {
-    if (msg.match(/deploy|launch|release/i)) return 'Deployment pipeline ready. DeployForge can push to GitHub, Vercel, Render, Netlify, or Railway. Which platform?';
-    if (msg.match(/report|analytics|stats/i)) return `Current stats: 56 platforms, 43 live, 7 agents active, 95.4% success rate, ₦49,500 revenue.`;
-    return 'I am Omega Commander. I manage enterprise operations with 9 AI agents. I can deploy, analyze, approve workflows, and manage the ecosystem.';
-  },
-  'Content Agent': (msg) => {
-    if (msg.match(/video|youtube|tiktok/i)) return 'Content suggestion: Create short-form videos (15-30s) for TikTok/Reels. Post 3x daily. Use trending audio. I can generate scripts and edit schedules.';
-    if (msg.match(/blog|article|write/i)) return 'I can generate SEO-optimized blog posts, social captions, and ad copy. What topic?';
-    return 'I am Content Agent. I manage content production across YouTube, TikTok, Instagram, Facebook, X, and LinkedIn. What content do you need?';
-  },
-  'EduWealth Agent': (msg) => {
-    if (msg.match(/trade|stock|invest/i)) return 'Trading lesson: Start with paper trading, learn risk management (1-2% rule), understand technical analysis basics (support, resistance, trends).';
-    if (msg.match(/market|digital|seo/i)) return 'Digital marketing: Focus on content marketing + SEO. Create valuable content, optimize for keywords, build backlinks. Consistency is key.';
-    return 'I am EduWealth Agent. I teach trading and digital marketing with 18 AI tutors. What would you like to learn?';
-  },
-  'Magani': (msg) => {
-    const lower = msg.toLowerCase();
-    if (lower.match(/platform|apps|ecosystem/)) return `HARZ Ecosystem has ${platformData.length} platforms — ${platformData.filter(p=>p.status==='Live').length} live. Categories: AI, Finance, Health, Construction, Media, Trading, and more. Check the Platforms tab!`;
-    if (lower.match(/agent|ai/)) return `We have ${agentData.length} AI agents with ${Math.round(agentData.reduce((s,a)=>s+(a.success_rate||0),0)/agentData.length*10)/10}% avg success rate. Tap any agent above to learn more.`;
-    if (lower.match(/wallet|pay|money|balance/)) return `Your HARZ Wallet: ₦125,000 / $350 / 5,000 GDEG / 120 USDT. Payment methods: UBA Transfer, Paystack, GDEG Token, USDT TRC20.`;
-    if (lower.match(/product|store|shop|buy/)) return `Harz Store has ${productData.length} products from all platforms. Prices range from ₦500 to ₦50,000. Check the Store tab!`;
-    if (lower.match(/revenue|income|earn/)) return `Total revenue: ₦49,500 from 6 completed transactions. Top platform: TradeOS (₦25,000).`;
-    if (lower.match(/hello|hi|sannu|ya/)) return '👋 Sannu! I am Magani, your HARZ ecosystem assistant. I can help with platforms, agents, wallet, products, and analytics!';
-    if (lower.match(/help|tade|gada/)) return 'I can help with: 📱 Platforms, 🤖 AI Agents, 💳 Wallet, 🛍️ Store, 📈 Analytics, 🔐 Settings. Just ask!';
-    return `I received: "${msg}". I can help with platforms, agents, wallet, products, analytics, and more. Try asking about the HARZ ecosystem!`;
-  }
-};
-
-let currentAgent = 'Magani';
-
-function openAgentChat(name) {
-  currentAgent = name;
-  showPage('agents');
-  const box = document.getElementById('chatBox');
-  box.innerHTML = `<div class="chat-msg in">👋 I am ${name}. How can I help you today?</div>`;
-  showToast('Chatting with ' + name);
-  document.getElementById('chatInput').focus();
-}
-
-function generateReply(msg) {
-  const responder = AGENT_RESPONSES[currentAgent] || AGENT_RESPONSES['Magani'];
-  return responder(msg);
-}
-
-
-// ===== THEME =====
 function toggleTheme() {
-  const body = document.body;
-  const isDark = !body.hasAttribute('data-theme') || body.getAttribute('data-theme') === 'dark';
-  if (isDark) {
-    body.setAttribute('data-theme', 'light');
-    document.getElementById('themeBtn').textContent = '☀️';
-    document.getElementById('themeName').textContent = 'Light';
-    localStorage.setItem('harz_theme', 'light');
-  } else {
-    body.setAttribute('data-theme', 'dark');
-    document.getElementById('themeBtn').textContent = '🌙';
-    document.getElementById('themeName').textContent = 'Dark';
-    localStorage.setItem('harz_theme', 'dark');
-  }
-}
-if (localStorage.getItem('harz_theme') === 'light') toggleTheme();
-
-// ===== TOAST =====
-function showToast(msg, isError = false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (isError ? ' error' : '');
-  setTimeout(() => t.className = 'toast', 3000);
+theme = theme === 'dark' ? 'light' : 'dark';
+localStorage.setItem('harz_theme', theme);
+applyTheme();
 }
 
-// ===== START =====
+// Utils
+function open(url) { window.open(url, '_blank'); }
+function toast(msg) {
+const t = document.getElementById('toast');
+t.textContent = msg;
+t.classList.add('show');
+setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Start
 init();
 </script>
-
-<!-- Platform Detail Modal -->
-<div id="platformModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:300;justify-content:center;align-items:center;padding:16px" onclick="if(event.target===this)closeModal()">
-<div style="background:var(--card);border-radius:16px;padding:20px;max-width:400px;width:100%;border:1px solid rgba(108,92,231,.3)">
-<div style="text-align:center;margin-bottom:16px">
-<div id="modalIcon" style="font-size:48px;margin-bottom:8px"></div>
-<div id="modalName" style="font-size:18px;font-weight:700;color:var(--text)"></div>
-<div id="modalCategory" style="font-size:12px;color:var(--muted);margin-top:4px"></div>
-</div>
-<div id="modalDesc" style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5"></div>
-<div id="modalStatus" style="margin-bottom:16px;text-align:center"></div>
-<button class="btn" id="modalOpenBtn" onclick="" style="margin-bottom:8px">Open Platform</button>
-<button class="btn btn-outline" onclick="closeModal()" style="margin-bottom:0">Close</button>
-</div>
-</div>
-
-<script>
-function showPlatformModal(name) {
-  const p = platformData.find(x => x.name === name);
-  if (!p) return;
-  document.getElementById('modalIcon').textContent = p.icon || '📦';
-  document.getElementById('modalName').textContent = p.name;
-  document.getElementById('modalCategory').textContent = p.category || '';
-  document.getElementById('modalDesc').textContent = p.description || 'No description available';
-  const statusEl = document.getElementById('modalStatus');
-  statusEl.innerHTML = p.status === 'Live' 
-    ? '<span class="badge badge-live">● Live</span>' 
-    : '<span class="badge badge-dev">● Development</span>';
-  const openBtn = document.getElementById('modalOpenBtn');
-  if (p.url) {
-    openBtn.style.display = 'block';
-    openBtn.onclick = () => window.open(p.url, '_blank');
-  } else {
-    openBtn.style.display = 'none';
-  }
-  document.getElementById('platformModal').style.display = 'flex';
-}
-function closeModal() {
-  document.getElementById('platformModal').style.display = 'none';
-}
-</script>
-
 </body>
 </html>
