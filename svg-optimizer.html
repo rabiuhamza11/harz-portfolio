@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SVG Optimizer — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:800px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}textarea{width:100%;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.85rem;font-family:monospace;min-height:150px;resize:vertical}textarea:focus{outline:none;border-color:#3b82f6}.btn{padding:8px 16px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.85rem}.btn.sec{background:#334155}.opts{display:flex;flex-direction:column;gap:8px;margin:12px 0}.opt{display:flex;align-items:center;gap:8px;font-size:.85rem;color:#cbd5e1}.opt input{width:18px;height:18px;accent-color:#3b82f6}.stat{display:inline-block;padding:4px 12px;background:#1e3a5f;border-radius:6px;font-size:.8rem;color:#93c5fd;margin:2px}.preview{text-align:center;padding:20px;background:#fff;border-radius:8px;margin-top:12px;min-height:60px}.out{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;font-family:monospace;font-size:.8rem;color:#a5b4fc;max-height:300px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;margin-top:12px}</style>
+</head>
+<body>
+<div class="c">
+<h1>SVG Optimizer</h1><p class="sub">Clean and minify SVG markup</p>
+<div class="card"><h2>Input SVG</h2>
+<textarea id="input" oninput="render()" placeholder="Paste SVG code here..."><svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <g id="layer1">
+    <circle cx="50" cy="50" r="40" fill="#3b82f6" stroke="#000" stroke-width="2"/>
+    <text x="50" y="55" text-anchor="middle" font-size="20" fill="#fff">H</text>
+  </g>
+  <!-- HARZ logo -->
+  <metadata>Created by HARZ Toolkit</metadata>
+</svg></textarea>
+<div class="opts">
+<div class="opt"><input type="checkbox" id="optComments" checked onchange="optimize()"><label for="optComments">Remove comments</label></div>
+<div class="opt"><input type="checkbox" id="optMetadata" checked onchange="optimize()"><label for="optMetadata">Remove metadata</label></div>
+<div class="opt"><input type="checkbox" id="optWhitespace" checked onchange="optimize()"><label for="optWhitespace">Collapse whitespace</label></div>
+<div class="opt"><input type="checkbox" id="optIndent" checked onchange="optimize()"><label for="optIndent">Remove indentation</label></div>
+<div class="opt"><input type="checkbox" id="optDefs" onchange="optimize()"><label for="optDefs">Remove empty defs</label></div>
+<div class="opt"><input type="checkbox" id="optIds" onchange="optimize()"><label for="optIds">Remove unused IDs</label></div>
+</div>
+<button class="btn" onclick="optimize()">Optimize</button>
+</div>
+<div class="card"><h2>Preview</h2><div class="preview" id="preview"></div></div>
+<div class="card"><h2>Result</h2>
+<div id="stats"></div>
+<div class="out" id="output"></div>
+<div style="display:flex;gap:8px;margin-top:12px"><button class="btn" onclick="copyOut()">Copy</button><button class="btn sec" onclick="download()">Download SVG</button></div></div>
+</div>
+<script>
+function render(){const svg=document.getElementById('input').value;document.getElementById('preview').innerHTML=svg;}
+function optimize(){let svg=document.getElementById('input').value;const origSize=svg.length;
+if(document.getElementById('optComments').checked)svg=svg.replace(/<!--[\s\S]*?-->/g,'');
+if(document.getElementById('optMetadata').checked)svg=svg.replace(/<metadata>[\s\S]*?<\/metadata>/g,'');
+if(document.getElementById('optDefs').checked)svg=svg.replace(/<defs>\s*<\/defs>/g,'');
+if(document.getElementById('optWhitespace').checked)svg=svg.replace(/>\s+</g,'><').replace(/\s{2,}/g,' ');
+if(document.getElementById('optIndent').checked)svg=svg.replace(/\n\s*/g,'');
+if(document.getElementById('optIds').checked)svg=svg.replace(/id="[^"]*"/g,'').replace(/\s+/g,' ').replace(/> </g,'><');
+svg=svg.trim();
+document.getElementById('output').textContent=svg;document.getElementById('preview').innerHTML=svg;
+const newSize=svg.length;const savings=((1-newSize/origSize)*100).toFixed(1);
+document.getElementById('stats').innerHTML='<span class="stat">Original: '+origSize+' chars</span><span class="stat">Optimized: '+newSize+' chars</span><span class="stat">Saved: '+savings+'%</span>';}
+function copyOut(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('SVG copied!');}
+function download(){var b=new Blob([document.getElementById('output').textContent],{type:'image/svg+xml'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='optimized.svg';a.click();}
+render();optimize();
+</script>
+</body></html>

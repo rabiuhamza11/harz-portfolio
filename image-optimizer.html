@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Image Optimizer — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:800px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}.upload-zone{border:2px dashed #334155;border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:.2s}.upload-zone:hover{border-color:#3b82f6;background:#1e293b80}.fg{margin-bottom:14px}.fg label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.fg input,.fg select{width:100%;padding:8px 10px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:.85rem}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.btn.sec{background:#334155}.stat{display:inline-block;padding:4px 12px;background:#1e3a5f;border-radius:6px;font-size:.8rem;color:#93c5fd;margin:2px}.canvas-preview{margin-top:12px;text-align:center}.canvas-preview canvas{max-width:100%;border-radius:8px}.compare{display:flex;gap:12px;margin-top:12px}.compare>div{flex:1;text-align:center}.compare canvas{max-width:100%;border-radius:8px;margin-top:6px}.compare p{font-size:.75rem;color:#94a3b8;margin-top:4px}</style>
+</head>
+<body>
+<div class="c">
+<h1>Image Optimizer</h1><p class="sub">Resize, compress, and convert images in the browser</p>
+<div class="card"><h2>Upload Image</h2><div class="upload-zone" id="dropZone"><p>Click or drag an image here</p><input type="file" id="fileInput" accept="image/*" style="display:none"></div></div>
+<div class="card" id="settings" style="display:none"><h2>Settings</h2>
+<div class="row"><div class="fg"><label>Max Width (px)</label><input type="number" id="maxW" value=1920 oninput="process()"></div><div class="fg"><label>Max Height (px)</label><input type="number" id="maxH" value=1080 oninput="process()"></div></div>
+<div class="row"><div class="fg"><label>Quality (0-1)</label><input type="range" id="quality" min=0.1 max=1 step=0.05 value=0.7 oninput="process()"></div><div class="fg"><label>Format</label><select id="format" onchange="process()"><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div></div>
+<div class="fg"><label>Maintain Aspect Ratio</label><select id="aspect" onchange="process()"><option value="true">Yes</option><option value="false">No (force dimensions)</option></select></div>
+</div>
+<div class="card" id="resultsCard" style="display:none"><h2>Results</h2><div id="stats"></div>
+<div class="compare"><div><p>Original</p><canvas id="origCanvas"></canvas><p id="origSize"></p></div><div><p>Optimized</p><canvas id="optCanvas"></canvas><p id="optSize"></p></div></div>
+<button class="btn" onclick="download()" style="margin-top:12px">Download Optimized</button></div>
+</div>
+<script>
+let originalImg=null,originalBlob=null;
+const dz=document.getElementById('dropZone'),fi=document.getElementById('fileInput');
+dz.addEventListener('click',()=>fi.click());
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='#3b82f6';});
+dz.addEventListener('drop',e=>{e.preventDefault();dz.style.borderColor='#334155';if(e.dataTransfer.files[0])load(e.dataTransfer.files[0]);});
+fi.addEventListener('change',e=>{if(e.target.files[0])load(e.target.files[0]);});
+function load(file){originalBlob=file;const reader=new FileReader();reader.onload=ev=>{const img=new Image();img.onload=()=>{originalImg=img;document.getElementById('settings').style.display='block';document.getElementById('resultsCard').style.display='block';document.getElementById('origCanvas').width=img.width;document.getElementById('origCanvas').height=img.height;document.getElementById('origCanvas').getContext('2d').drawImage(img,0,0);document.getElementById('origSize').textContent='Size: '+(file.size/1024).toFixed(1)+' KB | '+img.width+'x'+img.height;process();};img.src=ev.target.result;};reader.readAsDataURL(file);}
+function process(){if(!originalImg)return;const maxW=parseInt(document.getElementById('maxW').value),maxH=parseInt(document.getElementById('maxH').value),quality=parseFloat(document.getElementById('quality').value),format=document.getElementById('format').value,maintain=document.getElementById('aspect').value==='true';let w=originalImg.width,h=originalImg.height;if(maintain){const ratio=Math.min(maxW/w,maxH/h);if(ratio<1){w=Math.round(w*ratio);h=Math.round(h*ratio);}}else{w=maxW;h=maxH;}const canvas=document.getElementById('optCanvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(originalImg,0,0,w,h);canvas.toBlob(blob=>{document.getElementById('optSize').textContent='Size: '+(blob.size/1024).toFixed(1)+' KB | '+w+'x'+h;const orig=originalBlob.size,opt=blob.size;const savings=((1-opt/orig)*100).toFixed(1);document.getElementById('stats').innerHTML='<span class="stat">Original: '+(orig/1024).toFixed(1)+' KB</span><span class="stat">Optimized: '+(opt/1024).toFixed(1)+' KB</span><span class="stat">Savings: '+savings+'%</span><span class="stat">Format: '+format.replace('image/','').toUpperCase()+'</span>';},'format' in document.getElementById('format')?format:format,quality);}
+function download(){const canvas=document.getElementById('optCanvas');const format=document.getElementById('format').value;canvas.toBlob(blob=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='optimized.'+format.split('/')[1];a.click();});}
+</script>
+</body></html>

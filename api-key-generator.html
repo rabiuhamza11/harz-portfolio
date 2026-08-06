@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Key Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:700px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem;width:100%}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.85rem;word-break:break-all;color:#a5b4fc;margin-top:8px}
+.key-box{display:flex;align-items:center;gap:8px;margin-top:8px}
+.key-box button{padding:6px 12px;background:#334155;border:none;border-radius:6px;color:#94a3b8;cursor:pointer;font-size:.8rem;white-space:nowrap}
+.batch{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;color:#a5b4fc;margin-top:8px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>API Key Generator</h1>
+<p class="sub">Generate secure API keys, tokens, and secrets</p>
+<div class="card">
+<h2>Configuration</h2>
+<div class="form-grid">
+<div class="form-group"><label>Key Type</label><select id="keyType" onchange="generate()"><option value="random">Random String</option><option value="prefix">Prefixed (e.g. harz_sk_)</option><option value="jwt">JWT Token</option><option value="bearer">Bearer Token</option><option value="hmac">HMAC Key</option><option value="uuid">UUID v4</option></select></div>
+<div class="form-group"><label>Length</label><input id="length" type="number" value="32" min="8" max="256" oninput="generate()"></div>
+<div class="form-group"><label>Prefix (if applicable)</label><input id="prefix" value="harz_sk_" oninput="generate()"></div>
+<div class="form-group"><label>Encoding</label><select id="encoding" onchange="generate()"><option value="hex">Hex</option><option value="base64">Base64</option><option value="base64url">Base64URL</option><option value="alphanumeric">Alphanumeric</option></select></div>
+<div class="form-group"><label>Quantity</label><input id="quantity" type="number" value="1" min="1" max="100" oninput="generate()"></div>
+</div>
+<button class="btn" onclick="generate()">Generate Key(s)</button>
+</div>
+<div class="card" id="singleCard">
+<h2>Generated Key</h2>
+<div class="key-box"><div class="output" id="keyOutput" style="flex:1"></div><button onclick="copyKey()">Copy</button></div>
+</div>
+<div class="card" id="batchCard" style="display:none">
+<h2>Generated Keys</h2>
+<div class="batch" id="batchOutput"></div>
+<button class="btn secondary" onclick="copyBatch()" style="margin-top:10px">Copy All</button>
+</div>
+</div>
+<script>
+function genRandomBytes(len){const chars={hex:'0123456789abcdef',base64:'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',base64url:'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',alphanumeric:'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'};const set=chars[document.getElementById('encoding').value]||chars.alphanumeric;let key='';const arr=new Uint8Array(len);crypto.getRandomValues(arr);for(let i=0;i<len;i++)key+=set[arr[i]%set.length];return key;}
+function generate(){
+const type=document.getElementById('keyType').value;
+const len=parseInt(document.getElementById('length').value)||32;
+const prefix=document.getElementById('prefix').value;
+const qty=parseInt(document.getElementById('quantity').value)||1;
+const keys=[];
+for(let i=0;i<qty;i++){
+let key='';
+if(type==='random'){key=genRandomBytes(len);}
+else if(type==='prefix'){key=prefix+genRandomBytes(len);}
+else if(type==='jwt'){const header=btoa(JSON.stringify({alg:'HS256',typ:'JWT'}));const payload=btoa(JSON.stringify({iss:'harz',iat:Date.now(),exp:Date.now()+3600000}));const sig=genRandomBytes(43);key=header+'.'+payload+'.'+sig;}
+else if(type==='bearer'){key='Bearer '+genRandomBytes(len);}
+else if(type==='hmac'){key=genRandomBytes(64);}
+else if(type==='uuid'){key=crypto.randomUUID();}
+keys.push(key);}
+if(qty===1){document.getElementById('singleCard').style.display='block';document.getElementById('batchCard').style.display='none';document.getElementById('keyOutput').textContent=keys[0];}
+else{document.getElementById('singleCard').style.display='none';document.getElementById('batchCard').style.display='block';document.getElementById('batchOutput').textContent=keys.join('\n');}
+}
+function copyKey(){navigator.clipboard.writeText(document.getElementById('keyOutput').textContent);alert('Key copied!');}
+function copyBatch(){navigator.clipboard.writeText(document.getElementById('batchOutput').textContent);alert('All keys copied!');}
+generate();
+</script>
+</body>
+</html>

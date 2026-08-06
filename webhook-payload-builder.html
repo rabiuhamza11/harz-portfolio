@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webhook Payload Builder — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#3b82f6}
+.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.btn.sm{padding:6px 14px;font-size:.8rem}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.preset{display:inline-block;padding:6px 14px;background:#334155;border-radius:20px;font-size:.8rem;cursor:pointer;margin:2px;color:#cbd5e1}
+.preset:hover{background:#3b82f6;color:#fff}
+.status{padding:8px 12px;border-radius:6px;font-size:.85rem;margin-top:10px}
+.status.ok{background:#052e16;color:#4ade80}
+.status.fail{background:#450a0a;color:#f87171}
+.status.pending{background:#1e3a5f;color:#93c5fd}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Webhook Payload Builder</h1>
+<p class="sub">Build, sign, and test webhook payloads</p>
+<div class="card">
+<h2>Quick Presets</h2>
+<div id="presets"></div>
+</div>
+<div class="card">
+<h2>Webhook Configuration</h2>
+<div class="form-grid">
+<div class="form-group"><label>Webhook URL</label><input id="url" value="https://example.com/webhook" oninput="generate()"></div>
+<div class="form-group"><label>Method</label><select id="method" onchange="generate()"><option value="POST">POST</option><option value="PUT">PUT</option><option value="PATCH">PATCH</option></select></div>
+<div class="form-group"><label>Event Type</label><input id="eventType" value="payment.success" oninput="generate()"></div>
+<div class="form-group"><label>Secret (for HMAC signing)</label><input id="secret" placeholder="whsec_..." oninput="generate()"></div>
+</div>
+</div>
+<div class="card">
+<h2>Payload (JSON)</h2>
+<div class="form-group"><textarea id="payload" rows="10" oninput="generate()" style="width:100%;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.85rem;font-family:monospace"></textarea></div>
+</div>
+<div class="card">
+<h2>Generated Request</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy cURL</button>
+<button class="btn secondary" onclick="copyFetch()">Copy fetch()</button>
+<button class="btn" onclick="sendWebhook()">Send Test</button>
+</div>
+<div id="sendStatus"></div>
+</div>
+<div class="card">
+<h2>HMAC Signature</h2>
+<div class="output" id="signature">Enter a secret to generate HMAC signature</div>
+<button class="btn secondary" onclick="copySig()" style="margin-top:10px">Copy Signature</button>
+</div>
+</div>
+<script>
+const presetData={
+'Stripe Payment':[{"event":"payment.succeeded","data":{"id":"pi_1234567890","amount":50000,"currency":"ngn","status":"succeeded","customer":"cus_abc123","created":1672531200}}],
+'GitHub Push':[{"event":"push","data":{"ref":"refs/heads/main","repository":"harz/portfolio","pusher":{"name":"rabiuhamza11"},"commits":3,"modified":["index.html"]}}],
+'Slack Event':[{"event":"message","data":{"type":"message","channel":"C12345678","user":"U12345678","text":"Hello from HARZ","ts":"1672531200.001"}}]],
+'Custom':[{"event":"custom.event","data":{"action":"create","resource":"order","id":"ORD-001","timestamp":"2026-08-06T12:00:00Z"}}]
+};
+function renderPresets(){document.getElementById('presets').innerHTML=Object.keys(presetData).map(p=>'<span class="preset" onclick="loadPreset(\''+p+'\')">'+p+'</span>').join('');}
+function loadPreset(name){const data=presetData[name];if(!data)return;document.getElementById('eventType').value=data[0].event||data.event;document.getElementById('payload').value=JSON.stringify(data[0].data||data,null,2);generate();}
+function generate(){const url=document.getElementById('url').value;const method=document.getElementById('method').value;const eventType=document.getElementById('eventType').value;const secret=document.getElementById('secret').value;const payload=document.getElementById('payload').value;let parsed;try{parsed=JSON.parse(payload);}catch(e){parsed=JSON.parse('{}');}
+const headers={'Content-Type':'application/json'};if(eventType)headers['X-Event-Type']=eventType;if(secret)headers['X-Signature']='sha256=<HMAC>';const body=JSON.stringify({event:eventType,data:parsed,timestamp:new Date().toISOString()});
+const curl='curl -X '+method+' \''+url+'\' \\\n'+Object.entries(headers).map(([k,v])=>'  -H "'+k+': '+v+'"').join(' \\\n')+' \\\n  -d \''+JSON.stringify({event:eventType,data:parsed,timestamp:new Date().toISOString()})+'\'';
+const fetch='fetch(\''+url+'\', {\n  method: \''+method+'\',\n  headers: {\n'+Object.entries(headers).map(([k,v])=>'    \''+k+'\': \''+v+'\'').join(',\n')+'  },\n  body: JSON.stringify('+JSON.stringify({event:eventType,data:parsed,timestamp:new Date().toISOString()},null,2)+'\n})';
+document.getElementById('output').textContent=curl;
+if(secret){importKey(secret).then(()=>{hmacSha256(body,secret).then(h=>{document.getElementById('signature').textContent='sha256='+h;});});}}
+async function importKey(secret){return await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);}
+async function hmacSha256(data,secret){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);const sig=await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(data));return Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('cURL command copied!');}
+function copyFetch(){const url=document.getElementById('url').value;const method=document.getElementById('method').value;const payload=document.getElementById('payload').value;const fetchCode='fetch(\''+url+'\', {\n  method: \''+method+'\',\n  headers: { \'Content-Type\': \'application/json\' },\n  body: JSON.stringify('+payload+'\n)';navigator.clipboard.writeText(fetchCode);alert('fetch() code copied!');}
+function copySig(){navigator.clipboard.writeText(document.getElementById('signature').textContent);alert('Signature copied!');}
+async function sendWebhook(){const url=document.getElementById('url').value;const method=document.getElementById('method').value;const payload=document.getElementById('payload').value;const eventType=document.getElementById('eventType').value;const el=document.getElementById('sendStatus');el.innerHTML='<div class="status pending">Sending...</div>';try{const body=JSON.stringify({event:eventType,data:JSON.parse(payload),timestamp:new Date().toISOString()});const headers={'Content-Type':'application/json'};if(eventType)headers['X-Event-Type']=eventType;const res=await fetch(url,{method,headers,body});if(res.ok)el.innerHTML='<div class="status ok">Response: '+res.status+' '+res.statusText+'</div>';else el.innerHTML='<div class="status fail">Error: '+res.status+' '+res.statusText+'</div>';}catch(e){el.innerHTML='<div class="status fail">Failed: '+e.message+'</div>';}}
+renderPresets();loadPreset('Stripe Payment');
+</script>
+</body>
+</html>

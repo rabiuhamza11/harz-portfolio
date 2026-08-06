@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOTP Code Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:700px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;font-family:monospace}
+.form-group input:focus{outline:none;border-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem;width:100%}
+.btn.secondary{background:#334155;width:auto}
+.code-display{text-align:center;padding:30px;background:#0f172a;border:1px solid #334155;border-radius:12px;margin-top:16px}
+.code{font-size:2.5rem;font-family:monospace;letter-spacing:8px;color:#60a5fa;font-weight:bold}
+.timer{font-size:.85rem;color:#94a3b8;margin-top:10px}
+.progress{width:100%;height:4px;background:#334155;border-radius:2px;margin-top:8px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,#ef4444,#f59e0b);transition:width 1s linear;border-radius:2px}
+.info{background:#1e3a5f;border-radius:8px;padding:12px;margin-top:16px;font-size:.8rem;color:#93c5fd;line-height:1.6}
+.qr-display{text-align:center;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>TOTP / 2FA Code Generator</h1>
+<p class="sub">Generate time-based one-time passwords for 2FA testing</p>
+<div class="card">
+<h2>Configuration</h2>
+<div class="form-group"><label>Secret Key (Base32, e.g. JBSWY3DPEHPK3PXP)</label><input id="secret" value="JBSWY3DPEHPK3PXP" oninput="generate()" placeholder="Enter your 2FA secret"></div>
+<div class="form-group"><label>Algorithm</label><select id="algo" onchange="generate()"><option value="SHA1">SHA-1 (Default)</option><option value="SHA256">SHA-256</option><option value="SHA512">SHA-512</option></select></div>
+<div class="form-group"><label>Digits</label><select id="digits" onchange="generate()"><option value="6">6 digits</option><option value="8">8 digits</option></select></div>
+<div class="form-group"><label>Period (seconds)</label><select id="period" onchange="generate()"><option value="30">30 (Standard)</option><option value="60">60</option></select></div>
+<button class="btn" onclick="generate()">Generate Code</button>
+</div>
+<div class="card">
+<h2>Current TOTP Code</h2>
+<div class="code-display">
+<div class="code" id="code">------</div>
+<div class="timer">Expires in <span id="countdown">30</span> seconds</div>
+<div class="progress"><div class="progress-bar" id="progressBar" style="width:100%"></div></div>
+</div>
+</div>
+<div class="card">
+<h2>OTP Auth URL</h2>
+<div class="form-group"><label>Issuer (optional)</label><input id="issuer" value="HARZ" oninput="generateURL()"></div>
+<div class="form-group"><label>Account (optional)</label><input id="account" value="user@example.com" oninput="generateURL()"></div>
+<div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;font-family:monospace;font-size:.8rem;word-break:break-all;color:#a5b4fc;margin-top:8px" id="otpauthURL"></div>
+<button class="btn secondary" onclick="copyURL()" style="margin-top:10px">Copy otpauth URL</button>
+</div>
+<div class="card">
+<div class="info">
+*How to use:* Enter the Base32 secret from your 2FA setup. The code updates every 30 seconds. Use this for testing 2FA flows during development. Scan the otpauth URL with Google Authenticator or Authy to add it to your phone.
+</div>
+</div>
+</div>
+<script>
+function base32Decode(str){str=str.toUpperCase().replace(/[^A-Z2-7]/g,'');const charset='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let bits='',bytes=[];for(let i=0;i<str.length;i++){const val=charset.indexOf(str[i]);if(val<0)continue;bits+=val.toString(2).padStart(5,'0');}for(let i=0;i+8<=bits.length;i+=8)bytes.push(parseInt(bits.substr(i,8),2));return new Uint8Array(bytes);}
+async function generateTOTP(){
+const secret=document.getElementById('secret').value.replace(/\s/g,'');
+if(!secret){document.getElementById('code').textContent='------';return;}
+const digits=parseInt(document.getElementById('digits').value);
+const period=parseInt(document.getElementById('period').value);
+const algo=document.getElementById('algo').value;
+const key=base32Decode(secret);
+const time=Math.floor(Date.now()/1000);
+const counter=Math.floor(time/period);
+const buffer=new ArrayBuffer(8);const view=new DataView(buffer);for(let i=0;i<8;i++)view.setUint8(7-i,counter&0xFF);counter>>=8;
+const counterBytes=new Uint8Array(buffer);for(let i=7;i>=0;i--){counterBytes[i]=counter&0xFF;counter=Math.floor(counter/256);}
+const actualCounter=Math.floor(Date.now()/1000/period);const buf=new ArrayBuffer(8);const dv=new DataView(buf);dv.setUint32(4,actualCounter,false);const cryptoKey=await crypto.subtle.importKey('raw',key,{name:'HMAC',hash:algo},false,['sign']);const hmac=await crypto.subtle.sign('HMAC',cryptoKey,buf);const hmacBytes=new Uint8Array(hmac);const offset=hmacBytes[hmacBytes.length-1]&0xF;const code=((hmacBytes[offset]&0x7F)<<24|(hmacBytes[offset+1]&0xFF)<<16|(hmacBytes[offset+2]&0xFF)<<8|(hmacBytes[offset+3]&0xFF))%Math.pow(10,digits);document.getElementById('code').textContent=code.toString().padStart(digits,'0');}
+function updateTimer(){const period=parseInt(document.getElementById('period').value);const remaining=period-(Math.floor(Date.now()/1000)%period);document.getElementById('countdown').textContent=remaining;document.getElementById('progressBar').style.width=(remaining/period*100)+'%';}
+function generateURL(){const secret=document.getElementById('secret').value.replace(/\s/g,'');const issuer=document.getElementById('issuer').value;const account=document.getElementById('account').value;const algo=document.getElementById('algo').value;const digits=document.getElementById('digits').value;const period=document.getElementById('period').value;let url='otpauth://totp/'+encodeURIComponent(issuer+':'+account)+'?secret='+secret+'&issuer='+encodeURIComponent(issuer)+'&algorithm='+algo+'&digits='+digits+'&period='+period;document.getElementById('otpauthURL').textContent=url;}
+function copyURL(){navigator.clipboard.writeText(document.getElementById('otpauthURL').textContent);alert('otpauth URL copied!');}
+generateTOTP();generateURL();setInterval(generateTOTP,1000);setInterval(updateTimer,1000);
+</script>
+</body>
+</html>

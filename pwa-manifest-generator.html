@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PWA Manifest Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#3b82f6}
+.form-group.full{grid-column:1/-1}
+.icon-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.icon-row input{flex:1}
+.icon-preview{width:48px;height:48px;border:1px solid #334155;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;overflow:hidden;background:#0f172a}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem;transition:.2s}
+.btn:hover{opacity:.9}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.85rem;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+.color-pick{display:flex;gap:8px;align-items:center}
+.color-pick input[type=color]{width:44px;height:38px;border:1px solid #334155;border-radius:8px;cursor:pointer;background:none}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>PWA Manifest Generator</h1>
+<p class="sub">Generate manifest.json for your Progressive Web App</p>
+<div class="card">
+<h2>Basic Info</h2>
+<div class="form-grid">
+<div class="form-group"><label>App Name</label><input id="name" value="HARZ Super App" oninput="generate()"></div>
+<div class="form-group"><label>Short Name</label><input id="shortName" value="HARZ" oninput="generate()"></div>
+<div class="form-group"><label>Start URL</label><input id="startUrl" value="/" oninput="generate()"></div>
+<div class="form-group"><label>Scope</label><input id="scope" value="/" oninput="generate()"></div>
+<div class="form-group"><label>Display Mode</label><select id="display" onchange="generate()"><option value="standalone">Standalone</option><option value="fullscreen">Fullscreen</option><option value="minimal-ui">Minimal UI</option><option value="browser">Browser</option></select></div>
+<div class="form-group"><label>Orientation</label><select id="orientation" onchange="generate()"><option value="any">Any</option><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div>
+<div class="form-group"><label>Theme Color</label><div class="color-pick"><input type="color" id="themeColor" value="#3b82f6" oninput="generate()"><input id="themeColorText" value="#3b82f6" oninput="document.getElementById('themeColor').value=this.value;generate()"></div></div>
+<div class="form-group"><label>Background Color</label><div class="color-pick"><input type="color" id="bgColor" value="#0f172a" oninput="generate()"><input id="bgColorText" value="#0f172a" oninput="document.getElementById('bgColor').value=this.value;generate()"></div></div>
+<div class="form-group full"><label>Description</label><textarea id="description" rows="2" oninput="generate()">HARZ AI Operating System</textarea></div>
+<div class="form-group"><label>Language</label><input id="lang" value="en" oninput="generate()"></div>
+<div class="form-group"><label>Direction</label><select id="dir" onchange="generate()"><option value="ltr">LTR</option><option value="rtl">RTL</option></select></div>
+</div>
+</div>
+<div class="card">
+<h2>Icons</h2>
+<div id="iconsContainer"></div>
+<button class="btn secondary" onclick="addIcon()" style="margin-top:10px">+ Add Icon</button>
+</div>
+<div class="card">
+<h2>Categories</h2>
+<div class="form-group"><label>Categories (comma-separated)</label><input id="categories" value="productivity, business, education" oninput="generate()"></div>
+</div>
+<div class="card">
+<h2>Generated manifest.json</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy JSON</button>
+<button class="btn secondary" onclick="downloadManifest()">Download manifest.json</button>
+</div>
+</div>
+<div class="card">
+<h2>HTML Link Tag</h2>
+<div class="output" id="linkTag"></div>
+<button class="btn" onclick="copyLink()" style="margin-top:10px">Copy Link Tag</button>
+</div>
+</div>
+<script>
+let icons=[{src:"/icon-192.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"/icon-512.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}];
+function addIcon(){icons.push({src:"/icon-256.png",sizes:"256x256",type:"image/png",purpose:"any"});renderIcons();generate();}
+function removeIcon(i){icons.splice(i,1);renderIcons();generate();}
+function renderIcons(){const c=document.getElementById('iconsContainer');c.innerHTML=icons.map((ic,i)=>'<div class="icon-row"><div class="icon-preview">'+ic.sizes.split('x')[0]+'</div><input value="'+ic.src+'" placeholder="Icon URL" oninput="icons['+i+'].src=this.value;generate()"><input value="'+ic.sizes+'" placeholder="Sizes" style="max-width:120px" oninput="icons['+i+'].sizes=this.value;generate()"><select style="max-width:120px" onchange="icons['+i+'].type=this.value;generate()"><option value="'+ic.type+'">'+ic.type+'</option><option value="image/png">image/png</option><option value="image/svg+xml">image/svg+xml</option><option value="image/webp">image/webp</option></select><select style="max-width:140px" onchange="icons['+i+'].purpose=this.value;generate()"><option value="'+ic.purpose+'">'+ic.purpose+'</option><option value="any">any</option><option value="maskable">maskable</option><option value="any maskable">any maskable</option></select><button onclick="removeIcon('+i+')" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:1.2rem">x</button></div>').join('');}
+function generate(){const m={name:document.getElementById('shortName').value,short_name:document.getElementById('shortName').value,description:document.getElementById('description').value,start_url:document.getElementById('startUrl').value,scope:document.getElementById('scope').value,display:document.getElementById('display').value,orientation:document.getElementById('orientation').value,background_color:document.getElementById('bgColor').value,theme_color:document.getElementById('themeColor').value,lang:document.getElementById('lang').value,dir:document.getElementById('dir').value,icons:icons,categories:document.getElementById('categories').value.split(',').map(function(c){return c.trim()}).filter(Boolean)};document.getElementById('output').textContent=JSON.stringify(m,null,2);document.getElementById('linkTag').textContent='<link rel="manifest" href="/manifest.json">';}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Manifest JSON copied!');}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('linkTag').textContent);alert('Link tag copied!');}
+function downloadManifest(){var b=new Blob([document.getElementById('output').textContent],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='manifest.json';a.click();}
+renderIcons();generate();
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CSS Generator — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:900px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}.tab{padding:8px 16px;background:#334155;border:none;border-radius:8px 8px 0 0;color:#94a3b8;cursor:pointer;font-size:.85rem}.tab.active{background:#3b82f6;color:#fff}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}.fg{margin-bottom:14px}.fg label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}.fg input,.fg select{width:100%;padding:8px 10px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:.85rem}.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.out{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;font-family:monospace;font-size:.8rem;color:#a5b4fc;white-space:pre-wrap;word-break:break-all;margin-top:12px}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.preview-box{height:120px;border-radius:12px;margin-top:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600}</style>
+</head>
+<body>
+<div class="c">
+<h1>CSS Generator</h1><p class="sub">Generate box shadows, gradients, flexbox, and grid CSS</p>
+<div class="tabs">
+<button class="tab active" onclick="showTab('shadow')">Box Shadow</button>
+<button class="tab" onclick="showTab('gradient')">Gradient</button>
+<button class="tab" onclick="showTab('flex')">Flexbox</button>
+<button class="tab" onclick="showTab('grid')">CSS Grid</button>
+<button class="tab" onclick="showTab('animation')">Animation</button>
+</div>
+<div id="shadow" class="content">
+<div class="card"><h2>Box Shadow</h2>
+<div class="row"><div class="fg"><label>X Offset</label><input type=range id=shX min=-50 max=50 value=0 oninput="genShadow()"></div><div class="fg"><label>Y Offset</label><input type=range id=shY min=-50 max=50 value=4 oninput="genShadow()"></div><div class="fg"><label>Blur</label><input type=range id=shBlur min=0 max=100 value=12 oninput="genShadow()"></div></div>
+<div class="row"><div class="fg"><label>Spread</label><input type=range id=shSpread min=-50 max=50 value=0 oninput="genShadow()"></div><div class="fg"><label>Color</label><input type=color id=shColor value="#3b82f6" oninput="genShadow()"></div><div class="fg"><label>Opacity</label><input type=range id=shOpacity min=0 max=100 value=30 oninput="genShadow()"></div></div>
+<div class="fg"><label>Inset</label><select id=shInset onchange="genShadow()"><option value="">Outset</option><option value="inset ">Inset</option></select></div>
+<div class="preview-box" id="shPreview" style="background:#3b82f6">Preview</div>
+<div class="out" id="shOut"></div>
+<button class="btn" onclick="copyText('shOut')" style="margin-top:10px">Copy CSS</button>
+</div>
+</div>
+<div id="gradient" class="content" style="display:none">
+<div class="card"><h2>Gradient</h2>
+<div class="row"><div class="fg"><label>Color 1</label><input type=color id="gr1" value="#3b82f6" oninput="genGradient()"></div><div class="fg"><label>Color 2</label><input type=color id="gr2" value="#8b5cf6" oninput="genGradient()"></div><div class="fg"><label>Type</label><select id="grType" onchange="genGradient()"><option value="linear">Linear</option><option value="radial">Radial</option><option value="conic">Conic</option></select></div></div>
+<div class="fg"><label>Angle (for linear/conic)</label><input type=range id="grAngle" min=0 max=360 value=135 oninput="genGradient()"></div>
+<div class="preview-box" id="grPreview">Preview</div>
+<div class="out" id="grOut"></div>
+<button class="btn" onclick="copyText('grOut')" style="margin-top:10px">Copy CSS</button>
+</div>
+</div>
+<div id="flex" class="content" style="display:none">
+<div class="card"><h2>Flexbox</h2>
+<div class="row"><div class="fg"><label>Direction</label><select id="flDir" onchange="genFlex()"><option value="row">row</option><option value="column">column</option><option value="row-reverse">row-reverse</option><option value="column-reverse">column-reverse</option></select></div><div class="fg"><label>Justify</label><select id="flJust" onchange="genFlex()"><option value="flex-start">flex-start</option><option value="center">center</option><option value="flex-end">flex-end</option><option value="space-between">space-between</option><option value="space-around">space-around</option></select></div><div class="fg"><label>Align</label><select id="flAlign" onchange="genFlex()"><option value="stretch">stretch</option><option value="center">center</option><option value="flex-start">flex-start</option><option value="flex-end">flex-end</option></select></div></div>
+<div class="row"><div class="fg"><label>Wrap</label><select id="flWrap" onchange="genFlex()"><option value="nowrap">nowrap</option><option value="wrap">wrap</option></select></div><div class="fg"><label>Gap (px)</label><input type=number id="flGap" value=16 oninput="genFlex()"></div><div class="fg"><label>Items</label><select id="flItems" onchange="genFlex()"><option value="3">3 items</option><option value="4">4 items</option><option value="5">5 items</option></select></div></div>
+<div class="preview-box" id="flPreview" style="height:150px;background:#1e293b"></div>
+<div class="out" id="flOut"></div>
+<button class="btn" onclick="copyText('flOut')" style="margin-top:10px">Copy CSS</button>
+</div>
+</div>
+<div id="grid" class="content" style="display:none">
+<div class="card"><h2>CSS Grid</h2>
+<div class="row"><div class="fg"><label>Columns</label><input type=number id="gdCols" value=3 min=1 max=12 oninput="genGrid()"></div><div class="fg"><label>Rows</label><input type=number id="gdRows" value=2 min=1 max=12 oninput="genGrid()"></div><div class="fg"><label>Gap (px)</label><input type=number id="gdGap" value=16 oninput="genGrid()"></div></div>
+<div class="fg"><label>Template</label><select id="gdTemplate" onchange="genGrid()"><option value="equal">Equal columns</option><option value="auto">Auto-fit</option><option value="custom">Custom (below)</option></select></div>
+<div class="fg"><label>Custom template (if selected)</label><input id="gdCustom" value="1fr 2fr 1fr" oninput="genGrid()"></div>
+<div class="preview-box" id="gdPreview" style="height:200px;background:#1e293b"></div>
+<div class="out" id="gdOut"></div>
+<button class="btn" onclick="copyText('gdOut')" style="margin-top:10px">Copy CSS</button>
+</div>
+</div>
+<div id="animation" class="content" style="display:none">
+<div class="card"><h2>Animation</h2>
+<div class="row"><div class="fg"><label>Type</label><select id="anType" onchange="genAnim()"><option value="fade">Fade In</option><option value="slide">Slide Up</option><option value="scale">Scale Up</option><option value="rotate">Rotate</option><option value="bounce">Bounce</option><option value="pulse">Pulse</option></select></div><div class="fg"><label>Duration (s)</label><input type=number id="anDur" value=0.5 step=0.1 oninput="genAnim()"></div><div class="fg"><label>Easing</label><select id="anEase" onchange="genAnim()"><option value="ease">ease</option><option value="linear">linear</option><option value="ease-in">ease-in</option><option value="ease-out">ease-out</option><option value="ease-in-out">ease-in-out</option><option value="cubic-bezier(0.34,1.56,0.64,1)">spring</option></select></div></div>
+<div class="fg"><label>Iterations</label><select id="anIter" onchange="genAnim()"><option value="1">1</option><option value="infinite">infinite</option><option value="3">3</option></select></div>
+<div class="preview-box" id="anPreview" style="background:#3b82f6;cursor:pointer" onclick="document.getElementById('anPreview').style.animation='none';setTimeout(()=>document.getElementById('anPreview').style.animation=animName+' '+document.getElementById('anDur').value+'s '+document.getElementById('anEase').value+' '+document.getElementById('anIter').value,10)">Click to replay</div>
+<div class="out" id="anOut"></div>
+<button class="btn" onclick="copyText('anOut')" style="margin-top:10px">Copy CSS</button>
+</div>
+</div>
+</div>
+<script>
+let animName='fadeIn';
+function showTab(t){document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['shadow','gradient','flex','grid','animation'][i]===t));['shadow','gradient','flex','grid','animation'].forEach(c=>document.getElementById(c).style.display=c===t?'block':'none');}
+function genShadow(){const x=document.getElementById('shX').value,y=document.getElementById('shY').value,blur=document.getElementById('shBlur').value,spread=document.getElementById('shSpread').value,color=document.getElementById('shColor').value,opacity=document.getElementById('shOpacity').value/100,inset=document.getElementById('shInset').value;const c=hexToRgba(color,opacity);const css='box-shadow: '+inset+x+'px '+y+'px '+blur+'px '+spread+'px '+c+';';document.getElementById('shOut').textContent=css;document.getElementById('shPreview').style.boxShadow=inset+x+'px '+y+'px '+blur+'px '+spread+'px '+c;}
+function genGradient(){const c1=document.getElementById('gr1').value,c2=document.getElementById('gr2').value,type=document.getElementById('grType').value,angle=document.getElementById('grAngle').value;let css='';if(type==='linear'){css='background: linear-gradient('+angle+'deg, '+c1+', '+c2+');';document.getElementById('grPreview').style.background='linear-gradient('+angle+'deg,'+c1+','+c2+')';}else if(type==='radial'){css='background: radial-gradient(circle, '+c1+', '+c2+');';document.getElementById('grPreview').style.background='radial-gradient(circle,'+c1+','+c2+')';}else{css='background: conic-gradient(from '+angle+'deg, '+c1+', '+c2+');';document.getElementById('grPreview').style.background='conic-gradient(from '+angle+'deg,'+c1+','+c2+')';}document.getElementById('grOut').textContent=css;}
+function genFlex(){const dir=document.getElementById('flDir').value,just=document.getElementById('flJust').value,align=document.getElementById('flAlign').value,wrap=document.getElementById('flWrap').value,gap=document.getElementById('flGap').value,items=parseInt(document.getElementById('flItems').value);const css='.container {\n  display: flex;\n  flex-direction: '+dir+';\n  justify-content: '+just+';\n  align-items: '+align+';\n  flex-wrap: '+wrap+';\n  gap: '+gap+'px;\n}';document.getElementById('flOut').textContent=css;const p=document.getElementById('flPreview');p.style.cssText='display:flex;flex-direction:'+dir+';justify-content:'+just+';align-items:'+align+';flex-wrap:'+wrap+';gap:'+gap+'px;padding:12px;';p.innerHTML='';for(let i=0;i<items;i++){const d=document.createElement('div');d.style.cssText='background:#3b82f6;padding:12px;border-radius:8px;color:#fff;font-size:.8rem;min-width:40px;text-align:center';d.textContent='Item '+(i+1);p.appendChild(d);}}
+function genGrid(){const cols=parseInt(document.getElementById('gdCols').value),rows=parseInt(document.getElementById('gdRows').value),gap=document.getElementById('gdGap').value,template=document.getElementById('gdTemplate').value,custom=document.getElementById('gdCustom').value;let tpl='';if(template==='equal')tpl='repeat('+cols+', 1fr)';else if(template==='auto')tpl='repeat(auto-fit, minmax(120px, 1fr))';else tpl=custom;const css='.grid {\n  display: grid;\n  grid-template-columns: '+tpl+';\n  grid-template-rows: repeat('+rows+', 1fr);\n  gap: '+gap+'px;\n}';document.getElementById('gdOut').textContent=css;const p=document.getElementById('gdPreview');p.style.cssText='display:grid;grid-template-columns:'+tpl+';gap:'+gap+'px;padding:12px;';p.innerHTML='';for(let i=0;i<cols*rows;i++){const d=document.createElement('div');d.style.cssText='background:#3b82f6;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem';d.textContent=(i+1);p.appendChild(d);}}
+function genAnim(){const type=document.getElementById('anType').value,dur=document.getElementById('anDur').value,ease=document.getElementById('anEase').value,iter=document.getElementById('anIter').value;let keyframes='';animName='harz_'+type;if(type==='fade'){keyframes='@keyframes harz_fade {\n  from { opacity: 0; }\n  to { opacity: 1; }\n}';animName='harz_fade';}else if(type==='slide'){keyframes='@keyframes harz_slide {\n  from { transform: translateY(30px); opacity: 0; }\n  to { transform: translateY(0); opacity: 1; }\n}';animName='harz_slide';}else if(type==='scale'){keyframes='@keyframes harz_scale {\n  from { transform: scale(0.8); opacity: 0; }\n  to { transform: scale(1); opacity: 1; }\n}';animName='harz_scale';}else if(type==='rotate'){keyframes='@keyframes harz_rotate {\n  from { transform: rotate(0deg); }\n  to { transform: rotate(360deg); }\n}';animName='harz_rotate';}else if(type==='bounce'){keyframes='@keyframes harz_bounce {\n  0%, 100% { transform: translateY(0); }\n  50% { transform: translateY(-20px); }\n}';animName='harz_bounce';}else if(type==='pulse'){keyframes='@keyframes harz_pulse {\n  0%, 100% { transform: scale(1); }\n  50% { transform: scale(1.1); }\n}';animName='harz_pulse';}const css=keyframes+'\n\n.element {\n  animation: '+animName+' '+dur+'s '+ease+' '+iter+';\n}';document.getElementById('anOut').textContent=css;const p=document.getElementById('anPreview');p.style.animation='none';setTimeout(()=>p.style.animation=animName+' '+dur+'s '+ease+' '+iter,10);}
+function hexToRgba(hex,op){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return 'rgba('+r+','+g+','+b+','+op+')';}
+function copyText(id){navigator.clipboard.writeText(document.getElementById(id).textContent);alert('CSS copied!');}
+genShadow();genGradient();genFlex();genGrid();genAnim();
+</script>
+</body></html>

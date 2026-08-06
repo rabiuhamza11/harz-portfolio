@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Regex Builder — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:800px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}input,textarea,select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;font-family:monospace}input:focus,textarea:focus{outline:none;border-color:#3b82f6}.fg{margin-bottom:14px}.fg label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}.flags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.flag{padding:6px 12px;background:#334155;border-radius:6px;font-size:.8rem;cursor:pointer}.flag.on{background:#3b82f6;color:#fff}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.out{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;font-family:monospace;font-size:.85rem;color:#a5b4fc;margin-top:8px;white-space:pre-wrap;word-break:break-all}.match{background:#1e3a5f;padding:2px 4px;border-radius:3px;color:#93c5fd}.preset{display:inline-block;padding:6px 14px;background:#334155;border-radius:20px;font-size:.8rem;cursor:pointer;margin:2px;color:#cbd5e1}.preset:hover{background:#3b82f6;color:#fff}</style>
+</head>
+<body>
+<div class="c">
+<h1>Regex Builder & Tester</h1><p class="sub">Build, test, and debug regular expressions</p>
+<div class="card"><h2>Quick Presets</h2><div id="presets"></div></div>
+<div class="card"><h2>Pattern</h2>
+<div class="fg"><label>Regular Expression</label><input id="pattern" value="\\b[A-Z][a-z]+\\b" oninput="test()"></div>
+<div class="flags" id="flags"></div>
+<div class="fg"><label>Test String</label><textarea id="testStr" rows="4" oninput="test()">The Quick Brown Fox Jumps Over The Lazy Dog. Hello World!</textarea></div>
+</div>
+<div class="card"><h2>Results</h2>
+<div class="out" id="matchCount"></div>
+<div class="out" id="highlighted" style="margin-top:8px;max-height:200px;overflow-y:auto"></div>
+<div class="out" id="groups" style="margin-top:8px"></div>
+</div>
+<div class="card"><h2>Cheatsheet</h2>
+<div class="out" style="font-size:.8rem;line-height:1.8">
+. Any char | ^ Start | $ End | \d Digit | \w Word | \s Space | \D \W \S Negated
+[abc] Set | [^abc] Not set | a+ One+ | a* Zero+ | a? Optional | a{3} Exact | a{1,3} Range
+(...) Group | (?:...) Non-capture | (?=...) Lookahead | (?<=...) Lookbehind
+| Or | \b Word boundary | \B Not boundary | \n \t \r Special chars
+</div></div>
+</div>
+<script>
+const flagList=[{n:'g',l:'global'},{n:'i',l:'ignoreCase'},{n:'m',l:'multiline'},{n:'s',l:'dotAll'},{n:'u',l:'unicode'},{n:'y',l:'sticky'}];
+let activeFlags=new Set(['g','i']);
+const presets={'Email':'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}','URL':'https?://[^\\s]+','Phone':'\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{3,4}[-.\\s]?\\d{4}','IPv4':'\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b','Date':'\\d{4}-\\d{2}-\\d{2}','Hex Color':'#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})\\b','Strong Password':'^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$','UUID':'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'};
+document.getElementById('presets').innerHTML=Object.keys(presets).map(p=>'<span class="preset" onclick="loadPreset(\''+p+'\')">'+p+'</span>').join('');
+function loadPreset(n){document.getElementById('pattern').value=presets[n];test();}
+document.getElementById('flags').innerHTML=flagList.map(f=>'<span class="flag '+(activeFlags.has(f.n)?'on':'')+'" onclick="toggleFlag(\''+f.n+'\')">'+f.n+' — '+f.l+'</span>').join('');
+function toggleFlag(n){if(activeFlags.has(n))activeFlags.delete(n);else activeFlags.add(n);document.getElementById('flags').innerHTML=flagList.map(f=>'<span class="flag '+(activeFlags.has(f.n)?'on':'')+'" onclick="toggleFlag(\''+f.n+'\')">'+f.n+' — '+f.l+'</span>').join('');test();}
+function test(){const p=document.getElementById('pattern').value;const s=document.getElementById('testStr').value;const fl=[...activeFlags].join('');try{const re=new RegExp(p,fl);const matches=[];if(fl.includes('g')){let m;while((m=re.exec(s))!==null){matches.push({match:m[0],index:m.index,groups:m.slice(1)});if(m.index===re.lastIndex)re.lastIndex++;}}else{const m=re.exec(s);if(m)matches.push({match:m[0],index:m.index,groups:m.slice(1)});}
+document.getElementById('matchCount').textContent='Matches: '+matches.length;
+let hl=s;const offsets=[];matches.forEach(m=>offsets.push({start:m.index,end:m.index+m.match.length}));offsets.sort((a,b)=>b.start-a.start);offsets.forEach(o=>{hl=hl.slice(0,o.start)+'<span class="match">'+hl.slice(o.start,o.end)+'</span>'+hl.slice(o.end);});document.getElementById('highlighted').innerHTML=hl;
+let g='';matches.forEach((m,i)=>{g+='Match '+(i+1)+': "'+m.match+'" at index '+m.index;if(m.groups.length)g+=' | Groups: '+JSON.stringify(m.groups);g+='\n';});document.getElementById('groups').textContent=g||'No matches';}catch(e){document.getElementById('matchCount').textContent='Error: '+e.message;document.getElementById('highlighted').textContent='';document.getElementById('groups').textContent='';}}
+test();
+</script>
+</body></html>

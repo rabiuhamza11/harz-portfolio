@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SSL/CSR Generator — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:800px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}.fg{margin-bottom:14px}.fg label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}.fg input{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.out{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;font-family:monospace;font-size:.8rem;color:#a5b4fc;max-height:300px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;margin-top:12px}.info{background:#1e3a5f;border-radius:8px;padding:12px;font-size:.8rem;color:#93c5fd;line-height:1.6;margin-top:12px}</style>
+</head>
+<body>
+<div class="c">
+<h1>SSL CSR Generator</h1><p class="sub">Generate Certificate Signing Request templates</p>
+<div class="card"><h2>Certificate Details</h2>
+<div class="row"><div class="fg"><label>Common Name (CN)</label><input id="cn" value="harz.linkpc.net" oninput="generate()"></div><div class="fg"><label>Organization (O)</label><input id="o" value="HARZ" oninput="generate()"></div></div>
+<div class="row"><div class="fg"><label>Organizational Unit (OU)</label><input id="ou" value="IT Department" oninput="generate()"></div><div class="fg"><label>Country (C, 2 letters)</label><input id="c" value="NG" maxlength=2 oninput="generate()"></div></div>
+<div class="row"><div class="fg"><label>State/Province (ST)</label><input id="st" value="Kano" oninput="generate()"></div><div class="fg"><label>Locality (L)</label><input id="l" value="Kano" oninput="generate()"></div></div>
+<div class="fg"><label>Email</label><input id="email" value="admin@harz.linkpc.net" oninput="generate()"></div>
+<div class="fg"><label>Key Size</label><select id="keySize" onchange="generate()" style="width:100%;padding:10px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem"><option value=2048>2048 (standard)</option><option value=4096>4096 (high security)</option></select></div>
+</div>
+<div class="card"><h2>OpenSSL Commands</h2><div class="out" id="commands"></div>
+<div style="display:flex;gap:8px;margin-top:12px"><button class="btn" onclick="copyCmds()">Copy Commands</button></div></div>
+<div class="card"><h2>CSR Config File (openssl.cnf)</h2><div class="out" id="config"></div>
+<button class="btn" onclick="copyConfig()" style="margin-top:10px">Copy Config</button></div>
+<div class="card"><h2>Let's Encrypt (certbot)</h2><div class="out" id="certbot"></div>
+<button class="btn" onclick="copyCertbot()" style="margin-top:10px">Copy certbot command</button></div>
+<div class="card"><div class="info">Note: This tool generates the OpenSSL commands and config file for creating a CSR. You need to run these commands on your server to generate the actual private key and CSR. Never share your private key. The browser cannot generate real RSA keys securely — use OpenSSL on a server.</div></div>
+</div>
+<script>
+function generate(){const cn=document.getElementById('cn').value,o=document.getElementById('o').value,ou=document.getElementById('ou').value,c=document.getElementById('c').value,st=document.getElementById('st').value,l=document.getElementById('l').value,email=document.getElementById('email').value,ks=document.getElementById('keySize').value;
+const cmds='# Generate private key\nopenssl genrsa -out private.key '+ks+'\n\n# Generate CSR\nopenssl req -new -key private.key -out request.csr -config openssl.cnf\n\n# Verify CSR\nopenssl req -text -noout -verify -in request.csr\n\n# Self-signed certificate (for testing)\nopenssl x509 -req -days 365 -in request.csr -signkey private.key -out certificate.crt';
+document.getElementById('commands').textContent=cmds;
+const config='[req]\ndefault_bits = '+ks+'\nprompt = no\ndefault_md = sha256\ndistinguished_name = dn\nreq_extensions = req_ext\n\n[dn]\nCN = '+cn+'\nO = '+o+'\nOU = '+ou+'\nC = '+c+'\nST = '+st+'\nL = '+l+'\nemailAddress = '+email+'\n\n[req_ext]\nsubjectAltName = @alt_names\n\n[alt_names]\nDNS.1 = '+cn+'\nDNS.2 = www.'+cn.replace(/^www\./,'');
+document.getElementById('config').textContent=config;
+const certbot='# Install certbot\nsudo apt install certbot python3-certbot-nginx\n\n# Get certificate (Nginx)\nsudo certbot --nginx -d '+cn+' -d www.'+cn.replace(/^www\./,'')+'\n\n# Auto-renewal test\nsudo certbot renew --dry-run\n\n# Cloudflare DNS challenge (for Cloudflare proxied domains)\nsudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials /path/to/credentials.ini -d '+cn+' -d *.'+cn.replace(/^www\./,'');
+document.getElementById('certbot').textContent=certbot;}
+function copyCmds(){navigator.clipboard.writeText(document.getElementById('commands').textContent);alert('Commands copied!');}
+function copyConfig(){navigator.clipboard.writeText(document.getElementById('config').textContent);alert('Config copied!');}
+function copyCertbot(){navigator.clipboard.writeText(document.getElementById('certbot').textContent);alert('certbot command copied!');}
+generate();
+</script>
+</body></html>

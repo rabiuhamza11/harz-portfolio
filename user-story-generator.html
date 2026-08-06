@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Story Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#3b82f6}
+.form-group.full{grid-column:1/-1}
+.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.85rem}
+.checkbox input{width:18px;height:18px;accent-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:600px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+.preset{display:inline-block;padding:6px 14px;background:#334155;border-radius:20px;font-size:.8rem;cursor:pointer;margin:2px;color:#cbd5e1}
+.preset:hover{background:#3b82f6;color:#fff}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>User Story Generator</h1>
+<p class="sub">Generate agile user stories with acceptance criteria</p>
+<div class="card">
+<h2>Quick Presets</h2>
+<div id="presets"></div>
+</div>
+<div class="card">
+<h2>Story Details</h2>
+<div class="form-grid">
+<div class="form-group"><label>Persona / Role</label><input id="role" value="customer" oninput="generate()"></div>
+<div class="form-group"><label>Action / Goal</label><input id="goal" value="pay for school fees online" oninput="generate()"></div>
+<div class="form-group"><label>Benefit / Value</label><input id="benefit" value="I can pay from anywhere without visiting the school" oninput="generate()"></div>
+<div class="form-group"><label>Priority</label><select id="priority" onchange="generate()"><option value="Must Have">Must Have</option><option value="Should Have">Should Have</option><option value="Could Have">Could Have</option><option value="Won't Have">Won't Have (this sprint)</option></select></div>
+<div class="form-group"><label>Story Points</label><select id="points" onchange="generate()"><option value="1">1 (XS)</option><option value="2">2 (S)</option><option value="3">3 (M)</option><option value="5" selected>5 (L)</option><option value="8">8 (XL)</option><option value="13">13 (XXL)</option></select></div>
+<div class="form-group"><label>Epic</label><input id="epic" value="Payments" oninput="generate()"></div>
+</div>
+<div class="form-group full"><label>Acceptance Criteria (Given/When/Then — one per line)</label><textarea id="criteria" rows="5" oninput="generate()">Given the customer is on the payment page, When they select their child's class and enter card details, Then the payment is processed and a receipt is generated
+Given the payment fails, When the card is declined, Then an error message is shown and no charge is made
+Given the customer has insufficient balance, When they try to pay, Then they see a retry option with alternative payment methods</textarea></div>
+<div class="checkbox"><input type="checkbox" id="bdd" checked onchange="generate()"><label for="bdd">Generate BDD (Gherkin) format</label></div>
+</div>
+<div class="card">
+<h2>Generated User Story</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy</button>
+<button class="btn secondary" onclick="downloadFile()">Download .md</button>
+</div>
+</div>
+</div>
+<script>
+const personaPresets={'Customer':'customer','Admin':'admin','Teacher':'teacher','Farmer':'farmer','Student':'student','Developer':'developer','Visitor':'visitor'};
+function renderPresets(){document.getElementById('presets').innerHTML=Object.keys(personaPresets).map(p=>'<span class="preset" onclick="document.getElementById(\'role\').value=\''+personaPresets[p]+'\';generate()">'+p+'</span>').join('');}
+function generate(){
+const role=document.getElementById('role').value;
+const goal=document.getElementById('goal').value;
+const benefit=document.getElementById('benefit').value;
+const priority=document.getElementById('priority').value;
+const points=document.getElementById('points').value;
+const epic=document.getElementById('epic').value;
+const criteria=document.getElementById('criteria').value.split('\n').filter(l=>l.trim());
+const bdd=document.getElementById('bdd').checked;
+let story='# User Story\n\n**Epic:** '+epic+'\n**Priority:** '+priority+'\n**Story Points:** '+points+'\n\n## Story\n\nAs a '+role+',\nI want to '+goal+',\nSo that '+benefit+'.\n\n## Acceptance Criteria\n\n';
+criteria.forEach((c,i)=>{if(bdd){const parts=c.match(/Given\s+(.+?),?\s*When\s+(.+?),?\s*Then\s+(.+)/i);if(parts){story+='### Scenario '+String(i+1)+'\n```gherkin\nGiven '+parts[1]+'\nWhen '+parts[2]+'\nThen '+parts[3]+'\n```\n\n';}else{story+=String(i+1)+'. '+c+'\n';}}else{story+=String(i+1)+'. '+c+'\n';}});
+story+='\n## Tasks\n\n';
+story+='1. Design UI mockup\n2. Implement backend API\n3. Add form validation\n4. Write unit tests\n5. Write integration tests\n6. Update documentation\n';
+story+='\n## Definition of Done\n\n';
+story+='- [ ] Code reviewed and approved\n- [ ] Unit tests passing (coverage > 80%)\n- [ ] Integration tests passing\n- [ ] No critical bugs\n- [ ] Documentation updated\n- [ ] Deployed to staging\n- [ ] Product owner acceptance\n';
+document.getElementById('output').textContent=story;
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('User story copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'text/markdown'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='user-story.md';a.click();}
+renderPresets();generate();
+</script>
+</body>
+</html>

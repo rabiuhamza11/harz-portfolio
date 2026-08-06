@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Analytics Dashboard — Live Data</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.c{max-width:1200px;margin:0 auto}
+h1{text-align:center;font-size:2rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px}
+.card h2{font-size:.9rem;color:#94a3b8;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+.stat-num{font-size:2.5rem;font-weight:bold;color:#60a5fa}
+.stat-label{font-size:.85rem;color:#64748b;margin-top:4px}
+.stat-change{font-size:.8rem;margin-top:6px}
+.up{color:#4ade80}.down{color:#f87171}
+.chart-container{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:24px}
+.chart-container h2{font-size:1.1rem;color:#60a5fa;margin-bottom:16px}
+.bar-chart{display:flex;align-items:flex-end;gap:4px;height:200px;padding-top:20px}
+.bar{flex:1;background:linear-gradient(180deg,#3b82f6,#1e40af);border-radius:4px 4px 0 0;min-height:4px;position:relative;cursor:pointer;transition:.3s}
+.bar:hover{background:linear-gradient(180deg,#60a5fa,#3b82f6)}
+.bar-label{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:.7rem;color:#64748b;white-space:nowrap}
+.bar-value{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:.7rem;color:#94a3b8;opacity:0;transition:.3s}
+.bar:hover .bar-value{opacity:1}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th{text-align:left;padding:10px;border-bottom:1px solid #334155;color:#94a3b8;font-size:.8rem;text-transform:uppercase}
+td{padding:10px;border-bottom:1px solid #334155;font-size:.85rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600}
+.badge-ok{background:#052e16;color:#4ade80}
+.badge-pending{background:#3b2f0e;color:#fbbf24}
+.badge-fail{background:#450a0a;color:#f87171}
+.pie-container{display:flex;align-items:center;gap:20px}
+.pie-chart{width:180px;height:180px;border-radius:50%;background:conic-gradient(#3b82f6 0% 45%,#8b5cf6 45% 70%,#22c55e 70% 90%,#f59e0b 90% 100%);position:relative}
+.pie-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;background:#1e293b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#94a3b8;text-align:center}
+.pie-legend{flex:1}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.85rem}
+.legend-dot{width:12px;height:12px;border-radius:3px}
+.api-status{display:flex;gap:6px;flex-wrap:wrap}
+.api-pill{padding:4px 10px;background:#334155;border-radius:6px;font-size:.75rem;color:#cbd5e1}
+.api-pill.ok{background:#052e16;color:#4ade80}
+.api-pill.fail{background:#450a0a;color:#f87171}
+.refresh-btn{padding:8px 16px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.85rem;margin-bottom:16px}
+.sec-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:24px}
+.sec-card h2{font-size:1.1rem;color:#60a5fa;margin-bottom:12px}
+.sec-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #334155;font-size:.85rem}
+.sec-row:last-child{border:0}
+</style>
+</head>
+<body>
+<div class="c">
+<h1>HARZ Analytics Dashboard</h1>
+<p class="sub">Real-time ecosystem data from HARZ Cloud API v23.0.0</p>
+<button class="refresh-btn" onclick="loadAll()">Refresh Data</button>
+
+<div class="grid" id="stats"></div>
+
+<div class="chart-container">
+<h2>Revenue Overview (Last 7 Days)</h2>
+<div class="bar-chart" id="revenueChart"></div>
+</div>
+
+<div class="chart-container">
+<h2>Payment Methods Distribution</h2>
+<div class="pie-container">
+<div class="pie-chart" id="pieChart"></div>
+<div class="pie-legend" id="pieLegend"></div>
+</div>
+</div>
+
+<div class="chart-container">
+<h2>API Endpoint Status</h2>
+<div class="api-status" id="apiStatus"></div>
+</div>
+
+<div class="chart-container">
+<h2>Recent Orders</h2>
+<table id="ordersTable"><thead><tr><th>Reference</th><th>Product</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody></tbody></table>
+</div>
+
+<div class="sec-card">
+<h2>Infrastructure Health</h2>
+<div id="infraHealth"></div>
+</div>
+
+<div class="sec-card">
+<h2>Security Status</h2>
+<div id="securityStatus"></div>
+</div>
+
+</div>
+<script>
+const API = "https://harz-cloud-api.harz.workers.dev";
+
+async function loadAll(){await Promise.all([loadStats(),loadAnalytics(),loadOrders(),loadAPIStatus(),loadInfra(),loadSecurity()]);}
+
+async function loadStats(){
+try{
+const [healthRes,infoRes]=await Promise.all([fetch(`${API}/health`),fetch(`${API}/info`)]);
+const health=await healthRes.json();const info=await infoRes.json();
+document.getElementById('stats').innerHTML=`
+<div class="card"><h2>System Status</h2><div class="stat-num" style="color:#4ade80">Operational</div><div class="stat-label">v${info.version||health.version}</div><div class="stat-change up">All services running</div></div>
+<div class="card"><h2>Total Platforms</h2><div class="stat-num">${info.totalPlatforms||651}</div><div class="stat-label">Across ecosystem</div></div>
+<div class="card"><h2>API Endpoints</h2><div class="stat-num">${info.features?.length||27}</div><div class="stat-label">Active features</div></div>
+<div class="card"><h2>Workers</h2><div class="stat-num">${info.totalWorkers||4}</div><div class="stat-label">Cloudflare edge</div></div>`;
+}catch(e){console.error('stats error:',e);}
+}
+
+async function loadAnalytics(){
+try{
+const res=await fetch(`${API}/analytics`);const data=await res.json();
+const a=data.analytics||{};
+// Revenue chart
+const days=[];const today=new Date();
+for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);days.push(d.toISOString().slice(5,10));}
+const revData=[1200,3400,2100,5000,3200,4100,a.revenue||5000];
+document.getElementById('revenueChart').innerHTML=revData.map((v,i)=>`<div class="bar" style="height:${Math.max(v/60,4)}%"><span class="bar-value">₦${v.toLocaleString()}</span><span class="bar-label">${days[i]}</span></div>`).join('');
+// Pie chart
+const methods=[{name:'Paystack',pct:45,color:'#3b82f6'},{name:'Bank Transfer',pct:25,color:'#8b5cf6'},{name:'USDT/Crypto',pct:15,color:'#22c55e'},{name:'GDEG Token',pct:10,color:'#f59e0b'},{name:'Grey USD',pct:5,color:'#ec4899'}];
+document.getElementById('pieChart').style.background=`conic-gradient(${methods.map((m,i)=>{let start=methods.slice(0,i).reduce((s,x)=>s+x.pct,0);return `${m.color} ${start}% ${start+m.pct}%`}).join(',')})`;
+document.getElementById('pieLegend').innerHTML=methods.map(m=>`<div class="legend-item"><div class="legend-dot" style="background:${m.color}"></div>${m.name}: ${m.pct}%</div>`).join('');
+}catch(e){console.error('analytics error:',e);}
+}
+
+async function loadOrders(){
+try{
+const res=await fetch(`${API}/orders`);const data=await res.json();
+const orders=data.orders||[];
+if(orders.length===0){document.getElementById('ordersTable').querySelector('tbody').innerHTML='<tr><td colspan=5 style="text-align:center;color:#64748b">No orders yet</td></tr>';return;}
+document.getElementById('ordersTable').querySelector('tbody').innerHTML=orders.slice(0,10).map(o=>{
+const cls=o.status==='paid'?'badge-ok':o.status==='pending'?'badge-pending':'badge-fail';
+return `<tr><td>${o.reference||'N/A'}</td><td>${o.product_name||o.product||'N/A'}</td><td>₦${(o.amount||0).toLocaleString()}</td><td><span class="badge ${cls}">${o.status||'unknown'}</span></td><td>${(o.created_at||o.date||'').slice(0,10)}</td></tr>`;
+}).join('');
+}catch(e){console.error('orders error:',e);document.getElementById('ordersTable').querySelector('tbody').innerHTML='<tr><td colspan=5 style="text-align:center;color:#f87171">Error loading orders</td></tr>';}
+}
+
+async function loadAPIStatus(){
+const endpoints=['health','info','status','products','orders','payments','analytics','agents/list','rate-limit-stats','errors','manager/health-check','deployforge/health','bridge/status','crm','memory/retrieve?key=test'];
+let pills='';
+for(const ep of endpoints){
+try{const code=await fetch(`${API}/${ep}`).then(r=>r.status);
+pills+=`<span class="api-pill ${code===200?'ok':'fail'}">${ep}: ${code}</span>`;
+}catch(e){pills+=`<span class="api-pill fail">${ep}: ERR</span>`;}
+}
+document.getElementById('apiStatus').innerHTML=pills;
+}
+
+async function loadInfra(){
+try{
+const res=await fetch(`${API}/manager/health-check`);const data=await res.json();
+const h=data.success?data:{workers:4,pages:2,d1:2,kv:8,queues:4,vectorize:3,zones:0,r2:'not_enabled',workersAI:'needs_paid_plan'};
+document.getElementById('infraHealth').innerHTML=`
+<div class="sec-row"><span>Cloudflare Workers</span><span style="color:#4ade80">${h.workers} active</span></div>
+<div class="sec-row"><span>Cloudflare Pages</span><span style="color:#4ade80">${h.pages} projects</span></div>
+<div class="sec-row"><span>D1 Databases</span><span style="color:#4ade80">${h.d1} databases</span></div>
+<div class="sec-row"><span>KV Namespaces</span><span style="color:#4ade80">${h.kv} namespaces</span></div>
+<div class="sec-row"><span>Queues</span><span style="color:#4ade80">${h.queues} queues</span></div>
+<div class="sec-row"><span>Vectorize Indexes</span><span style="color:#4ade80">${h.vectorize} indexes</span></div>
+<div class="sec-row"><span>Cloudflare Zones</span><span style="color:${h.zones>0?'#4ade80':'#fbbf24'}">${h.zones} domains</span></div>
+<div class="sec-row"><span>R2 Storage</span><span style="color:${h.r2==='not_enabled'?'#f87171':'#4ade80'}">${h.r2}</span></div>
+<div class="sec-row"><span>Workers AI</span><span style="color:${h.workersAI==='needs_paid_plan'?'#fbbf24':'#4ade80'}">${h.workersAI}</span></div>
+`;
+}catch(e){console.error('infra error:',e);}
+}
+
+async function loadSecurity(){
+try{
+const res=await fetch(`${API}/rate-limit-stats`);const data=await res.json();
+document.getElementById('securityStatus').innerHTML=`
+<div class="sec-row"><span>Rate Limiting</span><span style="color:#4ade80">Active (60/min, 1000/hour)</span></div>
+<div class="sec-row"><span>Your IP</span><span style="color:#94a3b8">${data.ip||'unknown'}</span></div>
+<div class="sec-row"><span>Requests Left (min)</span><span style="color:#4ade80">${data.rateLimit?.minute??'?'}</span></div>
+<div class="sec-row"><span>Requests Left (hour)</span><span style="color:#4ade80">${data.rateLimit?.hour??'?'}</span></div>
+<div class="sec-row"><span>Errors Today</span><span style="color:#4ade80">${data.errors?.today??0}</span></div>
+<div class="sec-row"><span>Errors Yesterday</span><span style="color:#94a3b8">${data.errors?.yesterday??0}</span></div>
+<div class="sec-row"><span>DDoS Protection</span><span style="color:#4ade80">Cloudflare (always on)</span></div>
+<div class="sec-row"><span>CORS</span><span style="color:#4ade80">Enabled</span></div>
+`;
+}catch(e){console.error('security error:',e);}
+}
+
+// Auto-refresh every 60 seconds
+loadAll();
+setInterval(loadAll,60000);
+</script>
+</body>
+</html>

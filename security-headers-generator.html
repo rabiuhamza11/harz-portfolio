@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Headers Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.9rem}
+.checkbox input{width:18px;height:18px;accent-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Security Headers Generator</h1>
+<p class="sub">Generate CSP, CORS, and security headers for your server</p>
+<div class="card">
+<h2>Platform</h2>
+<div class="form-group"><select id="platform" onchange="generate()"><option value="nginx">Nginx</option><option value="apache">Apache (.htaccess)</option><option value="cloudflare">Cloudflare Workers</option><option value="express">Express.js</option><option value="nextjs">Next.js (next.config.js)</option><option value="html">HTML meta tags</option></select></div>
+</div>
+<div class="card">
+<h2>Security Headers</h2>
+<div class="checkbox"><input type="checkbox" id="csp" checked onchange="generate()"><label for="csp">Content-Security-Policy</label></div>
+<div class="checkbox"><input type="checkbox" id="hsts" checked onchange="generate()"><label for="hsts">Strict-Transport-Security (HSTS)</label></div>
+<div class="checkbox"><input type="checkbox" id="frame" checked onchange="generate()"><label for="frame">X-Frame-Options (clickjacking)</label></div>
+<div class="checkbox"><input type="checkbox" id="contentType" checked onchange="generate()"><label for="contentType">X-Content-Type-Options (MIME sniffing)</label></div>
+<div class="checkbox"><input type="checkbox" id="referrer" checked onchange="generate()"><label for="referrer">Referrer-Policy</label></div>
+<div class="checkbox"><input type="checkbox" id="permissions" checked onchange="generate()"><label for="permissions">Permissions-Policy</label></div>
+<div class="checkbox"><input type="checkbox" id="cors" onchange="generate()"><label for="cors">CORS Headers</label></div>
+<div class="form-group"><label>CSP: Allowed Origins (comma-separated)</label><input id="cspOrigins" value="self, https://harz-cloud.pages.dev" style="width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;margin-top:8px" oninput="generate()"></div>
+</div>
+<div class="card">
+<h2>Generated Headers</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy</button>
+<button class="btn secondary" onclick="downloadFile()">Download</button>
+</div>
+</div>
+</div>
+<script>
+function generate(){
+const platform=document.getElementById('platform').value;
+const csp=document.getElementById('csp').checked;
+const hsts=document.getElementById('hsts').checked;
+const frame=document.getElementById('frame').checked;
+const ct=document.getElementById('contentType').checked;
+const ref=document.getElementById('referrer').checked;
+const perm=document.getElementById('permissions').checked;
+const cors=document.getElementById('cors').checked;
+const origins=document.getElementById('cspOrigins').value.split(',').map(s=>s.trim());
+const self=origins.includes('self')?"'self'":origins[0];
+const allOrig=origins.map(o=>o==='self'?"'self'":o).join(' ');
+
+const headers=[];
+if(csp)headers.push('Content-Security-Policy: default-src '+self+'; script-src '+allOrig+" 'unsafe-inline'; style-src "+allOrig+" 'unsafe-inline'; img-src "+allOrig+" data: https:; font-src "+allOrig+" data:; connect-src "+allOrig+"; object-src 'none'; base-uri 'self'");
+if(hsts)headers.push('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+if(frame)headers.push('X-Frame-Options: SAMEORIGIN');
+if(ct)headers.push('X-Content-Type-Options: nosniff');
+if(ref)headers.push('Referrer-Policy: strict-origin-when-cross-origin');
+if(perm)headers.push("Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()");
+if(cors){headers.push('Access-Control-Allow-Origin: '+self);headers.push('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');headers.push('Access-Control-Allow-Headers: Content-Type, Authorization');headers.push('Access-Control-Max-Age: 86400');}
+
+let code='';
+if(platform==='nginx'){
+code='# Nginx — Add to server block\n';
+headers.forEach(h=>{const[k,v]=h.split(': ');code+='add_header '+k+' "'+v+'" always;\n';});
+}else if(platform==='apache'){
+code='# Apache — Add to .htaccess\n<IfModule mod_headers.c>\n';
+headers.forEach(h=>{const[k,v]=h.split(': ');code+='  Header set '+k+' "'+v+'"\n';});
+code+='</IfModule>';
+}else if(platform==='cloudflare'){
+code='// Cloudflare Workers — Add to response headers\nconst securityHeaders = {\n';
+headers.forEach(h=>{const[k,v]=h.split(': ');code+='  "'+k+'": "'+v+'",\n';});
+code=code.slice(0,-2)+'\n};\n\n// In your fetch handler:\n// response = new Response(body, { headers: { ...securityHeaders, "Content-Type": "text/html" } });';
+}else if(platform==='express'){
+code='// Express.js — Add before routes\n';
+headers.forEach(h=>{const[k,v]=h.split(': ');code+='app.use((req, res, next) => {\n  res.setHeader("'+k+'", "'+v+'");\n  next();\n});\n';});
+}else if(platform==='nextjs'){
+code='// next.config.js\nmodule.exports = {\n  async headers() {\n    return [\n      {\n        source: "/(.*)",\n        headers: [\n';
+headers.forEach(h=>{const[k,v]=h.split(': ');code+='          { key: "'+k+'", value: "'+v+'" },\n';});
+code=code.slice(0,-2)+'\n        ],\n      },\n    ];\n  },\n};';
+}else if(platform==='html'){
+code='<!-- HTML meta tags -->\n';
+headers.forEach(h=>{const[k,v]=h.split(': ');if(k!=='X-Frame-Options'&&k!=='Strict-Transport-Security')code+='<meta http-equiv="'+k+'" content="'+v+'">\n';});
+}
+document.getElementById('output').textContent=code;
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Headers copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='security-headers.txt';a.click();}
+generate();
+</script>
+</body>
+</html>

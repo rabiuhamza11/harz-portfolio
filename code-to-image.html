@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code to Image Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#3b82f6}
+.form-group textarea{font-family:monospace}
+.form-row{display:flex;gap:16px;margin-bottom:14px}
+.form-row .form-group{flex:1}
+.color-pick{display:flex;gap:8px;align-items:center}
+.color-pick input[type=color]{width:44px;height:38px;border:1px solid #334155;border-radius:8px;cursor:pointer;background:none}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.preview-wrap{border-radius:12px;overflow:hidden;margin-top:16px}
+.preview{padding:40px;font-family:monospace;font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;min-height:200px}
+.window-bar{display:flex;align-items:center;gap:6px;padding:10px 16px;background:#1a1a2e}
+.dot{width:12px;height:12px;border-radius:50%}
+.dot.red{background:#ff5f57}.dot.yellow{background:#ffbd2e}.dot.green{background:#28ca42}
+.actions{display:flex;gap:10px;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Code to Image Generator</h1>
+<p class="sub">Turn code snippets into beautiful shareable images</p>
+<div class="card">
+<h2>Code Snippet</h2>
+<div class="form-group"><textarea id="code" rows="6" oninput="render()">function harzPay(amount, currency) {
+  const tx = {
+    amount,
+    currency,
+    reference: 'HARZ_' + Date.now(),
+    status: 'pending'
+  };
+  return tx;
+}</textarea></div>
+<div class="form-row">
+<div class="form-group"><label>Language</label><select id="language" onchange="render()"><option value="javascript">JavaScript</option><option value="typescript">TypeScript</option><option value="python">Python</option><option value="go">Go</option><option value="rust">Rust</option><option value="html">HTML</option><option value="css">CSS</option><option value="json">JSON</option><option value="bash">Bash</option><option value="sql">SQL</option></select></div>
+<div class="form-group"><label>Theme</label><select id="theme" onchange="render()"><option value="dark">Dark</option><option value="midnight">Midnight</option><option value="ocean">Ocean</option><option value="forest">Forest</option><option value="sunset">Sunset</option></select></div>
+<div class="form-group"><label>Padding</label><select id="padding" onchange="render()"><option value="20">Small</option><option value="40" selected>Medium</option><option value="60">Large</option></select></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Background Color</label><div class="color-pick"><input type="color" id="bgColor" value="#1a1a2e" oninput="render()"></div></div>
+<div class="form-group"><label>Text Color</label><div class="color-pick"><input type="color" id="textColor" value="#e2e8f0" oninput="render()"></div></div>
+<div class="form-group"><label>Font Size</label><select id="fontSize" onchange="render()"><option value="12">12px</option><option value="14" selected>14px</option><option value="16">16px</option><option value="18">18px</option></select></div>
+</div>
+<div class="checkbox" style="margin-bottom:10px"><input type="checkbox" id="lineNumbers" checked onchange="render()" style="width:18px;height:18px;accent-color:#3b82f6"><label for="lineNumbers" style="font-size:.9rem">Show line numbers</label></div>
+<div class="checkbox" style="margin-bottom:10px"><input type="checkbox" id="windowBar" checked onchange="render()" style="width:18px;height:18px;accent-color:#3b82f6"><label for="windowBar" style="font-size:.9rem">Show window bar (macOS dots)</label></div>
+<div class="checkbox" style="margin-bottom:10px"><input type="checkbox" id="showTitle" onchange="render()" style="width:18px;height:18px;accent-color:#3b82f6"><label for="showTitle" style="font-size:.9rem">Show title bar</label></div>
+</div>
+<div class="card">
+<h2>Preview</h2>
+<div class="preview-wrap" id="previewWrap"></div>
+<div class="actions">
+<button class="btn" onclick="downloadImage()">Download PNG</button>
+<button class="btn secondary" onclick="copyHTML()">Copy HTML</button>
+</div>
+</div>
+</div>
+<script>
+const themes={dark:{bg:'#1a1a2e',text:'#e2e8f0',accent:'#3b82f6'},midnight:{bg:'#0f0f23',text:'#c4b5fd',accent:'#8b5cf6'},ocean:{bg:'#0c1e3a',text:'#7dd3fc',accent:'#0ea5e9'},forest:{bg:'#0a1f0e',text:'#86efac',accent:'#22c55e'},sunset:{bg:'#1a0f0f',text:'#fda4af',accent:'#f43f5e'}};
+function highlight(code,lang){
+const keywords={javascript:['function','const','let','var','return','if','else','for','while','class','new','async','await','import','export','from','default','try','catch','throw','typeof','instanceof'],typescript:['function','const','let','var','return','if','else','for','while','class','new','async','await','import','export','from','default','interface','type','enum','public','private','readonly','extends','implements'],python:['def','class','return','if','elif','else','for','while','import','from','as','try','except','raise','with','lambda','None','True','False','and','or','not','in','is'],go:['func','package','import','var','const','type','struct','interface','return','if','else','for','range','go','chan','defer','map','make','new'],rust:['fn','let','mut','pub','struct','enum','impl','trait','use','mod','return','if','else','for','while','loop','match','async','await','move'],bash:['echo','if','then','fi','for','do','done','while','case','esac','function','return','exit','export','local'],sql:['SELECT','FROM','WHERE','INSERT','UPDATE','DELETE','CREATE','TABLE','ALTER','DROP','JOIN','INNER','LEFT','RIGHT','ON','AND','OR','NOT','NULL','ORDER','GROUP','BY','LIMIT']};
+const kw=keywords[lang]||[];
+let highlighted=code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+kw.forEach(k=>{const re=new RegExp('\\b'+k+'\\b','g');highlighted=highlighted.replace(re,'<span style="color:'+themes[document.getElementById('theme').value].accent+';font-weight:bold">'+k+'</span>');});
+highlighted=highlighted.replace(/(["'`])([^"'`]*?)\1/g,'<span style="color:#fbbf24">$1$2$1</span>');
+highlighted=highlighted.replace(/(\/\/.*$)/gm,'<span style="color:#64748b;font-style:italic">$1</span>');
+return highlighted;}
+function render(){
+const code=document.getElementById('code').value;
+const theme=themes[document.getElementById('theme').value];
+const bg=document.getElementById('bgColor').value;
+const textColor=document.getElementById('textColor').value;
+const fontSize=document.getElementById('fontSize').value;
+const pad=document.getElementById('padding').value;
+const showLines=document.getElementById('lineNumbers').checked;
+const showBar=document.getElementById('windowBar').checked;
+const showTitle=document.getElementById('showTitle').checked;
+const lang=document.getElementById('language').value;
+const lines=code.split('\n');
+const highlighted=highlight(code,lang);
+let html='';
+if(showBar){html+='<div class="window-bar"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>'+(showTitle?'<span style="color:#94a3b8;font-size:12px;margin-left:10px;font-family:sans-serif">'+lang+'</span>':'')+'</div>';}
+let codeHtml='<div style="background:'+bg+';padding:'+pad+'px;font-family:monospace;font-size:'+fontSize+'px;color:'+textColor+';line-height:1.6;white-space:pre-wrap;word-break:break-word;min-height:200px">';
+if(showLines){const linesArr=highlighted.split('\n');linesArr.forEach((line,i)=>{codeHtml+='<div><span style="color:#475569;display:inline-block;width:30px;text-align:right;margin-right:16px;user-select:none">'+(i+1)+'</span>'+line+'</div>';});}
+else{codeHtml+=highlighted;}
+codeHtml+='</div>';
+html+=codeHtml;
+document.getElementById('previewWrap').innerHTML=html;
+}
+function downloadImage(){
+const wrap=document.getElementById('previewWrap');
+const data='<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400">'+wrap.innerHTML+'</svg>';
+const blob=new Blob([data],{type:'image/svg+xml'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='code-snippet.svg';a.click();
+}
+function copyHTML(){navigator.clipboard.writeText(document.getElementById('previewWrap').innerHTML);alert('HTML copied!');}
+render();
+</script>
+</body>
+</html>

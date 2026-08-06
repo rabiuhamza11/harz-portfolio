@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bundle Size Analyzer — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:800px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}textarea{width:100%;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.85rem;font-family:monospace;min-height:150px;resize:vertical}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.stat{text-align:center;padding:16px;margin-bottom:16px}.stat-num{font-size:2.5rem;font-weight:bold}.bar{height:24px;border-radius:6px;margin-bottom:6px;display:flex;align-items:center;padding:0 10px;font-size:.8rem;color:#fff;font-weight:600;transition:.3s}.pkg-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#0f172a;border:1px solid #334155;border-radius:6px;margin-bottom:6px}.pkg-name{font-family:monospace;font-size:.85rem;color:#a5b4fc}.pkg-size{font-size:.85rem;font-weight:600}.hint{background:#1e3a5f;border-radius:8px;padding:12px;font-size:.8rem;color:#93c5fd;line-height:1.6;margin-top:12px}</style>
+</head>
+<body>
+<div class="c">
+<h1>Bundle Size Analyzer</h1><p class="sub">Estimate bundle sizes and find optimization opportunities</p>
+<div class="card"><h2>Import Map</h2><textarea id="imports" placeholder="Paste your imports or package list..." oninput="analyze()">import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
+import moment from 'moment';
+import _ from 'lodash';
+import styled from 'styled-components';</textarea>
+<button class="btn" onclick="analyze()" style="margin-top:12px">Analyze</button></div>
+<div id="results" style="display:none">
+<div class="card"><h2>Estimated Size</h2><div class="stat"><div class="stat-num" id="totalSize">--</div><div style="color:#94a3b8;font-size:.9rem" id="totalGzip">--</div></div></div>
+<div class="card"><h2>Breakdown</h2><div id="breakdown"></div></div>
+<div class="card"><h2>Recommendations</h2><div id="recommendations"></div></div>
+</div>
+<div class="card"><div class="hint">Sizes are estimates based on common npm package sizes. For exact measurements, use webpack-bundle-analyzer or rollup-plugin-visualizer in your build pipeline.</div></div>
+</div>
+<script>
+const pkgSizes={react:6.4,'react-dom':130,'react-router-dom':22,axios:12,moment:67,lodash:71,'styled-components':12,next:0,vue:34,vuex:10,'@vue/router':22,express:0,zod:12,zustand:3,'@tanstack/react-query':12,dayjs:2,'date-fns':6,uuid:3,clsx:1,'framer-motion':32,svelte:0,solid:7};
+const alternatives={moment:'Use dayjs (2 KB) instead of moment (67 KB)','lodash:'Use lodash-es with tree-shaking or native ES methods','react-dom':'Consider preact (10 KB) for smaller bundles'};
+const gzipRatio=0.33;
+function analyze(){const text=document.getElementById('imports').value;const pkgs=[];const lines=text.split('\n');lines.forEach(line=>{const m=line.match(/from\s+['"]([^'"]+)['"]/)||line.match(/import\s+['"]([^'"]+)['"]/);if(m){let pkg=m[1];if(pkg.startsWith('@'))pkg=pkg.split('/').slice(0,2).join('/');else pkg=pkg.split('/')[0];pkgs.push(pkg);}});const unique=[...new Set(pkgs)];let total=0;const items=[];unique.forEach(p=>{const size=pkgSizes[p]||5;total+=size;items.push({name:p,size});});items.sort((a,b)=>b.size-a.size);document.getElementById('results').style.display='block';document.getElementById('totalSize').textContent=total+' KB';document.getElementById('totalGzip').textContent='~'+Math.round(total*gzipRatio)+' KB gzipped';document.getElementById('breakdown').innerHTML=items.map(i=>{const pct=(i.size/total)*100;const color=i.size>50?'#ef4444':i.size>20?'#f59e0b':'#22c55e';return '<div><div class="bar" style="background:'+color+';width:'+Math.max(pct,5)+'%">'+i.name+'</div><div style="text-align:right;font-size:.8rem;color:#94a3b8;margin-bottom:8px">'+i.size+' KB ('+pct.toFixed(1)+'%)</div></div>';}).join('');let recs=[];unique.forEach(p=>{if(alternatives[p])recs.push('<div style="padding:8px 12px;background:#052e16;border-radius:6px;margin-bottom:6px;font-size:.85rem;color:#4ade80">💡 '+alternatives[p]+'</div>');if(i.size>50)recs.push('<div style="padding:8px 12px;background:#3b2f0e;border-radius:6px;margin-bottom:6px;font-size:.85rem;color:#fbbf24">⚠️ '+p+' is '+i.size+' KB — consider code splitting</div>');});recs.push('<div style="padding:8px 12px;background:#1e3a5f;border-radius:6px;margin-bottom:6px;font-size:.85rem;color:#93c5fd">📦 Enable tree-shaking with ES modules</div>');recs.push('<div style="padding:8px 12px;background:#1e3a5f;border-radius:6px;margin-bottom:6px;font-size:.85rem;color:#93c5fd">🔧 Use dynamic import() for code splitting</div>');document.getElementById('recommendations').innerHTML=recs.join('');}
+analyze();
+</script>
+</body></html>

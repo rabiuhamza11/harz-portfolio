@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI/CD Pipeline Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.85rem}
+.checkbox input{width:18px;height:18px;accent-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:600px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>CI/CD Pipeline Generator</h1>
+<p class="sub">Generate CI/CD configs for GitHub Actions, GitLab CI, and more</p>
+<div class="card">
+<h2>Configuration</h2>
+<div class="form-grid">
+<div class="form-group"><label>Platform</label><select id="platform" onchange="generate()"><option value="github">GitHub Actions</option><option value="gitlab">GitLab CI</option><option value="circle">CircleCI</option></select></div>
+<div class="form-group"><label>Project Type</label><select id="projectType" onchange="generate()"><option value="node">Node.js</option><option value="static">Static Site</option><option value="docker">Docker</option><option value="python">Python</option><option value="pages">Cloudflare Pages</option></select></div>
+<div class="form-group"><label>Node Version</label><input id="nodeVer" value="20" oninput="generate()"></div>
+<div class="form-group"><label>Deploy Target</label><select id="deploy" onchange="generate()"><option value="none">None (test only)</option><option value="cloudflare">Cloudflare Pages</option><option value="docker">Docker Registry</option><option value="vercel">Vercel</option></select></div>
+</div>
+<div class="checkbox"><input type="checkbox" id="lint" checked onchange="generate()"><label for="lint">Run linter</label></div>
+<div class="checkbox"><input type="checkbox" id="test" checked onchange="generate()"><label for="test">Run tests</label></div>
+<div class="checkbox"><input type="checkbox" id="build" checked onchange="generate()"><label for="build">Build project</label></div>
+<div class="checkbox"><input type="checkbox" id="cache" checked onchange="generate()"><label for="cache">Enable caching</label></div>
+</div>
+<div class="card">
+<h2>Generated Pipeline</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy</button>
+<button class="btn secondary" onclick="downloadFile()">Download</button>
+</div>
+</div>
+</div>
+<script>
+function generate(){
+const p=document.getElementById('platform').value;
+const pt=document.getElementById('projectType').value;
+const nv=document.getElementById('nodeVer').value;
+const dep=document.getElementById('deploy').value;
+const lint=document.getElementById('lint').checked;
+const test=document.getElementById('test').checked;
+const build=document.getElementById('build').checked;
+const cache=document.getElementById('cache').checked;
+let code='';
+if(p==='github'){
+code='name: CI/CD Pipeline\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\njobs:\n';
+if(pt==='node'||pt==='pages'){
+code+='  build-and-test:\n    runs-on: ubuntu-latest\n';
+if(cache)code+='    steps:\n      - uses: actions/checkout@v4\n      - name: Setup Node.js\n        uses: actions/setup-node@v4\n        with:\n          node-version: \''+nv+'\'\n          cache: \'npm\'\n      - run: npm ci\n';
+else code+='    steps:\n      - uses: actions/checkout@v4\n      - name: Setup Node.js\n        uses: actions/setup-node@v4\n        with:\n          node-version: \''+nv+'\'\n      - run: npm ci\n';
+if(lint)code+='      - run: npm run lint\n';
+if(test)code+='      - run: npm test\n';
+if(build)code+='      - run: npm run build\n';
+if(dep==='cloudflare')code+='      - name: Deploy to Cloudflare Pages\n        uses: cloudflare/pages-action@v1\n        with:\n          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}\n          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}\n          projectName: harz-cloud\n          directory: dist\n';
+code+='\n';
+}else if(pt==='docker'){
+code+='  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - name: Build Docker image\n        run: docker build -t app .\n';
+if(dep==='docker')code+='      - name: Push to registry\n        run: |\n          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin\n          docker tag app ${{ secrets.DOCKER_USER }}/app:latest\n          docker push ${{ secrets.DOCKER_USER }}/app:latest\n';
+}else if(pt==='python'){
+code+='  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - name: Setup Python\n        uses: actions/setup-python@v5\n        with:\n          python-version: \'3.11\'\n      - run: pip install -r requirements.txt\n      - run: pytest\n';
+}else if(pt==='static'){
+code+='  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n';
+if(dep==='cloudflare')code+='      - name: Deploy to Cloudflare Pages\n        uses: cloudflare/pages-action@v1\n        with:\n          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}\n          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}\n          projectName: harz-cloud\n          directory: .\n';
+}
+}else if(p==='gitlab'){
+code='image: node:'+nv+'\n\nstages:\n  - lint\n  - test\n  - build\n  - deploy\n\n';
+if(lint)code+='lint:\n  stage: lint\n  script:\n    - npm ci\n    - npm run lint\n\n';
+if(test)code+='test:\n  stage: test\n  script:\n    - npm ci\n    - npm test\n\n';
+if(build)code+='build:\n  stage: build\n  script:\n    - npm ci\n    - npm run build\n  artifacts:\n    paths:\n      - dist/\n\n';
+if(dep==='cloudflare')code+='deploy:\n  stage: deploy\n  script:\n    - npx wrangler pages deploy dist --project-name=harz-cloud\n  only:\n    - main\n';
+}else if(p==='circle'){
+code='version: 2.1\n\njobs:\n  build-and-test:\n    docker:\n      - image: cimg/node:'+nv+'\n    steps:\n      - checkout\n      - restore_cache:\n          keys:\n            - v1-deps-{{ checksum "package-lock.json" }}\n';
+if(lint)code+='      - run: npm run lint\n';
+if(test)code+='      - run: npm test\n';
+if(build)code+='      - run: npm run build\n';
+if(cache)code+='      - save_cache:\n          paths:\n            - node_modules\n          key: v1-deps-{{ checksum "package-lock.json" }}\n';
+code+='\nworkflows:\n  version: 2\n  build-test-deploy:\n    jobs:\n      - build-and-test\n';
+}
+document.getElementById('output').textContent=code;
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Pipeline config copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.getElementById('platform').value==='github'?'.github/workflows/ci.yml':document.getElementById('platform').value==='gitlab'?'.gitlab-ci.yml':'config.yml';a.click();}
+generate();
+</script>
+</body>
+</html>

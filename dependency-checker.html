@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dependency Checker — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:800px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}textarea{width:100%;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.85rem;font-family:monospace;min-height:200px;resize:vertical}textarea:focus{outline:none;border-color:#3b82f6}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.btn.sec{background:#334155}.dep-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#0f172a;border:1px solid #334155;border-radius:8px;margin-bottom:6px}.dep-name{font-family:monospace;font-size:.85rem;color:#a5b4fc}.dep-info{font-size:.8rem;color:#94a3b8}.dep-badge{padding:2px 8px;border-radius:4px;font-size:.7rem;margin-left:6px}.badge-ok{background:#052e16;color:#4ade80}.badge-warn{background:#3b2f0e;color:#fbbf24}.badge-crit{background:#450a0a;color:#f87171}.stat{text-align:center;padding:20px;font-size:.9rem;color:#94a3b8}</style>
+</head>
+<body>
+<div class="c">
+<h1>Dependency Vulnerability Checker</h1><p class="sub">Paste package.json to check dependencies</p>
+<div class="card"><h2>package.json</h2><textarea id="pkgJson" placeholder="Paste your package.json here...">{
+  "name": "harz-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.18.2",
+    "lodash": "^4.17.21",
+    "axios": "^1.6.0",
+    "jsonwebtoken": "^9.0.0",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0"
+  }
+}</textarea>
+<div style="display:flex;gap:8px;margin-top:12px"><button class="btn" onclick="checkDeps()">Check Dependencies</button><button class="btn sec" onclick="npmAudit()">npm audit (link)</button></div></div>
+<div id="results" style="display:none">
+<div class="card"><h2>Results</h2><div class="stat" id="summary"></div><div id="depList"></div></div>
+</div>
+</div>
+<script>
+const knownVulns={'express':{'<4.19.0':'CVE-2024-29041 Open redirect'},'lodash':{'<4.17.21':'Prototype pollution'},'jsonwebtoken':{'<9.0.0':'Some versions have key confusion'},'axios':{'<1.6.0':'SSRF and XSS'},'minimist':{'<1.2.6':'Prototype pollution'},'jquery':{'<3.5.0':'XSS'},'moment':{'<2.29.4':'Path traversal'},'handlebars':{'<4.7.7':'Prototype pollution'},'ws':{'<8.17.0':'DoS'},'node-forge':{'<1.3.0':'Prototype pollution'}};
+const outdated={'express':'4.19.2','lodash':'4.17.21','axios':'1.7.2','jsonwebtoken':'9.0.2','bcryptjs':'2.4.3','eslint':'9.5.0','jest':'29.7.0','react':'18.3.1','next':'14.2.3','typescript':'5.4.5'};
+function checkDeps(){try{const pkg=JSON.parse(document.getElementById('pkgJson').value);const deps={...pkg.dependencies,...pkg.devDependencies};let items=[],ok=0,warn=0,crit=0;
+for(const[name,version]of Object.entries(deps)){const cleanVer=version.replace(/[\^~>=<]/g,'');let status='ok',badge='<span class="dep-badge badge-ok">Safe</span>';const vulnKey=Object.keys(knownVulns).find(k=>k===name);if(vulnKey){const vuln=knownVulns[vulnKey];const vulnVer=vuln.match(/<(.+)/)[1];if(compareVersions(cleanVer,vulnVer)<0){status='critical';badge='<span class="dep-badge badge-crit">Vulnerable</span>';crit++;}}if(status==='ok'&&outdated[name]&&compareVersions(cleanVer,outdated[name])<0){status='warn';badge='<span class="dep-badge badge-warn">Update available</span>';warn++;}if(status==='ok')ok++;items.push('<div class="dep-item"><div><span class="dep-name">'+name+'</span> '+version+badge+'</div><div class="dep-info">'+(status==='critical'?knownVulns[name]||'Vulnerable':status==='warn'?'Latest: '+outdated[name]:'Up to date')+'</div></div>');}
+document.getElementById('results').style.display='block';document.getElementById('summary').innerHTML='<span style="color:#4ade80;font-weight:bold">'+ok+' safe</span> | <span style="color:#fbbf24;font-weight:bold">'+warn+' outdated</span> | <span style="color:#f87171;font-weight:bold">'+crit+' vulnerable</span>';document.getElementById('depList').innerHTML=items.join('');}catch(e){alert('Invalid JSON: '+e.message);}}
+function compareVersions(a,b){const pa=a.split('.'),pb=b.split('.');for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=parseInt(pa[i]||0),nb=parseInt(pb[i]||0);if(na>nb)return 1;if(na<nb)return-1;}return 0;}
+function npmAudit(){window.open('https://docs.npmjs.com/cli/v10/commands/npm-audit','_blank');}
+</script>
+</body></html>

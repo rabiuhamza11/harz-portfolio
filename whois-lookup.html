@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WHOIS Lookup — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:800px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}.fg{margin-bottom:14px}.fg label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}.fg input{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;font-family:monospace}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.out{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;font-family:monospace;font-size:.8rem;color:#a5b4fc;max-height:500px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}.info-row{display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #334155}.info-row:last-child{border:0}.info-label{color:#94a3b8}.info-value{color:#a5b4fc;font-weight:600}.status{padding:8px 12px;border-radius:6px;margin:8px 0;font-size:.85rem}.status.pending{background:#1e3a5f;color:#93c5fd}.status.err{background:#450a0a;color:#f87171}</style>
+</head>
+<body>
+<div class="c">
+<h1>WHOIS Lookup</h1><p class="sub">Domain registration info via RDAP</p>
+<div class="card"><h2>Query</h2>
+<div class="fg"><label>Domain Name</label><input id="domain" value="pages.dev" onkeypress="if(event.key==='Enter')lookup()"></div>
+<button class="btn" onclick="lookup()">Lookup</button>
+</div>
+<div id="results" style="display:none"><div class="card"><h2>Domain Info</h2><div id="info"></div></div><div class="card"><h2>Raw RDAP Data</h2><div class="out" id="raw"></div></div></div>
+</div>
+<script>
+async function lookup(){const domain=document.getElementById('domain').value.trim().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0];if(!domain)return;document.getElementById('results').style.display='block';document.getElementById('info').innerHTML='<div class="status pending">Querying RDAP for '+domain+'...</div>';try{const res=await fetch('https://rdap.org/domain/'+domain);if(!res.ok){document.getElementById('info').innerHTML='<div class="status err">No WHOIS data found for '+domain+'</div>';return;}const data=await res.json();let html='';if(data.ldhName)html+='<div class="info-row"><span class="info-label">Domain</span><span class="info-value">'+data.ldhName+'</span></div>';if(data.handle)html+='<div class="info-row"><span class="info-label">Handle</span><span class="info-value">'+data.handle+'</span></div>';if(data.status)html+='<div class="info-row"><span class="info-label">Status</span><span class="info-value">'+data.status.join(', ')+'</span></div>';if(data.events)data.events.forEach(e=>{html+='<div class="info-row"><span class="info-label">'+e.eventAction+'</span><span class="info-value">'+e.eventDate+'</span></div>';});if(data.nameservers)html+='<div class="info-row"><span class="info-label">Nameservers</span><span class="info-value">'+data.nameservers.map(n=>n.ldhName).join(', ')+'</span></div>';if(data.entities)data.entities.forEach(e=>{const role=e.roles?e.roles.join(', '):'';const name=e.vcardArray&&e.vcardArray[1]?e.vcardArray[1].find(v=>v[0]==='fn')||e.vcardArray[1].find(v=>v[0]==='org'):'';if(name)html+='<div class="info-row"><span class="info-label">'+role+'</span><span class="info-value">'+name[3]+'</span></div>';});document.getElementById('info').innerHTML=html||'<div class="status err">No data available</div>';document.getElementById('raw').textContent=JSON.stringify(data,null,2).slice(0,3000);}catch(e){document.getElementById('info').innerHTML='<div class="status err">Error: '+e.message+'</div>';}}
+lookup();
+</script>
+</body></html>

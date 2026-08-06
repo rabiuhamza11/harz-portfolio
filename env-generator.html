@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>.env Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.85rem;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+.env-table{width:100%;border-collapse:collapse;margin-bottom:16px}
+.env-table th{text-align:left;padding:8px 12px;color:#94a3b8;font-size:.8rem;border-bottom:1px solid #334155}
+.env-table td{padding:4px 8px}
+.env-table input{width:100%;padding:8px 10px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:.85rem;font-family:monospace}
+.env-table input:focus{outline:none;border-color:#3b82f6}
+.env-table select{padding:8px 10px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:.85rem}
+.env-row td:last-child{text-align:center;width:40px}
+.delete-btn{background:none;border:none;color:#f87171;cursor:pointer;font-size:1.2rem}
+.preset{display:inline-block;padding:6px 14px;background:#334155;border-radius:20px;font-size:.8rem;cursor:pointer;margin:2px;color:#cbd5e1}
+.preset:hover{background:#3b82f6;color:#fff}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>.env File Generator</h1>
+<p class="sub">Generate environment variable files for your projects</p>
+<div class="card">
+<h2>Quick Presets</h2>
+<div class="presets" id="presets"></div>
+</div>
+<div class="card">
+<h2>Environment Variables</h2>
+<table class="env-table">
+<thead><tr><th>Key</th><th>Value</th><th>Type</th><th></th></tr></thead>
+<tbody id="envBody"></tbody>
+</table>
+<button class="btn secondary" onclick="addRow()">+ Add Variable</button>
+</div>
+<div class="card">
+<h2>Generated .env</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy .env</button>
+<button class="btn secondary" onclick="downloadFile()">Download .env</button>
+<button class="btn secondary" onclick="downloadExample()">Download .env.example</button>
+</div>
+</div>
+</div>
+<script>
+let vars=[];
+const presets={
+'Node.js':['NODE_ENV=production','PORT=3000','DATABASE_URL=','JWT_SECRET='],
+'PostgreSQL':['DATABASE_URL=postgresql://user:pass@localhost:5432/db','PG_HOST=localhost','PG_PORT=5432','PG_USER=postgres','PG_PASSWORD=','PG_DB=myapp'],
+'MongoDB':['MONGODB_URI=mongodb://localhost:27017/myapp','MONGODB_USER=','MONGODB_PASS='],
+'Redis':['REDIS_URL=redis://localhost:6379','REDIS_PASSWORD='],
+'API Keys':['API_KEY=','API_SECRET=','WEBHOOK_URL='],
+'Stripe':['STRIPE_SECRET_KEY=','STRIPE_PUBLISHABLE_KEY=','STRIPE_WEBHOOK_SECRET='],
+'Paystack':['PAYSTACK_SECRET_KEY=','PAYSTACK_PUBLIC_KEY=','PAYSTACK_WEBHOOK_URL='],
+'Cloudflare':['CF_API_TOKEN=','CF_ACCOUNT_ID=','CF_ZONE_ID='],
+'JWT':['JWT_SECRET=','JWT_EXPIRES_IN=7d','JWT_REFRESH_SECRET='],
+'Email':['SMTP_HOST=','SMTP_PORT=587','SMTP_USER=','SMTP_PASS=','FROM_EMAIL=noreply@example.com'],
+'AWS':['AWS_ACCESS_KEY_ID=','AWS_SECRET_ACCESS_KEY=','AWS_REGION=us-east-1','AWS_S3_BUCKET=']
+};
+function renderPresets(){document.getElementById('presets').innerHTML=Object.keys(presets).map(p=>`<span class="preset" onclick="loadPreset('${p}')">${p}</span>`).join('');}
+function loadPreset(name){vars=presets[name].map(v=>{const[k,...rest]=v.split('=');return{key:k,value:rest.join('='),type:'string'};});renderVars();generate();}
+function addRow(){vars.push({key:'',value:'',type:'string'});renderVars();generate();}
+function deleteRow(i){vars.splice(i,1);renderVars();generate();}
+function renderVars(){const b=document.getElementById('envBody');b.innerHTML=vars.map((v,i)=>`<tr class="env-row"><td><input value="${v.key}" placeholder="KEY_NAME" oninput="vars[${i}].key=this.value;generate()"></td><td><input value="${v.value}" placeholder="value" oninput="vars[${i}].value=this.value;generate()"></td><td><select onchange="vars[${i}].type=this.value;generate()"><option value="string" ${v.type==='string'?'selected':''}>string</option><option value="number" ${v.type==='number'?'selected':''}>number</option><option value="boolean" ${v.type==='boolean'?'selected':''}>boolean</option><option value="secret" ${v.type==='secret'?'selected':''}>secret</option></select></td><td><button class="delete-btn" onclick="deleteRow(${i})">x</button></td></tr>`).join('');}
+function generate(){const env=vars.filter(v=>v.key).map(v=>`${v.key}=${v.value}`).join('\n');document.getElementById('output').textContent=env;}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('.env copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='.env';a.click();}
+function downloadExample(){const example=vars.filter(v=>v.key).map(v=>`${v.key}=${v.type==='secret'?'your_'+v.key.toLowerCase()+'_here':''}`).join('\n');var b=new Blob([example],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='.env.example';a.click();}
+renderPresets();loadPreset('Node.js');
+</script>
+</body>
+</html>

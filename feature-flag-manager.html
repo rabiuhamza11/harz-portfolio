@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feature Flag Manager — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-row{display:flex;gap:8px;margin-bottom:14px}
+.form-row input,.form-row select{flex:1;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-row input:focus{outline:none;border-color:#3b82f6}
+.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem;white-space:nowrap}
+.btn.secondary{background:#334155}
+.flag-list{margin-top:16px}
+.flag-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#0f172a;border:1px solid #334155;border-radius:8px;margin-bottom:8px}
+.flag-info{flex:1}
+.flag-name{font-weight:600;font-size:.9rem;color:#e2e8f0}
+.flag-desc{font-size:.75rem;color:#94a3b8;margin-top:2px}
+.flag-toggle{width:44px;height:24px;background:#334155;border-radius:12px;position:relative;cursor:pointer;transition:.2s;margin:0 12px}
+.flag-toggle.on{background:#22c55e}
+.flag-toggle::after{content:'';position:absolute;width:20px;height:20px;background:#fff;border-radius:50%;top:2px;left:2px;transition:.2s}
+.flag-toggle.on::after{left:22px}
+.delete-btn{background:none;border:none;color:#f87171;cursor:pointer;font-size:1.2rem}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;color:#a5b4fc;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Feature Flag Manager</h1>
+<p class="sub">Design and export feature flag configurations</p>
+<div class="card">
+<h2>Add Flag</h2>
+<div class="form-row"><input id="flagName" placeholder="flag name (e.g. new_checkout)" onkeypress="if(event.key==='Enter')addFlag()"><input id="flagDesc" placeholder="description" onkeypress="if(event.key==='Enter')addFlag()"><button class="btn" onclick="addFlag()">Add</button></div>
+</div>
+<div class="card">
+<h2>Flags</h2>
+<div class="flag-list" id="flagList"></div>
+</div>
+<div class="card">
+<h2>Export Configuration</h2>
+<div class="form-row"><select id="exportFormat" onchange="exportConfig()"><option value="json">JSON</option><option value="js">JavaScript</option><option value="env">.env format</option></select><button class="btn secondary" onclick="copyExport()">Copy</button><button class="btn secondary" onclick="downloadExport()">Download</button></div>
+<div class="output" id="export"></div>
+</div>
+<div class="card">
+<h2>Usage Example</h2>
+<div class="output" id="usage"></div>
+</div>
+</div>
+<script>
+let flags=[
+{name:'new_checkout',description:'Redesigned checkout flow',enabled:false},
+{name:'dark_mode',description:'Dark theme support',enabled:true},
+{name:'crypto_payments',description:'NowPayments integration',enabled:true},
+{name:'ai_assistant',description:'HARZ AI widget',enabled:true}
+];
+function addFlag(){const name=document.getElementById('flagName').value.trim();const desc=document.getElementById('flagDesc').value.trim();if(!name)return;flags.push({name,description:desc||'No description',enabled:false});document.getElementById('flagName').value='';document.getElementById('flagDesc').value='';render();exportConfig();}
+function toggleFlag(i){flags[i].enabled=!flags[i].enabled;render();exportConfig();}
+function deleteFlag(i){flags.splice(i,1);render();exportConfig();}
+function render(){document.getElementById('flagList').innerHTML=flags.map((f,i)=>'<div class="flag-item"><div class="flag-info"><div class="flag-name">'+f.name+' '+(f.enabled?'<span style="color:#22c55e;font-size:.75rem">(ON)</span>':'<span style="color:#94a3b8;font-size:.75rem">(OFF)</span>')+'</div><div class="flag-desc">'+f.description+'</div></div><div class="flag-toggle '+(f.enabled?'on':'')+'" onclick="toggleFlag('+i+')"></div><button class="delete-btn" onclick="deleteFlag('+i+')">x</button></div>').join('');}
+function exportConfig(){const fmt=document.getElementById('exportFormat').value;let out='';if(fmt==='json'){out=JSON.stringify(Object.fromEntries(flags.map(f=>[f.name,{enabled:f.enabled,description:f.description}])),null,2);}else if(fmt==='js'){out='const featureFlags = {\n'+flags.map(f=>'  '+f.name+': '+f.enabled+', // '+f.description).join('\n')+'\n};\n\nexport default featureFlags;';}else if(fmt==='env'){out=flags.map(f=>'FEATURE_'+f.name.toUpperCase()+'='+(f.enabled?'true':'false')).join('\n');}document.getElementById('export').textContent=out;document.getElementById('usage').textContent='// Check a flag:\nif (featureFlags.new_checkout) {\n  // Show new checkout\n} else {\n  // Show old checkout\n}';}
+function copyExport(){navigator.clipboard.writeText(document.getElementById('export').textContent);alert('Config copied!');}
+function downloadExport(){const fmt=document.getElementById('exportFormat').value;const ext=fmt==='json'?'json':fmt==='js'?'js':'env';var b=new Blob([document.getElementById('export').textContent],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='feature-flags.'+ext;a.click();}
+render();exportConfig();
+</script>
+</body>
+</html>

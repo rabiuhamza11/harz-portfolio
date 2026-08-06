@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeScript Config Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.85rem}
+.checkbox input{width:18px;height:18px;accent-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:500px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>TypeScript Config Generator</h1>
+<p class="sub">Generate tsconfig.json for any project type</p>
+<div class="card">
+<h2>Project Type</h2>
+<div class="form-group"><select id="preset" onchange="loadPreset()"><option value="node">Node.js</option><option value="react">React</option><option value="next">Next.js</option><option value="vue">Vue 3</option><option value="deno">Deno</option><option value="bun">Bun</option><option value="library">Library/NPM Package</option><option value="strict">Strict (Recommended)</option></select></div>
+</div>
+<div class="card">
+<h2>Compiler Options</h2>
+<div class="checkbox"><input type="checkbox" id="strict" checked onchange="generate()"><label for="strict">strict</label></div>
+<div class="checkbox"><input type="checkbox" id="noImplicitAny" checked onchange="generate()"><label for="noImplicitAny">noImplicitAny</label></div>
+<div class="checkbox"><input type="checkbox" id="strictNullChecks" checked onchange="generate()"><label for="strictNullChecks">strictNullChecks</label></div>
+<div class="checkbox"><input type="checkbox" id="noUnusedLocals" onchange="generate()"><label for="noUnusedLocals">noUnusedLocals</label></div>
+<div class="checkbox"><input type="checkbox" id="noUnusedParameters" onchange="generate()"><label for="noUnusedParameters">noUnusedParameters</label></div>
+<div class="checkbox"><input type="checkbox" id="noImplicitReturns" checked onchange="generate()"><label for="noImplicitReturns">noImplicitReturns</label></div>
+<div class="checkbox"><input type="checkbox" id="esModuleInterop" checked onchange="generate()"><label for="esModuleInterop">esModuleInterop</label></div>
+<div class="checkbox"><input type="checkbox" id="skipLibCheck" checked onchange="generate()"><label for="skipLibCheck">skipLibCheck</label></div>
+<div class="checkbox"><input type="checkbox" id="forceConsistentCasing" checked onchange="generate()"><label for="forceConsistentCasing">forceConsistentCasingInFileNames</label></div>
+<div class="checkbox"><input type="checkbox" id="declaration" onchange="generate()"><label for="declaration">declaration (generate .d.ts)</label></div>
+<div class="form-group"><label>Module System</label><select id="module" onchange="generate()"><option value="ESNext">ESNext</option><option value="CommonJS">CommonJS</option><option value="UMD">UMD</option><option value="AMD">AMD</option></select></div>
+<div class="form-group"><label>Target</label><select id="target" onchange="generate()"><option value="ES2022">ES2022</option><option value="ES2020">ES2020</option><option value="ES2018">ES2018</option><option value="ESNext">ESNext</option></select></div>
+<div class="form-group"><label>JSX</label><select id="jsx" onchange="generate()"><option value="none">None</option><option value="react">React</option><option value="react-jsx">React 17+ (automatic)</option><option value="preserve">Preserve</option></select></div>
+</div>
+<div class="card">
+<h2>Generated tsconfig.json</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy</button>
+<button class="btn secondary" onclick="downloadFile()">Download tsconfig.json</button>
+</div>
+</div>
+</div>
+<script>
+const presets={node:{jsx:'none',declaration:false,module:'CommonJS'},react:{jsx:'react-jsx',declaration:false,module:'ESNext'},next:{jsx:'preserve',declaration:false,module:'ESNext'},vue:{jsx:'none',declaration:false,module:'ESNext'},deno:{jsx:'none',declaration:false,module:'ESNext'},bun:{jsx:'none',declaration:false,module:'ESNext'},library:{jsx:'none',declaration:true,module:'ESNext'},strict:{jsx:'none',declaration:false,module:'ESNext'}};
+function loadPreset(){const p=document.getElementById('preset').value;const preset=presets[p];document.getElementById('jsx').value=preset.jsx;document.getElementById('declaration').checked=preset.declaration;document.getElementById('module').value=preset.module;if(p==='library')document.getElementById('declaration').checked=true;generate();}
+function generate(){
+const strict=document.getElementById('strict').checked;
+const config={compilerOptions:{
+target:document.getElementById('target').value,
+module:document.getElementById('module').value,
+moduleResolution:'bundler',
+esModuleInterop:document.getElementById('esModuleInterop').checked,
+strict:strict,
+skipLibCheck:document.getElementById('skipLibCheck').checked,
+forceConsistentCasingInFileNames:document.getElementById('forceConsistentCasing').checked,
+noImplicitReturns:document.getElementById('noImplicitReturns').checked,
+resolveJsonModule:true,
+isolatedModules:true,
+noEmit:false
+},include:['src/**/*'],exclude:['node_modules','dist']};
+if(strict){config.compilerOptions.noImplicitAny=document.getElementById('noImplicitAny').checked;config.compilerOptions.strictNullChecks=document.getElementById('strictNullChecks').checked;}
+if(document.getElementById('noUnusedLocals').checked)config.compilerOptions.noUnusedLocals=true;
+if(document.getElementById('noUnusedParameters').checked)config.compilerOptions.noUnusedParameters=true;
+if(document.getElementById('declaration').checked)config.compilerOptions.declaration=true;
+const jsx=document.getElementById('jsx').value;if(jsx!=='none')config.compilerOptions.jsx=jsx;
+document.getElementById('output').textContent=JSON.stringify(config,null,2);
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('tsconfig.json copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tsconfig.json';a.click();}
+loadPreset();
+</script>
+</body>
+</html>

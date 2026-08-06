@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Icon Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input[type=file]{padding:6px}
+.upload-zone{border:2px dashed #334155;border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:.2s}
+.upload-zone:hover{border-color:#3b82f6;background:#1e293b80}
+.upload-zone p{color:#94a3b8;font-size:.9rem}
+#previewCanvas{display:none;margin:0 auto}
+.icons-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:12px;margin-top:16px}
+.icon-item{text-align:center;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px}
+.icon-item canvas{margin:0 auto;display:block;border-radius:12px}
+.icon-item p{font-size:.75rem;color:#94a3b8;margin-top:6px}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>App Icon Generator</h1>
+<p class="sub">Generate iOS and Android app icons from a single image</p>
+<div class="card">
+<h2>Upload Source Image</h2>
+<div class="upload-zone" id="dropZone">
+<p>Click or drag an image here (recommended: 512x512 or larger)</p>
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+</div>
+</div>
+<div class="card" id="settingsCard" style="display:none">
+<h2>Settings</h2>
+<div class="form-grid">
+<div class="form-group"><label>Platform</label><select id="platform" onchange="render()"><option value="both">Both (iOS + Android)</option><option value="ios">iOS only</option><option value="android">Android only</option><option value="pwa">PWA only</option></select></div>
+<div class="form-group"><label>Background Color (for transparency)</label><input type="color" id="bgColor" value="#3b82f6" onchange="render()"></div>
+<div class="form-group"><label>Border Radius (iOS)</label><select id="iosRadius" onchange="render()"><option value="0.22">iOS Default (22%)</option><option value="0.0">Square (0%)</option><option value="0.1">Rounded (10%)</option><option value="0.5">Circle (50%)</option></select></div>
+<div class="form-group"><label>Padding %</label><input type="range" id="padding" min="0" max="40" value="10" oninput="render()"></div>
+</div>
+</div>
+<div class="card" id="previewCard" style="display:none">
+<h2>Generated Icons</h2>
+<div class="icons-grid" id="iconsGrid"></div>
+<div class="actions">
+<button class="btn" onclick="downloadAll()">Download All (ZIP not available — click each)</button>
+<button class="btn secondary" onclick="reset()">Reset</button>
+</div>
+</div>
+</div>
+<script>
+let sourceImg=null;
+const iosSizes=[{name:'iPhone App (2x)',size:120,suffix:'icon-120'},{name:'iPhone App (3x)',size:180,suffix:'icon-180'},{name:'iPad App',size:152,suffix:'icon-152'},{name:'iPad Pro',size:167,suffix:'icon-167'},{name:'App Store',size:1024,suffix:'icon-1024'},{name:'Settings',size:29,suffix:'icon-29'},{name:'Spotlight',size:40,suffix:'icon-40'},{name:'Notification',size:20,suffix:'icon-20'}];
+const androidSizes=[{name:'mdpi',size:48,suffix:'mdpi'},{name:'hdpi',size:72,suffix:'hdpi'},{name:'xhdpi',size:96,suffix:'xhdpi'},{name:'xxhdpi',size:144,suffix:'xxhdpi'},{name:'xxxhdpi',size:192,suffix:'xxxhdpi'},{name:'Play Store',size:512,suffix:'playstore'}];
+const pwaSizes=[{name:'PWA 192',size:192,suffix:'icon-192'},{name:'PWA 512',size:512,suffix:'icon-512'},{name:'Favicon 16',size:16,suffix:'favicon-16'},{name:'Favicon 32',size:32,suffix:'favicon-32'},{name:'Favicon 48',size:48,suffix:'favicon-48'},{name:'Favicon 180',size:180,suffix:'apple-touch-icon'}];
+const dropZone=document.getElementById('dropZone');
+const fileInput=document.getElementById('fileInput');
+dropZone.addEventListener('click',()=>fileInput.click());
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.style.borderColor='#3b82f6';});
+dropZone.addEventListener('dragleave',()=>{dropZone.style.borderColor='#334155';});
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.style.borderColor='#334155';if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
+fileInput.addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0]);});
+function loadFile(file){const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{sourceImg=img;document.getElementById('settingsCard').style.display='block';document.getElementById('previewCard').style.display='block';render();};img.src=e.target.result;};reader.readAsDataURL(file);}
+function render(){if(!sourceImg)return;const platform=document.getElementById('platform').value;const bgColor=document.getElementById('bgColor').value;const radius=parseFloat(document.getElementById('iosRadius').value);const padding=parseInt(document.getElementById('padding').value)/100;let sizes=[];if(platform==='both'||platform==='ios')sizes=sizes.concat(iosSizes);if(platform==='both'||platform==='android')sizes=sizes.concat(androidSizes);if(platform==='pwa')sizes=pwaSizes;const grid=document.getElementById('iconsGrid');grid.innerHTML='';sizes.forEach(s=>{const canvas=document.createElement('canvas');canvas.width=s.size;canvas.height=s.size;const ctx=canvas.getContext('2d');ctx.fillStyle=bgColor;if(platform==='ios'||platform==='both){const r=s.size*radius;roundRect(ctx,0,0,s.size,s.size,r);ctx.fill();ctx.clip();}else{ctx.fillRect(0,0,s.size,s.size);}const pad=s.size*padding;const drawSize=s.size-pad*2;const ratio=Math.min(drawSize/sourceImg.width,drawSize/sourceImg.height);const dw=sourceImg.width*ratio;const dh=sourceImg.height*ratio;ctx.drawImage(sourceImg,(s.size-dw)/2,(s.size-dh)/2,dw,dh);const item=document.createElement('div');item.className='icon-item';item.appendChild(canvas);const label=document.createElement('p');label.textContent=s.name+' ('+s.size+'px)';item.appendChild(label);const btn=document.createElement('button');btn.className='btn secondary';btn.textContent='Download';btn.style.cssText='padding:4px 12px;font-size:.75rem;margin-top:4px';btn.onclick=()=>{canvas.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=s.suffix+'.png';a.click();});};item.appendChild(btn);grid.appendChild(item);});}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function downloadAll(){alert('Download each icon individually by clicking the Download button under each preview.');}
+function reset(){sourceImg=null;document.getElementById('settingsCard').style.display='none';document.getElementById('previewCard').style.display='none';fileInput.value='';}
+</script>
+</body>
+</html>
