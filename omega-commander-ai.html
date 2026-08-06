@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OMEGA Commander AI — Live Enterprise Agent | Harz Digital Services</title>
-<meta name="description" content="Autonomous enterprise operating system with 9 live AI executive agents powered by HARZ Cloud. Built by Harz Digital Services.">
-<link rel="canonical" href="https://harz-cloud.pages.dev/omega-commander-ai">
+<title>OMEGA Commander AI v3 — Autonomous Agent System | HARZ Cloud</title>
+<meta name="description" content="9 autonomous AI agents with real tools, memory, and action-taking ability. Powered by HARZ Cloud.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#7c3aed;--accent2:#00d4aa;--danger:#ef4444;--warn:#f59e0b;--text:#e8e8f0;--muted:#6b6b80}
@@ -20,16 +19,17 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 .section{margin:16px 0}
 .section-title{font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
 .agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.agent-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;transition:all .2s;cursor:pointer}
+.agent-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all .2s}
 .agent-card:active{transform:scale(.97)}
 .agent-card.active{border-color:var(--accent);background:rgba(124,58,237,.08)}
 .agent-card .role{font-size:.75rem;font-weight:700;color:var(--accent)}
-.agent-card .icon{font-size:1.3rem;margin-bottom:4px}
-.agent-card .caps{font-size:.65rem;color:var(--muted);margin-top:4px;line-height:1.3}
+.agent-card .icon{font-size:1rem;font-weight:800;color:var(--accent);margin-bottom:4px}
+.agent-card .caps{font-size:.65rem;color:var(--muted);margin-top:4px}
 .agent-card .badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:.55rem;font-weight:700;margin-top:4px}
 .badge-approval{background:rgba(124,58,237,.15);color:var(--accent)}
 .badge-auto{background:rgba(34,197,94,.15);color:#22c55e}
-.chat-area{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:none;flex-direction:column;height:400px}
+/* Chat */
+.chat-area{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:none;flex-direction:column;height:420px}
 .chat-area.active{display:flex}
 .chat-header{background:rgba(124,58,237,.1);padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .chat-header .title{font-size:.8rem;font-weight:700;color:var(--accent)}
@@ -40,23 +40,16 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 .msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:.8rem;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
 .msg.user{align-self:flex-end;background:rgba(124,58,237,.2);color:var(--text)}
 .msg.ai{align-self:flex-start;background:rgba(0,212,170,.08);border:1px solid var(--border);color:var(--text)}
+.msg.tool{align-self:flex-start;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--warn);font-size:.7rem;font-family:monospace}
 .typing{align-self:flex-start;background:rgba(0,212,170,.08);border:1px solid var(--border);padding:10px 14px;border-radius:16px;font-size:.75rem;color:var(--muted)}
 .chat-input{padding:10px;border-top:1px solid var(--border);display:flex;gap:8px}
 .chat-input input{flex:1;background:#14141e;border:1px solid var(--border);border-radius:20px;padding:10px 14px;color:var(--text);font-size:.8rem;outline:none}
 .chat-input input:focus{border-color:var(--accent)}
 .chat-input button{background:linear-gradient(135deg,#7c3aed,#00d4aa);border:none;border-radius:50%;width:38px;height:38px;color:#fff;font-size:1rem;cursor:pointer;flex-shrink:0}
 .chat-input button:disabled{opacity:.4}
-.tool-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px;cursor:pointer;transition:all .2s}
-.tool-card:active{transform:scale(.98)}
-.tool-card .name{font-size:.75rem;font-weight:600;color:var(--text)}
-.tool-card .desc{font-size:.65rem;color:var(--muted)}
-.tool-card .risk{float:right;padding:2px 8px;border-radius:4px;font-size:.55rem;font-weight:700}
-.risk-low{background:rgba(34,197,94,.15);color:#22c55e}
-.risk-medium{background:rgba(245,158,11,.15);color:var(--warn)}
-.risk-high{background:rgba(239,68,68,.15);color:var(--danger)}
-.stat-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.75rem}
-.stat-row:last-child{border:none}
-.stat-row .val{font-weight:700;color:var(--accent2)}
+/* Tool display */
+.tool-badge{display:inline-block;background:rgba(245,158,11,.15);color:var(--warn);padding:3px 8px;border-radius:6px;font-size:.6rem;font-weight:700;margin:4px 0}
+/* Footer */
 .footer{text-align:center;padding:20px 0;color:var(--muted);font-size:.6rem}
 .footer a{color:var(--accent2);text-decoration:none}
 @media(max-width:480px){.agent-grid{grid-template-columns:1fr}}
@@ -65,7 +58,7 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 <body>
 <div class="header">
 <h1>OMEGA Commander AI</h1>
-<p>v2.0.0 - Live Enterprise Agent System</p>
+<p>v3.0.0 - Autonomous Agents with Tools, Memory & Action</p>
 </div>
 
 <div class="status-bar">
@@ -76,12 +69,12 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 </div>
 
 <div class="section">
-<div class="section-title">EXECUTIVE AI AGENTS (Tap to Chat)</div>
+<div class="section-title">9 Autonomous Agents (Tap to Chat)</div>
 <div class="agent-grid" id="agentGrid"></div>
 </div>
 
 <div class="section">
-<div class="section-title">AGENT CHAT</div>
+<div class="section-title">Agent Chat with Tools</div>
 <div class="chat-area" id="chatArea">
 <div class="chat-header">
 <span class="title" id="chatTitle">Select an agent</span>
@@ -96,54 +89,55 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 </div>
 
 <div class="section">
-<div class="section-title">PLUGGABLE TOOLS (Tap to Run)</div>
-<div id="toolList"></div>
+<div class="section-title">10 Tools Available</div>
+<div id="toolList" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px"></div>
 </div>
 
 <div class="section">
-<div class="section-title">SYSTEM STATUS</div>
+<div class="section-title">System Status</div>
 <div id="statusInfo" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:.7rem;color:var(--muted)">Checking AI engine...</div>
 </div>
 
 <div class="footer">
-<p>OMEGA Commander AI v2.0.0 - Powered by HARZ Cloud</p>
+<p>OMEGA Commander AI v3.0.0 - Powered by Magani v9.0 on HARZ Cloud</p>
 <p>Harz Digital Services - RC 321424</p>
-<p><a href="omega-commander.html">Commander Suite</a> | <a href="harz-super-app.html">Home</a></p>
+<p><a href="omega-commander.html">Commander Suite</a> | <a href="harz-super-app-v4.html">Home</a></p>
 </div>
 
 <script>
 var AI_URL='https://magani-agent.harz.workers.dev/chat';
 var currentAgent=null;
+var sessionCounter=0;
 
 var agents=[
-{role:'Chief Executive',icon:'CEO',caps:['Overall coordination','Strategy','Final decisions'],approval:false,prompt:'You are the OMEGA Chief Executive AI for HARZ Digital Services (RC 321424). You oversee all business operations, make strategic decisions, and coordinate other agents. Be decisive, clear, and brief. Owner: Rabiu Hamza Mohammed.'},
-{role:'Strategy',icon:'STR',caps:['Business planning','Market analysis','Growth'],approval:true,prompt:'You are the OMEGA Strategy AI for HARZ Digital Services. You analyze markets, create business plans, and identify growth opportunities in Nigeria and globally. Be analytical and actionable.'},
-{role:'Operations',icon:'OPS',caps:['Workflow management','Process optimization'],approval:true,prompt:'You are the OMEGA Operations AI for HARZ. You manage workflows, optimize processes, and ensure efficiency across all HARZ platforms including 600+ digital assets.'},
-{role:'Finance',icon:'FIN',caps:['Transactions','Reporting','Budget'],approval:true,prompt:'You are the OMEGA Finance AI for HARZ. You monitor payments (Paystack, Stripe, crypto), track revenue, manage budgets, and generate financial reports.'},
-{role:'Marketing',icon:'MKT',caps:['Content creation','Campaigns','Analytics'],approval:true,prompt:'You are the OMEGA Marketing AI for HARZ. You create marketing content, manage campaigns, and analyze performance across social media and the HARZ ecosystem.'},
-{role:'Sales',icon:'SAL',caps:['Lead generation','Proposals','CRM'],approval:true,prompt:'You are the OMEGA Sales AI for HARZ. You generate leads, write proposals, manage customer relationships, and drive revenue across HARZ products and services.'},
-{role:'Support',icon:'SUP',caps:['Customer communication','Ticket resolution'],approval:false,prompt:'You are the OMEGA Support AI for HARZ. You handle customer inquiries, resolve tickets, and provide helpful guidance on HARZ products and services.'},
-{role:'Developer',icon:'DEV',caps:['Code generation','Deployment','Monitoring'],approval:true,prompt:'You are the OMEGA Developer AI for HARZ. You generate code, manage deployments on Cloudflare Workers, Pages, D1, R2, and monitor infrastructure. You know HTML, JS, Cloudflare Workers, D1 databases, KV storage.'},
-{role:'Security',icon:'SEC',caps:['Threat detection','Compliance','Access control'],approval:true,prompt:'You are the OMEGA Security AI for HARZ. You detect threats, ensure compliance, manage access control, and protect the HARZ ecosystem (600+ assets, 62+ Cloudflare Workers, Paystack payments).'}
+{role:'Chief Executive',icon:'CEO',caps:['Strategy','Decisions','Coordination'],approval:false,prompt:'You are the OMEGA Chief Executive AI for HARZ Digital Services (RC 321424). Owner: Rabiu Hamza Mohammed. You oversee all business operations and make strategic decisions. Use your tools to check real data before making recommendations. Be decisive and brief.'},
+{role:'Strategy',icon:'STR',caps:['Business planning','Market analysis','Growth'],approval:true,prompt:'You are the OMEGA Strategy AI for HARZ. You analyze markets, create business plans, and identify growth opportunities. Use web search to research current market conditions. Be analytical.'},
+{role:'Operations',icon:'OPS',caps:['Workflows','Processes','Efficiency'],approval:true,prompt:'You are the OMEGA Operations AI for HARZ. You manage workflows and optimize processes across 600+ digital assets. Use ecosystem_status and deploy_status tools to monitor operations. Be systematic.'},
+{role:'Finance',icon:'FIN',caps:['Payments','Reporting','Budget'],approval:true,prompt:'You are the OMEGA Finance AI for HARZ. You monitor payments via Paystack, track revenue, and manage budgets. Use paystack_dashboard and query_database tools to pull real financial data. Be precise with numbers.'},
+{role:'Marketing',icon:'MKT',caps:['Content','Campaigns','Analytics'],approval:true,prompt:'You are the OMEGA Marketing AI for HARZ. You create content and manage campaigns. Use web_search to research trends and query_database for analytics data. Be creative but data-driven.'},
+{role:'Sales',icon:'SAL',caps:['Leads','Proposals','CRM'],approval:true,prompt:'You are the OMEGA Sales AI for HARZ. You generate leads and write proposals. Use web_search and create_payment tools. Use query_database to check existing customers. Be persuasive.'},
+{role:'Support',icon:'SUP',caps:['Customer help','Ticket resolution'],approval:false,prompt:'You are the OMEGA Support AI for HARZ. You handle customer inquiries and resolve tickets. Use query_database to look up user records and transactions. Be helpful and patient.'},
+{role:'Developer',icon:'DEV',caps:['Code','Deployment','Monitoring'],approval:true,prompt:'You are the OMEGA Developer AI for HARZ. You generate code, manage Cloudflare deployments, and monitor infrastructure. Use ecosystem_status, deploy_status, and query_database tools. You know Cloudflare Workers, Pages, D1, KV.'},
+{role:'Security',icon:'SEC',caps:['Threats','Compliance','Access'],approval:true,prompt:'You are the OMEGA Security AI for HARZ. You detect threats, ensure compliance, and manage access. Use ecosystem_status to check infrastructure health. Use send_message to alert the owner of issues. Be vigilant.'}
 ];
 
 var tools=[
-{name:'deploy.status',desc:'Check all Cloudflare deployments status',risk:'low',cmd:'List the status of all HARZ Cloudflare deployments and report any issues'},
-{name:'content.create',desc:'Generate marketing content',risk:'low',cmd:'Generate a promotional social media post for HARZ Digital Services highlighting AI tools and 600+ platforms'},
-{name:'security.audit',desc:'Run security audit on platforms',risk:'medium',cmd:'Run a security audit checklist for the HARZ ecosystem with 600+ assets'},
-{name:'market.analyze',desc:'Analyze market conditions',risk:'low',cmd:'Analyze current market opportunities for a Nigerian digital services company'},
-{name:'lead.generate',desc:'Generate sales leads',risk:'low',cmd:'Generate 5 potential sales leads for HARZ digital products in Nigeria'},
-{name:'payment.report',desc:'Generate payment summary',risk:'medium',cmd:'Generate a summary of HARZ payment infrastructure including Paystack and crypto'},
-{name:'code.generate',desc:'Generate code from spec',risk:'medium',cmd:'Write a simple Cloudflare Worker that returns a JSON health check response'},
-{name:'content.schedule',desc:'Create content calendar',risk:'low',cmd:'Create a 7-day content calendar for HARZ social media channels'},
-{name:'idea.generate',desc:'Generate business ideas',risk:'low',cmd:'Generate 5 new business ideas for HARZ Digital Services expansion in Nigeria'},
-{name:'report.executive',desc:'Generate executive summary',risk:'low',cmd:'Generate an executive summary of HARZ Digital Services current operations'}
+{name:'ecosystem_status',desc:'Check live HARZ Cloud infrastructure',icon:'clinic'},
+{name:'create_payment',desc:'Create real Paystack payment link',icon:'card'},
+{name:'paystack_dashboard',desc:'Get live Paystack balance & transactions',icon:'bank'},
+{name:'crypto_prices',desc:'Get live crypto prices USD/NGN',icon:'coin'},
+{name:'web_search',desc:'Search the web for information',icon:'search'},
+{name:'currency_convert',desc:'Convert between currencies',icon:'exchange'},
+{name:'send_message',desc:'Send alert to owner via Telegram',icon:'send'},
+{name:'query_database',desc:'Query HARZ D1 database',icon:'database'},
+{name:'deploy_status',desc:'Check Cloudflare Pages deployments',icon:'deploy'},
+{name:'vat_calculator',desc:'Calculate Nigerian VAT (7.5%)',icon:'calc'}
 ];
 
 function renderAgents(){
 document.getElementById('agentGrid').innerHTML=agents.map(function(a,i){
 return '<div class="agent-card" onclick="openChat('+i+')">'+
-'<div class="icon" style="font-size:1rem;font-weight:800;color:var(--accent)">'+a.icon+'</div>'+
+'<div class="icon">'+a.icon+'</div>'+
 '<div class="role">'+a.role+'</div>'+
 '<div class="caps">'+a.caps.join(' | ')+'</div>'+
 (a.approval?'<span class="badge badge-approval">APPROVAL</span>':'<span class="badge badge-auto">AUTO</span>')+
@@ -153,22 +147,20 @@ return '<div class="agent-card" onclick="openChat('+i+')">'+
 
 function renderTools(){
 document.getElementById('toolList').innerHTML=tools.map(function(t){
-return '<div class="tool-card" onclick="runTool(\''+t.name+'\')">'+
-'<span class="risk risk-'+t.risk+'">'+t.risk.toUpperCase()+'</span>'+
-'<div class="name">'+t.name+'</div>'+
-'<div class="desc">'+t.desc+'</div>'+
-'<span style="font-size:.55rem;color:var(--accent2)">Tap to run</span>'+
+return '<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:.7rem">'+
+'<b style="color:var(--warn)">'+t.name+'</b> - <span style="color:var(--muted)">'+t.desc+'</span>'+
 '</div>';
 }).join('');
 }
 
 function openChat(idx){
 currentAgent=agents[idx];
+sessionCounter++;
 document.getElementById('chatArea').classList.add('active');
 document.getElementById('chatTitle').textContent=currentAgent.icon+' '+currentAgent.role;
 document.getElementById('chatMessages').innerHTML='';
 document.getElementById('chatInput').focus();
-addMsg('ai','Hello, I am the '+currentAgent.role+' agent for HARZ Digital Services. How can I help you today?');
+addMsg('ai','Hello, I am the '+currentAgent.role+' agent. I have 10 real tools and memory. I can check infrastructure, create payments, query databases, search the web, and more. What do you need?');
 }
 
 function closeChat(){
@@ -184,57 +176,42 @@ input.value='';
 var btn=document.getElementById('sendBtn');
 btn.disabled=true;
 addMsg('user',msg);
+
+// Show tool badge
+var toolBadge=document.createElement('div');
+toolBadge.className='tool-badge';
+toolBadge.textContent='Using tools: ecosystem_status, create_payment, web_search, query_database...';
+document.getElementById('chatMessages').appendChild(toolBadge);
+
 var typing=document.createElement('div');
 typing.className='typing';
-typing.textContent='Agent is thinking...';
+typing.textContent='Agent is thinking and using tools...';
 typing.id='typing';
 document.getElementById('chatMessages').appendChild(typing);
+
 try{
-var res=await fetch(AI_URL,{
+var session='omega_'+currentAgent.icon+'_'+sessionCounter;
+var res=await fetch(AI_URL+'?cb='+Date.now(),{
 method:'POST',
 headers:{'Content-Type':'application/json'},
-body:JSON.stringify({message:currentAgent.prompt+'\n\nUser request: '+msg})
+body:JSON.stringify({message:currentAgent.prompt+'\n\nUser request: '+msg,session:session})
 });
 var data=await res.json();
 var el=document.getElementById('typing');
 if(el)el.remove();
+if(toolBadge)toolBadge.remove();
 if(data.response){
 addMsg('ai',data.response);
 }else{
-addMsg('ai','Error: '+(data.error||'No response from AI'));
+addMsg('ai','Error: '+(data.error||'No response'));
 }
 }catch(e){
 var el2=document.getElementById('typing');
 if(el2)el2.remove();
-addMsg('ai','Connection error. AI engine may be offline.');
+if(toolBadge)toolBadge.remove();
+addMsg('ai','Connection error.');
 }
 btn.disabled=false;
-}
-
-async function runTool(toolName){
-var tool=tools.find(function(t){return t.name===toolName});
-if(!tool)return;
-var resultBox=document.getElementById('statusInfo');
-resultBox.textContent='Running '+toolName+'...';
-resultBox.style.color='var(--warn)';
-try{
-var res=await fetch(AI_URL,{
-method:'POST',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({message:'You are an OMEGA tool executor for HARZ Digital Services.\n\nTool: '+tool.name+'\nDescription: '+tool.desc+'\n\nExecute this: '+tool.cmd})
-});
-var data=await res.json();
-if(data.response){
-resultBox.innerHTML='<b style="color:var(--accent2)">DONE: '+toolName+'</b><br><br>'+data.response.replace(/\n/g,'<br>');
-resultBox.style.color='var(--text)';
-}else{
-resultBox.textContent='Tool failed: '+(data.error||'unknown');
-resultBox.style.color='var(--danger)';
-}
-}catch(e){
-resultBox.textContent='Connection error: '+e.message;
-resultBox.style.color='var(--danger)';
-}
 }
 
 function addMsg(type,text){
@@ -248,17 +225,19 @@ document.getElementById('chatMessages').scrollTop=document.getElementById('chatM
 renderAgents();
 renderTools();
 
-fetch('https://magani-agent.harz.workers.dev/').then(function(r){return r.json()}).then(function(d){
+fetch('https://magani-agent.harz.workers.dev/?cb='+Date.now()).then(function(r){return r.json()}).then(function(d){
 if(d.ai){
 document.getElementById('sysStatus').textContent='ON';
 document.getElementById('sysStatus').style.color='#22c55e';
-document.getElementById('engineName').textContent=(d.ai_model||'Active').substring(0,12);
-document.getElementById('statusInfo').innerHTML='<b style="color:#22c55e">AI Engine: Online</b><br>'+
-'<b style="color:var(--accent2)">Model:</b> '+(d.ai_model||'-')+'<br>'+
-'<b style="color:var(--accent2)">Engine:</b> '+(d.ai_engine||'-')+'<br>'+
+document.getElementById('engineName').textContent=(d.ai_model||'Active').substring(0,15);
+document.getElementById('statusInfo').innerHTML=
+'<b style="color:#22c55e">AI Engine: Online</b><br>'+
 '<b style="color:var(--accent2)">Version:</b> '+(d.version||'-')+'<br>'+
-'<b style="color:var(--accent2)">Paystack:</b> '+(d.payments&&d.payments.paystack?'Active':'Inactive')+'<br>'+
-'<br><i>Tap any agent above to start chatting. Tap any tool to run it.</i>';
+'<b style="color:var(--accent2)">Model:</b> '+(d.ai_model||'-')+'<br>'+
+'<b style="color:var(--accent2)">Tools:</b> '+(d.tools||10)+' live tools<br>'+
+'<b style="color:var(--accent2)">Capabilities:</b> '+(d.capabilities||[]).join(', ')+'<br>'+
+'<b style="color:var(--accent2)">Payments:</b> '+(d.payments&&d.payments.paystack?'Paystack LIVE':'inactive')+'<br>'+
+'<br><i>Each agent has tools, memory, and can take real actions. Tap an agent to start.</i>';
 }else{
 document.getElementById('sysStatus').textContent='OFF';
 document.getElementById('sysStatus').style.color='var(--danger)';
