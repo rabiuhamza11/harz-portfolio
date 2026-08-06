@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dockerfile Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#3b82f6}
+.form-group.full{grid-column:1/-1}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:500px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Dockerfile Generator</h1>
+<p class="sub">Generate Dockerfiles for Node, Python, Go, Rust, and more</p>
+<div class="card">
+<h2>Configuration</h2>
+<div class="form-grid">
+<div class="form-group"><label>Language/Runtime</label><select id="runtime" onchange="generate()"><option value="node">Node.js</option><option value="python">Python</option><option value="go">Go</option><option value="rust">Rust</option><option value="nginx">Nginx (Static)</option><option value="deno">Deno</option><option value="bun">Bun</option></select></div>
+<div class="form-group"><label>Base Image Version</label><input id="version" value="20-alpine" oninput="generate()"></div>
+<div class="form-group"><label>Working Directory</label><input id="workdir" value="/app" oninput="generate()"></div>
+<div class="form-group"><label>Exposed Port</label><input id="port" value="3000" oninput="generate()"></div>
+<div class="form-group"><label>Entry Command</label><input id="cmd" value="npm start" oninput="generate()"></div>
+<div class="form-group"><label>Build Command</label><input id="build" value="npm run build" oninput="generate()"></div>
+<div class="form-group full"><label>Environment Variables (KEY=value, one per line)</label><textarea id="envVars" rows="3" oninput="generate()">NODE_ENV=production
+PORT=3000</textarea></div>
+</div>
+</div>
+<div class="card">
+<h2>Generated Dockerfile</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy Dockerfile</button>
+<button class="btn secondary" onclick="downloadFile()">Download Dockerfile</button>
+</div>
+</div>
+<div class="card">
+<h2>.dockerignore</h2>
+<div class="output" id="dockerignore"></div>
+<button class="btn" onclick="copyIgnore()" style="margin-top:10px">Copy .dockerignore</button>
+</div>
+</div>
+<script>
+function generate(){
+const runtime=document.getElementById('runtime').value;
+const version=document.getElementById('version').value;
+const workdir=document.getElementById('workdir').value;
+const port=document.getElementById('port').value;
+const cmd=document.getElementById('cmd').value;
+const buildCmd=document.getElementById('build').value;
+const envVars=document.getElementById('envVars').value.split('\n').filter(l=>l.trim());
+
+let code='';
+if(runtime==='node'){
+code=`FROM node:${version}\nWORKDIR ${workdir}\n`;
+if(envVars.length)code+=envVars.map(e=>'ENV '+e).join('\n')+'\n';
+code+=`COPY package*.json ./\nRUN npm ci --only=production\n`;
+if(buildCmd&&buildCmd!=='npm start'){
+code+=`COPY . .\nRUN ${buildCmd}\n`;
+}else{code+=`COPY . .\n`;}
+code+=`EXPOSE ${port}\nCMD ["npm","start"]\n`;
+}else if(runtime==='python'){
+code=`FROM python:${version}\nWORKDIR ${workdir}\n`;
+if(envVars.length)code+=envVars.map(e=>'ENV '+e).join('\n')+'\n';
+code+=`COPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nEXPOSE ${port}\nCMD ["python","main.py"]\n`;
+}else if(runtime==='go'){
+code=`FROM golang:${version} AS builder\nWORKDIR ${workdir}\nCOPY go.mod go.sum ./\nRUN go mod download\nCOPY . .\nRUN go build -o server .\n\nFROM alpine:latest\nWORKDIR ${workdir}\nCOPY --from=builder ${workdir}/server .\n`;
+if(envVars.length)code+=envVars.map(e=>'ENV '+e).join('\n')+'\n';
+code+=`EXPOSE ${port}\nCMD ["./server"]\n`;
+}else if(runtime==='rust'){
+code=`FROM rust:${version} AS builder\nWORKDIR ${workdir}\nCOPY Cargo.toml Cargo.lock ./\nRUN cargo build --release\nCOPY . .\nRUN cargo build --release\n\nFROM alpine:latest\nWORKDIR ${workdir}\nCOPY --from=builder ${workdir}/target/release/app .\nEXPOSE ${port}\nCMD ["./app"]\n`;
+}else if(runtime==='nginx'){
+code=`FROM nginx:${version}\nCOPY . /usr/share/nginx/html\nCOPY nginx.conf /etc/nginx/conf.d/default.conf\nEXPOSE ${port}\nCMD ["nginx","-g","daemon off;"]\n`;
+}else if(runtime==='deno'){
+code=`FROM denoland/deno:${version}\nWORKDIR ${workdir}\nCOPY . .\nRUN deno cache main.ts\nEXPOSE ${port}\nCMD ["run","--allow-net","--allow-env","main.ts"]\n`;
+}else if(runtime==='bun'){
+code=`FROM oven/bun:${version}\nWORKDIR ${workdir}\nCOPY package.json bun.lockb ./\nRUN bun install --production\nCOPY . .\nEXPOSE ${port}\nCMD ["bun","run","src/index.ts"]\n`;
+}
+
+document.getElementById('output').textContent=code;
+
+const ignore=`node_modules\nnpm-debug.log\nDockerfile\n.dockerignore\n.git\n.gitignore\n.env\n*.md\ndist\nbuild\n.cache\ncoverage`;
+document.getElementById('dockerignore').textContent=ignore;
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Dockerfile copied!');}
+function copyIgnore(){navigator.clipboard.writeText(document.getElementById('dockerignore').textContent);alert('.dockerignore copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Dockerfile';a.click();}
+generate();
+</script>
+</body>
+</html>

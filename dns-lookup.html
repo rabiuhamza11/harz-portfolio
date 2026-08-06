@@ -1,97 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DNS Lookup Tool — Harz Tools</title>
-<meta name="description" content="Look up DNS records for any domain. Check A, AAAA, MX, TXT, CNAME, and NS records instantly.">
-<meta name="keywords" content="dns, lookup, domain, records, mx, a, cname, ns">
-<meta property="og:title" content="DNS Lookup Tool — Harz Tools">
-<meta property="og:description" content="Look up DNS records for any domain. Check A, AAAA, MX, TXT, CNAME, and NS records instantly.">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="DNS Lookup Tool — Harz Tools">
-<meta name="twitter:description" content="Look up DNS records for any domain. Check A, AAAA, MX, TXT, CNAME, and NS records instantly.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
-.header{background:linear-gradient(135deg,#667eea,#764ba2);padding:1.5rem;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.3)}
-.header h1{color:#fff;font-size:1.5rem;font-weight:700}
-.header a{color:#fff;text-decoration:none;font-size:.85rem;opacity:.8;margin-top:.25rem;display:inline-block}
-.container{max-width:900px;margin:0 auto;padding:1.5rem}
-.tool-card{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #333;border-radius:16px;padding:2rem;margin-bottom:1.5rem}
-.tool-card h2{color:#667eea;font-size:1.25rem;margin-bottom:1rem}
-.input-group{margin-bottom:1rem}
-.input-group label{display:block;color:#aaa;font-size:.85rem;margin-bottom:.5rem}
-input,textarea,select{width:100%;background:#0d0d1f;border:1px solid #333;border-radius:8px;padding:.75rem;color:#e0e0e0;font-size:1rem;outline:none}
-input:focus,textarea:focus,select:focus{border-color:#667eea}
-textarea{min-height:120px;resize:vertical;font-family:'Courier New',monospace}
-button{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:8px;padding:.75rem 1.5rem;font-size:1rem;cursor:pointer;transition:all .3s;width:100%;margin-top:.5rem}
-button:hover{opacity:.9;transform:translateY(-1px)}
-.output{background:#0d0d1f;border:1px solid #333;border-radius:8px;padding:1rem;margin-top:1rem;min-height:80px;white-space:pre-wrap;word-break:break-all;font-family:'Courier New',monospace;color:#4ade80;overflow-x:auto}
-.result{background:#0d0d1f;border:1px solid #333;border-radius:8px;padding:1.5rem;margin-top:1rem}
-.tag{display:inline-block;background:#667eea33;color:#667eea;padding:.25rem .75rem;border-radius:20px;font-size:.75rem;margin:.25rem}
-.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1rem}
-.feature{background:#0d0d1f;border-radius:12px;padding:1rem;text-align:center}
-.feature-icon{font-size:2rem;margin-bottom:.5rem}
-.feature h3{color:#667eea;font-size:.9rem;margin-bottom:.25rem}
-.feature p{color:#888;font-size:.8rem}
-.copy-btn{background:#16213e;border:1px solid #333;color:#aaa;border-radius:8px;padding:.5rem 1rem;font-size:.85rem;cursor:pointer;transition:all .3s}
-.copy-btn:hover{border-color:#667eea;color:#667eea}
-.info-box{background:#667eea11;border-left:3px solid #667eea;border-radius:8px;padding:1rem;margin-top:1rem;color:#aaa;font-size:.85rem;line-height:1.6}
-.footer{text-align:center;padding:2rem;color:#555;font-size:.85rem}
-.float-chat{position:fixed;bottom:20px;right:20px;width:56px;height:56px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(102,126,234,.4);z-index:999;transition:all .3s;text-decoration:none}
-.float-chat:hover{transform:scale(1.1)}
-@media(max-width:600px){.container{padding:1rem}.tool-card{padding:1.25rem}.header h1{font-size:1.2rem}}
-</style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DNS Lookup — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:800px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}.fg{margin-bottom:14px}.fg label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}.fg input{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;font-family:monospace}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.types{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.type-btn{padding:6px 12px;background:#334155;border-radius:6px;font-size:.8rem;cursor:pointer;color:#cbd5e1}.type-btn.active{background:#3b82f6;color:#fff}.result{margin-top:12px}.dns-row{display:flex;justify-content:space-between;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:6px;margin-bottom:6px;font-family:monospace;font-size:.85rem}.dns-row .name{color:#94a3b8}.dns-row .value{color:#a5b4fc}.dns-row .ttl{color:#64748b;font-size:.75rem}.status{padding:8px 12px;border-radius:6px;margin:8px 0;font-size:.85rem}.status.ok{background:#052e16;color:#4ade80}.status.err{background:#450a0a;color:#f87171}.status.pending{background:#1e3a5f;color:#93c5fd}</style>
 </head>
 <body>
-<div class="header">
-<h1>⚡ DNS Lookup Tool</h1>
-<a href="https://rabiuhamza11.github.io/harz-portfolio/tools.html">← Back to All Tools</a>
+<div class="c">
+<h1>DNS Lookup Tool</h1><p class="sub">Query DNS records using Google Public DNS API</p>
+<div class="card"><h2>Query</h2>
+<div class="fg"><label>Domain Name</label><input id="domain" value="harz-cloud.pages.dev" onkeypress="if(event.key==='Enter')lookup()"></div>
+<div class="types" id="types"></div>
+<button class="btn" onclick="lookup()">Lookup</button>
 </div>
-<div class="container">
-<div class="tool-card">
-<h2>DNS Lookup Tool</h2>
-<p style="color:#aaa;line-height:1.6;margin-bottom:1.5rem">Look up DNS records for any domain. Check A, AAAA, MX, TXT, CNAME, and NS records instantly.</p>
-<div class="input-group">
-<label>Input</label>
-<textarea id="inputText" placeholder="Enter your text or content here..." style="min-height:200px"></textarea>
+<div class="card"><h2>Results</h2><div id="results"></div></div>
+<div class="card"><h2>WHOIS Info</h2><div id="whois"></div><button class="btn" onclick="whoisLookup()" style="margin-top:10px">WHOIS Lookup</button></div>
 </div>
-<button onclick="process()" id="processBtn">Generate</button>
-<div class="output" id="output" style="display:none">Results will appear here...</div>
-</div>
-<div class="features">
-<div class="feature"><div class="feature-icon">⚡</div><h3>Instant Results</h3><p>Real-time processing</p></div>
-<div class="feature"><div class="feature-icon">📱</div><h3>Mobile Friendly</h3><p>Works on any device</p></div>
-<div class="feature"><div class="feature-icon">🔒</div><h3>Private</h3><p>All processing is local</p></div>
-</div>
-<div class="info-box">
-💡 <strong>Tip:</strong> This tool runs entirely in your browser — no data is sent to any server. Your content stays private and secure.
-</div>
-</div>
-<div class="footer">
-<p>Harz Tools — Part of the Harz Digital Services Ecosystem</p>
-<p><a href="https://rabiuhamza11.github.io/harz-portfolio/" style="color:#667eea">Harz Portfolio</a> · <a href="https://rabiuhamza11.github.io/harz-portfolio/tools.html" style="color:#667eea">All Tools</a></p>
-</div>
-<a href="https://wa.me/2348028687857?text=Hi%20Magani%2C%20I%27m%20using%20the%20dns_lookup%20tool" class="float-chat" title="Chat with Magani">💬</a>
 <script>
-function process(){
-  const input = document.getElementById('inputText').value;
-  const output = document.getElementById('output');
-  if(!input.trim()){output.style.display='block';output.textContent='Please enter some content first.';return;}
-  output.style.display='block';
-  output.textContent = input;
-}
-// Copy to clipboard on output click
-document.getElementById('output').addEventListener('click', function(){
-  navigator.clipboard.writeText(this.textContent).then(()=>{
-    const original = this.textContent;
-    this.textContent = '✅ Copied to clipboard!';
-    setTimeout(()=>{this.textContent = original;}, 1500);
-  });
-});
+const dnsTypes=['A','AAAA','CNAME','MX','TXT','NS','SOA','CAA','PTR','SRV'];
+let activeType='A';
+document.getElementById('types').innerHTML=dnsTypes.map(t=>'<span class="type-btn '+(t===activeType?'active':'')+'" onclick="setType(\''+t+'\')">'+t+'</span>').join('');
+function setType(t){activeType=t;document.querySelectorAll('.type-btn').forEach(b=>b.classList.toggle('active',b.textContent===t));}
+async function lookup(){
+const domain=document.getElementById('domain').value.trim();if(!domain)return;
+document.getElementById('results').innerHTML='<div class="status pending">Querying '+activeType+' records for '+domain+'...</div>';
+try{
+const res=await fetch('https://dns.google/resolve?name='+domain+'&type='+activeType);
+const data=await res.json();
+if(data.Answer&&data.Answer.length){document.getElementById('results').innerHTML=data.Answer.map(a=>'<div class="dns-row"><span class="name">'+a.name+'</span><span class="value">'+a.data+'</span><span class="ttl">TTL: '+a.TTL+'s</span></div>').join('');}
+else{document.getElementById('results').innerHTML='<div class="status err">No '+activeType+' records found for '+domain+'</div>';}
+}catch(e){document.getElementById('results').innerHTML='<div class="status err">Error: '+e.message+'</div>';}}
+async function whoisLookup(){
+const domain=document.getElementById('domain').value.trim();if(!domain)return;
+document.getElementById('whois').innerHTML='<div class="status pending">Fetching WHOIS...</div>';
+try{
+const res=await fetch('https://rdap.org/domain/'+domain);
+if(res.ok){const data=await res.json();let info='';if(data.registrantName)info+='Registrant: '+data.registrantName+'\n';if(data.events)data.events.forEach(e=>info+=e.eventAction+': '+e.eventDate+'\n');if(data.nameservers)info+='Nameservers: '+data.nameservers.map(n=>n.ldhName).join(', ')+'\n';if(data.status)info+='Status: '+data.status.join(', ');document.getElementById('whois').innerHTML='<div class="status ok">WHOIS found</div><pre style="white-space:pre-wrap;font-family:monospace;font-size:.8rem;color:#a5b4fc;margin-top:8px">'+(info||JSON.stringify(data,null,2).slice(0,500))+'</pre>';}
+else{document.getElementById('whois').innerHTML='<div class="status err">WHOIS not available for this domain (try whois.com)</div>';}
+}catch(e){document.getElementById('whois').innerHTML='<div class="status err">Error: '+e.message+'</div>';}}
+lookup();
 </script>
-</body>
-</html>
+</body></html>

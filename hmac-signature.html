@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HMAC Signature — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:700px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}.fg{margin-bottom:14px}.fg label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}.fg input,.fg select,.fg textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;font-family:monospace}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.btn.sec{background:#334155}.out{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;font-family:monospace;font-size:.85rem;color:#a5b4fc;word-break:break-all;margin-top:8px}.hash-row{display:flex;gap:8px;align-items:center;margin-bottom:12px}.hash-row .out{flex:1;margin:0}.copy-btn{padding:6px 12px;background:#334155;border:none;border-radius:6px;color:#94a3b8;cursor:pointer;font-size:.8rem;white-space:nowrap}.verify-box{margin-top:20px;padding-top:16px;border-top:1px solid #334155}.result{padding:8px 12px;border-radius:6px;margin-top:8px;font-size:.85rem}.result.ok{background:#052e16;color:#4ade80}.result.fail{background:#450a0a;color:#f87171}</style>
+</head>
+<body>
+<div class="c">
+<h1>HMAC Signature Generator</h1><p class="sub">Generate and verify HMAC signatures for webhooks and APIs</p>
+<div class="card"><h2>Generate Signature</h2>
+<div class="fg"><label>Message / Payload</label><textarea id="message" rows="4" oninput="generate()">{"event":"payment.success","data":{"id":"pi_123456","amount":50000,"currency":"ngn"}}</textarea></div>
+<div class="fg"><label>Secret Key</label><input id="secret" value="whsec_harz_secret_key" oninput="generate()"></div>
+<div class="fg"><label>Algorithm</label><select id="algo" onchange="generate()"><option value="SHA-256">SHA-256</option><option value="SHA-512">SHA-512</option><option value="SHA-1">SHA-1</option></select></div>
+<div class="fg"><label>Output Format</label><select id="format" onchange="generate()"><option value="hex">Hex</option><option value="base64">Base64</option></select></div>
+<div class="hash-row"><div class="out" id="signature"></div><button class="copy-btn" onclick="copySig()">Copy</button></div>
+<div class="out" id="fullHeader" style="font-size:.8rem"></div>
+</div>
+<div class="card"><h2>Verify Signature</h2>
+<div class="fg"><label>Message</label><textarea id="verifyMsg" rows="2" oninput="verify()"></textarea></div>
+<div class="fg"><label>Secret Key</label><input id="verifySecret" oninput="verify()"></div>
+<div class="fg"><label>Expected Signature</label><input id="verifySig" oninput="verify()"></div>
+<div id="verifyResult"></div></div>
+</div>
+<script>
+async function hmac(message,secret,algo){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(secret),{name:'HMAC',hash:algo},false,['sign']);const sig=await crypto.subtle.sign('HMAC',key,enc.encode(message));const bytes=new Uint8Array(sig);const fmt=document.getElementById('format').value;if(fmt==='hex')return Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');return btoa(String.fromCharCode(...bytes));}
+function generate(){const msg=document.getElementById('message').value;const secret=document.getElementById('secret').value;const algo=document.getElementById('algo').value;hmac(msg,secret,algo).then(sig=>{document.getElementById('signature').textContent=sig;const prefix=algo.replace('SHA-','sha').toLowerCase();document.getElementById('fullHeader').textContent='X-Signature: '+prefix+'='+sig;});}
+function copySig(){navigator.clipboard.writeText(document.getElementById('signature').textContent);alert('Signature copied!');}
+async function verify(){const msg=document.getElementById('verifyMsg').value;const secret=document.getElementById('verifySecret').value;const expected=document.getElementById('verifySig').value.trim();if(!msg||!secret||!expected){document.getElementById('verifyResult').innerHTML='';return;}const algo='SHA-256';const computed=await hmac(msg,secret,algo);const el=document.getElementById('verifyResult');if(computed===expected||computed.toLowerCase()===expected.toLowerCase()){el.innerHTML='<div class="result ok">✅ Signature VALID — verification passed</div>';}else{el.innerHTML='<div class="result fail">❌ Signature INVALID — signatures do not match</div><div style="font-size:.8rem;color:#94a3b8;margin-top:4px">Expected: '+expected.slice(0,40)+'...<br>Computed: '+computed.slice(0,40)+'...</div>';}}
+generate();
+</script>
+</body></html>

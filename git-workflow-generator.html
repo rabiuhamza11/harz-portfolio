@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git Workflow Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 16px;background:#334155;border:none;border-radius:8px 8px 0 0;color:#94a3b8;cursor:pointer;font-size:.85rem}
+.tab.active{background:#3b82f6;color:#fff}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Git Workflow Generator</h1>
+<p class="sub">Generate commit messages, changelogs, branch names, and PR templates</p>
+<div class="tabs">
+<button class="tab active" onclick="showTab('commit')">Commit Message</button>
+<button class="tab" onclick="showTab('branch')">Branch Name</button>
+<button class="tab" onclick="showTab('pr')">PR Template</button>
+<button class="tab" onclick="showTab('changelog')">Changelog</button>
+</div>
+
+<div id="commitTab" class="tab-content">
+<div class="card">
+<h2>Conventional Commit Message</h2>
+<div class="form-group"><label>Type</label><select id="commitType" onchange="genCommit()"><option value="feat">feat — New feature</option><option value="fix">fix — Bug fix</option><option value="docs">docs — Documentation</option><option value="style">style — Formatting</option><option value="refactor">refactor — Code refactoring</option><option value="test">test — Tests</option><option value="chore">chore — Build/tooling</option><option value="perf">perf — Performance</option><option value="ci">ci — CI/CD</option><option value="revert">revert — Revert</option></select></div>
+<div class="form-group"><label>Scope (optional)</label><input id="commitScope" placeholder="e.g. auth, payments, ui" oninput="genCommit()"></div>
+<div class="form-group"><label>Description</label><input id="commitDesc" placeholder="Brief description of the change" value="add payment verification endpoint" oninput="genCommit()"></div>
+<div class="form-group"><label>Body (optional)</label><textarea id="commitBody" rows="3" placeholder="Detailed explanation" oninput="genCommit()"></textarea></div>
+<div class="form-group"><label>Breaking Change (optional)</label><input id="commitBreaking" placeholder="What breaks" oninput="genCommit()"></div>
+</div>
+<div class="card">
+<h2>Generated Commit</h2>
+<div class="output" id="commitOut"></div>
+<button class="btn" onclick="copyText('commitOut')" style="margin-top:10px">Copy</button>
+</div>
+</div>
+
+<div id="branchTab" class="tab-content" style="display:none">
+<div class="card">
+<h2>Git Branch Name</h2>
+<div class="form-group"><label>Branch Type</label><select id="branchType" onchange="genBranch()"><option value="feature">feature</option><option value="bugfix">bugfix</option><option value="hotfix">hotfix</option><option value="release">release</option><option value="chore">chore</option><option value="docs">docs</option></select></div>
+<div class="form-group"><label>Ticket/Issue Number (optional)</label><input id="branchTicket" placeholder="123" oninput="genBranch()"></div>
+<div class="form-group"><label>Description</label><input id="branchDesc" placeholder="add payment verification" value="add payment verification" oninput="genBranch()"></div>
+</div>
+<div class="card">
+<h2>Generated Branch Name</h2>
+<div class="output" id="branchOut"></div>
+<button class="btn" onclick="copyText('branchOut')" style="margin-top:10px">Copy</button>
+</div>
+</div>
+
+<div id="prTab" class="tab-content" style="display:none">
+<div class="card">
+<h2>Pull Request Template</h2>
+<div class="output" id="prOut"></div>
+<button class="btn" onclick="copyText('prOut')" style="margin-top:10px">Copy PR Template</button>
+<button class="btn secondary" onclick="downloadPR()" style="margin-top:10px">Download .github/pull_request_template.md</button>
+</div>
+</div>
+
+<div id="changelogTab" class="tab-content" style="display:none">
+<div class="card">
+<h2>Changelog Template (Keep a Changelog format)</h2>
+<div class="output" id="changelogOut"></div>
+<button class="btn" onclick="copyText('changelogOut')" style="margin-top:10px">Copy CHANGELOG.md</button>
+<button class="btn secondary" onclick="downloadChangelog()" style="margin-top:10px">Download CHANGELOG.md</button>
+</div>
+</div>
+</div>
+<script>
+function showTab(tab){document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',['commit','branch','pr','changelog'][i]===tab);});document.getElementById('commitTab').style.display=tab==='commit'?'block':'none';document.getElementById('branchTab').style.display=tab==='branch'?'block':'none';document.getElementById('prTab').style.display=tab==='pr'?'block':'none';document.getElementById('changelogTab').style.display=tab==='changelog'?'block':'none';}
+function genCommit(){const type=document.getElementById('commitType').value;const scope=document.getElementById('commitScope').value;const desc=document.getElementById('commitDesc').value;const body=document.getElementById('commitBody').value;const breaking=document.getElementById('commitBreaking').value;let msg=type+(scope?'('+scope+')':'')+': '+desc;if(breaking)msg+='\n\nBREAKING CHANGE: '+breaking;if(body)msg+='\n\n'+body;document.getElementById('commitOut').textContent=msg;}
+function genBranch(){const type=document.getElementById('branchType').value;const ticket=document.getElementById('branchTicket').value;const desc=document.getElementById('branchDesc').value.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');let branch=type+'/'+desc;if(ticket)branch=type+'/'+ticket+'-'+desc;document.getElementById('branchOut').textContent=branch;}
+function genPR(){document.getElementById('prOut').textContent='## Description\n\nPlease include a summary of the changes and the related issue.\n\n## Type of Change\n\n- [ ] Bug fix (non-breaking change which fixes an issue)\n- [ ] New feature (non-breaking change which adds functionality)\n- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)\n- [ ] Documentation update\n\n## Checklist\n\n- [ ] My code follows the style guidelines of this project\n- [ ] I have performed a self-review of my own code\n- [ ] I have commented my code, particularly in hard-to-understand areas\n- [ ] I have made corresponding changes to the documentation\n- [ ] My changes generate no new warnings\n- [ ] I have added tests that prove my fix is effective or my feature works\n- [ ] New and existing unit tests pass locally with my changes\n\n## Screenshots (if applicable)\n\nAdd screenshots here.\n\n## Additional Notes\n\nAny additional information or context.';}
+function genChangelog(){const today=new Date().toISOString().split('T')[0];document.getElementById('changelogOut').textContent='# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n## [Unreleased]\n\n### Added\n- New features not yet released\n\n### Changed\n- Changes in existing functionality\n\n### Deprecated\n- Soon-to-be removed features\n\n### Removed\n- Now removed features\n\n### Fixed\n- Any bug fixes\n\n### Security\n- Vulnerability fixes\n\n## [1.0.0] - '+today+'\n\n### Added\n- Initial release\n';}
+function copyText(id){navigator.clipboard.writeText(document.getElementById(id).textContent);alert('Copied!');}
+function downloadPR(){var b=new Blob([document.getElementById('prOut').textContent],{type:'text/markdown'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='pull_request_template.md';a.click();}
+function downloadChangelog(){var b=new Blob([document.getElementById('changelogOut').textContent],{type:'text/markdown'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='CHANGELOG.md';a.click();}
+genCommit();genBranch();genPR();genChangelog();
+</script>
+</body>
+</html>

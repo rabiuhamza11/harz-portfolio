@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Case Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#3b82f6}
+.form-group.full{grid-column:1/-1}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:600px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+.test-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:.8rem}
+.test-table th{padding:8px;text-align:left;color:#94a3b8;border-bottom:1px solid #334155}
+.test-table td{padding:8px;color:#a5b4fc;border-bottom:1px solid #1e293b;vertical-align:top}
+.test-table input,.test-table select,.test-table textarea{width:100%;padding:6px 8px;background:#0f172a;border:1px solid #334155;border-radius:4px;color:#e2e8f0;font-size:.8rem}
+.priority-p0{color:#f87171}.priority-p1{color:#fbbf24}.priority-p2{color:#60a5fa}.priority-p3{color:#94a3b8}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}.test-table{font-size:.75rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Test Case Generator</h1>
+<p class="sub">Generate structured test cases for QA and development</p>
+<div class="card">
+<h2>Test Suite Info</h2>
+<div class="form-grid">
+<div class="form-group"><label>Feature / Module</label><input id="feature" value="Payment Processing" oninput="generate()"></div>
+<div class="form-group"><label>Test Framework</label><select id="framework" onchange="generate()"><option value="manual">Manual (Markdown)</option><option value="jest">Jest (JavaScript)</option><option value="pytest">pytest (Python)</option><option value="cypress">Cypress (E2E)</option></select></div>
+</div>
+</div>
+<div class="card">
+<h2>Test Cases</h2>
+<table class="test-table">
+<thead><tr><th>ID</th><th>Title</th><th>Steps</th><th>Expected</th><th>Priority</th><th>Type</th><th></th></tr></thead>
+<tbody id="testBody"></tbody>
+</table>
+<button class="btn secondary" onclick="addTest()" style="margin-top:10px">+ Add Test Case</button>
+</div>
+<div class="card">
+<h2>Generated Test Cases</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy</button>
+<button class="btn secondary" onclick="downloadFile()">Download</button>
+<button class="btn" onclick="generateQuick()">Auto-Generate Cases</button>
+</div>
+</div>
+</div>
+<script>
+let tests=[{title:'Successful payment with valid card',steps:'1. Navigate to checkout\n2. Enter valid card details\n3. Click pay\n4. Verify response',expected:'Payment succeeds, receipt generated, status=success',priority:'P0',type:'Positive'},{title:'Payment with expired card',steps:'1. Navigate to checkout\n2. Enter expired card\n3. Click pay',expected:'Error: Card expired. No charge made.',priority:'P0',type:'Negative'},{title:'Payment with insufficient funds',steps:'1. Enter valid card with low balance\n2. Click pay',expected:'Error: Insufficient funds',priority:'P1',type:'Negative'},{title:'Network timeout during payment',steps:'1. Start payment\n2. Simulate network timeout',expected:'Transaction marked pending, retry option shown',priority:'P2',type:'Edge'}];
+function addTest(){tests.push({title:'',steps:'',expected:'',priority:'P2',type:'Positive'});render();generate();}
+function deleteTest(i){tests.splice(i,1);render();generate();}
+function render(){document.getElementById('testBody').innerHTML=tests.map((t,i)=>'<tr><td>TC'+String(i+1).padStart(3,'0')+'</td><td><input value="'+t.title+'" oninput="tests['+i+'].title=this.value;generate()"></td><td><textarea rows="3" oninput="tests['+i+'].steps=this.value;generate()">'+t.steps+'</textarea></td><td><input value="'+t.expected+'" oninput="tests['+i+'].expected=this.value;generate()"></td><td><select onchange="tests['+i+'].priority=this.value;render();generate()"><option value="P0" '+(t.priority==='P0'?'selected':'')+'>P0</option><option value="P1" '+(t.priority==='P1'?'selected':'')+'>P1</option><option value="P2" '+(t.priority==='P2'?'selected':'')+'>P2</option><option value="P3" '+(t.priority==='P3'?'selected':'')+'>P3</option></select></td><td><select onchange="tests['+i+'].type=this.value;generate()"><option value="Positive" '+(t.type==='Positive'?'selected':'')+'>Positive</option><option value="Negative" '+(t.type==='Negative'?'selected':'')+'>Negative</option><option value="Edge" '+(t.type==='Edge'?'selected':'')+'>Edge</option><option value="Smoke" '+(t.type==='Smoke'?'selected':'')+'>Smoke</option></select></td><td><button class="delete-btn" onclick="deleteTest('+i+')" style="background:none;border:none;color:#f87171;cursor:pointer">x</button></td></tr>').join('');}
+function generate(){const feature=document.getElementById('feature').value;const fw=document.getElementById('framework').value;let out='';if(fw==='manual'){out='# Test Cases: '+feature+'\n\n| ID | Title | Priority | Type | Steps | Expected Result |\n|-----|-------|----------|------|-------|----------------|\n';tests.forEach((t,i)=>{out+='| TC'+String(i+1).padStart(3,'0')+' | '+t.title+' | '+t.priority+' | '+t.type+' | '+t.steps.replace(/\n/g,' ')+' | '+t.expected+' |\n';});out+='\n## Summary\nTotal: '+tests.length+' cases\nP0: '+tests.filter(t=>t.priority==='P0').length+' | P1: '+tests.filter(t=>t.priority==='P1').length+' | P2: '+tests.filter(t=>t.priority==='P2').length+'\nPositive: '+tests.filter(t=>t.type==='Positive').length+' | Negative: '+tests.filter(t=>t.type==='Negative').length+' | Edge: '+tests.filter(t=>t.type==='Edge').length+'\n';}else if(fw==='jest'){out='// Test Suite: '+feature+'\ndescribe(\''+feature+'\', () => {\n';tests.forEach((t,i)=>{out+='\n  // TC'+String(i+1).padStart(3,'0')+' ['+t.priority+' '+t.type+']\n  test(\''+t.title+'\', async () => {\n'+t.steps.split('\n').map(s=>'    // '+s).join('\n')+'\n    // Expected: '+t.expected+'\n    expect(true).toBe(true);\n  });\n';});out+='});\n';}else if(fw==='pytest'){out='# Test Suite: '+feature+'\nimport pytest\n\n';tests.forEach((t,i)=>{out+='def test_'+String(i+1).padStart(3,'0').toLowerCase()+'_'+t.title.toLowerCase().replace(/[^a-z0-9]/g,'_')+'():\n    """\n    TC'+String(i+1).padStart(3,'0')+' ['+t.priority+' '+t.type+']\n    '+t.title+'\n    Steps:\n'+t.steps.split('\n').map(s=>'      '+s).join('\n')+'\n    Expected: '+t.expected+'\n    """\n    assert True\n\n';});}else if(fw==='cypress'){out='// Test Suite: '+feature+'\ndescribe(\''+feature+'\', () => {\n';tests.forEach((t,i)=>{out+='\n  it(\''+t.title+' ['+t.priority+']\', () => {\n'+t.steps.split('\n').map(s=>'    cy.'+s.toLowerCase().replace(/^(\d+\.\s*)/,'')).join('\n')+'\n    // Expected: '+t.expected+'\n  });\n';});out+='});\n';}document.getElementById('output').textContent=out;}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Test cases copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='test-cases.'+(document.getElementById('framework').value==='jest'?'test.js':document.getElementById('framework').value==='pytest'?'py':'md');a.click();}
+function generateQuick(){const templates=[{title:'Empty form submission',steps:'1. Leave all fields empty\n2. Submit form',expected:'Validation errors shown, no submission',priority:'P1',type:'Negative'},{title:'SQL injection attempt',steps:'1. Enter SQL payload in input\n2. Submit',expected:'Input sanitized, no SQL executed',priority:'P0',type:'Security'},{title:'XSS attempt in text field',steps:'1. Enter script tag in input\n2. Submit and view output',expected:'Script escaped, no execution',priority:'P0',type:'Security'},{title:'Concurrent requests',steps:'1. Send 100 simultaneous requests\n2. Check all complete',expected:'All requests processed, no race conditions',priority:'P2',type:'Edge'},{title:'Large file upload',steps:'1. Upload file > 10MB\n2. Wait for processing',expected:'File rejected or processed with timeout handling',priority:'P2',type:'Edge'}];templates.forEach(t=>tests.push(t));render();generate();}
+render();generate();
+</script>
+</body>
+</html>

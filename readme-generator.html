@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>README Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#3b82f6}
+.form-group.full{grid-column:1/-1}
+.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.checkbox input{width:18px;height:18px;accent-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:600px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>README Generator</h1>
+<p class="sub">Generate a professional README.md for your project</p>
+<div class="card">
+<h2>Project Info</h2>
+<div class="form-grid">
+<div class="form-group"><label>Project Name</label><input id="projName" value="My Project" oninput="generate()"></div>
+<div class="form-group"><label>License</label><select id="license" onchange="generate()"><option value="MIT">MIT</option><option value="Apache-2.0">Apache 2.0</option><option value="GPL-3.0">GPL 3.0</option><option value="BSD-3-Clause">BSD 3-Clause</option><option value="none">None</option></select></div>
+<div class="form-group full"><label>Tagline / Description</label><input id="tagline" value="A brief description of what this project does" oninput="generate()"></div>
+<div class="form-group"><label>Author</label><input id="author" value="Your Name" oninput="generate()"></div>
+<div class="form-group"><label>Author URL</label><input id="authorUrl" value="https://github.com/yourname" oninput="generate()"></div>
+<div class="form-group"><label>Install Command</label><input id="install" value="npm install" oninput="generate()"></div>
+<div class="form-group"><label>Run Command</label><input id="run" value="npm start" oninput="generate()"></div>
+<div class="form-group"><label>Build Command</label><input id="build" value="npm run build" oninput="generate()"></div>
+<div class="form-group"><label>Test Command</label><input id="test" value="npm test" oninput="generate()"></div>
+<div class="form-group"><label>Node Version</label><input id="nodeVer" value=">=18.0.0" oninput="generate()"></div>
+<div class="form-group full"><label>Features (one per line)</label><textarea id="features" rows="4" oninput="generate()">Fast and lightweight
+Easy to use
+Cross-platform
+Well documented</textarea></div>
+<div class="form-group full"><label>Prerequisites</label><textarea id="prereqs" rows="3" oninput="generate()">Node.js >= 18
+npm or yarn</textarea></div>
+</div>
+<div class="checkbox"><input type="checkbox" id="badges" checked onchange="generate()"><label for="badges">Include badges (build, license, version)</label></div>
+<div class="checkbox"><input type="checkbox" id="contributing" checked onchange="generate()"><label for="contributing">Include contributing section</label></div>
+<div class="checkbox"><input type="checkbox" id="toc" onchange="generate()"><label for="toc">Include table of contents</label></div>
+</div>
+<div class="card">
+<h2>Generated README.md</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy Markdown</button>
+<button class="btn secondary" onclick="downloadFile()">Download README.md</button>
+</div>
+</div>
+</div>
+<script>
+function generate(){
+const name=document.getElementById('projName').value;
+const lic=document.getElementById('license').value;
+const tag=document.getElementById('tagline').value;
+const author=document.getElementById('author').value;
+const aUrl=document.getElementById('authorUrl').value;
+const inst=document.getElementById('install').value;
+const run=document.getElementById('run').value;
+const build=document.getElementById('build').value;
+const test=document.getElementById('test').value;
+const nodeV=document.getElementById('nodeVer').value;
+const features=document.getElementById('features').value.split('\n').filter(l=>l.trim());
+const prereqs=document.getElementById('prereqs').value.split('\n').filter(l=>l.trim());
+const badges=document.getElementById('badges').checked;
+const contrib=document.getElementById('contributing').checked;
+const toc=document.getElementById('toc').checked;
+
+let md='';
+if(badges){md+=`![Build Status](https://img.shields.io/badge/build-passing-brightgreen)\n![License](https://img.shields.io/badge/license-${lic}-blue)\n![Version](https://img.shields.io/badge/version-1.0.0-blue)\n\n`;}
+md+=`# ${name}\n\n${tag}\n\n`;
+if(toc){md+=`## Table of Contents\n\n1. [Features](#features)\n2. [Prerequisites](#prerequisites)\n3. [Installation](#installation)\n4. [Usage](#usage)\n5. [Testing](#testing)\n6. [Contributing](#contributing)\n7. [License](#license)\n\n`;}
+md+=`## Features\n\n${features.map(f=>`- ${f}`).join('\n')}\n\n`;
+md+=`## Prerequisites\n\n${prereqs.map(p=>`- ${p}`).join('\n')}\n\n`;
+md+=`## Installation\n\n\`\`\`bash\n${inst}\n\`\`\`\n\n`;
+md+=`## Usage\n\n\`\`\`bash\n${run}\n\`\`\`\n\n`;
+if(build&&build!=='npm start'){md+=`### Build\n\n\`\`\`bash\n${build}\n\`\`\`\n\n`;}
+if(test){md+=`## Testing\n\n\`\`\`bash\n${test}\n\`\`\`\n\n`;}
+if(contrib){md+=`## Contributing\n\nContributions are welcome! Please feel free to submit a Pull Request.\n\n1. Fork the repository\n2. Create your feature branch (git checkout -b feature/amazing-feature)\n3. Commit your changes (git commit -m 'Add amazing feature')\n4. Push to the branch (git push origin feature/amazing-feature)\n5. Open a Pull Request\n\n`;}
+md+=`## License\n\n`;
+if(lic==='none'){md+=`All rights reserved by ${author}.\n`;}
+else{md+=`This project is licensed under the ${lic} License — see the [LICENSE](LICENSE) file for details.\n`;}
+md+=`\n## Author\n\n**${author}** — [${aUrl}](${aUrl})\n`;
+document.getElementById('output').textContent=md;
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('README.md copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'text/markdown'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='README.md';a.click();}
+generate();
+</script>
+</body>
+</html>

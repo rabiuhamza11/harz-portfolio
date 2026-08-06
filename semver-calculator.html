@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semver Calculator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:700px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;font-family:monospace}
+.form-group input:focus{outline:none;border-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.version-display{text-align:center;padding:30px;background:#0f172a;border:1px solid #334155;border-radius:12px;margin-top:16px}
+.version{font-size:2.5rem;font-family:monospace;font-weight:bold}
+.version .major{color:#f87171}.version .minor{color:#fbbf24}.version .patch{color:#4ade80}.version .pre{color:#a78bfa}
+.result-box{padding:12px 16px;border-radius:8px;margin-top:8px;font-size:.9rem}
+.result-box.ok{background:#052e16;color:#4ade80}
+.result-box.fail{background:#450a0a;color:#f87171}
+.history{font-size:.8rem;color:#94a3b8;margin-top:12px}
+.history-item{padding:4px 8px;font-family:monospace}
+.diff{padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px;margin-top:8px;font-family:monospace;font-size:.85rem;color:#a5b4fc}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Semver Calculator</h1>
+<p class="sub">Semantic versioning helper — bump, compare, and validate versions</p>
+<div class="card">
+<h2>Current Version</h2>
+<div class="version-display"><div class="version" id="versionDisplay"><span class="major">1</span>.<span class="minor">0</span>.<span class="patch">0</span></div></div>
+<div class="form-grid" style="margin-top:16px">
+<div class="form-group"><label>Current Version</label><input id="version" value="1.0.0" oninput="parse()"></div>
+<div class="form-group"><label>Pre-release Tag (optional)</label><input id="prerelease" placeholder="alpha, beta, rc.1" oninput="parse()"></div>
+</div>
+<div class="result-box" id="validResult"></div>
+</div>
+<div class="card">
+<h2>Bump Version</h2>
+<div class="form-grid">
+<div class="form-group"><label>Bump Type</label><select id="bumpType"><option value="patch">Patch (1.0.0 → 1.0.1)</option><option value="minor">Minor (1.0.0 → 1.1.0)</option><option value="major">Major (1.0.0 → 2.0.0)</option><option value="prerelease">Pre-release</option></select></div>
+<div class="form-group"><label>Pre-release Type</label><select id="preType"><option value="alpha">alpha</option><option value="beta">beta</option><option value="rc">rc</option></select></div>
+</div>
+<button class="btn" onclick="bump()">Bump Version</button>
+<div class="diff" id="bumpResult"></div>
+</div>
+<div class="card">
+<h2>Compare Versions</h2>
+<div class="form-grid">
+<div class="form-group"><label>Version A</label><input id="vA" value="1.2.3" oninput="compare()"></div>
+<div class="form-group"><label>Version B</label><input id="vB" value="1.3.0" oninput="compare()"></div>
+</div>
+<div class="diff" id="compareResult"></div>
+</div>
+<div class="card">
+<h2>Version Range Checker</h2>
+<div class="form-grid">
+<div class="form-group"><label>Version Range</label><input id="range" value="^1.2.0" oninput="checkRange()"></div>
+<div class="form-group"><label>Test Version</label><input id="testVer" value="1.5.0" oninput="checkRange()"></div>
+</div>
+<div class="diff" id="rangeResult"></div>
+</div>
+</div>
+<script>
+let history=['1.0.0'];
+function parse(){const v=document.getElementById('version').value;const pre=document.getElementById('prerelease').value;const m=v.match(/^(\d+)\.(\d+)\.(\d+)/);if(!m){document.getElementById('validResult').className='result-box fail';document.getElementById('validResult').textContent='Invalid version format. Use MAJOR.MINOR.PATCH';return;}document.getElementById('validResult').className='result-box ok';document.getElementById('validResult').textContent='Valid version ✓ | Major: '+m[1]+' | Minor: '+m[2]+' | Patch: '+m[3]+(pre?' | Pre-release: '+pre:'');document.getElementById('versionDisplay').innerHTML='<span class="major">'+m[1]+'</span>.<span class="minor">'+m[2]+'</span>.<span class="patch">'+m[3]+'</span>'+(pre?'<span class="pre">-'+pre+'</span>':'');}
+function bump(){const v=document.getElementById('version').value;const pre=document.getElementById('prerelease').value;const preType=document.getElementById('preType').value;const bumpType=document.getElementById('bumpType').value;const m=v.match(/^(\d+)\.(\d+)\.(\d+)/);if(!m)return;let major=parseInt(m[1]),minor=parseInt(m[2]),patch=parseInt(m[3]);if(bumpType==='major'){major++;minor=0;patch=0;}else if(bumpType==='minor'){minor++;patch=0;}else if(bumpType==='patch'){patch++;}else if(bumpType==='prerelease'){patch++;pre=preType+'.1';}const newV=major+'.'+minor+'.'+patch+(pre?'-'+pre:'');document.getElementById('bumpResult').textContent=v+' → '+newV;document.getElementById('version').value=newV;document.getElementById('prerelease').value=pre||'';history.push(newV);parse();}
+function parseVer(v){const m=v.match(/^(\d+)\.(\d+)\.(\d+)(?:-(.+))?$/);return m?[parseInt(m[1]),parseInt(m[2]),parseInt(m[3]),m[4]||'']:null;}
+function compare(){const a=parseVer(document.getElementById('vA').value);const b=parseVer(document.getElementById('vB').value);if(!a||!b){document.getElementById('compareResult').textContent='Invalid version(s)';return;}const cmp=cmpVersions(a,b);let result='';if(cmp===0)result='Versions are EQUAL';else if(cmp>0)result=document.getElementById('vA').value+' is NEWER than '+document.getElementById('vB').value+' (difference: '+diffStr(a,b)+')';else result=document.getElementById('vA').value+' is OLDER than '+document.getElementById('vB').value+' (difference: '+diffStr(b,a)+')';document.getElementById('compareResult').textContent=result;}
+function cmpVersions(a,b){for(let i=0;i<3;i++){if(a[i]>b[i])return 1;if(a[i]<b[i])return-1;}if(a[3]&&!b[3])return-1;if(!a[3]&&b[3])return 1;return 0;}
+function diffStr(a,b){const dM=a[0]-b[0],dm=a[1]-b[1],dp=a[2]-b[2];if(dM>0)return '+'+dM+' major';if(dm>0)return '+'+dm+' minor';if(dp>0)return '+'+dp+' patch';return 'equal';}
+function checkRange(){const range=document.getElementById('range').value;const v=document.getElementById('testVer').value;const pv=parseVer(v);if(!pv){document.getElementById('rangeResult').textContent='Invalid version';return;}let match=false;if(range.startsWith('^')){const base=parseVer(range.slice(1));if(base&&pv[0]===base[0])match=pv[1]>base[1]||(pv[1]===base[1]&&pv[2]>=base[2]);}else if(range.startsWith('~')){const base=parseVer(range.slice(1));if(base&&pv[0]===base[0]&&pv[1]===base[1])match=pv[2]>=base[2];}else{const base=parseVer(range);if(base)match=cmpVersions(pv,base)>=0;}document.getElementById('rangeResult').textContent=range+' includes '+v+'? '+(match?'✅ YES':'❌ NO')+(match?'\n'+v+' is compatible with '+range:'\n'+v+' is NOT compatible with '+range);}
+parse();compare();checkRange();
+</script>
+</body>
+</html>

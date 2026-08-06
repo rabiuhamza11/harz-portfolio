@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Accessibility Checker — HARZ Toolkit</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}.c{max-width:800px;margin:0 auto}h1{text-align:center;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}textarea{width:100%;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.85rem;font-family:monospace;min-height:150px;resize:vertical}.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}.check{display:flex;gap:8px;align-items:flex-start;padding:12px;border-radius:8px;margin-bottom:8px}.check.pass{background:#052e16;border:1px solid #166534}.check.fail{background:#450a0a;border:1px solid #991b1b}.check.warn{background:#3b2f0e;border:1px solid #92400e}.icon{font-size:1.2rem;flex-shrink:0}.check-body{flex:1}.check-title{font-weight:600;font-size:.9rem}.check-desc{font-size:.8rem;color:#94a3b8;margin-top:4px}.score{text-align:center;padding:20px;margin-bottom:16px}.score-num{font-size:3rem;font-weight:bold}.score-label{font-size:.9rem;color:#94a3b8}.url-input{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;margin-bottom:12px}</style>
+</head>
+<body>
+<div class="c">
+<h1>Accessibility Checker</h1><p class="sub">Check HTML for WCAG compliance and a11y issues</p>
+<div class="card"><h2>Check URL or HTML</h2>
+<input class="url-input" id="urlInput" placeholder="Enter URL to check (e.g. https://harz-cloud.pages.dev)" onkeypress="if(event.key==='Enter')checkURL()">
+<button class="btn" onclick="checkURL()">Check URL</button>
+<p style="color:#94a3b8;font-size:.85rem;margin:12px 0">or paste HTML directly:</p>
+<textarea id="htmlInput" placeholder="<html>..."><div><img src="logo.png"></div><a href="#">Click here</a><button>Submit</button><input type="text"><img src="banner.jpg" alt="HARZ Banner"><div role="button" onclick="doSomething()">Action</div></textarea>
+<button class="btn" onclick="checkHTML()" style="margin-top:12px">Check HTML</button>
+</div>
+<div id="results" style="display:none">
+<div class="card"><h2>Accessibility Score</h2><div class="score"><div class="score-num" id="scoreNum">--</div><div class="score-label" id="scoreLabel">out of 100</div></div></div>
+<div class="card"><h2>Checks</h2><div id="checks"></div></div>
+</div>
+</div>
+<script>
+async function checkURL(){const url=document.getElementById('urlInput').value.trim();if(!url)return;document.getElementById('results').style.display='block';document.getElementById('checks').innerHTML='<div class="check warn"><div class="icon">⏳</div><div class="check-body"><div class="check-title">Fetching page...</div></div></div>';try{const res=await fetch(url);const html=await res.text();runChecks(html);}catch(e){document.getElementById('checks').innerHTML='<div class="check fail"><div class="icon">❌</div><div class="check-body"><div class="check-title">Cannot fetch URL</div><div class="check-desc">'+e.message+' — CORS may block this. Paste the HTML instead.</div></div></div>';}}
+function checkHTML(){const html=document.getElementById('htmlInput').value;runChecks(html);}
+function runChecks(html){const checks=[];const hasImgs=html.match(/<img[^>]+>/g)||[];const imgsNoAlt=hasImgs.filter(img=>!img.match(/\salt=/));const hasLang=html.match(/<html[^>]+lang=/);const hasTitle=html.match(/<title>[^<]+<\/title>/);const hasMetaViewport=html.match(/<meta[^>]+viewport/);const linksNoText=(html.match(/<a[^>]*>(\s*)<\/a>/g)||[]);const buttonsNoText=(html.match(/<button[^>]*>(\s*)<\/button>/g)||[]);const hasAriaLabels=html.match(/aria-label=/g)||[];const roleAttrs=html.match(/role=/g)||[];const tabindexHigh=html.match(/tabindex=["']?[5-9]/g)||[];const headings=(html.match(/<h[1-6]/g)||[]).map(h=>parseInt(h.match(/\d/)[0]));const hasH1=html.includes('<h1');const headingOrder=headings.every((h,i,arr)=>i===0||h<=arr[i-1]+1);
+checks.push({test:'Images have alt text',pass:imgsNoAlt.length===0,detail:imgsNoAlt.length+' images missing alt attribute'+(imgsNoAlt.length?': '+imgsNoAlt.slice(0,3).join(' '):'')});
+checks.push({test:'HTML has lang attribute',pass:!!hasLang,detail:hasLang?'Found':'Missing lang attribute on <html>'});
+checks.push({test:'Page has title',pass:!!hasTitle,detail:hasTitle?'Found':'Missing <title> tag'});
+checks.push({test:'Meta viewport present',pass:!!hasMetaViewport,detail:hasMetaViewport?'Found':'Missing viewport meta tag for mobile'});
+checks.push({test:'Links have text content',pass:linksNoText.length===0,detail:linksNoText.length+' empty links found'});
+checks.push({test:'Buttons have text content',pass:buttonsNoText.length===0,detail:buttonsNoText.length+' empty buttons found'});
+checks.push({test:'Has H1 heading',pass:hasH1,detail:hasH1?'Found':'Missing primary heading (h1)'});
+checks.push({test:'Heading order is logical',pass:headingOrder,detail:headingOrder?'Correct':'Heading levels skip (e.g. h1 to h3)'});
+checks.push({test:'No problematic tabindex',pass:tabindexHigh.length===0,detail:tabindexHigh.length?'Found tabindex >= 5':'All tabindex values are 0 or negative'});
+checks.push({test:'Interactive elements have labels',pass:hasAriaLabels.length>0||roleAttrs.length>0,detail:(hasAriaLabels.length+roleAttrs.length)+' labeled elements found'});
+const passed=checks.filter(c=>c.pass).length;const score=Math.round((passed/checks.length)*100);
+document.getElementById('scoreNum').textContent=score;document.getElementById('scoreNum').style.color=score>=80?'#4ade80':score>=50?'#fbbf24':'#f87171';
+document.getElementById('checks').innerHTML=checks.map(c=>'<div class="check '+(c.pass?'pass':'fail')+'"><div class="icon">'+(c.pass?'✅':'❌')+'</div><div class="check-body"><div class="check-title">'+c.test+'</div><div class="check-desc">'+c.detail+'</div></div></div>').join('');}
+</script>
+</body></html>

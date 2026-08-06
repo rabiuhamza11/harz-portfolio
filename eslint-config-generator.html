@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESLint Config Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.checkbox input{width:18px;height:18px;accent-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:500px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>ESLint Config Generator</h1>
+<p class="sub">Generate ESLint + Prettier configs for your project</p>
+<div class="card">
+<h2>Configuration</h2>
+<div class="form-grid">
+<div class="form-group"><label>Config Format</label><select id="format" onchange="generate()"><option value="flat">Flat Config (eslint.config.js)</option><option value="legacy">Legacy (.eslintrc.json)</option></select></div>
+<div class="form-group"><label>Environment</label><select id="env" onchange="generate()"><option value="node">Node.js</option><option value="browser">Browser</option><option value="both">Both</option></select></div>
+<div class="form-group"><label>Language</label><select id="lang" onchange="generate()"><option value="js">JavaScript</option><option value="ts">TypeScript</option></select></div>
+<div class="form-group"><label>Framework</label><select id="framework" onchange="generate()"><option value="none">None</option><option value="react">React</option><option value="next">Next.js</option><option value="vue">Vue</option></select></div>
+</div>
+<div class="checkbox"><input type="checkbox" id="prettier" checked onchange="generate()"><label for="prettier">Include Prettier</label></div>
+<div class="checkbox"><input type="checkbox" id="import" checked onchange="generate()"><label for="import">Include import plugin</label></div>
+</div>
+<div class="card">
+<h2>Generated Config</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy Config</button>
+<button class="btn secondary" onclick="downloadFile()">Download</button>
+</div>
+</div>
+<div class="card" id="prettierCard" style="display:none">
+<h2>Prettier Config (.prettierrc)</h2>
+<div class="output" id="prettierOut"></div>
+<button class="btn" onclick="copyPrettier()" style="margin-top:10px">Copy .prettierrc</button>
+</div>
+<div class="card">
+<h2>Install Command</h2>
+<div class="output" id="installCmd"></div>
+<button class="btn" onclick="copyInstall()" style="margin-top:10px">Copy Install Command</button>
+</div>
+</div>
+<script>
+function generate(){
+const format=document.getElementById('format').value;
+const env=document.getElementById('env').value;
+const lang=document.getElementById('lang').value;
+const fw=document.getElementById('framework').value;
+const pret=document.getElementById('prettier').checked;
+const imp=document.getElementById('import').checked;
+
+const deps=['eslint'];
+if(lang==='ts'){deps.push('typescript','@typescript-eslint/parser','@typescript-eslint/eslint-plugin');}
+if(fw==='react'){deps.push('eslint-plugin-react','eslint-plugin-react-hooks');}
+if(fw==='next'){deps.push('eslint-config-next');}
+if(fw==='vue'){deps.push('eslint-plugin-vue');}
+if(pret){deps.push('prettier','eslint-config-prettier','eslint-plugin-prettier');}
+if(imp){deps.push('eslint-plugin-import');}
+
+document.getElementById('installCmd').textContent='npm install --save-dev '+deps.join(' ');
+
+if(format==='flat'){
+let config='import eslint from "@eslint/js";\n';
+if(lang==='ts'){config+='import tseslint from "@typescript-eslint/eslint-plugin";\nimport tsparser from "@typescript-eslint/parser";\n';}
+if(pret){config+='import prettier from "eslint-config-prettier";\n';}
+config+='\nexport default [\n  eslint.configs.recommended';
+if(lang==='ts'){config+=',\n  {\n    files: ["**/*.ts"],\n    languageOptions: { parser: tsparser },\n    plugins: { "@typescript-eslint": tseslint },\n    rules: tseslint.configs.recommended.rules\n  }';}
+if(fw==='react'){config+=',\n  {\n    files: ["**/*.jsx"],\n    plugins: { react: eslintPluginReact },\n    rules: { "react/jsx-key": "error" }\n  }';}
+if(pret){config+=',\n  prettier';}
+config+='\n];\n';
+document.getElementById('output').textContent=config;
+document.getElementById('output').nextSibling;
+}else{
+let config='{\n  "extends": [\n    "eslint:recommended"';
+if(lang==='ts'){config+=',\n    "plugin:@typescript-eslint/recommended"'}
+if(fw==='react'){config+=',\n    "plugin:react/recommended",\n    "plugin:react-hooks/recommended"'}
+if(fw==='next'){config+=',\n    "next/core-web-vitals"'}
+if(fw==='vue'){config+=',\n    "plugin:vue/vue3-recommended"'}
+if(pret){config+=',\n    "prettier",\n    "plugin:prettier/recommended"'}
+config+='\n  ],\n  "parser": "'+(lang==='ts'?'@typescript-eslint/parser':'espree')+'",\n  "parserOptions": {\n    "ecmaVersion": 2022,\n    "sourceType": "module"';
+if(fw==='react'||fw==='next'){config+=',\n    "ecmaFeatures": { "jsx": true }';}
+config+='\n  },\n  "env": {\n    "es2022": true';
+if(env==='node'||env==='both')config+=',\n    "node": true';
+if(env==='browser'||env==='both')config+=',\n    "browser": true';
+config+='\n  },\n  "rules": {\n    "no-unused-vars": "warn",\n    "no-console": "warn"';if(lang==='ts'){config+=',\n    "@typescript-eslint/no-explicit-any": "warn"';}
+if(pret){config+=',\n    "prettier/prettier": "error"';}
+config+='\n  }\n}';
+document.getElementById('output').textContent=config;
+}
+
+if(pret){
+document.getElementById('prettierCard').style.display='block';
+document.getElementById('prettierOut').textContent=JSON.stringify({semi:true,tabWidth:2,singleQuote:true,trailingComma:'es5',printWidth:100,bracketSpacing:true,arrowParens:'always'},null,2);
+}else{
+document.getElementById('prettierCard').style.display='none';
+}
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Config copied!');}
+function copyPrettier(){navigator.clipboard.writeText(document.getElementById('prettierOut').textContent);alert('.prettierrc copied!');}
+function copyInstall(){navigator.clipboard.writeText(document.getElementById('installCmd').textContent);alert('Install command copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'application/javascript'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.getElementById('format').value==='flat'?'eslint.config.js':'.eslintrc.json';a.click();}
+generate();
+</script>
+</body>
+</html>

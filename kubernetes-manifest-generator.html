@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kubernetes Manifest Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;font-family:monospace}
+.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.85rem}
+.checkbox input{width:18px;height:18px;accent-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:600px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Kubernetes Manifest Generator</h1>
+<p class="sub">Generate K8s YAML for Deployments, Services, and more</p>
+<div class="card">
+<h2>Configuration</h2>
+<div class="form-grid">
+<div class="form-group"><label>Resource Type</label><select id="resourceType" onchange="generate()"><option value="deployment">Deployment</option><option value="service">Service</option><option value="ingress">Ingress</option><option value="configmap">ConfigMap</option><option value="secret">Secret</option><option value="job">Job</option><option value="cronjob">CronJob</option><option value="pdb">PodDisruptionBudget</option></select></div>
+<div class="form-group"><label>App Name</label><input id="appName" value="harz-app" oninput="generate()"></div>
+<div class="form-group"><label>Namespace</label><input id="namespace" value="default" oninput="generate()"></div>
+<div class="form-group"><label>Image</label><input id="image" value="harz/app:latest" oninput="generate()"></div>
+<div class="form-group"><label>Replicas</label><input id="replicas" type="number" value="3" oninput="generate()"></div>
+<div class="form-group"><label>Port</label><input id="port" type="number" value="8080" oninput="generate()"></div>
+</div>
+<div class="checkbox"><input type="checkbox" id="service" checked onchange="generate()"><label for="service">Include Service</label></div>
+<div class="checkbox"><input type="checkbox" id="ingress" onchange="generate()"><label for="ingress">Include Ingress</label></div>
+<div class="checkbox"><input type="checkbox" id="resources" checked onchange="generate()"><label for="resources">Include resource limits</label></div>
+<div class="checkbox"><input type="checkbox" id="probes" checked onchange="generate()"><label for="probes">Include health probes</label></div>
+<div class="checkbox"><input type="checkbox" id="hpa" onchange="generate()"><label for="hpa">Include HPA (autoscaling)</label></div>
+</div>
+<div class="card">
+<h2>Generated YAML</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy YAML</button>
+<button class="btn secondary" onclick="downloadFile()">Download k8s.yaml</button>
+</div>
+</div>
+</div>
+<script>
+function generate(){
+const type=document.getElementById('resourceType').value;
+const app=document.getElementById('appName').value;
+const ns=document.getElementById('namespace').value;
+const img=document.getElementById('image').value;
+const replicas=document.getElementById('replicas').value;
+const port=document.getElementById('port').value;
+const svc=document.getElementById('service').checked;
+const ing=document.getElementById('ingress').checked;
+const res=document.getElementById('resources').checked;
+const probes=document.getElementById('probes').checked;
+const hpa=document.getElementById('hpa').checked;
+let y='';
+y+='apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: '+app+'\n  namespace: '+ns+'\n  labels:\n    app: '+app+'\nspec:\n  replicas: '+replicas+'\n  selector:\n    matchLabels:\n      app: '+app+'\n  template:\n    metadata:\n      labels:\n        app: '+app+'\n    spec:\n      containers:\n      - name: '+app+'\n        image: '+img+'\n        ports:\n        - containerPort: '+port+'\n';
+if(res){y+='        resources:\n          requests:\n            cpu: 100m\n            memory: 128Mi\n          limits:\n            cpu: 500m\n            memory: 512Mi\n';}
+if(probes){y+='        livenessProbe:\n          httpGet:\n            path: /health\n            port: '+port+'\n          initialDelaySeconds: 15\n          periodSeconds: 10\n        readinessProbe:\n          httpGet:\n            path: /ready\n            port: '+port+'\n          initialDelaySeconds: 5\n          periodSeconds: 5\n';}
+y+='\n';
+if(svc){
+y+='---\napiVersion: v1\nkind: Service\nmetadata:\n  name: '+app+'-svc\n  namespace: '+ns+'\nspec:\n  selector:\n    app: '+app+'\n  ports:\n  - port: 80\n    targetPort: '+port+'\n    protocol: TCP\n  type: ClusterIP\n\n';
+}
+if(ing){
+y+='---\napiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: '+app+'-ingress\n  namespace: '+ns+'\n  annotations:\n    nginx.ingress.kubernetes.io/rewrite-target: /\nspec:\n  ingressClassName: nginx\n  rules:\n  - host: '+app+'.example.com\n    http:\n      paths:\n      - path: /\n        pathType: Prefix\n        backend:\n          service:\n            name: '+app+'-svc\n            port:\n              number: 80\n\n';
+}
+if(hpa){
+y+='---\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: '+app+'-hpa\n  namespace: '+ns+'\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: '+app+'\n  minReplicas: 2\n  maxReplicas: 10\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 70\n';
+}
+document.getElementById('output').textContent=y;
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('K8s YAML copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='k8s.yaml';a.click();}
+generate();
+</script>
+</body>
+</html>

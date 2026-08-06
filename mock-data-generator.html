@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock Data Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.field-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.field-row select,.field-row input{flex:1;padding:8px 10px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:.85rem}
+.btn{padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.btn.sm{padding:6px 14px;font-size:.8rem}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}.field-row{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Mock Data Generator</h1>
+<p class="sub">Generate fake data for testing and development</p>
+<div class="card">
+<h2>Settings</h2>
+<div class="form-grid">
+<div class="form-group"><label>Output Format</label><select id="format" onchange="generate()"><option value="json">JSON</option><option value="csv">CSV</option><option value="sql">SQL INSERT</option></select></div>
+<div class="form-group"><label>Number of Records</label><input id="count" type="number" value="10" min="1" max="1000" oninput="generate()"></div>
+</div>
+</div>
+<div class="card">
+<h2>Schema Fields</h2>
+<div id="fields"></div>
+<button class="btn secondary sm" onclick="addField()" style="margin-top:8px">+ Add Field</button>
+</div>
+<div class="card">
+<h2>Generated Data</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy Data</button>
+<button class="btn secondary" onclick="downloadFile()">Download</button>
+<button class="btn" onclick="generate()">Regenerate</button>
+</div>
+</div>
+</div>
+<script>
+let fields=[{name:'id',type:'uuid'},{name:'name',type:'fullName'},{name:'email',type:'email'},{name:'phone',type:'phone'},{name:'amount',type:'number'},{name:'status',type:'status'},{name:'createdAt',type:'date'}];
+const types=['uuid','fullName','firstName','lastName','email','phone','number','currency','status','date','timestamp','boolean','username','company','address','city','country','url','paragraph','lorem','color','avatar','age','job'];
+function addField(){fields.push({name:'',type:'fullName'});renderFields();generate();}
+function deleteField(i){fields.splice(i,1);renderFields();generate();}
+function renderFields(){document.getElementById('fields').innerHTML=fields.map((f,i)=>'<div class="field-row"><input value="'+f.name+'" placeholder="field_name" oninput="fields['+i+'].name=this.value;generate()" style="max-width:150px"><select onchange="fields['+i+'].type=this.value;generate()">'+types.map(t=>'<option value="'+t+'" '+(f.type===t?'selected':'')+'>'+t+'</option>').join('')+'</select><button class="btn secondary sm" onclick="deleteField('+i+')">x</button></div>').join('');}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function genValue(type){
+const firstNames=['James','Mary','John','Sarah','David','Aisha','Michael','Fatima','Rabiu','Halima','Emmanuel','Grace','Yusuf','Amina'];
+const lastNames=['Smith','Johnson','Hamza','Okafor','Williams','Musa','Brown','Abdullah','Ibrahim','Sani','Tayo','Bello'];
+switch(type){
+case 'uuid':return crypto.randomUUID();
+case 'fullName':return firstNames[rand(0,firstNames.length-1)]+' '+lastNames[rand(0,lastNames.length-1)];
+case 'firstName':return firstNames[rand(0,firstNames.length-1)];
+case 'lastName':return lastNames[rand(0,lastNames.length-1)];
+case 'email':return 'user'+rand(1,999)+'@example.com';
+case 'phone':return '+234'+rand(700,909)+rand(1000000,9999999);
+case 'number':return rand(1,10000);
+case 'currency':return (Math.random()*10000).toFixed(2);
+case 'status':return ['pending','active','completed','cancelled'][rand(0,3)];
+case 'date':return new Date(Date.now()-rand(0,365*86400000)).toISOString().split('T')[0];
+case 'timestamp':return new Date(Date.now()-rand(0,365*86400000)).toISOString();
+case 'boolean':return Math.random()>0.5;
+case 'username':return 'user_'+rand(100,99999);
+case 'company':return ['TechCorp','DataInc','HarzGroup','CloudSys','DevHub','NexaSoft'][rand(0,5)];
+case 'address':return rand(1,999)+' Main Street, Lagos';
+case 'city':return ['Lagos','Abuja','Kano','Kaduna','Port Harcourt','Ibadan'][rand(0,5)];
+case 'country':return 'Nigeria';
+case 'url':return 'https://example.com/'+rand(1,9999);
+case 'paragraph':return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+case 'lorem':return Array.from({length:rand(3,10)},()=>'lorem ipsum dolor sit amet').join(' ');
+case 'color':return '#'+rand(0,16777215).toString(16).padStart(6,'0');
+case 'avatar':return 'https://i.pravatar.cc/150?u='+rand(1,1000);
+case 'age':return rand(18,65);
+case 'job':return ['Developer','Designer','Manager','Analyst','Architect','Consultant'][rand(0,5)];
+default:return '';}
+}
+function generate(){
+const count=parseInt(document.getElementById('count').value)||10;
+const format=document.getElementById('format').value;
+const records=[];
+for(let i=0;i<count;i++){
+const rec={};
+fields.filter(f=>f.name).forEach(f=>{rec[f.name]=genValue(f.type);});
+records.push(rec);}
+if(format==='json'){document.getElementById('output').textContent=JSON.stringify(records,null,2);}
+else if(format==='csv'){const headers=fields.filter(f=>f.name).map(f=>f.name);const rows=records.map(r=>headers.map(h=>JSON.stringify(r[h]||'')).join(','));document.getElementById('output').textContent=headers.join(',')+'\n'+rows.join('\n');}
+else if(format==='sql'){const table='mock_data';const cols=fields.filter(f=>f.name).map(f=>f.name);const vals=records.map(r=>'('+cols.map(c=>typeof r[c]==='string'?`'${r[c]}'`:r[c]).join(', ')+')').join(',\n');document.getElementById('output').textContent='INSERT INTO '+table+' ('+cols.join(', ')+') VALUES\n'+vals+';';
+}
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Data copied!');}
+function downloadFile(){const fmt=document.getElementById('format').value;const ext=fmt==='json'?'json':fmt==='csv'?'csv':'sql';var b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='mock-data.'+ext;a.click();}
+renderFields();generate();
+</script>
+</body>
+</html>

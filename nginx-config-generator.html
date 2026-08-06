@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nginx Config Generator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#3b82f6}
+.form-group.full{grid-column:1/-1}
+.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.85rem}
+.checkbox input{width:18px;height:18px;accent-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.secondary{background:#334155}
+.output{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:16px;font-family:monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-all;max-height:500px;overflow-y:auto;color:#a5b4fc}
+.actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Nginx Config Generator</h1>
+<p class="sub">Generate nginx server configs for reverse proxy, static, and SSL</p>
+<div class="card">
+<h2>Server Configuration</h2>
+<div class="form-grid">
+<div class="form-group"><label>Config Type</label><select id="configType" onchange="generate()"><option value="proxy">Reverse Proxy</option><option value="static">Static Files (SPA)</option><option value="php">PHP Application</option><option value="loadbalance">Load Balancer</option></select></div>
+<div class="form-group"><label>Domain</label><input id="domain" value="example.com" oninput="generate()"></div>
+<div class="form-group"><label>Listen Port</label><input id="port" value="80" oninput="generate()"></div>
+<div class="form-group"><label>Proxy Target (for proxy)</label><input id="proxyTarget" value="http://localhost:3000" oninput="generate()"></div>
+<div class="form-group"><label>Root Path (for static)</label><input id="rootPath" value="/var/www/html" oninput="generate()"></div>
+<div class="form-group"><label>Index File</label><input id="indexFile" value="index.html" oninput="generate()"></div>
+</div>
+<div class="checkbox"><input type="checkbox" id="ssl" onchange="generate()"><label for="ssl">Enable SSL/HTTPS</label></div>
+<div class="checkbox"><input type="checkbox" id="www" checked onchange="generate()"><label for="www">Redirect www to non-www</label></div>
+<div class="checkbox"><input type="checkbox" id="gzip" checked onchange="generate()"><label for="gzip">Enable gzip compression</label></div>
+<div class="checkbox"><input type="checkbox" id="cache" checked onchange="generate()"><label for="cache">Enable static asset caching</label></div>
+<div class="checkbox"><input type="checkbox" id="security" checked onchange="generate()"><label for="security">Add security headers</label></div>
+<div class="form-group full"><label>SSL Certificate Path</label><input id="sslCert" value="/etc/letsencrypt/live/example.com/fullchain.pem" oninput="generate()"></div>
+<div class="form-group full"><label>SSL Key Path</label><input id="sslKey" value="/etc/letsencrypt/live/example.com/privkey.pem" oninput="generate()"></div>
+</div>
+<div class="card">
+<h2>Generated nginx.conf</h2>
+<div class="output" id="output"></div>
+<div class="actions">
+<button class="btn" onclick="copyOutput()">Copy Config</button>
+<button class="btn secondary" onclick="downloadFile()">Download nginx.conf</button>
+</div>
+</div>
+</div>
+<script>
+function generate(){
+const type=document.getElementById('configType').value;
+const domain=document.getElementById('domain').value;
+const port=document.getElementById('port').value;
+const proxyTarget=document.getElementById('proxyTarget').value;
+const rootPath=document.getElementById('rootPath').value;
+const indexFile=document.getElementById('indexFile').value;
+const ssl=document.getElementById('ssl').checked;
+const www=document.getElementById('www').checked;
+const gzip=document.getElementById('gzip').checked;
+const cache=document.getElementById('cache').checked;
+const security=document.getElementById('security').checked;
+const sslCert=document.getElementById('sslCert').value;
+const sslKey=document.getElementById('sslKey').value;
+
+let conf='';
+if(www){conf+='server {\n  listen 80;\n  server_name www.'+domain+';\n  return 301 https://'+domain+'$request_uri;\n}\n\n';}
+if(ssl){conf+='server {\n  listen 80;\n  server_name '+domain+';\n  return 301 https://$host$request_uri;\n}\n\n';}
+
+const listenPort=ssl?'443 ssl':port;
+conf+='server {\n  listen '+listenPort+';\n  server_name '+domain+';\n';
+if(ssl){conf+='  ssl_certificate '+sslCert+';\n  ssl_certificate_key '+sslKey+';\n  ssl_protocols TLSv1.2 TLSv1.3;\n  ssl_ciphers HIGH:!aNULL:!MD5;\n\n';}
+if(gzip){conf+='  gzip on;\n  gzip_types text/plain text/css application/json application/javascript text/xml application/xml;\n  gzip_min_length 1000;\n\n';}
+if(security){conf+='  add_header X-Frame-Options "SAMEORIGIN" always;\n  add_header X-Content-Type-Options "nosniff" always;\n  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;\n  add_header Referrer-Policy "strict-origin-when-cross-origin" always;\n\n';}
+if(cache){conf+='  location ~* \\.(jpg|jpeg|png|gif|ico|css|js|svg|woff2?)$ {\n    expires 1y;\n    add_header Cache-Control "public, immutable";\n  }\n\n';}
+
+if(type==='proxy'){conf+='  location / {\n    proxy_pass '+proxyTarget+';\n    proxy_http_version 1.1;\n    proxy_set_header Upgrade $http_upgrade;\n    proxy_set_header Connection "upgrade";\n    proxy_set_header Host $host;\n    proxy_set_header X-Real-IP $remote_addr;\n    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n    proxy_set_header X-Forwarded-Proto $scheme;\n    proxy_cache_bypass $http_upgrade;\n  }\n';}
+else if(type==='static'){conf+='  root '+rootPath+';\n  index '+indexFile+';\n\n  location / {\n    try_files $uri $uri/ /'+indexFile+';\n  }\n';}
+else if(type==='php'){conf+='  root '+rootPath+';\n  index index.php;\n\n  location / {\n    try_files $uri $uri/ /index.php?$query_string;\n  }\n\n  location ~ \\.php$ {\n    fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;\n    fastcgi_index index.php;\n    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;\n    include fastcgi_params;\n  }\n';}
+else if(type==='loadbalance'){conf+='  upstream backend {\n    server 127.0.0.1:3000;\n    server 127.0.0.1:3001;\n    server 127.0.0.1:3002;\n  }\n\n  location / {\n    proxy_pass http://backend;\n    proxy_set_header Host $host;\n    proxy_set_header X-Real-IP $remote_addr;\n  }\n';}
+conf+='}\n';
+document.getElementById('output').textContent=conf;
+}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Nginx config copied!');}
+function downloadFile(){var b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='nginx.conf';a.click();}
+generate();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subnet/CIDR Calculator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-row{display:flex;gap:12px;margin-bottom:16px}
+.form-group{flex:1}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;font-family:monospace}
+.form-group input:focus{outline:none;border-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result-item{padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px}
+.result-item label{display:block;font-size:.75rem;color:#94a3b8;margin-bottom:4px}
+.result-item value{font-family:monospace;font-size:.95rem;color:#60a5fa;font-weight:bold}
+.subnet-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:.85rem}
+.subnet-table th{padding:8px;text-align:left;color:#94a3b8;border-bottom:1px solid #334155}
+.subnet-table td{padding:8px;font-family:monospace;color:#a5b4fc;border-bottom:1px solid #1e293b}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Subnet / CIDR Calculator</h1>
+<p class="sub">Calculate IP ranges, subnet masks, and CIDR notations</p>
+<div class="card">
+<h2>Input</h2>
+<div class="form-row">
+<div class="form-group"><label>IP Address</label><input id="ip" value="192.168.1.0" oninput="calculate()"></div>
+<div class="form-group"><label>CIDR Prefix</label><select id="cidr" onchange="calculate()"><option value="/8">/8</option><option value="/16">/16</option><option value="/20">/20</option><option value="/24" selected>/24</option><option value="/25">/25</option><option value="/26">/26</option><option value="/27">/27</option><option value="/28">/28</option><option value="/29">/29</option><option value="/30">/30</option><option value="/31">/31</option><option value="/32">/32</option></select></div>
+</div>
+</div>
+<div class="card">
+<h2>Results</h2>
+<div class="result-grid">
+<div class="result-item"><label>Network Address</label><div class="value" id="network">-</div></div>
+<div class="result-item"><label>Broadcast Address</label><div class="value" id="broadcast">-</div></div>
+<div class="result-item"><label>Subnet Mask</label><div class="value" id="mask">-</div></div>
+<div class="result-item"><label>Wildcard Mask</label><div class="value" id="wildcard">-</div></div>
+<div class="result-item"><label>First Usable Host</label><div class="value" id="firstHost">-</div></div>
+<div class="result-item"><label>Last Usable Host</label><div class="value" id="lastHost">-</div></div>
+<div class="result-item"><label>Total Hosts</label><div class="value" id="totalHosts">-</div></div>
+<div class="result-item"><label>Usable Hosts</label><div class="value" id="usableHosts">-</div></div>
+<div class="result-item"><label>IP Class</label><div class="value" id="ipClass">-</div></div>
+<div class="result-item"><label>IP Type</label><div class="value" id="ipType">-</div></div>
+</div>
+</div>
+<div class="card">
+<h2>Subnet Breakdown</h2>
+<table class="subnet-table">
+<thead><tr><th>Property</th><th>Value</th></tr></thead>
+<tbody id="breakdown"></tbody>
+</table>
+</div>
+<div class="card">
+<h2>Common CIDR Reference</h2>
+<table class="subnet-table">
+<thead><tr><th>CIDR</th><th>Mask</th><th>Hosts</th><th>Usable</th></tr></thead>
+<tbody>
+<tr><td>/24</td><td>255.255.255.0</td><td>256</td><td>254</td></tr>
+<tr><td>/25</td><td>255.255.255.128</td><td>128</td><td>126</td></tr>
+<tr><td>/26</td><td>255.255.255.192</td><td>64</td><td>62</td></tr>
+<tr><td>/27</td><td>255.255.255.224</td><td>32</td><td>30</td></tr>
+<tr><td>/28</td><td>255.255.255.240</td><td>16</td><td>14</td></tr>
+<tr><td>/29</td><td>255.255.255.248</td><td>8</td><td>6</td></tr>
+<tr><td>/30</td><td>255.255.255.252</td><td>4</td><td>2</td></tr>
+<tr><td>/16</td><td>255.255.0.0</td><td>65536</td><td>65534</td></tr>
+<tr><td>/8</td><td>255.0.0.0</td><td>16777216</td><td>16777214</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<script>
+function ipToInt(ip){return ip.split('.').reduce((acc,oct)=>(acc<<8)+parseInt(oct),0)>>>0;}
+function intToIp(int){return [(int>>>24)&255,(int>>>16)&255,(int>>>8)&255,int&255].join('.');}
+function ipClass(first){const f=first.split('.')[0];if(f<128)return'A';if(f<192)return'B';if(f<224)return'C';if(f<240)return'D';return'E';}
+function ipType(ip){const o=ip.split('.').map(Number);if(o[0]===10)return'Private';if(o[0]===172&&o[1]>=16&&o[1]<=31)return'Private';if(o[0]===192&&o[1]===168)return'Private';if(o[0]===127)return'Loopback';if(o[0]===169&&o[1]===254)return'Link-Local';if(o[0]>=224)return'Special';return'Public';}
+function calculate(){
+const ip=document.getElementById('ip').value;
+const cidr=parseInt(document.getElementById('cidr').value.replace('/',''));
+const ipInt=ipToInt(ip);
+const mask=-1<<(32-cidr)>>>0;
+const network=ipInt&mask;
+const broadcast=network|(~mask>>>0);
+const wildcard=~mask>>>0;
+const totalHosts=Math.pow(2,32-cidr);
+const usableHosts=cidr>=31?(cidr===32?1:2):totalHosts-2;
+document.getElementById('network').textContent=intToIp(network);
+document.getElementById('broadcast').textContent=intToIp(broadcast);
+document.getElementById('mask').textContent=intToIp(mask);
+document.getElementById('wildcard').textContent=intToIp(wildcard);
+document.getElementById('firstHost').textContent=cidr<31?intToIp(network+1):intToIp(network);
+document.getElementById('lastHost').textContent=cidr<31?intToIp(broadcast-1):intToIp(broadcast);
+document.getElementById('totalHosts').textContent=totalHosts.toLocaleString();
+document.getElementById('usableHosts').textContent=usableHosts.toLocaleString();
+document.getElementById('ipClass').textContent=ipClass(ip)+' (CIDR ignores class)';
+document.getElementById('ipType').textContent=ipType(ip);
+const breakdown=[['CIDR Notation',ip+'/'+cidr],['Network Binary',network.toString(2).padStart(32,'0').match(/.{8}/g).join('.')],['Mask Binary',mask.toString(2).padStart(32,'0').match(/.{8}/g).join('.')],['Host Bits',32-cidr+' bits'],['Network Bits',cidr+' bits']];
+document.getElementById('breakdown').innerHTML=breakdown.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>').join('');
+}
+calculate();
+</script>
+</body>
+</html>

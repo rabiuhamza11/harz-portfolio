@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Validator — HARZ Toolkit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.container{max-width:700px;margin:0 auto}
+h1{text-align:center;margin-bottom:8px;font-size:1.8rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:.9rem}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:16px;color:#60a5fa}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:5px}
+.form-group input,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:.9rem;font-family:monospace}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:#3b82f6}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem;width:100%}
+.result{padding:16px;border-radius:8px;margin-top:12px}
+.result.valid{background:#052e16;border:1px solid #166534}
+.result.invalid{background:#450a0a;border:1px solid #991b1b}
+.result.pending{background:#1e3a5f;border:1px solid #1e40af}
+.email-part{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.8rem;margin:2px}
+.email-part.local{background:#1e3a5f;color:#93c5fd}
+.email-part.at{color:#94a3b8}
+.email-part.domain{background:#052e16;color:#4ade80}
+.email-part.tld{background:#3b1d0e;color:#fbbf24}
+.checks{margin-top:12px}
+.check-item{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:.85rem}
+.check-item.ok{color:#4ade80}.check-item.fail{color:#f87171}.check-item.pending{color:#93c5fd}
+.batch-results{margin-top:16px;font-size:.85rem}
+.batch-item{padding:8px 12px;border-radius:6px;margin-bottom:4px;display:flex;justify-content:space-between}
+.batch-item.valid{background:#052e16}.batch-item.invalid{background:#450a0a}
+.batch-item span{font-family:monospace}
+.info{background:#1e3a5f;border-radius:8px;padding:12px;margin-top:16px;font-size:.8rem;color:#93c5fd;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Email Validator</h1>
+<p class="sub">Validate email syntax, check domain MX records, and batch verify</p>
+<div class="card">
+<h2>Single Email</h2>
+<div class="form-group"><label>Email Address</label><input id="email" value="rabiu@harz-cloud.com" oninput="validate()" placeholder="Enter email to validate"></div>
+<button class="btn" onclick="validate(true)">Validate with MX Check</button>
+<div id="result"></div>
+</div>
+<div class="card">
+<h2>Batch Validation</h2>
+<div class="form-group"><label>Email Addresses (one per line)</label><textarea id="batch" rows="6" placeholder="user1@example.com&#10;user2@test.org&#10;invalid-email">rabiu@harz-cloud.com
+test@gmail.com
+invalid-email
+user@example.org</textarea></div>
+<button class="btn" onclick="validateBatch()">Validate All</button>
+<div id="batchResults"></div>
+</div>
+<div class="card">
+<div class="info">
+*Syntax validation* runs instantly in the browser.
+*MX record check* uses a public DNS API to verify the domain can receive mail.
+Note: Some valid domains may fail MX check due to CORS restrictions — use server-side validation for production.
+</div>
+</div>
+</div>
+<script>
+function validateSyntax(email){
+if(!email)return{valid:false,reason:'Empty'};
+if(email.length>254)return{valid:false,reason:'Too long (>254 chars)'};
+const regex=/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+if(!regex.test(email))return{valid:false,reason:'Invalid syntax'};
+const[local,domain]=email.split('@');
+if(local.length>64)return{valid:false,reason:'Local part too long'};
+if(domain.length>253)return{valid:false,reason:'Domain too long'};
+const parts=domain.split('.');
+if(parts.length<2)return{valid:false,reason:'Missing TLD'};
+const tld=parts[parts.length-1];
+if(tld.length<2)return{valid:false,reason:'TLD too short'};
+return{valid:true,local,domain,tld};
+}
+function validate(checkMX){
+const email=document.getElementById('email').value.trim();
+const result=validateSyntax(email);
+const el=document.getElementById('result');
+if(!result.valid){
+el.innerHTML='<div class="result invalid">❌ Invalid: '+result.reason+'<br>Email: '+email+'</div>';
+return;
+}
+let html='<div class="result valid">✅ Valid email syntax<br><span class="email-part local">'+result.local+'</span><span class="email-part at">@</span><span class="email-part domain">'+result.domain.split('.')[0]+'</span><span class="email-part tld">.'+result.tld+'</span></div>';
+if(checkMX){
+html+='<div class="result pending" id="mxResult">Checking MX records for '+result.domain+'...</div>';
+checkMXRecord(result.domain).then(hasMX=>{
+const mxEl=document.getElementById('mxResult');
+if(hasMX){mxEl.className='result valid';mxEl.innerHTML='✅ MX record found — '+result.domain+' can receive email';}
+else{mxEl.className='result invalid';mxEl.innerHTML='⚠️ No MX record found — domain may not accept email (or CORS blocked)';}
+});
+}
+el.innerHTML=html;
+}
+async function checkMXRecord(domain){
+try{
+const res=await fetch('https://dns.google/resolve?name='+domain+'&type=MX');
+const data=await res.json();
+return data.Answer&&data.Answer.length>0;
+}catch(e){return null;}
+}
+function validateBatch(){
+const emails=document.getElementById('batch').value.split('\n').filter(e=>e.trim());
+const el=document.getElementById('batchResults');
+let valid=0,invalid=0;
+el.innerHTML=emails.map(email=>{
+const r=validateSyntax(email.trim());
+if(r.valid){valid++;return '<div class="batch-item valid"><span>✅ '+email.trim()+'</span><span style="color:#4ade80">VALID</span></div>';}
+else{invalid++;return '<div class="batch-item invalid"><span>❌ '+email.trim()+'</span><span style="color:#f87171">'+r.reason+'</span></div>';}}).join('');
+el.innerHTML+='<div style="margin-top:12px;padding:8px;background:#1e293b;border-radius:8px;font-size:.85rem"><b style="color:#4ade80">'+valid+' valid</b> | <b style="color:#f87171">'+invalid+' invalid</b> | <b style="color:#94a3b8">'+emails.length+' total</b></div>';
+}
+validate();
+</script>
+</body>
+</html>
