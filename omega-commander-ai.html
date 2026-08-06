@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OMEGA Business Commander AI — Enterprise Operating System | Harz Digital Services</title>
-<meta name="description" content="Autonomous enterprise operating system with 9 AI executive agents, approval workflows, and multi-business management. Built by Harz Digital Services.">
-<meta property="og:title" content="OMEGA Business Commander AI">
-<meta property="og:description" content="9 AI executive agents. Approval workflows. Autonomous enterprise management.">
-<link rel="canonical" href="https://rabiuhamza11.github.io/harz-portfolio/omega-commander-ai.html">
+<title>OMEGA Commander AI — Live Enterprise Agent | Harz Digital Services</title>
+<meta name="description" content="Autonomous enterprise operating system with 9 live AI executive agents powered by HARZ Cloud. Built by Harz Digital Services.">
+<link rel="canonical" href="https://harz-cloud.pages.dev/omega-commander-ai">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#7c3aed;--accent2:#00d4aa;--danger:#ef4444;--warn:#f59e0b;--text:#e8e8f0;--muted:#6b6b80}
@@ -24,202 +22,253 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 .agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .agent-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;transition:all .2s;cursor:pointer}
 .agent-card:active{transform:scale(.97)}
+.agent-card.active{border-color:var(--accent);background:rgba(124,58,237,.08)}
 .agent-card .role{font-size:.75rem;font-weight:700;color:var(--accent)}
 .agent-card .icon{font-size:1.3rem;margin-bottom:4px}
 .agent-card .caps{font-size:.65rem;color:var(--muted);margin-top:4px;line-height:1.3}
 .agent-card .badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:.55rem;font-weight:700;margin-top:4px}
-.badge-active{background:rgba(0,212,170,.15);color:var(--accent2)}
 .badge-approval{background:rgba(124,58,237,.15);color:var(--accent)}
 .badge-auto{background:rgba(34,197,94,.15);color:#22c55e}
-.tool-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px}
+.chat-area{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:none;flex-direction:column;height:400px}
+.chat-area.active{display:flex}
+.chat-header{background:rgba(124,58,237,.1);padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.chat-header .title{font-size:.8rem;font-weight:700;color:var(--accent)}
+.chat-header .close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer}
+.chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:.8rem;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+.msg.user{align-self:flex-end;background:rgba(124,58,237,.2);color:var(--text)}
+.msg.ai{align-self:flex-start;background:rgba(0,212,170,.08);border:1px solid var(--border);color:var(--text)}
+.typing{align-self:flex-start;background:rgba(0,212,170,.08);border:1px solid var(--border);padding:10px 14px;border-radius:16px;font-size:.75rem;color:var(--muted)}
+.chat-input{padding:10px;border-top:1px solid var(--border);display:flex;gap:8px}
+.chat-input input{flex:1;background:#14141e;border:1px solid var(--border);border-radius:20px;padding:10px 14px;color:var(--text);font-size:.8rem;outline:none}
+.chat-input input:focus{border-color:var(--accent)}
+.chat-input button{background:linear-gradient(135deg,#7c3aed,#00d4aa);border:none;border-radius:50%;width:38px;height:38px;color:#fff;font-size:1rem;cursor:pointer;flex-shrink:0}
+.chat-input button:disabled{opacity:.4}
+.tool-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px;cursor:pointer;transition:all .2s}
+.tool-card:active{transform:scale(.98)}
 .tool-card .name{font-size:.75rem;font-weight:600;color:var(--text)}
 .tool-card .desc{font-size:.65rem;color:var(--muted)}
 .tool-card .risk{float:right;padding:2px 8px;border-radius:4px;font-size:.55rem;font-weight:700}
 .risk-low{background:rgba(34,197,94,.15);color:#22c55e}
 .risk-medium{background:rgba(245,158,11,.15);color:var(--warn)}
 .risk-high{background:rgba(239,68,68,.15);color:var(--danger)}
-.approval-flow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-.flow-step{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.7rem}
-.flow-step .time{color:var(--accent);font-weight:700;min-width:60px}
-.flow-step .desc{color:var(--muted)}
-.flow-line{width:2px;height:12px;background:var(--border);margin-left:7px}
-.test-area{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-.test-area input,.test-area select{width:100%;padding:10px;background:#14141e;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.8rem;margin-bottom:8px}
-.test-area input:focus{border-color:var(--accent);outline:none}
-.test-btn{width:100%;padding:12px;background:linear-gradient(135deg,#7c3aed,#00d4aa);border:none;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;font-size:.85rem}
-.test-btn:active{transform:scale(.97)}
-.result-box{background:#14141e;border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px;font-size:.7rem;color:var(--accent2);white-space:pre-wrap;display:none;max-height:200px;overflow-y:auto}
-.result-box.active{display:block}
 .stat-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.75rem}
 .stat-row:last-child{border:none}
 .stat-row .val{font-weight:700;color:var(--accent2)}
 .footer{text-align:center;padding:20px 0;color:var(--muted);font-size:.6rem}
 .footer a{color:var(--accent2);text-decoration:none}
+@media(max-width:480px){.agent-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="header">
-<h1>🧙‍♂️ OMEGA Business Commander AI</h1>
-<p>v1.0.0 — Autonomous Enterprise Operating System</p>
+<h1>OMEGA Commander AI</h1>
+<p>v2.0.0 - Live Enterprise Agent System</p>
 </div>
 
 <div class="status-bar">
-<div class="status-item"><div class="val" style="color:#22c55e" id="sysStatus">●</div><div class="lbl">System</div></div>
+<div class="status-item"><div class="val" style="color:#22c55e" id="sysStatus">.</div><div class="lbl">AI Engine</div></div>
 <div class="status-item"><div class="val" style="color:var(--accent)" id="agentCount">9</div><div class="lbl">Agents</div></div>
 <div class="status-item"><div class="val" style="color:var(--warn)" id="toolCount">10</div><div class="lbl">Tools</div></div>
-<div class="status-item"><div class="val" style="color:var(--accent2)" id="approvalCount">0</div><div class="lbl">Pending</div></div>
+<div class="status-item"><div class="val" style="color:var(--accent2)" id="engineName">-</div><div class="lbl">Model</div></div>
 </div>
 
 <div class="section">
-<div class="section-title">🤖 Executive AI Agents (9)</div>
+<div class="section-title">EXECUTIVE AI AGENTS (Tap to Chat)</div>
 <div class="agent-grid" id="agentGrid"></div>
 </div>
 
 <div class="section">
-<div class="section-title">🛠️ Pluggable Tools</div>
+<div class="section-title">AGENT CHAT</div>
+<div class="chat-area" id="chatArea">
+<div class="chat-header">
+<span class="title" id="chatTitle">Select an agent</span>
+<button class="close" onclick="closeChat()">X</button>
+</div>
+<div class="chat-messages" id="chatMessages"></div>
+<div class="chat-input">
+<input id="chatInput" placeholder="Type your command..." onkeypress="if(event.key==='Enter')sendMsg()">
+<button onclick="sendMsg()" id="sendBtn">></button>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">PLUGGABLE TOOLS (Tap to Run)</div>
 <div id="toolList"></div>
 </div>
 
 <div class="section">
-<div class="section-title">🔐 Approval System Flow</div>
-<div class="approval-flow">
-<div class="flow-step"><span class="time">T+0</span><span class="desc">Send to owner (primary: Telegram)</span></div>
-<div class="flow-line"></div>
-<div class="flow-step"><span class="time">T+2min</span><span class="desc">Reminder on WhatsApp</span></div>
-<div class="flow-line"></div>
-<div class="flow-step"><span class="time">T+5min</span><span class="desc">Escalate to deputy approver</span></div>
-<div class="flow-line"></div>
-<div class="flow-step"><span class="time">T+10min</span><span class="desc">Mark expired, notify owner, do not execute</span></div>
-<div class="flow-line"></div>
-<div class="flow-step"><span class="time">T+30min</span><span class="desc">Page owner via SMS if time-sensitive</span></div>
-</div>
-</div>
-
-<div class="section">
-<div class="section-title">⚡ Smart Auto-Approve Rules</div>
-<div class="stat-row"><span>vercel.deploy (preview)</span><span class="val" style="color:#22c55e">AUTO</span></div>
-<div class="stat-row"><span>email.send (<10 recipients)</span><span class="val" style="color:#22c55e">AUTO</span></div>
-<div class="stat-row"><span>content.create</span><span class="val" style="color:#22c55e">AUTO</span></div>
-<div class="stat-row"><span>ticket.resolve</span><span class="val" style="color:#22c55e">AUTO</span></div>
-<div class="stat-row"><span>analytics.view</span><span class="val" style="color:#22c55e">AUTO</span></div>
-<div class="stat-row"><span>report.generate</span><span class="val" style="color:#22c55e">AUTO</span></div>
-<div class="stat-row"><span>vercel.deploy (production)</span><span class="val" style="color:var(--danger)">APPROVAL</span></div>
-<div class="stat-row"><span>github.push (main)</span><span class="val" style="color:var(--danger)">APPROVAL</span></div>
-<div class="stat-row"><span>payment.send</span><span class="val" style="color:var(--danger)">APPROVAL</span></div>
-<div class="stat-row"><span>secret.access</span><span class="val" style="color:var(--danger)">APPROVAL</span></div>
-</div>
-
-<div class="section">
-<div class="section-title">🧪 Test the Orchestrator</div>
-<div class="test-area">
-<select id="testAction">
-<option value="status">System Status</option>
-<option value="route">Route Message to Agent</option>
-<option value="list_agents">List All Agents</option>
-<option value="audit_log">View Audit Log</option>
-<option value="list_approvals">List Pending Approvals</option>
-</select>
-<input id="testInput" placeholder="Enter message to route (e.g. 'deploy to vercel')" style="display:none">
-<button class="test-btn" onclick="runTest()">⚡ Execute</button>
-<div class="result-box" id="testResult"></div>
-</div>
+<div class="section-title">SYSTEM STATUS</div>
+<div id="statusInfo" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:.7rem;color:var(--muted)">Checking AI engine...</div>
 </div>
 
 <div class="footer">
-<p>OMEGA Business Commander AI v1.0.0</p>
-<p>Harz Digital Services · RC 321424</p>
-<p><a href="tools.html">← Back to Commander Suite</a> · <a href="link-in-bio.html">All Links</a></p>
+<p>OMEGA Commander AI v2.0.0 - Powered by HARZ Cloud</p>
+<p>Harz Digital Services - RC 321424</p>
+<p><a href="omega-commander.html">Commander Suite</a> | <a href="harz-super-app.html">Home</a></p>
 </div>
 
 <script>
+var AI_URL='https://magani-agent.harz.workers.dev/chat';
+var currentAgent=null;
+
 var agents=[
-{role:'Chief',icon:'👔',caps:['Overall coordination','Strategy execution'],approval:false},
-{role:'Strategy',icon:'🎯',caps:['Business planning','Market analysis'],approval:true},
-{role:'Operations',icon:'⚙️',caps:['Workflow management','Process optimization'],approval:true},
-{role:'Finance',icon:'💰',caps:['Transaction monitoring','Reporting','Budget planning'],approval:true},
-{role:'Marketing',icon:'📈',caps:['Content creation','Campaign management','Analytics'],approval:true},
-{role:'Sales',icon:'🤝',caps:['Lead generation','Proposal writing','CRM'],approval:true},
-{role:'Support',icon:'🎧',caps:['Customer communication','Ticket resolution'],approval:false},
-{role:'Dev',icon:'👨‍💻',caps:['Code generation','Deployment','Monitoring'],approval:true},
-{role:'Security',icon:'🛡️',caps:['Threat detection','Compliance','Access control'],approval:true}
+{role:'Chief Executive',icon:'CEO',caps:['Overall coordination','Strategy','Final decisions'],approval:false,prompt:'You are the OMEGA Chief Executive AI for HARZ Digital Services (RC 321424). You oversee all business operations, make strategic decisions, and coordinate other agents. Be decisive, clear, and brief. Owner: Rabiu Hamza Mohammed.'},
+{role:'Strategy',icon:'STR',caps:['Business planning','Market analysis','Growth'],approval:true,prompt:'You are the OMEGA Strategy AI for HARZ Digital Services. You analyze markets, create business plans, and identify growth opportunities in Nigeria and globally. Be analytical and actionable.'},
+{role:'Operations',icon:'OPS',caps:['Workflow management','Process optimization'],approval:true,prompt:'You are the OMEGA Operations AI for HARZ. You manage workflows, optimize processes, and ensure efficiency across all HARZ platforms including 600+ digital assets.'},
+{role:'Finance',icon:'FIN',caps:['Transactions','Reporting','Budget'],approval:true,prompt:'You are the OMEGA Finance AI for HARZ. You monitor payments (Paystack, Stripe, crypto), track revenue, manage budgets, and generate financial reports.'},
+{role:'Marketing',icon:'MKT',caps:['Content creation','Campaigns','Analytics'],approval:true,prompt:'You are the OMEGA Marketing AI for HARZ. You create marketing content, manage campaigns, and analyze performance across social media and the HARZ ecosystem.'},
+{role:'Sales',icon:'SAL',caps:['Lead generation','Proposals','CRM'],approval:true,prompt:'You are the OMEGA Sales AI for HARZ. You generate leads, write proposals, manage customer relationships, and drive revenue across HARZ products and services.'},
+{role:'Support',icon:'SUP',caps:['Customer communication','Ticket resolution'],approval:false,prompt:'You are the OMEGA Support AI for HARZ. You handle customer inquiries, resolve tickets, and provide helpful guidance on HARZ products and services.'},
+{role:'Developer',icon:'DEV',caps:['Code generation','Deployment','Monitoring'],approval:true,prompt:'You are the OMEGA Developer AI for HARZ. You generate code, manage deployments on Cloudflare Workers, Pages, D1, R2, and monitor infrastructure. You know HTML, JS, Cloudflare Workers, D1 databases, KV storage.'},
+{role:'Security',icon:'SEC',caps:['Threat detection','Compliance','Access control'],approval:true,prompt:'You are the OMEGA Security AI for HARZ. You detect threats, ensure compliance, manage access control, and protect the HARZ ecosystem (600+ assets, 62+ Cloudflare Workers, Paystack payments).'}
 ];
 
 var tools=[
-{name:'vercel.deploy',desc:'Deploy GitHub repo to Vercel',risk:'high',approval:true},
-{name:'github.push',desc:'Push code to GitHub repository',risk:'high',approval:true},
-{name:'email.send',desc:'Send email via Gmail',risk:'medium',approval:false},
-{name:'content.create',desc:'Generate marketing content',risk:'low',approval:false},
-{name:'ticket.resolve',desc:'Resolve customer support ticket',risk:'low',approval:false},
-{name:'payment.monitor',desc:'Monitor payment transactions',risk:'medium',approval:true},
-{name:'security.audit',desc:'Run security audit on platforms',risk:'high',approval:true},
-{name:'market.analyze',desc:'Analyze market conditions',risk:'low',approval:false},
-{name:'lead.generate',desc:'Generate sales leads',risk:'low',approval:false},
-{name:'code.generate',desc:'Generate code from specification',risk:'medium',approval:true}
+{name:'deploy.status',desc:'Check all Cloudflare deployments status',risk:'low',cmd:'List the status of all HARZ Cloudflare deployments and report any issues'},
+{name:'content.create',desc:'Generate marketing content',risk:'low',cmd:'Generate a promotional social media post for HARZ Digital Services highlighting AI tools and 600+ platforms'},
+{name:'security.audit',desc:'Run security audit on platforms',risk:'medium',cmd:'Run a security audit checklist for the HARZ ecosystem with 600+ assets'},
+{name:'market.analyze',desc:'Analyze market conditions',risk:'low',cmd:'Analyze current market opportunities for a Nigerian digital services company'},
+{name:'lead.generate',desc:'Generate sales leads',risk:'low',cmd:'Generate 5 potential sales leads for HARZ digital products in Nigeria'},
+{name:'payment.report',desc:'Generate payment summary',risk:'medium',cmd:'Generate a summary of HARZ payment infrastructure including Paystack and crypto'},
+{name:'code.generate',desc:'Generate code from spec',risk:'medium',cmd:'Write a simple Cloudflare Worker that returns a JSON health check response'},
+{name:'content.schedule',desc:'Create content calendar',risk:'low',cmd:'Create a 7-day content calendar for HARZ social media channels'},
+{name:'idea.generate',desc:'Generate business ideas',risk:'low',cmd:'Generate 5 new business ideas for HARZ Digital Services expansion in Nigeria'},
+{name:'report.executive',desc:'Generate executive summary',risk:'low',cmd:'Generate an executive summary of HARZ Digital Services current operations'}
 ];
 
 function renderAgents(){
-document.getElementById('agentGrid').innerHTML=agents.map(function(a){
-return '<div class="agent-card">'+
-'<div class="icon">'+a.icon+'</div>'+
+document.getElementById('agentGrid').innerHTML=agents.map(function(a,i){
+return '<div class="agent-card" onclick="openChat('+i+')">'+
+'<div class="icon" style="font-size:1rem;font-weight:800;color:var(--accent)">'+a.icon+'</div>'+
 '<div class="role">'+a.role+'</div>'+
-'<div class="caps">'+a.caps.join(' • ')+'</div>'+
-(a.approval?'<span class="badge badge-approval">REQUIRES APPROVAL</span>':'<span class="badge badge-auto">AUTO-EXECUTE</span>')+
+'<div class="caps">'+a.caps.join(' | ')+'</div>'+
+(a.approval?'<span class="badge badge-approval">APPROVAL</span>':'<span class="badge badge-auto">AUTO</span>')+
 '</div>';
 }).join('');
 }
 
 function renderTools(){
 document.getElementById('toolList').innerHTML=tools.map(function(t){
-return '<div class="tool-card">'+
+return '<div class="tool-card" onclick="runTool(\''+t.name+'\')">'+
 '<span class="risk risk-'+t.risk+'">'+t.risk.toUpperCase()+'</span>'+
 '<div class="name">'+t.name+'</div>'+
 '<div class="desc">'+t.desc+'</div>'+
-(t.approval?'<span style="font-size:.55rem;color:var(--danger)">⚠ Approval required</span>':'<span style="font-size:.55rem;color:#22c55e">✓ Auto-approved</span>')+
+'<span style="font-size:.55rem;color:var(--accent2)">Tap to run</span>'+
 '</div>';
 }).join('');
 }
 
-document.getElementById('testAction').addEventListener('change',function(){
-document.getElementById('testInput').style.display=this.value==='route'?'block':'none';
-});
+function openChat(idx){
+currentAgent=agents[idx];
+document.getElementById('chatArea').classList.add('active');
+document.getElementById('chatTitle').textContent=currentAgent.icon+' '+currentAgent.role;
+document.getElementById('chatMessages').innerHTML='';
+document.getElementById('chatInput').focus();
+addMsg('ai','Hello, I am the '+currentAgent.role+' agent for HARZ Digital Services. How can I help you today?');
+}
 
-async function runTest(){
-var action=document.getElementById('testAction').value;
-var input=document.getElementById('testInput').value;
-var resultBox=document.getElementById('testResult');
-resultBox.classList.add('active');
-resultBox.textContent='Loading...';
+function closeChat(){
+document.getElementById('chatArea').classList.remove('active');
+currentAgent=null;
+}
 
-var payload={action:action};
-if(action==='route'&&input){payload.message=input;}
-
+async function sendMsg(){
+var input=document.getElementById('chatInput');
+var msg=input.value.trim();
+if(!msg||!currentAgent)return;
+input.value='';
+var btn=document.getElementById('sendBtn');
+btn.disabled=true;
+addMsg('user',msg);
+var typing=document.createElement('div');
+typing.className='typing';
+typing.textContent='Agent is thinking...';
+typing.id='typing';
+document.getElementById('chatMessages').appendChild(typing);
 try{
-var res=await fetch('https://superagent-2286fb2f.base44.app/functions/omegaCommander',{
+var res=await fetch(AI_URL,{
 method:'POST',
 headers:{'Content-Type':'application/json'},
-body:JSON.stringify(payload)
+body:JSON.stringify({message:currentAgent.prompt+'\n\nUser request: '+msg})
 });
 var data=await res.json();
-resultBox.textContent=JSON.stringify(data,null,2);
-}catch(e){
-resultBox.textContent='Error: '+e.message;
+var el=document.getElementById('typing');
+if(el)el.remove();
+if(data.response){
+addMsg('ai',data.response);
+}else{
+addMsg('ai','Error: '+(data.error||'No response from AI'));
 }
+}catch(e){
+var el2=document.getElementById('typing');
+if(el2)el2.remove();
+addMsg('ai','Connection error. AI engine may be offline.');
+}
+btn.disabled=false;
+}
+
+async function runTool(toolName){
+var tool=tools.find(function(t){return t.name===toolName});
+if(!tool)return;
+var resultBox=document.getElementById('statusInfo');
+resultBox.textContent='Running '+toolName+'...';
+resultBox.style.color='var(--warn)';
+try{
+var res=await fetch(AI_URL,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({message:'You are an OMEGA tool executor for HARZ Digital Services.\n\nTool: '+tool.name+'\nDescription: '+tool.desc+'\n\nExecute this: '+tool.cmd})
+});
+var data=await res.json();
+if(data.response){
+resultBox.innerHTML='<b style="color:var(--accent2)">DONE: '+toolName+'</b><br><br>'+data.response.replace(/\n/g,'<br>');
+resultBox.style.color='var(--text)';
+}else{
+resultBox.textContent='Tool failed: '+(data.error||'unknown');
+resultBox.style.color='var(--danger)';
+}
+}catch(e){
+resultBox.textContent='Connection error: '+e.message;
+resultBox.style.color='var(--danger)';
+}
+}
+
+function addMsg(type,text){
+var div=document.createElement('div');
+div.className='msg '+type;
+div.textContent=text;
+document.getElementById('chatMessages').appendChild(div);
+document.getElementById('chatMessages').scrollTop=document.getElementById('chatMessages').scrollHeight;
 }
 
 renderAgents();
 renderTools();
 
-// Load live status
-fetch('https://superagent-2286fb2f.base44.app/functions/omegaCommander',{
-method:'POST',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({action:'status'})
-}).then(function(r){return r.json()}).then(function(d){
-if(d.status==='operational'){
-document.getElementById('sysStatus').textContent='●';
+fetch('https://magani-agent.harz.workers.dev/').then(function(r){return r.json()}).then(function(d){
+if(d.ai){
+document.getElementById('sysStatus').textContent='ON';
 document.getElementById('sysStatus').style.color='#22c55e';
+document.getElementById('engineName').textContent=(d.ai_model||'Active').substring(0,12);
+document.getElementById('statusInfo').innerHTML='<b style="color:#22c55e">AI Engine: Online</b><br>'+
+'<b style="color:var(--accent2)">Model:</b> '+(d.ai_model||'-')+'<br>'+
+'<b style="color:var(--accent2)">Engine:</b> '+(d.ai_engine||'-')+'<br>'+
+'<b style="color:var(--accent2)">Version:</b> '+(d.version||'-')+'<br>'+
+'<b style="color:var(--accent2)">Paystack:</b> '+(d.payments&&d.payments.paystack?'Active':'Inactive')+'<br>'+
+'<br><i>Tap any agent above to start chatting. Tap any tool to run it.</i>';
+}else{
+document.getElementById('sysStatus').textContent='OFF';
+document.getElementById('sysStatus').style.color='var(--danger)';
+document.getElementById('statusInfo').textContent='AI Engine offline.';
 }
-}).catch(function(){});
+}).catch(function(){
+document.getElementById('sysStatus').textContent='OFF';
+document.getElementById('sysStatus').style.color='var(--danger)';
+document.getElementById('statusInfo').textContent='Cannot reach AI engine.';
+});
 </script>
 </body>
 </html>
