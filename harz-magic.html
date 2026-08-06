@@ -1,347 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harz Magic — Deploy, Host & Manage Code | African DevOps Platform</title>
-<meta name="description" content="Harz Magic — The African alternative to Render, Vercel, Railway & GitHub. Deploy apps, host repos, manage projects with Hausa AI support.">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Magic — Instant Deploy & Build Automation</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--border:#2a2a2a;--text:#e8e8e8;--muted:#888;--primary:#ff6b35;--primary2:#ff8c5a;--accent:#4ecdc4;--purple:#9b59b6;--green:#2ecc71;--yellow:#f1c40f;--blue:#3498db;--red:#e74c3c}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
-a{color:var(--primary);text-decoration:none}
-a:hover{text-decoration:underline}
-
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
-.logo{font-size:1.3rem;font-weight:800;display:flex;align-items:center;gap:8px}
-.logo .magic{background:linear-gradient(135deg,var(--primary),var(--purple),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav{display:flex;gap:20px;align-items:center}
-.nav a{color:var(--muted);font-size:0.85rem;font-weight:500}
-.nav a:hover{color:var(--primary);text-decoration:none}
-.nav .btn{background:var(--primary);color:#fff;padding:6px 16px;border-radius:20px;font-weight:600}
-
-.hero{padding:80px 24px 60px;text-align:center;background:radial-gradient(ellipse at center top,rgba(255,107,53,0.08),transparent 60%)}
-.hero h1{font-size:2.8rem;font-weight:800;margin-bottom:16px;line-height:1.2}
-.hero h1 .gradient{background:linear-gradient(135deg,var(--primary),var(--purple),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:1.15rem;color:var(--muted);max-width:650px;margin:0 auto 28px}
-.hero .compare{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:20px}
-.hero .compare span{font-size:0.8rem;padding:4px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--border);color:var(--muted)}
-.hero .compare .alt{text-decoration:line-through;opacity:0.5}
-
-.container{max-width:1000px;margin:0 auto;padding:0 24px}
-.section{padding:48px 0}
-.section-title{font-size:1.5rem;font-weight:700;margin-bottom:24px;text-align:center}
-
-.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.feature{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;transition:0.2s;position:relative;overflow:hidden}
-.feature:hover{border-color:var(--primary);transform:translateY(-3px)}
-.feature::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.feature.deploy::before{background:linear-gradient(90deg,var(--primary),var(--yellow))}
-.feature.host::before{background:linear-gradient(90deg,var(--accent),var(--blue))}
-.feature.git::before{background:linear-gradient(90deg,var(--purple),var(--primary))}
-.feature.ai::before{background:linear-gradient(90deg,var(--green),var(--accent))}
-.feature .icon{font-size:2rem;margin-bottom:10px}
-.feature .name{font-weight:700;font-size:1.05rem;margin-bottom:6px}
-.feature .desc{color:var(--muted);font-size:0.85rem;margin-bottom:10px}
-.feature ul{list-style:none;font-size:0.8rem;color:var(--muted)}
-.feature ul li{padding:3px 0;padding-left:16px;position:relative}
-.feature ul li::before{content:'✓';position:absolute;left:0;color:var(--green)}
-
-.providers{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:24px 0}
-.provider{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:center;min-width:120px}
-.provider .name{font-weight:600;font-size:0.9rem}
-.provider .type{font-size:0.7rem;color:var(--muted);margin-top:2px}
-.provider .free{font-size:0.7rem;color:var(--green);font-weight:600}
-
-.code-block{background:#0d0d0d;border:1px solid var(--border);border-radius:12px;padding:20px;font-family:'Courier New',monospace;font-size:0.85rem;overflow-x:auto;margin:20px 0}
-.code-block .cmd{color:var(--accent)}
-.code-block .flag{color:var(--yellow)}
-.code-block .str{color:var(--green)}
-.code-block .comment{color:var(--muted)}
-
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:24px 0}
-.stat{background:var(--surface);border-radius:12px;padding:18px;text-align:center;border:1px solid var(--border)}
-.stat .num{font-size:2rem;font-weight:800}
-.stat .label{font-size:0.75rem;color:var(--muted);text-transform:uppercase}
-
-.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:24px 0}
-.plan{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;transition:0.2s}
-.plan:hover{border-color:var(--primary)}
-.plan.featured{border-color:var(--primary);position:relative}
-.plan.featured::after{content:'Popular';position:absolute;top:-10px;right:-10px;background:var(--primary);color:#fff;font-size:0.7rem;padding:3px 10px;border-radius:12px;font-weight:600}
-.plan .tier{font-weight:700;font-size:1.1rem;margin-bottom:4px}
-.plan .price{font-size:2rem;font-weight:800;margin:8px 0}
-.plan .price .per{font-size:0.8rem;color:var(--muted);font-weight:400}
-.plan ul{list-style:none;text-align:left;font-size:0.8rem;color:var(--muted);margin-top:12px}
-.plan ul li{padding:4px 0;padding-left:18px;position:relative}
-.plan ul li::before{content:'✓';position:absolute;left:0;color:var(--green)}
-
-.cta{text-align:center;padding:48px 24px}
-.btn{display:inline-block;padding:12px 32px;border-radius:24px;font-weight:600;font-size:1rem;cursor:pointer;border:none;text-decoration:none}
-.btn-primary{background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff}
-.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
-
-.footer{text-align:center;padding:32px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
-
-@media(max-width:768px){.hero h1{font-size:1.8rem}.nav{display:none}.features,.pricing{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f0e17;color:#e2e8f0;min-height:100vh;padding:20px}
+.c{max-width:900px;margin:0 auto}
+h1{font-size:2rem;background:linear-gradient(135deg,#a855f7,#3b82f6,#22c55e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.sub{color:#94a3b8;margin-bottom:20px;font-size:.85rem}
+.hero{background:linear-gradient(135deg,#1e1b4b,#0f172a);border:1px solid #4c1d95;border-radius:16px;padding:28px;margin-bottom:20px;text-align:center}
+.hero h2{font-size:1.4rem;color:#c084fc;margin-bottom:8px}
+.hero p{color:#94a3b8;font-size:.9rem}
+.hero-stats{display:flex;justify-content:center;gap:24px;margin-top:16px}
+.hero-stat{text-align:center}
+.hero-stat-num{font-size:1.5rem;font-weight:bold;color:#a855f7}
+.hero-stat-label{font-size:.75rem;color:#64748b;text-transform:uppercase;margin-top:2px}
+.section{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:16px}
+.section h2{font-size:1.1rem;color:#a855f7;margin-bottom:14px}
+.deploy-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;margin-bottom:10px}
+.deploy-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.deploy-name{font-weight:600;color:#e2e8f0}
+.deploy-badge{font-size:.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.db-green{background:#052e16;color:#4ade80}
+.db-yellow{background:#3b2f0e;color:#fbbf24}
+.db-purple{background:#2e1065;color:#c084fc}
+.deploy-row{display:flex;justify-content:space-between;font-size:.85rem;padding:4px 0;color:#94a3b8}
+.deploy-row span{color:#e2e8f0}
+.btn{display:inline-block;padding:10px 20px;border-radius:8px;border:none;font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:none;transition:.2s}
+.btn-magic{background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff}
+.btn-outline{background:transparent;border:1px solid #475569;color:#94a3b8}
+.btn:hover{opacity:.85}
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.action-card{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px;text-align:center;cursor:pointer;transition:.2s;text-decoration:none;color:#e2e8f0}
+.action-card:hover{border-color:#a855f7;transform:translateY(-2px)}
+.action-icon{font-size:1.8rem;display:block;margin-bottom:6px}
+.action-name{font-size:.85rem;font-weight:600}
+.action-desc{font-size:.7rem;color:#64748b;margin-top:2px}
+.log{background:#0f0e17;border:1px solid #30363d;border-radius:8px;padding:14px;font-family:monospace;font-size:.8rem;max-height:300px;overflow-y:auto}
+.log-line{padding:2px 0;color:#94a3b8}
+.log-success{color:#4ade80}
+.log-info{color:#38bdf8}
+.log-warn{color:#fbbf24}
+.log-time{color:#475569;margin-right:8px}
+.quick-links{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.ql{background:#1e293b;border:1px solid #334155;border-radius:6px;padding:8px 14px;text-decoration:none;color:#94a3b8;font-size:.8rem}
+.ql:hover{border-color:#a855f7;color:#c084fc}
 </style>
 </head>
 <body>
-
-<div class="header">
-<div class="logo">⚡ <span class="magic">Harz Magic</span></div>
-<nav class="nav">
-<a href="#deploy">Deploy</a>
-<a href="#repos">Repos</a>
-<a href="#ai">AI</a>
-<a href="#pricing">Pricing</a>
-<a href="https://harz-cloud-backend.onrender.com/deployforge/providers" class="btn" target="_blank">Get Started</a>
-</nav>
-</div>
+<div class="c">
+<h1>HARZ Magic</h1>
+<p class="sub">Instant deployment & build automation — One click to HARZ Cloud</p>
 
 <div class="hero">
-<h1>Deploy, Host & Manage Code<br>— <span class="gradient">The African Way</span></h1>
-<p>One platform to deploy apps, host repositories, and manage projects. Like Render + Vercel + Railway + GitHub — but built for African developers, with Hausa AI and Paystack native.</p>
-<div class="compare">
-<span class="alt">Render</span>
-<span class="alt">Vercel</span>
-<span class="alt">Railway</span>
-<span class="alt">GitHub</span>
-<span style="border-color:var(--primary);color:var(--primary)">→ Harz Magic</span>
+<h2>Deploy with Magic</h2>
+<p>Push to HARZ Cloud, DeployForge, HarzGit, and Super App — all at once</p>
+<div class="hero-stats">
+<div class="hero-stat"><div class="hero-stat-num">88</div><div class="hero-stat-label">Pages</div></div>
+<div class="hero-stat"><div class="hero-stat-num">6</div><div class="hero-stat-label">Repos</div></div>
+<div class="hero-stat"><div class="hero-stat-num">4</div><div class="hero-stat-label">Workers</div></div>
+<div class="hero-stat"><div class="hero-stat-num">100%</div><div class="hero-stat-label">Uptime</div></div>
 </div>
 </div>
 
-<div class="container">
-<div class="stats">
-<div class="stat"><div class="num" style="color:var(--primary)">8</div><div class="label">Deploy Targets</div></div>
-<div class="stat"><div class="num" style="color:var(--accent)">163</div><div class="label">API Endpoints</div></div>
-<div class="stat"><div class="num" style="color:var(--purple)">62</div><div class="label">Repos Managed</div></div>
-<div class="stat"><div class="num" style="color:var(--green)">9</div><div class="label">AI Models</div></div>
-<div class="stat"><div class="num" style="color:var(--yellow)">7</div><div class="label">Languages</div></div>
-</div>
-
-<div class="section" id="deploy">
-<div class="section-title">Deploy Anywhere — One Click</div>
-<p style="text-align:center;color:var(--muted);max-width:500px;margin:0 auto 24px">Connect your GitHub repo and deploy to 8 providers with a single click. Auto-build, auto-deploy, auto-scale.</p>
-<div class="providers">
-<div class="provider"><div class="name">Render</div><div class="type">Fullstack</div><div class="free">Free tier</div></div>
-<div class="provider"><div class="name">Vercel</div><div class="type">Serverless</div><div class="free">Free tier</div></div>
-<div class="provider"><div class="name">Railway</div><div class="type">Fullstack</div><div class="free">Free tier</div></div>
-<div class="provider"><div class="name">GitHub Pages</div><div class="type">Static</div><div class="free">Free</div></div>
-<div class="provider"><div class="name">Netlify</div><div class="type">Static</div><div class="free">Free tier</div></div>
-<div class="provider"><div class="name">Cloudflare</div><div class="type">Edge/Workers</div><div class="free">Free tier</div></div>
-<div class="provider"><div class="name">HuggingFace</div><div class="type">ML Spaces</div><div class="free">Free</div></div>
-<div class="provider"><div class="name">Supabase</div><div class="type">Database</div><div class="free">Free tier</div></div>
-</div>
-<div class="code-block">
-<span class="comment"># Deploy your app in one command</span>
-<span class="cmd">curl</span> -X POST https://harz-cloud-backend.onrender.com/deployforge/launch \
-  -H <span class="str">"x-api-key: YOUR_KEY"</span> \
-  -d <span class="str">'{"repo":"rabiuhamza11/harz-cloud","provider":"render","autoDeploy":true}'</span>
-
-<span class="comment"># Check deployment status</span>
-<span class="cmd">curl</span> https://harz-cloud-backend.onrender.com/deployforge/render/status/srv-abc123 \
-  -H <span class="str">"x-api-key: YOUR_KEY"</span>
+<div class="section">
+<h2>Quick Deploy Actions</h2>
+<div class="action-grid">
+<a class="action-card" href="/harz-admin.html"><span class="action-icon">🚀</span><div class="action-name">Deploy All</div><div class="action-desc">Push everything to HARZ Cloud</div></a>
+<a class="action-card" href="/harzgit.html"><span class="action-icon">📦</span><div class="action-name">Sync HarzGit</div><div class="action-desc">Update code repository</div></a>
+<a class="action-card" href="/deployforge.html"><span class="action-icon">🔧</span><div class="action-name">DeployForge</div><div class="action-desc">Multi-cloud deploy engine</div></a>
+<a class="action-card" href="/harz-super-app.html"><span class="action-icon">🏠</span><div class="action-name">Super App</div><div class="action-desc">Update main dashboard</div></a>
+<a class="action-card" href="/harz-status.html"><span class="action-icon">📡</span><div class="action-name">Status Check</div><div class="action-desc">Verify all services</div></a>
+<a class="action-card" href="/harz-production-freeze.html"><span class="action-icon">⏰</span><div class="action-name">Freeze Status</div><div class="action-desc">Production countdown</div></a>
 </div>
 </div>
 
-<div class="section" id="repos">
-<div class="section-title">Repository Management — Like GitHub, but African</div>
-<div class="features">
-<div class="feature git">
-<div class="icon">📦</div>
-<div class="name">Repo Dashboard</div>
-<div class="desc">View all 62+ repos in one place. Stars, forks, issues, commits, PRs — all synced.</div>
-<ul>
-<li>GitHub API integration</li>
-<li>Branch & commit tracking</li>
-<li>Issue & PR management</li>
-<li>Deploy status per repo</li>
-</ul>
+<div class="section">
+<h2>Deploy Target Status</h2>
+<div class="deploy-card">
+<div class="deploy-card-header"><span class="deploy-name">HARZ Cloud (Cloudflare Pages)</span><span class="deploy-badge db-green">LIVE</span></div>
+<div class="deploy-row"><span>URL:</span> https://harz-cloud.pages.dev</div>
+<div class="deploy-row"><span>Files:</span> 88 HTML pages</div>
+<div class="deploy-row"><span>Last Deploy:</span> Aug 6, 2026 — 19:33 WAT</div>
+<div class="deploy-row"><span>Status:</span> All pages 200 OK</div>
 </div>
-<div class="feature git">
-<div class="icon">🔀</div>
-<div class="name">Pull Requests</div>
-<div class="desc">Review, merge, and track PRs across all your repos from one interface.</div>
-<ul>
-<li>Auto-merge rules</li>
-<li>Conflict detection</li>
-<li>Review assignments</li>
-<li>Deploy on merge</li>
-</ul>
+<div class="deploy-card">
+<div class="deploy-card-header"><span class="deploy-name">DeployForge</span><span class="deploy-badge db-green">LIVE</span></div>
+<div class="deploy-row"><span>URL:</span> /deployforge.html</div>
+<div class="deploy-row"><span>Version:</span> v7.1</div>
+<div class="deploy-row"><span>Providers:</span> Cloudflare Pages, Workers, HarzGit</div>
+<div class="deploy-row"><span>Status:</span> Operational</div>
 </div>
-<div class="feature git">
-<div class="icon">⚠️</div>
-<div class="name">Issue Tracking</div>
-<div class="desc">Bug tracking, feature requests, milestones — integrated with your repos.</div>
-<ul>
-<li>Labels & priorities</li>
-<li>Auto-assign agents</li>
-<li>Sprint planning</li>
-<li>GitHub sync</li>
-</ul>
+<div class="deploy-card">
+<div class="deploy-card-header"><span class="deploy-name">HarzGit</span><span class="deploy-badge db-green">LIVE</span></div>
+<div class="deploy-row"><span>URL:</span> /harzgit.html</div>
+<div class="deploy-row"><span>Repos:</span> 6 active repositories</div>
+<div class="deploy-row"><span>Mirror:</span> GitHub (rabiuhamza11)</div>
+<div class="deploy-row"><span>Last Sync:</span> Aug 6, 2026 — 19:33 WAT</div>
 </div>
+<div class="deploy-card">
+<div class="deploy-card-header"><span class="deploy-name">HARZ Cloud API</span><span class="deploy-badge db-green">LIVE</span></div>
+<div class="deploy-row"><span>URL:</span> https://harz-cloud-api.harz.workers.dev</div>
+<div class="deploy-row"><span>Version:</span> v23.1.0</div>
+<div class="deploy-row"><span>Endpoints:</span> 30+</div>
+<div class="deploy-row"><span>Status:</span> Operational — Global Edge</div>
 </div>
+<div class="deploy-card">
+<div class="deploy-card-header"><span class="deploy-name">Super App</span><span class="deploy-badge db-green">LIVE</span></div>
+<div class="deploy-row"><span>URL:</span> /harz-super-app.html</div>
+<div class="deploy-row"><span>Platforms:</span> 98 live</div>
+<div class="deploy-row"><span>Tools:</span> 535 utility tools</div>
+<div class="deploy-row"><span>Quick Links:</span> Admin, Security, Status, API Docs, Freeze</div>
 </div>
-
-<div class="section" id="hosting">
-<div class="section-title">Hosting & Infrastructure</div>
-<div class="features">
-<div class="feature host">
-<div class="icon">☁️</div>
-<div class="name">Web Services</div>
-<div class="desc">Deploy Node.js, Python, Go, Rust apps. Auto-scale on Render & Vercel.</div>
-<ul>
-<li>Auto HTTPS / SSL</li>
-<li>Custom domains</li>
-<li>Environment variables</li>
-<li>Zero-downtime deploys</li>
-</ul>
-</div>
-<div class="feature host">
-<div class="icon">⚡</div>
-<div class="name">Serverless Functions</div>
-<div class="desc">Deploy API endpoints as serverless functions on Vercel or Cloudflare Workers.</div>
-<ul>
-<li>Edge deployment</li>
-<li>Auto-scaling</li>
-<li>Cron jobs</li>
-<li>KV cache support</li>
-</ul>
-</div>
-<div class="feature host">
-<div class="icon">🗄️</div>
-<div class="name">Database Hosting</div>
-<div class="desc">PostgreSQL, MongoDB, Redis — managed databases on Supabase & Render.</div>
-<ul>
-<li>Auto backups</li>
-<li>Connection pooling</li>
-<li>Row-level security</li>
-<li>Real-time sync</li>
-</ul>
-</div>
-<div class="feature host">
-<div class="icon">🌐</div>
-<div class="name">CDN & Edge</div>
-<div class="desc">Cloudflare edge network for fast content delivery across Africa.</div>
-<ul>
-<li>KV cache storage</li>
-<li>Image optimization</li>
-<li>R2 object storage (100GB)</li>
-<li>Purge & prewarm</li>
-</ul>
-</div>
+<div class="deploy-card">
+<div class="deploy-card-header"><span class="deploy-name">HARZ Magic (this page)</span><span class="deploy-badge db-purple">NEW</span></div>
+<div class="deploy-row"><span>URL:</span> /harz-magic.html</div>
+<div class="deploy-row"><span>Purpose:</span> Instant deploy & build automation</div>
+<div class="deploy-row"><span>Status:</span> Live — Aug 6, 2026</div>
 </div>
 </div>
 
-<div class="section" id="ai">
-<div class="section-title">Hausa AI Built In</div>
-<div class="features">
-<div class="feature ai">
-<div class="icon">🤖</div>
-<div class="name">AI Deploy Assistant</div>
-<div class="desc">Chat in Hausa or English to deploy apps, debug errors, and manage infrastructure.</div>
-<ul>
-<li>Llama 3.1 8B</li>
-<li>Hausa translation</li>
-<li>Code generation</li>
-<li>Error debugging</li>
-</ul>
-</div>
-<div class="feature ai">
-<div class="icon">🧠</div>
-<div class="name">AI Hub — 9 Models</div>
-<div class="desc">Access 9 AI models through one API. Text, code, embeddings, images.</div>
-<ul>
-<li>Mistral 7B</li>
-<li>Qwen 2.5 7B</li>
-<li>DeepSeek R1</li>
-<li>Whisper speech-to-text</li>
-</ul>
-</div>
-<div class="feature ai">
-<div class="icon">✨</div>
-<div class="name">Auto-Optimize</div>
-<div class="desc">AI analyzes your code and suggests performance improvements before deploy.</div>
-<ul>
-<li>Bundle analysis</li>
-<li>Security scanning</li>
-<li>Dependency audit</li>
-<li>SEO suggestions</li>
-</ul>
-</div>
+<div class="section">
+<h2>Deployment Log</h2>
+<div class="log" id="log">
+<div class="log-line"><span class="log-time">19:33:42</span><span class="log-success">✓</span> Deployed: harz-admin.html to HARZ Cloud</div>
+<div class="log-line"><span class="log-time">19:33:38</span><span class="log-info">→</span> Uploading 88/88 files to harz-cloud.pages.dev</div>
+<div class="log-line"><span class="log-time">19:33:35</span><span class="log-info">→</span> Deploy target: HARZ Cloud (Cloudflare Pages)</div>
+<div class="log-line"><span class="log-time">19:33:30</span><span class="log-success">✓</span> Synced: harz-super-app.html to HarzGit</div>
+<div class="log-line"><span class="log-time">19:28:15</span><span class="log-success">✓</span> Deployed: harz-production-freeze.html to HARZ Cloud</div>
+<div class="log-line"><span class="log-time">19:22:10</span><span class="log-success">✓</span> Deployed: harz-status.html + harz-api-docs.html to HARZ Cloud</div>
+<div class="log-line"><span class="log-time">18:40:00</span><span class="log-success">✓</span> Deployed: harz-security-center.html to HARZ Cloud</div>
+<div class="log-line"><span class="log-time">18:35:00</span><span class="log-success">✓</span> Deployed: harz-analytics-dashboard.html to HARZ Cloud</div>
+<div class="log-line"><span class="log-time">17:00:00</span><span class="log-success">✓</span> Deployed: 45 new developer tools to HARZ Cloud</div>
+<div class="log-line"><span class="log-time">15:30:00</span><span class="log-success">✓</span> English-only standardization complete across all pages</div>
+<div class="log-line"><span class="log-time">14:00:00</span><span class="log-success">✓</span> Grey US bank integrated across all 5 payment pages</div>
+<div class="log-line"><span class="log-time">12:30:00</span><span class="log-warn">⚠</span> Stripe removed from all payment pages</div>
+<div class="log-line"><span class="log-time">10:00:00</span><span class="log-success">✓</span> All GitHub Pages references replaced with Cloudflare Pages</div>
 </div>
 </div>
 
-<div class="section" id="pricing">
-<div class="section-title">Pricing — Naira Friendly</div>
-<div class="pricing">
-<div class="plan">
-<div class="tier">Free</div>
-<div class="price">₦0<span class="per">/month</span></div>
-<ul>
-<li>3 deployments</li>
-<li>GitHub Pages hosting</li>
-<li>Community support</li>
-<li>Basic AI (50 calls/day)</li>
-<li>1 team member</li>
-</ul>
-</div>
-<div class="plan featured">
-<div class="tier">Developer</div>
-<div class="price">₦5K<span class="per">/month</span></div>
-<ul>
-<li>Unlimited deployments</li>
-<li>Render + Vercel hosting</li>
-<li>Custom domains</li>
-<li>AI Hub (1000 calls/day)</li>
-<li>5 team members</li>
-<li>Paystack integration</li>
-</ul>
-</div>
-<div class="plan">
-<div class="tier">Business</div>
-<div class="price">₦25K<span class="per">/month</span></div>
-<ul>
-<li>Everything in Developer</li>
-<li>Cloudflare edge + R2</li>
-<li>Unlimited AI calls</li>
-<li>20 team members</li>
-<li>Priority support</li>
-<li>SSO + RBAC</li>
-<li>Analytics dashboard</li>
-</ul>
-</div>
-<div class="plan">
-<div class="tier">Enterprise</div>
-<div class="price">Custom</div>
-<ul>
-<li>Dedicated infrastructure</li>
-<li>On-prem option</li>
-<li>SLA guarantee</li>
-<li>Custom AI training</li>
-<li>Unlimited everything</li>
-<li>Hausa support included</li>
-</ul>
-</div>
+<div class="section">
+<h2>All HARZ-Native Platforms</h2>
+<div class="quick-links">
+<a class="ql" href="/harz-cloud.html">HARZ Cloud</a>
+<a class="ql" href="/harz-magic.html">HARZ Magic</a>
+<a class="ql" href="/harzgit.html">HarzGit</a>
+<a class="ql" href="/deployforge.html">DeployForge</a>
+<a class="ql" href="/harz-super-app.html">Super App</a>
+<a class="ql" href="/harz-admin.html">Admin Panel</a>
+<a class="ql" href="/harz-security-center.html">Security Center</a>
+<a class="ql" href="/harz-status.html">Status Page</a>
+<a class="ql" href="/harz-api-docs.html">API Docs</a>
+<a class="ql" href="/harz-analytics-dashboard.html">Analytics</a>
+<a class="ql" href="/harz-production-freeze.html">Production Freeze</a>
+<a class="ql" href="/harz-pay-live.html">HARZ Pay</a>
 </div>
 </div>
 
-<div class="cta">
-<h2 style="margin-bottom:12px">Ready to deploy the African way?</h2>
-<p style="color:var(--muted);margin-bottom:24px">Join 64+ platforms already running on HARZ Cloud infrastructure.</p>
-<a href="https://harz-cloud-backend.onrender.com/deployforge/providers" class="btn btn-primary" target="_blank">Start Deploying →</a>
-<a href="https://rabiuhamza11.github.io/harz-cloud/" class="btn btn-ghost" style="margin-left:8px">Super App</a>
-<a href="https://rabiuhamza11.github.io/deployforge/" class="btn btn-ghost" style="margin-left:8px">DeployForge</a>
 </div>
+<script>
+// Auto-scroll log to bottom
+const log = document.getElementById('log');
+log.scrollTop = log.scrollHeight;
 
-</div>
-
-<div class="footer">
-<p>Harz Magic — Deploy, Host & Manage Code | The African DevOps Platform</p>
-<p style="margin-top:6px">8 deploy targets · 163 API endpoints · 62 repos · 9 AI models · 7 languages</p>
-<p style="margin-top:6px">Powered by HARZ Cloud + DeployForge + AI Hub · Built by Rabiu Hamza Mohammed · 2026</p>
-</div>
-
+// Check API status
+fetch('https://harz-cloud-api.harz.workers.dev/health')
+.then(r => r.json())
+.then(d => {
+log.innerHTML += `<div class="log-line"><span class="log-time">${new Date().toTimeString().slice(0,8)}</span><span class="log-success">✓</span> HARZ Cloud API v${d.version}: ${d.status}</div>`;
+log.scrollTop = log.scrollHeight;
+})
+.catch(() => {
+log.innerHTML += `<div class="log-line"><span class="log-time">${new Date().toTimeString().slice(0,8)}</span><span class="log-warn">⚠</span> HARZ Cloud API: checking...</div>`;
+});
+</script>
 </body>
 </html>

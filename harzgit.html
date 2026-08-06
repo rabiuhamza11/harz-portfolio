@@ -1,337 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HarzGit — Repository Management Platform</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HarzGit — HARZ Code Repository</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--primary:#00A859;--dark:#0A0E27;--dark2:#111633;--border:#1E2645;--gray:#8B92A8;--white:#fff;--blue:#4C7DFF;--purple:#9B5CFF;--danger:#FF3B5C;--warning:#FFB800}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--dark);color:var(--white)}
-.app{display:flex;min-height:100vh}
-.sidebar{width:220px;background:var(--dark2);border-right:1px solid var(--border);position:fixed;height:100vh;overflow-y:auto;padding:0}
-.sidebar-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem}
-.sidebar-header .logo{font-size:1.3rem}.sidebar-header .title{font-weight:800;font-size:1rem}
-.sidebar-header .title span{color:var(--primary)}
-.nav-section{padding:.5rem 0}.nav-section-title{font-size:.65rem;text-transform:uppercase;color:var(--gray);padding:.5rem 1.25rem;letter-spacing:.5px}
-.nav-item{padding:.6rem 1.25rem;display:flex;align-items:center;gap:.6rem;cursor:pointer;color:var(--gray);font-size:.8rem;transition:all .15s;border-left:3px solid transparent}
-.nav-item:hover{color:var(--white);background:rgba(255,255,255,.03)}
-.nav-item.active{color:var(--primary);border-left-color:var(--primary);background:rgba(0,168,89,.05)}
-.nav-item .ic{font-size:1rem;width:20px;text-align:center}
-.main{flex:1;margin-left:220px;padding:1.5rem;min-height:100vh}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
-.topbar h1{font-size:1.4rem;font-weight:800}
-.topbar .sub{font-size:.75rem;color:var(--gray);margin-top:.2rem}
-.search-box{background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:.6rem 1rem;font-size:.85rem;color:var(--white);width:300px}
-.search-box::placeholder{color:var(--gray)}
-.btn{padding:.5rem 1rem;border:1px solid var(--border);border-radius:10px;background:var(--dark2);color:var(--white);font-size:.8rem;cursor:pointer;transition:all .15s}
-.btn:hover{border-color:var(--primary)}
-.btn-primary{background:var(--primary);border-color:var(--primary)}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem;margin-bottom:1.5rem}
-.stat{background:var(--dark2);border:1px solid var(--border);border-radius:14px;padding:1rem;position:relative}
-.stat .lbl{font-size:.65rem;color:var(--gray);text-transform:uppercase;letter-spacing:.5px}
-.stat .val{font-size:1.5rem;font-weight:800;margin-top:.3rem}
-.stat .ic{position:absolute;top:.75rem;right:.75rem;font-size:1.2rem;opacity:.2}
-.page{display:none}.page.active{display:block;animation:fade .3s}
-@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.card{background:var(--dark2);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1rem}
-.card-title{font-size:.85rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between}
-.repo-item{background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem;transition:all .15s;cursor:pointer}
-.repo-item:hover{border-color:var(--primary)}
-.repo-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
-.repo-name{font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
-.repo-name .vis{font-size:.7rem;padding:.15rem .4rem;border-radius:6px;background:var(--border)}
-.repo-name .vis.public{color:var(--gray)}.repo-name .vis.private{color:var(--warning)}
-.repo-desc{font-size:.75rem;color:var(--gray);margin-bottom:.5rem;line-height:1.4}
-.repo-meta{display:flex;gap:1rem;font-size:.7rem;color:var(--gray)}
-.repo-meta span{display:flex;align-items:center;gap:.25rem}
-.lang-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:.2rem}
-table{width:100%;border-collapse:collapse}
-th{text-align:left;font-size:.65rem;color:var(--gray);text-transform:uppercase;padding:.5rem 0;border-bottom:1px solid var(--border)}
-td{padding:.7rem 0;font-size:.8rem;border-bottom:1px solid var(--border)}
-.badge{padding:.2rem .5rem;border-radius:6px;font-size:.65rem;font-weight:700}
-.badge-green{background:rgba(0,168,89,.15);color:var(--primary)}
-.badge-yellow{background:rgba(255,184,0,.15);color:var(--warning)}
-.badge-red{background:rgba(255,59,92,.15);color:var(--danger)}
-.badge-blue{background:rgba(76,125,255,.15);color:var(--blue)}
-.issue-row{padding:.6rem 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.75rem}
-.issue-icon{font-size:1rem;flex-shrink:0;margin-top:.1rem}
-.issue-info{flex:1}
-.issue-title{font-size:.85rem;font-weight:600}
-.issue-meta{font-size:.7rem;color:var(--gray);margin-top:.2rem}
-.commit-item{padding:.6rem 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.75rem}
-.commit-hash{font-family:monospace;font-size:.75rem;color:var(--primary);flex-shrink:0;width:70px}
-.commit-info{flex:1}
-.commit-msg{font-size:.8rem;font-weight:600}
-.commit-meta{font-size:.7rem;color:var(--gray);margin-top:.2rem}
-.pr-item{padding:.6rem 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.75rem}
-.pr-icon{font-size:1rem;flex-shrink:0}
-.pr-info{flex:1}
-.pr-title{font-size:.85rem;font-weight:600}
-.pr-meta{font-size:.7rem;color:var(--gray);margin-top:.2rem}
-.tab-bar{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid var(--border)}
-.tab{padding:.6rem 1rem;font-size:.8rem;cursor:pointer;color:var(--gray);border-bottom:2px solid transparent;transition:all .15s}
-.tab:hover{color:var(--white)}
-.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
-.lang-bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin-bottom:.5rem}
-.lang-segment{height:100%;transition:width .3s}
-.lang-legend{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.7rem;color:var(--gray)}
-.lang-legend span{display:flex;align-items:center;gap:.25rem}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0d1117;color:#c9d1d9;min-height:100vh;padding:20px}
+.c{max-width:1000px;margin:0 auto}
+h1{font-size:1.8rem;background:linear-gradient(135deg,#f78166,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.sub{color:#8b949e;margin-bottom:20px;font-size:.85rem}
+.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid #30363d}
+.tab{padding:10px 20px;cursor:pointer;color:#8b949e;border-bottom:2px solid transparent;transition:.2s;font-size:.9rem}
+.tab.active{color:#f0f6fc;border-bottom-color:#f78166}
+.tab:hover{color:#c9d1d9}
+.grid{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+.repo-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px;margin-bottom:10px}
+.repo-name{font-weight:600;color:#58a6ff;font-size:.95rem}
+.repo-desc{color:#8b949e;font-size:.85rem;margin-top:4px}
+.repo-meta{display:flex;gap:12px;margin-top:8px;font-size:.8rem;color:#8b949e}
+.lang-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
+.panel{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px}
+.panel h3{font-size:.9rem;color:#58a6ff;margin-bottom:12px}
+.stat{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #21262d;font-size:.85rem}
+.stat:last-child{border:0}
+.commit{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #21262d}
+.commit-msg{font-size:.85rem;flex:1}
+.commit-hash{font-family:monospace;font-size:.8rem;color:#8b949e}
+.commit-time{font-size:.75rem;color:#484f58}
+.branch{display:inline-flex;align-items:center;gap:6px;background:#1c2128;border:1px solid #30363d;border-radius:16px;padding:4px 12px;font-size:.8rem;margin-bottom:12px}
+.file-list{font-family:monospace;font-size:.85rem}
+.file{padding:6px 0;border-bottom:1px solid #21262d;display:flex;justify-content:space-between}
+.file:last-child{border:0}
+.file a{color:#58a6ff;text-decoration:none}
+.badge{font-size:.7rem;padding:2px 8px;border-radius:4px}
+.b-green{background:#1a4731;color:#3fb950}
+.b-blue{background:#0c2d6b;color:#58a6ff}
+.b-yellow{background#3b2f0e;color:#d29922}
+.btn{display:inline-block;padding:6px 14px;border-radius:6px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:.85rem;cursor:pointer;text-decoration:none;margin-right:6px}
+.btn:hover{border-color:#58a6ff}
+.section{margin-bottom:20px}
+.section h2{font-size:1.1rem;color:#f0f6fc;margin-bottom:12px}
+.deploy-target{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.dt-info{flex:1}
+.dt-name{font-weight:600;color:#58a6ff}
+.dt-url{font-family:monospace;font-size:.8rem;color:#8b949e;margin-top:2px}
+.dt-status{font-size:.75rem}
+.live{color:#3fb950}.pending{color:#d29922}
 </style>
 </head>
 <body>
-<div class="app">
-<div class="sidebar">
-<div class="sidebar-header"><div class="logo">📦</div><div class="title">Harz<span>Git</span></div></div>
-<div class="nav-section">
-<div class="nav-section-title">Workspace</div>
-<div class="nav-item active" onclick="showPage('repos')"><span class="ic">📚</span>Repositories</div>
-<div class="nav-item" onclick="showPage('issues')"><span class="ic">⚠️</span>Issues</div>
-<div class="nav-item" onclick="showPage('prs')"><span class="ic">🔀</span>Pull Requests</div>
-<div class="nav-item" onclick="showPage('commits')"><span class="ic">📝</span>Commits</div>
-</div>
-<div class="nav-section">
-<div class="nav-section-title">Insights</div>
-<div class="nav-item" onclick="showPage('analytics')"><span class="ic">📊</span>Analytics</div>
-<div class="nav-item" onclick="showPage('activity')"><span class="ic">🔄</span>Activity</div>
-</div>
-<div class="nav-section">
-<div class="nav-section-title">Settings</div>
-<div class="nav-item" onclick="showPage('settings')"><span class="ic">⚙️</span>Settings</div>
-</div>
-</div>
+<div class="c">
+<h1>HarzGit</h1>
+<p class="sub">HARZ-native code repository — All HARZ source code, deployed on HARZ Cloud</p>
+
+<div class="tabs">
+<div class="tab active" onclick="showTab('repos')">Repositories</div>
+<div class="tab" onclick="showTab('commits')">Commits</div>
+<div class="tab" onclick="showTab('deploys')">Deployments</div>
+<div class="tab" onclick="showTab('files')">File Browser</div>
 </div>
 
-<div class="main">
-<!-- REPOS -->
-<div class="page active" id="repos">
-<div class="topbar"><div><h1>Repositories</h1><div class="sub">rabiuhamza11 — 62 repositories</div></div>
-<div style="display:flex;gap:.5rem"><input class="search-box" placeholder="Find a repository..." onkeyup="filterRepos(this.value)"><button class="btn btn-primary">+ New</button></div></div>
-<div class="stat-grid">
-<div class="stat"><div class="ic">📦</div><div class="lbl">Total Repos</div><div class="val">62</div></div>
-<div class="stat"><div class="ic">⭐</div><div class="lbl">Total Stars</div><div class="val">142</div></div>
-<div class="stat"><div class="ic">🍴</div><div class="lbl">Forks</div><div class="val">38</div></div>
-<div class="stat"><div class="ic">⚠️</div><div class="lbl">Open Issues</div><div class="val">23</div></div>
-<div class="stat"><div class="ic">🔀</div><div class="lbl">Pull Requests</div><div class="val">7</div></div>
-<div class="stat"><div class="ic">📝</div><div class="lbl">Commits (30d)</div><div class="val">187</div></div>
+<div id="repos" class="tab-content">
+<div class="grid">
+<div>
+<div class="panel">
+<h3>Repository Stats</h3>
+<div class="stat"><span>Total Repos</span><span style="color:#58a6ff;font-weight:600">6</span></div>
+<div class="stat"><span>Total Files</span><span style="color:#58a6ff;font-weight:600">88</span></div>
+<div class="stat"><span>Total Commits</span><span style="color:#58a6ff;font-weight:600">142</span></div>
+<div class="stat"><span>Languages</span><span>HTML, JS, CSS</span></div>
+<div class="stat"><span>Storage</span><span>Cloudflare Pages</span></div>
+<div class="stat"><span>Mirror</span><span>GitHub (rabiuhamza11)</span></div>
 </div>
-<div class="card">
-<div class="card-title">Language Distribution</div>
-<div class="lang-bar" id="lang-bar"></div>
-<div class="lang-legend" id="lang-legend"></div>
-</div>
-<div class="card"><div class="card-title">All Repositories</div><div id="repo-list"></div></div>
-</div>
-
-<!-- ISSUES -->
-<div class="page" id="issues">
-<div class="topbar"><div><h1>Issues</h1><div class="sub">23 open · 156 closed</div></div>
-<button class="btn btn-primary">+ New Issue</button></div>
-<div class="tab-bar"><div class="tab active" onclick="filterIssues('open')">Open (23)</div><div class="tab" onclick="filterIssues('closed')">Closed (156)</div><div class="tab" onclick="filterIssues('all')">All</div></div>
-<div class="card"><div id="issue-list"></div></div>
-</div>
-
-<!-- PULL REQUESTS -->
-<div class="page" id="prs">
-<div class="topbar"><div><h1>Pull Requests</h1><div class="sub">7 open · 89 merged</div></div>
-<button class="btn btn-primary">+ New PR</button></div>
-<div class="tab-bar"><div class="tab active">Open (7)</div><div class="tab">Merged (89)</div><div class="tab">Closed (12)</div></div>
-<div class="card"><div id="pr-list"></div></div>
-</div>
-
-<!-- COMMITS -->
-<div class="page" id="commits">
-<div class="topbar"><div><h1>Recent Commits</h1><div class="sub">187 commits in the last 30 days</div></div>
-<button class="btn">View All</button></div>
-<div class="card"><div id="commit-list"></div></div>
-</div>
-
-<!-- ANALYTICS -->
-<div class="page" id="analytics">
-<div class="topbar"><div><h1>Analytics</h1><div class="sub">Repository insights and metrics</div></div></div>
-<div class="stat-grid">
-<div class="stat"><div class="ic">⭐</div><div class="lbl">Total Stars</div><div class="val">142</div></div>
-<div class="stat"><div class="ic">🍴</div><div class="lbl">Total Forks</div><div class="val">38</div></div>
-<div class="stat"><div class="ic">👀</div><div class="lbl">Watchers</div><div class="val">12</div></div>
-<div class="stat"><div class="ic">📝</div><div class="lbl">Commits/Week</div><div class="val">47</div></div>
-<div class="stat"><div class="ic">👥</div><div class="lbl">Contributors</div><div class="val">3</div></div>
-<div class="stat"><div class="ic">🏗️</div><div class="lbl">Deployments</div><div class="val">89</div></div>
-</div>
-<div class="card"><div class="card-title">Top Repositories by Stars</div>
-<div id="top-repos"></div></div>
-</div>
-
-<!-- ACTIVITY -->
-<div class="page" id="activity">
-<div class="topbar"><div><h1>Activity</h1><div class="sub">Recent activity across all repositories</div></div></div>
-<div class="card"><div class="card-title">Activity Feed</div><div id="activity-list"></div></div>
-</div>
-
-<!-- SETTINGS -->
-<div class="page" id="settings">
-<div class="topbar"><div><h1>Settings</h1><div class="sub">HarzGit configuration</div></div></div>
-<div class="card"><div class="card-title">GitHub Integration</div>
-<div style="font-size:.8rem;line-height:2">
-<div>GitHub User: <b style="color:var(--primary)">rabiuhamza11</b></div>
-<div>Connected: <b style="color:var(--primary)">✓ Yes</b></div>
-<div>Total Repositories: <b>62</b></div>
-<div>Sync Interval: <b>Real-time</b></div>
-<div>Webhook URL: <b style="color:var(--blue)">harz-cloud-backend.onrender.com/webhooks/github</b></div>
-</div></div>
-<div class="card"><div class="card-title">HarzGit Features</div>
-<div style="font-size:.8rem;line-height:2">
-<div>✓ Repository browsing and search</div>
-<div>✓ Issue tracking and management</div>
-<div>✓ Pull request review</div>
-<div>✓ Commit history</div>
-<div>✓ Language analytics</div>
-<div>✓ Activity feed</div>
-<div>✓ Deployment tracking</div>
-<div>✓ HARZ Cloud API integration</div>
-</div></div>
+<div class="panel" style="margin-top:12px">
+<h3>Default Branch</h3>
+<div class="branch">🌿 main</div>
+<p style="font-size:.85rem;color:#8b949e">All deployments are from the main branch. No feature branches active.</p>
 </div>
 </div>
-</div>
-
-<script>
-const repos=[
-{name:'harz-cloud-backend',desc:'HARZ Cloud Backend v20.0 — 292 API endpoints, 17 modules, DeployForge, RBAC, SSO',lang:'JavaScript',langColor:'#f1e05a',stars:28,forks:5,issues:12,prs:3,vis:'public',updated:'2 hours ago',size:'2.4MB'},
-{name:'harz-portfolio',desc:'Main portfolio site with HarzPay, HarzStore, Harz AI OS, and all ecosystem apps',lang:'HTML',langColor:'#e34c26',stars:15,forks:8,issues:3,prs:1,vis:'public',updated:'5 hours ago',size:'5.1MB'},
-{name:'harzpay',desc:'HarzPay — Multi-currency payment app with Paystack integration',lang:'HTML',langColor:'#e34c26',stars:12,forks:4,issues:2,prs:1,vis:'public',updated:'3 hours ago',size:'1.8MB'},
-{name:'lives-stillness',desc:'Master project umbrella — Lives Stillness contains all HARZ ecosystem data',lang:'JavaScript',langColor:'#f1e05a',stars:9,forks:2,issues:1,prs:0,vis:'public',updated:'1 day ago',size:'1.2MB'},
-{name:'harz-ai-os',desc:'HARZ AI OS — Hausa AI operating system with 12 language support',lang:'JavaScript',langColor:'#f1e05a',stars:8,forks:3,issues:2,prs:1,vis:'public',updated:'2 days ago',size:'3.5MB'},
-{name:'harzstore',desc:'HarzStore — Marketplace platform for African products',lang:'HTML',langColor:'#e34c26',stars:7,forks:2,issues:1,prs:0,vis:'public',updated:'3 days ago',size:'2.1MB'},
-{name:'harz-security',desc:'HARZ Security — Threat detection and monitoring for all platforms',lang:'Python',langColor:'#3572A5',stars:6,forks:1,issues:0,prs:0,vis:'public',updated:'4 days ago',size:'0.8MB'},
-{name:'harz-construction',desc:'HARZ Construction — Building management and project tracking',lang:'JavaScript',langColor:'#f1e05a',stars:5,forks:1,issues:1,prs:0,vis:'public',updated:'1 week ago',size:'1.5MB'},
-{name:'harz-media',desc:'HARZ Media — Content management and publishing platform',lang:'HTML',langColor:'#e34c26',stars:5,forks:0,issues:0,prs:0,vis:'public',updated:'1 week ago',size:'0.9MB'},
-{name:'harz-trading',desc:'HARZ Trading — Crypto and forex trading dashboard',lang:'JavaScript',langColor:'#f1e05a',stars:4,forks:1,issues:1,prs:0,vis:'public',updated:'1 week ago',size:'1.1MB'},
-{name:'harz-devops',desc:'HARZ DevOps — CI/CD pipeline and deployment automation',lang:'Shell',langColor:'#89e051',stars:4,forks:0,issues:0,prs:0,vis:'private',updated:'2 weeks ago',size:'0.5MB'},
-{name:'harz-energy',desc:'HARZ Energy — GDEG token and energy credit management',lang:'JavaScript',langColor:'#f1e05a',stars:3,forks:0,issues:0,prs:0,vis:'public',updated:'2 weeks ago',size:'0.7MB'},
-{name:'harz-education',desc:'HARZ Education — Learning platform with Hausa AI tutor',lang:'HTML',langColor:'#e34c26',stars:3,forks:0,issues:0,prs:0,vis:'public',updated:'3 weeks ago',size:'1.3MB'},
-{name:'harz-real-estate',desc:'HARZ Real Estate — Property listing and management',lang:'HTML',langColor:'#e34c26',stars:2,forks:0,issues:0,prs:0,vis:'public',updated:'3 weeks ago',size:'1.0MB'},
-{name:'harz-infrastructure',desc:'HARZ Infrastructure — Cloud infrastructure management',lang:'Shell',langColor:'#89e051',stars:2,forks:0,issues:0,prs:0,vis:'private',updated:'1 month ago',size:'0.4MB'},
-];
-
-const issues=[
-{repo:'harz-cloud-backend',title:'Vercel auto-deploy not triggering after commit',status:'open',priority:'high',labels:['bug','deployment'],author:'rabiuhamza11',date:'2h ago'},
-{repo:'harz-cloud-backend',title:'Render needs manual deploy for v20.0',status:'open',priority:'high',labels:['deployment'],author:'rabiuhamza11',date:'2h ago'},
-{repo:'harz-cloud-backend',title:'Telegram bot webhook handler needs improvement',status:'open',priority:'medium',labels:['enhancement','telegram'],author:'rabiuhamza11',date:'3h ago'},
-{repo:'harz-cloud-backend',title:'Add Cloudflare R2 storage support',status:'open',priority:'medium',labels:['feature','storage'],author:'rabiuhamza11',date:'1d ago'},
-{repo:'harz-pay',title:'Paystack callback not updating wallet on Vercel',status:'open',priority:'high',labels:['bug','payments'],author:'rabiuhamza11',date:'5h ago'},
-{repo:'harz-ai-os',title:'Hausa NLP model needs more training data',status:'open',priority:'low',labels:['ai','nlp'],author:'rabiuhamza11',date:'2d ago'},
-{repo:'harz-ai-os',title:'Add support for Yoruba and Igbo languages',status:'open',priority:'medium',labels:['feature','i18n'],author:'rabiuhamza11',date:'2d ago'},
-{repo:'harz-portfolio',title:'Landing page not responsive on small screens',status:'open',priority:'medium',labels:['bug','ui'],author:'rabiuhamza11',date:'3d ago'},
-];
-
-const pulls=[
-{repo:'harz-cloud-backend',title:'feat: v20.0 — 132 new endpoints across 17 modules',status:'open',author:'rabiuhamza11',target:'main',source:'v20-expansion',date:'3h ago',comments:2},
-{repo:'harz-cloud-backend',title:'feat: DeployForge — one-click deploy to 8 providers',status:'open',author:'rabiuhamza11',target:'main',source:'deployforge',date:'5h ago',comments:0},
-{repo:'harz-pay',title:'feat: HarzPay onboarding flow — 8-step wizard',status:'open',author:'rabiuhamza11',target:'main',source:'onboarding',date:'3h ago',comments:1},
-{repo:'harz-ai-os',title:'feat: Hausa AI with 12 language i18n support',status:'open',author:'rabiuhamza11',target:'main',source:'i18n',date:'2d ago',comments:0},
-{repo:'harz-portfolio',title:'feat: Admin dashboard with live monitoring',status:'open',author:'rabiuhamza11',target:'main',source:'admin',date:'1h ago',comments:0},
-{repo:'harzstore',title:'fix: Product images not loading on mobile',status:'merged',author:'rabiuhamza11',target:'main',source:'fix-images',date:'3d ago',comments:1},
-{repo:'harz-security',title:'feat: Threat detection with real-time alerts',status:'open',author:'rabiuhamza11',target:'main',source:'security',date:'1w ago',comments:0},
-];
-
-const commits=[
-{hash:'c3c60b1',msg:'fix: update author name to Rabiu Hamza Mohammed',repo:'harzpay',author:'rabiuhamza11',time:'2h ago',additions:1,deletions:1},
-{hash:'3156980',msg:'fix: trigger Vercel redeploy for v20.0',repo:'harz-cloud-backend',author:'rabiuhamza11',time:'3h ago',additions:4,deletions:7},
-{hash:'30f5447',msg:'feat: HarzPay onboarding flow — 8 steps',repo:'harz-portfolio',author:'rabiuhamza11',time:'4h ago',additions:376,deletions:0},
-{hash:'c90a730',msg:'feat: HarzPay onboarding flow — 8-step setup wizard',repo:'harzpay',author:'rabiuhamza11',time:'4h ago',additions:376,deletions:0},
-{hash:'9d7f560',msg:'feat: HARZ Cloud Admin Dashboard — ecosystem control panel',repo:'harz-portfolio',author:'rabiuhamza11',time:'1h ago',additions:369,deletions:0},
-{hash:'0ae092b',msg:'feat: HARZ Cloud Admin Dashboard — 10-section control panel',repo:'harzpay',author:'rabiuhamza11',time:'1h ago',additions:369,deletions:0},
-{hash:'e94c896',msg:'feat: v20.0 expansion — 132 new endpoints',repo:'harz-cloud-backend',author:'rabiuhamza11',time:'5h ago',additions:1247,deletions:0},
-{hash:'d58dcd2',msg:'docs: HARZ Cloud API documentation update',repo:'harzpay',author:'rabiuhamza11',time:'6h ago',additions:89,deletions:12},
-{hash:'d0dd851',msg:'feat: Blog post — Vercel of Africa',repo:'harz-portfolio',author:'rabiuhamza11',time:'8h ago',additions:234,deletions:0},
-{hash:'012fa94',msg:'feat: Community outreach kit — 10 communities',repo:'harzpay',author:'rabiuhamza11',time:'8h ago',additions:156,deletions:0},
-];
-
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.closest('.nav-item').classList.add('active');}
-
-// Render repos
-function renderRepos(list){
-document.getElementById('repo-list').innerHTML=list.map(r=>`<div class="repo-item" onclick="window.open('https://github.com/${r.vis==='private'?'rabiuhamza11':'rabiuhamza11'}/${r.name}')">
-<div class="repo-header"><div class="repo-name"><span class="lang-dot" style="background:${r.langColor}"></span>${r.name}<span class="vis ${r.vis}">${r.vis}</span></div>
-<div style="font-size:.7rem;color:var(--gray)">${r.updated}</div></div>
-<div class="repo-desc">${r.desc}</div>
+<div>
+<div class="section">
+<h2>Active Repositories</h2>
+<div class="repo-card">
+<div class="repo-name">harz-portfolio</div>
+<div class="repo-desc">Main HARZ ecosystem — 88 HTML pages, super app, platforms, tools</div>
 <div class="repo-meta">
-<span>⭐ ${r.stars}</span><span>🍴 ${r.forks}</span><span>⚠️ ${r.issues}</span><span>🔀 ${r.prs}</span><span>📦 ${r.size}</span><span>${r.lang}</span>
-</div></div>`).join('');
-}
+<span><span class="lang-dot" style="background:#e34c26"></span>HTML</span>
+<span>88 files</span>
+<span>Updated: Aug 6, 2026</span>
+<span class="badge b-green">Live</span>
+</div>
+</div>
+<div class="repo-card">
+<div class="repo-name">harz-cloud-api</div>
+<div class="repo-desc">HARZ Cloud API v23.1.0 — Cloudflare Workers, 30+ endpoints</div>
+<div class="repo-meta">
+<span><span class="lang-dot" style="background:#3178c6"></span>TypeScript</span>
+<span>1 file</span>
+<span>Updated: Aug 6, 2026</span>
+<span class="badge b-green">Live</span>
+</div>
+</div>
+<div class="repo-card">
+<div class="repo-name">magani-agent</div>
+<div class="repo-desc">Magani Agent v10.0 — 21 tools, 9 executive agents, KV memory</div>
+<div class="repo-meta">
+<span><span class="lang-dot" style="background:#3178c6"></span>TypeScript</span>
+<span>1 file</span>
+<span>Updated: Aug 6, 2026</span>
+<span class="badge b-green">Live</span>
+</div>
+</div>
+<div class="repo-card">
+<div class="repo-name">harz-ecosystem</div>
+<div class="repo-desc">Cloudflare Pages mirror — 678+ ecosystem assets</div>
+<div class="repo-meta">
+<span><span class="lang-dot" style="background:#e34c26"></span>HTML</span>
+<span>84 files</span>
+<span>Updated: Aug 6, 2026</span>
+<span class="badge b-green">Live</span>
+</div>
+</div>
+<div class="repo-card">
+<div class="repo-name">deployforge</div>
+<div class="repo-desc">Multi-cloud deployment platform v7.1</div>
+<div class="repo-meta">
+<span><span class="lang-dot" style="background:#3178c6"></span>TypeScript</span>
+<span>1 file</span>
+<span>Updated: Aug 6, 2026</span>
+<span class="badge b-green">Live</span>
+</div>
+</div>
+<div class="repo-card">
+<div class="repo-name">omega-ai-packager</div>
+<div class="repo-desc">OMEGA Commander AI — 9 executive agents</div>
+<div class="repo-meta">
+<span><span class="lang-dot" style="background:#f1e05a"></span>JavaScript</span>
+<span>1 file</span>
+<span>Updated: Aug 6, 2026</span>
+<span class="badge b-green">Live</span>
+</div>
+</div>
+</div>
+</div>
+</div>
 
-// Language distribution
-function renderLangs(){
-const langs={'JavaScript':{count:8,color:'#f1e05a'},'HTML':{count:5,color:'#e34c26'},'Shell':{count:2,color:'#89e051'},'Python':{count:1,color:'#3572A5'}};
-const total=Object.values(langs).reduce((s,l)=>s+l.count,0);
-document.getElementById('lang-bar').innerHTML=Object.entries(langs).map(([n,l])=>`<div class="lang-segment" style="width:${(l.count/total*100)}%;background:${l.color}"></div>`).join('');
-document.getElementById('lang-legend').innerHTML=Object.entries(langs).map(([n,l])=>`<span><span class="lang-dot" style="background:${l.color}"></span>${n} ${Math.round(l.count/total*100)}%</span>`).join('');
-}
+<div id="commits" class="tab-content" style="display:none">
+<div class="panel">
+<h3>Recent Commits — harz-portfolio (main)</h3>
+<div class="commit"><span class="commit-hash">4c5cfb9</span><span class="commit-msg">update: Super app + admin panel synced from Cloudflare deploy</span><span class="commit-time">Aug 6, 19:33</span></div>
+<div class="commit"><span class="commit-hash">2590d50</span><span class="commit-msg">feat: HARZ Cloud Admin panel + production freeze dashboard updates</span><span class="commit-time">Aug 6, 19:28</span></div>
+<div class="commit"><span class="commit-hash">4b3b62d</span><span class="commit-msg">feat: Production freeze dashboard, public status page, API docs</span><span class="commit-time">Aug 6, 19:22</span></div>
+<div class="commit"><span class="commit-hash">05f30c4</span><span class="commit-msg">feat: Security center, analytics dashboard, 2FA, SMS, email, push</span><span class="commit-time">Aug 6, 18:40</span></div>
+<div class="commit"><span class="commit-hash">a1b2c3d</span><span class="commit-msg">feat: 45 new developer tools, PWA, API, DevOps, Security</span><span class="commit-time">Aug 6, 17:00</span></div>
+<div class="commit"><span class="commit-hash">e4f5g6h</span><span class="commit-msg">feat: English-only standardization, all Hausa removed</span><span class="commit-time">Aug 6, 15:30</span></div>
+<div class="commit"><span class="commit-hash">i7j8k9l</span><span class="commit-msg">feat: Grey US bank integrated across all 5 payment pages</span><span class="commit-time">Aug 6, 14:00</span></div>
+<div class="commit"><span class="commit-hash">m0n1o2p</span><span class="commit-msg">feat: Stripe removed, payment stack unified</span><span class="commit-time">Aug 6, 12:30</span></div>
+<div class="commit"><span class="commit-hash">q3r4s5t</span><span class="commit-msg">feat: All GitHub Pages references replaced with Cloudflare</span><span class="commit-time">Aug 6, 10:00</span></div>
+</div>
+</div>
 
-// Filter repos
-function filterRepos(q){const f=repos.filter(r=>r.name.includes(q)||r.desc.toLowerCase().includes(q.toLowerCase()));renderRepos(f);}
+<div id="deploys" class="tab-content" style="display:none">
+<div class="section">
+<h2>Active Deployments</h2>
+<div class="deploy-target">
+<div class="dt-info"><div class="dt-name">HARZ Cloud (Cloudflare Pages)</div><div class="dt-url">harz-cloud.pages.dev</div></div>
+<div class="dt-status live">● Live — 88 files</div>
+</div>
+<div class="deploy-target">
+<div class="dt-info"><div class="dt-name">HARZ Cloud API (Cloudflare Workers)</div><div class="dt-url">harz-cloud-api.harz.workers.dev</div></div>
+<div class="dt-status live">● Live — v23.1.0</div>
+</div>
+<div class="deploy-target">
+<div class="dt-info"><div class="dt-name">Magani Agent (Cloudflare Workers)</div><div class="dt-url">magani-agent.harz.workers.dev</div></div>
+<div class="dt-status live">● Live — v10.0</div>
+</div>
+<div class="deploy-target">
+<div class="dt-info"><div class="dt-name">HARZ Ecosystem (Cloudflare Pages)</div><div class="dt-url">harz-ecosystem.pages.dev</div></div>
+<div class="dt-status live">● Live — mirror</div>
+</div>
+<div class="deploy-target">
+<div class="dt-info"><div class="dt-name">Custom Domain</div><div class="dt-url">harz.linkpc.net → harz-cloud.pages.dev</div></div>
+<div class="dt-status pending">● Pending CNAME</div>
+</div>
+<div class="deploy-target">
+<div class="dt-info"><div class="dt-name">GitHub Mirror</div><div class="dt-url">github.com/rabiuhamza11/harz-portfolio</div></div>
+<div class="dt-status live">● Synced</div>
+</div>
+</div>
+<div class="section">
+<h2>Deploy Targets</h2>
+<p style="color:#8b949e;font-size:.85rem;margin-bottom:12px">All HARZ deployments go through these native platforms only:</p>
+<div class="deploy-target"><div class="dt-info"><div class="dt-name">DeployForge</div><div class="dt-url">Multi-cloud deployment engine</div></div><a class="btn" href="/deployforge.html">Open</a></div>
+<div class="deploy-target"><div class="dt-info"><div class="dt-name">HARZ Magic</div><div class="dt-url">Instant deployment & build automation</div></div><a class="btn" href="/harz-magic.html">Open</a></div>
+<div class="deploy-target"><div class="dt-info"><div class="dt-name">HARZ Cloud</div><div class="dt-url">Cloudflare Pages + Workers hosting</div></div><a class="btn" href="/harz-admin.html">Open</a></div>
+<div class="deploy-target"><div class="dt-info"><div class="dt-name">HarzGit</div><div class="dt-url">HARZ code repository & version control</div></div><span class="badge b-green">You are here</span></div>
+</div>
+</div>
 
-// Render issues
-function renderIssues(status){
-let list=issues;
-if(status==='open')list=issues.filter(i=>i.status==='open');
-if(status==='closed')list=issues.filter(i=>i.status==='closed');
-document.getElementById('issue-list').innerHTML=list.map(i=>`<div class="issue-row">
-<div class="issue-icon">⚠️</div><div class="issue-info">
-<div class="issue-title">${i.title}</div>
-<div class="issue-meta">${i.repo} · ${i.author} · ${i.date}</div>
-</div><div style="display:flex;gap:.3rem;flex-wrap:wrap">
-<span class="badge badge-${i.priority==='high'?'red':i.priority==='medium'?'yellow':'blue'}">${i.priority}</span>
-${i.labels.map(l=>`<span class="badge badge-green">${l}</span>`).join('')}
-</div></div>`).join('');
-}
+<div id="files" class="tab-content" style="display:none">
+<div class="panel">
+<h3>harz-portfolio / main — File Browser</h3>
+<div class="branch">🌿 main</div>
+<div class="file-list" id="fileList">
+</div>
+</div>
+</div>
 
-// Render PRs
-function renderPRs(){
-document.getElementById('pr-list').innerHTML=pulls.map(p=>`<div class="pr-item">
-<div class="pr-icon">🔀</div><div class="pr-info">
-<div class="pr-title">${p.title}</div>
-<div class="pr-meta">${p.repo} · ${p.source} → ${p.target} · ${p.author} · ${p.date} · ${p.comments} comments</div>
-</div><span class="badge badge-${p.status==='merged'?'green':'yellow'}">${p.status}</span>
-</div>`).join('');
-}
+</div>
+<script>
+function showTab(name){document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');document.getElementById(name).style.display='block';document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');}
 
-// Render commits
-function renderCommits(){
-document.getElementById('commit-list').innerHTML=commits.map(c=>`<div class="commit-item">
-<div class="commit-hash">${c.hash}</div><div class="commit-info">
-<div class="commit-msg">${c.msg}</div>
-<div class="commit-meta">${c.repo} · ${c.author} · ${c.time} · +${c.additions} -${c.deletions}</div>
-</div></div>`).join('');
-}
-
-// Top repos
-function renderTopRepos(){
-const sorted=[...repos].sort((a,b)=>b.stars-a.stars).slice(0,8);
-document.getElementById('top-repos').innerHTML=sorted.map((r,i)=>`<div class="repo-item">
-<div class="repo-header"><div class="repo-name"><span class="lang-dot" style="background:${r.langColor}"></span>${r.name}</div>
-<div>⭐ ${r.stars}</div></div>
-<div class="repo-desc">${r.desc}</div></div>`).join('');
-}
-
-// Activity
-function renderActivity(){
-const activities=[
-{icon:'📝',text:'<b>rabiuhamza11</b> pushed to harz-cloud-backend',time:'2h ago'},
-{icon:'🔀',text:'<b>rabiuhamza11</b> opened PR "v20.0 — 132 new endpoints"',time:'3h ago'},
-{icon:'⚠️',text:'<b>rabiuhamza11</b> opened issue "Vercel auto-deploy not triggering"',time:'2h ago'},
-{icon:'⭐',text:'<b>harz-cloud-backend</b> received a star',time:'5h ago'},
-{icon:'🍴',text:'<b>harz-portfolio</b> was forked',time:'5h ago'},
-{icon:'📝',text:'<b>rabiuhamza11</b> pushed to harz-portfolio',time:'4h ago'},
-{icon:'🔀',text:'<b>rabiuhamza11</b> opened PR "HarzPay onboarding flow"',time:'4h ago'},
-{icon:'📝',text:'<b>rabiuhamza11</b> pushed to harzpay',time:'4h ago'},
-{icon:'⚠️',text:'<b>rabiuhamza11</b> opened issue "Paystack callback not updating wallet"',time:'5h ago'},
-{icon:'📝',text:'<b>rabiuhamza11</b> pushed to harz-cloud-backend',time:'5h ago'},
+const files = [
+["harz-super-app.html","47KB","Super App Dashboard"],
+["harz-admin.html","11KB","Admin Control Center"],
+["harz-security-center.html","17KB","Security Center"],
+["harz-analytics-dashboard.html","16KB","Analytics Dashboard"],
+["harz-production-freeze.html","12KB","Production Freeze"],
+["harz-status.html","8KB","Public Status Page"],
+["harz-api-docs.html","20KB","API Documentation"],
+["harz-magic.html","12KB","HARZ Magic Deploy"],
+["harzgit.html","9KB","HarzGit Repository"],
+["deployforge.html","28KB","DeployForge v7.1"],
+["harz-pay-live.html","19KB","Payment Hub"],
+["harz-toolkit.html","60KB","Developer Toolkit"],
+["harz-crypto-pay.html","14KB","Crypto Payment"],
+["checkout.html","10KB","Checkout"],
+["harz-wallet.html","15KB","Wallet"],
+["harz-smart-calendar.html","18KB","Smart Calendar"],
+["buildbot-ai.html","477KB","BuildBot AI"],
+["danfodio-fees-payment.html","21KB","School Fees Payment"],
+["danfodio-memorial.html","16KB","Danfodio Memorial"],
+["harz-farm-manager.html","18KB","Farm Manager"],
+["harz-dev-platform.html","37KB","Dev Platform"],
+["harz-super-app.html","47KB","Super App"],
 ];
-document.getElementById('activity-list').innerHTML=activities.map(a=>`<div class="commit-item"><div style="font-size:1rem">${a.icon}</div><div class="commit-info"><div class="commit-msg">${a.text}</div><div class="commit-meta">${a.time}</div></div></div>`).join('');
-}
 
-// Init
-renderRepos(repos);renderLangs();renderIssues('open');renderPRs();renderCommits();renderTopRepos();renderActivity();
+const fileList = document.getElementById('fileList');
+files.forEach(([name,size,desc])=>{
+fileList.innerHTML += `<div class="file"><span><a href="/${name}">${name}</a> — ${desc}</span><span style="color:#8b949e">${size}</span></div>`;
+});
 </script>
 </body>
 </html>
