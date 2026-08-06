@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>User Story Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>User Story Generator</h1>
+<div class="field"><label>Role (who)</label><input id="role" value="customer" oninput="gen()"></div>
+<div class="field"><label>Goals (one per line: goal|reason)</label><textarea id="goals" rows="5" oninput="gen()">browse products on WhatsApp|I want to see what's available without opening a browser
+pay with crypto|I want to use USDT for faster international payments
+get instant AI support|I want answers without waiting for a human agent</textarea></div>
+<button onclick="copy()">Copy User Stories</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const r=document.getElementById('role').value;
+const goals=document.getElementById('goals').value.split('\n').filter(l=>l.trim()).map(l=>{const[g,reason]=l.split('|');return{g:g.trim(),r:(reason||'').trim()};});
+let out='';
+goals.forEach((s,i)=>{out+=`### Story ${i+1}\nAs a ${r}, I want to ${s.g}, so that ${s.r}.\n\n**Acceptance Criteria:**\n- Given I am a ${r}\n- When I ${s.g}\n- Then ${s.r}\n\n**Priority:** ${i===0?'High':i===1?'Medium':'Low'}\n**Estimate:** ${i+2} points\n\n`;});
+document.getElementById('output').textContent=out;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+gen();
+</script></body></html>

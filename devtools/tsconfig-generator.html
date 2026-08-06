@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TypeScript Config Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}select{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>TypeScript Config Generator</h1>
+<div class="field"><label>Project Type</label><select id="type" onchange="gen()"><option>Node.js</option><option>React</option><option>Next.js</option><option>Cloudflare Workers</option><option>Strict Library</option></select></div>
+<button onclick="copy()">Copy tsconfig.json</button>
+<button onclick="download()">Download</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const t=document.getElementById('type').value;let cfg={compilerOptions:{target:'ES2022',module:'ES2022',moduleResolution:'bundler',lib:['ES2022'],strict:true,esModuleInterop:true,skipLibCheck:true,forceConsistentCasingInFileNames:true,resolveJsonModule:true,declaration:true,outDir:'./dist',rootDir:'./src'},include:['src/**/*'],exclude:['node_modules','dist']};
+if(t==='Cloudflare Workers'){cfg.compilerOptions.types=['@cloudflare/workers-types'];cfg.compilerOptions.moduleResolution='node';}
+if(t==='React'){cfg.compilerOptions.jsx='react-jsx';cfg.compilerOptions.lib.push('DOM','DOM.Iterable');}
+if(t==='Next.js'){cfg.compilerOptions.jsx='preserve';cfg.compilerOptions.plugins=[{name:'next'}];cfg.compilerOptions.paths={'@/*':['./src/*']};}
+if(t==='Strict Library'){cfg.compilerOptions.noUnusedLocals=true;cfg.compilerOptions.noUnusedParameters=true;cfg.compilerOptions.noImplicitReturns=true;cfg.compilerOptions.noFallthroughCasesInSwitch=true;cfg.compilerOptions.noUncheckedIndexedAccess=true;}
+document.getElementById('output').textContent=JSON.stringify(cfg,null,2);
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+function download(){const b=new Blob([document.getElementById('output').textContent],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tsconfig.json';a.click();}
+gen();
+</script></body></html>

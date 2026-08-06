@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PWA Manifest Generator — HARZ DevTools</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}
+h1{color:#58a6ff;font-size:1.4em;margin-bottom:10px}
+.field{margin:10px 0}
+label{display:block;color:#8b949e;font-size:0.85em;margin-bottom:3px}
+input,select,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px;font-size:0.9em}
+button{padding:10px 20px;background:#238636;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.9em;margin:10px 5px 10px 0}
+button:hover{background:#2ea043}
+.row{display:flex;gap:10px}
+.row>div{flex:1}
+textarea{min-height:200px;font-family:monospace;font-size:0.85em}
+pre{background:#161b22;padding:15px;border-radius:6px;overflow-x:auto;white-space:pre-wrap;font-size:0.85em;border:1px solid #30363d}
+.tag{display:inline-block;background:#1f6feb;color:white;padding:2px 8px;border-radius:12px;font-size:0.75em;margin:2px}
+</style>
+</head>
+<body>
+<h1>PWA Manifest Generator</h1>
+<div class="field"><label>App Name</label><input id="name" value="HARZ AI OS" oninput="gen()"></div>
+<div class="row">
+<div class="field"><label>Short Name</label><input id="short_name" value="HARZ AI" oninput="gen()"></div>
+<div class="field"><label>Theme Color</label><input id="theme_color" type="color" value="#1f6feb" oninput="gen()"></div>
+<div class="field"><label>Background Color</label><input id="bg_color" type="color" value="#0d1117" oninput="gen()"></div>
+</div>
+<div class="row">
+<div class="field"><label>Display Mode</label><select id="display" onchange="gen()"><option>standalone</option><option>fullscreen</option><option>minimal-ui</option><option>browser</option></select></div>
+<div class="field"><label>Orientation</label><select id="orientation" onchange="gen()"><option>any</option><option>portrait</option><option>landscape</option></select></div>
+<div class="field"><label>Start URL</label><input id="start_url" value="/" oninput="gen()"></div>
+</div>
+<div class="field"><label>Scope</label><input id="scope" value="/" oninput="gen()"></div>
+<div class="field"><label>Description</label><input id="desc" value="HARZ AI Operating System — 63+ platforms in one app" oninput="gen()"></div>
+<div class="row">
+<div class="field"><label>Icon 192 URL</label><input id="icon192" value="/icons/icon-192.png" oninput="gen()"></div>
+<div class="field"><label>Icon 512 URL</label><input id="icon512" value="/icons/icon-512.png" oninput="gen()"></div>
+</div>
+<div class="field"><label>Categories (comma separated)</label><input id="categories" value="productivity,education,business" oninput="gen()"></div>
+<button onclick="download()">Download manifest.json</button>
+<button onclick="copy()">Copy JSON</button>
+<h3 style="margin-top:15px;color:#58a6ff">manifest.json</h3>
+<pre id="output"></pre>
+<script>
+function gen(){
+const cats=document.getElementById('categories').value.split(',').map(c=>c.trim());
+const manifest={
+name:document.getElementById('name').value,
+short_name:document.getElementById('short_name').value,
+description:document.getElementById('desc').value,
+start_url:document.getElementById('start_url').value,
+scope:document.getElementById('scope').value,
+display:document.getElementById('display').value,
+orientation:document.getElementById('orientation').value,
+theme_color:document.getElementById('theme_color').value,
+background_color:document.getElementById('bg_color').value,
+categories:cats,
+icons:[
+{src:document.getElementById('icon192').value,sizes:"192x192",type:"image/png",purpose:"any maskable"},
+{src:document.getElementById('icon512').value,sizes:"512x512",type:"image/png",purpose:"any maskable"}
+],
+shortcuts:[
+{name:"AI Chat",short_name:"Chat",url:document.getElementById('start_url').value+"?action=chat"},
+{name:"Wallet",short_name:"Wallet",url:document.getElementById('start_url').value+"?action=wallet"},
+{name:"Store",short_name:"Store",url:document.getElementById('start_url').value+"?action=store"}
+]
+};
+document.getElementById('output').textContent=JSON.stringify(manifest,null,2);
+}
+function download(){const blob=new Blob([document.getElementById('output').textContent],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='manifest.json';a.click();}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+gen();
+</script>
+</body>
+</html>

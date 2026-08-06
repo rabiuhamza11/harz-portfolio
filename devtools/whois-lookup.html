@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WHOIS Lookup — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>WHOIS Lookup</h1>
+<div class="field"><label>Domain name</label><input id="domain" value="harzdm.com" oninput=""></div>
+<button onclick="lookup()">Lookup</button>
+<pre id="output" style="margin-top:10px"></pre>
+<script>
+async function lookup(){
+const d=document.getElementById('domain').value.replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+document.getElementById('output').textContent='Querying WHOIS for '+d+'...';
+try{
+// Use RDAP (Registration Data Access Protocol) - modern WHOIS
+const r=await fetch(`https://rdap.org/domain/${d}`);
+if(r.ok){
+const data=await r.json();
+let out=`Domain: ${data.ldhName||d}\n`;
+const events=data.events||[];
+events.forEach(e=>{out+=`${e.eventAction}: ${e.eventDate}\n`;});
+out+=`\nStatus: ${(data.status||[]).join(', ')}\n`;
+const entities=data.entities||[];
+entities.forEach(e=>{out+=`\n${e.roles.join(', ')}:\n`;out+=`  ${e.vcardArray[1].find(v=>v[0]==='fn')?.[3]||'N/A'}\n`;e.vcardArray[1].forEach(v=>{if(v[0]==='email')out+=`  Email: ${v[3]}\n`;if(v[0]==='tel')out+=`  Phone: ${v[3]}\n`;if(v[0]==='adr')out+=`  Address: ${(v[3]||[]).join(', ')}\n`;});});
+const ns=data.nameservers||[];
+if(ns.length){out+=`\nNameservers:\n`;ns.forEach(n=>out+=`  ${n.ldhName}\n`);}
+document.getElementById('output').textContent=out;
+}else{
+document.getElementById('output').textContent='No RDAP data found for '+d+'\n\nTry: https://who.is/whois/'+d;
+}
+}catch(e){document.getElementById('output').textContent='Error: '+e.message+'\n\nTry manual lookup: https://who.is/whois/'+d;}
+}
+</script></body></html>

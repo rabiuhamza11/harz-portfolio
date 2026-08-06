@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Regex Visual Builder — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px;font-family:monospace}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}.match{color:#7ee787}.nomatch{color:#f85149}</style></head>
+<body><h1>Regex Visual Builder & Tester</h1>
+<div class="field"><label>Pattern (without /slashes/)</label><input id="pattern" value="\\b[A-Z][a-z]+\\b" oninput="test()"></div>
+<div class="row" style="display:flex;gap:10px;margin:10px 0">
+<label><input type="checkbox" id="g" checked onchange="test()"> Global</label>
+<label><input type="checkbox" id="i" onchange="test()"> Case-insensitive</label>
+<label><input type="checkbox" id="m" onchange="test()"> Multiline</label>
+<label><input type="checkbox" id="s" onchange="test()"> Dotall</label>
+</div>
+<div class="field"><label>Test String</label><textarea id="text" rows="5" oninput="test()">Hello World, This is HARZ Digital Services. The Quick Brown Fox Jumps Over The Lazy Dog.</textarea></div>
+<div class="field"><label>Common Patterns</label><select id="presets" onchange="loadPreset()"><option value="">Select a preset...</option><option value="^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$">Email</option><option value="^(\\+234|0)[789][01]\\d{8}$">Nigerian Phone</option><option value="\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b">IP Address</option><option value="https?://[\\w.-]+(?:/[\\w./?=-]*)?">URL</option><option value="\\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\b">UUID</option><option value="^[0-9]{10}$">BVN (10 digits)</option><option value="\\bNGN\\s?[\\d,.]+\\b">Currency NGN</option></select></div>
+<pre id="output"></pre>
+<script>
+function test(){
+const p=document.getElementById('pattern').value;const t=document.getElementById('text').value;
+let flags='';if(document.getElementById('g').checked)flags+='g';if(document.getElementById('i').checked)flags+='i';if(document.getElementById('m').checked)flags+='m';if(document.getElementById('s').checked)flags+='s';
+let out=`/${p}/${flags}\n\n`;
+try{const re=new RegExp(p,flags);const matches=[...t.matchAll(re)];
+if(matches.length===0){out+='No matches found';}else{matches.forEach((m,i)=>{out+=`Match ${i+1}: "${m[0]}" at index ${m.index}\n`;if(m.length>1){m.slice(1).forEach((g,j)=>{out+=`  Group ${j+1}: "${g}"\n`;});}});out+=`\nTotal: ${matches.length} match(es)`;}
+const full=re.test(t);out+=`\n\n.test() => ${full}`;
+}catch(e){out+='Error: '+e.message;}
+document.getElementById('output').textContent=out;
+}
+function loadPreset(){const p=document.getElementById('presets').value;if(!p)return;document.getElementById('pattern').value=p.replace(/\\\\/g,'\\');test();}
+test();
+</script></body></html>

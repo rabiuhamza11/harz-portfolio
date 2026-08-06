@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CORS Config Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>CORS Config Generator</h1>
+<div class="field"><label>Allowed Origins (comma, or * for all)</label><input id="origins" value="https://harzdm.com, https://rabiuhamza11.github.io, https://harz-cloud-api.harz.workers.dev" oninput="gen()"></div>
+<div class="field"><label>Allowed Methods</label><input id="methods" value="GET, POST, PUT, DELETE, OPTIONS" oninput="gen()"></div>
+<div class="field"><label>Allowed Headers</label><input id="headers" value="Content-Type, Authorization, X-HARZ-Key" oninput="gen()"></div>
+<div class="field"><label>Max Age (seconds)</label><input id="maxage" value="86400" oninput="gen()"></div>
+<div class="field"><label>Allow Credentials</label><select id="creds" onchange="gen()"><option value="true">Yes</option><option value="false">No</option></select></div>
+<button onclick="copy()">Copy Headers</button>
+<button onclick="copyWorker()">Copy Worker Code</button>
+<pre id="output"></pre>
+<pre id="worker" style="margin-top:10px"></pre>
+<script>
+function gen(){
+const o=document.getElementById('origins').value;const m=document.getElementById('methods').value;const h=document.getElementById('headers').value;const ma=document.getElementById('maxage').value;const c=document.getElementById('creds').value;
+document.getElementById('output').textContent=`Access-Control-Allow-Origin: ${o}\nAccess-Control-Allow-Methods: ${m}\nAccess-Control-Allow-Headers: ${h}\nAccess-Control-Max-Age: ${ma}\nAccess-Control-Allow-Credentials: ${c}`;
+document.getElementById('worker').textContent=`// Cloudflare Worker CORS handler\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": ${o.includes(',')?o.split(',')[0].trim().replace(/"/g,'\\"'):"'"+o+"'"},\n  "Access-Control-Allow-Methods": "${m}",\n  "Access-Control-Allow-Headers": "${h}",\n  "Access-Control-Max-Age": "${ma}",\n  "Access-Control-Allow-Credentials": "${c}"\n};\n\nexport default {\n  async fetch(request, env) {\n    if (request.method === "OPTIONS") {\n      return new Response(null, { status: 204, headers: corsHeaders });\n    }\n    // Handle actual request...\n    return new Response("OK", { headers: corsHeaders });\n  }\n};`;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Headers copied!');}
+function copyWorker(){navigator.clipboard.writeText(document.getElementById('worker').textContent);alert('Worker code copied!');}
+gen();
+</script></body></html>

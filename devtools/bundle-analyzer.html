@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Bundle Size Analyzer — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}.bar{background:#1f6feb;height:20px;border-radius:4px;transition:width 0.3s}.bar-row{display:flex;align-items:center;gap:10px;margin:8px 0}.bar-label{width:150px;color:#8b949e;font-size:0.85em}.bar-container{flex:1;background:#161b22;border-radius:4px;overflow:hidden}.bar-size{width:80px;text-align:right;font-size:0.85em;color:#e6edf3}table{width:100%;border-collapse:collapse;margin-top:10px}td,th{padding:8px;text-align:left;border-bottom:1px solid #30363d}th{color:#58a6ff}</style></head>
+<body><h1>Bundle Size Analyzer</h1>
+<div class="field"><label>Paste your JS/CSS code</label><textarea id="code" rows="8" placeholder="Paste minified or source JS/CSS here"></textarea></div>
+<button onclick="analyze()">Analyze</button>
+<div id="results"></div>
+<script>
+function analyze(){
+const code=document.getElementById('code').value;const bytes=new Blob([code]).size;
+const kb=(bytes/1024).toFixed(2);const gzipped=estimateGzip(bytes);
+const chars=code.length;const lines=code.split('\n').length;const funcs=(code.match(/function\s+\w+|=>\s*{/g)||[]).length;
+const imports=(code.match(/import\s+.*?from/g)||[]).length;
+const html=`<table><tr><th>Metric</th><th>Value</th></tr>
+<tr><td>Raw size</td><td>${kb} KB (${bytes} bytes)</td></tr>
+<tr><td>Estimated Gzip</td><td>${gzipped} KB</td></tr>
+<tr><td>Characters</td><td>${chars.toLocaleString()}</td></tr>
+<tr><td>Lines</td><td>${lines.toLocaleString()}</td></tr>
+<tr><td>Functions</td><td>${funcs}</td></tr>
+<tr><td>Imports</td><td>${imports}</td></tr>
+<tr><td>Load time (3G)</td><td>${(bytes/40000).toFixed(2)}s</td></tr>
+<tr><td>Load time (4G)</td><td>${(bytes/1000000).toFixed(3)}s</td></tr>
+</table>
+<div class="bar-row" style="margin-top:15px"><div class="bar-label">Raw</div><div class="bar-container"><div class="bar" style="width:${Math.min(bytes/10240*100,100)}%"></div></div><div class="bar-size">${kb}KB</div></div>
+<div class="bar-row"><div class="bar-label">Gzipped</div><div class="bar-container"><div class="bar" style="width:${Math.min(gzipped/10240*100,100)}%;background:#7ee787"></div></div><div class="bar-size">${gzipped}KB</div></div>
+<p style="color:#8b949e;font-size:0.85em;margin-top:10px">${bytes>50000?'⚠ Large bundle. Consider code splitting.':'✓ Bundle size is acceptable.'}</p>`;
+document.getElementById('results').innerHTML=html;
+}
+function estimateGzip(bytes){return(bytes*0.3/1024).toFixed(2);}
+</script></body></html>

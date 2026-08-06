@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HMAC Signature Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px;word-break:break-all}</style></head>
+<body><h1>HMAC Signature Generator</h1>
+<div class="field"><label>Secret Key</label><input id="secret" type="password" value="harz_secret_321424" oninput="gen()"></div>
+<div class="field"><label>Payload (JSON or text)</label><textarea id="payload" rows="5" oninput="gen()">{&quot;event&quot;:&quot;payment.success&quot;,&quot;reference&quot;:&quot;HARZ-12345&quot;,&quot;amount&quot;:3200}</textarea></div>
+<div class="field"><label>Algorithm</label><select id="algo" onchange="gen()"><option>SHA-256</option><option>SHA-512</option><option>SHA-1</option></select></div>
+<div class="field"><label>Encoding</label><select id="enc" onchange="gen()"><option value="hex">Hex</option><option value="base64">Base64</option></select></div>
+<button onclick="gen()">Generate</button>
+<button onclick="copy()">Copy Signature</button>
+<pre id="output"></pre>
+<script>
+async function gen(){
+const sec=document.getElementById('secret').value;const msg=document.getElementById('payload').value;const algo=document.getElementById('algo').value;const enc=document.getElementById('enc').value;
+const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(sec),{name:'HMAC',hash:algo},false,['sign']);
+const sig=await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(msg));
+const bytes=new Uint8Array(sig);
+let result=enc==='hex'?Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join(''):btoa(String.fromCharCode(...bytes));
+document.getElementById('output').textContent=result;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+gen();
+</script></body></html>

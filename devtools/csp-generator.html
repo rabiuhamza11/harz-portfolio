@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CSP Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}.chk{display:block;margin:5px 0}.chk input{width:auto}</style></head>
+<body><h1>Content Security Policy Generator</h1>
+<div class="field"><label>Allowed domains (comma, e.g. 'self, harzdm.com, cdn.cloudflare.com')</label><input id="domains" value="self, *.harz.workers.dev, *.vercel.app, rabiuhamza11.github.io, cdnjs.cloudflare.com" oninput="gen()"></div>
+<div style="margin:10px 0">
+<label class="chk"><input type="checkbox" id="self" checked onchange="gen()"> Allow 'self'</label>
+<label class="chk"><input type="checkbox" id="inline" onchange="gen()"> Allow inline scripts/styles</label>
+<label class="chk"><input type="checkbox" id="unsafe" onchange="gen()"> Allow 'unsafe-eval' (not recommended)</label>
+<label class="chk"><input type="checkbox" id="https" checked onchange="gen()"> Force HTTPS upgrade</label>
+<label class="chk"><input type="checkbox" id="img" checked onchange="gen()"> Allow images from any source</label>
+<label class="chk"><input type="checkbox" id="ws" onchange="gen()"> Allow WebSocket connections</label>
+</div>
+<button onclick="copy()">Copy CSP Header</button>
+<button onclick="copyMeta()">Copy Meta Tag</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const domains=document.getElementById('domains').value.split(',').map(d=>d.trim());
+const self=document.getElementById('self').checked?"'self'":'';
+const inline=document.getElementById('inline').checked?"'unsafe-inline'":'';
+const unsafe=document.getElementById('unsafe').checked?"'unsafe-eval'":'';
+const https=document.getElementById('https').checked?'upgrade-insecure-requests;':'';
+const img=document.getElementById('img').checked?' *':'';
+const ws=document.getElementById('ws').checked?'wss: https:':'';
+const all=[self,...domains.filter(d=>d!=='self'),inline,unsafe].filter(Boolean).join(' ');
+let csp=`default-src ${all};\n`;
+csp+=`script-src ${all};\n`;
+csp+=`style-src ${all};\n`;
+csp+=`img-src 'self'${img} data: blob:;\n`;
+csp+=`font-src 'self' data: https://fonts.gstatic.com;\n`;
+if(ws)csp+=`connect-src 'self' ${ws};\n`;else csp+=`connect-src 'self';\n`;
+csp+=`object-src 'none';\n`;
+csp+=`base-uri 'self';\n`;
+csp+=`frame-ancestors 'self';\n`;
+if(https)csp+=`${https}`;
+document.getElementById('output').textContent=csp;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('CSP header copied!');}
+function copyMeta(){navigator.clipboard.writeText('<meta http-equiv="Content-Security-Policy" content="'+document.getElementById('output').textContent.replace(/\n/g,' ')+'">');alert('Meta tag copied!');}
+gen();
+</script></body></html>

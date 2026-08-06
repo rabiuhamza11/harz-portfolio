@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Email Validator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>Email Validator (Syntax + MX Record)</h1>
+<div class="field"><label>Email address</label><input id="email" value="hamzarabiu390@gmail.com" oninput="validate()"></div>
+<button onclick="validate()">Validate</button>
+<pre id="output"></pre>
+<script>
+async function validate(){
+const email=document.getElementById('email').value.trim();
+const syntaxRe=/^[\w.-]+@([\w-]+\.)+[\w-]{2,}$/;
+const syntaxOk=syntaxRe.test(email);
+const parts=email.split('@');const domain=parts[1]||'';
+let out=`Email: ${email}\n\n`;
+out+=`Syntax check: ${syntaxOk?'✓ Valid':'✗ Invalid'}\n`;
+out+=`Domain: ${domain||'(empty)'}\n`;
+if(syntaxOk){
+out+=`Local part: ${parts[0]}\n`;
+out+=`Domain parts: ${domain.split('.').join(', ')}\n`;
+out+=`TLD: .${domain.split('.').pop()}\n`;
+out+=`Length: ${email.length} chars\n`;
+out+=`Has +alias: ${email.includes('+')?'Yes':'No'}\n`;
+out+=`\nNote: MX record lookup requires server-side.\n`;
+out+=`Worker API: GET https://harz-dev-tools.harz.workers.dev/email/check?email=${encodeURIComponent(email)}\n`;
+// Try DNS over HTTPS
+try{const r=await fetch(`https://cloudflare-dns.com/dns-query?name=${domain}&type=MX`,{headers:{Accept:'application/dns-json'}});
+const d=await r.json();
+if(d.Answer){out+=`\nMX Records:\n`;d.Answer.forEach(a=>out+=`  ${a.data}\n`);out+=`\n✓ Domain has valid MX records (email can receive)`;}
+else{out+=`\n⚠ No MX records found for ${domain}`;}}
+catch(e){out+=`\n(MX check skipped - network issue)`;}
+}
+document.getElementById('output').textContent=out;
+}
+validate();
+</script></body></html>

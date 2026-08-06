@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dockerfile Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}.row{display:flex;gap:10px}.row>div{flex:1}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>Dockerfile Generator</h1>
+<div class="row"><div class="field"><label>Runtime</label><select id="runtime" onchange="gen()"><option value="node:22-alpine">Node.js 22 Alpine</option><option value="node:20-alpine">Node.js 20 Alpine</option><option value="python:3.12-slim">Python 3.12</option><option value="golang:1.22-alpine">Go 1.22</option><option value="nginx:alpine">Nginx</option></select></div>
+<div class="field"><label>Port</label><input id="port" value="3000" oninput="gen()"></div></div>
+<div class="row"><div class="field"><label>Entry Command</label><input id="cmd" value="npm start" oninput="gen()"></div>
+<div class="field"><label>Package Manager</label><select id="pm" onchange="gen()"><option value="npm">npm</option><option value="yarn">yarn</option><option value="pnpm">pnpm</option></select></div></div>
+<button onclick="copy()">Copy Dockerfile</button>
+<button onclick="copyCompose()">Copy docker-compose.yml</button>
+<pre id="output"></pre>
+<pre id="compose" style="margin-top:10px"></pre>
+<script>
+function gen(){
+const rt=document.getElementById('runtime').value;const port=document.getElementById('port').value;const cmd=document.getElementById('cmd').value;const pm=document.getElementById('pm').value;
+const isNode=rt.includes('node');const isPython=rt.includes('python');const isNginx=rt.includes('nginx');
+let df='';
+if(isNode){df=`FROM ${rt}\nWORKDIR /app\nCOPY package*.json ./\nRUN ${pm} ci --production\nCOPY . .\nEXPOSE ${port}\nCMD ["${cmd.replace(/ /g,'","')}"]\n`;}
+else if(isPython){df=`FROM ${rt}\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nEXPOSE ${port}\nCMD ["python","main.py"]\n`;}
+else if(isNginx){df=`FROM ${rt}\nCOPY ./dist /usr/share/nginx/html\nEXPOSE ${port}\nCMD ["nginx","-g","daemon off;"]\n`;}
+document.getElementById('output').textContent=df;
+document.getElementById('compose').textContent=`version: '3.9'\nservices:\n  app:\n    build: .\n    ports:\n      - "${port}:${port}"\n    environment:\n      - NODE_ENV=production\n    restart: unless-stopped\n    volumes:\n      - ./:/app`;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Dockerfile copied!');}
+function copyCompose(){navigator.clipboard.writeText(document.getElementById('compose').textContent);alert('docker-compose.yml copied!');}
+gen();
+</script></body></html>

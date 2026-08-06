@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Accessibility Checker — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px;font-family:monospace}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}.pass{color:#7ee787}.fail{color:#f85149}.warn{color:#f0883e}</style></head>
+<body><h1>Accessibility (a11y) Checker</h1>
+<div class="field"><label>Paste your HTML</label><textarea id="html" rows="8" placeholder="Paste HTML to check">&lt;img src="logo.png"&gt;
+&lt;button&gt;Click&lt;/button&gt;
+&lt;input type="text" placeholder="Search"&gt;
+&lt;a href="#">&lt;Read more&lt;/a&gt;</textarea></div>
+<button onclick="check()">Check Accessibility</button>
+<pre id="output"></pre>
+<script>
+function check(){
+const h=document.getElementById('html').value;const d=new DOMParser().parseFromString(h,'text/html');
+let issues=[];
+// Check images for alt
+d.querySelectorAll('img').forEach((img,i)=>{if(!img.alt)issues.push({type:'fail',msg:`Image #${i+1} missing alt attribute`,wcag:'1.1.1'});});
+// Check buttons for text
+d.querySelectorAll('button').forEach((b,i)=>{if(!b.textContent.trim()&&!b.getAttribute('aria-label'))issues.push({type:'fail',msg:`Button #${i+1} has no accessible text`,wcag:'4.1.2'});});
+// Check inputs for labels
+d.querySelectorAll('input').forEach((inp,i)=>{if(!inp.getAttribute('aria-label')&&!inp.id)issues.push({type:'warn',msg:`Input #${i+1} has no label or aria-label`,wcag:'1.3.1'});else if(inp.id&&!d.querySelector(`label[for="${inp.id}"]`))issues.push({type:'warn',msg:`Input #${i+1} has id but no matching label`,wcag:'1.3.1'});});
+// Check links
+d.querySelectorAll('a').forEach((a,i)=>{if(!a.textContent.trim()&&a.textContent!=='')issues.push({type:'warn',msg:`Link #${i+1} has no text content`,wcag:'2.4.4'});});
+// Check color contrast (can't do without CSS, note)
+// Check for headings order
+const headings=[...d.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+if(headings.length>0&&!headings[0].matches('h1'))issues.push({type:'warn',msg:'First heading is not H1',wcag:'1.3.1'});
+let out=`Accessibility Report\n${'='.repeat(40)}\n\nIssues found: ${issues.length}\n\n`;
+if(issues.length===0){out+='✓ No accessibility issues detected!\n';}else{issues.forEach(i=>{out+=`${i.type==='fail'?'✗ FAIL':i.type==='warn'?'⚠ WARN':'✓ PASS'} [WCAG ${i.wcag}] ${i.msg}\n`;});}
+out+=`\n\nChecks performed:\n- Image alt attributes (WCAG 1.1.1)\n- Button accessible text (WCAG 4.1.2)\n- Input labels (WCAG 1.3.1)\n- Link text (WCAG 2.4.4)\n- Heading order (WCAG 1.3.1)\n\nNote: This is a basic check. Use axe-core or Lighthouse for comprehensive testing.`;
+document.getElementById('output').textContent=out;
+}
+</script></body></html>

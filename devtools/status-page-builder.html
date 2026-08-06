@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Status Page Builder — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}.svc{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#161b22;border:1px solid #30363d;border-radius:6px;margin:5px 0}.svc-ok{color:#7ee787}.svc-down{color:#f85149}</style></head>
+<body><h1>Status Page Builder</h1>
+<div class="field"><label>Brand Name</label><input id="brand" value="HARZ Cloud" oninput="gen()"></div>
+<div class="field"><label>Services (one per line: name|url)</label>
+<textarea id="services" rows="6" oninput="gen()">HARZ AI|https://harz-ai.harz.workers.dev/health
+HARZ Cloud API|https://harz-cloud-api.harz.workers.dev/health
+HARZ Hub|https://harz-hub.harz.workers.dev/api
+Magani Agent|https://magani-agent.harz.workers.dev/info
+Dev Tools|https://harz-dev-tools.harz.workers.dev/health</textarea></div>
+<button onclick="gen()">Check All</button>
+<button onclick="download()">Download HTML</button>
+<div id="status" style="margin-top:15px"></div>
+<script>
+async function gen(){
+const brand=document.getElementById('brand').value;
+const svcs=document.getElementById('services').value.split('\n').filter(l=>l.trim()).map(l=>{const[n,u]=l.split('|');return{name:n.trim(),url:u.trim()};});
+let html=`<h2 style="color:#58a6ff">${brand} Status</h2><p style="color:#8b949e">Last checked: ${new Date().toLocaleString()}</p>`;
+for(const s of svcs){
+let status='...',cls='';
+try{const r=await fetch(s.url,{signal:AbortSignal.timeout(8000)});status=r.ok?'Operational':'Degraded';cls=r.ok?'svc-ok':'svc-down';}
+catch(e){status='Down';cls='svc-down';}
+html+=`<div class="svc"><span>${s.name}</span><span class="${cls}">${status}</span></div>`;
+}
+document.getElementById('status').innerHTML=html;
+}
+function download(){
+const html=document.documentElement.outerHTML;
+const b=new Blob([html],{type:'text/html'});
+const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='status-page.html';a.click();
+}
+gen();
+</script></body></html>

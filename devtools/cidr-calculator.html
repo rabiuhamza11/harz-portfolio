@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CIDR Calculator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}table{width:100%;border-collapse:collapse;margin-top:10px}td,th{padding:8px;border-bottom:1px solid #30363d}th{color:#58a6ff;text-align:left}</style></head>
+<body><h1>Subnet / CIDR Calculator</h1>
+<div class="field"><label>CIDR (e.g. 192.168.1.0/24)</label><input id="cidr" value="10.0.0.0/24" oninput="calc()"></div>
+<div id="results"></div>
+<script>
+function calc(){
+const c=document.getElementById('cidr').value.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)\/(\d+)$/);
+if(!c){document.getElementById('results').innerHTML='<p style="color:#f85149">Invalid CIDR format</p>';return;}
+const[_,o1,o2,o3,o4,mask]=c;const prefix=parseInt(mask);
+const ip=parseInt(o1)*16777216+parseInt(o2)*65536+parseInt(o3)*256+parseInt(o4);
+const hostBits=32-prefix;const totalIPs=Math.pow(2,hostBits);
+const network=ip&(0xFFFFFFFF<<hostBits>>>0);
+const broadcast=network+totalIPs-1;
+const firstUsable=prefix<31?network+1:network;
+const lastUsable=prefix<31?broadcast-1:broadcast;
+const subnet=(0xFFFFFFFF<<hostBits>>>0);
+const maskStr=`${(subnet>>>24)&255}.${(subnet>>>16)&255}.${(subnet>>>8)&255}.${subnet&255}`;
+function intToIP(n){return `${(n>>>24)&255}.${(n>>>16)&255}.${(n>>>8)&255}.${n&255}`;}
+let html=`<table><tr><th>Property</th><th>Value</th></tr>
+<tr><td>Network Address</td><td>${intToIP(network)}</td></tr>
+<tr><td>Subnet Mask</td><td>${maskStr} (/${prefix})</td></tr>
+<tr><td>Broadcast Address</td><td>${intToIP(broadcast)}</td></tr>
+<tr><td>First Usable</td><td>${intToIP(firstUsable)}</td></tr>
+<tr><td>Last Usable</td><td>${intToIP(lastUsable)}</td></tr>
+<tr><td>Total IPs</td><td>${totalIPs.toLocaleString()}</td></tr>
+<tr><td>Usable IPs</td><td>${prefix>=31?totalIPs:totalIPs-2}</td></tr>
+<tr><td>IP Class</td><td>${parseInt(o1)<128?'A':parseInt(o1)<192?'B':parseInt(o1)<224?'C':'D/E'}</td></tr>
+<tr><td>Private?</td><td>${parseInt(o1)===10||(parseInt(o1)===172&&parseInt(o2)>=16&&parseInt(o2)<=31)||(parseInt(o1)===192&&parseInt(o2)===168)?'Yes':'No'}</td></tr>
+</table>`;
+if(prefix<=26){html+=`<h3 style="color:#58a6ff;margin-top:15px">Usable Range</h3><pre style="background:#161b22;padding:10px;border-radius:6px;border:1px solid #30363d;font-size:0.85em">${intToIP(firstUsable)} - ${intToIP(lastUsable)}</pre>`;}
+document.getElementById('results').innerHTML=html;
+}
+calc();
+</script></body></html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TOTP Code Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}.field{margin:10px 0}.code{font-size:3em;font-family:monospace;color:#7ee787;text-align:center;letter-spacing:0.1em;margin:20px 0}.timer{text-align:center;color:#8b949e;margin:10px 0}progress{width:100%;height:8px;border-radius:4px}.note{color:#f0883e;font-size:0.85em}</style></head>
+<body><h1>TOTP Code Generator</h1>
+<div class="field"><label>Secret Key (Base32, e.g. from QR code)</label><input id="secret" value="JBSWY3DPEHPK3PXP" oninput="totp()"></div>
+<div class="note">Enter the secret from your 2FA setup (usually a Base32 string)</div>
+<div class="code" id="code">------</div>
+<div class="timer" id="timer"></div>
+<progress id="prog" value="30" max="30"></progress>
+<script>
+function base32decode(s){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let bits='',bytes=[];s=s.toUpperCase().replace(/[^A-Z2-7]/g,'');for(const c of s)bits+=a.indexOf(c).toString(2).padStart(5,'0');for(let i=0;i+8<=bits.length;i+=8)bytes.push(parseInt(bits.substr(i,8),2));return new Uint8Array(bytes);}
+async function totp(){
+const secret=document.getElementById('secret').value;
+if(!secret)return;
+const key=await crypto.subtle.importKey('raw',base32decode(secret),{name:'HMAC',hash:'SHA-1'},false,['sign']);
+const time=Math.floor(Date.now()/1000);const counter=Math.floor(time/30);
+const buf=new ArrayBuffer(8);const view=new DataView(buf);
+view.setUint32(0,Math.floor(counter/0x100000000));view.setUint32(4,counter&0xFFFFFFFF);
+const hmac=await crypto.subtle.sign('HMAC',key,buf);
+const bytes=new Uint8Array(hmac);const offset=bytes[bytes.length-1]&0xf;
+const code=((bytes[offset]&0x7f)<<24|(bytes[offset+1]&0xff)<<16|(bytes[offset+2]&0xff)<<8|(bytes[offset+3]&0xff)).toString().slice(-6).padStart(6,'0');
+document.getElementById('code').textContent=code;
+const remaining=30-(time%30);document.getElementById('timer').textContent=remaining+'s remaining';document.getElementById('prog').value=remaining;
+}
+totp();setInterval(totp,1000);
+</script></body></html>

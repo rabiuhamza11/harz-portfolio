@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Webhook Payload Builder — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px;white-space:pre-wrap}.resp{color:#7ee787}</style></head>
+<body><h1>Webhook Payload Builder & Tester</h1>
+<div class="field"><label>Webhook URL</label><input id="url" value="https://harz-cloud-api.harz.workers.dev/webhook/test" oninput=""></div>
+<div class="field"><label>Method</label><select id="method"><option>POST</option><option>PUT</option><option>DELETE</option><option>PATCH</option></select></div>
+<div class="field"><label>Headers (JSON)</label><textarea id="headers" rows="3">{&quot;Content-Type&quot;:&quot;application/json&quot;,&quot;X-HARZ-Key&quot;:&quot;hzck_xxx&quot;}</textarea></div>
+<div class="field"><label>Payload (JSON)</label><textarea id="payload" rows="6">{&quot;event&quot;:&quot;order.created&quot;,&quot;data&quot;:{&quot;product&quot;:&quot;Digital Marketing Guide&quot;,&quot;amount&quot;:3000,&quot;currency&quot;:&quot;NGN&quot;}}</textarea></div>
+<button onclick="send()">Send Webhook</button>
+<button onclick="copyPayload()">Copy Payload</button>
+<pre id="output" style="margin-top:10px"></pre>
+<script>
+async function send(){
+const url=document.getElementById('url').value;const method=document.getElementById('method').value;
+let headers={};try{headers=JSON.parse(document.getElementById('headers').value);}catch(e){document.getElementById('output').textContent='Header JSON error: '+e.message;return;}
+let body=document.getElementById('payload').value;try{JSON.parse(body);body=body;}catch(e){}
+document.getElementById('output').textContent='Sending...';
+try{const r=await fetch(url,{method,headers,body});const t=await r.text();document.getElementById('output').innerHTML=`<span class="resp">Status: ${r.status} ${r.statusText}</span>\n\n${t}`;}catch(e){document.getElementById('output').textContent='Error: '+e.message+'\n\n(CORS or network issue. Try from a server or use a proxy.)';}
+}
+function copyPayload(){navigator.clipboard.writeText(document.getElementById('payload').value);alert('Copied!');}
+</script></body></html>

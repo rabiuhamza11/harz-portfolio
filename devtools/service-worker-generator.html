@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Service Worker Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em;margin-bottom:10px}.field{margin:10px 0}label{display:block;color:#8b949e;font-size:0.85em;margin-bottom:3px}input,select,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px;font-size:0.9em}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}pre{background:#161b22;padding:15px;border-radius:6px;overflow-x:auto;white-space:pre-wrap;font-size:0.85em;border:1px solid #30363d;margin-top:10px}.row{display:flex;gap:10px}.row>div{flex:1}</style></head>
+<body><h1>Service Worker Generator</h1>
+<div class="field"><label>Cache Name</label><input id="cacheName" value="harz-cache-v1" oninput="gen()"></div>
+<div class="field"><label>Offline Fallback Page</label><input id="fallback" value="/offline.html" oninput="gen()"></div>
+<div class="row">
+<div class="field"><label>Cache Strategy</label><select id="strategy" onchange="gen()"><option value="cache-first">Cache First (fast)</option><option value="network-first">Network First (fresh)</option><option value="stale-while-revalidate">Stale While Revalidate (balanced)</option></select></div>
+<div class="field"><label>Pre-cache URLs (comma)</label><input id="precache" value="/,/index.html,/styles.css,/app.js" oninput="gen()"></div>
+</div>
+<div class="field"><label>Patterns to cache (comma, use * wildcard)</label><input id="patterns" value="*.css,*.js,*.png,*.jpg,*.svg,*.woff2" oninput="gen()"></div>
+<button onclick="download()">Download sw.js</button>
+<button onclick="copy()">Copy JS</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const cacheName=document.getElementById('cacheName').value;
+const fallback=document.getElementById('fallback').value;
+const strategy=document.getElementById('strategy').value;
+const precache=document.getElementById('precache').value.split(',').map(s=>s.trim());
+const patterns=document.getElementById('patterns').value.split(',').map(p=>p.trim().replace(/\./g,'\\.'));
+let code=`// HARZ Service Worker — ${strategy}\nconst CACHE='${cacheName}';\nconst FALLBACK='${fallback}';\nconst PRECACHE=[${precache.map(u=>`'${u}'`).join(',')}];\n\n`;
+code+=`self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE)).then(()=>self.skipWaiting()));});\n\n`;
+code+=`self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});\n\n`;
+if(strategy==='cache-first'){
+code+=`self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request).then(r=>{if(r.ok){const clone=r.clone();caches.open(CACHE).then(cache=>cache.put(e.request,clone));}return r;}).catch(()=>caches.match(FALLBACK))));});\n`;
+}else if(strategy==='network-first'){
+code+=`self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(r=>{if(r.ok){const clone=r.clone();caches.open(CACHE).then(cache=>cache.put(e.request,clone));}return r;}).catch(()=>caches.match(e.request).then(c=>c||caches.match(FALLBACK))));});\n`;
+}else{
+code+=`self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.open(CACHE).then(cache=>cache.match(e.request).then(cached=>{const network=fetch(e.request).then(r=>{if(r.ok)cache.put(e.request,r.clone());return r;}).catch(()=>cached||caches.match(FALLBACK));return cached||network;})));});\n`;
+}
+document.getElementById('output').textContent=code;
+}
+function download(){const b=new Blob([document.getElementById('output').textContent],{type:'text/javascript'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='sw.js';a.click();}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+gen();
+</script></body></html>

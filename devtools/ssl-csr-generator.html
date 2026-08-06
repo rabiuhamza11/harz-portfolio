@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SSL CSR Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}.row{display:flex;gap:10px}.row>div{flex:1}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>SSL CSR Generator (Command Builder)</h1>
+<div class="row"><div class="field"><label>Common Name (domain)</label><input id="cn" value="harzdm.com" oninput="gen()"></div>
+<div class="field"><label>Organization</label><input id="org" value="HARZ Digital Services" oninput="gen()"></div></div>
+<div class="row"><div class="field"><label>City</label><input id="city" value="Bauchi" oninput="gen()"></div>
+<div class="field"><label>State</label><input id="state" value="Bauchi" oninput="gen()"></div></div>
+<div class="row"><div class="field"><label>Country (2 letters)</label><input id="country" value="NG" oninput="gen()"></div>
+<div class="field"><label>Key Size</label><input id="keysize" value="2048" oninput="gen()"></div></div>
+<button onclick="copy()">Copy OpenSSL Command</button>
+<pre id="output"></pre>
+<pre id="conf" style="margin-top:10px"></pre>
+<script>
+function gen(){
+const cn=document.getElementById('cn').value;const o=document.getElementById('org').value;const c=document.getElementById('city').value;const s=document.getElementById('state').value;const co=document.getElementById('country').value;const ks=document.getElementById('keysize').value;
+document.getElementById('output').textContent=`# Generate private key + CSR\nopenssl req -new -newkey rsa:${ks} -nodes -keyout ${cn}.key -out ${cn}.csr \\\n  -subj "/C=${co}/ST=${s}/L=${c}/O=${o}/CN=${cn}"\n\n# Or generate CSR from existing key\nopenssl req -new -key ${cn}.key -out ${cn}.csr\n\n# Verify CSR\nopenssl req -text -noout -verify -in ${cn}.csr\n\n# Self-signed cert (for testing)\nopenssl req -x509 -newkey rsa:${ks} -nodes -keyout ${cn}.key -out ${cn}.crt -days 365 \\\n  -subj "/C=${co}/ST=${s}/L=${c}/O=${o}/CN=${cn}"`;
+document.getElementById('conf').textContent=`# openssl.cnf\n[req]\ndefault_bits = ${ks}\nprompt = no\ndefault_md = sha256\ndistinguished_name = dn\n\n[dn]\nC = ${co}\nST = ${s}\nL = ${c}\nO = ${o}\nCN = ${cn}\n\n[SAN]\nsubjectAltName = DNS:${cn}, DNS:www.${cn}`;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+gen();
+</script></body></html>

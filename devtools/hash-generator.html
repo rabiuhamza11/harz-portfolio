@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Password Hash Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px;word-break:break-all}</style></head>
+<body><h1>Password Hash Generator</h1>
+<div class="field"><label>Password to hash</label><input id="pass" type="text" value="HARZ_Secret_2026" oninput="gen()"></div>
+<div class="field"><label>Algorithm</label><select id="algo" onchange="gen()"><option value="sha256">SHA-256</option><option value="sha512">SHA-512</option><option value="sha1">SHA-1</option><option value="md5">MD5 (not secure)</option></select></div>
+<button onclick="gen()">Generate Hash</button>
+<button onclick="copy()">Copy Hash</button>
+<pre id="output"></pre>
+<pre id="pbkdf2"></pre>
+<script>
+async function gen(){
+const p=document.getElementById('pass').value;const algo=document.getElementById('algo').value;
+const data=new TextEncoder().encode(p);
+const hash=await crypto.subtle.digest(algo==='md5'?'SHA-256':algo,data);
+const hex=Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+document.getElementById('output').textContent=`${algo}: ${hex}`;
+// PBKDF2 (bcrypt alternative in browser)
+const salt=crypto.getRandomValues(new Uint8Array(16));
+const key=await crypto.subtle.importKey('raw',data,'PBKDF2',false,['deriveBits']);
+const derived=await crypto.subtle.deriveBits({name:'PBKDF2',salt:salt,iterations:100000,hash:'SHA-256'},key,256);
+const saltHex=Array.from(salt).map(b=>b.toString(16).padStart(2,'0')).join('');
+const dkHex=Array.from(new Uint8Array(derived)).map(b=>b.toString(16).padStart(2,'0')).join('');
+document.getElementById('pbkdf2').textContent=`PBKDF2 (100k iterations):\nsalt: ${saltHex}\nhash: ${dkHex}\n\nStore as: pbkdf2:100000:${saltHex}:${dkHex}`;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent+'\n'+document.getElementById('pbkdf2').textContent);alert('Copied!');}
+gen();
+</script></body></html>

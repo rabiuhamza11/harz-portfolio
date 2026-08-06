@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GraphQL Schema Builder — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px;max-height:500px;overflow:auto}</style></head>
+<body><h1>GraphQL Schema Builder</h1>
+<div class="field"><label>Type Name</label><input id="type" value="Product" oninput="gen()"></div>
+<div class="field"><label>Fields (one per line: name:Type! or name:Type)</label>
+<textarea id="fields" rows="6" oninput="gen()">id:ID!
+title:String!
+description:String
+price:Float!
+category:String
+status:String
+created_at:String</textarea></div>
+<div class="field"><label>Queries (one per line)</label><textarea id="queries" rows="3" oninput="gen()">products:[Product!]!
+product(id:ID!):Product</textarea></div>
+<div class="field"><label>Mutations (one per line)</label><textarea id="mutations" rows="3" oninput="gen()">createProduct(input:ProductInput!):Product
+updateProduct(id:ID!,input:ProductInput!):Product</textarea></div>
+<button onclick="copy()">Copy Schema</button>
+<button onclick="download()">Download schema.graphql</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const type=document.getElementById('type').value;
+const fields=document.getElementById('fields').value.split('\n').filter(l=>l.trim());
+const queries=document.getElementById('queries').value.split('\n').filter(l=>l.trim());
+const mutations=document.getElementById('mutations').value.split('\n').filter(l=>l.trim());
+let schema=`type ${type} {\n${fields.map(f=>'  '+f.trim()).join('\n')}\n}\n\n`;
+schema+=`input ${type}Input {\n${fields.filter(f=>!f.includes('ID!')).map(f=>'  '+f.trim().replace('!','')).join('\n')}\n}\n\n`;
+if(queries.length){schema+=`type Query {\n${queries.map(q=>'  '+q.trim()).join('\n')}\n}\n\n`;}
+if(mutations.length){schema+=`type Mutation {\n${mutations.map(m=>'  '+m.trim()).join('\n')}\n}\n`;}
+document.getElementById('output').textContent=schema;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+function download(){const b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='schema.graphql';a.click();}
+gen();
+</script></body></html>

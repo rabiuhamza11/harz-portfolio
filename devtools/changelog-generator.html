@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Changelog Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>Changelog Generator</h1>
+<div class="field"><label>Version</label><input id="ver" value="2.1.0" oninput="gen()"></div>
+<div class="field"><label>Date</label><input id="date" value="" oninput="gen()"></div>
+<div class="field"><label>Added (one per line)</label><textarea id="added" rows="4" oninput="gen()">PWA Manifest Generator tool
+Service Worker Generator tool
+App Icon Generator tool
+Cloudflare Queue support</textarea></div>
+<div class="field"><label>Changed (one per line)</label><textarea id="changed" rows="3" oninput="gen()">Upgraded AI model to Nemotron 120B
+Improved mobile layout for Infinix Hot 10i</textarea></div>
+<div class="field"><label>Fixed (one per line)</label><textarea id="fixed" rows="3" oninput="gen()">Fixed Groq quota fallback issue
+Resolved tool-calling loop in Omega Commander</textarea></div>
+<button onclick="copy()">Copy CHANGELOG</button>
+<button onclick="download()">Download</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const v=document.getElementById('ver').value;const d=document.getElementById('date').value||new Date().toISOString().split('T')[0];
+const add=document.getElementById('added').value.split('\n').filter(l=>l.trim());
+const chg=document.getElementById('changed').value.split('\n').filter(l=>l.trim());
+const fix=document.getElementById('fixed').value.split('\n').filter(l=>l.trim());
+let r=`# Changelog\n\n## [${v}] - ${d}\n`;
+if(add.length)r+=`\n### Added\n${add.map(a=>`- ${a}`).join('\n')}\n`;
+if(chg.length)r+=`\n### Changed\n${chg.map(c=>`- ${c}`).join('\n')}\n`;
+if(fix.length)r+=`\n### Fixed\n${fix.map(f=>`- ${f}`).join('\n')}\n`;
+document.getElementById('output').textContent=r;
+document.getElementById('date').value=d;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+function download(){const b=new Blob([document.getElementById('output').textContent],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='CHANGELOG.md';a.click();}
+gen();
+</script></body></html>

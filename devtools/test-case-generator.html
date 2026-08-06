@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Test Case Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px;max-height:500px;overflow:auto}</style></head>
+<body><h1>Test Case Generator</h1>
+<div class="field"><label>Feature/Function Name</label><input id="feature" value="POST /chat" oninput="gen()"></div>
+<div class="field"><label>Scenarios (one per line: description|input|expected)</label>
+<textarea id="cases" rows="6" oninput="gen()">Valid message returns AI response|{"message":"Hello"}|200 with text response
+Empty message returns error|{}|400 Bad Request
+Very long message (>5000 chars) handled gracefully|{"message":"x".repeat(5001)}|400 with length error
+Unsupported language defaults to English|{"message":"你好"}|200 with English response
+API key missing returns 401|no auth header|401 Unauthorized</textarea></div>
+<button onclick="copy()">Copy Test Cases</button>
+<button onclick="copyJest()">Copy Jest Tests</button>
+<pre id="output"></pre>
+<pre id="jest" style="margin-top:10px"></pre>
+<script>
+function gen(){
+const f=document.getElementById('feature').value;
+const cases=document.getElementById('cases').value.split('\n').filter(l=>l.trim()).map(l=>{const[d,i,e]=l.split('|');return{desc:d.trim(),input:i.trim(),expected:e.trim()};});
+let r=`Test Plan: ${f}\n${'='.repeat(50)}\n\n`;
+cases.forEach((c,i)=>{r+=`TC${String(i+1).padStart(3,'0')}: ${c.desc}\n  Input: ${c.input}\n  Expected: ${c.expected}\n  Priority: High\n  Status: Not Run\n\n`;});
+document.getElementById('output').textContent=r;
+let j=`// Jest tests for ${f}\ndescribe('${f}', () => {\n`;
+cases.forEach((c,i)=>{const desc=c.desc.replace(/[^a-zA-Z0-9 ]/g,'').toLowerCase().replace(/\s+/g,'_');
+j+=`  test('${c.desc}', async () => {\n    // Input: ${c.input}\n    // Expected: ${c.expected}\n    const result = await request(app)\n      .post('/chat')\n      .send(${c.input})\n      .expect(${c.expected.match(/\d+/)?.[0]||200});\n    // Add assertions here\n  });\n\n`;});
+j+=`});`;
+document.getElementById('jest').textContent=j;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+function copyJest(){navigator.clipboard.writeText(document.getElementById('jest').textContent);alert('Jest tests copied!');}
+gen();
+</script></body></html>

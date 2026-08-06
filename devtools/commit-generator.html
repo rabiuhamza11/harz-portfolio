@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Commit Message Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}.row{display:flex;gap:10px}.row>div{flex:1}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>Conventional Commit Generator</h1>
+<div class="row"><div class="field"><label>Type</label><select id="type" onchange="gen()"><option value="feat">feat - New feature</option><option value="fix">fix - Bug fix</option><option value="docs">docs - Documentation</option><option value="style">style - Formatting</option><option value="refactor">refactor - Code refactoring</option><option value="test">test - Tests</option><option value="chore">chore - Maintenance</option><option value="perf">perf - Performance</option><option value="ci">ci - CI/CD</option></select></div>
+<div class="field"><label>Scope (optional)</label><input id="scope" value="ai" oninput="gen()"></div></div>
+<div class="field"><label>Description</label><input id="desc" value="add 3-tier fallback for Groq quota exhaustion" oninput="gen()"></div>
+<div class="field"><label>Body (optional, multi-line)</label><textarea id="body" rows="3" oninput="gen()">Nemotron 120B as primary, Groq 70B as secondary, Groq 8B as tertiary fallback.
+Resolves tool-calling loop when daily token quota is exceeded.</textarea></div>
+<div class="field"><label>Breaking change?</label><select id="breaking" onchange="gen()"><option value="">No</option><option value="!">Yes</option></select></div>
+<div class="field"><label>Footer (issue/PR refs)</label><input id="footer" value="Closes #42" oninput="gen()"></div>
+<button onclick="copy()">Copy Commit Message</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const t=document.getElementById('type').value;const s=document.getElementById('scope').value;const d=document.getElementById('desc').value;const b=document.getElementById('body').value;const br=document.getElementById('breaking').value;const f=document.getElementById('footer').value;
+let msg=`${t}${s?'('+s+')':''}${br}: ${d}`;
+if(b)msg+=`\n\n${b}`;
+if(f)msg+=`\n\n${f}`;
+document.getElementById('output').textContent=msg;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+gen();
+</script></body></html>

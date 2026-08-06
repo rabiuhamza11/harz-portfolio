@@ -1,0 +1,33 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>.env File Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>.env File Generator</h1>
+<div class="field"><label>Environment variables (one per line: KEY=value or KEY= for empty)</label>
+<textarea id="vars" rows="8" oninput="gen()">DATABASE_URL=
+GROQ_API_KEY=
+CLOUDFLARE_ACCOUNT_ID=
+CLOUDFLARE_API_TOKEN=
+PAYSTACK_SECRET_KEY=
+TERMII_API_KEY=
+GUMROAD_API_KEY=
+PADDLE_API_KEY=
+USDT_WALLET_ADDRESS=
+GDEG_TOKEN_CONTRACT=0xdE2c45A0c25dC290aF51347f95D82EBbe51fe3C1
+PORT=8787
+NODE_ENV=production</textarea></div>
+<div class="field"><label>Template Preset</label><select id="preset" onchange="loadPreset()"><option value="">Custom</option><option value="cloudflare">Cloudflare Workers</option><option value="node">Node.js + Express</option><option value="nextjs">Next.js</option></select></div>
+<button onclick="copy()">Copy .env</button>
+<button onclick="copyExample()">Copy .env.example (masked)</button>
+<pre id="output"></pre>
+<pre id="example"></pre>
+<script>
+function gen(){
+const lines=document.getElementById('vars').value.split('\n').filter(l=>l.trim());
+document.getElementById('output').textContent=lines.join('\n');
+document.getElementById('example').textContent=lines.map(l=>{const[lhs,rhs]=l.split('=');return lhs+'='+ (rhs?'<your-'+lhs.toLowerCase().replace(/_/g,'-')+'-here>':'');}).join('\n');
+}
+function loadPreset(){const p=document.getElementById('preset').value;if(!p)return;const presets={cloudflare:'CLOUDFLARE_ACCOUNT_ID=\nCLOUDFLARE_API_TOKEN=\nD1_DATABASE_ID=\nKV_NAMESPACE_ID=\nR2_BUCKET=\nAI_MODEL=@cf/nvidia/nemotron-3-120b-a12b\nTERMII_API_KEY=\nGROQ_API_KEY=',node:'DATABASE_URL=\nPORT=3000\nNODE_ENV=development\nJWT_SECRET=\nSMTP_HOST=\nSMTP_PORT=587\nSMTP_USER=\nSMTP_PASS=\nPAYSTACK_SECRET_KEY=\nTERMII_API_KEY=',nextjs:'NEXT_PUBLIC_API_URL=\nNEXT_PUBLIC_STRIPE_KEY=\nDATABASE_URL=\nNEXTAUTH_SECRET=\nNEXTAUTH_URL=\nGROQ_API_KEY=\nPAYSTACK_SECRET_KEY='};document.getElementById('vars').value=presets[p];gen();}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('.env copied!');}
+function copyExample(){navigator.clipboard.writeText(document.getElementById('example').textContent);alert('.env.example copied!');}
+gen();
+</script></body></html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Semver Calculator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select,button{width:100%;padding:10px;margin:5px 0;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{background:#238636}pre{background:#161b22;padding:15px;border-radius:6px;font-size:1.5em;border:1px solid #30363d;margin:15px 0;text-align:center;color:#7ee787}.row{display:flex;gap:10px}.row>div{flex:1}.field{margin:10px 0}</style></head>
+<body><h1>Semantic Version Calculator</h1>
+<div class="field"><label>Current Version</label><input id="current" value="2.0.0" oninput="calc()"></div>
+<div class="row"><div class="field"><label>Bump Type</label><select id="bump" onchange="calc()"><option value="patch">Patch (x.x.1) — bug fixes</option><option value="minor">Minor (x.1.0) — new features</option><option value="major">Major (1.0.0) — breaking changes</option></select></div></div>
+<pre id="result">2.0.0</pre>
+<div class="field"><label>Version History (optional, one per line)</label><textarea id="history" rows="4" style="width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px" oninput="calc()">1.0.0
+1.1.0
+1.2.0
+2.0.0</textarea></div>
+<pre id="next" style="font-size:0.85em"></pre>
+<script>
+function calc(){
+const cur=document.getElementById('current').value.split('.').map(Number);
+const bump=document.getElementById('bump').value;
+let[maj,min,pat]=cur;
+if(bump==='major'){maj++;min=0;pat=0;}
+else if(bump==='minor'){min++;pat=0;}
+else{pat++;}
+const newVer=`${maj}.${min}.${pat}`;
+document.getElementById('result').textContent=newVer;
+const hist=document.getElementById('history').value.split('\n').filter(l=>l.trim());
+document.getElementById('next').textContent='History:\n'+hist.join('\n')+'\n\nNext: '+newVer+'\n\nTag: v'+newVer+'\nGit: git tag v'+newVer+' && git push --tags';
+}
+calc();
+</script></body></html>

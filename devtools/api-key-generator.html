@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>API Key Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}.row{display:flex;gap:10px}.row>div{flex:1}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px;word-break:break-all}</style></head>
+<body><h1>API Key Generator</h1>
+<div class="row"><div class="field"><label>Prefix</label><input id="prefix" value="hzck_" oninput="gen()"></div>
+<div class="field"><label>Length</label><input id="length" type="number" value="32" oninput="gen()"></div>
+<div class="field"><label>Quantity</label><input id="qty" type="number" value="1" oninput="gen()"></div></div>
+<div class="field"><label>Format</label><select id="format" onchange="gen()"><option value="hex">Hex (a-f0-9)</option><option value="base62">Base62 (a-zA-Z0-9)</option><option value="base64url">Base64URL</option><option value="uuid">UUID v4</option></select></div>
+<button onclick="gen()">Generate</button>
+<button onclick="copyAll()">Copy All</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const pre=document.getElementById('prefix').value;const len=parseInt(document.getElementById('length').value);const qty=parseInt(document.getElementById('qty').value);const fmt=document.getElementById('format').value;
+const chars={hex:'0123456789abcdef',base62:'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',base64url:'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'};
+let out=[];
+for(let i=0;i<qty;i++){let key='';
+if(fmt==='uuid'){key=crypto.randomUUID();}else{const a=new Uint8Array(len);crypto.getRandomValues(a);key=Array.from(a).map(b=>chars[fmt][b%chars[fmt].length]).join('');}
+out.push(pre+key);}
+document.getElementById('output').textContent=out.join('\n');
+}
+function copyAll(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+gen();
+</script></body></html>

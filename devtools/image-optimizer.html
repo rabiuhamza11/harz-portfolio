@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Image Optimizer — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input[type=file]{margin:10px 0}input[type=range]{width:100%}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}canvas{max-width:100%;border-radius:8px}table{width:100%;margin-top:10px}td,th{padding:8px;border-bottom:1px solid #30363d}th{color:#58a6ff;text-align:left}</style></head>
+<body><h1>Image Optimizer / Compressor</h1>
+<input type="file" id="upload" accept="image/*">
+<div class="field"><label>Quality: <span id="qval">80</span>%</label><input type="range" id="quality" min="10" max="100" value="80" oninput="document.getElementById('qval').textContent=this.value;optimize()"></div>
+<div class="field"><label>Max width: <span id="wval">1920</span>px</label><input type="range" id="maxWidth" min="100" max="4096" value="1920" oninput="document.getElementById('wval').textContent=this.value;optimize()"></div>
+<div class="field"><label>Format</label><select id="format" onchange="optimize()" style="width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px"><option value="image/jpeg">JPEG</option><option value="image/webp">WebP (smaller)</option><option value="image/png">PNG</option></select></div>
+<canvas id="canvas" style="display:none"></canvas>
+<button onclick="download()">Download Optimized</button>
+<div id="results"></div>
+<script>
+let origSize=0;
+document.getElementById('upload').addEventListener('change',function(e){const f=e.target.files[0];if(!f)return;origSize=f.size;const img=new Image();img.onload=()=>{window._img=img;optimize();};img.src=URL.createObjectURL(f);});
+function optimize(){
+const img=window._img;if(!img)return;
+const q=parseInt(document.getElementById('quality').value)/100;const maxW=parseInt(document.getElementById('maxWidth').value);const fmt=document.getElementById('format').value;
+const c=document.getElementById('canvas');const ctx=c.getContext('2d');
+let w=img.width,h=img.height;if(w>maxW){h=h*(maxW/w);w=maxW;}
+c.width=w;c.height=h;ctx.drawImage(img,0,0,w,h);
+c.toBlob(blob=>{const newSize=blob.size;
+document.getElementById('results').innerHTML=`<table><tr><th>Metric</th><th>Before</th><th>After</th><th>Saved</th></tr>
+<tr><td>Size</td><td>${(origSize/1024).toFixed(1)} KB</td><td>${(newSize/1024).toFixed(1)} KB</td><td style="color:#7ee787">${((1-newSize/origSize)*100).toFixed(1)}%</td></tr>
+<tr><td>Dimensions</td><td>${img.width}x${img.height}</td><td>${w.toFixed(0)}x${h.toFixed(0)}</td><td></td></tr>
+<tr><td>Format</td><td>Original</td><td>${fmt.split('/')[1].toUpperCase()}</td><td></td></tr>
+</table>`;window._blob=blob;},fmt,q);
+}
+function download(){if(!window._blob)return;const fmt=document.getElementById('format').value.split('/')[1];const a=document.createElement('a');a.href=URL.createObjectURL(window._blob);a.download=`optimized.${fmt}`;a.click();}
+</script></body></html>

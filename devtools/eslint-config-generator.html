@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ESLint/Prettier Config Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}select{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>ESLint + Prettier Config Generator</h1>
+<div class="field"><label>Framework</label><select id="fw" onchange="gen()"><option>Node.js</option><option>React</option><option>Next.js</option><option>Vue</option><option>Cloudflare Workers</option></select></div>
+<div class="field"><label>Style</label><select id="style" onchange="gen()"><option> Airbnb</option><option>Standard</option><option>Google</option></select></div>
+<button onclick="copy()">Copy Configs</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const fw=document.getElementById('fw').value;const style=document.getElementById('style').value.trim().toLowerCase();
+let eslintExtends,parserOpts='';
+if(fw==='Cloudflare Workers'){eslintExtends=['eslint:recommended'];parserOpts=',\n  "globals":{"caches":"readonly","crypto":"readonly"}';}
+else if(fw==='React'){eslintExtends=[`eslint:recommended`,`plugin:react/recommended`];}
+else if(fw==='Next.js'){eslintExtends=['next/core-web-vitals'];}
+else if(fw==='Vue'){eslintExtends=['eslint:recommended','plugin:vue/essential'];}
+else{eslintExtends=[`eslint:recommended`];}
+const eslint={env:{es2021:true,node:true,browser:fw!=='Node.js'},extends:eslintExtends,parserOptions:{ecmaVersion:12,sourceType:'module'+parserOpts},rules:{'no-unused-vars':'warn','no-console':'off','semi:['error','always']','quotes':['error','single']},ignore:['node_modules/','dist/','wrangler.toml']};
+const prettier={semi:true,singleQuote:true,trailingComma:'es5',printWidth:100,tabWidth:2,bracketSpacing:true,arrowParens:'always'};
+const pkg={devDependencies:{'eslint':'^8.50.0','prettier':'^3.0.0'}};
+let out=`// .eslintrc.json\n${JSON.stringify(eslint,null,2)}\n\n// .prettierrc\n${JSON.stringify(prettier,null,2)}\n\n// package.json devDeps\n${JSON.stringify(pkg,null,2)}\n\n// .eslintignore\nnode_modules\ndist\n.wrangler\n\n// .prettierignore\nnode_modules\ndist\npackage-lock.json`;
+document.getElementById('output').textContent=out;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+gen();
+</script></body></html>

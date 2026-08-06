@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mock Data Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}.row{display:flex;gap:10px}.row>div{flex:1}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px;max-height:500px;overflow:auto}</style></head>
+<body><h1>Mock Data Generator</h1>
+<div class="row"><div class="field"><label>Count</label><input id="count" type="number" value="10" oninput="gen()"></div>
+<div class="field"><label>Format</label><select id="format" onchange="gen()"><option value="json">JSON</option><option value="csv">CSV</option><option value="sql">SQL INSERT</option></select></div>
+<div class="field"><label>Table/Model Name</label><input id="table" value="products" oninput="gen()"></div></div>
+<div class="field"><label>Fields (comma: name:type)</label><textarea id="fields" rows="4" oninput="gen()">id:uuid,title:product,price:number:2000:5000,category:pick:AI Tools,Marketing,Design,Courses,status:pick:active,draft,pending,created_at:date</textarea></div>
+<button onclick="gen()">Generate</button>
+<button onclick="copy()">Copy</button>
+<button onclick="download()">Download</button>
+<pre id="output"></pre>
+<script>
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function uid(){return crypto.randomUUID();}
+function pick(arr){return arr[rand(0,arr.length-1)];}
+function gen(){
+const count=parseInt(document.getElementById('count').value);
+const fmt=document.getElementById('format').value;
+const table=document.getElementById('table').value;
+const fieldLines=document.getElementById('fields').value.split('\n').filter(l=>l.trim());
+const fields=fieldLines.map(l=>l.trim().split(':'));
+let records=[];
+for(let i=0;i<count;i++){let r={};
+fields.forEach(f=>{const[name,...opts]=f;const type=opts[0]||'string';
+switch(type){
+case 'uuid':r[name]=uid();break;
+case 'product':r[name]=pick(['AI Marketing Toolkit','SEO Master Guide','Crypto Trading Course','Canva Templates Pro','Python Bootcamp','Business Plan Builder','Social Media Kit','Productivity Dashboard','Logo Design Pack','Email Marketing Blueprint']);break;
+case 'name':r[name]=pick(['Aisha Mohammed','John Doe','Fatima Bello','Emeka Nwosu','Zainab Ibrahim','David Okafor','Hauwa Sani','Chidi Eze','Maryam Audu','Tunde Bakare']);break;
+case 'number':r[name]=rand(parseInt(opts[1]||1),parseInt(opts[2]||100));break;
+case 'pick':r[name]=pick(opts.slice(1));break;
+case 'date':r[name]=new Date(Date.now()-rand(0,365*86400000)).toISOString().split('T')[0];break;
+case 'email':r[name]='user'+rand(100,999)+'@example.com';break;
+case 'phone':r[name]='080'+rand(10000000,99999999);break;
+case 'bool':r[name]=Math.random()>0.5;break;
+default:r[name]=opts[1]||'sample';}});
+records.push(r);}
+let out='';
+if(fmt==='json'){out=JSON.stringify(records,null,2);}
+else if(fmt==='csv'){const keys=Object.keys(records[0]||{});out=keys.join(',')+'\n';records.forEach(r=>{out+=keys.map(k=>r[k]).join(',')+'\n';});}
+else if(fmt==='sql'){records.forEach(r=>{const keys=Object.keys(r);const vals=keys.map(k=>typeof r[k]==='string'?`'${r[k]}'`:r[k]);out+=`INSERT INTO ${table} (${keys.join(', ')}) VALUES (${vals.join(', ')});\n`;});}
+document.getElementById('output').textContent=out;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+function download(){const fmt=document.getElementById('format').value;const ext=fmt==='sql'?'sql':fmt;const b=new Blob([document.getElementById('output').textContent],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`mock-data.${ext}`;a.click();}
+gen();
+</script></body></html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>K8s Manifest Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}.row{display:flex;gap:10px}.row>div{flex:1}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px;max-height:500px;overflow:auto}</style></head>
+<body><h1>Kubernetes Manifest Generator</h1>
+<div class="row"><div class="field"><label>App Name</label><input id="name" value="harz-api" oninput="gen()"></div>
+<div class="field"><label>Image</label><input id="image" value="harz/api:latest" oninput="gen()"></div></div>
+<div class="row"><div class="field"><label>Replicas</label><input id="replicas" type="number" value="3" oninput="gen()"></div>
+<div class="field"><label>Port</label><input id="port" value="3000" oninput="gen()"></div></div>
+<div class="row"><div class="field"><label>CPU Limit</label><input id="cpu" value="500m" oninput="gen()"></div>
+<div class="field"><label>Memory Limit</label><input id="mem" value="512Mi" oninput="gen()"></div></div>
+<button onclick="copy()">Copy YAML</button>
+<button onclick="download()">Download k8s.yaml</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const n=document.getElementById('name').value;const img=document.getElementById('image').value;const r=document.getElementById('replicas').value;const p=document.getElementById('port').value;const cpu=document.getElementById('cpu').value;const mem=document.getElementById('mem').value;
+const yaml=`apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${n}
+  labels:
+    app: ${n}
+spec:
+  replicas: ${r}
+  selector:
+    matchLabels:
+      app: ${n}
+  template:
+    metadata:
+      labels:
+        app: ${n}
+    spec:
+      containers:
+      - name: ${n}
+        image: ${img}
+        ports:
+        - containerPort: ${p}
+        resources:
+          limits:
+            cpu: ${cpu}
+            memory: ${mem}
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        envFrom:
+        - secretRef:
+            name: ${n}-secrets
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: ${p}
+          initialDelaySeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${n}-svc
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: ${p}
+  selector:
+    app: ${n}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ${n}-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ${n}
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70`;
+document.getElementById('output').textContent=yaml;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+function download(){const b=new Blob([document.getElementById('output').textContent],{type:'text/yaml'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='k8s.yaml';a.click();}
+gen();
+</script></body></html>

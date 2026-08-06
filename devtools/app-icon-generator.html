@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>App Icon Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input[type=file]{margin:10px 0}input[type=color]{width:60px;height:30px;border:none;border-radius:4px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:5px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin:15px 0}.icon-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;text-align:center}.icon-card canvas{max-width:100%;border-radius:8px;margin-bottom:5px}.icon-card .size{color:#8b949e;font-size:0.75em}.icon-card button{padding:4px 10px;font-size:0.8em;background:#1f6feb}</style></head>
+<body><h1>App Icon Generator</h1>
+<p style="color:#8b949e;margin:10px 0">Upload one image, get all sizes for PWA, iOS, Android</p>
+<input type="file" id="upload" accept="image/*">
+<div class="field" style="margin:10px 0"><label>Background color (for transparent images)</label><input type="color" id="bgColor" value="#1f6feb"></div>
+<div class="field"><label>Border radius (px)</label><input type="range" id="radius" min="0" max="100" value="20" oninput="gen()"></div>
+<div class="grid" id="grid"></div>
+<script>
+const SIZES=[16,32,48,72,96,128,144,152,192,256,384,512,1024];
+document.getElementById('upload').addEventListener('change',function(e){const file=e.target.files[0];if(!file)return;const img=new Image();img.onload=()=>window._img=img;img.src=URL.createObjectURL(file);});
+function gen(){
+const img=window._img;if(!img)return;const bg=document.getElementById('bgColor').value;const r=document.getElementById('radius').value;
+const grid=document.getElementById('grid');grid.innerHTML='';
+SIZES.forEach(s=>{
+const card=document.createElement('div');card.className='icon-card';
+const c=document.createElement('canvas');c.width=c.height=s;
+const ctx=c.getContext('2d');ctx.fillStyle=bg;
+if(r>0){ctx.beginPath();ctx.roundRect(0,0,s,s,r/100*s);ctx.fill();}else{ctx.fillRect(0,0,s,s);}
+ctx.drawImage(img,0,0,s,s);
+const sizeLabel=document.createElement('div');sizeLabel.className='size';sizeLabel.textContent=s+'x'+s;
+const btn=document.createElement('button');btn.textContent='Download';btn.onclick=()=>{const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download=`icon-${s}.png`;a.click();};
+card.appendChild(c);card.appendChild(sizeLabel);card.appendChild(btn);grid.appendChild(card);
+});
+}
+</script></body></html>

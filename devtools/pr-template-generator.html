@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PR Template Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px}</style></head>
+<body><h1>PR Template Generator</h1>
+<div class="field"><label>Project Name</label><input id="proj" value="HARZ Cloud API" oninput="gen()"></div>
+<button onclick="copy()">Copy PR Template</button>
+<button onclick="download()">Download .github/pull_request_template.md</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const p=document.getElementById('proj').value;
+const r=`## Description\n\n[Describe what this PR does and why]\n\n## Type of Change\n\n- [ ] Bug fix (non-breaking)\n- [ ] New feature (non-breaking)\n- [ ] Breaking change (requires migration)\n- [ ] Documentation update\n- [ ] Performance improvement\n- [ ] Code refactoring\n\n## Testing\n\n- [ ] Local tests pass\n- [ ] Added new tests for changes\n- [ ] Manual testing completed\n\n## Checklist\n\n- [ ] Code follows project style guide\n- [ ] Self-reviewed the code\n- [ ] Commented hard-to-understand areas\n- [ ] Updated documentation\n- [ ] No new warnings introduced\n\n## Related Issues\n\nCloses #[issue number]\n\n## Screenshots (if applicable)\n\n[Add screenshots for UI changes]`;
+document.getElementById('output').textContent=r;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+function download(){const b=new Blob([document.getElementById('output').textContent],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='pull_request_template.md';a.click();}
+gen();
+</script></body></html>

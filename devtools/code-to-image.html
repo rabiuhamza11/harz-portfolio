@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Code to Image — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}textarea,input,select{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}.preview{background:#1e1e2e;padding:20px;border-radius:12px;margin:15px 0;font-family:'Fira Code',monospace;font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-x:auto}.row{display:flex;gap:10px}.row>div{flex:1}</style></head>
+<body><h1>Code Snippet to Image</h1>
+<div class="field"><label>Code</label><textarea id="code" rows="6" oninput="render()">export default {
+  async fetch(request, env) {
+    const data = await request.json();
+    return new Response(JSON.stringify(data));
+  }
+};</textarea></div>
+<div class="row"><div class="field"><label>Theme</label><select id="theme" onchange="render()"><option>dark</option><option>light</option><option>midnight</option><option>solarized</option></select></div>
+<div class="field"><label>Language</label><input id="lang" value="javascript" oninput="render()"></div></div>
+<div class="row"><div class="field"><label>Title</label><input id="title" value="HARZ Worker" oninput="render()"></div>
+<div class="field"><label>Window</label><select id="window" onchange="render()"><option value="mac">Mac (traffic lights)</option><option value="none">None</option></select></div></div>
+<button onclick="download()">Download PNG</button>
+<div id="preview" class="preview"></div>
+<canvas id="canvas" style="display:none"></canvas>
+<script>
+const THEMES={dark:{bg:'#1e1e2e',text:'#e6e6e6'},light:{bg:'#f5f5f5',text:'#333'},midnight:{bg:'#0d1117',text:'#e6edf3'},solarized:{bg:'#002b36',text:'#93a1a1'}};
+function render(){
+const code=document.getElementById('code').value;const theme=document.getElementById('theme').value;const t=THEMES[theme];const title=document.getElementById('title').value;
+const p=document.getElementById('preview');p.style.background=t.bg;p.style.color=t.text;
+let html='';
+if(document.getElementById('window').value==='mac'){html+='<div style="margin-bottom:10px"><span style="color:#ff5f57">●</span> <span style="color:#febc2e">●</span> <span style="color:#28c840">●</span> <span style="margin-left:10px;opacity:0.6">'+title+'</span></div>';}
+html+='<pre>'+code.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre>';
+p.innerHTML=html;
+}
+async function download(){
+const p=document.getElementById('preview');const t=THEMES[document.getElementById('theme').value];
+const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');
+canvas.width=800;canvas.height=p.offsetHeight+40;ctx.fillStyle=t.bg;ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.font='14px monospace';ctx.fillStyle=t.text;
+const lines=document.getElementById('code').value.split('\n');
+let y=30;
+if(document.getElementById('window').value==='mac'){ctx.fillStyle='#ff5f57';ctx.beginPath();ctx.arc(15,20,6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#febc2e';ctx.beginPath();ctx.arc(35,20,6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#28c840';ctx.beginPath();ctx.arc(55,20,6,0,Math.PI*2);ctx.fill();ctx.fillStyle=t.text;ctx.globalAlpha=0.6;ctx.fillText(document.getElementById('title').value,80,25);ctx.globalAlpha=1;y=45;}
+lines.forEach(line=>{ctx.fillText(line,20,y);y+=22;});
+const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='code-snippet.png';a.click();
+}
+render();
+</script></body></html>

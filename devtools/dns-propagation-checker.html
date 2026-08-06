@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DNS Propagation Checker — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,select{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}table{width:100%;border-collapse:collapse;margin-top:10px}td,th{padding:8px;border-bottom:1px solid #30363d;text-align:left}th{color:#58a6ff}.ok{color:#7ee787}.fail{color:#f85149}</style></head>
+<body><h1>DNS Propagation Checker</h1>
+<div class="field"><label>Domain</label><input id="domain" value="harzdm.com" oninput=""></div>
+<div class="field"><label>Record Type</label><select id="type"><option>A</option><option>AAAA</option><option>CNAME</option><option>MX</option><option>TXT</option><option>NS</option></select></div>
+<button onclick="check()">Check Propagation</button>
+<div id="results"></div>
+<script>
+const RESOLVERS=[
+{name:'Cloudflare',url:'https://cloudflare-dns.com/dns-query'},{name:'Google',url:'https://dns.google/resolve'},
+{name:'Quad9',url:'https://dns.quad9.net:5053/dns-query'},{name:'AdGuard',url:'https://dns.adguard.com/dns-query'}];
+async function check(){
+const d=document.getElementById('domain').value;const t=document.getElementById('type').value;
+let html=`<table><tr><th>Resolver</th><th>Result</th><th>Status</th></tr>`;
+for(const r of RESOLVERS){
+try{let url;
+if(r.url.includes('cloudflare')||r.url.includes('quad9')||r.url.includes('adguard')){url=`${r.url}?name=${d}&type=${t}`;}
+else{url=`${r.url}?name=${d}&type=${t}`;}
+const resp=await fetch(url,{headers:Accept:'application/dns-json'});
+const data=await resp.json();
+const answers=data.Answer?data.Answer.map(a=>a.data).join(', '):'No records';
+const status=answers!=='No records'?'ok':'fail';
+html+=`<tr><td>${r.name}</td><td>${answers}</td><td class="${status}">${status==='ok'?'✓':'✗'}</td></tr>`;
+}catch(e){html+=`<tr><td>${r.name}</td><td>Error</td><td class="fail">✗</td></tr>`;}}
+html+='</table><p style="color:#8b949e;font-size:0.85em;margin-top:10px">Note: Some resolvers may not support CORS. For full propagation check, use whatsmydns.net</p>';
+document.getElementById('results').innerHTML=html;
+}
+</script></body></html>

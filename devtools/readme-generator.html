@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>README Generator — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}input,textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}.row{display:flex;gap:10px}.row>div{flex:1}pre{background:#161b22;padding:15px;border-radius:6px;font-size:0.85em;border:1px solid #30363d;margin-top:10px;max-height:500px;overflow:auto}</style></head>
+<body><h1>README.md Generator</h1>
+<div class="row"><div class="field"><label>Project Name</label><input id="name" value="HARZ Cloud API" oninput="gen()"></div>
+<div class="field"><label>License</label><input id="license" value="MIT" oninput="gen()"></div></div>
+<div class="field"><label>Description</label><textarea id="desc" rows="2" oninput="gen()">Unified backend for the HARZ ecosystem. 163+ API routes on Cloudflare Workers with D1, KV, and R2 storage.</textarea></div>
+<div class="field"><label>Installation commands</label><textarea id="install" rows="3" oninput="gen()">git clone https://github.com/rabiuhamza11/harz-cloud.git\ncd harz-cloud\nnpm install</textarea></div>
+<div class="field"><label>Environment variables needed</label><textarea id="env" rows="3" oninput="gen()">CLOUDFLARE_API_TOKEN=xxx\nD1_DATABASE_ID=xxx\nGROQ_API_KEY=xxx</textarea></div>
+<div class="field"><label>Usage examples</label><textarea id="usage" rows="3" oninput="gen()">npm run dev\nnpm run deploy</textarea></div>
+<button onclick="copy()">Copy README.md</button>
+<button onclick="download()">Download</button>
+<pre id="output"></pre>
+<script>
+function gen(){
+const n=document.getElementById('name').value;const l=document.getElementById('license').value;const d=document.getElementById('desc').value;
+const inst=document.getElementById('install').value;const env=document.getElementById('env').value;const usage=document.getElementById('usage').value;
+let r=`# ${n}\n\n${d}\n\n## Features\n\n- Built on Cloudflare Workers (zero cold starts)\n- D1 database + KV storage + R2 object storage\n- 163+ API routes\n- WhatsApp CRM integration\n- AI agent support\n\n## Prerequisites\n\n- Node.js 18+\n- Cloudflare account\n- Wrangler CLI\n\n## Installation\n\n\`\`\`bash\n${inst}\n\`\`\`\n\n## Environment Setup\n\nCreate a \`.env\` file:\n\n\`\`\`\n${env}\n\`\`\`\n\n## Usage\n\n\`\`\`bash\n${usage}\n\`\`\`\n\n## API Endpoints\n\n| Method | Path | Description |\n|--------|------|-------------|\n| GET | /health | Health check |\n| GET | /products | List products |\n| POST | /chat | AI chat |\n| GET | /payments/balance | Check balance |\n\n## Tech Stack\n\n- Cloudflare Workers\n- D1 (SQLite)\n- KV (key-value store)\n- R2 (object storage)\n- Wrangler\n\n## License\n\n${l} License - see LICENSE file for details\n\n## Author\n\nRabiu Hamza Mohammed\nHARZ Digital Services\nCAC RC: 321424\n`;
+document.getElementById('output').textContent=r;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('output').textContent);alert('Copied!');}
+function download(){const b=new Blob([document.getElementById('output').textContent],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='README.md';a.click();}
+gen();
+</script></body></html>

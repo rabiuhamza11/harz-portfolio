@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HARZ DevTools Suite — 45 Developer Tools</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui;max-width:900px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}
+header{margin-bottom:20px}
+h1{color:#58a6fe0;font-size:1.8em}
+h1 b{color:#58a6ff}
+.subtitle{color:#8b949e;font-size:0.95em;margin:5px 0}
+.search{width:100%;padding:12px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:8px;font-size:1em;margin:15px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.cat{font-size:0.75em;color:#f0883e;text-transform:uppercase;letter-spacing:1px;margin:20px 0 8px}
+.tool{display:block;padding:12px;background:#161b22;border:1px solid #30363d;border-radius:8px;text-decoration:none;color:#e6edf3;transition:border-color 0.2s}
+.tool:hover{border-color:#58a6ff;background:#1c232e}
+.tool .num{font-size:0.75em;color:#8b949e}
+.tool .name{font-size:0.9em;margin-top:3px}
+.tool .desc{font-size:0.75em;color:#8b949e;margin-top:2px}
+footer{margin-top:30px;text-align:center;color:#8b949e;font-size:0.85em;padding:20px 0;border-top:1px solid #30363d}
+</style>
+</head>
+<body>
+<header>
+<h1>HARZ <b>DevTools</b> Suite</h1>
+<div class="subtitle">45 developer tools — 100% client-side, zero dependencies, works offline</div>
+<input class="search" type="text" placeholder="Search tools..." oninput="filter()" id="search">
+</header>
+
+<div class="cat">PWA & Mobile</div>
+<div class="grid" id="pwa">
+<a class="tool" href="pwa-manifest-generator.html"><div class="num">25</div><div class="name">PWA Manifest</div><div class="desc">manifest.json builder</div></a>
+<a class="tool" href="service-worker-generator.html"><div class="num">26</div><div class="name">Service Worker</div><div class="desc">SW template builder</div></a>
+<a class="tool" href="app-icon-generator.html"><div class="num">27</div><div class="name">App Icons</div><div class="desc">All sizes from one image</div></a>
+</div>
+
+<div class="cat">API & Backend</div>
+<div class="grid" id="api">
+<a class="tool" href="openapi-generator.html"><div class="num">1</div><div class="name">OpenAPI Spec</div><div class="desc">Swagger 3.0 generator</div></a>
+<a class="tool" href="postman-generator.html"><div class="num">2</div><div class="name">Postman Collection</div><div class="desc">Export test collections</div></a>
+<a class="tool" href="api-key-generator.html"><div class="num">3</div><div class="name">API Key Gen</div><div class="desc">Secure token generation</div></a>
+<a class="tool" href="hmac-generator.html"><div class="num">4</div><div class="name">HMAC Signer</div><div class="desc">Webhook payload signing</div></a>
+<a class="tool" href="webhook-builder.html"><div class="num">5</div><div class="name">Webhook Builder</div><div class="desc">Test webhook payloads</div></a>
+<a class="tool" href="mock-data-generator.html"><div class="num">6</div><div class="name">Mock Data</div><div class="desc">JSON/CSV/SQL fake data</div></a>
+<a class="tool" href="graphql-schema-builder.html"><div class="num">7</div><div class="name">GraphQL Schema</div><div class="desc">Schema type builder</div></a>
+</div>
+
+<div class="cat">Code Quality & Config</div>
+<div class="grid" id="code">
+<a class="tool" href="eslint-config-generator.html"><div class="num">8</div><div class="name">ESLint Config</div><div class="desc">Linting + Prettier setup</div></a>
+<a class="tool" href="tsconfig-generator.html"><div class="num">9</div><div class="name">TS Config</div><div class="desc">tsconfig.json builder</div></a>
+<a class="tool" href="env-generator.html"><div class="num">10</div><div class="name">.env Generator</div><div class="desc">Environment variables</div></a>
+<a class="tool" href="bundle-analyzer.html"><div class="num">11</div><div class="name">Bundle Analyzer</div><div class="desc">Size + gzip estimate</div></a>
+<a class="tool" href="regex-builder.html"><div class="num">12</div><div class="name">Regex Builder</div><div class="desc">Visual regex tester</div></a>
+</div>
+
+<div class="cat">DevOps & Infrastructure</div>
+<div class="grid" id="devops">
+<a class="tool" href="dockerfile-generator.html"><div class="num">13</div><div class="name">Dockerfile</div><div class="desc">Container builder</div></a>
+<a class="tool" href="nginx-config-generator.html"><div class="num">14</div><div class="name">Nginx Config</div><div class="desc">Server config builder</div></a>
+<a class="tool" href="k8s-manifest-generator.html"><div class="num">15</div><div class="name">K8s Manifest</div><div class="desc">Deployment YAML</div></a>
+<a class="tool" href="cicd-generator.html"><div class="num">16</div><div class="name">CI/CD Pipeline</div><div class="desc">GitHub/GitLab YAML</div></a>
+<a class="tool" href="ssl-csr-generator.html"><div class="num">17</div><div class="name">SSL CSR</div><div class="desc">OpenSSL command builder</div></a>
+<a class="tool" href="status-page-builder.html"><div class="num">18</div><div class="name">Status Page</div><div class="desc">Service uptime page</div></a>
+</div>
+
+<div class="cat">Security & Auth</div>
+<div class="grid" id="security">
+<a class="tool" href="ssh-key-generator.html"><div class="num">19</div><div class="name">SSH Key Gen</div><div class="desc">RSA keypair generator</div></a>
+<a class="tool" href="hash-generator.html"><div class="num">20</div><div class="name">Password Hash</div><div class="desc">SHA/PBKDF2 hashing</div></a>
+<a class="tool" href="totp-generator.html"><div class="num">21</div><div class="name">TOTP Code</div><div class="desc">2FA code generator</div></a>
+<a class="tool" href="csp-generator.html"><div class="num">22</div><div class="name">CSP Builder</div><div class="desc">Security policy headers</div></a>
+<a class="tool" href="cors-generator.html"><div class="num">23</div><div class="name">CORS Config</div><div class="desc">CORS header builder</div></a>
+<a class="tool" href="vuln-checker.html"><div class="num">24</div><div class="name">Vuln Checker</div><div class="desc">CVE dependency scan</div></a>
+</div>
+
+<div class="cat">Documentation & Git</div>
+<div class="grid" id="docs">
+<a class="tool" href="readme-generator.html"><div class="num">28</div><div class="name">README Gen</div><div class="desc">Project docs builder</div></a>
+<a class="tool" href="changelog-generator.html"><div class="num">29</div><div class="name">Changelog</div><div class="desc">Keep a Changelog format</div></a>
+<a class="tool" href="license-generator.html"><div class="num">30</div><div class="name">License Gen</div><div class="desc">MIT, Apache, GPL</div></a>
+<a class="tool" href="commit-generator.html"><div class="num">31</div><div class="name">Commit Msg</div><div class="desc">Conventional commits</div></a>
+<a class="tool" href="pr-template-generator.html"><div class="num">32</div><div class="name">PR Template</div><div class="desc">Pull request template</div></a>
+<a class="tool" href="semver-calculator.html"><div class="num">33</div><div class="name">Semver Calc</div><div class="desc">Version bump calculator</div></a>
+</div>
+
+<div class="cat">Testing & Quality</div>
+<div class="grid" id="testing">
+<a class="tool" href="test-case-generator.html"><div class="num">34</div><div class="name">Test Cases</div><div class="desc">Test plan + Jest</div></a>
+<a class="tool" href="user-story-generator.html"><div class="num">35</div><div class="name">User Stories</div><div class="desc">Agile story builder</div></a>
+<a class="tool" href="a11y-checker.html"><div class="num">36</div><div class="name">A11y Checker</div><div class="desc">WCAG compliance</div></a>
+<a class="tool" href="email-validator.html"><div class="num">37</div><div class="name">Email Validator</div><div class="desc">Syntax + MX records</div></a>
+</div>
+
+<div class="cat">Network & DNS</div>
+<div class="grid" id="network">
+<a class="tool" href="dns-propagation-checker.html"><div class="num">38</div><div class="name">DNS Propagation</div><div class="desc">Multi-resolver check</div></a>
+<a class="tool" href="whois-lookup.html"><div class="num">39</div><div class="name">WHOIS Lookup</div><div class="desc">RDAP domain info</div></a>
+<a class="tool" href="cidr-calculator.html"><div class="num">40</div><div class="name">CIDR Calc</div><div class="desc">Subnet calculator</div></a>
+</div>
+
+<div class="cat">Media & Documents</div>
+<div class="grid" id="media">
+<a class="tool" href="image-optimizer.html"><div class="num">41</div><div class="name">Image Optimizer</div><div class="desc">Compress + resize</div></a>
+<a class="tool" href="svg-optimizer.html"><div class="num">42</div><div class="name">SVG Optimizer</div><div class="desc">Clean + minify SVGs</div></a>
+<a class="tool" href="code-to-image.html"><div class="num">43</div><div class="name">Code to Image</div><div class="desc">Carbon-style snippets</div></a>
+<a class="tool" href="pdf-generator.html"><div class="num">44</div><div class="name">PDF Generator</div><div class="desc">HTML to PDF</div></a>
+<a class="tool" href="markdown-to-pdf.html"><div class="num">45</div><div class="name">MD to PDF</div><div class="desc">Markdown converter</div></a>
+</div>
+
+<footer>
+HARZ DevTools Suite v1.0 — 45 tools, 0 dependencies, 100% client-side<br>
+Built by Magani for HARZ Digital Services — Aug 6, 2026
+</footer>
+
+<script>
+function filter(){
+const q=document.getElementById('search').value.toLowerCase();
+document.querySelectorAll('.tool').forEach(t=>{const text=t.textContent.toLowerCase();t.style.display=text.includes(q)?'':'none';});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Vulnerability Checker — HARZ DevTools</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;max-width:800px;margin:0 auto;padding:20px;background:#0d1117;color:#e6edf3}h1{color:#58a6ff;font-size:1.4em}label{display:block;color:#8b949e;font-size:0.85em;margin:3px 0}textarea{width:100%;padding:8px;background:#161b22;border:1px solid #30363d;color:#e6edf3;border-radius:6px;font-family:monospace}button{padding:10px 20px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:10px 5px 0 0}.field{margin:10px 0}table{width:100%;border-collapse:collapse;margin-top:10px}td,th{padding:8px;border-bottom:1px solid #30363d}th{color:#58a6ff;text-align:left}.crit{color:#f85149}.high{color:#ff7b72}.med{color:#f0883e}.low{color:#7ee787}</style></head>
+<body><h1>Dependency Vulnerability Checker</h1>
+<div class="field"><label>Paste package.json or requirements.txt</label><textarea id="deps" rows="6" oninput="check()">{&quot;dependencies&quot;:{&quot;express&quot;:&quot;4.18.2&quot;,&quot;lodash&quot;:&quot;4.17.20&quot;,&quot;axios&quot;:&quot;1.6.0&quot;,&quot;ws&quot;:&quot;8.16.0&quot;}}</textarea></div>
+<button onclick="check()">Check</button>
+<div id="results"></div>
+<script>
+const KNOWN_VULNS={
+'lodash':{min:'4.17.21',cve:'CVE-2021-23337',severity:'high',desc:'Command injection via template'},
+'express':{min:'4.19.2',cve:'CVE-2024-29041',severity:'medium',desc:'Open redirect via malformed URLs'},
+'axios':{min:'1.7.4',cve:'CVE-2024-39338',severity:'high',desc:'SSRF vulnerability'},
+'ws':{min:'8.17.1',cve:'CVE-2024-37890',severity:'high',desc:'DoS via HTTP requests'},
+'request':{min:'deprecated',cve:'N/A',severity:'high',desc:'Package deprecated, no longer maintained'},
+'moment':{min:'deprecated',cve:'N/A',severity:'low',desc:'In maintenance mode, use luxon or day.js'},
+'node-forge':{min:'1.3.1',cve:'CVE-2022-24772',severity:'high',desc:'Prototype pollution'},
+'json5':{min:'2.2.2',cve:'CVE-2022-46175',severity:'high',desc:'Prototype pollution'},
+'qs':{min:'6.5.3',cve:'CVE-2022-24999',severity:'high',desc:'Prototype pollution'}
+};
+function check(){
+const txt=document.getElementById('deps').value.trim();let deps={};
+try{const j=JSON.parse(txt);deps={...j.dependencies,...j.devDependencies};}
+catch(e){txt.split('\n').forEach(l=>{const[m,v]=l.split('==').length>1?l.split('=='):l.split('==');const n=m.split('>')[0].split('<')[0].split('=')[0].trim();if(n)deps[n]=v?v.trim():'*';});}
+let html=`<table><tr><th>Package</th><th>Version</th><th>Severity</th><th>CVE</th><th>Issue</th></tr>`;
+let vulnCount=0;
+for(const[name,ver]of Object.entries(deps)){
+const v=KNOWN_VULNS[name];
+if(v){
+vulnCount++;
+const cls=v.severity==='critical'?'crit':v.severity==='high'?'high':v.severity==='medium'?'med':'low';
+html+=`<tr><td>${name}</td><td>${ver}</td><td class="${cls}">${v.severity.toUpperCase()}</td><td>${v.cve}</td><td>${v.desc}</td></tr>`;
+}}
+if(vulnCount===0)html+='<tr><td colspan="5" style="color:#7ee787;text-align:center">No known vulnerabilities detected</td></tr>';
+html+=`</table><p style="color:#8b949e;font-size:0.85em;margin-top:10px">Note: This checks against known CVEs. For full scanning use: npm audit or npm-check-updates</p>`;
+html+=`<p style="color:#8b949e;font-size:0.85em">To fix: npm audit fix / npm update / npm install package@latest</p>`;
+document.getElementById('results').innerHTML=html;
+}
+check();
+</script></body></html>
