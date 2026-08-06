@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OMEGA Commander AI v3 — Autonomous Agent System | HARZ Cloud</title>
-<meta name="description" content="9 autonomous AI agents with real tools, memory, and action-taking ability. Powered by HARZ Cloud.">
+<title>OMEGA Commander AI v3.1 — Executive Body | HARZ Cloud</title>
+<meta name="description" content="9 autonomous executive AI agents with specialized tools, memory, and action-taking ability.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#050508;--card:#0e0e16;--border:#1e1e2e;--accent:#7c3aed;--accent2:#00d4aa;--danger:#ef4444;--warn:#f59e0b;--text:#e8e8f0;--muted:#6b6b80}
@@ -14,25 +14,27 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 .header p{font-size:.7rem;color:var(--muted);margin-top:4px}
 .status-bar{display:flex;justify-content:space-around;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px}
 .status-item{text-align:center}
-.status-item .val{font-size:1.2rem;font-weight:800}
+.status-item .val{font-size:1.1rem;font-weight:800}
 .status-item .lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase}
 .section{margin:16px 0}
 .section-title{font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
 .agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.agent-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all .2s}
+.agent-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
 .agent-card:active{transform:scale(.97)}
 .agent-card.active{border-color:var(--accent);background:rgba(124,58,237,.08)}
-.agent-card .role{font-size:.75rem;font-weight:700;color:var(--accent)}
-.agent-card .icon{font-size:1rem;font-weight:800;color:var(--accent);margin-bottom:4px}
-.agent-card .caps{font-size:.65rem;color:var(--muted);margin-top:4px}
-.agent-card .badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:.55rem;font-weight:700;margin-top:4px}
+.agent-card .role{font-size:.75rem;font-weight:700}
+.agent-card .icon{font-size:1rem;font-weight:800;margin-bottom:4px;font-family:monospace}
+.agent-card .caps{font-size:.6rem;color:var(--muted);margin-top:4px}
+.agent-card .tools-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:.55rem;font-weight:700;margin-top:4px;background:rgba(245,158,11,.1);color:var(--warn)}
+.agent-card .badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:.55rem;font-weight:700;margin-top:2px}
 .badge-approval{background:rgba(124,58,237,.15);color:var(--accent)}
 .badge-auto{background:rgba(34,197,94,.15);color:#22c55e}
-/* Chat */
-.chat-area{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:none;flex-direction:column;height:420px}
+.agent-card .stripe{position:absolute;top:0;left:0;width:3px;height:100%}
+.chat-area{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:none;flex-direction:column;height:440px}
 .chat-area.active{display:flex}
 .chat-header{background:rgba(124,58,237,.1);padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .chat-header .title{font-size:.8rem;font-weight:700;color:var(--accent)}
+.chat-header .agent-tools{font-size:.6rem;color:var(--muted)}
 .chat-header .close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer}
 .chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
 .chat-messages::-webkit-scrollbar{width:4px}
@@ -40,16 +42,13 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 .msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:.8rem;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
 .msg.user{align-self:flex-end;background:rgba(124,58,237,.2);color:var(--text)}
 .msg.ai{align-self:flex-start;background:rgba(0,212,170,.08);border:1px solid var(--border);color:var(--text)}
-.msg.tool{align-self:flex-start;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--warn);font-size:.7rem;font-family:monospace}
+.msg.tool-use{align-self:center;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);padding:6px 12px;border-radius:8px;font-size:.65rem;color:var(--warn);font-family:monospace}
 .typing{align-self:flex-start;background:rgba(0,212,170,.08);border:1px solid var(--border);padding:10px 14px;border-radius:16px;font-size:.75rem;color:var(--muted)}
 .chat-input{padding:10px;border-top:1px solid var(--border);display:flex;gap:8px}
 .chat-input input{flex:1;background:#14141e;border:1px solid var(--border);border-radius:20px;padding:10px 14px;color:var(--text);font-size:.8rem;outline:none}
 .chat-input input:focus{border-color:var(--accent)}
 .chat-input button{background:linear-gradient(135deg,#7c3aed,#00d4aa);border:none;border-radius:50%;width:38px;height:38px;color:#fff;font-size:1rem;cursor:pointer;flex-shrink:0}
 .chat-input button:disabled{opacity:.4}
-/* Tool display */
-.tool-badge{display:inline-block;background:rgba(245,158,11,.15);color:var(--warn);padding:3px 8px;border-radius:6px;font-size:.6rem;font-weight:700;margin:4px 0}
-/* Footer */
 .footer{text-align:center;padding:20px 0;color:var(--muted);font-size:.6rem}
 .footer a{color:var(--accent2);text-decoration:none}
 @media(max-width:480px){.agent-grid{grid-template-columns:1fr}}
@@ -58,97 +57,72 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 <body>
 <div class="header">
 <h1>OMEGA Commander AI</h1>
-<p>v3.0.0 - Autonomous Agents with Tools, Memory & Action</p>
+<p>v3.1.0 — 9 Executive Agents with Specialized Tools & Memory</p>
 </div>
 
 <div class="status-bar">
 <div class="status-item"><div class="val" style="color:#22c55e" id="sysStatus">.</div><div class="lbl">AI Engine</div></div>
-<div class="status-item"><div class="val" style="color:var(--accent)" id="agentCount">9</div><div class="lbl">Agents</div></div>
-<div class="status-item"><div class="val" style="color:var(--warn)" id="toolCount">10</div><div class="lbl">Tools</div></div>
+<div class="status-item"><div class="val" style="color:var(--accent)" id="agentCount">9</div><div class="lbl">Executives</div></div>
+<div class="status-item"><div class="val" style="color:var(--warn)" id="toolCount">10</div><div class="lbl">Total Tools</div></div>
 <div class="status-item"><div class="val" style="color:var(--accent2)" id="engineName">-</div><div class="lbl">Model</div></div>
 </div>
 
 <div class="section">
-<div class="section-title">9 Autonomous Agents (Tap to Chat)</div>
+<div class="section-title">Executive Body — Tap to Chat</div>
 <div class="agent-grid" id="agentGrid"></div>
 </div>
 
 <div class="section">
-<div class="section-title">Agent Chat with Tools</div>
+<div class="section-title">Active Agent Chat</div>
 <div class="chat-area" id="chatArea">
 <div class="chat-header">
-<span class="title" id="chatTitle">Select an agent</span>
+<div><span class="title" id="chatTitle">Select an agent</span><br><span class="agent-tools" id="chatTools"></span></div>
 <button class="close" onclick="closeChat()">X</button>
 </div>
 <div class="chat-messages" id="chatMessages"></div>
 <div class="chat-input">
-<input id="chatInput" placeholder="Type your command..." onkeypress="if(event.key==='Enter')sendMsg()">
+<input id="chatInput" placeholder="Type your command to this agent..." onkeypress="if(event.key==='Enter')sendMsg()">
 <button onclick="sendMsg()" id="sendBtn">></button>
 </div>
 </div>
 </div>
 
 <div class="section">
-<div class="section-title">10 Tools Available</div>
-<div id="toolList" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px"></div>
-</div>
-
-<div class="section">
 <div class="section-title">System Status</div>
-<div id="statusInfo" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:.7rem;color:var(--muted)">Checking AI engine...</div>
+<div id="statusInfo" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:.7rem;color:var(--muted)">Checking executive body...</div>
 </div>
 
 <div class="footer">
-<p>OMEGA Commander AI v3.0.0 - Powered by Magani v9.0 on HARZ Cloud</p>
-<p>Harz Digital Services - RC 321424</p>
+<p>OMEGA Commander AI v3.1.0 — Powered by Magani v9.1 on HARZ Cloud</p>
+<p>Harz Digital Services — RC 321424</p>
 <p><a href="omega-commander.html">Commander Suite</a> | <a href="harz-super-app-v4.html">Home</a></p>
 </div>
 
 <script>
-var AI_URL='https://magani-agent.harz.workers.dev/chat';
+var API='https://magani-agent.harz.workers.dev';
 var currentAgent=null;
 var sessionCounter=0;
 
 var agents=[
-{role:'Chief Executive',icon:'CEO',caps:['Strategy','Decisions','Coordination'],approval:false,prompt:'You are the OMEGA Chief Executive AI for HARZ Digital Services (RC 321424). Owner: Rabiu Hamza Mohammed. You oversee all business operations and make strategic decisions. Use your tools to check real data before making recommendations. Be decisive and brief.'},
-{role:'Strategy',icon:'STR',caps:['Business planning','Market analysis','Growth'],approval:true,prompt:'You are the OMEGA Strategy AI for HARZ. You analyze markets, create business plans, and identify growth opportunities. Use web search to research current market conditions. Be analytical.'},
-{role:'Operations',icon:'OPS',caps:['Workflows','Processes','Efficiency'],approval:true,prompt:'You are the OMEGA Operations AI for HARZ. You manage workflows and optimize processes across 600+ digital assets. Use ecosystem_status and deploy_status tools to monitor operations. Be systematic.'},
-{role:'Finance',icon:'FIN',caps:['Payments','Reporting','Budget'],approval:true,prompt:'You are the OMEGA Finance AI for HARZ. You monitor payments via Paystack, track revenue, and manage budgets. Use paystack_dashboard and query_database tools to pull real financial data. Be precise with numbers.'},
-{role:'Marketing',icon:'MKT',caps:['Content','Campaigns','Analytics'],approval:true,prompt:'You are the OMEGA Marketing AI for HARZ. You create content and manage campaigns. Use web_search to research trends and query_database for analytics data. Be creative but data-driven.'},
-{role:'Sales',icon:'SAL',caps:['Leads','Proposals','CRM'],approval:true,prompt:'You are the OMEGA Sales AI for HARZ. You generate leads and write proposals. Use web_search and create_payment tools. Use query_database to check existing customers. Be persuasive.'},
-{role:'Support',icon:'SUP',caps:['Customer help','Ticket resolution'],approval:false,prompt:'You are the OMEGA Support AI for HARZ. You handle customer inquiries and resolve tickets. Use query_database to look up user records and transactions. Be helpful and patient.'},
-{role:'Developer',icon:'DEV',caps:['Code','Deployment','Monitoring'],approval:true,prompt:'You are the OMEGA Developer AI for HARZ. You generate code, manage Cloudflare deployments, and monitor infrastructure. Use ecosystem_status, deploy_status, and query_database tools. You know Cloudflare Workers, Pages, D1, KV.'},
-{role:'Security',icon:'SEC',caps:['Threats','Compliance','Access'],approval:true,prompt:'You are the OMEGA Security AI for HARZ. You detect threats, ensure compliance, and manage access. Use ecosystem_status to check infrastructure health. Use send_message to alert the owner of issues. Be vigilant.'}
-];
-
-var tools=[
-{name:'ecosystem_status',desc:'Check live HARZ Cloud infrastructure',icon:'clinic'},
-{name:'create_payment',desc:'Create real Paystack payment link',icon:'card'},
-{name:'paystack_dashboard',desc:'Get live Paystack balance & transactions',icon:'bank'},
-{name:'crypto_prices',desc:'Get live crypto prices USD/NGN',icon:'coin'},
-{name:'web_search',desc:'Search the web for information',icon:'search'},
-{name:'currency_convert',desc:'Convert between currencies',icon:'exchange'},
-{name:'send_message',desc:'Send alert to owner via Telegram',icon:'send'},
-{name:'query_database',desc:'Query HARZ D1 database',icon:'database'},
-{name:'deploy_status',desc:'Check Cloudflare Pages deployments',icon:'deploy'},
-{name:'vat_calculator',desc:'Calculate Nigerian VAT (7.5%)',icon:'calc'}
+{key:'ceo',role:'Chief Executive',icon:'CEO',color:'#7c3aed',caps:['All operations','Strategy','Decisions'],approval:false,tools:10,desc:'Full access to all 10 tools. Oversees everything.'},
+{key:'strategy',role:'Strategy Director',icon:'STR',color:'#3b82f6',caps:['Market research','Business plans','Growth'],approval:true,tools:5,desc:'Web search, database, currency, ecosystem, alerts.'},
+{key:'operations',role:'Operations Manager',icon:'OPS',color:'#10b981',caps:['Infrastructure','Workflows','Monitoring'],approval:true,tools:5,desc:'Ecosystem status, deployments, database, alerts.'},
+{key:'finance',role:'Finance Director',icon:'FIN',color:'#f59e0b',caps:['Payments','Revenue','Budgets'],approval:true,tools:7,desc:'Paystack, payments, VAT, currency, database, alerts.'},
+{key:'marketing',role:'Marketing Director',icon:'MKT',color:'#ec4899',caps:['Campaigns','Content','Analytics'],approval:true,tools:5,desc:'Web search, database, alerts, crypto, currency.'},
+{key:'sales',role:'Sales Director',icon:'SAL',color:'#8b5cf6',caps:['Leads','Proposals','CRM'],approval:true,tools:5,desc:'Web search, payments, database, alerts, currency.'},
+{key:'support',role:'Support Manager',icon:'SUP',color:'#06b6d4',caps:['Customer help','Tickets','Resolution'],approval:false,tools:4,desc:'Database lookup, alerts, web search, ecosystem.'},
+{key:'developer',role:'Lead Developer',icon:'DEV',color:'#6366f1',caps:['Code','Deployments','Monitoring'],approval:true,tools:5,desc:'Ecosystem, deployments, database, alerts, search.'},
+{key:'security',role:'Security Officer',icon:'SEC',color:'#ef4444',caps:['Threats','Compliance','Access'],approval:true,tools:5,desc:'Ecosystem, database, alerts, search, deployments.'}
 ];
 
 function renderAgents(){
 document.getElementById('agentGrid').innerHTML=agents.map(function(a,i){
-return '<div class="agent-card" onclick="openChat('+i+')">'+
-'<div class="icon">'+a.icon+'</div>'+
-'<div class="role">'+a.role+'</div>'+
+return '<div class="agent-card" onclick="openChat('+i+')" style="border-left:3px solid '+a.color+'">'+
+'<div class="icon" style="color:'+a.color+'">'+a.icon+'</div>'+
+'<div class="role" style="color:'+a.color+'">'+a.role+'</div>'+
 '<div class="caps">'+a.caps.join(' | ')+'</div>'+
+'<span class="tools-badge">'+a.tools+' tools</span> '+
 (a.approval?'<span class="badge badge-approval">APPROVAL</span>':'<span class="badge badge-auto">AUTO</span>')+
-'</div>';
-}).join('');
-}
-
-function renderTools(){
-document.getElementById('toolList').innerHTML=tools.map(function(t){
-return '<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:.7rem">'+
-'<b style="color:var(--warn)">'+t.name+'</b> - <span style="color:var(--muted)">'+t.desc+'</span>'+
 '</div>';
 }).join('');
 }
@@ -158,9 +132,10 @@ currentAgent=agents[idx];
 sessionCounter++;
 document.getElementById('chatArea').classList.add('active');
 document.getElementById('chatTitle').textContent=currentAgent.icon+' '+currentAgent.role;
+document.getElementById('chatTools').textContent=currentAgent.tools+' specialized tools | '+currentAgent.desc;
 document.getElementById('chatMessages').innerHTML='';
 document.getElementById('chatInput').focus();
-addMsg('ai','Hello, I am the '+currentAgent.role+' agent. I have 10 real tools and memory. I can check infrastructure, create payments, query databases, search the web, and more. What do you need?');
+addMsg('ai','I am the '+currentAgent.role+'. I have '+currentAgent.tools+' specialized tools and my own memory. I can take real actions for my area. What do you need?');
 }
 
 function closeChat(){
@@ -177,29 +152,22 @@ var btn=document.getElementById('sendBtn');
 btn.disabled=true;
 addMsg('user',msg);
 
-// Show tool badge
-var toolBadge=document.createElement('div');
-toolBadge.className='tool-badge';
-toolBadge.textContent='Using tools: ecosystem_status, create_payment, web_search, query_database...';
-document.getElementById('chatMessages').appendChild(toolBadge);
-
 var typing=document.createElement('div');
 typing.className='typing';
-typing.textContent='Agent is thinking and using tools...';
+typing.textContent=currentAgent.icon+' is thinking and using tools...';
 typing.id='typing';
 document.getElementById('chatMessages').appendChild(typing);
 
 try{
-var session='omega_'+currentAgent.icon+'_'+sessionCounter;
-var res=await fetch(AI_URL+'?cb='+Date.now(),{
+var session='omega_'+currentAgent.key+'_'+sessionCounter;
+var res=await fetch(API+'/chat',{
 method:'POST',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({message:currentAgent.prompt+'\n\nUser request: '+msg,session:session})
+headers:{'Content-Type':'application/json','Cache-Control':'no-cache, no-store'},
+body:JSON.stringify({agent:currentAgent.key,message:msg,session:session})
 });
 var data=await res.json();
 var el=document.getElementById('typing');
 if(el)el.remove();
-if(toolBadge)toolBadge.remove();
 if(data.response){
 addMsg('ai',data.response);
 }else{
@@ -208,8 +176,7 @@ addMsg('ai','Error: '+(data.error||'No response'));
 }catch(e){
 var el2=document.getElementById('typing');
 if(el2)el2.remove();
-if(toolBadge)toolBadge.remove();
-addMsg('ai','Connection error.');
+addMsg('ai','Connection error. Please try again.');
 }
 btn.disabled=false;
 }
@@ -223,21 +190,36 @@ document.getElementById('chatMessages').scrollTop=document.getElementById('chatM
 }
 
 renderAgents();
-renderTools();
 
-fetch('https://magani-agent.harz.workers.dev/?cb='+Date.now()).then(function(r){return r.json()}).then(function(d){
+// Fetch live agent data
+fetch(API+'/agents?cb='+Date.now(),{headers:{'Cache-Control':'no-cache'}}).then(function(r){return r.json()}).then(function(d){
+var agentData=d.agents||{};
+agents.forEach(function(a){
+var live=agentData[a.key];
+if(live){
+a.liveTools=live.tool_names;
+}
+});
+}).catch(function(){});
+
+// System status
+fetch(API+'?cb='+Date.now(),{headers:{'Cache-Control':'no-cache'}}).then(function(r){return r.json()}).then(function(d){
 if(d.ai){
 document.getElementById('sysStatus').textContent='ON';
 document.getElementById('sysStatus').style.color='#22c55e';
-document.getElementById('engineName').textContent=(d.ai_model||'Active').substring(0,15);
+document.getElementById('engineName').textContent=(d.ai_model||'').substring(0,15);
+var agentDetails=d.agent_details||{};
+var agentList=Object.entries(agentDetails).map(function(e){return e[1].name+': '+e[1].tools+' tools';});
 document.getElementById('statusInfo').innerHTML=
-'<b style="color:#22c55e">AI Engine: Online</b><br>'+
+'<b style="color:#22c55e">Executive Body: Online</b><br>'+
 '<b style="color:var(--accent2)">Version:</b> '+(d.version||'-')+'<br>'+
 '<b style="color:var(--accent2)">Model:</b> '+(d.ai_model||'-')+'<br>'+
-'<b style="color:var(--accent2)">Tools:</b> '+(d.tools||10)+' live tools<br>'+
-'<b style="color:var(--accent2)">Capabilities:</b> '+(d.capabilities||[]).join(', ')+'<br>'+
+'<b style="color:var(--accent2)">Agents:</b> '+(d.agents||9)+' specialized executives<br>'+
+'<b style="color:var(--accent2)">Total Tools:</b> '+(d.total_tools||10)+'<br>'+
+'<b style="color:var(--accent2)">Memory:</b> Per-agent, KV-backed<br>'+
 '<b style="color:var(--accent2)">Payments:</b> '+(d.payments&&d.payments.paystack?'Paystack LIVE':'inactive')+'<br>'+
-'<br><i>Each agent has tools, memory, and can take real actions. Tap an agent to start.</i>';
+'<br><b style="color:var(--warn)">Executive Team:</b><br>'+agentList.join('<br>')+
+'<br><br><i>Each executive has specialized tools for their role and independent memory. Tap an agent to start giving orders.</i>';
 }else{
 document.getElementById('sysStatus').textContent='OFF';
 document.getElementById('sysStatus').style.color='var(--danger)';
