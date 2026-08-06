@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARZ Security Center</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+.c{max-width:800px;margin:0 auto}
+h1{text-align:center;font-size:2rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{text-align:center;color:#94a3b8;margin-bottom:30px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:20px}
+.card h2{font-size:1.2rem;color:#60a5fa;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.status-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #334155}
+.status-row:last-child{border:0}
+.status-label{color:#94a3b8;font-size:.9rem}
+.status-value{font-weight:600;font-size:.9rem}
+.active{color:#4ade80}.pending{color:#fbbf24}.inactive{color:#f87171}
+input,button,select{font-family:inherit;font-size:.9rem;padding:10px 14px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;outline:none}
+input:focus{border-color:#3b82f6}
+button{cursor:pointer;border:none;font-weight:600;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-success{background:#16a34a;color:#fff}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;margin-bottom:6px;color:#94a3b8;font-size:.85rem}
+.form-group input{width:100%}
+.qr-container{text-align:center;margin:16px 0}
+.qr-container img{border-radius:8px;border:2px solid #334155}
+.secret-code{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;font-family:monospace;font-size:1rem;color:#4ade80;text-align:center;letter-spacing:.1em;margin:8px 0;word-break:break-all}
+.msg{padding:12px 16px;border-radius:8px;margin:8px 0;font-size:.9rem}
+.msg-ok{background:#052e16;color:#4ade80}.msg-err{background:#450a0a;color:#f87171}.msg-info{background:#0c4a6e;color:#38bdf8}
+.flex{display:flex;gap:10px;align-items:center}
+.flex input{flex:1}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:8px 16px;background:#334155;border-radius:8px;cursor:pointer;font-size:.85rem;color:#94a3b8;transition:.2s}
+.tab.active{background:#3b82f6;color:#fff}
+.hidden{display:none}
+.provider-btn{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:8px;border:1px solid #334155;background:#1e293b;cursor:pointer;font-size:.9rem;color:#e2e8f0;transition:.2s;width:100%;margin-bottom:8px}
+.provider-btn:hover{border-color:#3b82f6}
+.provider-btn img{width:20px;height:20px}
+</style>
+</head>
+<body>
+<div class="c">
+<h1>HARZ Security Center</h1>
+<p class="sub">2FA, OAuth, SMS, Email, and Push Notifications</p>
+
+<div class="tabs">
+<div class="tab active" onclick="showTab('overview')">Overview</div>
+<div class="tab" onclick="showTab('twofa')">2FA</div>
+<div class="tab" onclick="showTab('oauth')">OAuth Login</div>
+<div class="tab" onclick="showTab('sms')">SMS</div>
+<div class="tab" onclick="showTab('email')">Email</div>
+<div class="tab" onclick="showTab('push')">Push</div>
+</div>
+
+<div id="tab-overview">
+<div class="card">
+<h2>Security Status</h2>
+<div id="securityOverview"></div>
+</div>
+<div class="card">
+<h2>Rate Limiting</h2>
+<div id="rateLimitInfo"></div>
+</div>
+</div>
+
+<div id="tab-twofa" class="hidden">
+<div class="card">
+<h2>Enable Two-Factor Authentication</h2>
+<div class="form-group"><label>Email Address</label><input type="email" id="twofa-email" placeholder="you@harz.cloud"></div>
+<button class="btn-primary" onclick="setup2FA()">Generate QR Code</button>
+<div id="twofa-result"></div>
+</div>
+<div class="card">
+<h2>Verify 2FA Code</h2>
+<div class="form-group"><label>Email</label><input type="email" id="verify-email" placeholder="you@harz.cloud"></div>
+<div class="form-group"><label>6-digit code from authenticator app</label><input type="text" id="verify-code" placeholder="123456" maxlength="6"></div>
+<button class="btn-success" onclick="verify2FA()">Verify Code</button>
+<div id="verify-result"></div>
+</div>
+</div>
+
+<div id="tab-oauth" class="hidden">
+<div class="card">
+<h2>OAuth2 Login Providers</h2>
+<p style="color:#94a3b8;margin-bottom:16px;font-size:.9rem">Connect your social accounts for one-click login. OAuth client IDs need to be configured on the server.</p>
+<div class="provider-btn" onclick="oauthLogin('google')"><span style="font-size:1.2rem">G</span> Continue with Google</div>
+<div class="provider-btn" onclick="oauthLogin('github')"><span style="font-size:1.2rem">⌥</span> Continue with GitHub</div>
+<div class="provider-btn" onclick="oauthLogin('facebook')"><span style="font-size:1.2rem">f</span> Continue with Facebook</div>
+<div id="oauth-result"></div>
+</div>
+</div>
+
+<div id="tab-sms" class="hidden">
+<div class="card">
+<h2>Send SMS (Termii)</h2>
+<div class="form-group"><label>Phone Number</label><input type="tel" id="sms-phone" placeholder="+2348012345678"></div>
+<div class="form-group"><label>Message</label><input type="text" id="sms-message" placeholder="Your message..."></div>
+<button class="btn-primary" onclick="sendSMS()">Send SMS</button>
+<div id="sms-result"></div>
+</div>
+<div class="card">
+<h2>Send OTP via SMS</h2>
+<div class="form-group"><label>Phone Number</label><input type="tel" id="otp-phone" placeholder="+2348012345678"></div>
+<button class="btn-primary" onclick="sendOTPSMS()">Send OTP</button>
+<div class="form-group" style="margin-top:12px"><label>OTP Code</label><input type="text" id="otp-code" placeholder="123456" maxlength="6"></div>
+<div class="form-group"><label>PIN ID (from response)</label><input type="text" id="otp-pinid" placeholder="pinId from send"></div>
+<button class="btn-success" onclick="verifyOTPSMS()">Verify OTP</button>
+<div id="otp-result"></div>
+</div>
+</div>
+
+<div id="tab-email" class="hidden">
+<div class="card">
+<h2>Send Email (Resend)</h2>
+<div class="form-group"><label>To</label><input type="email" id="email-to" placeholder="recipient@example.com"></div>
+<div class="form-group"><label>Subject</label><input type="text" id="email-subject" placeholder="Subject"></div>
+<div class="form-group"><label>Template</label><select id="email-template"><option value="welcome">Welcome</option><option value="receipt">Receipt</option><option value="alert">Alert</option></select></div>
+<button class="btn-primary" onclick="sendEmail()">Send Email</button>
+<div id="email-result"></div>
+</div>
+<div class="card">
+<h2>Send Payment Receipt</h2>
+<div class="form-group"><label>To</label><input type="email" id="receipt-to" placeholder="customer@example.com"></div>
+<div class="form-group"><label>Reference</label><input type="text" id="receipt-ref" placeholder="HARZ_001"></div>
+<div class="form-group"><label>Product</label><input type="text" id="receipt-product" placeholder="Product Name"></div>
+<div class="form-group"><label>Amount</label><input type="text" id="receipt-amount" placeholder="5000"></div>
+<div class="form-group"><label>Currency</label><input type="text" id="receipt-currency" placeholder="NGN"></div>
+<div class="form-group"><label>Method</label><input type="text" id="receipt-method" placeholder="Paystack"></div>
+<button class="btn-primary" onclick="sendReceipt()">Send Receipt</button>
+<div id="receipt-result"></div>
+</div>
+</div>
+
+<div id="tab-push" class="hidden">
+<div class="card">
+<h2>Push Notifications</h2>
+<p style="color:#94a3b8;margin-bottom:16px;font-size:.9rem">Subscribe to receive push notifications from HARZ Cloud. Requires VAPID keys on the server.</p>
+<button class="btn-primary" onclick="subscribePush()">Enable Notifications</button>
+<div id="push-sub-result"></div>
+</div>
+<div class="card">
+<h2>Send Test Notification</h2>
+<div class="form-group"><label>Title</label><input type="text" id="push-title" placeholder="Payment Received"></div>
+<div class="form-group"><label>Body</label><input type="text" id="push-body" placeholder="Your payment of ₦5,000 was successful"></div>
+<button class="btn-primary" onclick="sendPush()">Send to All Subscribers</button>
+<div id="push-send-result"></div>
+</div>
+</div>
+
+</div>
+<script>
+const API="https://harz-cloud-api.harz.workers.dev";
+function showTab(t){document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',el.textContent.toLowerCase().includes(t)));document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add('hidden'));document.getElementById('tab-'+t).classList.remove('hidden');}
+function msg(el,txt,type){const c=type==='ok'?'msg-ok':type==='err'?'msg-err':'msg-info';el.innerHTML=`<div class="msg ${c}">${txt}</div>`;}
+
+async function loadOverview(){
+try{
+const[health,rl]=await Promise.all([fetch(`${API}/health`).then(r=>r.json()),fetch(`${API}/rate-limit-stats`).then(r=>r.json())]);
+const s=health.services||{};
+const items=[['Workers',s.workers],['D1 Database',s.d1],['KV Storage',s.kv],['Rate Limiting',s.rateLimit],['Error Tracking',s.errorTracking],['2FA/TOTP',s.twofa],['SMS (Termii)',s.sms],['Email (Resend)',s.email],['Push Notifications',s.push]];
+document.getElementById('securityOverview').innerHTML=items.map(([k,v])=>{const cls=v==='active'||v==='operational'?'active':v==='pending_key'?'pending':'inactive';return `<div class="status-row"><span class="status-label">${k}</span><span class="status-value ${cls}">${v||'unknown'}</span></div>`;}).join('');
+const r=rl.rateLimit||{};
+document.getElementById('rateLimitInfo').innerHTML=`<div class="status-row"><span class="status-label">Your IP</span><span class="status-value">${rl.ip||'?'}</span></div><div class="status-row"><span class="status-label">Requests left (this minute)</span><span class="status-value active">${r.minute??'?'}</span></div><div class="status-row"><span class="status-label">Requests left (this hour)</span><span class="status-value active">${r.hour??'?'}</span></div><div class="status-row"><span class="status-label">Errors today</span><span class="status-value active">${(rl.errors||{}).today||0}</span></div>`;
+}catch(e){console.error(e);}
+}
+
+async function setup2FA(){
+const email=document.getElementById('twofa-email').value;if(!email)return msg(document.getElementById('twofa-result'),'Email required','err');
+try{const r=await fetch(`${API}/2fa/setup`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})}).then(r=>r.json());
+if(r.success){document.getElementById('twofa-result').innerHTML=`<div class="qr-container"><img src="${r.qrUrl}" alt="QR Code"></div><div class="secret-code">${r.secret}</div><div class="msg msg-info">Scan with Google Authenticator or Authy, then verify below</div>`;}
+else msg(document.getElementById('twofa-result'),r.error||'Failed','err');
+}catch(e){msg(document.getElementById('twofa-result'),'Error: '+e.message,'err');}
+}
+
+async function verify2FA(){
+const email=document.getElementById('verify-email').value,code=document.getElementById('verify-code').value;
+if(!email||!code)return msg(document.getElementById('verify-result'),'Email and code required','err');
+try{const r=await fetch(`${API}/2fa/verify`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,code})}).then(r=>r.json());
+if(r.verified)msg(document.getElementById('verify-result'),'2FA verified successfully! Login now requires your code.','ok');
+else msg(document.getElementById('verify-result'),'Invalid code. Try again.','err');
+}catch(e){msg(document.getElementById('verify-result'),'Error: '+e.message,'err');}
+}
+
+async function oauthLogin(provider){
+try{const r=await fetch(`${API}/oauth/${provider}?redirect_uri=${encodeURIComponent(window.location.origin+'/auth/callback')}`).then(r=>r.json());
+if(r.success){msg(document.getElementById('oauth-result'),`OAuth URL generated for ${provider}. Client ID needs to be set on server. State: ${r.state}`,'info');}
+else msg(document.getElementById('oauth-result'),r.error||'Failed','err');
+}catch(e){msg(document.getElementById('oauth-result'),'Error: '+e.message,'err');}
+}
+
+async function sendSMS(){
+const phone=document.getElementById('sms-phone').value,message=document.getElementById('sms-message').value;
+if(!phone||!message)return msg(document.getElementById('sms-result'),'Phone and message required','err');
+try{const r=await fetch(`${API}/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,message})}).then(r=>r.json());
+if(r.success)msg(document.getElementById('sms-result'),`SMS sent! ID: ${r.messageId}`,'ok');
+else msg(document.getElementById('sms-result'),r.error,'err');
+}catch(e){msg(document.getElementById('sms-result'),'Error: '+e.message,'err');}
+}
+
+async function sendOTPSMS(){
+const phone=document.getElementById('otp-phone').value;if(!phone)return msg(document.getElementById('otp-result'),'Phone required','err');
+try{const r=await fetch(`${API}/sms/otp/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone})}).then(r=>r.json());
+if(r.success){document.getElementById('otp-pinid').value=r.pinId||'';msg(document.getElementById('otp-result'),`OTP sent to ${phone}. PIN ID: ${r.pinId}`,'ok');}
+else msg(document.getElementById('otp-result'),r.error,'err');
+}catch(e){msg(document.getElementById('otp-result'),'Error: '+e.message,'err');}
+}
+
+async function verifyOTPSMS(){
+const pinId=document.getElementById('otp-pinid').value,pin=document.getElementById('otp-code').value;
+if(!pinId||!pin)return msg(document.getElementById('otp-result'),'PIN ID and code required','err');
+try{const r=await fetch(`${API}/sms/otp/verify`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pinId,pin})}).then(r=>r.json());
+if(r.verified)msg(document.getElementById('otp-result'),'OTP verified successfully!','ok');
+else msg(document.getElementById('otp-result'),'Invalid OTP code','err');
+}catch(e){msg(document.getElementById('otp-result'),'Error: '+e.message,'err');}
+}
+
+async function sendEmail(){
+const to=document.getElementById('email-to').value,subject=document.getElementById('email-subject').value,template=document.getElementById('email-template').value;
+if(!to||!subject)return msg(document.getElementById('email-result'),'To and subject required','err');
+try{const r=await fetch(`${API}/email/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,subject,template})}).then(r=>r.json());
+if(r.success)msg(document.getElementById('email-result'),`Email sent! ID: ${r.messageId}`,'ok');
+else msg(document.getElementById('email-result'),r.error,'err');
+}catch(e){msg(document.getElementById('email-result'),'Error: '+e.message,'err');}
+}
+
+async function sendReceipt(){
+const to=document.getElementById('receipt-to').value,reference=document.getElementById('receipt-ref').value,product=document.getElementById('receipt-product').value,amount=document.getElementById('receipt-amount').value,currency=document.getElementById('receipt-currency').value,method=document.getElementById('receipt-method').value;
+if(!to||!reference)return msg(document.getElementById('receipt-result'),'To and reference required','err');
+try{const r=await fetch(`${API}/email/receipt`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,reference,product,amount,currency,method})}).then(r=>r.json());
+if(r.success)msg(document.getElementById('receipt-result'),`Receipt sent to ${to}!`,'ok');
+else msg(document.getElementById('receipt-result'),r.error,'err');
+}catch(e){msg(document.getElementById('receipt-result'),'Error: '+e.message,'err');}
+}
+
+async function subscribePush(){
+if(!('serviceWorker' in navigator))return msg(document.getElementById('push-sub-result'),'Push not supported in this browser','err');
+try{const r=await fetch(`${API}/push/subscribe`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:window.location.href,keys:{p256dh:'browser',auth:'auto'}})}).then(r=>r.json());
+if(r.success)msg(document.getElementById('push-sub-result'),`Subscribed! ID: ${r.subscriptionId}`,'ok');
+else msg(document.getElementById('push-sub-result'),r.error,'err');
+}catch(e){msg(document.getElementById('push-sub-result'),'Error: '+e.message,'err');}
+}
+
+async function sendPush(){
+const title=document.getElementById('push-title').value,body=document.getElementById('push-body').value;
+if(!title||!body)return msg(document.getElementById('push-send-result'),'Title and body required','err');
+try{const r=await fetch(`${API}/push/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,body})}).then(r=>r.json());
+if(r.success)msg(document.getElementById('push-send-result'),`Sent to ${r.sent} subscribers`,'ok');
+else msg(document.getElementById('push-send-result'),r.error,'err');
+}catch(e){msg(document.getElementById('push-send-result'),'Error: '+e.message,'err');}
+}
+
+loadOverview();setInterval(loadOverview,30000);
+</script>
+</body>
+</html>
