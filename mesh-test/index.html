@@ -524,7 +524,7 @@ async function scanFrame(){
     if (codes.length === 0) lastScan = '';
   } catch (e){ /* transient */ }
 }
-function handleChunk(raw){
+async function handleChunk(raw){
   var chunk;
   try { chunk = JSON.parse(raw); } catch(e){ return; }
   if (typeof chunk.c !== 'number' || typeof chunk.n !== 'number' || typeof chunk.d !== 'string') return;
