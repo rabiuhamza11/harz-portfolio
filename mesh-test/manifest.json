@@ -1,0 +1,15 @@
+{
+  "name": "HARZ Mesh Test — Sovereignty Field Test",
+  "short_name": "HARZ Mesh Test",
+  "description": "Zero-internet device-to-device mesh sovereignty field test. Optical QR link, hash-chained bundles, DPB-continuity dedup and acks. Light theme PWA.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0f2f5",
+  "theme_color": "#f0f2f5",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
