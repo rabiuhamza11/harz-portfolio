@@ -162,8 +162,9 @@ async function loadWallet(){
 function calcSwap(){
   var amt=parseFloat(document.getElementById('swapAmt').value)||0;
   var from=document.getElementById('swapFrom').value;
-  if(from==='GDEG')document.getElementById('swapResult').value=(amt*15).toFixed(2)+' NGN';
-  else document.getElementById('swapResult').value=(amt/15).toFixed(2)+' GDEG';
+  if(!GDEG_NGN){document.getElementById('swapResult').value='live rate unavailable — use HARZSwap';return}
+  if(from==='GDEG')document.getElementById('swapResult').value=(amt*GDEG_NGN).toFixed(2)+' NGN';
+  else document.getElementById('swapResult').value=(amt/GDEG_NGN).toFixed(2)+' GDEG';
 }
 
 function doSwap(){location.href='https://harz-swap.harz.workers.dev/';}

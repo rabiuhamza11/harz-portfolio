@@ -237,12 +237,18 @@ function renderAll(data) {
   renderStats(data.stats || {});
 }
 
+window.GDEG_MARKET_NGN = 0;
+fetch('https://harz-swap.harz.workers.dev/api/prices').then(function(r){return r.json()}).then(function(d){
+  var g=d&&d.internal&&d.internal.GDEG&&d.internal.GDEG.ngn;
+  if(g&&isFinite(g)&&g>0){window.GDEG_MARKET_NGN=g; if(window._lastWallet)renderWallet(window._lastWallet);}
+}).catch(function(){});
 function renderWallet(w) {
   const ngn = w.ngn_balance || w.ngnBalance || 0;
   const usd = w.usd_balance || w.usdBalance || 0;
   const usdt = w.usdt_balance || w.usdtBalance || 0;
   const gdeg = w.gdeg_balance || w.gdegBalance || 0;
-  const total = ngn + (usd * 1500) + (gdeg * 0.01 * 1500) + (usdt * 1500);
+  window._lastWallet = w;
+  const total = ngn + (usd * 1500) + (gdeg * (window.GDEG_MARKET_NGN || 0)) + (usdt * 1500);
   document.getElementById('total-balance').textContent = '₦' + Math.round(total).toLocaleString();
   
   const chips = [];

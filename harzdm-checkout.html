@@ -93,7 +93,11 @@ input:focus,select:focus{border-color:var(--p);outline:none}
 const API='https://superagent-2286fb2f.base44.app/functions/harzPayments';
 const PRODUCTS_API='https://superagent-2286fb2f.base44.app/functions/harzdmCatalog';
 const USD_NGN_RATE = 1600; // 1 USD = ₦1,600
-const GDEG_RATE = 15; // 1 GDEG = ₦15
+var GDEG_RATE = null; // live market rate from HARZSwap oracle (no fixed price — owner law Sep 18, 2026)
+fetch('https://harz-swap.harz.workers.dev/api/prices').then(function(r){return r.json()}).then(function(d){
+  var g=d&&d.internal&&d.internal.GDEG&&d.internal.GDEG.ngn;
+  if(g&&isFinite(g)&&g>0){GDEG_RATE=g;try{updateAmount()}catch(e){}}
+}).catch(function(){});
 
 let selProduct=null, selAmountNGN=0, selOpt_='bank';
 
@@ -159,8 +163,9 @@ function updateAmount() {
   
   if (selOpt_ === 'gdeg') {
     amount = applyGdegDiscount(selAmountNGN);
-    const gdegTokens = Math.round(amount / GDEG_RATE);
-    noteText = `${gdegTokens} GDEG tokens (10% discount applied)`;
+    if(!GDEG_RATE){ noteText = 'GDEG live market rate unavailable — refresh or choose another method'; }
+    else { const gdegTokens = Math.round(amount / GDEG_RATE);
+    noteText = `${gdegTokens} GDEG tokens (10% discount applied)`; }
   } else if (selOpt_ === 'crypto') {
     const usdtAmount = (amount / USD_NGN_RATE).toFixed(2);
     noteText = `≈ $${usdtAmount} USDT (TRC20)`;
@@ -211,6 +216,7 @@ async function checkout() {
 
   // GDEG token payment
   if (selOpt_ === 'gdeg') {
+    if(!GDEG_RATE){ alert('GDEG live market rate unavailable — refresh and try again, or choose another payment method'); return; }
     const gdegTokens = Math.round(finalAmount / GDEG_RATE);
     document.getElementById('result').style.display = 'block';
     document.getElementById('bankDetails').innerHTML = `
