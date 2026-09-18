@@ -79,7 +79,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
 
 <div class="asset-card">
 <div class="asset-row">
-<div class="asset-left"><div class="asset-icon" style="background:rgba(245,158,11,.15);color:var(--gold)">G</div><div><div class="asset-name">GDEG Token</div><div class="asset-desc">HARZ Ecosystem · ₦15/token</div></div></div>
+<div class="asset-left"><div class="asset-icon" style="background:rgba(245,158,11,.15);color:var(--gold)">G</div><div><div class="asset-name">GDEG Token</div><div class="asset-desc">HARZ Ecosystem · <span id="gdeg-price">live market price</span>/token</div></div></div>
 <div><div class="asset-amount" id="gdegBalance">0 GDEG</div><div class="asset-usd">≈ ₦<span id="gdegValue">0</span></div></div>
 </div>
 </div>
@@ -121,8 +121,8 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
 <div class="input-group"><label class="input-label">From</label><select class="input" id="swapFrom"><option value="GDEG">GDEG Tokens</option><option value="NGN">NGN Naira</option></select></div>
 <div class="input-group"><label class="input-label">Amount</label><input class="input" id="swapAmt" type="number" placeholder="0.00" oninput="calcSwap()"></div>
 <div class="input-group"><label class="input-label">You'll receive</label><input class="input" id="swapResult" readonly value="0.00"></div>
-<div style="font-size:.7rem;color:var(--muted);margin:4px 0">Rate: 1 GDEG = ₦15</div>
-<button class="btn-gold" onclick="doSwap()">Swap Now</button>
+<div style="font-size:.7rem;color:var(--muted);margin:4px 0">Rate: 1 GDEG = ₦<span id="gdeg-rate">live market</span></div>
+<button class="btn-gold" onclick="doSwap()">Swap on HARZSwap (live DEX)</button>
 <button class="btn-secondary" onclick="closeModal('swapModal')">Cancel</button>
 </div>
 </div>
@@ -149,7 +149,7 @@ async function loadWallet(){
       document.getElementById('ngnBalance').textContent='₦'+ngnBal.toLocaleString();
       document.getElementById('balanceSub').textContent=gdegBal+' GDEG · ~$'+(ngnBal/1500).toFixed(2);
       document.getElementById('gdegBalance').textContent=gdegBal+' GDEG';
-      document.getElementById('gdegValue').textContent=(gdegBal*15).toLocaleString();
+      document.getElementById('gdegValue').textContent=GDEG_NGN?(gdegBal*GDEG_NGN).toLocaleString():'—';
       document.getElementById('myEmail').textContent=myEmail;
       document.getElementById('loginPrompt')!==null?document.getElementById('loginPrompt').style.display='none':null;
       document.querySelector('.login-prompt').style.display='none';
@@ -166,7 +166,7 @@ function calcSwap(){
   else document.getElementById('swapResult').value=(amt/15).toFixed(2)+' GDEG';
 }
 
-function doSwap(){showToast('Swap feature coming soon');closeModal('swapModal');}
+function doSwap(){location.href='https://harz-swap.harz.workers.dev/';}
 
 async function sendMoney(){
   var to=document.getElementById('sendTo').value.trim();
@@ -191,6 +191,31 @@ async function sendMoney(){
 function openModal(id){document.getElementById(id).classList.add('show');}
 function closeModal(id){document.getElementById(id).classList.remove('show');}
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},3000);}
+</script>
+<script>
+var GDEG_NGN=0;
+(async function(){
+  try{
+    const r=await fetch('https://harz-swap.harz.workers.dev/api/prices');
+    const d=await r.json();
+    const g=d&&d.internal&&d.internal.GDEG&&d.internal.GDEG.ngn;
+    if(g&&isFinite(g)&&g>0){
+      GDEG_NGN=g;
+      const p=document.getElementById('gdeg-price'); if(p)p.textContent='₦'+g.toFixed(2);
+      const q=document.getElementById('gdeg-rate'); if(q)q.textContent=g.toFixed(2)+' (live market — no fixed price)';
+      const gb=document.getElementById('gdegBalance');
+      const gv=document.getElementById('gdegValue');
+      if(gb&&gv&&gb.textContent!=='0 GDEG'){
+        const bal=parseFloat(gb.textContent)||0; gv.textContent=(bal*GDEG_NGN).toLocaleString();
+      }
+    }else{
+      const p=document.getElementById('gdeg-price'); if(p)p.textContent='market price (oracle unavailable)';
+      const q=document.getElementById('gdeg-rate'); if(q)q.textContent='unavailable';
+    }
+  }catch(e){
+    const p=document.getElementById('gdeg-price'); if(p)p.textContent='market price (oracle unavailable)';
+  }
+})();
 </script>
 </body>
 </html>
