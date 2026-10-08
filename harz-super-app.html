@@ -85,6 +85,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;t
 </style>
 </head>
 <body>
+<div id="netlab" style="display:none;background:#fff3cd;border-bottom:1px solid #ffe08a;padding:8px 14px;font-size:.8rem;color:#856404;text-align:center">OFFLINE — HARZ AI OS is running from your saved copy. Hub pages open locally; live platform data needs the network. Your work is kept on this device.</div>
 <div class="header">
 <div class="logo">⚡ HARZ</div>
 <div class="nav-btns">
@@ -1739,6 +1740,10 @@ function closeModal() {
 </script>
 
 
+<script>
+function netup(){var b=document.getElementById('netlab');if(b)b.style.display=navigator.onLine?'none':'block'}
+addEventListener('online',function(){location.reload()});addEventListener('offline',netup);netup();
+</script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
