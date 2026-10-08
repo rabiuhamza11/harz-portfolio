@@ -1,10 +1,17 @@
 // HARZ Super App Service Worker
-const CACHE = 'harz-super-app-v4';
+const CACHE = 'harz-super-app-v5';
 const ASSETS = [
   './harz-super-app.html',
   './super-app-manifest.json',
   './super-app-icon-192.png',
-  './super-app-icon-512.png'
+  './super-app-icon-512.png',
+  './harz-admin.html',
+  './harz-security-center.html',
+  './harz-status.html',
+  './harz-api-docs.html',
+  './harz-production-freeze.html',
+  './harzgit.html',
+  './harz-magic.html'
 ];
 
 self.addEventListener('install', e => {
