@@ -53,7 +53,7 @@ function search(q){
 var list = document.getElementById('list');
 function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
 function showList(res){
-  if (!res.length){ list.innerHTML = '<div class="res"><h3>No results in this volume.</h3><div class="dom">Try volume 2, 3 or 4 for other domains.</div></div>'; return; }
+  if (!res.length){ list.innerHTML = '<div class="res"><h3>No results in this volume.</h3><div class="dom">Try volume 2, 3, 4, 5 or 6 for other domains.</div></div>'; return; }
   list.innerHTML = res.slice(0, 100).map(function(r){
     var d = D[r.i];
     var sn = (d.x || "").slice(0, 160).replace(/\s+/g, " ");
