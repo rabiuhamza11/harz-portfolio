@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f0f2f5"><title>Google — HARZ Offline</title>
+<style>
+body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#fff;margin:0;color:#202124;display:flex;flex-direction:column;min-height:100vh}
+.banner{position:sticky;top:0;z-index:9;background:#fff0e0;color:#a05a00;font:600 12px -apple-system,system-ui,sans-serif;padding:8px 12px;text-align:center}
+.main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.logo{font-size:56px;font-weight:700;letter-spacing:2px;margin-bottom:28px}
+.logo .g1{color:#4285f4}.logo .g2{color:#ea4335}.logo .g3{color:#fbbc05}.logo .g4{color:#4285f4}.logo .g5{color:#34a853}.logo .g6{color:#ea4335}
+form{width:100%;max-width:480px}
+.searchbar{display:flex;align-items:center;border:1px solid #dfe1e5;border-radius:24px;padding:12px 18px;background:#fff;box-shadow:0 1px 6px rgba(32,33,36,.15)}
+.searchbar svg{width:20px;height:20px;fill:#9aa0a6;margin-right:12px;flex:none}
+input{border:0;outline:0;flex:1;font-size:16px;background:transparent}
+.btns{display:flex;gap:10px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+button{padding:11px 20px;border:0;border-radius:6px;font-size:14px;cursor:pointer}
+.goog{background:#f8f9fa;color:#3c4043;cursor:default;opacity:.65}
+.harz{background:#0a7d3c;color:#fff;font-weight:600}
+.hnote{margin-top:30px;max-width:520px;font-size:12.5px;color:#5f6368;line-height:1.55}
+.hnote b{color:#0a7d3c}
+.foot{padding:14px;text-align:center;font-size:11.5px;color:#9aa0a6;border-top:1px solid #eee}
+</style></head><body>
+<div class="banner">HARZ OFFLINE SHELL — Google needs its live index and the web. Offline, search HARZ instead: 87,000+ stored documents open without network.</div>
+<div class="main">
+<div class="logo"><span class="g1">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">l</span><span class="g6">e</span></div>
+<form action="https://harz-search-node-a.harz.workers.dev/" method="GET">
+<div class="searchbar"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.8l-.3-.3a6.5 6.5 0 1 0-.7.7l.3.3v.8l5 5 1.5-1.5-5-5Zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z"/></svg><input type="text" name="q" placeholder="Search HARZ offline corpus…" autocomplete="off"></div>
+<div class="btns">
+<button type="button" class="goog" disabled>Google Search (needs network)</button>
+<button type="submit" class="harz">Search HARZ instead</button>
+</div>
+</form>
+<div class="hnote"><b>HARZ note:</b> the button on the right searches our own engine — 87,656 indexed documents with full-text doors, fully working offline. When network returns, google.com resumes in the same tab.</div>
+</div>
+<div class="foot">Google · HARZ Offline Internetless · light theme #f0f2f5</div>
+</body></html>
